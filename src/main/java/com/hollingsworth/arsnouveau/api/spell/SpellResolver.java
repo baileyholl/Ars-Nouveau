@@ -12,8 +12,12 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -42,6 +46,21 @@ public class SpellResolver implements Cloneable {
 
     public @Nullable HitResult hitResult = null;
     public @Nullable SpellResolver previousResolver = null;
+
+    public static final MapCodec<SpellResolver> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            SpellContext.CODEC.fieldOf("spellContext").forGetter(s -> s.spellContext)
+    ).apply(instance, SpellResolver::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellResolver> STREAM = StreamCodec.of(
+            (buf, val) -> {
+                SpellContext.STREAM.encode(buf, val.spellContext);
+            },
+            buf -> {
+                SpellContext context = SpellContext.STREAM.decode(buf);
+                return new SpellResolver(context);
+            }
+    );
+
 
     public SpellResolver(SpellContext spellContext) {
         this.spell = spellContext.getSpell();
@@ -165,7 +184,7 @@ public class SpellResolver implements Cloneable {
     /**
      * Attempts to resolve the remaining effects of the SpellContext without restarting.
      */
-    public void resume(Level world){
+    public void resume(Level world) {
         LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         NeoForge.EVENT_BUS.post(spellResolveEvent);
@@ -193,15 +212,15 @@ public class SpellResolver implements Cloneable {
             if (preEvent.isCanceled())
                 continue;
             effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
-            if(hitPos != null){
+            if (hitPos != null) {
                 var resolveListener = world.getCapability(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, hitPos);
-                if(resolveListener != null)
+                if (resolveListener != null)
                     resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             }
 
-            if(hitEntity != null){
+            if (hitEntity != null) {
                 var resolveListener = hitEntity.getCapability(CapabilityRegistry.ENTITY_SPELL_RESOLVE_CAP);
-                if(resolveListener != null)
+                if (resolveListener != null)
                     resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             }
             NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));

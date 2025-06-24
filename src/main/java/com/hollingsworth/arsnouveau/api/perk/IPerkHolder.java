@@ -16,12 +16,12 @@ import java.util.List;
  */
 public interface IPerkHolder<T> {
 
-    default List<PerkInstance> getPerkInstances(ItemStack stack){
+    default List<PerkInstance> getPerkInstances(ItemStack stack) {
         List<PerkInstance> perkInstances = new ArrayList<>();
         List<PerkSlot> slots = new ArrayList<>(getSlotsForTier(stack));
         List<IPerk> perks = getPerks();
-        for(int i = 0; i < slots.size(); i++){
-            if(i < perks.size()) {
+        for (int i = 0; i < slots.size(); i++) {
+            if (i < perks.size()) {
                 perkInstances.add(new PerkInstance(slots.get(i), perks.get(i)));
             }
         }
@@ -34,20 +34,20 @@ public interface IPerkHolder<T> {
 
     List<PerkSlot> getSlotsForTier(ItemStack stack);
 
-    default boolean isEmpty(){
+    default boolean isEmpty() {
         return getPerks().isEmpty();
     }
 
-    default void appendPerkTooltip(List<Component> tooltip, ItemStack stack){
+    default void appendPerkTooltip(List<Component> tooltip, ItemStack stack) {
 
-        for(PerkInstance perkInstance : getPerkInstances(stack)){
+        for (PerkInstance perkInstance : getPerkInstances(stack)) {
             IPerk perk = perkInstance.getPerk();
             ResourceLocation location = perk.getRegistryName();
             tooltip.add(Component.literal(Component.translatable("item." + location.getNamespace() + "." + location.getPath()).getString()
                     + " " + RomanNumber.toRoman(perkInstance.getSlot().value())));
         }
         int missing = getSlotsForTier(stack).size() - getPerkInstances(stack).size();
-        for(int i = 0; i < missing; i++){
+        for (int i = 0; i < missing; i++) {
             PerkSlot slot = new ArrayList<>(getSlotsForTier(stack)).subList(getPerkInstances(stack).size(), getSlotsForTier(stack).size()).get(i);
             tooltip.add(Component.literal(Component.translatable("ars_nouveau.empty").getString() + " " + RomanNumber.toRoman(slot.value())).withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC));
         }
@@ -57,7 +57,8 @@ public interface IPerkHolder<T> {
 
     T setTier(int tier);
 
-    @Nullable CompoundTag getTagForPerk(IPerk perk);
+    @Nullable
+    CompoundTag getTagForPerk(IPerk perk);
 
     T setTagForPerk(IPerk perk, CompoundTag tag);
 }

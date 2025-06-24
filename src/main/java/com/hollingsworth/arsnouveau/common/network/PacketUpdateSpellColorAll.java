@@ -40,6 +40,7 @@ public class PacketUpdateSpellColorAll extends PacketUpdateSpellColors {
 
         }
     }
+
     public static final Type<PacketUpdateSpellColorAll> TYPE = new Type<>(ArsNouveau.prefix("update_spell_color_all"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateSpellColorAll> CODEC = StreamCodec.ofMember(PacketUpdateSpellColorAll::toBytes, PacketUpdateSpellColorAll::new);
 

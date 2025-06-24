@@ -32,14 +32,14 @@ public class TemporaryBlock extends MirrorWeave implements EntityBlock, ITickabl
     }
 
 
-
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         return ItemInteractionResult.SUCCESS;
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {}
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+    }
 
     @Nullable
     @Override

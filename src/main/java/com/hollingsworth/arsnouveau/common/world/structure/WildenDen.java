@@ -55,14 +55,14 @@ public class WildenDen extends Structure {
     public boolean cannotSpawnInLiquid = true;
     public Optional<Integer> minYAllowed = Optional.empty();
     public Optional<Integer> maxYAllowed = Optional.empty();
+
     public WildenDen(Structure.StructureSettings config,
-                         Holder<StructureTemplatePool> startPool,
-                         Optional<ResourceLocation> startJigsawName,
-                         int size,
-                         HeightProvider startHeight,
-                         Optional<Heightmap.Types> projectStartToHeightmap,
-                         int maxDistanceFromCenter)
-    {
+                     Holder<StructureTemplatePool> startPool,
+                     Optional<ResourceLocation> startJigsawName,
+                     int size,
+                     HeightProvider startHeight,
+                     Optional<Heightmap.Types> projectStartToHeightmap,
+                     int maxDistanceFromCenter) {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
@@ -84,14 +84,13 @@ public class WildenDen extends Structure {
             NoiseColumn columnOfBlocks = context.chunkGenerator().getBaseColumn(centerOfChunk.getX(), centerOfChunk.getZ(), context.heightAccessor(), context.randomState());
             BlockState topBlock = columnOfBlocks.getBlock(centerOfChunk.getY() + landHeight);
 
-            if(!topBlock.getFluidState().isEmpty()) {
+            if (!topBlock.getFluidState().isEmpty()) {
                 return Optional.empty();
             }
         }
 
         if (this.terrainHeightCheckRadius.isPresent() &&
-                (this.allowedTerrainHeightRange.isPresent() || this.minYAllowed.isPresent()))
-        {
+                (this.allowedTerrainHeightRange.isPresent() || this.minYAllowed.isPresent())) {
             int maxTerrainHeight = Integer.MIN_VALUE;
             int minTerrainHeight = Integer.MAX_VALUE;
             int terrainCheckRange = this.terrainHeightCheckRadius.get();
@@ -112,9 +111,8 @@ public class WildenDen extends Structure {
                 }
             }
 
-            if(this.allowedTerrainHeightRange.isPresent() &&
-                    maxTerrainHeight - minTerrainHeight > this.allowedTerrainHeightRange.get())
-            {
+            if (this.allowedTerrainHeightRange.isPresent() &&
+                    maxTerrainHeight - minTerrainHeight > this.allowedTerrainHeightRange.get()) {
                 return Optional.empty();
             }
         }
@@ -153,10 +151,10 @@ public class WildenDen extends Structure {
                 .forEach(pos -> {
                     if (level.getBlockState(pos).is(Blocks.CAVE_VINES_PLANT)
                             && level.getBlockState(pos).hasProperty(CaveVinesPlantBlock.BERRIES)
-                            && level.getBlockState(pos).getValue(CaveVinesPlantBlock.BERRIES)){
+                            && level.getBlockState(pos).getValue(CaveVinesPlantBlock.BERRIES)) {
                         level.setBlock(pos, Blocks.CAVE_VINES_PLANT.defaultBlockState().setValue(CaveVinesPlantBlock.BERRIES, false), 2);
                     }
-                    if (level.getBlockState(pos).is(Blocks.CAVE_VINES)){
+                    if (level.getBlockState(pos).is(Blocks.CAVE_VINES)) {
                         level.setBlock(pos, Blocks.CAVE_VINES.defaultBlockState().setValue(CaveVinesPlantBlock.BERRIES, false).setValue(GrowingPlantHeadBlock.AGE, 25), 2);
                     }
                 });

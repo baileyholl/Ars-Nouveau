@@ -30,7 +30,8 @@ public class ApparatusRecipeBuilder {
     private boolean keepNbtOfReagent;
     private ResourceLocation id;
 
-    public ApparatusRecipeBuilder() {}
+    public ApparatusRecipeBuilder() {
+    }
 
     public static ApparatusRecipeBuilder builder() {
         return new ApparatusRecipeBuilder();
@@ -107,8 +108,8 @@ public class ApparatusRecipeBuilder {
 
     public RecipeWrapper<EnchantingApparatusRecipe> build() {
         if (id == null || id.getPath().equals("empty"))
-            id = ArsNouveau.prefix( getRegistryName(result.getItem()).getPath());
-        if(result.isEmpty()){
+            id = ArsNouveau.prefix(getRegistryName(result.getItem()).getPath());
+        if (result.isEmpty()) {
             throw new IllegalStateException("Enchanting Apparatus Recipe has no result");
         }
 
@@ -116,13 +117,14 @@ public class ApparatusRecipeBuilder {
     }
 
     public RecipeWrapper<EnchantmentRecipe> buildEnchantmentRecipe(ResourceKey<Enchantment> enchantment, int level, int mana) {
-        if(id == null || id.getPath().equals("empty")){
+        if (id == null || id.getPath().equals("empty")) {
             id = ArsNouveau.prefix(enchantment.location().getPath() + "_" + level);
         }
         return new RecipeWrapper<>(id, new EnchantmentRecipe(this.pedestalItems, enchantment, level, mana), EnchantmentRecipe.CODEC);
     }
 
-    public record RecipeWrapper<T extends EnchantingApparatusRecipe>(ResourceLocation id, T recipe, Codec<Recipe<?>> codec) {
+    public record RecipeWrapper<T extends EnchantingApparatusRecipe>(ResourceLocation id, T recipe,
+                                                                     Codec<Recipe<?>> codec) {
         public JsonElement serialize() {
             return codec().encodeStart(JsonOps.INSTANCE, recipe).getOrThrow();
         }

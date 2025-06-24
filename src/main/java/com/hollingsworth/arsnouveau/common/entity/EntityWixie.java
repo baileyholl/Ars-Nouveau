@@ -193,7 +193,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
     }
@@ -241,7 +241,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         if (color.isEmpty())
             color = "blue";
         String finalColor = color;
-        return TEXTURES.computeIfAbsent(color, (k) -> ArsNouveau.prefix( "textures/entity/wixie_" + finalColor + ".png"));
+        return TEXTURES.computeIfAbsent(color, (k) -> ArsNouveau.prefix("textures/entity/wixie_" + finalColor + ".png"));
     }
 
     @Override

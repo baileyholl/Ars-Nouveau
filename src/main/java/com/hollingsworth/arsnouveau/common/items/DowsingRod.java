@@ -31,7 +31,7 @@ public class DowsingRod extends ModItem {
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel() instanceof ServerLevel && pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof IPedestalMachine ipm){
+        if (pContext.getLevel() instanceof ServerLevel && pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof IPedestalMachine ipm) {
             ipm.lightPedestal(pContext.getLevel());
             return InteractionResult.SUCCESS;
         }

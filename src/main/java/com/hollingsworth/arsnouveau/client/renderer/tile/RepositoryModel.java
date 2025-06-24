@@ -8,11 +8,11 @@ import software.bernie.geckolib.model.GeoModel;
 
 public class RepositoryModel extends GeoModel<RepositoryTile> {
 
-    public static final ResourceLocation TEXTURE = ArsNouveau.prefix( "textures/block/repository.png");
-    public static final ResourceLocation MODEL = ArsNouveau.prefix( "geo/repository.geo.json");
-    public static final ResourceLocation ANIMATION = ArsNouveau.prefix( "animations/empty.geo.json");
+    public static final ResourceLocation TEXTURE = ArsNouveau.prefix("textures/block/repository.png");
+    public static final ResourceLocation MODEL = ArsNouveau.prefix("geo/repository.geo.json");
+    public static final ResourceLocation ANIMATION = ArsNouveau.prefix("animations/empty.geo.json");
 
-    public RepositoryModel(){
+    public RepositoryModel() {
     }
 
     @Override

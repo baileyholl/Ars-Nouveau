@@ -20,7 +20,7 @@ public class PufferfishBehavior extends JarBehavior<Pufferfish> {
         super.tick(tile);
         Level level = tile.getLevel();
         Pufferfish pufferfish = (Pufferfish) tile.getEntity();
-        if(level.isClientSide || pufferfish == null){
+        if (level.isClientSide || pufferfish == null) {
             return;
         }
         PufferfishAccessor pufferfishAccessor = (PufferfishAccessor) pufferfish;
@@ -53,15 +53,15 @@ public class PufferfishBehavior extends JarBehavior<Pufferfish> {
             }
             pufferfishAccessor.setDeflateTimer(pufferfishAccessor.getDeflateTimer() + 1);
         }
-        if(!playerNearby){
+        if (!playerNearby) {
             pufferfishAccessor.setInflateCounter(0);
-            if(pufferfish.getPuffState() == 0) {
+            if (pufferfish.getPuffState() == 0) {
                 pufferfishAccessor.setDeflateTimer(0);
             }
         }
     }
 
-    public boolean mobsNearby(MobJarTile tile, Pufferfish pufferfish){
+    public boolean mobsNearby(MobJarTile tile, Pufferfish pufferfish) {
         List<LivingEntity> list = pufferfish.level.getEntitiesOfClass(LivingEntity.class, new AABB(tile.getBlockPos()).inflate(2.4D), (p_149015_) -> {
             return PufferfishAccessor.targetConditions().test(pufferfish, p_149015_);
         });
@@ -71,9 +71,9 @@ public class PufferfishBehavior extends JarBehavior<Pufferfish> {
     @Override
     public int getSignalPower(MobJarTile tile) {
         Pufferfish pufferfish = (Pufferfish) tile.getEntity();
-        if(pufferfish.getPuffState() == 1){
+        if (pufferfish.getPuffState() == 1) {
             return 8;
-        }else if(pufferfish.getPuffState() == 2){
+        } else if (pufferfish.getPuffState() == 2) {
             return 15;
         }
         return 0;

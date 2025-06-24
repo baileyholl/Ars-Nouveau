@@ -27,7 +27,6 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
     }
 
 
-
     @Override
     public ItemStack assemble(final CraftingInput inv, HolderLookup.Provider p_266797_) {
         final ItemStack output = super.assemble(inv, p_266797_); // Get the default output
@@ -40,25 +39,25 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
             if (stack.getItem() instanceof PotionFlask flask) {
                 flaskPotionStack = stack.copy();
                 IPotionProvider provider = PotionProviderRegistry.from(flaskPotionStack);
-                if(provider == null || provider.roomLeft(flaskPotionStack) <= 0)
+                if (provider == null || provider.roomLeft(flaskPotionStack) <= 0)
                     return ItemStack.EMPTY;
             }
-            if(stack.getItem() instanceof PotionItem){
+            if (stack.getItem() instanceof PotionItem) {
                 potionStack = stack;
             }
         }
-        if(flaskPotionStack.isEmpty() || potionStack.isEmpty())
+        if (flaskPotionStack.isEmpty() || potionStack.isEmpty())
             return ItemStack.EMPTY;
         IPotionProvider provider = PotionProviderRegistry.from(flaskPotionStack);
         PotionContents potionData = potionStack.get(DataComponents.POTION_CONTENTS);
-        if(provider == null)
+        if (provider == null)
             return ItemStack.EMPTY;
         int count = provider.usesRemaining(flaskPotionStack);
         ItemStack copyStack = flaskPotionStack.copy();
-        if(count <= 0){
+        if (count <= 0) {
             provider.setData(potionData, 1, provider.maxUses(flaskPotionStack), copyStack);
             return copyStack;
-        }else if(PotionUtil.arePotionContentsEqual(potionData, provider.getPotionData(potionStack))){
+        } else if (PotionUtil.arePotionContentsEqual(potionData, provider.getPotionData(potionStack))) {
             provider.setData(potionData, count + 1, provider.maxUses(flaskPotionStack), copyStack);
             return copyStack;
         }

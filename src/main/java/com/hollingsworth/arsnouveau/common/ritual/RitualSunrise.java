@@ -23,7 +23,7 @@ public class RitualSunrise extends AbstractRitual {
                 for (ServerPlayer player : world.players()) {
                     player.connection.send(new ClientboundSetTimePacket(world.getGameTime(), world.getDayTime(), world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)));
                 }
-            }else {
+            } else {
                 //speed up since the target is reached
                 incrementProgress();
             }
@@ -61,7 +61,7 @@ public class RitualSunrise extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.SUNRISE);
+        return ArsNouveau.prefix(RitualLib.SUNRISE);
     }
 
 }

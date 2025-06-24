@@ -6,11 +6,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class ConfiguredSpellSound implements Cloneable{
+public class ConfiguredSpellSound implements Cloneable {
 
     public static final MapCodec<ConfiguredSpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             SpellSound.CODEC.codec().optionalFieldOf("sound", SoundRegistry.DEFAULT_SPELL_SOUND).forGetter(s -> s.sound),
@@ -18,7 +20,7 @@ public class ConfiguredSpellSound implements Cloneable{
             Codec.FLOAT.optionalFieldOf("pitch", 1.0f).forGetter(s -> s.pitch)
     ).apply(instance, ConfiguredSpellSound::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf,ConfiguredSpellSound> STREAM = StreamCodec.of(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConfiguredSpellSound> STREAM = StreamCodec.of(
             (buf, val) -> {
                 SpellSound.STREAM.encode(buf, val.getSound());
                 buf.writeFloat(val.getVolume());
@@ -44,9 +46,13 @@ public class ConfiguredSpellSound implements Cloneable{
     }
 
     public ConfiguredSpellSound(@Nullable SpellSound spellSound, float volume, float pitch) {
-        this.sound = spellSound ;
+        this.sound = spellSound;
         this.volume = volume;
         this.pitch = pitch;
+    }
+
+    public void playSound(Level level, double x, double y, double z) {
+        level.playSound(null, x, y, z, sound.getSoundEvent().value(), SoundSource.NEUTRAL, volume, pitch);
     }
 
     @Override
@@ -75,7 +81,6 @@ public class ConfiguredSpellSound implements Cloneable{
     public ConfiguredSpellSound clone() {
         try {
             ConfiguredSpellSound clone = (ConfiguredSpellSound) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

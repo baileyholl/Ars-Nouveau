@@ -8,7 +8,8 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record ApparatusRecipeInput(ItemStack catalyst, List<ItemStack> pedestals, @Nullable Player player) implements RecipeInput {
+public record ApparatusRecipeInput(ItemStack catalyst, List<ItemStack> pedestals,
+                                   @Nullable Player player) implements RecipeInput {
 
     public ApparatusRecipeInput(EnchantingApparatusTile tile) {
         this(tile.getStack(), tile.getPedestalItems(), null);

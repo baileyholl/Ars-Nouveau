@@ -67,7 +67,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
         super(tileEntityTypeIn, pos, state);
     }
 
-    public ItemStack setNewScroll(ItemStack stack){
+    public ItemStack setNewScroll(ItemStack stack) {
         ItemStack oldStack = this.scrollStack.copy();
         this.scrollStack = stack.copy();
         updateBlock();
@@ -78,7 +78,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
     @Override
     public FilterSet getFilterSet() {
-        if (scrollStack.isEmpty()){
+        if (scrollStack.isEmpty()) {
             return proxyFilters;
         }
         FilterSet.ListSet listSet = new FilterSet.ListSet();
@@ -86,22 +86,22 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
         return new FilterSet.Composite().withFilter(listSet).withFilter(proxyFilters);
     }
 
-    public void invalidateNetwork(){
+    public void invalidateNetwork() {
         connectedRepositories = new ArrayList<>();
         buildRepositoryNetwork(new HashSet<>(), worldPosition);
         invalidateCapabilities();
     }
 
     private void buildRepositoryNetwork(Set<BlockPos> visited, BlockPos nextPos) {
-        if(!(level instanceof ServerLevel serverLevel)){
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
         visited.add(nextPos);
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BlockPos pos = nextPos.relative(direction);
             if (!visited.contains(pos)) {
                 visited.add(pos);
-                if(level.getBlockState(pos).getBlock() instanceof RepositoryBlock) {
+                if (level.getBlockState(pos).getBlock() instanceof RepositoryBlock) {
                     var mapCap = BlockCapabilityCache.create(CapabilityRegistry.MAP_INV_CAP, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
                     var invCap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
                     connectedRepositories.add(new ConnectedRepository(pos, mapCap, invCap));
@@ -120,13 +120,13 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(hasCustomName()){
+        if (hasCustomName()) {
             tooltip.add(getCustomName());
         }
-        if(!scrollStack.isEmpty()){
+        if (!scrollStack.isEmpty()) {
             tooltip.add(scrollStack.getHoverName().copy().withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             ItemScrollData scrollData = scrollStack.get(DataComponentRegistry.ITEM_SCROLL_DATA);
-            if(scrollData != null) {
+            if (scrollData != null) {
                 scrollData.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL);
             }
         }
@@ -134,35 +134,35 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
     @Override
     public void tick() {
-        if(invalidateNextTick){
+        if (invalidateNextTick) {
             invalidateNetwork();
             invalidateNextTick = false;
         }
-        if(drawerTicks > 0){
+        if (drawerTicks > 0) {
             drawerTicks--;
-            if(drawerTicks == 38){
+            if (drawerTicks == 38) {
                 level.playSound(null, worldPosition, SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.5f, 1.6f + (float) ParticleUtil.inRange(-0.2, 0.2));
             }
-            if(drawerTicks == 15){
+            if (drawerTicks == 15) {
                 level.playSound(null, worldPosition, SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.5f, 1.6f + (float) ParticleUtil.inRange(-0.2, 0.2));
             }
-            if(drawerTicks == 38 && !level.isClientSide){
+            if (drawerTicks == 38 && !level.isClientSide) {
                 Direction direction = level.getBlockState(worldPosition).getValue(RepositoryCatalog.FACING);
-                for(Entity entity : level.getEntities(null, AABB.unitCubeFromLowerCorner(worldPosition.relative(direction).getBottomCenter()))){
+                for (Entity entity : level.getEntities(null, AABB.unitCubeFromLowerCorner(worldPosition.relative(direction).getBottomCenter()))) {
                     entity.push(direction.getStepX() * 0.5, 0.1, direction.getStepZ() * 0.5);
                     entity.hurtMarked = true;
                 }
             }
-        }else{
+        } else {
             openDrawer = 0;
         }
     }
 
-    public void openRandomDrawer(){
+    public void openRandomDrawer() {
 
         openDrawer = level.random.nextIntBetweenInclusive(1, 6);
         drawerTicks = 60;
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             Networking.sendToNearbyClient(level, worldPosition, new PacketOneShotAnimation(worldPosition));
         }
     }
@@ -173,11 +173,11 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
         invalidateNextTick = true;
     }
 
-    public ControllerInv getControllerInv(){
+    public ControllerInv getControllerInv() {
         List<IItemHandler> handlers = new ArrayList<>();
-        for(ConnectedRepository connectedRepository : this.connectedRepositories){
+        for (ConnectedRepository connectedRepository : this.connectedRepositories) {
             IItemHandler handler = connectedRepository.itemHandler.getCapability();
-            if(handler != null) {
+            if (handler != null) {
                 handlers.add(handler);
             }
         }
@@ -190,13 +190,14 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     public Component getName() {
         return name;
     }
-        public void setName(Component name) {
+
+    public void setName(Component name) {
         this.name = name;
     }
 
-    public IResolveListener getSpellListener(){
+    public IResolveListener getSpellListener() {
         return (world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver) -> {
-            if(resolveEffect instanceof EffectName && spell.name() != null){
+            if (resolveEffect instanceof EffectName && spell.name() != null) {
                 setName(Component.literal(spell.name()));
             }
         };
@@ -205,7 +206,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if(tag.contains("name")){
+        if (tag.contains("name")) {
             this.name = Component.literal(tag.getString("name"));
         }
         this.scrollStack = ItemStack.parseOptional(registries, tag.getCompound("scrollStack"));
@@ -214,7 +215,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if(name != null){
+        if (name != null) {
             tag.putString("name", name.getString());
         }
         tag.put("scrollStack", scrollStack.saveOptional(registries));
@@ -228,15 +229,16 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
 
     List<AnimationController> animControllers = new ArrayList<>();
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        for(int index = 1; index < 7; index++){
+        for (int index = 1; index < 7; index++) {
             int finalIndex = index;
-            AnimationController controller = new AnimationController<>(this, "drawer" + index, 20, event ->{
-                if(openDrawer == finalIndex) {
+            AnimationController controller = new AnimationController<>(this, "drawer" + index, 20, event -> {
+                if (openDrawer == finalIndex) {
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("drawer" + finalIndex));
                     return PlayState.CONTINUE;
-                }else{
+                } else {
                     event.getController().forceAnimationReset();
                     return PlayState.STOP;
                 }
@@ -255,7 +257,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
     @Override
     public void startAnimation(int arg) {
-        for(var controller : animControllers){
+        for (var controller : animControllers) {
             controller.forceAnimationReset();
         }
         openRandomDrawer();
@@ -264,8 +266,9 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     /**
      * Returns the highest preference from the connected inventories ignoring this controllers own scroll.
      */
-    public static class ProxyFilterSet extends FilterSet{
+    public static class ProxyFilterSet extends FilterSet {
         RepositoryCatalogTile tile;
+
         public ProxyFilterSet(RepositoryCatalogTile tile) {
             this.tile = tile;
         }
@@ -273,14 +276,14 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
         @Override
         public ItemScroll.SortPref getHighestPreference(ItemStack stack) {
             var preferencedStacks = tile.getControllerInv().preferredForStack(stack, false);
-            if(preferencedStacks.isEmpty()){
+            if (preferencedStacks.isEmpty()) {
                 return ItemScroll.SortPref.INVALID;
             }
             return preferencedStacks.peek().sortPref();
         }
     }
 
-    public static class ConnectedRepository{
+    public static class ConnectedRepository {
         public BlockPos pos;
         public BlockCapabilityCache<IMapInventory, Direction> capability;
         public BlockCapabilityCache<IItemHandler, Direction> itemHandler;

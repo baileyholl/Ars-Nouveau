@@ -92,7 +92,7 @@ public class LightManager {
         register(ModEntities.ANIMATED_BLOCK.get(), (p) -> p.getBlockState().getLightEmission(p.level, p.blockPosition()));
     }
 
-    public static < T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {
+    public static <T extends Entity> void register(EntityType<T> type, Function<T, Integer> luminanceFunction) {
         if (!LIGHT_REGISTRY.containsKey(type)) {
             LIGHT_REGISTRY.put(type, new ArrayList<>());
         }
@@ -100,28 +100,26 @@ public class LightManager {
     }
 
 
-    public static <T extends Entity> Map<EntityType<?>, List<Function<?, Integer>>> getLightRegistry(){
+    public static <T extends Entity> Map<EntityType<?>, List<Function<?, Integer>>> getLightRegistry() {
         return LIGHT_REGISTRY;
     }
 
-    public static <T extends Entity> int getValue(T entity)
-    {
+    public static <T extends Entity> int getValue(T entity) {
         int val = 0;
-        if(!LIGHT_REGISTRY.containsKey(entity.getType()))
+        if (!LIGHT_REGISTRY.containsKey(entity.getType()))
             return val;
         EntityType<?> type = entity.getType();
-        for(Function<?, Integer> function : LIGHT_REGISTRY.get(type))
-        {
-            var fun = (Function<T,Integer>)function;
+        for (Function<?, Integer> function : LIGHT_REGISTRY.get(type)) {
+            var fun = (Function<T, Integer>) function;
             Integer value = fun.apply(entity);
-            if(value > val){
+            if (value > val) {
                 val = value;
             }
         }
         return val;
     }
 
-    public static boolean containsEntity(EntityType<? extends Entity> type){
+    public static boolean containsEntity(EntityType<? extends Entity> type) {
         return LIGHT_REGISTRY.containsKey(type) || Config.ENTITY_LIGHT_MAP.containsKey(BuiltInRegistries.ENTITY_TYPE.getKey(type));
     }
 

@@ -25,7 +25,7 @@ public class ManaUtil {
         if (e == null) return 0;
         AtomicInteger discounts = new AtomicInteger();
         var items = CuriosUtil.getAllWornItems(e);
-        if(items != null){
+        if (items != null) {
             for (int i = 0; i < items.getSlots(); i++) {
                 ItemStack item = items.getStackInSlot(i);
                 if (item.getItem() instanceof IManaDiscountEquipment discountItem)

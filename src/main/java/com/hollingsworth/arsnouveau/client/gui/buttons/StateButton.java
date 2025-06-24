@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class StateButton extends ANButton{
+public class StateButton extends ANButton {
 
     public ResourceLocation texture;
     public int tile;
@@ -17,6 +17,7 @@ public class StateButton extends ANButton{
     public int texY = 0;
     public int imageWidth;
     public int imageHeight;
+
     public StateButton(int x, int y, int width, int height, int imageWidth, int imageHeight, int tile, ResourceLocation texture, OnPress pressable) {
         super(x, y, width, height, Component.empty(), pressable);
         this.tile = tile;

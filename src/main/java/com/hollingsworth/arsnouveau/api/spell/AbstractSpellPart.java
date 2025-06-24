@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
@@ -10,6 +12,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +83,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public SpellPartConfigUtil.ComboLimits invalidCombinations = new SpellPartConfigUtil.ComboLimits(null);
 
     public AbstractSpellPart(String registryName, String name) {
-        this(ArsNouveau.prefix( registryName), name);
+        this(ArsNouveau.prefix(registryName), name);
     }
 
     public AbstractSpellPart(ResourceLocation registryName, String name) {
@@ -92,12 +96,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         compatibleAugments.addAll(getCompatibleAugments());
         Map<AbstractAugment, String> map = new ConcurrentHashMap<>();
         this.addAugmentDescriptions(map);
-        for(AbstractAugment augment :  map.keySet()){
+        for (AbstractAugment augment : map.keySet()) {
             augmentDescriptions.put(augment, Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath()));
         }
-        if(!FMLEnvironment.production){
-            for(AbstractAugment augment : compatibleAugments){
-                if(!augmentDescriptions.containsKey(augment)){
+        if (!FMLEnvironment.production) {
+            for (AbstractAugment augment : compatibleAugments) {
+                if (!augmentDescriptions.containsKey(augment)) {
                     ArsNouveau.postLoadWarnings.add("Glyph " + registryName + " is missing a description for augment " + augment.getRegistryName());
                 }
             }
@@ -112,9 +116,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * Can be changed and uncanceled by modifying this context directly.
      * If isCanceled is not false, no more effects will resolve.
      * Use the currentIndex to determine where a spell was canceled.
+     *
      * @return true if the canceled callbacks should continue to the next glyph, false if it should stop.
      */
-    public boolean contextCanceled(SpellContext context){
+    public boolean contextCanceled(SpellContext context) {
         this.onContextCanceled(context);
         return true;
     }
@@ -136,7 +141,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return this.name;
     }
 
-    public SpellTier getConfigTier(){
+    public SpellTier getConfigTier() {
         return GLYPH_TIER == null ? defaultTier() : SpellTier.SPELL_TIER_MAP.get(GLYPH_TIER.get());
     }
 
@@ -166,11 +171,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Return the Augment -> string mappings used for datagen.
      */
-    public void addAugmentDescriptions(Map<AbstractAugment, String> map){
+    public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
 
     }
 
-    public Component getAugmentLangKey(AbstractAugment augment){
+    public Component getAugmentLangKey(AbstractAugment augment) {
         return Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath());
     }
 
@@ -259,6 +264,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     protected void buildAugmentCostOverrideConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
         this.augmentCosts = SpellPartConfigUtil.buildAugmentCosts(builder, defaults);
     }
+
     /**
      * Registers the glyph_limits configuration entry for combo limits.
      */
@@ -277,9 +283,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Adds default augment limits to the given map, used to generate the config.
      */
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {}
+    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    }
 
-    protected void addAugmentCostOverrides(Map<ResourceLocation, Integer> defaults) {}
+    protected void addAugmentCostOverrides(Map<ResourceLocation, Integer> defaults) {
+    }
 
     protected Set<ResourceLocation> getDefaultInvalidCombos(Set<ResourceLocation> defaults) {
         addDefaultInvalidCombos(defaults);
@@ -309,11 +317,15 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return Component.translatable(getLocalizationKey()).getString();
     }
 
-    public DocAssets.BlitInfo getTypeIcon(){
+    public DocAssets.BlitInfo getTypeIcon() {
         return DocAssets.NA_ICON;
     }
 
     public abstract Component getTypeName();
+
+    public ParticleEmitter createStaticEmitter(TimelineEntryData timelineEntryData, Vec3 position) {
+        return new ParticleEmitter(() -> position, () -> new Vec2(0, 0), timelineEntryData.motion(), timelineEntryData.particleOptions());
+    }
 
     @Override
     public boolean equals(Object o) {

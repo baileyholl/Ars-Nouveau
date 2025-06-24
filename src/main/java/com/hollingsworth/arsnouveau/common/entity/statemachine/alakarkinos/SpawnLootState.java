@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class SpawnLootState extends CrabState{
+public class SpawnLootState extends CrabState {
     boolean backToHat;
     int waitTicks;
     AlakarkinosRecipe recipe;
@@ -39,10 +39,10 @@ public class SpawnLootState extends CrabState{
     @Override
     public @Nullable CrabState tick() {
         var hatPos = alakarkinos.hatPos;
-        if(hatPos == null || alakarkinos.getHome() == null){
+        if (hatPos == null || alakarkinos.getHome() == null) {
             return new DecideCrabActionState(alakarkinos);
         }
-        if(waitTicks > 0){
+        if (waitTicks > 0) {
             waitTicks--;
             return null;
         }

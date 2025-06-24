@@ -69,6 +69,9 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<AgronomicSourcelinkBlock> AGRONOMIC_SOURCELINK = registerBlockAndItem(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkBlock::new);
     public static BlockEntityTypeRegistryWrapper<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE = registerTile(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkTile::new, AGRONOMIC_SOURCELINK);
 
+    public static BlockRegistryWrapper<ParticleBlock> PARTICLE_BLOCK = registerBlock(LibBlockNames.PARTICLE_BLOCK, ParticleBlock::new);
+    public static BlockEntityTypeRegistryWrapper<ParticleTile> PARTICLE_TILE = registerTile(LibBlockNames.PARTICLE_BLOCK, ParticleTile::new, PARTICLE_BLOCK);
+
 
     public static BlockRegistryWrapper<EnchantingApparatusBlock> ENCHANTING_APP_BLOCK = registerBlockAndItem(LibBlockNames.ENCHANTING_APPARATUS, EnchantingApparatusBlock::new, (reg) -> new RendererBlockItem(reg.get(), defaultItemProperties()) {
         @Override

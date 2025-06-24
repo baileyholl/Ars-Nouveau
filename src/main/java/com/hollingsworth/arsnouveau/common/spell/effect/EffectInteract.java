@@ -50,7 +50,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity e = rayTraceResult.getEntity();
         Player player = getPlayer(shooter, (ServerLevel) world);
         boolean wasShiftDown = player.isShiftKeyDown();
@@ -64,10 +64,10 @@ public class EffectInteract extends AbstractEffect {
                 player.setPose(Pose.CROUCHING);
             }
             useOnEntity(player, spellStats, e);
-            for(ItemStack i : player.inventory.items){
+            for (ItemStack i : player.inventory.items) {
                 manager.insertOrDrop(i, world, e.blockPosition());
             }
-        }else {
+        } else {
             if (shouldShift) {
                 wasShiftDown = player.isShiftKeyDown();
                 previousPose = player.getPose();
@@ -109,10 +109,10 @@ public class EffectInteract extends AbstractEffect {
                 }
 
                 player.awardStat(Stats.ITEM_USED.get(bucket));
-                if(player.getItemInHand(hand).isEmpty()){
+                if (player.getItemInHand(hand).isEmpty()) {
                     player.setItemInHand(hand, result);
-                }else{
-                    if(!player.addItem(result)){
+                } else {
+                    if (!player.addItem(result)) {
                         player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), result));
                     }
                 }
@@ -124,10 +124,10 @@ public class EffectInteract extends AbstractEffect {
         if (placed) {
             if (!player.hasInfiniteMaterials()) {
                 ItemStack result = ItemUtils.createFilledResult(item, player, new ItemStack(Items.BUCKET));
-                if(player.getItemInHand(hand).isEmpty()){
+                if (player.getItemInHand(hand).isEmpty()) {
                     player.setItemInHand(hand, result);
-                }else{
-                    if(!player.addItem(result)){
+                } else {
+                    if (!player.addItem(result)) {
                         player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), result));
                     }
                 }
@@ -143,12 +143,12 @@ public class EffectInteract extends AbstractEffect {
     public void useOnEntity(Player player, SpellStats spellStats, Entity target) {
         if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
-            if(target instanceof  LivingEntity livingEntity) {
+            if (target instanceof LivingEntity livingEntity) {
                 InteractionResult res = item.interactLivingEntity(player, livingEntity, getHand(player));
                 if (res != InteractionResult.SUCCESS) {
                     target.interact(player, getHand(player));
                 }
-            }else{
+            } else {
                 target.interact(player, getHand(player));
             }
         } else {
@@ -185,25 +185,25 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos blockPos = rayTraceResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockPos))
             return;
-        if(blockState.is(BlockTagProvider.INTERACT_BLACKLIST)){
+        if (blockState.is(BlockTagProvider.INTERACT_BLACKLIST)) {
             return;
         }
         Player player = getPlayer(shooter, (ServerLevel) world);
         boolean wasShiftDown = player.isShiftKeyDown();
         Pose previousPose = player.getPose();
         boolean shouldShift = spellStats.hasBuff(AugmentDampen.INSTANCE);
-        if(isRealPlayer(shooter)){
+        if (isRealPlayer(shooter)) {
             if (shouldShift) {
                 player.setShiftKeyDown(true);
                 player.setPose(Pose.CROUCHING);
             }
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
-        }else{
+        } else {
             InventoryManager manager = spellContext.getCaster().getInvManager();
             player = setupFakeInventory(spellContext, world);
             if (shouldShift) {
@@ -213,10 +213,10 @@ public class EffectInteract extends AbstractEffect {
                 player.setPose(Pose.CROUCHING);
             }
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
-            for(ItemStack i : player.inventory.items){
+            for (ItemStack i : player.inventory.items) {
                 manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
             }
-            for(ItemStack i : player.inventory.offhand){
+            for (ItemStack i : player.inventory.offhand) {
                 manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
             }
         }
@@ -227,20 +227,20 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
-    public FakePlayer setupFakeInventory(SpellContext context, Level level){
+    public FakePlayer setupFakeInventory(SpellContext context, Level level) {
         InventoryManager manager = context.getCaster().getInvManager();
         ANFakePlayer player = ANFakePlayer.getPlayer((ServerLevel) level);
         player.inventory.clearContent();
         player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
         ExtractedStack stack = manager.extractItem(i -> !i.isEmpty(), 1);
-        if(!stack.isEmpty()){
+        if (!stack.isEmpty()) {
             player.setItemSlot(EquipmentSlot.MAINHAND, stack.getStack().copy());
         }
         return player;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentSensitive.INSTANCE, AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
@@ -272,7 +272,7 @@ public class EffectInteract extends AbstractEffect {
         return 10;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

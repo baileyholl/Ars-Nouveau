@@ -14,7 +14,7 @@ public interface IPlaceableFeature {
 
     String getFeatureName();
 
-    default Pair<BlockPos, BlockPos> getCustomOffsets(){
+    default Pair<BlockPos, BlockPos> getCustomOffsets() {
         return new Pair<>(BlockPos.ZERO, BlockPos.ZERO);
     }
 }

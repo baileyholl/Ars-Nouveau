@@ -35,7 +35,7 @@ public class EnchantersShield extends ShieldItem implements GeoItem {
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int p_77663_4_, boolean p_77663_5_) {
         super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
-        if(entity instanceof Player player)
+        if (entity instanceof Player player)
             RepairingPerk.attemptRepair(stack, player);
     }
 

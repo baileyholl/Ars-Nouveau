@@ -51,7 +51,7 @@ public class GravityEffect extends MobEffect {
     // Disable flight here because items tick after our potions
     @SubscribeEvent
     public static void entityTick(PlayerTickEvent.Post e) {
-        if ( e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT) && !e.getEntity().onGround() && !e.getEntity().isCreative()) {
+        if (e.getEntity().hasEffect(ModPotions.GRAVITY_EFFECT) && !e.getEntity().onGround() && !e.getEntity().isCreative()) {
             e.getEntity().abilities.flying = false;
         }
     }

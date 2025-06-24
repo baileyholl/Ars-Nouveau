@@ -35,16 +35,17 @@ public abstract class ItemScroll extends ModItem implements IScribeable, AliasPr
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        if(pUsedHand == InteractionHand.MAIN_HAND && !pLevel.isClientSide){
+        if (pUsedHand == InteractionHand.MAIN_HAND && !pLevel.isClientSide) {
             ItemStack thisStack = pPlayer.getItemInHand(pUsedHand);
             ItemStack otherStack = pPlayer.getItemInHand(InteractionHand.OFF_HAND);
-            if(!otherStack.isEmpty()){
-                onScribe(pLevel, pPlayer.blockPosition(), pPlayer, InteractionHand.OFF_HAND , thisStack);
+            if (!otherStack.isEmpty()) {
+                onScribe(pLevel, pPlayer.blockPosition(), pPlayer, InteractionHand.OFF_HAND, thisStack);
                 return InteractionResultHolder.success(thisStack);
             }
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
+
     // TODO 1.22: Move this to API.
     public enum SortPref {
         INVALID,

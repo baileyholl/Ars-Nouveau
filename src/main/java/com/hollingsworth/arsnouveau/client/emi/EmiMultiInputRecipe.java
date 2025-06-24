@@ -91,7 +91,7 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
      * Do not call from {@link EmiMultiInputRecipe#generateInputs} as it will result in a stack overflow.
      *
      * @return A list of ingredients required for the recipe.
-     * 	Inputs will consider this recipe a use when exploring recipes.
+     * Inputs will consider this recipe a use when exploring recipes.
      */
     @Override
     public final List<EmiIngredient> getInputs() {

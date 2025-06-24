@@ -14,7 +14,10 @@ import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.*;
-import dev.emi.emi.api.*;
+import dev.emi.emi.api.EmiApi;
+import dev.emi.emi.api.EmiEntrypoint;
+import dev.emi.emi.api.EmiPlugin;
+import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
@@ -98,7 +101,8 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 case EnchantingApparatusRecipe enchantingApparatusRecipe when !enchantingApparatusRecipe.excludeJei() ->
                         new EmiEnchantingApparatusRecipe<>(id, enchantingApparatusRecipe);
                 case CrushRecipe crushRecipe -> new EmiCrushRecipe(id, crushRecipe);
-                case BuddingConversionRecipe buddingConversionRecipe -> new EmiBuddingConversionRecipe(id, buddingConversionRecipe);
+                case BuddingConversionRecipe buddingConversionRecipe ->
+                        new EmiBuddingConversionRecipe(id, buddingConversionRecipe);
                 case ScryRitualRecipe scryRitualRecipe -> new EmiScryRitualRecipe(id, scryRitualRecipe);
                 case AlakarkinosRecipe alakarkinosRecipe -> new EmiAlakarkinosRecipe(id, alakarkinosRecipe);
                 default -> null;

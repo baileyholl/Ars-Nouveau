@@ -61,13 +61,13 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
                         .add(
                                 Attributes.ATTACK_DAMAGE,
                                 new AttributeModifier(
-                                        BASE_ATTACK_DAMAGE_ID, (double)((float)baseDamage + iItemTier.getAttackDamageBonus()), AttributeModifier.Operation.ADD_VALUE
+                                        BASE_ATTACK_DAMAGE_ID, (double) ((float) baseDamage + iItemTier.getAttackDamageBonus()), AttributeModifier.Operation.ADD_VALUE
                                 ),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
                                 Attributes.ATTACK_SPEED,
-                                new AttributeModifier(BASE_ATTACK_SPEED_ID, (double)baseAttackSpeed, AttributeModifier.Operation.ADD_VALUE),
+                                new AttributeModifier(BASE_ATTACK_SPEED_ID, (double) baseAttackSpeed, AttributeModifier.Operation.ADD_VALUE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(PerkAttributes.SPELL_DAMAGE_BONUS, new AttributeModifier(ArsNouveau.prefix("sword_spell_bonus"), 4.0f, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
@@ -78,7 +78,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int p_77663_4_, boolean p_77663_5_) {
         super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
-        if(entity instanceof Player player)
+        if (entity instanceof Player player)
             RepairingPerk.attemptRepair(stack, player);
     }
 
@@ -103,7 +103,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     @Override
     public boolean hurtEnemy(@NotNull ItemStack stack, LivingEntity target, @NotNull LivingEntity entity) {
         AbstractCaster<?> caster = getSpellCaster(stack);
-        IWrappedCaster wrappedCaster = entity instanceof  Player player ? new PlayerCaster(player) : new LivingCaster(entity);
+        IWrappedCaster wrappedCaster = entity instanceof Player player ? new PlayerCaster(player) : new LivingCaster(entity);
         SpellContext context = new SpellContext(entity.level, caster.modifySpellBeforeCasting((ServerLevel) target.level, entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster, stack);
         SpellResolver resolver = entity instanceof Player ? new SpellResolver(context) : new EntitySpellResolver(context);
         EntityHitResult entityRes = new EntityHitResult(target);

@@ -80,7 +80,7 @@ public class KeyHandler {
 
 
         if (key == ModKeyBindings.OPEN_BOOK.getKey().getValue()) {
-            if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spell_name.isFocused()) {
+            if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spellNameBox.isFocused()) {
                 MINECRAFT.player.closeContainer();
                 return;
             }
@@ -152,9 +152,9 @@ public class KeyHandler {
             checkKeysPressed(event.getKey());
         if (event.getKey() == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
             if (Minecraft.getInstance().player != null
-                && !Minecraft.getInstance().player.onGround()
-                && CuriosUtil.hasItem(Minecraft.getInstance().player, ItemsRegistry.JUMP_RING.get())
-                && Minecraft.getInstance().screen == null) {
+                    && !Minecraft.getInstance().player.onGround()
+                    && CuriosUtil.hasItem(Minecraft.getInstance().player, ItemsRegistry.JUMP_RING.get())
+                    && Minecraft.getInstance().screen == null) {
                 Networking.sendToServer(new PacketGenericClientMessage(PacketGenericClientMessage.Action.JUMP_RING));
             }
         }

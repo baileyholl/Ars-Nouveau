@@ -66,7 +66,7 @@ public class EffectEvaporate extends AbstractEffect {
         return 50;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

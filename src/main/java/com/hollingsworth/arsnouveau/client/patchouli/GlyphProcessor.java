@@ -29,7 +29,7 @@ public class GlyphProcessor implements IComponentProcessor {
     }
 
     @Override
-    public IVariable process(Level level,  String s) {
+    public IVariable process(Level level, String s) {
         if (holder == null)
             return null;
         var recipe = holder.value();

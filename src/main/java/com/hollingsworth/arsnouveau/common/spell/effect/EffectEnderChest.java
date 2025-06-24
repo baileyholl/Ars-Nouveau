@@ -33,7 +33,7 @@ public class EffectEnderChest extends AbstractEffect {
         }
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();
@@ -54,7 +54,7 @@ public class EffectEnderChest extends AbstractEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

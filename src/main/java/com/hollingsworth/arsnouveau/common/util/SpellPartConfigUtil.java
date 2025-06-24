@@ -109,7 +109,7 @@ public class SpellPartConfigUtil {
     public static ComboLimits buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
         ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Prevents the given glyph from being used in the same spell as the given glyph", "Example entry: \"" + GlyphLib.EffectBurstID + "\"")
-                .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s &&  ResourceLocation.read(s).isSuccess());
+                .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s && ResourceLocation.read(s).isSuccess());
 
         return new ComboLimits(configValue);
     }

@@ -145,7 +145,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (toPos != null) {
             list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
         }
-        if(fromPos != null){
+        if (fromPos != null) {
             list.add(ColorPos.centered(fromPos, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
@@ -208,7 +208,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         super.loadAdditional(tag, pRegistries);
         this.toPos = null;
         this.fromPos = null;
-        
+
         if (NBTUtil.hasBlockPos(tag, TO)) {
             this.toPos = NBTUtil.getBlockPos(tag, TO);
         }

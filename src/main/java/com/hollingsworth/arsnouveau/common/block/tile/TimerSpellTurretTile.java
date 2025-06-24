@@ -36,7 +36,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     @Override
     public void tick() {
         ticksElapsed++;
-        if(!level.isClientSide && ticksPerSignal > 0 && !isOff && ticksElapsed >= ticksPerSignal){
+        if (!level.isClientSide && ticksPerSignal > 0 && !isOff && ticksElapsed >= ticksPerSignal) {
             getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
             ticksElapsed = 0;
         }

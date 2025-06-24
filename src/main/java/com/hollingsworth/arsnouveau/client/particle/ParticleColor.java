@@ -12,6 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -43,7 +44,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
             }
     );
 
-    public static final ResourceLocation ID = ArsNouveau.prefix( "constant");
+    public static final ResourceLocation ID = ArsNouveau.prefix("constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);
@@ -64,6 +65,11 @@ public class ParticleColor implements IParticleColor, Cloneable {
     public static final ParticleColor BROWN = new ParticleColor(125, 42, 42);
 
     public static final ParticleColor BLACK = new ParticleColor(0, 0, 0);
+
+    // all 16 colors in rainbow order
+    public static final List<ParticleColor> PRESET_COLORS = List.of(
+            BROWN, RED, ORANGE, YELLOW, LIME, GREEN, CYAN, LIGHT_BLUE, BLUE, PURPLE, MAGENTA, PINK, WHITE, LIGHT_GRAY, GRAY, BLACK
+    );
 
     public static final ParticleColor TO_HIGHLIGHT = RED;
     public static final ParticleColor FROM_HIGHLIGHT = CYAN;
@@ -93,7 +99,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
         this((int) r, (int) g, (int) b);
     }
 
-    public ParticleColor(CompoundTag compoundTag){
+    public ParticleColor(CompoundTag compoundTag) {
         this(compoundTag.getInt("r"), compoundTag.getInt("g"), compoundTag.getInt("b"));
     }
 
@@ -160,16 +166,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return new IntWrapper(this);
     }
 
-    /**
-     * Generates a new color within the max range of the given color.
-     */
-    public ParticleColor nextColor(RandomSource random) {
-        ParticleColor.IntWrapper wrapper = toWrapper();
-        return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
-    }
-
-    @Override
-    public ParticleColor transition(int ticks) {
+    public ParticleColor nextColor(int ticks) {
         ParticleColor.IntWrapper wrapper = toWrapper();
         return new ParticleColor(random.nextInt(wrapper.r), random.nextInt(wrapper.g), random.nextInt(wrapper.b));
     }
@@ -216,8 +213,8 @@ public class ParticleColor implements IParticleColor, Cloneable {
 
         public IntWrapper(ParticleColor color) {
             this.r = Math.max(1, (int) (color.getRed() * 255.0));
-            this.g = Math.max(1,(int) (color.getGreen() * 255.0));
-            this.b = Math.max(1,(int) (color.getBlue() * 255.0));
+            this.g = Math.max(1, (int) (color.getGreen() * 255.0));
+            this.b = Math.max(1, (int) (color.getBlue() * 255.0));
         }
 
         public ParticleColor toParticleColor() {

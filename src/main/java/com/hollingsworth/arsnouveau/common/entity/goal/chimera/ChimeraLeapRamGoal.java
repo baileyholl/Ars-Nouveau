@@ -78,7 +78,7 @@ public class ChimeraLeapRamGoal extends Goal {
                 return;
             }
             breakBlocks();
-            if(boss.onGround()) {
+            if (boss.onGround()) {
                 Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(), 1);
                 if (path == null) {
                     return;

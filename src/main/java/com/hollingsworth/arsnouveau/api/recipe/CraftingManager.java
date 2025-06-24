@@ -36,7 +36,7 @@ public class CraftingManager {
 
     List<ItemStack> getContainerItems(List<ItemStack> items) {
         List<ItemStack> remaining = new ArrayList<>();
-        for(ItemStack item : items) {
+        for (ItemStack item : items) {
             if (item.hasCraftingRemainingItem()) {
                 remaining.add(item.getCraftingRemainingItem());
             }
@@ -67,23 +67,23 @@ public class CraftingManager {
         return !isCraftInvalid() && neededItems.isEmpty();
     }
 
-    public boolean isCraftCompleted(){
+    public boolean isCraftCompleted() {
         return isCraftInvalid() || craftCompleted;
     }
 
-    public boolean isCraftInvalid(){
+    public boolean isCraftInvalid() {
         return outputStack.isEmpty();
     }
 
-    public void completeCraft(WixieCauldronTile tile){
+    public void completeCraft(WixieCauldronTile tile) {
         Level level = tile.getLevel();
         BlockPos worldPosition = tile.getBlockPos();
 
-        if(!outputStack.isEmpty()){
+        if (!outputStack.isEmpty()) {
             level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1.0, worldPosition.getZ(), outputStack.copy()));
         }
         for (ItemStack i : remainingItems) {
-            if(!i.isEmpty()) {
+            if (!i.isEmpty()) {
                 level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1.0, worldPosition.getZ(), i.copy()));
             }
         }
@@ -101,13 +101,13 @@ public class CraftingManager {
         tag.putBoolean("completed", craftCompleted);
     }
 
-    public void read(HolderLookup.Provider provider, CompoundTag tag){
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
         outputStack = ItemStack.parseOptional(provider, tag.getCompound("output_stack"));
         neededItems = NBTUtil.readItems(provider, tag, "progress");
         remainingItems = NBTUtil.readItems(provider, tag, "refund");
     }
 
-    public static CraftingManager fromTag(HolderLookup.Provider provider, CompoundTag tag){
+    public static CraftingManager fromTag(HolderLookup.Provider provider, CompoundTag tag) {
         CraftingManager craftingManager = tag.getBoolean("isPotion") ? new PotionCraftingManager() : new CraftingManager();
         craftingManager.read(provider, tag);
         return craftingManager;

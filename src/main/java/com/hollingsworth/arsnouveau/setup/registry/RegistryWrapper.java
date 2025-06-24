@@ -18,7 +18,7 @@ public class RegistryWrapper<R, T extends R> implements Supplier<T>, ItemLike {
         this.registryObject = registryObject;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public T get() {
         return registryObject.get();
@@ -44,8 +44,8 @@ public class RegistryWrapper<R, T extends R> implements Supplier<T>, ItemLike {
         return registryObject.getId().getPath();
     }
 
-    public BlockState defaultBlockState(){
-        if(registryObject.get() instanceof Block block){
+    public BlockState defaultBlockState() {
+        if (registryObject.get() instanceof Block block) {
             return block.defaultBlockState();
         }
         throw new IllegalStateException("RegistryWrapper is not a Block");

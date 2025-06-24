@@ -58,7 +58,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
         }
     }
 
-    public boolean canConsumeEntireItem(ItemStack i){
+    public boolean canConsumeEntireItem(ItemStack i) {
         int sourceValue = getSourceValue(i);
         return this.getSource() + sourceValue <= this.getMaxSource();
     }
@@ -112,16 +112,16 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     }
 
     public BlockPos getTagInArea(TagKey<Block> block, int range) {
-        for(BlockPos blockPos : BlockPos.betweenClosed(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range))){
+        for (BlockPos blockPos : BlockPos.betweenClosed(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range))) {
             blockPos = blockPos.immutable();
             if (level.getBlockState(blockPos).is(block))
-               return blockPos;
+                return blockPos;
         }
         return null;
     }
 
     public BlockPos getBlockInArea(Block block, int range) {
-        for(BlockPos blockPos : BlockPos.betweenClosed(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range))){
+        for (BlockPos blockPos : BlockPos.betweenClosed(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range))) {
             if (level.getBlockState(blockPos).getBlock() == block)
                 return blockPos.immutable();
         }

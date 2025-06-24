@@ -19,7 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public record CodexData(Optional<UUID> uuid, String playerName, List<ResourceLocation> glyphIds) implements TooltipProvider {
+public record CodexData(Optional<UUID> uuid, String playerName,
+                        List<ResourceLocation> glyphIds) implements TooltipProvider {
     public static Codec<CodexData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(CodexData::uuid),
             Codec.STRING.optionalFieldOf("playerName", "").forGetter(CodexData::playerName),
@@ -32,13 +33,13 @@ public record CodexData(Optional<UUID> uuid, String playerName, List<ResourceLoc
             ByteBufCodecs.STRING_UTF8,
             CodexData::playerName,
             ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity)
-    ), CodexData::glyphIds, CodexData::new);
+            ), CodexData::glyphIds, CodexData::new);
 
     public CodexData(UUID uuid, String playerName, List<ResourceLocation> glyphIds) {
         this(Optional.of(uuid), playerName, glyphIds);
     }
 
-    public boolean wasRecorded(){
+    public boolean wasRecorded() {
         return uuid.isPresent() && playerName != null && !playerName.isEmpty();
     }
 

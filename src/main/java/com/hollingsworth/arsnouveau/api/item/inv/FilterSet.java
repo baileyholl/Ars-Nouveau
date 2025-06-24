@@ -22,20 +22,20 @@ public abstract class FilterSet {
      */
     public abstract ItemScroll.SortPref getHighestPreference(ItemStack stack);
 
-    public static FilterSet forPosition(Level level, BlockPos pos){
+    public static FilterSet forPosition(Level level, BlockPos pos) {
         List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
         IItemHandler inv = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-        if(inv == null){
+        if (inv == null) {
             return new FilterSet.ListSet(filters);
         }
         IFiltersetProvider filtersetProvider = level.getCapability(CapabilityRegistry.FILTERSET_CAPABILITY, pos, null);
-        if(filtersetProvider != null){
+        if (filtersetProvider != null) {
             return filtersetProvider.getFilterSet();
         }
 
         for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
             BlockPos attachedTo = i.blockPosition().relative(i.getDirection().getOpposite());
-            if(!attachedTo.equals(pos)){
+            if (!attachedTo.equals(pos)) {
                 continue;
             }
             ItemStack stackInFrame = i.getItem();
@@ -53,20 +53,20 @@ public abstract class FilterSet {
         return new FilterSet.ListSet(filters);
     }
 
-    public static class ListSet extends FilterSet{
+    public static class ListSet extends FilterSet {
         public List<Function<ItemStack, ItemScroll.SortPref>> filters;
 
-        public ListSet(){
+        public ListSet() {
             this.filters = new ArrayList<>();
         }
 
-        public ListSet(List<Function<ItemStack, ItemScroll.SortPref>> filters){
+        public ListSet(List<Function<ItemStack, ItemScroll.SortPref>> filters) {
             super();
             this.filters = filters;
         }
 
-        public boolean addFilterScroll(ItemStack scrollStack, IItemHandler itemHandler){
-            if(scrollStack.getItem() instanceof ItemScroll itemScroll){
+        public boolean addFilterScroll(ItemStack scrollStack, IItemHandler itemHandler) {
+            if (scrollStack.getItem() instanceof ItemScroll itemScroll) {
                 return filters.add(stackIn -> itemScroll.getSortPref(stackIn, scrollStack, itemHandler));
             }
             return false;
@@ -76,13 +76,13 @@ public abstract class FilterSet {
          * Returns the highest preference from a list of predicates, unless it is invalid.
          * Invalid overrules all other preferences, as the user does NOT want that item to be inserted.
          */
-        public ItemScroll.SortPref getHighestPreference(ItemStack stack){
+        public ItemScroll.SortPref getHighestPreference(ItemStack stack) {
             ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
-            for(Function<ItemStack, ItemScroll.SortPref> filter : filters){
+            for (Function<ItemStack, ItemScroll.SortPref> filter : filters) {
                 ItemScroll.SortPref newPref = filter.apply(stack);
-                if(newPref == ItemScroll.SortPref.INVALID){
+                if (newPref == ItemScroll.SortPref.INVALID) {
                     return ItemScroll.SortPref.INVALID;
-                }else if(newPref.ordinal() > pref.ordinal()){
+                } else if (newPref.ordinal() > pref.ordinal()) {
                     pref = newPref;
                 }
             }
@@ -90,18 +90,18 @@ public abstract class FilterSet {
         }
     }
 
-    public static class Composite extends FilterSet{
+    public static class Composite extends FilterSet {
         public List<FilterSet> filterSets;
 
-        public Composite(List<FilterSet> filterSets){
+        public Composite(List<FilterSet> filterSets) {
             this.filterSets = filterSets;
         }
 
-        public Composite(){
+        public Composite() {
             this.filterSets = new ArrayList<>();
         }
 
-        public Composite withFilter(FilterSet filterSet){
+        public Composite withFilter(FilterSet filterSet) {
             this.filterSets.add(filterSet);
             return this;
         }
@@ -110,13 +110,13 @@ public abstract class FilterSet {
          * Returns the highest preference from a list of predicates, unless it is invalid.
          * Invalid overrules all other preferences, as the user does NOT want that item to be inserted.
          */
-        public ItemScroll.SortPref getHighestPreference(ItemStack stack){
+        public ItemScroll.SortPref getHighestPreference(ItemStack stack) {
             ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
-            for(FilterSet filterSet : filterSets){
+            for (FilterSet filterSet : filterSets) {
                 ItemScroll.SortPref newPref = filterSet.getHighestPreference(stack);
-                if(newPref == ItemScroll.SortPref.INVALID){
+                if (newPref == ItemScroll.SortPref.INVALID) {
                     return ItemScroll.SortPref.INVALID;
-                }else if(newPref.ordinal() > pref.ordinal()){
+                } else if (newPref.ordinal() > pref.ordinal()) {
                     pref = newPref;
                 }
             }

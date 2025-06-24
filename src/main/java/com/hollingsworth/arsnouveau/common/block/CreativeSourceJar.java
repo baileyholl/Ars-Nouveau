@@ -27,6 +27,6 @@ public class CreativeSourceJar extends SourceJar {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness",100));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", 100));
     }
 }

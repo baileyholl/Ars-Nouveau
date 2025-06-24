@@ -48,7 +48,7 @@ public class FishingRodRenderer extends GeoItemRenderer<EnchantersFishingRod> {
     public Color getRenderColor(EnchantersFishingRod animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
         var caster = SpellCasterRegistry.from(currentItemStack);
-        if (caster != null){
+        if (caster != null) {
             color = caster.getColor();
         }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);

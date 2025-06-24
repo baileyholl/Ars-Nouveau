@@ -166,7 +166,7 @@ public class ItemsRegistry {
         flask.withTooltip(Component.translatable("tooltip.potion_flask_extend_time"));
         return flask;
     });
-    public static ItemRegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () ->{
+    public static ItemRegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> {
         ExperienceGem gem = new ExperienceGem() {
             @Override
             public int getValue() {
@@ -176,7 +176,7 @@ public class ItemsRegistry {
         gem.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem"));
         return gem;
     });
-    public static ItemRegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () ->{
+    public static ItemRegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> {
         ExperienceGem gem = new ExperienceGem() {
             @Override
             public int getValue() {
@@ -190,7 +190,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, EnchantersShield::new);
     public static final ItemRegistryWrapper<CasterTome> CASTER_TOME = register(LibItemNames.CASTER_TOME, CasterTome::new);
     public static final ItemRegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, DrygmyCharm::new);
-    public static final ItemRegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")).    withTooltip(Component.translatable("tooltip.drygmy_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
+    public static final ItemRegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")).withTooltip(Component.translatable("tooltip.drygmy_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
     public static final ItemRegistryWrapper<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem(defaultItemProperties().fireResistant()).withTooltip(Component.translatable("tooltip.ars_nouveau.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
     public static final ItemRegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, SummoningFocus::new);
     public static final ItemRegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)));
@@ -271,11 +271,11 @@ public class ItemsRegistry {
             helper.register(holder.getRegistryName(), script);
         }
 
-        for(IPerk perk : PerkRegistry.getPerkMap().values()) {
+        for (IPerk perk : PerkRegistry.getPerkMap().values()) {
             PerkItem perkItem = new PerkItem(perk);
             PerkRegistry.getPerkItemMap().put(perk.getRegistryName(), perkItem);
             helper.register(perk.getRegistryName(), perkItem);
-            if(perk instanceof EmptyPerk){
+            if (perk instanceof EmptyPerk) {
                 BLANK_THREAD = perkItem;
             }
         }

@@ -20,7 +20,7 @@ public interface IPotionProvider {
 
     int maxUses(ItemStack stack);
 
-    default int roomLeft(ItemStack stack){
+    default int roomLeft(ItemStack stack) {
         return maxUses(stack) - usesRemaining(stack);
     }
 
@@ -48,12 +48,12 @@ public interface IPotionProvider {
         }
     }
 
-    default void addTooltip(ItemStack stack, List<Component> tooltips){
+    default void addTooltip(ItemStack stack, List<Component> tooltips) {
         PotionContents potionStack = getPotionData(stack);
         potionStack.addPotionTooltip(tooltips::add, 1.0F, 20.0f);
     }
 
-    default boolean isEmpty(ItemStack stack){
+    default boolean isEmpty(ItemStack stack) {
         return PotionUtil.isEmpty(getPotionData(stack)) || usesRemaining(stack) <= 0;
     }
 }

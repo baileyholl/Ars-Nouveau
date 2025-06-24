@@ -56,7 +56,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     protected @NotNull SourceStorage createDefaultStorage() {
-        return new SourceStorage(10000000, 10000000, 0, 0){
+        return new SourceStorage(10000000, 10000000, 0, 0) {
             @Override
             public boolean canProvideSource(int source) {
                 return false;

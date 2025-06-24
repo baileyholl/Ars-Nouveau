@@ -29,29 +29,31 @@ public abstract class ChangeableBehavior implements IWandable {
         this.entity = entity;
     }
 
-    public void tick(){
+    public void tick() {
 
     }
 
-    public void getTooltip(Consumer<Component> tooltip){}
+    public void getTooltip(Consumer<Component> tooltip) {
+    }
 
     public CompoundTag toTag(CompoundTag tag) {
         return tag;
     }
 
-    public double getX(){
+    public double getX() {
         return entity.getX();
     }
 
-    public double getY(){
+    public double getY() {
         return entity.getY();
     }
 
-    public double getZ(){
+    public double getZ() {
         return entity.getZ();
     }
 
-    public void pickUpItem(ItemEntity entity) {}
+    public void pickUpItem(ItemEntity entity) {
+    }
 
     public abstract ResourceLocation getRegistryName();
 
@@ -59,7 +61,7 @@ public abstract class ChangeableBehavior implements IWandable {
         return InteractionResult.PASS;
     }
 
-    public ItemStack getStackForRender(){
+    public ItemStack getStackForRender() {
         return ItemStack.EMPTY;
     }
 
@@ -71,7 +73,7 @@ public abstract class ChangeableBehavior implements IWandable {
         return true;
     }
 
-    public void syncTag(){
+    public void syncTag() {
 
     }
 }

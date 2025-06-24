@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -29,29 +28,29 @@ public class AdoptCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-adopted")
-            .requires(sender -> sender.hasPermission(2))
-            .then(
-                Commands.literal("by-name")
-                    .then(
-                        Commands.argument("name", StringArgumentType.greedyString())
-                            .suggests(BY_NAME)
-                                .executes(ctx -> {
-                                    Rewards.ContributorStarby starby = getStarbuncle(starbuncle -> starbuncle.name, StringArgumentType.getString(ctx, "name"));
-                                    return spawnStarbuncle(ctx.getSource(), starby);
-                                })
-                    )
-            )
-            .then(
-                Commands.literal("by-adopter")
-                    .then(
-                        Commands.argument("adopter", StringArgumentType.greedyString())
-                            .suggests(BY_ADOPTER)
-                            .executes(ctx -> {
-                                Rewards.ContributorStarby starby = getStarbuncle(starbuncle -> starbuncle.adopter, StringArgumentType.getString(ctx, "adopter"));
-                                return spawnStarbuncle(ctx.getSource(), starby);
-                            })
-                    )
-            )
+                .requires(sender -> sender.hasPermission(2))
+                .then(
+                        Commands.literal("by-name")
+                                .then(
+                                        Commands.argument("name", StringArgumentType.greedyString())
+                                                .suggests(BY_NAME)
+                                                .executes(ctx -> {
+                                                    Rewards.ContributorStarby starby = getStarbuncle(starbuncle -> starbuncle.name, StringArgumentType.getString(ctx, "name"));
+                                                    return spawnStarbuncle(ctx.getSource(), starby);
+                                                })
+                                )
+                )
+                .then(
+                        Commands.literal("by-adopter")
+                                .then(
+                                        Commands.argument("adopter", StringArgumentType.greedyString())
+                                                .suggests(BY_ADOPTER)
+                                                .executes(ctx -> {
+                                                    Rewards.ContributorStarby starby = getStarbuncle(starbuncle -> starbuncle.adopter, StringArgumentType.getString(ctx, "adopter"));
+                                                    return spawnStarbuncle(ctx.getSource(), starby);
+                                                })
+                                )
+                )
         );
     }
 

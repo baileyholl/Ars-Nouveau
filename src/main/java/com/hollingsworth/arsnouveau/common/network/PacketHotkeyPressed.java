@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-public class PacketHotkeyPressed extends AbstractPacket{
+public class PacketHotkeyPressed extends AbstractPacket {
     public static final Type<PacketHotkeyPressed> TYPE = new Type<>(ArsNouveau.prefix("hotkey_pressed"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketHotkeyPressed> CODEC = StreamCodec.ofMember(PacketHotkeyPressed::toBytes, PacketHotkeyPressed::new);
 

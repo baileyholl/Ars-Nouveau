@@ -32,7 +32,7 @@ public class EffectSenseMagic extends AbstractEffect implements IPotionEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof IPedestalMachine toHighlight){
+        if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof IPedestalMachine toHighlight) {
             toHighlight.lightPedestal(world);
         }
     }

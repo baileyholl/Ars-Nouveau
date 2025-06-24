@@ -30,17 +30,17 @@ public class WildenStalkerModel extends GeoModel<WildenStalker> {
 
     @Override
     public ResourceLocation getModelResource(WildenStalker wildenStalker) {
-        return ArsNouveau.prefix( "geo/wilden_stalker.geo.json");
+        return ArsNouveau.prefix("geo/wilden_stalker.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WildenStalker wildenStalker) {
-        return ArsNouveau.prefix( "textures/entity/wilden_stalker.png");
+        return ArsNouveau.prefix("textures/entity/wilden_stalker.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WildenStalker wildenStalker) {
-        return ArsNouveau.prefix( "animations/wilden_stalker_animations.json");
+        return ArsNouveau.prefix("animations/wilden_stalker_animations.json");
     }
 
 }

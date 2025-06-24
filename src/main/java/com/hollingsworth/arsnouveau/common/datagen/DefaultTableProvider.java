@@ -195,9 +195,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
                 registerDropSelf(BlockRegistry.getBlock(s));
-                Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
+                Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs"));
                 registerDropSelf(block);
-                Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
+                Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab"));
                 registerDropSelf(slab);
 
             }
@@ -247,7 +247,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SOURCEBERRY_SACK.get());
             LootItemCondition.Builder lootitemcondition$builder1 = LootItemBlockStatePropertyCondition.hasBlockStateProperties(BlockRegistry.MAGE_BLOOM_CROP.get())
                     .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CropBlock.AGE, 7));
-            add(BlockRegistry.MAGE_BLOOM_CROP.get(), createCropDrops(BlockRegistry.MAGE_BLOOM_CROP.get(), ItemsRegistry.MAGE_BLOOM.asItem(), BlockRegistry.MAGE_BLOOM_CROP.get().asItem(),lootitemcondition$builder1, 0));
+            add(BlockRegistry.MAGE_BLOOM_CROP.get(), createCropDrops(BlockRegistry.MAGE_BLOOM_CROP.get(), ItemsRegistry.MAGE_BLOOM.asItem(), BlockRegistry.MAGE_BLOOM_CROP.get().asItem(), lootitemcondition$builder1, 0));
 
             this.add(
                     BlockRegistry.SOURCEBERRY_BUSH.get(),
@@ -413,7 +413,7 @@ public class DefaultTableProvider extends LootTableProvider {
     public static class EntityLootTable extends EntityLootSubProvider {
         private final Map<EntityType<?>, Map<ResourceKey<LootTable>, LootTable.Builder>> map = Maps.newHashMap();
 
-        protected EntityLootTable(HolderLookup.Provider pRegistries){
+        protected EntityLootTable(HolderLookup.Provider pRegistries) {
             super(FeatureFlags.REGISTRY.allFlags(), pRegistries);
         }
 

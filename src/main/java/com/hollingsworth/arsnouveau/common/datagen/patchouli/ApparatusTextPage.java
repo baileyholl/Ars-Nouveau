@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
 
-public class ApparatusTextPage extends ApparatusPage{
+public class ApparatusTextPage extends ApparatusPage {
 
     public ApparatusTextPage(String recipe) {
         super(recipe);
@@ -17,6 +17,6 @@ public class ApparatusTextPage extends ApparatusPage{
 
     @Override
     public ResourceLocation getType() {
-        return ArsNouveau.prefix( "no_output_apparatus_recipe");
+        return ArsNouveau.prefix("no_output_apparatus_recipe");
     }
 }

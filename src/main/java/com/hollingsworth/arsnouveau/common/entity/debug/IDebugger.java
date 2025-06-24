@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 
 public interface IDebugger {
 
-    default void addEntityEvent(DebugEvent event){
+    default void addEntityEvent(DebugEvent event) {
         addEntityEvent(event, false);
     }
 

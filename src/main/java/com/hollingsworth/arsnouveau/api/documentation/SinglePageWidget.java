@@ -26,7 +26,7 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
         this.parent = parent;
     }
 
-    public List<AbstractWidget> getExtras(){
+    public List<AbstractWidget> getExtras() {
         return new ArrayList<>();
     }
 
@@ -35,7 +35,7 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
         tooltipStack = ItemStack.EMPTY;
     }
 
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick){
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
 
     }
 
@@ -54,8 +54,8 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
 
     }
 
-    public void setTooltipIfHovered(ItemStack stack){
-        if(stack.isEmpty()){
+    public void setTooltipIfHovered(ItemStack stack) {
+        if (stack.isEmpty()) {
             return;
         }
         this.tooltipStack = stack;
@@ -75,7 +75,7 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
         return object;
     }
 
-    public void addExportProperties(JsonObject object){
+    public void addExportProperties(JsonObject object) {
 
     }
 }

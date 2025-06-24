@@ -119,11 +119,11 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
                 }
             }
         }
-        if(!level.isClientSide && level.getGameTime() % 100 == 0){
+        if (!level.isClientSide && level.getGameTime() % 100 == 0) {
             playerTooFar = true;
             ServerLevel serverLevel = (ServerLevel) level;
-            for(ServerPlayer serverPlayer : serverLevel.players()){
-                if(BlockUtil.distanceFrom(serverPlayer.position(), this.position()) < 40){
+            for (ServerPlayer serverPlayer : serverLevel.players()) {
+                if (BlockUtil.distanceFrom(serverPlayer.position(), this.position()) < 40) {
                     playerTooFar = false;
                     break;
                 }
@@ -133,7 +133,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public boolean canCollideWith(Entity pEntity) {
-        if(pEntity instanceof Player)
+        if (pEntity instanceof Player)
             return false;
         return super.canCollideWith(pEntity);
     }
@@ -144,7 +144,8 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    protected void pushEntities() {}
+    protected void pushEntities() {
+    }
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float p_70097_2_) {
@@ -166,9 +167,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new TransferGoal(this));
-        this.goalSelector.addGoal(4, new RandomStorageVisitGoal(this, () ->{
+        this.goalSelector.addGoal(4, new RandomStorageVisitGoal(this, () -> {
             StorageLecternTile tile = getTile();
-            if(tile == null || playerTooFar){
+            if (tile == null || playerTooFar) {
                 return null;
             }
             List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(StorageLecternTile.HandlerPos::pos).toList());
@@ -181,7 +182,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public TransferTask getTransferTask() {
         StorageLecternTile tile = getTile();
-        if(tile != null){
+        if (tile != null) {
             return tile.getTransferTask();
         }
         return null;
@@ -210,7 +211,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     public void remove(RemovalReason pReason) {
         super.remove(pReason);
         StorageLecternTile tile = getTile();
-        if(tile != null){
+        if (tile != null) {
             tile.removeBookwyrm(this);
         }
     }
@@ -238,7 +239,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("lectern")){
+        if (tag.contains("lectern")) {
             lecternPos = BlockPos.of(tag.getLong("lectern"));
         }
         setHeldStack(ItemStack.parseOptional(registryAccess(), tag.getCompound("held")));
@@ -256,7 +257,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "walkController", 1, event ->{
+        data.add(new AnimationController<>(this, "walkController", 1, event -> {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
         }));
@@ -319,7 +320,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         if (color.isEmpty())
             color = "blue";
         String finalColor = color;
-        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix( "textures/entity/book_wyrm_" + finalColor + ".png"));
+        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix("textures/entity/book_wyrm_" + finalColor + ".png"));
     }
 
     @Override

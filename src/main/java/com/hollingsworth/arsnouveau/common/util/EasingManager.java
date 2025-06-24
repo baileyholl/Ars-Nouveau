@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.util;
 
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 
-
 import java.util.List;
 import java.util.function.Function;
 

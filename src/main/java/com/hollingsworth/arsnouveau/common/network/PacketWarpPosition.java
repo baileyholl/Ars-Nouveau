@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketWarpPosition extends AbstractPacket{
+public class PacketWarpPosition extends AbstractPacket {
     private final int entityID;
     double x;
     double y;

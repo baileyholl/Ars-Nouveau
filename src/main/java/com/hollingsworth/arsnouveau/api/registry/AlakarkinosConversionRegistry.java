@@ -35,7 +35,7 @@ public class AlakarkinosConversionRegistry {
     private static Set<Block> CONVERTABLE_BLOCKS = Set.of();
     private static Map<Block, WeightedRandomList<WeightedEntry.Wrapper<AlakarkinosRecipe>>> CONVERTABLE_BLOCKS_MAP = new HashMap<>();
 
-    public static List<AlakarkinosRecipe> getRecipes(){
+    public static List<AlakarkinosRecipe> getRecipes() {
         return Collections.unmodifiableList(RECIPES);
     }
 
@@ -97,7 +97,9 @@ public class AlakarkinosConversionRegistry {
                         Codec.INT.fieldOf("weight").forGetter(LootDrops::weight)
                 ).apply(instance, LootDrops::new)
         );
-    };
+    }
+
+    ;
 
     public record LootDrop(ItemStack item, float chance) {
         private static HashMap<ResourceKey<LootTable>, LootDrops> DROPS = new HashMap<>();

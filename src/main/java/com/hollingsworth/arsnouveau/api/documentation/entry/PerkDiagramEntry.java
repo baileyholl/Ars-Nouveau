@@ -23,11 +23,12 @@ public class PerkDiagramEntry extends SinglePageWidget {
     public ItemStack item2;
     public ItemStack item3;
     public ItemStack item4;
+
     public PerkDiagramEntry(BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(ItemLike item1, ItemLike item2, ItemLike item3, ItemLike item4){
+    public static SinglePageCtor create(ItemLike item1, ItemLike item2, ItemLike item3, ItemLike item4) {
         return (parent, x, y, width, height) -> {
             PerkDiagramEntry entry = new PerkDiagramEntry(parent, x, y, width, height);
             entry.item1 = item1.asItem().getDefaultInstance();
@@ -53,13 +54,13 @@ public class PerkDiagramEntry extends SinglePageWidget {
         DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.thread_tier", 3), guiGraphics, x + fontXOffset, y + fontYOffset + 30, width - 2, mouseX, mouseY, partialTick);
 
         int itemYOffset = 30;
-        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics,x + xOffset + 2, y + itemYOffset, mouseX, mouseY, item1));
+        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + xOffset + 2, y + itemYOffset, mouseX, mouseY, item1));
 
-        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics,x + xOffset + 2, y + itemYOffset + 19, mouseX, mouseY, item2));
+        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + xOffset + 2, y + itemYOffset + 19, mouseX, mouseY, item2));
 
-        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics,x + xOffset + 2, y + itemYOffset + 19 * 2, mouseX, mouseY, item3));
+        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + xOffset + 2, y + itemYOffset + 19 * 2, mouseX, mouseY, item3));
 
-        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics,x + xOffset + 2, y + itemYOffset + 19 * 3, mouseX, mouseY, item4));
+        setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + xOffset + 2, y + itemYOffset + 19 * 3, mouseX, mouseY, item4));
 
 
         int perkXOffset = 35;
@@ -71,24 +72,24 @@ public class PerkDiagramEntry extends SinglePageWidget {
 
     }
 
-    public void drawRow(GuiGraphics graphics, int x, int y, ItemStack stack){
+    public void drawRow(GuiGraphics graphics, int x, int y, ItemStack stack) {
         var provider = PerkRegistry.getPerkProvider(stack);
-        if(provider != null){
-            for(int tier = 0; tier < provider.size(); tier++){
+        if (provider != null) {
+            for (int tier = 0; tier < provider.size(); tier++) {
                 var levelOne = provider.get(tier);
-                int extraOffset = switch (tier){
+                int extraOffset = switch (tier) {
                     case 0 -> 0;
                     case 1 -> 6;
                     case 2 -> 20;
                     default -> 0;
                 };
-                drawSlotList(graphics, x + tier * 12 +extraOffset, y, levelOne);
+                drawSlotList(graphics, x + tier * 12 + extraOffset, y, levelOne);
             }
         }
     }
 
-    public void drawSlotList(GuiGraphics graphics, int x, int y, List<PerkSlot> perks){
-        for(int i = 0; i < perks.size(); i++){
+    public void drawSlotList(GuiGraphics graphics, int x, int y, List<PerkSlot> perks) {
+        for (int i = 0; i < perks.size(); i++) {
             var perk = perks.get(i);
             DocClientUtils.blit(graphics, perk.icon(), x + i * 8, y);
         }
@@ -97,7 +98,7 @@ public class PerkDiagramEntry extends SinglePageWidget {
     @Override
     public void addExportProperties(JsonObject object) {
         super.addExportProperties(object);
-        if(item1 != null){
+        if (item1 != null) {
             JsonArray perkData = getPerkRowExport(item1);
             JsonObject item1Data = new JsonObject();
             item1Data.addProperty(DocExporter.ITEM_PROPERTY, BuiltInRegistries.ITEM.getKey(item1.getItem()).toString());
@@ -105,7 +106,7 @@ public class PerkDiagramEntry extends SinglePageWidget {
             object.add("item1", item1Data);
         }
 
-        if(item2 != null){
+        if (item2 != null) {
             JsonArray perkData = getPerkRowExport(item2);
             JsonObject item2Data = new JsonObject();
             item2Data.addProperty(DocExporter.ITEM_PROPERTY, BuiltInRegistries.ITEM.getKey(item2.getItem()).toString());
@@ -113,7 +114,7 @@ public class PerkDiagramEntry extends SinglePageWidget {
             object.add("item2", item2Data);
         }
 
-        if(item3 != null){
+        if (item3 != null) {
             JsonArray perkData = getPerkRowExport(item3);
             JsonObject item3Data = new JsonObject();
             item3Data.addProperty(DocExporter.ITEM_PROPERTY, BuiltInRegistries.ITEM.getKey(item3.getItem()).toString());
@@ -121,7 +122,7 @@ public class PerkDiagramEntry extends SinglePageWidget {
             object.add("item3", item3Data);
         }
 
-        if(item4 != null){
+        if (item4 != null) {
             JsonArray perkData = getPerkRowExport(item4);
             JsonObject item4Data = new JsonObject();
             item4Data.addProperty(DocExporter.ITEM_PROPERTY, BuiltInRegistries.ITEM.getKey(item4.getItem()).toString());
@@ -131,16 +132,16 @@ public class PerkDiagramEntry extends SinglePageWidget {
 
     }
 
-    public JsonArray getPerkRowExport(ItemStack stack){
+    public JsonArray getPerkRowExport(ItemStack stack) {
         var provider = PerkRegistry.getPerkProvider(stack);
         JsonArray tiersData = new JsonArray();
-        if(provider != null){
-            for(int tier = 0; tier < provider.size(); tier++){
+        if (provider != null) {
+            for (int tier = 0; tier < provider.size(); tier++) {
                 JsonObject tierData = new JsonObject();
                 tierData.addProperty("tier", tier);
 
                 JsonArray perkSlots = new JsonArray();
-                for(PerkSlot slot : provider.get(tier)){
+                for (PerkSlot slot : provider.get(tier)) {
                     perkSlots.add(slot.value());
                 }
                 tierData.add("perks", perkSlots);

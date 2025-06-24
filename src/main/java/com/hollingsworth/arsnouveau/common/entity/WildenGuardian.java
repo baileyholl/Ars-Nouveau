@@ -97,7 +97,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(pSource.is(DamageTypes.DROWN)){
+        if (pSource.is(DamageTypes.DROWN)) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -118,12 +118,12 @@ public class WildenGuardian extends Monster implements GeoEntity {
             if (armorCooldown > 0)
                 armorCooldown--;
         }
-        if(isArmored() && !this.level.isClientSide){
+        if (isArmored() && !this.level.isClientSide) {
             this.getNavigation().stop();
         }
     }
 
-    public void explodeSpikes(){
+    public void explodeSpikes() {
         for (int i = 0; i < 20; i++) {
             EntityChimeraProjectile entity = new EntityChimeraProjectile(level);
             entity.shootFromRotation(this, level.random.nextInt(360), level.random.nextInt(360), 0.0f, (float) (1.0F + ParticleUtil.inRange(0.0, 0.5)), 1.0F);
@@ -143,10 +143,10 @@ public class WildenGuardian extends Monster implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {
-        if(this.isArmored()){
+        if (this.isArmored()) {
             return PlayState.STOP;
         }
-        if(tAnimationState.isMoving()){
+        if (tAnimationState.isMoving()) {
             tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
@@ -154,10 +154,10 @@ public class WildenGuardian extends Monster implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
-        if(this.isArmored()){
+        if (this.isArmored()) {
             return PlayState.STOP;
         }
-        if(tAnimationState.isMoving()){
+        if (tAnimationState.isMoving()) {
             return PlayState.STOP;
         }
         tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
@@ -171,7 +171,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
     }
 
     private PlayState defendPredicate(AnimationState<?> event) {
-        if(this.isArmored()){
+        if (this.isArmored()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("defending"));
             return PlayState.CONTINUE;
         }
@@ -181,6 +181,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
     AnimationController<WildenGuardian> controller;
     AnimationController<WildenGuardian> runController;
     AnimationController<WildenGuardian> idleController;
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         controller = new AnimationController<>(this, "attackController", 1, this::defendPredicate);

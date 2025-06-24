@@ -15,6 +15,7 @@ public class GoToBedGoal extends Goal {
     BlockPos bedPos;
     public StarbyBehavior behavior;
     public int ticksRunning;
+
     public GoToBedGoal(Starbuncle starbuncle, StarbyBehavior behavior) {
         this.starbuncle = starbuncle;
         this.behavior = behavior;
@@ -23,19 +24,19 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if(ticksRunning >= 20 * 15){
+        if (ticksRunning >= 20 * 15) {
             starbuncle.addGoalDebug(this, new DebugEvent("BedTimeout", "Took too long to find bed"));
             starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
             return false;
         }
 
-        if(bedPos == null || starbuncle.data.bedPos == null)
+        if (bedPos == null || starbuncle.data.bedPos == null)
             return false;
 
         boolean bedValid = true;
         boolean isOnBed = false;
         // Time defer these checks otherwise we will destroy TPS with blockstate lookups.
-        if(starbuncle.level.getGameTime() % 10 == 0){
+        if (starbuncle.level.getGameTime() % 10 == 0) {
             bedValid = isBedValid();
             isOnBed = isOnBed();
         }
@@ -78,7 +79,7 @@ public class GoToBedGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if(starbuncle.level.random.nextInt(2) == 0){
+        if (starbuncle.level.random.nextInt(2) == 0) {
             return false;
         }
         bedPos = starbuncle.data.bedPos;
@@ -86,22 +87,22 @@ public class GoToBedGoal extends Goal {
                 || starbuncle.goalState != Starbuncle.StarbuncleGoalState.NONE
                 || bedPos == null
                 || !behavior.canGoToBed()) {
-            starbuncle.addGoalDebug(this, new DebugEvent("CannotSleep","Bed not valid" + " backoff: " + starbuncle.getBedBackoff()));
+            starbuncle.addGoalDebug(this, new DebugEvent("CannotSleep", "Bed not valid" + " backoff: " + starbuncle.getBedBackoff()));
             return false;
         }
         boolean canRun = isBedValid() && !isOnBed();
-        if(!canRun){
+        if (!canRun) {
             starbuncle.setBedBackoff(20 * 3);
             starbuncle.addGoalDebug(this, new DebugEvent("InvalidBed", "Bed position invalid"));
         }
         return canRun;
     }
 
-    public boolean isBedValid(){
+    public boolean isBedValid() {
         return starbuncle.level.isLoaded(bedPos) && starbuncle.level.getBlockState(new BlockPos(bedPos)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 
-    public boolean isOnBed(){
+    public boolean isOnBed() {
         return starbuncle.level.getBlockState(BlockPos.containing(starbuncle.position)).is(BlockTagProvider.SUMMON_SLEEPABLE);
     }
 

@@ -146,7 +146,7 @@ public class ClientEvents {
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
-        for (var tooltip: ClientInfo.storageTooltip) {
+        for (var tooltip : ClientInfo.storageTooltip) {
             event.getToolTip().add(tooltip);
         }
     }

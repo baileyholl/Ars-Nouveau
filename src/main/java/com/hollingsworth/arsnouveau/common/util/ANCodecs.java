@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec2;
 
@@ -23,35 +26,68 @@ public class ANCodecs {
             Codec.FLOAT.fieldOf("y").forGetter(v -> v.y)
     ).apply(instance, Vec2::new));
 
-    public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value){
+    public static StreamCodec<RegistryFriendlyByteBuf, Vec2> VEC2_STREAM = StreamCodec.composite(
+            ByteBufCodecs.FLOAT,
+            (i) -> i.x,
+            ByteBufCodecs.FLOAT,
+            i -> i.y,
+            Vec2::new
+    );
+
+    public static <T extends Enum<T>> Codec<T> createEnumCodec(Class<T> enumClass) {
+        return Codec.STRING.flatXmap(
+                name -> {
+                    try {
+                        T e = Enum.valueOf(enumClass, name);
+                        return DataResult.success(e);
+                    } catch (IllegalArgumentException ignored) {
+                        return DataResult.error(() -> "Unknown enum name: '" + name + "' for enum class: " + enumClass);
+                    }
+                },
+                e -> {
+                    String name = e.name();
+                    return DataResult.success(name);
+                }
+        );
+    }
+
+    public static <T extends Enum<T>> StreamCodec<RegistryFriendlyByteBuf, T> createEnumStreamCodec(Class<T> enumClass) {
+        return StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8,
+                Enum::name,
+                stringName -> Enum.valueOf(enumClass, stringName)
+        );
+    }
+
+    public static <T> Tag encode(HolderLookup.Provider provider, Codec<T> codec, T value) {
         return codec.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();
     }
 
-    public static <T> Tag encode(Codec<T> codec, T value){
+    public static <T> Tag encode(Codec<T> codec, T value) {
         return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow();
     }
 
-    public static <T> T decode(Codec<T> codec, Tag tag){
+    public static <T> T decode(Codec<T> codec, Tag tag) {
         return codec.parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
 
-    public static <T> T decode(HolderLookup.Provider provider, Codec<T> codec, Tag tag){
+    public static <T> T decode(HolderLookup.Provider provider, Codec<T> codec, Tag tag) {
         return codec.parse(provider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 
-    public static <T> Optional<T> decodeOptional(Codec<T> codec, Tag tag){
+    public static <T> Optional<T> decodeOptional(Codec<T> codec, Tag tag) {
         return codec.parse(NbtOps.INSTANCE, tag).result();
     }
 
-    public static <T> JsonElement toJson(Codec<T> codec, T value){
+    public static <T> JsonElement toJson(Codec<T> codec, T value) {
         return codec.encodeStart(JsonOps.INSTANCE, value).getOrThrow();
     }
 
     /**
      * Creates an unbounded map codec that uses integer keys.
      */
-    public static <MapVal, Obj> Codec<Obj> intMap(Codec<MapVal> codec, Function<Map<Integer, MapVal>, Obj> constructor, Function<Obj, Map<Integer, MapVal>> intMap){
-        return Codec.unboundedMap(Codec.STRING, codec).xmap((stringMap) ->{
+    public static <MapVal, Obj> Codec<Obj> intMap(Codec<MapVal> codec, Function<Map<Integer, MapVal>, Obj> constructor, Function<Obj, Map<Integer, MapVal>> intMap) {
+        return Codec.unboundedMap(Codec.STRING, codec).xmap((stringMap) -> {
             var builder = ImmutableMap.<Integer, MapVal>builder();
             stringMap.forEach((key, value) -> builder.put(Integer.parseInt(key), value));
             return constructor.apply(builder.build());

@@ -9,7 +9,7 @@ public class ANEventBus {
     /**
      * Returns true if the event is canceled
      */
-    public static <T extends Event & ICancellableEvent> boolean post(T cancellableEvent){
+    public static <T extends Event & ICancellableEvent> boolean post(T cancellableEvent) {
         return NeoForge.EVENT_BUS.post(cancellableEvent).isCanceled();
     }
 }

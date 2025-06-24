@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 
 public class SpellSchools {
-    
+
     public static final SpellSchool ABJURATION = new SpellSchool("abjuration", DocAssets.ALCHEMANCY_ICON);
     public static final SpellSchool CONJURATION = new SpellSchool("conjuration", DocAssets.CONJURATION_ICON);
     public static final SpellSchool NECROMANCY = new SpellSchool("necromancy");

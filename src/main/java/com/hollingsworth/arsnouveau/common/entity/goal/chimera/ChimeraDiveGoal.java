@@ -111,8 +111,8 @@ public class ChimeraDiveGoal extends Goal {
         boss.diving = false;
         finished = true;
         ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CHIMERA_EXPLOSION.get(), (ServerLevel) boss.level, BlockPos.containing(boss.position().x, boss.position.y, boss.position.z), 10);
-        for(int i = 0; i < 40; i++){
-            if(!boss.level.getBlockState(boss.getOnPos().below(i)).isAir()){
+        for (int i = 0; i < 40; i++) {
+            if (!boss.level.getBlockState(boss.getOnPos().below(i)).isAir()) {
                 boss.setPos(boss.getX(), boss.getY() - i, boss.getZ());
                 boss.setOnGround(true);
                 return;
@@ -123,12 +123,12 @@ public class ChimeraDiveGoal extends Goal {
     public void makeExplosion() {
         //TODO: restore destructive chimera config
         boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, Level.ExplosionInteraction.MOB);
-        if(boss.hasSpikes()) {
+        if (boss.hasSpikes()) {
             ChimeraSpikeGoal.spawnAOESpikes(boss);
         }
     }
 
-    public void tearDownNavigation(){
+    public void tearDownNavigation() {
         boss.getNavigation().setCanFloat(false);
         boss.getNavigation().stop();
         boss.setFlying(false);
@@ -140,7 +140,7 @@ public class ChimeraDiveGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         boolean canContinue = !finished && !boss.getPhaseSwapping();
-        if(!canContinue){
+        if (!canContinue) {
             tearDownNavigation();
         }
         return canContinue;

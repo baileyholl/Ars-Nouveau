@@ -34,7 +34,7 @@ public class DroplessMobsCommand {
             // This subcommand requires op as with enough simulations and entity types, it can get quite slow.
             int times = IntegerArgumentType.getInteger(c, "times");
             c.getSource().sendSystemMessage(Component.literal(listDroplessEntities(c.getSource().getServer().reloadableRegistries(), c.getSource().getLevel(), times).stream().map(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e).toString()).collect(Collectors.joining(","))));
-            c.getSource().sendSystemMessage(Component.literal("Listed mobs that produced no drops after " + times +  " simulations, open your logs if you want to copy them."));
+            c.getSource().sendSystemMessage(Component.literal("Listed mobs that produced no drops after " + times + " simulations, open your logs if you want to copy them."));
 
             return 1;
         }))));
@@ -46,7 +46,8 @@ public class DroplessMobsCommand {
         ObjectArrayList<ItemStack> stacks = simulations <= 0 ? null : new ObjectArrayList<>();
 
         ObjectArrayList<EntityType<?>> types = new ObjectArrayList<>();
-        outer: for (EntityType<?> ty : BuiltInRegistries.ENTITY_TYPE) {
+        outer:
+        for (EntityType<?> ty : BuiltInRegistries.ENTITY_TYPE) {
             Entity e;
             try {
                 e = ty.create(level);

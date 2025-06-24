@@ -31,7 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable, LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
+public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable,
+                                 LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
 
     public boolean matches(LivingEntity killer, Entity victim) {
         if (!victim.getType().equals(this.entity)) return false;

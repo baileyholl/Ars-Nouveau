@@ -130,7 +130,7 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -153,7 +153,7 @@ public class EffectFangs extends AbstractEffect implements IDamageEffect {
         return "Summons Evoker Fangs in the direction where the spell was targeted. Using fangs on your self will spawn them in an area around you.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

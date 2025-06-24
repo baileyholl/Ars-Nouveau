@@ -31,7 +31,7 @@ public class PedestalRecipeEntry extends SinglePageWidget {
         this.image = image;
     }
 
-    public PedestalRecipeEntry(BaseDocScreen parent, int x, int y, int width, int height){
+    public PedestalRecipeEntry(BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         ingredients = new ArrayList<>();
         outputStack = ItemStack.EMPTY;
@@ -42,9 +42,9 @@ public class PedestalRecipeEntry extends SinglePageWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-        DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX,mouseY, partialTick);
+        DocClientUtils.drawHeader(title, guiGraphics, x, y, width, mouseX, mouseY, partialTick);
         int yOffset = 24;
-        DocClientUtils.blit(guiGraphics, image,x + 13, y + yOffset);
+        DocClientUtils.blit(guiGraphics, image, x + 13, y + yOffset);
 
         int degreePerInput = (int) (360F / ingredients.size());
         float currentDegree = spinning ? ClientInfo.ticksInGame + partialTick : 0;
@@ -52,9 +52,9 @@ public class PedestalRecipeEntry extends SinglePageWidget {
             int renderX = x + 19;
             int renderY = y + yOffset + 2;
             setTooltipIfHovered(DocClientUtils.renderIngredientAtAngle(guiGraphics, renderX, renderY, mouseX, mouseY, currentDegree, input));
-            double itemX =  (renderX + DocClientUtils.nextXAngle(currentDegree - 90, 41));
-            double itemY =  (renderY + DocClientUtils.nextYAngle(currentDegree - 90, 41));
-            if(drawPedestals) {
+            double itemX = (renderX + DocClientUtils.nextXAngle(currentDegree - 90, 41));
+            double itemY = (renderY + DocClientUtils.nextYAngle(currentDegree - 90, 41));
+            if (drawPedestals) {
                 PoseStack poseStack = guiGraphics.pose();
                 poseStack.pushPose();
                 poseStack.translate(itemX - 3, itemY - 3, 0);
@@ -64,7 +64,7 @@ public class PedestalRecipeEntry extends SinglePageWidget {
             currentDegree += degreePerInput;
         }
 
-        if(!reagentStack.isEmpty()){
+        if (!reagentStack.isEmpty()) {
             int itemX = x + width / 2 + 7;
             int itemY = y + yOffset + 33;
             setTooltipIfHovered(DocClientUtils.renderIngredient(guiGraphics, itemX, itemY, mouseX, mouseY, reagentStack));

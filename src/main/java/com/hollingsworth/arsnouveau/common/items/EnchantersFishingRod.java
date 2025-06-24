@@ -59,9 +59,9 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
         if (player.fishing != null) {
             if (!level.isClientSide) {
                 Entity hookedIn = player.fishing.getHookedIn();
-                if(hookedIn != null && player.fishing instanceof EnchantedHook enchantedHook){
+                if (hookedIn != null && player.fishing instanceof EnchantedHook enchantedHook) {
                     enchantedHook.castSpell();
-                }else {
+                } else {
                     int i = player.fishing.retrieve(itemstack);
                     ItemStack original = itemstack.copy();
                     itemstack.hurtAndBreak(i, player, LivingEntity.getSlotForHand(hand));
@@ -94,7 +94,7 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
                     0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
             );
             if (level instanceof ServerLevel serverlevel) {
-                int j = (int)(EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
+                int j = (int) (EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
                 int k = EnchantmentHelper.getFishingLuckBonus(serverlevel, itemstack, player);
                 ItemStack stack = player.getItemInHand(hand);
                 AbstractCaster<?> caster = getSpellCaster(stack);
@@ -160,6 +160,7 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;

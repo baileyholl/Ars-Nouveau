@@ -109,7 +109,7 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
 
             this.tag(EnchantmentTags.NON_TREASURE).addOptional(
-                    EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.location())
+                            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.location())
                     .addOptional(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.location());
             this.tag(EnchantmentTags.TRADEABLE).addOptional(
                     EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.location()).addOptional(

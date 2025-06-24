@@ -239,13 +239,18 @@ public class DominionWand extends ModItem implements IRadialProvider {
         return radialMenuSlots;
     }
 
-    public void playSoundFromResult(Level level, BlockPos at, IWandable.Result result){
-        switch (result){
-            case SUCCESS -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_SUCCESS.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            case FAIL -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_FAIL.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            case SELECT -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_SELECT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            case CLEAR -> level.playSound(null, at, SoundRegistry.DOMINION_WAND_CLEAR.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            default -> {}
+    public void playSoundFromResult(Level level, BlockPos at, IWandable.Result result) {
+        switch (result) {
+            case SUCCESS ->
+                    level.playSound(null, at, SoundRegistry.DOMINION_WAND_SUCCESS.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case FAIL ->
+                    level.playSound(null, at, SoundRegistry.DOMINION_WAND_FAIL.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case SELECT ->
+                    level.playSound(null, at, SoundRegistry.DOMINION_WAND_SELECT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            case CLEAR ->
+                    level.playSound(null, at, SoundRegistry.DOMINION_WAND_CLEAR.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            default -> {
+            }
         }
     }
 

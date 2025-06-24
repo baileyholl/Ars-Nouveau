@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.camera;
 
 import net.minecraft.client.multiplayer.ClientChunkCache;
-import net.minecraft.client.multiplayer.ClientChunkCache.Storage;
 
 /**
  * https://github.com/Geforce132/SecurityCraft/blob/34699802f2ab334ab3e3f5e6412a5d74879b8ba8/src/main/java/net/geforcemods/securitycraft/misc/IChunkStorageProvider.java

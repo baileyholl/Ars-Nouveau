@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class Perk implements IPerk{
+public abstract class Perk implements IPerk {
     private ResourceLocation id;
 
     public Perk(ResourceLocation key) {

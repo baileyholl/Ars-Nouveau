@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class SnareEffect extends MobEffect {
     public static final ResourceLocation SNARE_ATTR = ArsNouveau.prefix("snare_modifier");
+
     public SnareEffect() {
         super(MobEffectCategory.HARMFUL, 2039587);
         addAttributeModifier(Attributes.MOVEMENT_SPEED, SNARE_ATTR, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);

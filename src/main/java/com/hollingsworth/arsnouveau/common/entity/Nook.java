@@ -51,7 +51,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         super(pEntityType, pLevel);
     }
 
-    public Nook(Level level){
+    public Nook(Level level) {
         this(ModEntities.NOOK.get(), level);
     }
 
@@ -86,13 +86,13 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
-        if(!level.isClientSide){
-            if(level.getGameTime() % 20 == 0 && !ownerNookMap.containsValue(this.getUUID())){
+        if (!level.isClientSide) {
+            if (level.getGameTime() % 20 == 0 && !ownerNookMap.containsValue(this.getUUID())) {
                 this.remove(RemovalReason.DISCARDED);
             }
-            if( wagTicks > 0 && isWagging()){
+            if (wagTicks > 0 && isWagging()) {
                 wagTicks--;
-                if(wagTicks <= 0){
+                if (wagTicks <= 0) {
                     setWagging(false);
                 }
             }
@@ -165,7 +165,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(!(pSource.getEntity() instanceof Player)){
+        if (!(pSource.getEntity() instanceof Player)) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -195,21 +195,21 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController(this, "walk", 1, (event) -> {
-            if(event.isMoving()){
+            if (event.isMoving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
         data.add(new AnimationController(this, "idle", 1, (event) -> {
-            if(!event.isMoving() && !this.isWagging() && !this.isOrderedToSit()){
+            if (!event.isMoving() && !this.isWagging() && !this.isOrderedToSit()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
         data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
-            if(!event.isMoving() && this.isWagging()){
+            if (!event.isMoving() && this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wag"));
                 return PlayState.CONTINUE;
             }
@@ -217,14 +217,16 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         }));
 
         data.add(new AnimationController(this, "rest", 1, (event) -> {
-            if(!event.isMoving() && this.isOrderedToSit()){
+            if (!event.isMoving() && this.isOrderedToSit()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("sit"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
     }
+
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
@@ -232,7 +234,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if(caster.getUUID().equals(this.getOwnerUUID())) {
+        if (caster.getUUID().equals(this.getOwnerUUID())) {
             this.remove(RemovalReason.DISCARDED);
             return true;
         }
@@ -242,7 +244,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     @Override
     public void load(CompoundTag pCompound) {
         super.load(pCompound);
-        if(!ownerNookMap.containsKey(this.getOwnerUUID())) {
+        if (!ownerNookMap.containsKey(this.getOwnerUUID())) {
             Nook.ownerNookMap.put(this.getOwnerUUID(), this.getUUID());
         }
     }

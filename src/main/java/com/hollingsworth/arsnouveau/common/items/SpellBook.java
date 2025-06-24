@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
+import com.hollingsworth.arsnouveau.client.gui.radial_menu.SecondaryIconPosition;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
@@ -66,6 +67,12 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
+//        var caster2 = SpellCasterRegistry.from(stack);
+//        caster2.getSpell().particleTimeline().debugPrintHash(caster2.getSpell(), worldIn);
+//        var timeline = caster2.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+//        var element = IParticleTimeline.CODEC.encodeStart(JsonOps.INSTANCE, timeline);
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        System.out.println(gson.toJson(element.result().get()));
         if (playerIn instanceof ServerPlayer) {
             if (tier != SpellTier.CREATIVE) {
                 var iMana = CapabilityRegistry.getMana(playerIn);
@@ -106,7 +113,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
     @Override
     public void appendHoverText(final @NotNull ItemStack stack, final @NotNull TooltipContext world, final @NotNull List<Component> tooltip, final @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        if(ArsNouveau.proxy.isClientSide()) {
+        if (ArsNouveau.proxy.isClientSide()) {
             tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
             tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
             tooltip.add(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
@@ -145,15 +152,15 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
         if (hand == null) {
             return;
         }
-        if(ArsNouveau.proxy.isClientSide()) {
-            ArsNouveau.proxy.getMinecraft().setScreen(new GuiSpellBook(hand));
+        if (player.level.isClientSide) {
+            GuiSpellBook.open(hand);
         }
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onRadialKeyPressed(ItemStack stack, Player player) {
-        if(ArsNouveau.proxy.isClientSide()) {
+        if (ArsNouveau.proxy.isClientSide()) {
             ArsNouveau.proxy.getMinecraft().setScreen(new GuiRadialMenu<>(getRadialMenuProviderForSpellpart(stack)));
         }
     }
@@ -167,6 +174,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IDyeable
             Networking.sendToServer(new PacketSetCasterSlot(slot));
         },
                 getRadialMenuSlotsForSpellpart(itemStack),
+                SecondaryIconPosition.NORTH,
                 RenderUtils::drawSpellPart,
                 0);
     }

@@ -706,20 +706,20 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         return this.entityData.get(COLOR);
     }
 
-    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>(){
+    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>() {
         {
             put("Gootastic", ArsNouveau.prefix("textures/entity/starbuncle_goo.png"));
             put("Sir Squirrely", ArsNouveau.prefix("textures/entity/sir_squirrely.png"));
             put("Zieg", ArsNouveau.prefix("textures/entity/zieg.png"));
             put("Xacris", ArsNouveau.prefix("textures/entity/xacris.png"));
             put("Xollus", ArsNouveau.prefix("textures/entity/starbuncle_jarva.png"));
-            for(DyeColor color : DyeColor.values()) {
+            for (DyeColor color : DyeColor.values()) {
                 put(color.getName(), ArsNouveau.prefix("textures/entity/starbuncle_" + color.getName().toLowerCase() + ".png"));
             }
         }
     };
 
-    public static Map<String, ResourceLocation> MODELS = new HashMap<>(){
+    public static Map<String, ResourceLocation> MODELS = new HashMap<>() {
         {
             put("Gootastic", ArsNouveau.prefix("geo/goobuncle.geo.json"));
             put("Sir Squirrely", ArsNouveau.prefix("geo/sir_squirrely.geo.json"));
@@ -733,7 +733,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public ResourceLocation getTexture() {
         var nameTexture = TEXTURES.get(this.getName().getString());
-        if(nameTexture != null){
+        if (nameTexture != null) {
             return nameTexture;
         }
         String color = getColor();
@@ -741,7 +741,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         return TEXTURES.get(color);
     }
 
-    public ResourceLocation getModel(){
+    public ResourceLocation getModel() {
         String key = getName().getString();
         return MODELS.getOrDefault(key, MODELS.get("starbuncle"));
     }

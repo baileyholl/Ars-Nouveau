@@ -42,6 +42,7 @@ public class PacketNoSpamChatMessage extends AbstractPacket {
         }
         AN_SIGNATURE = new MessageSignature(bytes);
     }
+
     /**
      * Creates a new packet to send a no-spam message to a player.
      * <p>

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 
-public class StorageItemHandler extends FilterableItemHandler{
+public class StorageItemHandler extends FilterableItemHandler {
 
     public StorageItemHandler(IItemHandler handler, FilterSet filters, SlotCache slotCache) {
         super(handler, filters);

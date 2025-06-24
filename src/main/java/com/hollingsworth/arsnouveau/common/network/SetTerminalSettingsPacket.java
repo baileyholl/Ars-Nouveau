@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 
-public class SetTerminalSettingsPacket extends AbstractPacket{
+public class SetTerminalSettingsPacket extends AbstractPacket {
 
     public static final Type<SetTerminalSettingsPacket> TYPE = new Type<>(ArsNouveau.prefix("terminal_settings"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SetTerminalSettingsPacket> CODEC = StreamCodec.composite(
@@ -53,7 +53,7 @@ public class SetTerminalSettingsPacket extends AbstractPacket{
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         super.onServerReceived(minecraftServer, player);
-        if (player.containerMenu instanceof StorageTerminalMenu terminalScreen){
+        if (player.containerMenu instanceof StorageTerminalMenu terminalScreen) {
             terminalScreen.receiveSettings(player, settings, selectedTab);
         }
     }

@@ -34,8 +34,8 @@ public class ShaderRegistry extends RenderType {
     }
 
     public static final RenderType SKY_RENDER_TYPE = RenderType.create(ArsNouveau.MODID + "_sky", DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder()
-            .setShaderState(new RenderStateShard.ShaderStateShard(()-> ClientInfo.skyShader))
-            .setTextureState(new RenderStateShard.EmptyTextureStateShard(()->{
+            .setShaderState(new RenderStateShard.ShaderStateShard(() -> ClientInfo.skyShader))
+            .setTextureState(new RenderStateShard.EmptyTextureStateShard(() -> {
 
                 RenderSystem.setShaderTexture(0, ClientInfo.skyRenderTarget.getColorTextureId());
             }, () -> {
@@ -77,9 +77,9 @@ public class ShaderRegistry extends RenderType {
 
     @SubscribeEvent
     public static void shaderRegistry(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "rainbow_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.rainbowShader = s);
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix( "blamed_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.blameShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix("sky"), DefaultVertexFormat.POSITION), s -> ClientInfo.skyShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix("rainbow_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.rainbowShader = s);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ArsNouveau.prefix("blamed_entity"), DefaultVertexFormat.NEW_ENTITY), s -> ClientInfo.blameShader = s);
     }
 
     private static <T, U, V, R> TriFunction<T, U, V, R> memoize(final TriFunction<T, U, V, R> pMemoBiFunction) {
@@ -99,16 +99,14 @@ public class ShaderRegistry extends RenderType {
     /**
      * Usable for rendering simple flat textures
      *
-     * @param  resLoc texture location
-     * @return        render type
+     * @param resLoc texture location
+     * @return render type
      */
-    public static RenderType worldEntityIcon(final ResourceLocation resLoc)
-    {
+    public static RenderType worldEntityIcon(final ResourceLocation resLoc) {
         return InnerRenderTypes.WORLD_ENTITY_ICON.apply(resLoc);
     }
 
-    public static final class InnerRenderTypes extends RenderType
-    {
+    public static final class InnerRenderTypes extends RenderType {
 
         private InnerRenderTypes(final String nameIn,
                                  final VertexFormat formatIn,
@@ -117,8 +115,7 @@ public class ShaderRegistry extends RenderType {
                                  final boolean useDelegateIn,
                                  final boolean needsSortingIn,
                                  final Runnable setupTaskIn,
-                                 final Runnable clearTaskIn)
-        {
+                                 final Runnable clearTaskIn) {
             super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
             throw new IllegalStateException();
         }

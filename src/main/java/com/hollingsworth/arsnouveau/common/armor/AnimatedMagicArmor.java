@@ -61,14 +61,14 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     }
 
     public static AnimatedMagicArmor medium(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot,ItemsRegistry.defaultItemProperties()
+        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot, ItemsRegistry.defaultItemProperties()
                 .stacksTo(1)
                 .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
                 .durability(slot.getDurability(25)), new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor heavy(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot,ItemsRegistry.defaultItemProperties()
+        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot, ItemsRegistry.defaultItemProperties()
                 .stacksTo(1)
                 .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
                 .durability(slot.getDurability(35)), new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
@@ -86,10 +86,10 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity player, int slotId, boolean pIsSelected) {
         super.inventoryTick(stack, world, player, slotId, pIsSelected);
-        if(slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.INVENTORY_SIZE + 4){
+        if (slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.INVENTORY_SIZE + 4) {
             if (world.isClientSide())
                 return;
-            if(player instanceof LivingEntity livingEntity) {
+            if (player instanceof LivingEntity livingEntity) {
                 RepairingPerk.attemptRepair(stack, livingEntity);
                 var perkHolder = PerkUtil.getPerkHolder(stack);
                 if (perkHolder == null)
@@ -132,7 +132,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     @Override
     public void onDye(ItemStack stack, DyeColor dyeColor) {
         var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
-        if(data == null){
+        if (data == null) {
             return;
         }
         stack.set(DataComponentRegistry.ARMOR_PERKS, data.setColor(dyeColor.getName()));
@@ -158,7 +158,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
 
             @Override
             public @Nullable <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
-                if(renderer == null){
+                if (renderer == null) {
                     renderer = new ArmorRenderer(getArmorModel());
                 }
                 return this.renderer;
@@ -181,13 +181,13 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     @Override
     public @Nullable ResourceLocation getArmorTexture(@NotNull ItemStack stack, @NotNull Entity entity, @NotNull EquipmentSlot slot, ArmorMaterial.@NotNull Layer layer, boolean innerModel) {
         GenericModel<AnimatedMagicArmor> genericModel = (GenericModel<AnimatedMagicArmor>) model;
-        return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
+        return ArsNouveau.prefix("textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
     }
 
 
     public String getColor(ItemStack object) {
         var perkHolder = PerkUtil.getPerkHolder(object);
-        if(!(perkHolder instanceof ArmorPerkHolder data)){
+        if (!(perkHolder instanceof ArmorPerkHolder data)) {
             return "purple";
         }
         return data.getColor() == null || data.getColor().isEmpty() ? "purple" : data.getColor();

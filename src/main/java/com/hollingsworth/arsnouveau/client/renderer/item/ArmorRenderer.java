@@ -23,7 +23,7 @@ public class ArmorRenderer extends GeoArmorRenderer<AnimatedMagicArmor> {
 
     @Override
     public void renderRecursively(PoseStack poseStack, AnimatedMagicArmor animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        if(bone.getName().equalsIgnoreCase("armorRightArmSlim") || bone.getName().equalsIgnoreCase("armorLeftArmSlim")){
+        if (bone.getName().equalsIgnoreCase("armorRightArmSlim") || bone.getName().equalsIgnoreCase("armorLeftArmSlim")) {
             bone.setHidden(true);
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
@@ -43,8 +43,8 @@ public class ArmorRenderer extends GeoArmorRenderer<AnimatedMagicArmor> {
 
     @Override
     public ResourceLocation getTextureLocation(AnimatedMagicArmor instance) {
-        if(instance != null && model instanceof GenericModel<AnimatedMagicArmor> genericModel){
-            return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
+        if (instance != null && model instanceof GenericModel<AnimatedMagicArmor> genericModel) {
+            return ArsNouveau.prefix("textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
         }
 
         return super.getTextureLocation(instance);

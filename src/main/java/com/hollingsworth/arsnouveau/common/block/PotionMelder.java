@@ -44,7 +44,7 @@ public class PotionMelder extends TickableModBlock implements SimpleWaterloggedB
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
-    public PotionMelder(){
+    public PotionMelder() {
         this(ModBlock.defaultProperties().noOcclusion());
     }
 

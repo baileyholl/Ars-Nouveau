@@ -34,7 +34,7 @@ public class PotionStoreGoal extends GoToPosGoal<StarbyPotionBehavior> {
 
     @Override
     public boolean onDestinationReached() {
-        if(starbuncle.level.getBlockEntity(targetPos) instanceof PotionJarTile jarTile){
+        if (starbuncle.level.getBlockEntity(targetPos) instanceof PotionJarTile jarTile) {
             int room = jarTile.getMaxFill() - jarTile.getAmount();
             int diff = Math.min(room, behavior.getAmount());
             jarTile.add(behavior.getHeldPotion(), diff);

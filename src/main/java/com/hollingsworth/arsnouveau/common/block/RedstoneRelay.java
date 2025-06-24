@@ -20,7 +20,7 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
-    public RedstoneRelay(){
+    public RedstoneRelay() {
         this(defaultProperties().noOcclusion());
     }
 
@@ -32,7 +32,7 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
 
     public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
         Direction facing = pBlockState.getValue(FACING);
-        if(pSide == facing.getOpposite() || !(pBlockAccess.getBlockEntity(pPos) instanceof RedstoneRelayTile redstoneRelayTile))
+        if (pSide == facing.getOpposite() || !(pBlockAccess.getBlockEntity(pPos) instanceof RedstoneRelayTile redstoneRelayTile))
             return 0;
         return redstoneRelayTile.getOutputPower();
     }
@@ -53,13 +53,13 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
         updatePower(pLevel, pPos, pState);
     }
 
-    public void updatePower(Level pLevel, BlockPos pPos, BlockState pState){
+    public void updatePower(Level pLevel, BlockPos pPos, BlockState pState) {
         int power = 0;
         Direction direction = pState.getValue(FACING);
         power = pLevel.getSignal(pPos.relative(pState.getValue(FACING)), direction);
 
 
-        if(pLevel.getBlockEntity(pPos) instanceof RedstoneRelayTile redstoneRelayTile){
+        if (pLevel.getBlockEntity(pPos) instanceof RedstoneRelayTile redstoneRelayTile) {
             redstoneRelayTile.setLocalPower(power);
         }
     }
@@ -74,15 +74,15 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
         if (pState.is(pNewState.getBlock())) {
             return;
         }
-        if(pLevel.isClientSide){
+        if (pLevel.isClientSide) {
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
             return;
         }
-        if(!(pLevel.getBlockEntity(pPos) instanceof RedstoneRelayTile thisTile))
+        if (!(pLevel.getBlockEntity(pPos) instanceof RedstoneRelayTile thisTile))
             return;
         BlockPos worldPosition = pPos.immutable();
-        for(BlockPos pos : thisTile.powering){
-            if(pLevel.getBlockEntity(pos) instanceof RedstoneRelayTile redstoneRelayTile){
+        for (BlockPos pos : thisTile.powering) {
+            if (pLevel.getBlockEntity(pos) instanceof RedstoneRelayTile redstoneRelayTile) {
                 redstoneRelayTile.onParentRemoved(worldPosition);
             }
         }

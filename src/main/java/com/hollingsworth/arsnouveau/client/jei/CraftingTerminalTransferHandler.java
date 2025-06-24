@@ -29,116 +29,120 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & IAutoFillTerminal> implements IRecipeTransferHandler<C, RecipeHolder<CraftingRecipe>> {
-	private final Class<C> containerClass;
-	private final IRecipeTransferHandlerHelper helper;
-	private static final List<Class<? extends AbstractContainerMenu>> containerClasses = new ArrayList<>();
-	private static final IRecipeTransferError ERROR_INSTANCE = new IRecipeTransferError() {
-		@Override public Type getType() { return Type.INTERNAL; }
-	};
-	static {
-		containerClasses.add(CraftingTerminalMenu.class);
-	}
+    private final Class<C> containerClass;
+    private final IRecipeTransferHandlerHelper helper;
+    private static final List<Class<? extends AbstractContainerMenu>> containerClasses = new ArrayList<>();
+    private static final IRecipeTransferError ERROR_INSTANCE = new IRecipeTransferError() {
+        @Override
+        public Type getType() {
+            return Type.INTERNAL;
+        }
+    };
 
-	public CraftingTerminalTransferHandler(Class<C> containerClass, IRecipeTransferHandlerHelper helper) {
-		this.containerClass = containerClass;
-		this.helper = helper;
-	}
+    static {
+        containerClasses.add(CraftingTerminalMenu.class);
+    }
 
-	@Override
-	public Class<C> getContainerClass() {
-		return containerClass;
-	}
+    public CraftingTerminalTransferHandler(Class<C> containerClass, IRecipeTransferHandlerHelper helper) {
+        this.containerClass = containerClass;
+        this.helper = helper;
+    }
 
-	@Override
-	public @Nullable IRecipeTransferError transferRecipe(C container, RecipeHolder<CraftingRecipe> recipe,
-			IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
-		if (container instanceof IAutoFillTerminal term) {
-			List<IRecipeSlotView> missing = new ArrayList<>();
-			List<IRecipeSlotView> views = recipeSlots.getSlotViews();
-			List<List<ItemStack>> inputs = new ArrayList<>();
-			Set<StoredItemStack> stored = new HashSet<>(term.getStoredItems());
+    @Override
+    public Class<C> getContainerClass() {
+        return containerClass;
+    }
 
-			for (IRecipeSlotView view : views) {
-				if(view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {
-					List<ItemStack> possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toList();
-					if(possibleStacks.isEmpty()){
-						inputs.add(List.of());
-						continue;
-					}
+    @Override
+    public @Nullable IRecipeTransferError transferRecipe(C container, RecipeHolder<CraftingRecipe> recipe,
+                                                         IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
+        if (container instanceof IAutoFillTerminal term) {
+            List<IRecipeSlotView> missing = new ArrayList<>();
+            List<IRecipeSlotView> views = recipeSlots.getSlotViews();
+            List<List<ItemStack>> inputs = new ArrayList<>();
+            Set<StoredItemStack> stored = new HashSet<>(term.getStoredItems());
 
-					inputs.add(possibleStacks);
+            for (IRecipeSlotView view : views) {
+                if (view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {
+                    List<ItemStack> possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toList();
+                    if (possibleStacks.isEmpty()) {
+                        inputs.add(List.of());
+                        continue;
+                    }
 
-					boolean found = false;
-					for (ItemStack stack : possibleStacks) {
-						if (stack != null && player.getInventory().findSlotMatchingItem(stack) != -1) {
-							found = true;
-							break;
-						}
-					}
+                    inputs.add(possibleStacks);
 
-					if (!found) {
-						for (ItemStack stack : possibleStacks) {
-							StoredItemStack s = new StoredItemStack(stack);
-							if(stored.contains(s)) {
-								found = true;
-								break;
-							}
-						}
-					}
+                    boolean found = false;
+                    for (ItemStack stack : possibleStacks) {
+                        if (stack != null && player.getInventory().findSlotMatchingItem(stack) != -1) {
+                            found = true;
+                            break;
+                        }
+                    }
 
-					if (!found) {
-						missing.add(view);
-					}
+                    if (!found) {
+                        for (ItemStack stack : possibleStacks) {
+                            StoredItemStack s = new StoredItemStack(stack);
+                            if (stored.contains(s)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
 
-				}
-			}
+                    if (!found) {
+                        missing.add(view);
+                    }
 
-			if (doTransfer) {
-				Networking.sendToServer(new ClientTransferHandlerPacket(inputs));
-			}
+                }
+            }
 
-			if(!missing.isEmpty()) {
-				return new TransferWarning(helper.createUserErrorForMissingSlots(Component.translatable("tooltip.ars_nouveau.items_missing"), missing));
-			}
-		} else {
-			return ERROR_INSTANCE;
-		}
-		return null;
-	}
+            if (doTransfer) {
+                Networking.sendToServer(new ClientTransferHandlerPacket(inputs));
+            }
 
-	public static void registerTransferHandlers(IRecipeTransferRegistration recipeTransferRegistry) {
-		for (Class<? extends AbstractContainerMenu> aClass : containerClasses)
-			recipeTransferRegistry.addRecipeTransferHandler(new CraftingTerminalTransferHandler(aClass, recipeTransferRegistry.getTransferHelper()), RecipeTypes.CRAFTING);
-	}
+            if (!missing.isEmpty()) {
+                return new TransferWarning(helper.createUserErrorForMissingSlots(Component.translatable("tooltip.ars_nouveau.items_missing"), missing));
+            }
+        } else {
+            return ERROR_INSTANCE;
+        }
+        return null;
+    }
 
-	private static class TransferWarning implements IRecipeTransferError {
-		private final IRecipeTransferError parent;
+    public static void registerTransferHandlers(IRecipeTransferRegistration recipeTransferRegistry) {
+        for (Class<? extends AbstractContainerMenu> aClass : containerClasses)
+            recipeTransferRegistry.addRecipeTransferHandler(new CraftingTerminalTransferHandler(aClass, recipeTransferRegistry.getTransferHelper()), RecipeTypes.CRAFTING);
+    }
 
-		public TransferWarning(IRecipeTransferError parent) {
-			this.parent = parent;
-		}
+    private static class TransferWarning implements IRecipeTransferError {
+        private final IRecipeTransferError parent;
 
-		@Override
-		public Type getType() {
-			return Type.COSMETIC;
-		}
+        public TransferWarning(IRecipeTransferError parent) {
+            this.parent = parent;
+        }
 
-		@Override
-		public void showError(GuiGraphics matrixStack, int mouseX, int mouseY, IRecipeSlotsView recipeLayout, int recipeX,
-							  int recipeY) {
-			this.parent.showError(matrixStack, mouseX, mouseY, recipeLayout, recipeX, recipeY);
-		}
-	}
+        @Override
+        public Type getType() {
+            return Type.COSMETIC;
+        }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Optional<MenuType<C>> getMenuType() {
-		return Optional.of((MenuType<C>) MenuRegistry.STORAGE.get());
-	}
+        @Override
+        public void showError(GuiGraphics matrixStack, int mouseX, int mouseY, IRecipeSlotsView recipeLayout, int recipeX,
+                              int recipeY) {
+            this.parent.showError(matrixStack, mouseX, mouseY, recipeLayout, recipeX, recipeY);
+        }
+    }
 
-	@Override
-	public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
-		return RecipeTypes.CRAFTING;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Optional<MenuType<C>> getMenuType() {
+        return Optional.of((MenuType<C>) MenuRegistry.STORAGE.get());
+    }
+
+    @Override
+    public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
+        return RecipeTypes.CRAFTING;
+    }
 
 }

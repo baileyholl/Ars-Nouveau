@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class StepHeightPerk extends Perk {
 
-    public static final StepHeightPerk INSTANCE = new StepHeightPerk(ArsNouveau.prefix( "thread_high_step"));
+    public static final StepHeightPerk INSTANCE = new StepHeightPerk(ArsNouveau.prefix("thread_high_step"));
 
     public static final UUID PERK_STEP_UUID = UUID.fromString("46937d0b-123c-4786-95b5-748afd50f398");
 

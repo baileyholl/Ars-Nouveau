@@ -37,19 +37,19 @@ public class EntityEntry extends SinglePageWidget {
         this.yOffset = yOffset;
     }
 
-    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType){
+    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType) {
         return (parent, x, y, width, height) -> new EntityEntry(entityType, Component.empty(), 1.0f, parent, x, y, width, height, 0);
     }
 
-    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType, Component description){
+    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType, Component description) {
         return (parent, x, y, width, height) -> new EntityEntry(entityType, description, 1.0f, parent, x, y, width, height, 0);
     }
 
-    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType, Component description, float scale){
+    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType, Component description, float scale) {
         return (parent, x, y, width, height) -> new EntityEntry(entityType, description, scale, parent, x, y, width, height, 0);
     }
 
-    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType, Component description, float scale, int yOffset){
+    public static SinglePageCtor create(EntityType<? extends LivingEntity> entityType, Component description, float scale, int yOffset) {
         return (parent, x, y, width, height) -> new EntityEntry(entityType, description, scale, parent, x, y, width, height, yOffset);
     }
 
@@ -58,7 +58,7 @@ public class EntityEntry extends SinglePageWidget {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         DocClientUtils.blit(guiGraphics, DocAssets.IMAGE_FRAME, x + 4, y + 10);
         DocClientUtils.drawHeaderNoUnderline(entityType.getDescription(), guiGraphics, x, y, width, mouseX, mouseY, partialTick);
-        if(this.description != null){
+        if (this.description != null) {
             DocClientUtils.drawParagraph(description, guiGraphics, x, y + 100, width, mouseX, mouseY, partialTick);
         }
         float entityWidth = entity.getBbWidth();
@@ -68,7 +68,7 @@ public class EntityEntry extends SinglePageWidget {
 
         float renderScale = 100F / entitySize * 0.6F * scale;
         float offset = Math.max(entityHeight, entitySize) * 0.5F + yOffset;
-        renderEntity(guiGraphics, entity, x + (float) width /2, y + offset + 80, (float) ClientInfo.ticksInGame + partialTick, renderScale, 0);
+        renderEntity(guiGraphics, entity, x + (float) width / 2, y + offset + 80, (float) ClientInfo.ticksInGame + partialTick, renderScale, 0);
     }
 
     @Override
@@ -98,9 +98,9 @@ public class EntityEntry extends SinglePageWidget {
     @Override
     public void addExportProperties(JsonObject object) {
         super.addExportProperties(object);
-        if(description != null) {
+        if (description != null) {
             object.addProperty(DocExporter.DESCRIPTION_PROPERTY, this.description.getString());
         }
-        object.addProperty(DocExporter.ENTITY_PROPERTY,  BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString());
+        object.addProperty(DocExporter.ENTITY_PROPERTY, BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString());
     }
 }

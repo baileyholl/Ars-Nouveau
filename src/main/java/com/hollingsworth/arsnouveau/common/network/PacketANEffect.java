@@ -14,7 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketANEffect extends AbstractPacket{
+public class PacketANEffect extends AbstractPacket {
     public static final Type<PacketANEffect> TYPE = new Type<>(ArsNouveau.prefix("effect"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketANEffect> CODEC = StreamCodec.ofMember(PacketANEffect::toBytes, PacketANEffect::decode);
     private final EffectType type;
@@ -112,6 +112,7 @@ public class PacketANEffect extends AbstractPacket{
             }
         }
     }
+
     public enum EffectType {
         TIMED_GLOW(4), //dest xyz num_particles
         TIMED_HELIX(0),

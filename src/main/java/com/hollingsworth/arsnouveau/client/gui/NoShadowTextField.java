@@ -59,7 +59,7 @@ public class NoShadowTextField extends EditBox {
             graphics.drawString(font, this.formatter.apply(s.substring(offset), this.cursorPos), textStartX, yStart, textColor);
         }
 
-        if (!outOfSpace && this.suggestion != null) {
+        if (!outOfSpace && this.suggestion != null && (this.value == null || this.value.isEmpty())) {
             graphics.drawString(this.font, this.suggestion, decorationStartX - 1, yStart, -8355712, false);
         }
 

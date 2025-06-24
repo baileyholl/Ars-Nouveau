@@ -29,13 +29,13 @@ public class EffectBubble extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         var bubble = createBubble(world, spellStats);
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
-        if(isNotFakePlayer(shooter)){
+        if (isNotFakePlayer(shooter)) {
             bubble.setOwner(shooter);
         }
         world.addFreshEntity(bubble);
     }
 
-    public BubbleEntity createBubble(Level level, SpellStats spellStats){
+    public BubbleEntity createBubble(Level level, SpellStats spellStats) {
         return new BubbleEntity(level, (int) (100 + spellStats.getDurationMultiplier() * EXTEND_TIME.getAsInt()), (float) (DAMAGE.getAsDouble() + spellStats.getAmpMultiplier() * AMP_VALUE.getAsDouble() + spellStats.getDamageModifier()));
     }
 
@@ -43,7 +43,7 @@ public class EffectBubble extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         var bubble = createBubble(world, spellStats);
         bubble.setPos(rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z);
-        if(isNotFakePlayer(shooter)){
+        if (isNotFakePlayer(shooter)) {
             bubble.setOwner(shooter);
         }
         world.addFreshEntity(bubble);

@@ -29,7 +29,7 @@ public class RitualEventQueue {
         return posMap.get(key).contains(pos);
     }
 
-    public static <T extends RangeRitual> List<T> getRituals(Level level, Class<T> type){
+    public static <T extends RangeRitual> List<T> getRituals(Level level, Class<T> type) {
         List<T> rituals = new ArrayList<>();
         Set<BlockPos> worldList = posMap.getOrDefault(level.dimension().location().toString(), new HashSet<>());
         List<BlockPos> stalePos = new ArrayList<>();
@@ -42,8 +42,8 @@ public class RitualEventQueue {
                 continue;
             }
             AbstractRitual ritual = brazierTile.ritual;
-            if(ritual != null && ritual.getClass().equals(type)){
-                rituals.add((T)ritual);
+            if (ritual != null && ritual.getClass().equals(type)) {
+                rituals.add((T) ritual);
             }
         }
         return rituals;
@@ -53,7 +53,7 @@ public class RitualEventQueue {
      * Used to run operations on the first matching ranged ritual.
      * Returns the first ritual of the given type that matches the predicate.
      */
-    public static @Nullable <T extends RangeRitual> T getRitual(Level level, Class<T> type, Predicate<T> isMatch){
+    public static @Nullable <T extends RangeRitual> T getRitual(Level level, Class<T> type, Predicate<T> isMatch) {
         Set<BlockPos> worldList = posMap.getOrDefault(level.dimension().location().toString(), new HashSet<>());
         List<BlockPos> stalePos = new ArrayList<>();
         for (BlockPos p : worldList) {
@@ -65,8 +65,8 @@ public class RitualEventQueue {
                 continue;
             }
             AbstractRitual ritual = brazierTile.ritual;
-            if(ritual != null && ritual.getClass().equals(type) && isMatch.test((T)ritual)){
-                return (T)ritual;
+            if (ritual != null && ritual.getClass().equals(type) && isMatch.test((T) ritual)) {
+                return (T) ritual;
             }
         }
         for (BlockPos p : stalePos) {

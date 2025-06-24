@@ -32,6 +32,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     private final boolean keepNbtOfReagent;
 
     private NonNullList<Ingredient> ingredients;
+
     public EnchantingApparatusRecipe(Ingredient reagent, ItemStack result, List<Ingredient> pedestalItems, int sourceCost, boolean keepNbtOfReagent) {
         this.reagent = reagent;
         this.result = result;
@@ -49,14 +50,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @Nullable Player player) {
-        if(this.pedestalItems.size() != input.pedestals().size()){
+        if (this.pedestalItems.size() != input.pedestals().size()) {
             return false;
         }
         return doesReagentMatch(input, level, player) && doPedestalsMatch(input);
     }
 
-    public boolean doPedestalsMatch(ApparatusRecipeInput input){
-        if(this.pedestalItems.size() != input.pedestals().size()){
+    public boolean doPedestalsMatch(ApparatusRecipeInput input) {
+        if (this.pedestalItems.size() != input.pedestals().size()) {
             return false;
         }
         var pedestalItems = input.pedestals().stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
@@ -69,7 +70,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     // Function to check if both arrays are same
     public static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
-        if(inputs.size() != recipeItems.size()){
+        if (inputs.size() != recipeItems.size()) {
             return false;
         }
         StackedContents recipeitemhelper = new StackedContents();

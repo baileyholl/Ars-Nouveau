@@ -7,7 +7,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
@@ -17,10 +16,11 @@ import net.minecraft.world.item.crafting.*;
  */
 public class ExtendableShapelessSerializer {
 
-    public static <T extends ShapelessRecipe> RecipeSerializer<T> create(ShapelessConstructor<T> creator){
+    public static <T extends ShapelessRecipe> RecipeSerializer<T> create(ShapelessConstructor<T> creator) {
         return new RecipeSerializer<T>() {
             public final MapCodec<T> CODEC = ExtendableShapelessSerializer.createMap(creator);
             public final StreamCodec<RegistryFriendlyByteBuf, T> STREAM_CODEC = ExtendableShapelessSerializer.createStream(creator);
+
             @Override
             public MapCodec<T> codec() {
                 return CODEC;
@@ -33,7 +33,7 @@ public class ExtendableShapelessSerializer {
         };
     }
 
-    public static <T extends ShapelessRecipe> MapCodec<T> createMap(ShapelessConstructor<T> create){
+    public static <T extends ShapelessRecipe> MapCodec<T> createMap(ShapelessConstructor<T> create) {
         return RecordCodecBuilder.mapCodec(
                 p_340779_ -> p_340779_.group(
                                 Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessRecipe::getGroup),
@@ -61,7 +61,7 @@ public class ExtendableShapelessSerializer {
         );
     }
 
-    public static <T extends ShapelessRecipe> StreamCodec<RegistryFriendlyByteBuf, T> createStream(ShapelessConstructor<T> create){
+    public static <T extends ShapelessRecipe> StreamCodec<RegistryFriendlyByteBuf, T> createStream(ShapelessConstructor<T> create) {
         return StreamCodec.of(
                 ExtendableShapelessSerializer::toNetwork, (a) -> ExtendableShapelessSerializer.fromNetwork(a, create)
         );
@@ -90,7 +90,7 @@ public class ExtendableShapelessSerializer {
     }
 
     @FunctionalInterface
-    public interface ShapelessConstructor<T>{
+    public interface ShapelessConstructor<T> {
         T create(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients);
     }
 }

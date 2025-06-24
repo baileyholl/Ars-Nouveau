@@ -6,11 +6,11 @@ import net.minecraft.world.phys.Vec3;
 
 public interface IAdorable {
 
-    private LivingEntity getThis(){
-        return (LivingEntity)this;
+    private LivingEntity getThis() {
+        return (LivingEntity) this;
     }
 
-    default boolean isLookingAtMe(Player pPlayer){
+    default boolean isLookingAtMe(Player pPlayer) {
         Vec3 vec3 = pPlayer.getViewVector(1.0F).normalize();
         Vec3 vec31 = new Vec3(getThis().getX() - pPlayer.getX(), getThis().getEyeY() - pPlayer.getEyeY(), getThis().getZ() - pPlayer.getZ());
         double d0 = vec31.length();

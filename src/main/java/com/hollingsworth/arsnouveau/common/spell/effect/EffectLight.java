@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
@@ -36,6 +37,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class EffectLight extends AbstractEffect implements IPotionEffect {
     public static EffectLight INSTANCE = new EffectLight();
+
 
     private EffectLight() {
         super(GlyphLib.EffectLightID, "Conjure Magelight");
@@ -84,7 +86,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
             BlockState lightBlockState = (spellStats.getDurationMultiplier() != 0 ? BlockRegistry.T_LIGHT_BLOCK.get() : BlockRegistry.LIGHT_BLOCK.get()).defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             if (world.getBlockEntity(pos) instanceof LightTile tile) {
-                tile.color = spellContext.getColors();
+                tile.setTimeline(spellContext.getParticleTimeline(ParticleTimelineRegistry.LIGHT_TIMELINE.get()));
                 if (tile instanceof TempLightTile tempLightTile)
                     tempLightTile.lengthModifier = spellStats.getDurationMultiplier();
             }
@@ -129,7 +131,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
 
     @Override
     public String getBookDescription() {
-        return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color.";
+        return "If cast on a block, a permanent light source is created. May be amplified up to Glowstone brightness, or Dampened for a lower light level. When cast on yourself, you will receive night vision. When cast on other entities or with Sensitive, they will receive Night Vision and Glowing. If Sensitive, Glowing will use the spell color. Particles can be configured from the Spell Style menu in the spellbook.";
     }
 
     @NotNull

@@ -1,4 +1,5 @@
 package com.hollingsworth.arsnouveau.api.ritual.features;
+
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.FeaturePlacementRitual;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
@@ -13,7 +14,8 @@ public class BonemealFeature implements IPlaceableFeature {
 
     double distance;
     double chance;
-    public BonemealFeature(double distance, double chance){
+
+    public BonemealFeature(double distance, double chance) {
         this.distance = distance;
         this.chance = chance;
     }

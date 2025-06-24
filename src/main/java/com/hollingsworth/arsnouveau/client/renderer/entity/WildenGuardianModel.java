@@ -11,9 +11,9 @@ import software.bernie.geckolib.model.data.EntityModelData;
 
 public class WildenGuardianModel extends GeoModel<WildenGuardian> {
 
-    public static final ResourceLocation WARDER_NEUTRAL = ArsNouveau.prefix( "geo/wilden_guardian.geo.json");
-    public static final ResourceLocation TEXT = ArsNouveau.prefix( "textures/entity/wilden_guardian.png");
-    public static final ResourceLocation ANIM = ArsNouveau.prefix( "animations/wilden_defender_animations.json");
+    public static final ResourceLocation WARDER_NEUTRAL = ArsNouveau.prefix("geo/wilden_guardian.geo.json");
+    public static final ResourceLocation TEXT = ArsNouveau.prefix("textures/entity/wilden_guardian.png");
+    public static final ResourceLocation ANIM = ArsNouveau.prefix("animations/wilden_defender_animations.json");
 
 
     @Override

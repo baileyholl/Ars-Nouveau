@@ -47,7 +47,7 @@ public class EnchantedSkull extends EnchantedFallingBlock {
     }
 
     public ItemStack getStack() {
-        if(renderStack == null) {
+        if (renderStack == null) {
             Item item = getBlockState().getBlock().asItem();
             ItemStack stack = item.getDefaultInstance();
             if (item instanceof PlayerHeadItem && blockData != null) {

@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public class PacketReactiveSpell extends AbstractPacket{
+public class PacketReactiveSpell extends AbstractPacket {
 
 
     public static final Type<PacketReactiveSpell> TYPE = new Type<>(ArsNouveau.prefix("reactive_spell"));

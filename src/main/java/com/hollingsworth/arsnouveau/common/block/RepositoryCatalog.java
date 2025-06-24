@@ -38,13 +38,13 @@ public class RepositoryCatalog extends TickableModBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemScrollData scrollData = stack.get(DataComponentRegistry.ITEM_SCROLL_DATA);
-        if(hand != InteractionHand.MAIN_HAND || !(level.getBlockEntity(pos) instanceof RepositoryCatalogTile controllerTile)){
+        if (hand != InteractionHand.MAIN_HAND || !(level.getBlockEntity(pos) instanceof RepositoryCatalogTile controllerTile)) {
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         }
-        if(scrollData != null){
+        if (scrollData != null) {
             ItemStack resultStack = controllerTile.setNewScroll(stack);
             player.getItemInHand(hand).shrink(1);
-            if(resultStack.isEmpty()){
+            if (resultStack.isEmpty()) {
                 player.setItemInHand(hand, ItemStack.EMPTY);
             } else {
                 player.setItemInHand(hand, resultStack);
@@ -52,7 +52,7 @@ public class RepositoryCatalog extends TickableModBlock {
             return ItemInteractionResult.SUCCESS;
         }
 
-        if(player.getItemInHand(hand).isEmpty()){
+        if (player.getItemInHand(hand).isEmpty()) {
             ItemStack resultStack = controllerTile.setNewScroll(ItemStack.EMPTY);
             player.setItemInHand(hand, resultStack);
 
@@ -88,8 +88,8 @@ public class RepositoryCatalog extends TickableModBlock {
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if(!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryCatalogTile tile){
-            if(!tile.scrollStack.isEmpty()){
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryCatalogTile tile) {
+            if (!tile.scrollStack.isEmpty()) {
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, tile.scrollStack));
             }
         }

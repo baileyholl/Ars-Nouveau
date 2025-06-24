@@ -10,16 +10,16 @@ public class RedstoneUtil {
 
     public static void getArsSignal(ServerLevel serverLevel, BlockPos pPos, Direction pFacing, CallbackInfoReturnable<Integer> cir) {
         var map = RedstoneSavedData.from(serverLevel).SIGNAL_MAP;
-        if(map.isEmpty()){
+        if (map.isEmpty()) {
             return;
         }
 
         var entry = map.get(pPos);
-        if(entry != null){
+        if (entry != null) {
             cir.setReturnValue(Math.max(entry.power, cir.getReturnValue()));
-        }else if(map.containsKey(pPos.relative(pFacing))){
+        } else if (map.containsKey(pPos.relative(pFacing))) {
             cir.setReturnValue(Math.max(map.get(pPos.relative(pFacing)).power, cir.getReturnValue()));
-        }else if(map.containsKey(pPos.relative(pFacing.getOpposite()))){
+        } else if (map.containsKey(pPos.relative(pFacing.getOpposite()))) {
             cir.setReturnValue(Math.max(map.get(pPos.relative(pFacing.getOpposite())).power, cir.getReturnValue()));
         }
     }

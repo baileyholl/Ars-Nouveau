@@ -31,6 +31,7 @@ import java.util.function.BiConsumer;
 public class MagicTrunkPlacer extends TrunkPlacer {
     boolean isWorldGen;
     ResourceLocation podID;
+
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b) {
         super(baseHeight, height_rand_a, height_rand_b);
     }
@@ -207,11 +208,11 @@ public class MagicTrunkPlacer extends TrunkPlacer {
             }
 
             // pod decoration
-            if(isWorldGen && i >= 2 && i < foliageHeight - 2){
-                addPod(world,blockpos1,rand,consumer, new Direction[]{Direction.NORTH, Direction.WEST} );
-                addPod(world,blockpos1.east(),rand,consumer, new Direction[]{Direction.NORTH, Direction.EAST} );
-                addPod(world,blockpos1.south(),rand,consumer, new Direction[]{Direction.SOUTH, Direction.WEST} );
-                addPod(world,blockpos1.south().east(),rand,consumer, new Direction[]{Direction.SOUTH, Direction.EAST} );
+            if (isWorldGen && i >= 2 && i < foliageHeight - 2) {
+                addPod(world, blockpos1, rand, consumer, new Direction[]{Direction.NORTH, Direction.WEST});
+                addPod(world, blockpos1.east(), rand, consumer, new Direction[]{Direction.NORTH, Direction.EAST});
+                addPod(world, blockpos1.south(), rand, consumer, new Direction[]{Direction.SOUTH, Direction.WEST});
+                addPod(world, blockpos1.south().east(), rand, consumer, new Direction[]{Direction.SOUTH, Direction.EAST});
             }
         }
 
@@ -219,11 +220,11 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         return list;
     }
 
-    public void addPod(LevelSimulatedReader world, BlockPos pos, RandomSource random, BiConsumer<BlockPos, BlockState> consumer, Direction[] validDirs){
-        if(random.nextDouble() <= 0.07) {
+    public void addPod(LevelSimulatedReader world, BlockPos pos, RandomSource random, BiConsumer<BlockPos, BlockState> consumer, Direction[] validDirs) {
+        if (random.nextDouble() <= 0.07) {
             Direction d = validDirs[random.nextInt(validDirs.length)];
             int age = random.nextIntBetweenInclusive(0, 2);
-            if(world.isStateAtPosition(pos.relative(d), BlockBehaviour.BlockStateBase::isAir)) {
+            if (world.isStateAtPosition(pos.relative(d), BlockBehaviour.BlockStateBase::isAir)) {
                 setBlock(world, pos.relative(d).immutable(), getPodState()
                         .setValue(HorizontalDirectionalBlock.FACING, d.getOpposite())
                         .setValue(SconceBlock.LIGHT_LEVEL, 6 + age)
@@ -232,7 +233,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
         }
     }
 
-    public BlockState getPodState(){
+    public BlockState getPodState() {
         return BuiltInRegistries.BLOCK.get(podID).defaultBlockState();
     }
 

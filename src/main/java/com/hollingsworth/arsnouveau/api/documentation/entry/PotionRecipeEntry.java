@@ -21,7 +21,7 @@ public class PotionRecipeEntry extends SinglePageWidget {
         this.recipe2 = recipe2;
     }
 
-    public static SinglePageCtor create(BrewingRecipe recipe, BrewingRecipe recipe2){
+    public static SinglePageCtor create(BrewingRecipe recipe, BrewingRecipe recipe2) {
         return (parent, x, y, width, height) -> new PotionRecipeEntry(parent, x, y, width, height, recipe, recipe2);
     }
 
@@ -29,22 +29,22 @@ public class PotionRecipeEntry extends SinglePageWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         DocClientUtils.drawHeader(Component.translatable("block.minecraft.brewing_stand"), guiGraphics, x, y, width, mouseX, mouseY, partialTick);
-        if(recipe1 != null) {
+        if (recipe1 != null) {
             drawBrewingRecipe(guiGraphics, x + 2, y + 20, mouseX, mouseY, recipe1);
         }
 
-        if(recipe2 != null) {
+        if (recipe2 != null) {
             drawBrewingRecipe(guiGraphics, x + 2, y + 88, mouseX, mouseY, recipe2);
         }
     }
 
 
-    public void drawBrewingRecipe(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, BrewingRecipe recipe){
+    public void drawBrewingRecipe(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, BrewingRecipe recipe) {
         DocClientUtils.blit(guiGraphics, DocAssets.POTION_RECIPE, x, y);
         Ingredient ingredient = recipe.getInput();
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             int col = i % 3;
-            int renderX = x  + 4 + (col * 22);
+            int renderX = x + 4 + (col * 22);
             int renderY = y + 35;
             this.setTooltipIfHovered(DocClientUtils.renderIngredient(guiGraphics, renderX, renderY, mouseX, mouseY, ingredient));
         }

@@ -15,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SkyWeave extends MirrorWeave implements ITickableBlock{
+public class SkyWeave extends MirrorWeave implements ITickableBlock {
 
     public SkyWeave(Properties properties) {
         super(properties);
@@ -39,12 +39,12 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock{
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND){
+        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
             return ItemInteractionResult.SUCCESS;
         }
 
-        if(pLevel.getBlockEntity(pPos) instanceof SkyBlockTile tile){
-            if(!tile.showFacade() && !pPlayer.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
+        if (pLevel.getBlockEntity(pPos) instanceof SkyBlockTile tile) {
+            if (!tile.showFacade() && !pPlayer.hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }

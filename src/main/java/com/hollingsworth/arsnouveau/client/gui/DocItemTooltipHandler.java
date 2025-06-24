@@ -52,7 +52,7 @@ public class DocItemTooltipHandler {
             return;
         }
 
-        if(mc.screen instanceof PageHolderScreen pageHolderScreen && pageHolderScreen.entry == docEntry){
+        if (mc.screen instanceof PageHolderScreen pageHolderScreen && pageHolderScreen.entry == docEntry) {
             return;
         }
 
@@ -114,7 +114,7 @@ public class DocItemTooltipHandler {
         ms.scale(0.5F, 0.5F, 1F);
         boolean mac = Minecraft.ON_OSX;
         Component key = (boundToControl ? (mac ? Component.literal("Cmd") : Component.literal("Ctrl")) : ModKeyBindings.OPEN_DOCUMENTATION.getTranslatedKeyMessage().copy())
-        .withStyle(ChatFormatting.BOLD);
+                .withStyle(ChatFormatting.BOLD);
         graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
         ms.popPose();
 

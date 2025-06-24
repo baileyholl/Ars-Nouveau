@@ -22,17 +22,17 @@ public record MultiPotionContents(int charges, PotionContents contents, int maxU
             Codec.INT.fieldOf("maxUses").forGetter(MultiPotionContents::maxUses)
     ).apply(instance, MultiPotionContents::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, MultiPotionContents> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, MultiPotionContents::charges, PotionContents.STREAM_CODEC, MultiPotionContents::contents,ByteBufCodecs.INT, MultiPotionContents::maxUses, MultiPotionContents::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, MultiPotionContents> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT, MultiPotionContents::charges, PotionContents.STREAM_CODEC, MultiPotionContents::contents, ByteBufCodecs.INT, MultiPotionContents::maxUses, MultiPotionContents::new);
 
-    public MultiPotionContents withCharges(int charges){
+    public MultiPotionContents withCharges(int charges) {
         return new MultiPotionContents(charges, contents, maxUses);
     }
 
-    public MultiPotionContents withMaxUses(int maxUses){
+    public MultiPotionContents withMaxUses(int maxUses) {
         return new MultiPotionContents(charges, contents, maxUses);
     }
 
-    public MultiPotionContents withContents(PotionContents contents){
+    public MultiPotionContents withContents(PotionContents contents) {
         return new MultiPotionContents(charges, contents, maxUses);
     }
 

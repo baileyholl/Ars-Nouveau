@@ -49,7 +49,7 @@ public class DrygmyCharm extends AbstractSummonCharm implements AliasProvider {
     @Override
     public Collection<Alias> getAliases() {
         return List.of(
-            new Alias("mob_farm", "Mob Farm")
+                new Alias("mob_farm", "Mob Farm")
         );
     }
 }

@@ -36,7 +36,7 @@ public class ModdedTile extends BlockEntity {
     }
 
     public boolean updateBlock() {
-        if(level != null) {
+        if (level != null) {
             BlockState state = level.getBlockState(worldPosition);
             level.sendBlockUpdated(worldPosition, state, state, 3);
             setChanged();

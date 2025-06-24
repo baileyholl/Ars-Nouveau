@@ -46,7 +46,7 @@ public abstract class PotionFlask extends ModItem {
         IPotionProvider data = PotionProviderRegistry.from(thisStack);
         Player playerEntity = context.getPlayer();
 
-        if(data == null || playerEntity == null)
+        if (data == null || playerEntity == null)
             return super.useOn(context);
 
         PotionContents contents = data.getPotionData(thisStack);
@@ -57,12 +57,12 @@ public abstract class PotionFlask extends ModItem {
             jarTile.add(contents, 100);
             var newContents = new MultiPotionContents(usesRemaining - 1, contents, maxUses);
             thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
-        }else if (!playerEntity.isShiftKeyDown() && usesRemaining < maxUses && jarTile.getAmount() >= 100) {
+        } else if (!playerEntity.isShiftKeyDown() && usesRemaining < maxUses && jarTile.getAmount() >= 100) {
             if (PotionUtil.arePotionContentsEqual(contents, jarTile.getData())) {
                 var newContents = new MultiPotionContents(usesRemaining + 1, contents, maxUses);
                 jarTile.remove(100);
                 thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
-            }else if (usesRemaining == 0){
+            } else if (usesRemaining == 0) {
                 var newContents = new MultiPotionContents(1, jarTile.getData(), maxUses);
                 thisStack.set(DataComponentRegistry.MULTI_POTION, newContents);
                 jarTile.remove(100);
@@ -95,7 +95,7 @@ public abstract class PotionFlask extends ModItem {
     }
 
     //Get the modified EffectInstance from the parent class.
-    public abstract@NotNull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
+    public abstract @NotNull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
 
 
     @Override

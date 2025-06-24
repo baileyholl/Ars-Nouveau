@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FeatherPerk extends Perk {
 
-    public static final FeatherPerk INSTANCE = new FeatherPerk(ArsNouveau.prefix( "thread_feather"));
+    public static final FeatherPerk INSTANCE = new FeatherPerk(ArsNouveau.prefix("thread_feather"));
 
     public FeatherPerk(ResourceLocation key) {
         super(key);

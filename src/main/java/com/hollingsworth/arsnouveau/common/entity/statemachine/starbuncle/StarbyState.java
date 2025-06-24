@@ -12,6 +12,7 @@ public class StarbyState implements IState<StarbyState> {
     public StarbyTransportBehavior behavior;
     public int ticksRunning;
     public Level level;
+
     public StarbyState(Starbuncle starbuncle, StarbyTransportBehavior behavior) {
         this.starbuncle = starbuncle;
         this.behavior = behavior;

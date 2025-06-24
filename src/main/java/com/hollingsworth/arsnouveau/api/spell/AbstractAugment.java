@@ -27,7 +27,7 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
         return 10;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();
@@ -41,10 +41,10 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
      * Therefore, this method fetches the 'Break' part's AugmentCosts map and gets the cost for this augment if it is applied to the 'Break' part.
      */
     public int getCostForPart(AbstractSpellPart spellPart) {
-        if(spellPart instanceof AbstractAugment)
+        if (spellPart instanceof AbstractAugment)
             return this.getCastingCost();
         SpellPartConfigUtil.AugmentCosts augmentCosts = spellPart.augmentCosts;
-        if(augmentCosts == null){
+        if (augmentCosts == null) {
             return this.getCastingCost();
         }
         return augmentCosts.getAugmentCost(spellPart.getRegistryName(), this.getCastingCost());
@@ -55,7 +55,7 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
     }
 
     @Deprecated
-    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart){
+    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
         return builder;
     }
 

@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 public interface SpecialSingleInputRecipe extends Recipe<SingleRecipeInput> {
 
-    default boolean matches(ItemStack stack, Level level){
+    default boolean matches(ItemStack stack, Level level) {
         return this.matches(new SingleRecipeInput(stack), level);
     }
 

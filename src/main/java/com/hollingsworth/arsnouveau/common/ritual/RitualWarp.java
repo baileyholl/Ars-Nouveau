@@ -81,6 +81,6 @@ public class RitualWarp extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.WARP);
+        return ArsNouveau.prefix(RitualLib.WARP);
     }
 }

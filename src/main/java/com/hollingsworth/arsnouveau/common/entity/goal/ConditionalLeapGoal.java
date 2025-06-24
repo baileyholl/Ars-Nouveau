@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 public class ConditionalLeapGoal extends LeapAtTargetGoal {
     public Supplier<Boolean> canUse;
+
     public ConditionalLeapGoal(Mob pMob, float pYd, Supplier<Boolean> canUse) {
         super(pMob, pYd);
         this.canUse = canUse;

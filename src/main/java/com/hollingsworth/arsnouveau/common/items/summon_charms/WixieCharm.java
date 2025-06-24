@@ -62,9 +62,9 @@ public class WixieCharm extends AbstractSummonCharm implements AliasProvider {
     @Override
     public Collection<Alias> getAliases() {
         return List.of(
-            new Alias("auto_crafter", "Auto Crafter"),
-            new Alias("potion_brewer", "Potion Brewer"),
-            new Alias("brewing_stand", "Brewing Stand")
+                new Alias("auto_crafter", "Auto Crafter"),
+                new Alias("potion_brewer", "Potion Brewer"),
+                new Alias("brewing_stand", "Brewing Stand")
         );
     }
 }

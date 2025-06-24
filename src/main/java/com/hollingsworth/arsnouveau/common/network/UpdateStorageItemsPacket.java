@@ -12,11 +12,11 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-public class UpdateStorageItemsPacket extends AbstractPacket{
+public class UpdateStorageItemsPacket extends AbstractPacket {
 
     public List<StoredItemStack> stacks;
 
-    public UpdateStorageItemsPacket(List<StoredItemStack> stacks){
+    public UpdateStorageItemsPacket(List<StoredItemStack> stacks) {
         this.stacks = stacks;
     }
 
@@ -27,6 +27,7 @@ public class UpdateStorageItemsPacket extends AbstractPacket{
             terminalScreen.updateItems(stacks);
         }
     }
+
     public static final Type<UpdateStorageItemsPacket> TYPE = new Type<>(ArsNouveau.prefix("update_storage_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateStorageItemsPacket> CODEC = StreamCodec.composite(StoredItemStack.STREAM.apply(ByteBufCodecs.list()), u -> u.stacks, UpdateStorageItemsPacket::new);
 

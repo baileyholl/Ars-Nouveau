@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 public class ConditionalLookAtMob extends LookAtPlayerGoal {
     Supplier<Boolean> canContinue;
+
     public ConditionalLookAtMob(Mob pMob, Class<? extends LivingEntity> pLookAtType, float pLookDistance, Supplier<Boolean> canContinue) {
         super(pMob, pLookAtType, pLookDistance);
         this.canContinue = canContinue;

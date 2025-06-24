@@ -35,12 +35,12 @@ public class ScribesBlock extends TableBlock {
 
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack heldStack,BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack heldStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()) {
-            Networking.sendToPlayerClient( new PacketOpenGlyphCraft(pos), (ServerPlayer) player);
+            Networking.sendToPlayerClient(new PacketOpenGlyphCraft(pos), (ServerPlayer) player);
             return ItemInteractionResult.SUCCESS;
         }
 
@@ -78,7 +78,7 @@ public class ScribesBlock extends TableBlock {
         }
         if (player.isShiftKeyDown()) {
             ItemStack stack = tile.getStack();
-            if(player.getItemInHand(handIn).getItem() instanceof DominionWand){
+            if (player.getItemInHand(handIn).getItem() instanceof DominionWand) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
             if (stack == null || stack.isEmpty())
@@ -126,9 +126,9 @@ public class ScribesBlock extends TableBlock {
         Level world = event.getLevel();
         BlockPos pos = event.getPos();
 
-        if (world.getBlockState(pos).getBlock() instanceof ScribesBlock ) {
+        if (world.getBlockState(pos).getBlock() instanceof ScribesBlock) {
             ItemStack stack = event.getEntity().getItemInHand(event.getHand());
-            if(stack.getItem() instanceof DominionWand){
+            if (stack.getItem() instanceof DominionWand) {
                 return;
             }
             BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), event.getHitVec());

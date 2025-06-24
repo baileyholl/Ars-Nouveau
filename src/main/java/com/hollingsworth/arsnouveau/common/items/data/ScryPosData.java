@@ -12,7 +12,7 @@ public record ScryPosData(Optional<BlockPos> pos) {
             BlockPos.CODEC.optionalFieldOf("pos").forGetter(ScryPosData::pos)
     ).apply(instance, ScryPosData::new));
 
-    public ScryPosData(BlockPos pos){
+    public ScryPosData(BlockPos pos) {
         this(Optional.ofNullable(pos));
     }
 

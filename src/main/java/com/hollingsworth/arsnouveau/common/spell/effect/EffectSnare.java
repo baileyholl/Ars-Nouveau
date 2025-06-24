@@ -32,9 +32,9 @@ public class EffectSnare extends AbstractEffect implements IPotionEffect {
             this.applyConfigPotion(living, ModPotions.SNARE_EFFECT, spellStats);
             living.setDeltaMovement(0, 0, 0);
             living.hurtMarked = true;
-        }else if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock) {
+        } else if (rayTraceResult.getEntity() instanceof EnchantedFallingBlock fallingBlock) {
             BlockPos resultPos = fallingBlock.groundBlock(true);
-            if(resultPos != null) {
+            if (resultPos != null) {
                 ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(resultPos.getX(), resultPos.getY(), resultPos.getZ()), rayTraceResult.getEntity().getMotionDirection(), resultPos, false), world, shooter, spellContext, resolver);
             }
         }

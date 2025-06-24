@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransport
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-public class GoToBedState extends StarbyState{
+public class GoToBedState extends StarbyState {
     public boolean unreachable;
     public BlockPos bedPos;
     public StarbyState nextState;
@@ -20,20 +20,20 @@ public class GoToBedState extends StarbyState{
     @Override
     public @Nullable StarbyState tick() {
         super.tick();
-        if(ticksRunning >= 20 * 15){
+        if (ticksRunning >= 20 * 15) {
             starbuncle.addGoalDebug(this, new DebugEvent("BedTimeout", "Took too long to find bed"));
             return nextState;
         }
 
         BlockPos bedPos = starbuncle.data.bedPos;
-        if(bedPos == null)
+        if (bedPos == null)
             return nextState;
 
         // Time defer these checks otherwise we will destroy TPS with blockstate lookups.
-        if(starbuncle.level.getGameTime() % 10 == 0){
+        if (starbuncle.level.getGameTime() % 10 == 0) {
             var bedValid = behavior.isBedValid(bedPos);
             var isOnBed = behavior.isOnBed();
-            if(!bedValid || isOnBed || !behavior.canGoToBed()){
+            if (!bedValid || isOnBed || !behavior.canGoToBed()) {
                 return nextState;
             }
         }

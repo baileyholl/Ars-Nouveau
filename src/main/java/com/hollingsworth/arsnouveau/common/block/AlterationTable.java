@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AlterationTable extends TableBlock{
+public class AlterationTable extends TableBlock {
 
     public AlterationTable() {
         super();
@@ -42,29 +42,29 @@ public class AlterationTable extends TableBlock{
             return ItemInteractionResult.SUCCESS;
         ItemStack stack = player.getMainHandItem();
         // Attempt to put armor and remove perks
-        if(tile.isMasterTile()){
+        if (tile.isMasterTile()) {
             var holder = PerkUtil.getPerkHolder(stack);
             if (holder instanceof StackPerkHolder) {
-                if(tile.armorStack.isEmpty()){
+                if (tile.armorStack.isEmpty()) {
                     tile.setArmorStack(stack, player);
                     return ItemInteractionResult.SUCCESS;
                 }
-            }else if(stack.isEmpty() && !tile.armorStack.isEmpty()){
+            } else if (stack.isEmpty() && !tile.armorStack.isEmpty()) {
                 tile.removeArmorStack(player);
                 return ItemInteractionResult.SUCCESS;
             }
-        }else if(state.getValue(PART) == ThreePartBlock.OTHER){
+        } else if (state.getValue(PART) == ThreePartBlock.OTHER) {
             this.useItemOn(pStack, world.getBlockState(pos.below()), world, pos.below(), player, handIn, hit);
-        }else{
+        } else {
             tile = tile.getLogicTile();
-            if(tile == null)
+            if (tile == null)
                 return ItemInteractionResult.SUCCESS;
-            if(stack.isEmpty()){
+            if (stack.isEmpty()) {
                 tile.removePerk(player);
                 return ItemInteractionResult.SUCCESS;
             }
             // Attempt to change perks
-            if(!(stack.getItem() instanceof PerkItem)){
+            if (!(stack.getItem() instanceof PerkItem)) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_perk"));
                 return ItemInteractionResult.SUCCESS;
             }
@@ -108,17 +108,17 @@ public class AlterationTable extends TableBlock{
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         ThreePartBlock partBlock = state.getValue(PART);
-        if(partBlock != ThreePartBlock.OTHER){
+        if (partBlock != ThreePartBlock.OTHER) {
             return super.getShape(state, getter, pos, context);
         }
         Direction direction = state.getValue(FACING);
-        if(direction == Direction.SOUTH){
+        if (direction == Direction.SOUTH) {
             return SOUTH_OTHER;
-        }else if(direction == Direction.NORTH){
+        } else if (direction == Direction.NORTH) {
             return NORTH_OTHER;
-        }else if(direction == Direction.EAST){
+        } else if (direction == Direction.EAST) {
             return EAST_OTHER;
-        }else if(direction == Direction.WEST){
+        } else if (direction == Direction.WEST) {
             return WEST_OTHER;
         }
         return super.getShape(state, getter, pos, context);
@@ -127,7 +127,7 @@ public class AlterationTable extends TableBlock{
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         ThreePartBlock partBlock = pState.getValue(PART);
-        if(partBlock != ThreePartBlock.OTHER){
+        if (partBlock != ThreePartBlock.OTHER) {
             return super.getCollisionShape(pState, pLevel, pPos, pContext);
         }
         return Shapes.empty();
@@ -165,17 +165,17 @@ public class AlterationTable extends TableBlock{
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         List<Direction> connectedDirs = getConnectedDirections(state);
-        if(connectedDirs.contains(direction)){
-           for(Direction dir : connectedDirs){
-               if(world.getBlockState(pos.relative(dir)).getBlock() != this){
-                   return tearDown(state, dir, state2, world, pos, pos2);
-               }
-           }
+        if (connectedDirs.contains(direction)) {
+            for (Direction dir : connectedDirs) {
+                if (world.getBlockState(pos.relative(dir)).getBlock() != this) {
+                    return tearDown(state, dir, state2, world, pos, pos2);
+                }
+            }
         }
         return state;
     }
 
-    public List<Direction> getConnectedDirections(BlockState state){
+    public List<Direction> getConnectedDirections(BlockState state) {
         Direction direction = state.getValue(FACING);
         return switch (state.getValue(PART)) {
             case HEAD -> List.of(direction.getOpposite());

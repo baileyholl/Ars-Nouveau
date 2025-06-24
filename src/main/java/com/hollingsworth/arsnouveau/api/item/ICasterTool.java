@@ -61,6 +61,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
                     .setFlavorText(heldCaster.getFlavorText())
                     .setSpellName(heldCaster.getSpellName())
                     .setSound(heldCaster.getCurrentSound())
+                    .setParticles(heldCaster.getSpell().particleTimeline())
                     .saveToStack(tableStack);
 
         }

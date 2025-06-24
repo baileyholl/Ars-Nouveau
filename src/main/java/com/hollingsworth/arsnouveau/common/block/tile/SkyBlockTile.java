@@ -27,35 +27,35 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     @Override
     public void tick() {
-        if(showFacade && !level.isClientSide) {
-            if(getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission(level, worldPosition)){
+        if (showFacade && !level.isClientSide) {
+            if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission(level, worldPosition)) {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
             }
             return;
         }
-        if(!level.isClientSide && level.isDay()){
-            if(getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != 15){
+        if (!level.isClientSide && level.isDay()) {
+            if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != 15) {
                 previousLight = getBlockState().getValue(MirrorWeave.LIGHT_LEVEL);
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, 15));
             }
         }
-        if(!level.isClientSide && !level.isDay()){
-            if(getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != previousLight){
+        if (!level.isClientSide && !level.isDay()) {
+            if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != previousLight) {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
             }
         }
     }
 
-    public void setShowFacade(boolean showFacade){
-        if(this.showFacade == showFacade){
+    public void setShowFacade(boolean showFacade) {
+        if (this.showFacade == showFacade) {
             return;
         }
 
         int ticks = 1;
-        for(Direction d : Direction.values()){
+        for (Direction d : Direction.values()) {
             BlockPos offset = getBlockPos().relative(d);
-            if(level.getBlockEntity(offset) instanceof SkyBlockTile neighbor){
-                if(this.showFacade() == neighbor.showFacade()) {
+            if (level.getBlockEntity(offset) instanceof SkyBlockTile neighbor) {
+                if (this.showFacade() == neighbor.showFacade()) {
                     ticks++;
                     EventQueue.getServerInstance().addEvent(new SkyweaveVisibilityEvent(neighbor, ticks, showFacade));
                 }

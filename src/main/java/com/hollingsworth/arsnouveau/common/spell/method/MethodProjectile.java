@@ -36,10 +36,10 @@ public class MethodProjectile extends AbstractCastMethod {
     @Override
     public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        PROJECTILE_TTL = builder.comment("Max lifespan of the projectile, in seconds.").defineInRange("max_lifespan",60, 0, Integer.MAX_VALUE);
+        PROJECTILE_TTL = builder.comment("Max lifespan of the projectile, in seconds.").defineInRange("max_lifespan", 60, 0, Integer.MAX_VALUE);
     }
 
-    public int getProjectileLifespan(){
+    public int getProjectileLifespan() {
         return PROJECTILE_TTL != null ? PROJECTILE_TTL.get() : 60;
     }
 
@@ -49,7 +49,7 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     public void summonProjectiles(Level world, LivingEntity shooter, SpellStats stats, SpellResolver resolver) {
-        int numSplits =  1 + stats.getBuffCount(AugmentSplit.INSTANCE);
+        int numSplits = 1 + stats.getBuffCount(AugmentSplit.INSTANCE);
 
         List<EntityProjectileSpell> projectiles = new ArrayList<>();
         for (int i = 0; i < numSplits; i++) {

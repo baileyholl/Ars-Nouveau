@@ -18,7 +18,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rotation, boolean crossDim) implements TooltipProvider {
+public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rotation,
+                             boolean crossDim) implements TooltipProvider {
     public static final Codec<WarpScrollData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockPos.CODEC.optionalFieldOf("pos").forGetter(WarpScrollData::pos),
             Codec.STRING.optionalFieldOf("dimension", "").forGetter(WarpScrollData::dimension),
@@ -26,11 +27,11 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
             Codec.BOOL.optionalFieldOf("crossDim", false).forGetter(WarpScrollData::crossDim)
     ).apply(instance, WarpScrollData::new));
 
-    public WarpScrollData(boolean crossDim){
+    public WarpScrollData(boolean crossDim) {
         this(Optional.empty(), "", new Vec2(0, 0), crossDim);
     }
 
-    public WarpScrollData withCrossDim(boolean crossDim){
+    public WarpScrollData withCrossDim(boolean crossDim) {
         return new WarpScrollData(pos, dimension, rotation, crossDim);
     }
 
@@ -38,7 +39,7 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
         return this.dimension.equals(dimension) || crossDim;
     }
 
-    public boolean canTeleportWithDim(Level level){
+    public boolean canTeleportWithDim(Level level) {
         return canTeleportWithDim(level.dimension().location().toString());
     }
 
@@ -54,7 +55,7 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
         }
         var pos = this.pos.get();
         pTooltipAdder.accept(Component.translatable("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
-        if(crossDim) {
+        if (crossDim) {
             String dimId = dimension();
             if (dimId != null) {
                 ResourceLocation resourceLocation = ResourceLocation.tryParse(dimId);
@@ -76,6 +77,6 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
 
     @Override
     public int hashCode() {
-        return Float.hashCode(rotation.x) +  Float.hashCode(rotation.y) + Objects.hash(pos, dimension, crossDim);
+        return Float.hashCode(rotation.x) + Float.hashCode(rotation.y) + Objects.hash(pos, dimension, crossDim);
     }
 }

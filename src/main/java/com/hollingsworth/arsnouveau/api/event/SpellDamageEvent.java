@@ -35,7 +35,7 @@ public class SpellDamageEvent extends Event {
 
     }
 
-    public static class Post extends SpellDamageEvent{
+    public static class Post extends SpellDamageEvent {
 
         public Post(DamageSource source, LivingEntity shooter, Entity entity, float totalDamage, SpellContext context) {
             super(source, shooter, entity, totalDamage, context);

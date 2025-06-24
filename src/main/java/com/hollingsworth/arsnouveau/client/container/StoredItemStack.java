@@ -12,61 +12,61 @@ import java.util.function.Function;
 
 public class StoredItemStack {
 
-	public static final Codec<StoredItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ItemStack.CODEC.fieldOf("stack").forGetter(StoredItemStack::getStack),
-			Codec.LONG.fieldOf("count").forGetter(StoredItemStack::getQuantity)
-	).apply(instance, StoredItemStack::new));
+    public static final Codec<StoredItemStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ItemStack.CODEC.fieldOf("stack").forGetter(StoredItemStack::getStack),
+            Codec.LONG.fieldOf("count").forGetter(StoredItemStack::getQuantity)
+    ).apply(instance, StoredItemStack::new));
 
-	public static final StreamCodec<RegistryFriendlyByteBuf, StoredItemStack> STREAM = StreamCodec.composite(ItemStack.STREAM_CODEC, StoredItemStack::getStack, ByteBufCodecs.VAR_LONG, StoredItemStack:: getQuantity, StoredItemStack::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, StoredItemStack> STREAM = StreamCodec.composite(ItemStack.STREAM_CODEC, StoredItemStack::getStack, ByteBufCodecs.VAR_LONG, StoredItemStack::getQuantity, StoredItemStack::new);
 
-	private ItemStack stack;
-	private long count;
-	private int hash;
+    private ItemStack stack;
+    private long count;
+    private int hash;
 
-	public StoredItemStack(ItemStack stack, long count) {
-		this.stack = stack;
-		this.count = count;
-	}
+    public StoredItemStack(ItemStack stack, long count) {
+        this.stack = stack;
+        this.count = count;
+    }
 
-	public StoredItemStack(ItemStack stack) {
-		this.stack = stack.copy();
-		this.stack.setCount(1);
-		this.count = stack.getCount();
-	}
+    public StoredItemStack(ItemStack stack) {
+        this.stack = stack.copy();
+        this.stack.setCount(1);
+        this.count = stack.getCount();
+    }
 
-	public ItemStack getStack() {
-		return stack;
-	}
+    public ItemStack getStack() {
+        return stack;
+    }
 
-	public long getQuantity() {
-		return count;
-	}
+    public long getQuantity() {
+        return count;
+    }
 
-	public ItemStack getActualStack() {
-		ItemStack s = stack.copy();
-		s.setCount((int) count);
-		return s;
-	}
+    public ItemStack getActualStack() {
+        ItemStack s = stack.copy();
+        s.setCount((int) count);
+        return s;
+    }
 
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		StoredItemStack other = (StoredItemStack) obj;
-		if (stack == null) {
-			return other.stack == null;
-		} else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        StoredItemStack other = (StoredItemStack) obj;
+        if (stack == null) {
+            return other.stack == null;
+        } else return ItemStack.isSameItem(stack, other.stack) && ItemStack.matches(stack, other.stack);
+    }
 
-	@Override
-	public int hashCode() {
-		if(hash == 0) {
-			hash = ItemStack.hashItemAndComponents(stack);
-		}
-		return hash;
-	}
+    @Override
+    public int hashCode() {
+        if (hash == 0) {
+            hash = ItemStack.hashItemAndComponents(stack);
+        }
+        return hash;
+    }
 //
 //	public CompoundTag writeToNBT(CompoundTag tag) {
 //		tag.putLong(ITEM_COUNT_NAME, getQuantity());
@@ -89,98 +89,100 @@ public class StoredItemStack {
 //		return !stack.stack.isEmpty() ? stack : null;
 //	}
 
-	public static class ComparatorAmount implements IStoredItemStackComparator {
-		public boolean reversed;
+    public static class ComparatorAmount implements IStoredItemStackComparator {
+        public boolean reversed;
 
-		public ComparatorAmount(boolean reversed) {
-			this.reversed = reversed;
-		}
+        public ComparatorAmount(boolean reversed) {
+            this.reversed = reversed;
+        }
 
-		@Override
-		public int compare(StoredItemStack in1, StoredItemStack in2) {
-			int c = in2.getQuantity() > in1.getQuantity() ? 1 : (in1.getQuantity() == in2.getQuantity() ? in1.getStack().getHoverName().getString().compareTo(in2.getStack().getHoverName().getString()) : -1);
-			return this.reversed ? -c : c;
-		}
+        @Override
+        public int compare(StoredItemStack in1, StoredItemStack in2) {
+            int c = in2.getQuantity() > in1.getQuantity() ? 1 : (in1.getQuantity() == in2.getQuantity() ? in1.getStack().getHoverName().getString().compareTo(in2.getStack().getHoverName().getString()) : -1);
+            return this.reversed ? -c : c;
+        }
 
-		@Override
-		public boolean isReversed() {
-			return reversed;
-		}
+        @Override
+        public boolean isReversed() {
+            return reversed;
+        }
 
-		@Override
-		public int type() {
-			return 0;
-		}
+        @Override
+        public int type() {
+            return 0;
+        }
 
-		@Override
-		public void setReversed(boolean rev) {
-			reversed  = rev;
-		}
-	}
+        @Override
+        public void setReversed(boolean rev) {
+            reversed = rev;
+        }
+    }
 
-	public static class ComparatorName implements IStoredItemStackComparator {
-		public boolean reversed;
+    public static class ComparatorName implements IStoredItemStackComparator {
+        public boolean reversed;
 
-		public ComparatorName(boolean reversed) {
-			this.reversed = reversed;
-		}
+        public ComparatorName(boolean reversed) {
+            this.reversed = reversed;
+        }
 
-		@Override
-		public int compare(StoredItemStack in1, StoredItemStack in2) {
-			int c = in1.getDisplayName().compareTo(in2.getDisplayName());
-			return this.reversed ? -c : c;
-		}
+        @Override
+        public int compare(StoredItemStack in1, StoredItemStack in2) {
+            int c = in1.getDisplayName().compareTo(in2.getDisplayName());
+            return this.reversed ? -c : c;
+        }
 
-		@Override
-		public boolean isReversed() {
-			return reversed;
-		}
+        @Override
+        public boolean isReversed() {
+            return reversed;
+        }
 
-		@Override
-		public int type() {
-			return 1;
-		}
+        @Override
+        public int type() {
+            return 1;
+        }
 
-		@Override
-		public void setReversed(boolean rev) {
-			reversed = rev;
-		}
-	}
+        @Override
+        public void setReversed(boolean rev) {
+            reversed = rev;
+        }
+    }
 
-	public interface IStoredItemStackComparator extends Comparator<StoredItemStack> {
-		boolean isReversed();
-		void setReversed(boolean rev);
-		int type();
-	}
+    public interface IStoredItemStackComparator extends Comparator<StoredItemStack> {
+        boolean isReversed();
 
-	public enum SortingTypes {
-		AMOUNT(ComparatorAmount::new),
-		NAME(ComparatorName::new)
-		;
-		public static final SortingTypes[] VALUES = values();
-		private final Function<Boolean, IStoredItemStackComparator> factory;
-		SortingTypes(Function<Boolean, IStoredItemStackComparator> factory) {
-			this.factory = factory;
-		}
+        void setReversed(boolean rev);
 
-		public IStoredItemStackComparator create(boolean rev) {
-			return factory.apply(rev);
-		}
-	}
+        int type();
+    }
 
-	public String getDisplayName() {
-		return stack.getHoverName().getString();
-	}
+    public enum SortingTypes {
+        AMOUNT(ComparatorAmount::new),
+        NAME(ComparatorName::new);
+        public static final SortingTypes[] VALUES = values();
+        private final Function<Boolean, IStoredItemStackComparator> factory;
 
-	public void grow(long c) {
-		count += c;
-	}
+        SortingTypes(Function<Boolean, IStoredItemStackComparator> factory) {
+            this.factory = factory;
+        }
 
-	public void setCount(long count) {
-		this.count = count;
-	}
+        public IStoredItemStackComparator create(boolean rev) {
+            return factory.apply(rev);
+        }
+    }
 
-	public int getMaxStackSize() {
-		return stack.getMaxStackSize();
-	}
+    public String getDisplayName() {
+        return stack.getHoverName().getString();
+    }
+
+    public void grow(long c) {
+        count += c;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    public int getMaxStackSize() {
+        return stack.getMaxStackSize();
+    }
 }

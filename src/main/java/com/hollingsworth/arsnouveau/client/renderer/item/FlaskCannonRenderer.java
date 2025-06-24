@@ -31,30 +31,30 @@ public class FlaskCannonRenderer extends GeoItemRenderer<FlaskCannon> {
 
     @Override
     public void renderRecursively(PoseStack poseStack, FlaskCannon animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int packedColor) {
-        if(currentItemStack == null) {
+        if (currentItemStack == null) {
             super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
             return;
         }
         PotionLauncherData flask = currentItemStack.getOrDefault(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData());
         int amountLeft = flask.amountLeft(Minecraft.getInstance().player);
-        if(bone == null)
+        if (bone == null)
             return;
-        if(bone.getName().equalsIgnoreCase("full")){
+        if (bone.getName().equalsIgnoreCase("full")) {
             bone.setHidden(amountLeft < 8);
-        }else if(bone.getName().equalsIgnoreCase("75")){
+        } else if (bone.getName().equalsIgnoreCase("75")) {
             bone.setHidden(!(amountLeft == 7 || amountLeft == 6));
-        }else if(bone.getName().equalsIgnoreCase("50")){
+        } else if (bone.getName().equalsIgnoreCase("50")) {
             bone.setHidden(!(amountLeft == 5 || amountLeft == 4));
-        }else if(bone.getName().equalsIgnoreCase("25")){
+        } else if (bone.getName().equalsIgnoreCase("25")) {
             bone.setHidden(!(amountLeft == 3 || amountLeft == 2));
-        }else if(bone.getName().equalsIgnoreCase("1")){
+        } else if (bone.getName().equalsIgnoreCase("1")) {
             bone.setHidden(amountLeft != 1);
         }
 
-        if(bone.getName().equals("potion_levels") || (bone.getParent() != null && bone.getParent().getName().equals("potion_levels"))) {
+        if (bone.getName().equals("potion_levels") || (bone.getParent() != null && bone.getParent().getName().equals("potion_levels"))) {
             ParticleColor color = ParticleColor.fromInt(flask.renderData().getColor());
             super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.getColor());
-        }else{
+        } else {
             super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
         }
     }

@@ -21,7 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-public abstract class TableBlock extends TickableModBlock{
+public abstract class TableBlock extends TickableModBlock {
     public static final EnumProperty<ThreePartBlock> PART = BlockProps.TABLE_ENUM;
     protected static final VoxelShape BASE = Block.box(0.0D, 0D, 0.0D, 16.0D, 16, 16.0D);
     protected static final VoxelShape LEG_NORTH_WEST = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 3.0D, 3.0D);

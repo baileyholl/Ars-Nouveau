@@ -24,7 +24,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
     public void render(ArcanePedestalTile tileEntityIn, float pPartialTick, PoseStack matrixStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
 
         if (tileEntityIn.getStack() == null || tileEntityIn.getStack().isEmpty()) return;
-        if(!(tileEntityIn.getBlockState().getBlock() instanceof ArcanePedestal pedestal)){
+        if (!(tileEntityIn.getBlockState().getBlock() instanceof ArcanePedestal pedestal)) {
             return;
         }
         Vector3f offsetVec = pedestal.getItemOffset(tileEntityIn.getBlockState(), tileEntityIn.getBlockPos());

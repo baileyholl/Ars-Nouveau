@@ -179,6 +179,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EntityOrbitProjectile>> ORBIT_SPELL = registerEntity(
             LibEntityNames.ORBIT_PROJECTILE,
             EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).fireImmune()
+                    .noSave()
                     .clientTrackingRange(20).setShouldReceiveVelocityUpdates(true));
     public static final DeferredHolder<EntityType<?>, EntityType<EntityChimeraProjectile>> ENTITY_CHIMERA_SPIKE = registerEntity(
             LibEntityNames.CHIMERA_SPIKE,
@@ -206,7 +207,7 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    );
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
             LibEntityNames.WALL,
             EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
@@ -214,7 +215,7 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    );
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<WealdWalker>> ENTITY_CASCADING_WEALD = registerEntity(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                 WealdWalker walker = new WealdWalker(type, world);
                 walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);
@@ -327,7 +328,7 @@ public class ModEntities {
 
     public static boolean wildenSpawnRules(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
-               && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)

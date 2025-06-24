@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 
 public interface ITurretBehavior {
 
-    default void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction direction){
+    default void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction direction) {
 
     }
 }

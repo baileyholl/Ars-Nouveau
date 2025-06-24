@@ -16,7 +16,7 @@ public record LightJarData(Optional<BlockPos> pos, boolean enabled) {
             Codec.BOOL.fieldOf("enabled").forGetter(LightJarData::enabled)
     ).apply(instance, LightJarData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LightJarData> STREAM_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC.apply(ByteBufCodecs::optional), LightJarData::pos, ByteBufCodecs.BOOL,LightJarData::enabled, LightJarData::new);
+    public static StreamCodec<RegistryFriendlyByteBuf, LightJarData> STREAM_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC.apply(ByteBufCodecs::optional), LightJarData::pos, ByteBufCodecs.BOOL, LightJarData::enabled, LightJarData::new);
 
     public LightJarData() {
         this(Optional.empty(), false);
