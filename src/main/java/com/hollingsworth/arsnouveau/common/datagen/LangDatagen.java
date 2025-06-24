@@ -1780,6 +1780,12 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sound.trident_throw", "Trident Throw");
         add("ars_nouveau.sound.totem_use", "Totem Use");
         add("ars_nouveau.sound.squid_squirt", "Squid Squirt");
+        add("ars_nouveau.particle.sculk_charge", "Sculk Charge");
+        add("ars_nouveau.particle.sculk_charge_pop", "Sculk Charge Pop");
+        // explosion
+        add("ars_nouveau.particle.explosion", "Explosion");
+        add("ars_nouveau.particle.cloud", "Cloud");
+        add("ars_nouveau.particle.breaking_circle", "Breaking Circle");
 
     }
 

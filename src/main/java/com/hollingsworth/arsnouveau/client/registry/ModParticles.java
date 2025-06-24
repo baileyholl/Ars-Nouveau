@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleType;
 import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.client.particle.BubbleParticle;
+import com.hollingsworth.arsnouveau.client.particle.SculkChargeParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ParticleType;
@@ -95,6 +96,9 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> TRIAL_SPAWNER = PARTICLES.register("trial_spawner", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> OMINOUS_SPAWNING = PARTICLES.register("ominous_spawning", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> RAID_OMEN = PARTICLES.register("raid_omen", PropertyParticleType::new);
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> BREAKING_CIRCLE = PARTICLES.register("breaking_circle", PropertyParticleType::new);
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> EXPLOSION = PARTICLES.register("explosion", PropertyParticleType::new);
+    public static final DeferredHolder<ParticleType<?>, PropertyParticleType> CLOUD = PARTICLES.register("cloud", PropertyParticleType::new);
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Inner {
@@ -139,8 +143,7 @@ public class ModParticles {
             evt.registerSpriteSet(SCULK_SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_SOUL, SoulParticle.EmissiveProvider::new));
             evt.registerSpriteSet(SOUL_FIRE_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL_FIRE_FLAME, FlameParticle.Provider::new));
             evt.registerSpriteSet(SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL, SoulParticle.Provider::new));
-//            evt.registerSpriteSet(SCULK_CHARGE_POP.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_CHARGE_POP, SculkChargePopParticle.Provider::new));
-//            evt.registerSpriteSet(SCULK_CHARGE.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_CHARGE, SculkChargeParticle.Provider::new));
+            evt.registerSpriteSet(SCULK_CHARGE_POP.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_CHARGE_POP, SculkChargePopParticle.Provider::new));
             evt.registerSpriteSet(HAPPY_VILLAGER.get(), (spites) -> new WrappedProvider(ParticleTypes.HAPPY_VILLAGER, SuspendedTownParticle.HappyVillagerProvider::new));
             evt.registerSpriteSet(COMPOSTER.get(), (spites) -> new WrappedProvider(ParticleTypes.COMPOSTER, SuspendedTownParticle.ComposterFillProvider::new));
             evt.registerSpriteSet(HEART.get(), (spites) -> new WrappedProvider(ParticleTypes.HEART, HeartParticle.Provider::new));
@@ -176,7 +179,10 @@ public class ModParticles {
             evt.registerSpriteSet(TRIAL_SPAWNER.get(), (spites) -> new WrappedProvider(ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER, TrialSpawnerDetectionParticle.Provider::new));
             evt.registerSpriteSet(OMINOUS_SPAWNING.get(), (spites) -> new WrappedProvider(ParticleTypes.OMINOUS_SPAWNING, FlyStraightTowardsParticle.OminousSpawnProvider::new));
             evt.registerSpriteSet(RAID_OMEN.get(), (spites) -> new WrappedProvider(ParticleTypes.RAID_OMEN, SpellParticle.Provider::new));
-
+            evt.registerSpriteSet(EXPLOSION.get(), (spites) -> new WrappedProvider(ParticleTypes.EXPLOSION, HugeExplosionParticle.Provider::new));
+            evt.registerSpriteSet(BREAKING_CIRCLE.get(), BreakingCircleParticle.Provider::new);
+            evt.registerSpriteSet(CLOUD.get(), (spites) -> new WrappedProvider(ParticleTypes.CLOUD, PlayerCloudParticle.Provider::new));
+            evt.registerSpriteSet(SCULK_CHARGE.get(), SculkChargeParticle.Provider::new);
         }
     }
 }
