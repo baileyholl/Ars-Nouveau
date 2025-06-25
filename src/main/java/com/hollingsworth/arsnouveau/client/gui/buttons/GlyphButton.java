@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
-import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -13,7 +12,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforgespi.language.IModInfo;
@@ -77,10 +75,5 @@ public class GlyphButton extends ANButton {
                 tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
             }
         }
-    }
-
-    @Override
-    public TooltipComponent getTooltipImage() {
-        return abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(abstractSpellPart);
     }
 }

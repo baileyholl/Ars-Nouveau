@@ -56,13 +56,6 @@ public class ModdedScreen extends Screen {
     }
 
     protected TooltipComponent collectComponent(int mouseX, int mouseY) {
-        for (Renderable renderable : renderables) {
-            if (renderable instanceof AbstractWidget widget && (widget instanceof ITooltipProvider tooltipProvider)) {
-                if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
-                    return tooltipProvider.getTooltipImage();
-                }
-            }
-        }
         return null;
     }
 

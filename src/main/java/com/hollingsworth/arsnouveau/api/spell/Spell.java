@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
@@ -17,9 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Spell {
@@ -119,6 +120,29 @@ public class Spell {
             System.out.println("String format not valid.");
         }
         return new Spell();
+    }
+
+    public String toJson() {
+        JsonElement json = Spell.CODEC.codec().encodeStart(JsonOps.INSTANCE, this).getOrThrow();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(json);
+    }
+
+    public String toBinaryBase64() {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(byteStream);
+
+            String json = this.toJson();
+
+            out.writeUTF(json);
+
+            out.close();
+            return Base64.getEncoder().encodeToString(byteStream.toByteArray());
+        } catch (IOException e) {
+            System.out.println("Error writing spell to binary: " + e.getMessage());
+            return "";
+        }
     }
 
 

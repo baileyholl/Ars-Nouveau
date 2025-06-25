@@ -6,17 +6,17 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.*;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.network.*;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphKnownValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
@@ -32,7 +32,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -51,13 +50,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
-import static com.hollingsworth.arsnouveau.api.util.SpellUtil.spellToBinaryBase64;
-import static com.hollingsworth.arsnouveau.api.util.SpellUtil.spellToJson;
 
 public class GuiSpellBook extends SpellSlottedScreen {
-
-    public Spell clipboard = new Spell();
-    public ClipboardWidget clipboardW;
 
     public int numLinks = 10;
 
@@ -146,7 +140,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         resetCraftingCells();
 
         layoutAllGlyphs(page);
-        addRenderableWidget(new CreateSpellButton(bookRight - 74, bookBottom - 13, this::onCreateClick, () -> this.validationErrors));
+        addRenderableWidget(new CreateSpellButton(bookRight - 74, bookBottom - 13, (b) -> this.saveSpell(), () -> this.validationErrors));
         addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::clear));
 
         String previousSearch = "";
@@ -169,13 +163,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         spellNameBox.setValue(caster.getSpellName(selectedSpellSlot));
         addRenderableWidget(spellNameBox);
         addRenderableWidget(searchBar);
-
-        // clipboard, copy and paste buttons
-        clipboardW = addRenderableWidget(
-                new ClipboardWidget(this)
-        );
-        addRenderableWidget(new CopyButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.copy")));
-        addRenderableWidget(new PasteButton(this).withTooltip(Component.translatable("ars_nouveau.spell_book_gui.paste")));
 
         initSpellSlots((slotButton) -> {
             onSetCaster(selectedSpellSlot);
@@ -702,16 +689,11 @@ public class GuiSpellBook extends SpellSlottedScreen {
         validate();
     }
 
-    public void onCreateClick(Button button) {
+    protected void saveSpell() {
         validate();
         if (validationErrors.isEmpty()) {
-            Spell.Mutable spell = new Spell().mutable();
-            for (AbstractSpellPart spellPart : this.spell) {
-                if (spellPart != null) {
-                    spell.add(spellPart);
-                }
-            }
-            Networking.sendToServer(new PacketUpdateCaster(spell.immutable(), this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
+            Spell spell = new Spell(this.spell);
+            Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
             ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
     }
@@ -906,55 +888,37 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
 
     public void onCopyOrExport(Button ignoredB) {
-        if (hasShiftDown() && clipboard != null && !clipboard.isEmpty()) {
-            // copy the spell to the clipboard
-            Spell spell = fetchCurrentSpell();
-            getMinecraft().keyboardHandler.setClipboard(hasAltDown() ? spellToBinaryBase64(spell) : spellToJson(spell));
-        } else if (spell != null && !spell.isEmpty()) {
-            clipboard = fetchCurrentSpell();
-            clipboardW.setClipboard(clipboard.mutable());
-        }
+        Spell spell = fetchCurrentSpell();
+        getMinecraft().keyboardHandler.setClipboard(spell.toBinaryBase64());
     }
 
     public void onPasteOrImport(Button ignoredB) {
-        if (Screen.hasShiftDown()) {
-            String clipboardString = Minecraft.getInstance().keyboardHandler.getClipboard();
-            if (!clipboardString.isEmpty()) {
-                Spell spell = hasAltDown() ? Spell.fromBinaryBase64(clipboardString) : Spell.fromJson(clipboardString);
-                if (spell.isValid()) {
-                    clipboard = spell;
-                    spellNameBox.setValue(spell.name());
-                    clipboardW.setClipboard(clipboard.mutable());
-                }
-            }
-        } else {
-            if (clipboard == null || clipboard.isEmpty()) {
-                return;
-            }
-            // before pasting, trim the spell to the max size supported by the spell book
-            int maxSize = 10 + getExtraGlyphSlots();
-            Spell oldSpell = fetchCurrentSpell();
-            Spell.Mutable clipSpell = clipboard.mutable();
-            spell = clipboard.size() > maxSize ? clipSpell.recipe.subList(0, maxSize) : clipSpell.recipe;
 
-            // validate the spell
-            validate();
-
-            if (validationErrors.isEmpty()) {
-                spell.removeIf(Objects::isNull);
-                if (clipboard.color() != ParticleColor.DEFAULT) // if color is default, it's likely absent, keep the old one
-                    Networking.sendToServer(new PacketUpdateSpellColors(this.selectedSpellSlot, clipboard.color(), this.hand == InteractionHand.MAIN_HAND));
-                if (clipboard.sound() != ConfiguredSpellSound.DEFAULT) // if sound is default, it's likely absent, keep the old one
-                    Networking.sendToServer(new PacketSetSound(this.selectedSpellSlot, clipboard.sound(), this.hand == InteractionHand.MAIN_HAND));
-                if (!clipboard.particleTimeline().timelines().isEmpty()) {
-                    Networking.sendToServer(new PacketUpdateParticleTimeline(this.selectedSpellSlot, clipboard.particleTimeline(), this.hand == InteractionHand.MAIN_HAND));
-                }
-                Networking.sendToServer(new PacketUpdateCaster(new Spell(spell), this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
-            } else {
-                // if the spell is invalid, set the spell back to the old one
-                spell = oldSpell.mutable().recipe;
-            }
+        String clipboardString = Minecraft.getInstance().keyboardHandler.getClipboard();
+        if (clipboardString.isEmpty()) {
+            return;
         }
+        Spell clipboard = Spell.fromBinaryBase64(clipboardString);
+        if (clipboard.isValid()) {
+            spellNameBox.setValue(clipboard.name());
+        } else {
+            return;
+        }
+
+        int maxSize = 10 + getExtraGlyphSlots();
+        Spell oldSpell = fetchCurrentSpell();
+        Spell.Mutable clipSpell = Spell.fromBinaryBase64(clipboardString).mutable();
+        spell = clipboard.size() > maxSize ? clipSpell.recipe.subList(0, maxSize) : clipSpell.recipe;
+
+        if (validationErrors.isEmpty()) {
+            spell.removeIf(Objects::isNull);
+            Networking.sendToServer(new PacketUpdateParticleTimeline(this.selectedSpellSlot, clipboard.particleTimeline(), this.hand == InteractionHand.MAIN_HAND));
+            ParticleOverviewScreen.lastOpenedHash = 0;
+            saveSpell();
+        } else {
+            spell = oldSpell.mutable().recipe;
+        }
+        validate();
     }
 
 

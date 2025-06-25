@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
-import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.List;
 
@@ -22,12 +19,12 @@ public class PasteButton extends GuiImageButton {
         tooltip.add(Component.translatable("ars_nouveau.spell_book_gui.paste_shift"));
     }
 
-    @Override
-    public TooltipComponent getTooltipImage() {
-        if (guiSpellBook.clipboard == null || guiSpellBook.clipboard.isEmpty()) {
-            return null;
-        }
-        return new SpellTooltip(new Spell(guiSpellBook.clipboard.unsafeList()));
-    }
+//    @Override
+//    public TooltipComponent getTooltipImage() {
+//        if (guiSpellBook.clipboard == null || guiSpellBook.clipboard.isEmpty()) {
+//            return null;
+//        }
+//        return new SpellTooltip(new Spell(guiSpellBook.clipboard.unsafeList()));
+//    }
 
 }
