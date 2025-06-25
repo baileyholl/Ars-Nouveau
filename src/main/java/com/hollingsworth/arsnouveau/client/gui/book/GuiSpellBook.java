@@ -909,7 +909,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         Spell oldSpell = fetchCurrentSpell();
         Spell.Mutable clipSpell = Spell.fromBinaryBase64(clipboardString).mutable();
         spell = clipboard.size() > maxSize ? clipSpell.recipe.subList(0, maxSize) : clipSpell.recipe;
-
+        validate();
         if (validationErrors.isEmpty()) {
             spell.removeIf(Objects::isNull);
             Networking.sendToServer(new PacketUpdateParticleTimeline(this.selectedSpellSlot, clipboard.particleTimeline(), this.hand == InteractionHand.MAIN_HAND));
