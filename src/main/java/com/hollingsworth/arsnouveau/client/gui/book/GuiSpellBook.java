@@ -66,6 +66,8 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public PageButton nextButton;
     public PageButton previousButton;
     public ISpellValidator spellValidator;
+    public ISpellValidator pasteValidator;
+
     public String previousString = "";
 
     public int formTextRow = 0;
@@ -111,6 +113,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
         this.displayedGlyphs = new ArrayList<>(this.unlockedSpells);
         this.validationErrors = new LinkedList<>();
         this.spellValidator = new CombinedSpellValidator(
+                ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
+                new GlyphMaxTierValidator(tier)
+        );
+        this.pasteValidator = new CombinedSpellValidator(
                 ArsNouveauAPI.getInstance().getSpellCraftingSpellValidator(),
                 new GlyphMaxTierValidator(tier),
                 new GlyphKnownValidator(player.isCreative() || bookStack.is(ItemsRegistry.CREATIVE_SPELLBOOK.asItem()) ? null : playerCap)
@@ -777,7 +783,12 @@ public class GuiSpellBook extends SpellSlottedScreen {
     /**
      * Validates the current spell as well as the potential for adding each glyph.
      */
+
     private void validate() {
+        validate(spellValidator);
+    }
+
+    private void validate(ISpellValidator validator) {
         resetCraftingCells();
         //update mana cache
         currentCostCache = getCurrentManaCost();
@@ -789,7 +800,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         }
 
         // Validate the crafting slots
-        List<SpellValidationError> errors = spellValidator.validate(spell);
+        List<SpellValidationError> errors = validator.validate(spell);
         for (SpellValidationError ve : errors) {
             CraftingButton b = craftingCells.get(ve.getPosition());
             b.validationErrors.add(ve);
@@ -837,7 +848,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
             // Filter the errors to ones referring to the simulated glyph
             glyphButton.validationErrors.addAll(
-                    spellValidator.validate(slicedSpell).stream()
+                    validator.validate(slicedSpell).stream()
                             .filter(ve -> ve.getPosition() >= slicedSpell.size() - 1).toList()
             );
 
@@ -908,8 +919,9 @@ public class GuiSpellBook extends SpellSlottedScreen {
         int maxSize = 10 + getExtraGlyphSlots();
         Spell oldSpell = fetchCurrentSpell();
         Spell.Mutable clipSpell = Spell.fromBinaryBase64(clipboardString).mutable();
+
         spell = clipboard.size() > maxSize ? clipSpell.recipe.subList(0, maxSize) : clipSpell.recipe;
-        validate();
+        validate(pasteValidator);
         if (validationErrors.isEmpty()) {
             spell.removeIf(Objects::isNull);
             Networking.sendToServer(new PacketUpdateParticleTimeline(this.selectedSpellSlot, clipboard.particleTimeline(), this.hand == InteractionHand.MAIN_HAND));
@@ -918,7 +930,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         } else {
             spell = oldSpell.mutable().recipe;
         }
-        validate();
+        validate(spellValidator);
     }
 
 
