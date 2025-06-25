@@ -374,8 +374,6 @@ public class APIRegistry {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.FLAME.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.INFESTED.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_SOUL.get(), true));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticlModParticles.eData(SCULK_CHARGE_POP.get(), false));
-//            ParticleTypeProperty.addType(new ParticleTypeProperty.ParticlModParticles.eData(SCULK_CHARGE.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SOUL.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SOUL_FIRE_FLAME.get(), false));
 
@@ -416,6 +414,11 @@ public class APIRegistry {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.TRIAL_SPAWNER.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.OMINOUS_SPAWNING.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.RAID_OMEN.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BREAKING_CIRCLE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.CLOUD.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.EXPLOSION.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_CHARGE.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCULK_CHARGE_POP.get(), true));
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar) {

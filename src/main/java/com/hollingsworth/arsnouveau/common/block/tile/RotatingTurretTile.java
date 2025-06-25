@@ -20,7 +20,6 @@ import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -166,7 +165,6 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
         if (resolver.castType != null && RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, level, pos, fakePlayer, iposition, orderedByNearest()[0].getOpposite());
-            spellCaster.playSound(pos, level, null, spellCaster.getCurrentSound(), SoundSource.BLOCKS);
         }
     }
 

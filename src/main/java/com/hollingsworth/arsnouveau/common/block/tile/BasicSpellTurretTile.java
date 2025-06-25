@@ -22,7 +22,6 @@ import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -81,7 +80,6 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
         if (resolver.castType != null && BasicSpellTurret.TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             BasicSpellTurret.TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, level, pos, fakePlayer, iposition, direction);
-            spellCaster.playSound(pos, level, null, spellCaster.getCurrentSound(), SoundSource.BLOCKS);
         }
     }
 

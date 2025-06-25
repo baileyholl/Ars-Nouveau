@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -49,6 +50,10 @@ public class ConfiguredSpellSound implements Cloneable {
         this.sound = spellSound;
         this.volume = volume;
         this.pitch = pitch;
+    }
+
+    public void playSound(Level level, Vec3 position) {
+        this.playSound(level, position.x, position.y, position.z);
     }
 
     public void playSound(Level level, double x, double y, double z) {

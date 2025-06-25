@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
@@ -95,10 +94,10 @@ public class OrbitTimeline extends BaseTimeline<OrbitTimeline> {
     @Override
     public List<BaseProperty<?>> getProperties() {
         return List.of(
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("trail"), this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS))),
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)), List.of(resolveSound)),
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("spawn"), this.onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS)), List.of(spawnSound)),
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("flair"), this.flairEffect, ImmutableList.copyOf(FLAIR_OPTIONS)))
+                new MotionProperty(new TimelineOption(TimelineOption.TRAIL, this.trailEffect, ImmutableList.copyOf(TRAIL_OPTIONS))),
+                new MotionProperty(new TimelineOption(TimelineOption.IMPACT, this.onResolvingEffect, ImmutableList.copyOf(RESOLVING_OPTIONS)), List.of(resolveSound)),
+                new MotionProperty(new TimelineOption(TimelineOption.SPAWN, this.onSpawnEffect, ImmutableList.copyOf(SPAWN_OPTIONS)), List.of(spawnSound)),
+                new MotionProperty(new TimelineOption(TimelineOption.FLAIR, this.flairEffect, ImmutableList.copyOf(FLAIR_OPTIONS)))
         );
     }
 }

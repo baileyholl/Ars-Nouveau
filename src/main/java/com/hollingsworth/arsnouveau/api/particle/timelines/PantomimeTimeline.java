@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
@@ -53,7 +52,7 @@ public class PantomimeTimeline extends BaseTimeline<PantomimeTimeline> {
     @Override
     public List<BaseProperty<?>> getProperties() {
         return List.of(
-                new MotionProperty(new TimelineOption(ArsNouveau.prefix("impact"), this.onResolvingEffect, ImmutableList.copyOf(TouchTimeline.RESOLVING_OPTIONS)), List.of(resolveSound))
+                new MotionProperty(new TimelineOption(TimelineOption.IMPACT, this.onResolvingEffect, ImmutableList.copyOf(TouchTimeline.RESOLVING_OPTIONS)), List.of(resolveSound))
         );
     }
 }

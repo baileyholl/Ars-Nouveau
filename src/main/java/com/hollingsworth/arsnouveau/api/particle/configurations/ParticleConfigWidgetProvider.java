@@ -32,6 +32,10 @@ public abstract class ParticleConfigWidgetProvider {
 
     public abstract void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 
+    public void renderBg(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    }
+
+
     public abstract void addWidgets(List<AbstractWidget> widgets);
 
     public abstract void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks);

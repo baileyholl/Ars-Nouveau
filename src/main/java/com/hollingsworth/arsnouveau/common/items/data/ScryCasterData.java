@@ -20,7 +20,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -114,7 +113,6 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
                 position,
                 direction);
         resolver.expendMana();
-        playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 

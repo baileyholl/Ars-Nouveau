@@ -115,6 +115,7 @@ public abstract class ListParticleWidgetProvider extends ParticleConfigWidgetPro
         pageOffset = 0;
         previousSearch = search;
         preservedData.get().put("search", search);
+        preservedData.get().put("pageOffset", pageOffset);
         updateButtons();
     }
 

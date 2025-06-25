@@ -1480,7 +1480,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.property.particle_type", "Particle");
         add("ars_nouveau.spell_styles", "Spell Styles");
         add("ars_nouveau.timeline.trail", "Trail");
-        add("ars_nouveau.timeline.impact", "On Impact");
+        add("ars_nouveau.timeline.impact", "On Resolve");
         add("ars_nouveau.particle_timelines", "Configurable Particles");
         add("ars_nouveau.particle.new_glow", "Glow");
         add("ars_nouveau.particle.snow", "Snow");
@@ -1493,7 +1493,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spawn.sphere", "Sphere");
         add("ars_nouveau.spawn.box", "Box");
         add("ars_nouveau.radius_slider", "Radius: %s");
-        add("ars_nouveau.timeline.field", "Field");
         add("ars_nouveau.particle_config.upward_wall", "Upward Wall");
         add("ars_nouveau.particle.dripping_water", "Water");
         add("ars_nouveau.particle.an_bubble", "Bubble");
@@ -1757,7 +1756,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.timeline.impact.tooltip", "Creates particles and sound where the spell resolves");
         add("ars_nouveau.timeline.flair.tooltip", "Additional particles that play on the projectile's path");
         add("ars_nouveau.timeline.tick.tooltip", "Creates particles every tick");
-        add("ars_nouveau.timeline.field.tooltip", "Creates particles where this effect lands.");
         add("block.ars_nouveau.particle_block", "Prestidigitation Block");
         add("ars_nouveau.expand_button", "Toggle Expanded View");
 
@@ -1784,6 +1782,12 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sound.trident_throw", "Trident Throw");
         add("ars_nouveau.sound.totem_use", "Totem Use");
         add("ars_nouveau.sound.squid_squirt", "Squid Squirt");
+        add("ars_nouveau.particle.sculk_charge", "Sculk Charge");
+        add("ars_nouveau.particle.sculk_charge_pop", "Sculk Charge Pop");
+        // explosion
+        add("ars_nouveau.particle.explosion", "Explosion");
+        add("ars_nouveau.particle.cloud", "Cloud");
+        add("ars_nouveau.particle.breaking_circle", "Breaking Circle");
 
     }
 
