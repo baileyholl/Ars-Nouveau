@@ -557,7 +557,9 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
         // only react if ctrl is pressed
-        if (hasControlDown() && !spellNameBox.isFocused() && !searchBar.isFocused()) {
+        if (hasControlDown()
+                && (!searchBar.isFocused() || searchBar.highlightPos == searchBar.value.length())
+                && (!spellNameBox.isFocused() || spellNameBox.highlightPos == spellNameBox.value.length())) {
             if (isCopy(keyCode)) {
                 onCopyOrExport(null);
                 return true;
@@ -570,12 +572,12 @@ public class GuiSpellBook extends SpellSlottedScreen {
                 return true;
             }
         }
-
+        
         if (super.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
         }
 
-        if (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchBar.isFocused() || !searchBar.active) {
+        if (keyCode != GLFW.GLFW_KEY_LEFT_CONTROL && (!(keyCode >= GLFW.GLFW_KEY_LEFT_SHIFT && keyCode <= GLFW.GLFW_KEY_MENU) && !searchBar.isFocused() || !searchBar.active)) {
             var prevFocus = this.getFocused();
             this.clearFocus();
             this.setFocused(searchBar);
