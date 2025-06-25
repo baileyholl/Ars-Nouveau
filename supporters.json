@@ -40,11 +40,8 @@
   "066f67d4-51dc-4767-b48f-d03dd7359f4a", "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9", "6d60f894-2a95-4dfd-8afb-64980e0a6d17",
   "9529428c-25ea-443e-b56f-f24a18ebb5f1", "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8", "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
   "7e0a1802-2a6a-403d-a487-d3a60cb2d037", "4295cb3b-245c-481d-ad3c-60b179b8cc27", "5abd7fb8-61fd-4fcd-bf6b-10da638f5174",
-    "eb5adebb-130f-4a56-9a52-e99c455b628d",
-    "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5",
-    "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
-    "d41bfe34-e558-4c52-9797-bdd88fcbc88a"
-  ],
+  "eb5adebb-130f-4a56-9a52-e99c455b628d", "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5", "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
+  "d41bfe34-e558-4c52-9797-bdd88fcbc88a"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -649,14 +646,12 @@
       "name": "Jacob",
       "bio": "He loves to calculate plane geometry in Cartesian coordinates.",
       "color": "purple"
-    },
-    {
+    },{
       "adopter": "Dadamalda",
       "color": "red",
       "bio": "He throws the clock out of the window every morning.",
       "name": "Sleepy Bill"
-    },
-    {
+    },{
       "adopter": "Breadcrumb",
       "bio": "Came looking for balance, promptly got lost",
       "color": "purple",
