@@ -10,9 +10,11 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.ColorPresetButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
+import com.hollingsworth.nuggets.client.gui.NoShadowTextField;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -77,17 +79,14 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
             SelectedParticleButton rainbowButton;
             SelectedParticleButton noneButton;
             List<SelectedParticleButton> selectableButtons = new ArrayList<>();
+            NoShadowTextField textField;
 
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 DocClientUtils.drawHeader(getName(), graphics, x, y, width, mouseX, mouseY, partialTicks);
-                Color color = new Color(displayColor.getColor(), false);
 
                 int xOffset = x + 7;
                 int yOffset = y + 18;
-                graphics.fill(xOffset + 2, yOffset + 3, xOffset - 2 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.width(), yOffset - 3 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.height(), color.getRGB());
-
-                graphics.fill(xOffset + 3, yOffset + 2, xOffset - 3 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.width(), yOffset - 2 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.height(), color.getRGB());
 
                 DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_COLOR_PREVIEW, xOffset, yOffset);
                 int hueOffset = 35;
@@ -100,6 +99,19 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
 //                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.green_slider", greenW.getValueInt()), graphics, x + 8, y + hueOffset + 20, width, mouseX, mouseY, partialTicks);
 //                    DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.color_gui.blue_slider", blueW.getValueInt()), graphics, x + 8, y + hueOffset + 41, width, mouseX, mouseY, partialTicks);
 //                }
+            }
+
+            @Override
+            public void renderBg(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+                super.renderBg(graphics, mouseX, mouseY, partialTicks);
+                Color color = new Color(displayColor.getColor(), false);
+
+                int xOffset = 160;
+                int yOffset = 35;
+                graphics.fill(xOffset + 2, yOffset + 3, xOffset - 2 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.width(), yOffset - 3 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.height(), color.getRGB());
+
+                graphics.fill(xOffset + 3, yOffset + 2, xOffset - 3 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.width(), yOffset - 2 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.height(), color.getRGB());
+
             }
 
             @Override
@@ -134,6 +146,14 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     updateParticleColor();
                 });
 
+                textField = new NoShadowTextField(Minecraft.getInstance().font, x + xOffset, y + 17, 100, 20, Component.empty());
+                textField.setResponder((val) -> {
+                    if (val.length() == 7) {
+                        ParticleColor color = ParticleColor.fromHex(val);
+                        setFromPreset(color);
+                        updateParticleColor();
+                    }
+                });
                 setFromPreset(particleColor);
                 int numPerRow = 6;
                 int size = ParticleColor.PRESET_COLORS.size();
@@ -169,7 +189,28 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 noneButton.withTooltip(Component.translatable("ars_nouveau.color_none"));
                 selectableButtons.add(noneButton);
                 selectableButtons.add(rainbowButton);
+                textField.setValue(displayColor.toHex());
+                textField.textColor = displayColor.getOppositeColor().getColor();
+                textField.setMaxLength(7);
+                textField.setFilter((s) -> {
+                    if (!s.startsWith("#")) {
+                        return false;
+                    }
+                    if (s.length() > 7) {
+                        return false;
+                    }
+                    if (s.length() < 7) {
+                        return true;
+                    }
+                    try {
+                        ParticleColor.fromHex(s);
+                        return true;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                });
                 widgets.add(rainbowButton);
+                widgets.add(textField);
 //                if (isLegacyRGB) {
 //                    widgets.add(redW);
 //                    widgets.add(greenW);
@@ -188,6 +229,10 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 particleColor = HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()).toColor().toParticle();
                 displayColor = particleColor;
                 propertyHolder.set(getType(), property);
+                textField.setTextColor(displayColor.getOppositeColor().getColor());
+                if (!textField.value.equals(displayColor.toHex())) {
+                    textField.value = displayColor.toHex();
+                }
             }
 
             public void setFromPreset(ParticleColor preset) {

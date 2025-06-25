@@ -199,6 +199,22 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return Objects.hash(getRegistryName(), r, g, b, color);
     }
 
+    public String toHex() {
+        return String.format("#%02x%02x%02x", getRedInt(), getGreenInt(), getBlueInt());
+    }
+
+    public static ParticleColor fromHex(String colorStr) {
+        return new ParticleColor(
+                Integer.valueOf(colorStr.substring(1, 3), 16),
+                Integer.valueOf(colorStr.substring(3, 5), 16),
+                Integer.valueOf(colorStr.substring(5, 7), 16));
+    }
+
+    public ParticleColor getOppositeColor() {
+        double y = (299 * getRedInt() + 587 * getGreenInt() + 114 * getBlueInt()) / 1000;
+        return y >= 128 ? ParticleColor.BLACK : ParticleColor.WHITE;
+    }
+
     @Deprecated(forRemoval = true)
     public static class IntWrapper implements Cloneable {
         public int r;

@@ -326,6 +326,19 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
+        if (propertyWidgetProvider != null) {
+            propertyWidgetProvider.renderBg(graphics, mouseX, mouseY, partialTicks);
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (propertyWidgetProvider != null) {
