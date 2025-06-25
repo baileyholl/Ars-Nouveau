@@ -899,8 +899,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
 
     public void onCopyOrExport(Button ignoredB) {
-        Spell spell = fetchCurrentSpell();
-        getMinecraft().keyboardHandler.setClipboard(spell.toBinaryBase64());
+        getMinecraft().keyboardHandler.setClipboard(new Spell(spell, spellNameBox.value).toBinaryBase64());
     }
 
     public void onPasteOrImport(Button ignoredB) {
@@ -910,34 +909,25 @@ public class GuiSpellBook extends SpellSlottedScreen {
             return;
         }
         Spell clipboard = Spell.fromBinaryBase64(clipboardString);
-        if (clipboard.isValid()) {
-            spellNameBox.setValue(clipboard.name());
-        } else {
+        if (!clipboard.isValid()) {
             return;
         }
 
         int maxSize = 10 + getExtraGlyphSlots();
-        Spell oldSpell = fetchCurrentSpell();
+        List<AbstractSpellPart> oldSpell = new ArrayList<>(spell);
         Spell.Mutable clipSpell = Spell.fromBinaryBase64(clipboardString).mutable();
 
-        spell = clipboard.size() > maxSize ? clipSpell.recipe.subList(0, maxSize) : clipSpell.recipe;
+        spell = clipSpell.recipe.subList(0, Math.min(maxSize, clipSpell.recipe.size()));
         validate(pasteValidator);
         if (validationErrors.isEmpty()) {
             spell.removeIf(Objects::isNull);
             Networking.sendToServer(new PacketUpdateParticleTimeline(this.selectedSpellSlot, clipboard.particleTimeline(), this.hand == InteractionHand.MAIN_HAND));
             ParticleOverviewScreen.lastOpenedHash = 0;
+            spellNameBox.setValue(clipboard.name());
             saveSpell();
         } else {
-            spell = oldSpell.mutable().recipe;
+            spell = oldSpell;
         }
         validate(spellValidator);
-    }
-
-
-    public Spell fetchCurrentSpell() {
-        if (caster != null) {
-            return caster.getSpell(selectedSpellSlot);
-        }
-        return new Spell(spell, spellname);
     }
 }

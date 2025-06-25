@@ -314,17 +314,6 @@ public class Spell {
         return !this.isEmpty();
     }
 
-    /**
-     * @deprecated Use {@link Mutable#add(AbstractSpellPart, int, int)} or {@link Mutable#add(AbstractSpellPart)} instead.
-     * This method will be removed in a future version as it's backed by an immutable list.
-     */
-    @Deprecated(forRemoval = true)
-    public Spell add(AbstractSpellPart spellPart, int count, int index) {
-        for (int i = 0; i < count; i++)
-            recipe.add(index, spellPart);
-        return this;
-    }
-
     public List<ResourceLocation> serializeRecipe() {
         return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
@@ -377,12 +366,6 @@ public class Spell {
 
         public Mutable add(int index, AbstractSpellPart spellPart) {
             recipe.add(index, spellPart);
-            return this;
-        }
-
-        public Mutable add(AbstractSpellPart spellPart, int count, int index) {
-            for (int i = 0; i < count; i++)
-                recipe.add(index, spellPart);
             return this;
         }
 
