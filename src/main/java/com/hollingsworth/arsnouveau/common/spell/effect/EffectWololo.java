@@ -64,14 +64,19 @@ public class EffectWololo extends AbstractEffect {
         DyeItem dye = (DyeItem) dyeStack.getItem();
 
         if (rayTraceResult.getEntity() instanceof ItemEntity itemEntity) {
-            if (itemEntity.getItem().getItem() instanceof IDyeable iDyeable)
+            Item item = itemEntity.getItem().getItem();
+            if (item instanceof IDyeable iDyeable)
                 iDyeable.onDye(itemEntity.getItem(), dye.getDyeColor());
-            else if (itemEntity.getItem().getItem() instanceof BlockItem blockItem) {
+            else if (item instanceof BlockItem blockItem) {
                 ItemStack result = getDyedResult((ServerLevel) world, makeContainer(dye, blockItem));
                 result.setCount(itemEntity.getItem().getCount());
                 if (!result.isEmpty() && result.getItem() instanceof BlockItem) {
                     itemEntity.setItem(result);
                 }
+            }
+
+            if (itemEntity.getItem().has(DataComponents.BASE_COLOR)) {
+                itemEntity.getItem().set(DataComponents.BASE_COLOR, dye.getDyeColor());
             }
         } else if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             if (living instanceof Sheep sheep)
@@ -85,6 +90,10 @@ public class EffectWololo extends AbstractEffect {
                         } else if (armorStack.getItem() instanceof IDyeable iDyeable) {
                             iDyeable.onDye(armorStack, dye.getDyeColor());
                         }
+
+                        if (armorStack.has(DataComponents.BASE_COLOR)) {
+                            armorStack.set(DataComponents.BASE_COLOR, dye.getDyeColor());
+                        }
                     }
                 }
             } else if (living instanceof Mob mob) {
@@ -94,7 +103,7 @@ public class EffectWololo extends AbstractEffect {
                 player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             }
         }
-        world.playSound(null, rayTraceResult.getEntity().getX(), rayTraceResult.getEntity().getY(), rayTraceResult.getEntity().getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, spellContext.getSpell().sound().getVolume(), spellContext.getSpell().sound().getPitch());
+        world.playSound(null, rayTraceResult.getEntity().getX(), rayTraceResult.getEntity().getY(), rayTraceResult.getEntity().getZ(), SoundEvents.EVOKER_PREPARE_WOLOLO, SoundSource.PLAYERS, 1.0f, 1.0f);
     }
 
     @NotNull

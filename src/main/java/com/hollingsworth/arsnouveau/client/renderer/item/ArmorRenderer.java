@@ -7,7 +7,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
@@ -44,7 +46,8 @@ public class ArmorRenderer extends GeoArmorRenderer<AnimatedMagicArmor> {
     @Override
     public ResourceLocation getTextureLocation(AnimatedMagicArmor instance) {
         if (instance != null && model instanceof GenericModel<AnimatedMagicArmor> genericModel) {
-            return ArsNouveau.prefix("textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + instance.getColor(getCurrentStack()) + ".png");
+            DyeColor dyeColor = getCurrentStack().getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
+            return ArsNouveau.prefix("textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + dyeColor.getName() + ".png");
         }
 
         return super.getTextureLocation(instance);

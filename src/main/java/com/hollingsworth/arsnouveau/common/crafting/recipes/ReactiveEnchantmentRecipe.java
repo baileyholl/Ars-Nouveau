@@ -34,9 +34,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
         ItemStack result = super.assemble(input, lookup);
         ItemStack parchment = getParchment(input.pedestals());
         AbstractCaster<?> parchmentCaster = SpellCasterRegistry.from(parchment);
-        result.set(DataComponentRegistry.REACTIVE_CASTER, new ReactiveCasterData(0, "", false, "", 1)
-                .setColor(parchmentCaster.getColor())
-                .setSpell(parchmentCaster.getSpell()));
+        result.set(DataComponentRegistry.REACTIVE_CASTER, new ReactiveCasterData(0, "", false, "", 1).setSpell(parchmentCaster.getSpell()));
         return result;
     }
 

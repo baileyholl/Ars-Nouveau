@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
@@ -20,7 +19,6 @@ import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -38,6 +36,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -361,10 +360,8 @@ public class ClientHandler {
     }
 
     public static int colorFromArmor(ItemStack stack) {
-        ArmorPerkHolder holder = PerkUtil.getPerkHolder(stack);
-        if (!(holder instanceof ArmorPerkHolder armorPerkHolder))
-            return FastColor.ABGR32.opaque(DyeColor.PURPLE.getTextColor());
-        return FastColor.ABGR32.opaque(DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor());
+        DyeColor color = stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
+        return FastColor.ABGR32.opaque(color.getTextColor());
     }
 
     public static int colorFromFlask(ItemStack stack) {

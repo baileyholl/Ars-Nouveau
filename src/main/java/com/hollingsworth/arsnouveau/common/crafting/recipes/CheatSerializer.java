@@ -21,14 +21,6 @@ public class CheatSerializer {
         );
     }
 
-    public static <T> T fromNetwork(MapCodec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf) {
-        return fromNetwork(codec.codec(), friendlyByteBuf);
-    }
-
-    public static <T> void toNetwork(MapCodec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf, T obj) {
-        toNetwork(codec.codec(), friendlyByteBuf, obj);
-    }
-
     public static <T> T fromNetwork(Codec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf) {
         return friendlyByteBuf.readJsonWithCodec(codec);
     }

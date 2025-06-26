@@ -13,14 +13,18 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 public class ANCodecs {
 
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENT_LIST_STREAM = Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new));
     public static Codec<Vec2> VEC2 = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("x").forGetter(v -> v.x),
             Codec.FLOAT.fieldOf("y").forGetter(v -> v.y)

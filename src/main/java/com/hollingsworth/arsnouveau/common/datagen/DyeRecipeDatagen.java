@@ -43,6 +43,7 @@ public class DyeRecipeDatagen extends SimpleDataProvider {
         addDyeRecipe(ItemsRegistry.BATTLEMAGE_LEGGINGS);
         addDyeRecipe(ItemsRegistry.BATTLEMAGE_ROBES);
         addDyeRecipe(ItemsRegistry.BATTLEMAGE_HOOD);
+        addDyeRecipe(ItemsRegistry.CREATIVE_SPELLBOOK);
         for (FileObj fileObj : files) {
             saveStable(pOutput, fileObj.element, fileObj.path);
         }

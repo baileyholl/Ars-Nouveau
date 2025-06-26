@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -154,7 +155,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 EnchantingApparatusRecipe::reagent,
                 ItemStack.STREAM_CODEC,
                 EnchantingApparatusRecipe::result,
-                Serializers.INGREDIENT_LIST_STREAM,
+                ANCodecs.INGREDIENT_LIST_STREAM,
                 EnchantingApparatusRecipe::pedestalItems,
                 ByteBufCodecs.VAR_INT,
                 EnchantingApparatusRecipe::sourceCost,
