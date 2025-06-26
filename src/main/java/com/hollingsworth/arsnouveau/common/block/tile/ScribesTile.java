@@ -127,7 +127,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, bPos, null);
             if (handler != null) {
                 for (int i = 0; i < handler.getSlots(); i++) {
-                    ItemStack stack = handler.getStackInSlot(i);
+                    ItemStack stack = handler.extractItem(i, 1, true);
                     if (canConsumeItemstack(stack)) {
                         ItemStack stack1 = handler.extractItem(i, 1, false);
                         stack1.copy().setCount(1);

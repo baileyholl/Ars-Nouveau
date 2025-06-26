@@ -54,7 +54,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     public SpellBow() {
-        this(ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
+        this(ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponents.BASE_COLOR, DyeColor.PURPLE).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
     public boolean canPlayerCastSpell(ItemStack bow, Player playerentity) {

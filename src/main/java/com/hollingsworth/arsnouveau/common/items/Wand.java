@@ -11,11 +11,13 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -41,7 +43,9 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     public Wand() {
-        super(new Item.Properties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
+        super(new Item.Properties().stacksTo(1)
+                .component(DataComponents.BASE_COLOR, DyeColor.PURPLE)
+                .component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
     private <P extends Item & GeoAnimatable> PlayState predicate(AnimationState<P> event) {
