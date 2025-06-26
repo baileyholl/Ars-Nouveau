@@ -203,7 +203,7 @@ public class SoundRegistry {
     public static SpellSound APPLY_EFFECT_BAD_OMEN = register(SoundEvents.APPLY_EFFECT_BAD_OMEN, "apply_effect_bad_omen");
     public static SpellSound APPLY_EFFECT_TRIAL_OMEN = register(SoundEvents.APPLY_EFFECT_TRIAL_OMEN, "apply_effect_trial_omen");
     public static SpellSound APPLY_EFFECT_RAID_OMEN = register(SoundEvents.APPLY_EFFECT_RAID_OMEN, "apply_effect_raid_omen");
-
+    
     public static final SpellSound HORSE_DEATH = register(SoundEvents.HORSE_DEATH, "horse_death");
     public static final SpellSound ARMADILLO_HURT_REDUCED = register(SoundEvents.ARMADILLO_HURT_REDUCED, "armadillo_hurt_reduced");
     public static final SpellSound WITHER_AMBIENT = register(SoundEvents.WITHER_AMBIENT, "wither_ambient");
