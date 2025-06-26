@@ -49,6 +49,7 @@ public class DyeRecipeDatagen extends SimpleDataProvider {
         addDyeRecipe(ItemsRegistry.SPELL_BOW);
         addDyeRecipe(ItemsRegistry.SCRY_CASTER);
         addDyeRecipe(ItemsRegistry.SPELL_CROSSBOW);
+        addDyeRecipe(ItemsRegistry.SPELL_PARCHMENT);
 
         for (FileObj fileObj : files) {
             saveStable(pOutput, fileObj.element, fileObj.path);

@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
-import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
@@ -341,9 +340,10 @@ public class ClientHandler {
                         colorFromArmor(stack),
                 ItemsRegistry.BATTLEMAGE_LEGGINGS);
 
-        event.register((stack, color) -> {
-            if (color == 1 && SpellCasterRegistry.from(stack) != null) {
-                return FastColor.ABGR32.opaque(SpellCasterRegistry.from(stack).getColor().getColor());
+        event.register((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                DyeColor dyeColor = stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
+                return FastColor.ABGR32.opaque(dyeColor.getTextColor());
             }
             return -1;
 
