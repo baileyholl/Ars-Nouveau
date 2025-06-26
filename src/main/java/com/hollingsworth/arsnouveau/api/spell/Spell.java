@@ -1,10 +1,15 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
@@ -15,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.io.*;
 import java.util.*;
 
 public class Spell {
@@ -61,6 +67,10 @@ public class Spell {
         this(Arrays.asList(spellParts));
     }
 
+    public Spell(List<AbstractSpellPart> recipe, String name) {
+        this(name, ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe);
+    }
+
     public Spell(List<AbstractSpellPart> recipe) {
         this("", ParticleColor.defaultParticleColor(), ConfiguredSpellSound.DEFAULT, recipe, new TimelineMap());
     }
@@ -81,6 +91,60 @@ public class Spell {
     public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, Optional<TimelineMap> particleTimeline) {
         this(name, color, configuredSpellSound, abstractSpellParts, particleTimeline.orElseGet(TimelineMap::new));
     }
+
+
+    public static Spell fromJson(String jsonString) {
+
+        try {
+            System.out.println("About to read full spell from JSON: " + jsonString);
+            Spell spell = CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
+            System.out.println("Full decoded spell: " + spell);
+            return spell;
+        } catch (Exception e) {
+            System.out.println("Failed to read spell from JSON: " + e.getMessage());
+        }
+
+        return new Spell();
+
+    }
+
+    public static Spell fromBinaryBase64(String base64) {
+
+        try {
+            byte[] bytes = Base64.getDecoder().decode(base64);
+            String jsonString = new DataInputStream(new ByteArrayInputStream(bytes)).readUTF();
+            return fromJson(jsonString);
+        } catch (IOException | NullPointerException e) {
+            System.out.println("Failed to read spell from binary base64: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("String format not valid.");
+        }
+        return new Spell();
+    }
+
+    public String toJson() {
+        JsonElement json = Spell.CODEC.codec().encodeStart(JsonOps.INSTANCE, this).getOrThrow();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(json);
+    }
+
+    public String toBinaryBase64() {
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(byteStream);
+
+            String json = this.toJson();
+
+            out.writeUTF(json);
+
+            out.close();
+            return Base64.getEncoder().encodeToString(byteStream.toByteArray());
+        } catch (IOException e) {
+            System.out.println("Error writing spell to binary: " + e.getMessage());
+            return "";
+        }
+    }
+
 
     @Deprecated(forRemoval = true)
     public ConfiguredSpellSound sound() {
@@ -248,12 +312,6 @@ public class Spell {
 
     public boolean isValid() {
         return !this.isEmpty();
-    }
-
-    public Spell add(AbstractSpellPart spellPart, int count, int index) {
-        for (int i = 0; i < count; i++)
-            recipe.add(index, spellPart);
-        return this;
     }
 
     public List<ResourceLocation> serializeRecipe() {
