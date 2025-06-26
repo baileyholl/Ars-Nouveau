@@ -352,10 +352,6 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_book_gui.effect", "Effect");
         add("ars_nouveau.spell_book_gui.augment", "Augment");
         add("ars_nouveau.spell_book_gui.create", "Create");
-        add("ars_nouveau.spell_book_gui.copy", "Copy Spell to Clipboard");
-        add("ars_nouveau.spell_book_gui.copy_shift", "Hold Shift to export from spell clipboard to system clipboard.");
-        add("ars_nouveau.spell_book_gui.paste", "Paste Spell from Clipboard");
-        add("ars_nouveau.spell_book_gui.paste_shift", "Hold Shift to import from system clipboard to spell clipboard.");
         add("ars_nouveau.spell_book_gui.clear", "Clear");
         add("ars_nouveau.color_gui.red_slider", "Red: %s");
         add("ars_nouveau.color_gui.green_slider", "Green: %s");
