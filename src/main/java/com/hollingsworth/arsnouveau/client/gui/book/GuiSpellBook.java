@@ -572,7 +572,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
                 return true;
             }
         }
-        
+
         if (super.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
         }
@@ -700,7 +700,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     protected void saveSpell() {
         validate();
         if (validationErrors.isEmpty()) {
-            Spell spell = new Spell(this.spell);
+            Spell spell = new Spell(this.spell.stream().filter(Objects::nonNull).collect(Collectors.toList()));
             Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
             ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
