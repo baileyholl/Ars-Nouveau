@@ -36,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ParticleUtil {
     public static Random r = new Random();
 
-    private static Object2ObjectOpenHashMap<UUID, List<ClientboundLevelParticlesPacket>> QUEUE = new Object2ObjectOpenHashMap<>();
+    private static final Object2ObjectOpenHashMap<UUID, List<ClientboundLevelParticlesPacket>> QUEUE = new Object2ObjectOpenHashMap<>();
     private static boolean queueHasItems = false;
 
     @SubscribeEvent
