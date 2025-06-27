@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.util;
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.common.network.PacketBatchedSounds;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
@@ -43,7 +42,7 @@ public class SoundUtil {
     }
 
     public static void processQueue(PlayerList players) {
-        if (!queueHasItems) {
+        if (QUEUE.isEmpty()) {
             return;
         }
 
@@ -53,10 +52,10 @@ public class SoundUtil {
             var player = players.getPlayer(entry.getKey());
             var sounds = entry.getValue();
             if (player != null && !sounds.isEmpty()) {
-                player.connection.send(new PacketBatchedSounds(ImmutableList.copyOf(sounds)));
+                player.connection.send(new PacketBatchedSounds(sounds));
             }
 
-            sounds.clear();
+            iter.remove();
         }
 
         queueHasItems = false;
