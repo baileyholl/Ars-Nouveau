@@ -104,7 +104,7 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
 
     public void damage(Vec3 vec, ServerLevel world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, float damage) {
         if (attemptDamage(world, shooter, stats, context, resolver, livingEntity, buildDamageSource(world, shooter), damage)) {
-            ParticleUtil.sendParticles(world, ParticleTypes.CAMPFIRE_COSY_SMOKE, vec.x, vec.y + 0.5, vec.z, 50,
+            world.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
         }
     }

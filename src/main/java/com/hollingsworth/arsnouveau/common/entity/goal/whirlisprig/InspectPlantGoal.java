@@ -50,7 +50,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
             ServerLevel world = (ServerLevel) entity.level;
             entity.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
             if (world.random.nextInt(20) == 0)
-                ParticleUtil.sendParticles(world, ParticleTypes.HEART, this.pos.getX() + 0.5, this.pos.getY() + 1.1, this.pos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
+                world.sendParticles(ParticleTypes.HEART, this.pos.getX() + 0.5, this.pos.getY() + 1.1, this.pos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
             this.timeLooking--;
         }
     }

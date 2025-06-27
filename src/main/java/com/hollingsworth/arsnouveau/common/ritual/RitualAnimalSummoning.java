@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.SummonRitualRecipe;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
@@ -96,7 +95,7 @@ public class RitualAnimalSummoning extends AbstractRitual {
         mob.level().addFreshEntity(mob);
         if (mob.level() instanceof ServerLevel serverLevel) {
             for (ServerPlayer player : serverLevel.players()) {
-                ParticleUtil.sendParticles(player, ParticleTypes.END_ROD, false, pos.getX(), pos.getY() + 0.1, pos.getZ(), 10, 0.1, 0.1, 0.1, 0.05);
+                serverLevel.sendParticles(player, ParticleTypes.END_ROD, false, pos.getX(), pos.getY() + 0.1, pos.getZ(), 10, 0.1, 0.1, 0.1, 0.05);
             }
         }
     }

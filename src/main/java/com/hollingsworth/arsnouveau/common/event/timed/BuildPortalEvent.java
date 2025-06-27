@@ -109,7 +109,7 @@ public class BuildPortalEvent implements ITimedEvent {
             } else {
                 destroyPortal = true;
                 ServerLevel serverLevel = (ServerLevel) level;
-                ParticleUtil.sendParticles(serverLevel, ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
+                serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
             }
         }
         boolean placingPortal = !portalPos.isEmpty() && framePos.isEmpty() && !destroyPortal;
@@ -122,7 +122,7 @@ public class BuildPortalEvent implements ITimedEvent {
                 } else {
                     destroyPortal = true;
                     ServerLevel serverLevel = (ServerLevel) level;
-                    ParticleUtil.sendParticles(serverLevel, ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
                     break;
                 }
             }

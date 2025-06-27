@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -105,7 +104,7 @@ public class EffectBlink extends AbstractEffect {
             EntityTeleportEvent.EnderEntity event = EventHooks.onEnderTeleport(living, warpPos.getX(), warpPos.getY(), warpPos.getZ());
             if (event.isCanceled()) return;
         }
-        ParticleUtil.sendParticles((ServerLevel) entity.level, ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
+        ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(), entity.getY() + 1, entity.getZ(),
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
         Vec3 vec3 = entity.position;
@@ -113,7 +112,7 @@ public class EffectBlink extends AbstractEffect {
         entity.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
         Networking.sendToNearbyClient(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-        ParticleUtil.sendParticles((ServerLevel) entity.level, ParticleTypes.PORTAL, entity.blockPosition().getX() + 0.5, entity.blockPosition().getY() + 1.0, entity.blockPosition().getZ() + 0.5,
+        ((ServerLevel) entity.level).sendParticles(ParticleTypes.PORTAL, entity.blockPosition().getX() + 0.5, entity.blockPosition().getY() + 1.0, entity.blockPosition().getZ() + 0.5,
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
     }
 
