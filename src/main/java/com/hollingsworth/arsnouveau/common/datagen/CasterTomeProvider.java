@@ -302,7 +302,11 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         tomes.add(buildTome("cocoaeyebrows", "Gobute's Humble Tunnel", new Spell(MethodTouch.INSTANCE, EffectBreak.INSTANCE).add(AugmentDampen.INSTANCE, 2).add(AugmentAOE.INSTANCE, 2).add(AugmentPierce.INSTANCE, 4), "Leave the riches untouched. Seek only to carve the earth.", new ParticleColor(255, 128, 1)));
 
-        tomes.add(buildTome("beepsterr", "Verdant Aura", new Spell(MethodProjectile.INSTANCE, EffectOrbit.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE, AugmentSplit.INSTANCE, EffectGrow.INSTANCE, AugmentAOE.INSTANCE, AugmentAOE.INSTANCE).withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND)), " It's covered in dirt and moss..", new ParticleColor(145, 145, 201)));
+        tomes.add(buildTome("beepsterr", "Verdant Aura", new Spell(MethodProjectile.INSTANCE, EffectOrbit.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE, AugmentSplit.INSTANCE, EffectGrow.INSTANCE, AugmentAOE.INSTANCE, AugmentAOE.INSTANCE).withSound(new ConfiguredSpellSound(SoundRegistry.GAIA_SPELL_SOUND)), "It's covered in dirt and moss..", new ParticleColor(145, 145, 201)));
+
+        tomes.add(buildTome("worsecookie", "The Yellow Sun", new Spell(MethodTouch.INSTANCE, EffectRune.INSTANCE, EffectHex.INSTANCE).add(AugmentAmplify.INSTANCE, 4).add(EffectWither.INSTANCE).add(AugmentAmplify.INSTANCE, 2), "Along the shore the cloud waves break, The twin suns sink beneath the lake, The shadows lengthen. In Carcosa", new ParticleColor(204, 153, 1)));
+
+
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
