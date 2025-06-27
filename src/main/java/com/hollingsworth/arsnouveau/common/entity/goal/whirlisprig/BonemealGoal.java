@@ -57,7 +57,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
             sylph.getNavigation().moveTo(this.growPos.getX(), this.growPos.getY(), this.growPos.getZ(), 1.2);
         } else {
             ServerLevel world = (ServerLevel) sylph.level;
-            world.sendParticles(ParticleTypes.COMPOSTER, this.growPos.getX() + 0.5, this.growPos.getY() + 1.1, this.growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
+            ParticleUtil.sendParticles(world, ParticleTypes.COMPOSTER, this.growPos.getX() + 0.5, this.growPos.getY() + 1.1, this.growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
             this.timeGrowing--;
             if (this.timeGrowing <= 0) {
                 sylph.timeSinceBonemeal = 0;
