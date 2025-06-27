@@ -113,7 +113,21 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         fallingBlock.hurtEntities = true;
         fallingBlock.baseDamage = ((float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier())) * 0.5f;
         fallingBlock.shooter = shooter;
-        level.addFreshEntity(fallingBlock);
+
+        boolean shouldSpawn = true;
+        for (var glyph : resolver.spellContext.getRemainingSpell().unsafeList()) {
+            if (glyph instanceof AbstractEffect) {
+                if (glyph instanceof EffectSnare) {
+                    shouldSpawn = false;
+                }
+
+                break;
+            }
+        }
+
+        if (shouldSpawn) {
+            level.addFreshEntity(fallingBlock);
+        }
         ShapersFocus.tryPropagateEntitySpell(fallingBlock, level, shooter, context, resolver);
     }
 
