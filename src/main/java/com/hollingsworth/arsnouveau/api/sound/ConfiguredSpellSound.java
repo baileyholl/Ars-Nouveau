@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
+import com.hollingsworth.arsnouveau.common.util.SoundUtil;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -57,7 +58,7 @@ public class ConfiguredSpellSound implements Cloneable {
     }
 
     public void playSound(Level level, double x, double y, double z) {
-        level.playSound(null, x, y, z, sound.getSoundEvent().value(), SoundSource.NEUTRAL, volume, pitch);
+        SoundUtil.playSound(level, null, x, y, z, sound.getSoundEvent().value(), SoundSource.NEUTRAL, volume, pitch);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.util.SoundUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -47,7 +48,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
 
             ParticleUtil.sendParticles(world, ParticleTypes.SPIT, position.x, position.y + 0.5, position.z, 10,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
-            world.playSound(null, BlockPos.containing(position), SoundEvents.GLASS_FALL, SoundSource.BLOCKS, 0.8f, 0.8f);
+            SoundUtil.playSound(world, null, BlockPos.containing(position), SoundEvents.GLASS_FALL, SoundSource.BLOCKS, 0.8f, 0.8f);
         }
     }
 
