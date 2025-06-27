@@ -45,7 +45,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
             }
 
-            world.sendParticles(ParticleTypes.SPIT, position.x, position.y + 0.5, position.z, 10,
+            ParticleUtil.sendParticles(world, ParticleTypes.SPIT, position.x, position.y + 0.5, position.z, 10,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
             world.playSound(null, BlockPos.containing(position), SoundEvents.GLASS_FALL, SoundSource.BLOCKS, 0.8f, 0.8f);
         }
