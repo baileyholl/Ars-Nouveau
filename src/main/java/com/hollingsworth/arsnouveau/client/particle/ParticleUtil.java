@@ -42,13 +42,6 @@ public class ParticleUtil {
         processQueue(event.getServer().getPlayerList());
     }
 
-    @SubscribeEvent
-    public static void processQueue(SpellResolveEvent.Post event) {
-        if (event.world instanceof ServerLevel level) {
-            processQueue(level.getServer().getPlayerList());
-        }
-    }
-
     public static void processQueue(PlayerList players) {
         if (QUEUE.isEmpty()) {
             return;
