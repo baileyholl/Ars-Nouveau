@@ -27,18 +27,10 @@ import java.util.UUID;
 
 public class SoundUtil {
     private static final Object2ObjectOpenHashMap<UUID, List<ClientboundSoundPacket>> QUEUE = new Object2ObjectOpenHashMap<>();
-    private static boolean queueHasItems = false;
 
     @SubscribeEvent
     public static void processQueue(ServerTickEvent.Post event) {
         processQueue(event.getServer().getPlayerList());
-    }
-
-    @SubscribeEvent
-    public static void processQueue(SpellResolveEvent.Post event) {
-        if (event.world instanceof ServerLevel level) {
-            processQueue(level.getServer().getPlayerList());
-        }
     }
 
     public static void processQueue(PlayerList players) {
@@ -57,8 +49,6 @@ public class SoundUtil {
 
             iter.remove();
         }
-
-        queueHasItems = false;
     }
 
     public static void playSound(@NotNull Level level, @Nullable Entity entity, BlockPos pos, SoundEvent sound, SoundSource category, float volume, float pitch) {
