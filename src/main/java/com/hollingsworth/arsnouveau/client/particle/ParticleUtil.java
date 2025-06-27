@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -16,6 +17,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -39,11 +41,21 @@ public class ParticleUtil {
 
     @SubscribeEvent
     public static void processQueue(ServerTickEvent.Post event) {
+        processQueue(event.getServer().getPlayerList());
+    }
+
+    @SubscribeEvent
+    public static void processQueue(SpellResolveEvent.Post event) {
+        if (event.world instanceof ServerLevel level) {
+            processQueue(level.getServer().getPlayerList());
+        }
+    }
+
+    public static void processQueue(PlayerList players) {
         if (!queueHasItems) {
             return;
         }
 
-        var players = event.getServer().getPlayerList();
         var iter = Object2ObjectMaps.fastIterator(QUEUE);
         while (iter.hasNext()) {
             var entry = iter.next();
