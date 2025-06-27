@@ -168,7 +168,11 @@ public class SpellResolver implements Cloneable {
     /**
      * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
      */
+    // TODO: 1.22 make params ServerLevel
     public void onResolveEffect(Level world, HitResult result) {
+        if (world.isClientSide) {
+            return;
+        }
         this.hitResult = result;
         this.resolveAllEffects(world);
     }
@@ -177,6 +181,9 @@ public class SpellResolver implements Cloneable {
      * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
      */
     protected void resolveAllEffects(Level world) {
+        if (world.isClientSide) {
+            return;
+        }
         spellContext.resetCastCounter();
         resume(world);
     }
@@ -185,6 +192,9 @@ public class SpellResolver implements Cloneable {
      * Attempts to resolve the remaining effects of the SpellContext without restarting.
      */
     public void resume(Level world) {
+        if (world.isClientSide) {
+            return;
+        }
         LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         NeoForge.EVENT_BUS.post(spellResolveEvent);
