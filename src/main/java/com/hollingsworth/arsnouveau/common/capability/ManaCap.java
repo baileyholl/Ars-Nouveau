@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -97,7 +96,6 @@ public class ManaCap implements IManaCap {
     }
 
     public void syncToClient(ServerPlayer player) {
-        CompoundTag tag = manaData.serializeNBT(player.registryAccess());
-        Networking.sendToPlayerClient(new PacketUpdateMana(tag), player);
+        Networking.sendToPlayerClient(new PacketUpdateMana(manaData), player);
     }
 }

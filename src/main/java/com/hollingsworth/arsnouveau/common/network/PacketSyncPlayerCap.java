@@ -12,35 +12,42 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
 public class PacketSyncPlayerCap extends AbstractPacket {
-    CompoundTag tag;
+    ANPlayerData data;
+
+    public PacketSyncPlayerCap(ANPlayerData data) {
+        this.data = data;
+    }
 
     //Decoder
     public PacketSyncPlayerCap(RegistryFriendlyByteBuf buf) {
-        tag = buf.readNbt();
+        this.data = CODEC.decode(buf).data;
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(tag);
+        CODEC.encode(buf, this);
     }
 
+    @Deprecated(forRemoval = true)
     public PacketSyncPlayerCap(CompoundTag famCaps) {
-        this.tag = famCaps;
+        this.data = new ANPlayerData();
+        this.data.deserializeNBT(null, famCaps);
     }
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player playerEntity) {
-        ANPlayerData data = new ANPlayerData();
-        data.deserializeNBT(playerEntity.registryAccess(), this.tag);
-        playerEntity.setData(AttachmentsRegistry.PLAYER_DATA, data);
+        playerEntity.setData(AttachmentsRegistry.PLAYER_DATA, this.data);
         var cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
         if (cap != null) {
-            cap.setPlayerData(data);
+            cap.setPlayerData(this.data);
         }
     }
 
     public static final Type<PacketSyncPlayerCap> TYPE = new Type<>(ArsNouveau.prefix("sync_player_cap"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncPlayerCap> CODEC = StreamCodec.ofMember(PacketSyncPlayerCap::toBytes, PacketSyncPlayerCap::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncPlayerCap> CODEC = StreamCodec.composite(
+            ANPlayerData.STREAM_CODEC, p -> p.data,
+            PacketSyncPlayerCap::new
+    );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
