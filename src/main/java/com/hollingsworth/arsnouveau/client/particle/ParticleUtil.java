@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
@@ -37,7 +36,6 @@ public class ParticleUtil {
     public static Random r = new Random();
 
     private static final Object2ObjectOpenHashMap<UUID, List<ClientboundLevelParticlesPacket>> QUEUE = new Object2ObjectOpenHashMap<>();
-    private static boolean queueHasItems = false;
 
     @SubscribeEvent
     public static void processQueue(ServerTickEvent.Post event) {
@@ -52,7 +50,7 @@ public class ParticleUtil {
     }
 
     public static void processQueue(PlayerList players) {
-        if (!queueHasItems) {
+        if (QUEUE.isEmpty()) {
             return;
         }
 
@@ -62,13 +60,11 @@ public class ParticleUtil {
             var player = players.getPlayer(entry.getKey());
             var particles = entry.getValue();
             if (player != null && !particles.isEmpty()) {
-                player.connection.send(new PacketBatchedParticles(ImmutableList.copyOf(particles)));
+                player.connection.send(new PacketBatchedParticles(particles));
             }
 
-            particles.clear();
+            iter.remove();
         }
-
-        queueHasItems = false;
     }
 
     public static <T extends ParticleOptions> int sendParticles(
@@ -115,7 +111,6 @@ public class ParticleUtil {
         } else {
             BlockPos blockpos = player.blockPosition();
             if (blockpos.closerToCenterThan(new Vec3(posX, posY, posZ), longDistance ? 512.0 : 32.0)) {
-                queueHasItems = true;
                 QUEUE.compute(player.getUUID(), (a, b) -> {
                     List<ClientboundLevelParticlesPacket> list = b == null ? new ArrayList<>() : b;
                     list.add(packet);
