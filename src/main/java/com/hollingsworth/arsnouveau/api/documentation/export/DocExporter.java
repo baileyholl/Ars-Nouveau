@@ -50,11 +50,11 @@ public class DocExporter {
         p_236070_.put("id", -1);
         p_236070_.defaultReturnValue(2);
     });
-    static Comparator<String> KEY_COMPARATOR = Comparator.comparingInt(FIXED_ORDER_FIELDS).thenComparing(p_236077_ -> (String)p_236077_);
+    static Comparator<String> KEY_COMPARATOR = Comparator.comparingInt(FIXED_ORDER_FIELDS).thenComparing(p_236077_ -> (String) p_236077_);
 
     static Path basePath = Path.of("./data/ars_nouveau/doc/");
 
-    public static void export(String modId){
+    public static void export(String modId) {
         try {
             Path categoryPath = Path.of("../../wiki/" + modId + "/categories/");
             FileUtils.cleanDirectory(categoryPath.toFile());
@@ -78,12 +78,12 @@ public class DocExporter {
                 }
             }
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.getLogger().error("Failed to write files", e);
         }
     }
 
-    public static CompletableFuture<Void> exportJson(JsonElement element, ResourceLocation id, Path basePath){
+    public static CompletableFuture<Void> exportJson(JsonElement element, ResourceLocation id, Path basePath) {
         return CompletableFuture.runAsync(() -> {
             try {
                 ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
@@ -97,7 +97,7 @@ public class DocExporter {
 
                 Path filePath = basePath.resolve(id.getPath() + ".json");
                 Files.createDirectories(filePath.getParent());
-                if(!Files.exists(filePath)) {
+                if (!Files.exists(filePath)) {
                     Files.createFile(filePath);
                 }
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();

@@ -9,7 +9,7 @@ public interface IContextManipulator {
      * Called before manipulate to determine if the context should be pushed or not.
      * Allows you to determine if you should push a new context or not. Returning false will not push a new context in SpellContext#makeChildContext
      */
-    default boolean shouldPushContext(SpellContext context){
+    default boolean shouldPushContext(SpellContext context) {
         return true;
     }
 
@@ -21,14 +21,14 @@ public interface IContextManipulator {
     /**
      * Resets the combination limit validator for this set of glpyhs if THIS glyph appears before them.
      */
-    default Set<AbstractSpellPart> bypassCombinationLimitsFor(){
+    default Set<AbstractSpellPart> bypassCombinationLimitsFor() {
         return new HashSet<>();
     }
 
     /**
      * Resets the occurrence limit validator for this set of glpyhs if THIS glyph appears before them.
      */
-    default Set<AbstractSpellPart> bypassOccurrenceLimitsFor(){
+    default Set<AbstractSpellPart> bypassOccurrenceLimitsFor() {
         return new HashSet<>();
     }
 }

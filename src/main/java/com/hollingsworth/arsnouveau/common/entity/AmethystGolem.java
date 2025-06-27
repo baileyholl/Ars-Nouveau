@@ -292,7 +292,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "run_controller", 1, e ->{
+        data.add(new AnimationController<>(this, "run_controller", 1, e -> {
             AnimationController controller = e.getController();
             if (isStomping()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("harvest2"));
@@ -315,11 +315,10 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController<>(this, "attack_controller", 5, e ->{
+        data.add(new AnimationController<>(this, "attack_controller", 5, e -> {
             return PlayState.CONTINUE;
         }));
     }
-
 
 
     public void setHome(BlockPos home) {

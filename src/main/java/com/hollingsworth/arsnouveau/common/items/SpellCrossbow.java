@@ -8,6 +8,8 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.PlayerCaster;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellCrossbowRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -58,6 +60,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     private static final CrossbowItem.ChargingSounds DEFAULT_SOUNDS = new CrossbowItem.ChargingSounds(
             Optional.of(SoundEvents.CROSSBOW_LOADING_START), Optional.of(SoundEvents.CROSSBOW_LOADING_MIDDLE), Optional.of(SoundEvents.CROSSBOW_LOADING_END)
     );
+
     public SpellCrossbow(Properties pProperties) {
         super(pProperties);
     }
@@ -68,7 +71,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         int i = this.getUseDuration(pStack, pEntityLiving) - pTimeLeft;
         float f = getPowerForTime(i, pStack, pEntityLiving);
         if (f >= 1.0F && !isCharged(pStack) && tryLoadProjectiles(pEntityLiving, pStack)) {
-            CrossbowItem.ChargingSounds crossbowitem$chargingsounds =  EnchantmentHelper.pickHighestLevel(pStack, EnchantmentEffectComponents.CROSSBOW_CHARGING_SOUNDS).orElse(DEFAULT_SOUNDS);
+            CrossbowItem.ChargingSounds crossbowitem$chargingsounds = EnchantmentHelper.pickHighestLevel(pStack, EnchantmentEffectComponents.CROSSBOW_CHARGING_SOUNDS).orElse(DEFAULT_SOUNDS);
             crossbowitem$chargingsounds.end()
                     .ifPresent(
                             p_352852_ -> pLevel.playSound(
@@ -86,8 +89,20 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     private boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
-        if(pShooter.level().isClientSide){
+        if (pShooter.level().isClientSide) {
             return true;
+        }
+
+        AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
+        SpellContext context = new SpellContext(pShooter.level, caster.modifySpellBeforeCasting((ServerLevel) pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack);
+        SpellResolver resolver = new SpellResolver(context);
+        int cost = resolver.getExpendedCost();
+        if (!(pShooter instanceof Player player && player.isCreative()) && !context.getCaster().enoughMana(cost)) {
+            if (pShooter instanceof ServerPlayer player) {
+                PortUtil.sendMessageNoSpam(player, Component.translatable("ars_nouveau.spell.no_mana"));
+                Networking.sendToPlayerClient(new NotEnoughManaPacket(cost), player);
+            }
+            return false;
         }
 
         int multishotLevel = EnchantmentHelper.getTagEnchantmentLevel(pShooter.level.holderOrThrow(Enchantments.MULTISHOT), pCrossbowStack);
@@ -96,20 +111,19 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         ItemStack ammoStack = pShooter.getProjectile(pCrossbowStack);
         ItemStack ammoCopy = ammoStack.copy();
 
-        AbstractCaster<?> caster = getSpellCaster(pCrossbowStack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(pShooter.level, caster.modifySpellBeforeCasting((ServerLevel) pShooter.level, pShooter, InteractionHand.MAIN_HAND, caster.getSpell()), pShooter, LivingCaster.from(pShooter), pCrossbowStack));
         boolean consumedMana = false;
-
-        if(!(pShooter instanceof Player) || resolver.withSilent(true).canCast(pShooter)){
+        if (!(pShooter instanceof Player) || resolver.withSilent(true).canCast(pShooter)) {
             resolver.expendMana();
             consumedMana = true;
             numProjectiles += resolver.spell.getBuffsAtIndex(0, pShooter, AugmentSplit.INSTANCE);
         }
-        if(ammoStack.getItem() instanceof FormSpellArrow formSpellArrow && formSpellArrow.part == AugmentSplit.INSTANCE){
+
+        if (ammoStack.getItem() instanceof FormSpellArrow formSpellArrow && formSpellArrow.part == AugmentSplit.INSTANCE) {
             numProjectiles += formSpellArrow.numParts;
         }
+
         List<ItemStack> stacks = new ArrayList<>();
-        for(int k = 0; k < numProjectiles; ++k) {
+        for (int k = 0; k < numProjectiles; ++k) {
             if (k > 0) {
                 ammoStack = ammoCopy.copy();
             }
@@ -119,12 +133,12 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
                 ammoCopy = ammoStack.copy();
             }
             ItemStack checkedAmmo = useAmmo(pCrossbowStack, ammoStack, pShooter, k > 0);
-            if(!checkedAmmo.isEmpty()) {
+            if (!checkedAmmo.isEmpty()) {
                 stacks.add(checkedAmmo);
             }
         }
 
-        if(!stacks.isEmpty()){
+        if (!stacks.isEmpty()) {
             pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(stacks));
             CompoundTag tag = new CompoundTag();
             tag.putBoolean("isSpell", true);
@@ -139,11 +153,11 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             boolean flag = pAmmoStack.is(Items.FIREWORK_ROCKET);
             Projectile projectile;
             if (flag) {
-                projectile = new FireworkRocketEntity(worldIn, pAmmoStack, pShooter, pShooter.getX(), pShooter.getEyeY() - (double)0.15F, pShooter.getZ(), true);
+                projectile = new FireworkRocketEntity(worldIn, pAmmoStack, pShooter, pShooter.getX(), pShooter.getEyeY() - (double) 0.15F, pShooter.getZ(), true);
             } else {
                 projectile = getArrow(worldIn, pShooter, pCrossbowStack, pAmmoStack);
                 if (pIsCreativeMode || pProjectileAngle != 0.0F) {
-                    ((AbstractArrow)projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                    ((AbstractArrow) projectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
             }
             LivingCaster livingCaster = pShooter instanceof Player player ? new PlayerCaster(player) : new LivingCaster(pShooter);
@@ -153,13 +167,13 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
             if (isSpell) {
                 projectile = buildSpellArrow(worldIn, pShooter, caster, pCrossbowStack, pAmmoStack);
                 ((EntitySpellArrow) projectile).pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
-            }else if(pAmmoStack.getItem() instanceof SpellArrow && projectile instanceof EntitySpellArrow spellArrow){
+            } else if (pAmmoStack.getItem() instanceof SpellArrow && projectile instanceof EntitySpellArrow spellArrow) {
                 spellArrow.pierceLeft += EnchantmentHelper.getTagEnchantmentLevel(worldIn.holderOrThrow(Enchantments.PIERCING), pCrossbowStack);
-                spellArrow.setColors(resolver.spell.color());
+                spellArrow.setResolver(resolver);
             }
 
             Vec3 vec31 = pShooter.getUpVector(1.0F);
-            Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(pProjectileAngle * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
+            Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(pProjectileAngle * ((float) Math.PI / 180F), vec31.x, vec31.y, vec31.z);
             Vec3 vec3 = pShooter.getViewVector(1.0F);
             Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
             projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), pVelocity, pInaccuracy);
@@ -171,7 +185,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     private AbstractArrow getArrow(Level pLevel, LivingEntity pLivingEntity, ItemStack pCrossbowStack, ItemStack pAmmoStack) {
-        ArrowItem arrowitem = (ArrowItem)(pAmmoStack.getItem() instanceof ArrowItem ? pAmmoStack.getItem() : Items.ARROW);
+        ArrowItem arrowitem = (ArrowItem) (pAmmoStack.getItem() instanceof ArrowItem ? pAmmoStack.getItem() : Items.ARROW);
         AbstractArrow abstractarrow = arrowitem.createArrow(pLevel, pAmmoStack, pLivingEntity, pCrossbowStack);
         if (pLivingEntity instanceof Player) {
             abstractarrow.setCritArrow(true);
@@ -182,18 +196,19 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     @Override
     public void performShooting(@NotNull Level pLevel, @NotNull LivingEntity pShooter, @NotNull InteractionHand pUsedHand, @NotNull ItemStack pCrossbowStack, float pVelocity, float pInaccuracy, @Nullable LivingEntity pTarget) {
-        if (pShooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(pCrossbowStack, pShooter.level, player, 1, true) < 0) return;
+        if (pShooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(pCrossbowStack, pShooter.level, player, 1, true) < 0)
+            return;
         ChargedProjectiles chargedprojectiles = pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
-        if(chargedprojectiles == null)
+        if (chargedprojectiles == null)
             return;
         var customData = pCrossbowStack.get(DataComponents.CUSTOM_DATA);
         CompoundTag tag = customData != null ? customData.getUnsafe() : new CompoundTag();
         boolean isSpell = tag.getBoolean("isSpell");
-        for(int i = 0; i < chargedprojectiles.getItems().size(); ++i) {
+        for (int i = 0; i < chargedprojectiles.getItems().size(); ++i) {
             ItemStack itemstack = chargedprojectiles.getItems().get(i);
             boolean flag = pShooter instanceof Player player && player.hasInfiniteMaterials();
             if (!itemstack.isEmpty()) {
-                float offset = 10.0f * (float)((i > 0 ? 1 + i : 0) / 2);
+                float offset = 10.0f * (float) ((i > 0 ? 1 + i : 0) / 2);
                 boolean isOdd = i % 2 == 1;
                 if (isOdd) {
                     offset *= -1;
@@ -218,8 +233,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, AbstractCaster<?> caster, ItemStack bowStack, ItemStack arrowStack) {
         EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true);
-        spellArrow.setColors(caster.getColor());
+        spellArrow.setResolver(new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true));
         return spellArrow;
     }
 
@@ -279,7 +293,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 

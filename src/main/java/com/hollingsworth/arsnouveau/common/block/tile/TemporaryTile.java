@@ -55,7 +55,7 @@ public class TemporaryTile extends MirrorWeaveTile implements ITickable {
         }
     }
 
-    public BlockState getDefaultBlockState(){
+    public BlockState getDefaultBlockState() {
         return Blocks.AIR.defaultBlockState();
     }
 }

@@ -20,7 +20,7 @@ import java.util.*;
  * Stores a list of recipes and provides methods to check if a given inventory contains the items needed to craft any of the recipes.
  * These recipes typically all correspond to the same output item.
  */
-public class MultiRecipeWrapper implements IRecipeWrapper{
+public class MultiRecipeWrapper implements IRecipeWrapper {
 
     public Set<SingleRecipe> recipes;
 
@@ -30,7 +30,7 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
         recipes = new HashSet<>();
     }
 
-    public static MultiRecipeWrapper fromStack(ItemStack stack, Level level){
+    public static MultiRecipeWrapper fromStack(ItemStack stack, Level level) {
         MultiRecipeWrapper wrapper = new MultiRecipeWrapper();
         if (stack.getItem() == Items.POTION) {
             for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes(level)) {
@@ -42,7 +42,7 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
                 }
             }
         } else {
-            if(RECIPE_CACHE.containsKey(stack.getItem())){
+            if (RECIPE_CACHE.containsKey(stack.getItem())) {
                 return RECIPE_CACHE.get(stack.getItem());
             }
             for (RecipeHolder<?> rh : level.getServer().getRecipeManager().getRecipes()) {
@@ -83,7 +83,7 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
      * This method tracks that the inventory has enough of each item to craft the recipe.
      */
     @Nullable
-    public List<ItemStack> getItemsNeeded(Map<Item, Integer> inventory, Level world, BlockPos pos, SingleRecipe recipe){
+    public List<ItemStack> getItemsNeeded(Map<Item, Integer> inventory, Level world, BlockPos pos, SingleRecipe recipe) {
         Map<Item, Integer> map = new HashMap<>(inventory);
 
         List<ItemStack> items = new ArrayList<>();
@@ -119,7 +119,7 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
         return recipes.add(new SingleRecipe(recipe, outputStack, iRecipe));
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return recipes.isEmpty();
     }
 }

@@ -44,8 +44,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.ClientHooks;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -62,6 +60,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     public final ArmorStandArmorModel innerModel;
     public final ArmorStandArmorModel outerModel;
     private final TextureAtlas armorTrimAtlas;
+
     public AlterationTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(new GenericModel<>("alteration_table").withEmptyAnim());
         innerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR));
@@ -76,25 +75,25 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
             return;
         ItemStack stack = tile.armorStack;
 //        if (stack.getItem() instanceof ArmorItem armorItem) {
-            // to rotate around a point: scale, point translate, rotate, object translate
-            matrixStack.scale(0.5f, 0.5f, 0.5f);
+        // to rotate around a point: scale, point translate, rotate, object translate
+        matrixStack.scale(0.5f, 0.5f, 0.5f);
 //            matrixStack.translate(-2.1, 3.3, 0);
-            double yOffset = Mth.smoothstepDerivative((Math.sin((ClientInfo.ticksInGame + ticks) / 20f) + 1f) / 2f) * 0.0625;
-            if (tile.newPerkTimer >= 0) {
-                // need zero it out or else it fights the translation we're doing below
-                yOffset = 0;
-                float percentage = Mth.abs(tile.newPerkTimer - 20) / 20f;
-                double smooooooooth = Mth.smoothstep(percentage);
-                double perkYOffset = 0.625 - (smooooooooth * 0.625);
+        double yOffset = Mth.smoothstepDerivative((Math.sin((ClientInfo.ticksInGame + ticks) / 20f) + 1f) / 2f) * 0.0625;
+        if (tile.newPerkTimer >= 0) {
+            // need zero it out or else it fights the translation we're doing below
+            yOffset = 0;
+            float percentage = Mth.abs(tile.newPerkTimer - 20) / 20f;
+            double smooooooooth = Mth.smoothstep(percentage);
+            double perkYOffset = 0.625 - (smooooooooth * 0.625);
 //                matrixStack.mulPose(Axis.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
-                matrixStack.translate(0, perkYOffset, 0);
-            }
+            matrixStack.translate(0, perkYOffset, 0);
+        }
 //            matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-            matrixStack.translate(0, yOffset, 0);
+        matrixStack.translate(0, yOffset, 0);
 
 //            this.renderArmorPiece(tile,stack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
 //        } else {
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
 //        }
         matrixStack.popPose();
     }
@@ -147,7 +146,7 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         for (int i = 0; i < Math.min(3, perks.size()); i++) {
             var tier = perks.get(i);
             var component = Component.translatable("enchantment.level." + tier.value()).withStyle(ChatFormatting.BOLD);
-            var height = font.lineHeight/2;
+            var height = font.lineHeight / 2;
 
             matrixStack.pushPose();
             matrixStack.translate(0.25, 1 - (0.175 * i), -0.05 - (0.175 * i));
@@ -307,8 +306,8 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         stack.translate(perkTranslate.x, perkTranslate.y + 0.2, perkTranslate.z);
 
 //        if (!(animatable.armorStack.getItem() instanceof ArmorItem)) {
-            stack.scale(0.75f, 0.75f, 0.75f);
-            stack.translate(-1.5, 1.95, 0);
+        stack.scale(0.75f, 0.75f, 0.75f);
+        stack.translate(-1.5, 1.95, 0);
 //        }
 
         this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, packedLight, packedOverlay);
@@ -321,7 +320,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         this.renderPerks(animatable, stack, bufferSource, packedLight, packedOverlay);
         stack.popPose();
     }
-
 
 
     public static GenericItemBlockRenderer getISTER() {

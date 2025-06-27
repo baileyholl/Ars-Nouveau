@@ -17,7 +17,7 @@ public class FalseweaveRenderer extends MirrorweaveRenderer<FalseWeaveTile> {
     @Override
     public void render(FalseWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT);
-        if(hasMagicFind)
+        if (hasMagicFind)
             return;
         super.render((MirrorWeaveTile) tileEntityIn, partialTick, pPoseStack, bufferIn, combinedLightIn, combinedOverlayIn);
     }

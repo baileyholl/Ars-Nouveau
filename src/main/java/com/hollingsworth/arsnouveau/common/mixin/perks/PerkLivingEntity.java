@@ -1,11 +1,8 @@
 package com.hollingsworth.arsnouveau.common.mixin.perks;
 
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.Color;
 import com.hollingsworth.arsnouveau.common.perk.DepthsPerk;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectLight;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,24 +37,5 @@ public abstract class PerkLivingEntity extends Entity {
     public PerkLivingEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
-
-    /**
-     * Used to make the glowing effect on mobs use the tag applied by {@link EffectLight}.
-     */
-    @Override
-    public int getTeamColor() {
-        int color = super.getTeamColor();
-        if (color == 16777215 && this.isCurrentlyGlowing()) {
-            var perData = this.getPersistentData();
-            if (perData.contains("GlowColor")) {
-                color = perData.getInt("GlowColor");
-                if (color < 0) {
-                    color = Color.rainbowColor(ClientInfo.ticksInGame).getRGB();
-                }
-            }
-        }
-        return color;
-    }
-
 
 }

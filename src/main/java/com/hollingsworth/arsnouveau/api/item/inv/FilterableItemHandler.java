@@ -17,19 +17,23 @@ import java.util.function.Function;
 public class FilterableItemHandler {
     private SlotCache slotCache;
     private IItemHandler handler;
-    private List<Function<ItemStack, ItemScroll.SortPref>> filters;
+    public FilterSet filters;
 
-    public FilterableItemHandler(IItemHandler handler){
-        this(handler, new ArrayList<>());
+    public FilterableItemHandler(IItemHandler handler) {
+        this(handler, new FilterSet.ListSet());
     }
 
-    public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> filters){
+    public FilterableItemHandler(IItemHandler handler, List<Function<ItemStack, ItemScroll.SortPref>> functions) {
+        this(handler, new FilterSet.ListSet(functions));
+    }
+
+    public FilterableItemHandler(IItemHandler handler, FilterSet filters) {
         this.handler = handler;
         this.filters = filters;
         this.slotCache = new SlotCache();
     }
 
-    public FilterableItemHandler withSlotCache(SlotCache cache){
+    public FilterableItemHandler withSlotCache(SlotCache cache) {
         this.slotCache = cache;
         return this;
     }
@@ -37,7 +41,7 @@ public class FilterableItemHandler {
     /**
      * If this inventory supports insertion of the given stack.
      */
-    public InteractResult canInsert(ItemStack stack){
+    public InteractResult canInsert(ItemStack stack) {
         ItemScroll.SortPref pref = getHighestPreference(stack);
         return new InteractResult(pref, pref != ItemScroll.SortPref.INVALID);
     }
@@ -45,7 +49,7 @@ public class FilterableItemHandler {
     /**
      * If this inventory supports extraction of the given stack.
      */
-    public InteractResult canExtract(ItemStack stack){
+    public InteractResult canExtract(ItemStack stack) {
         ItemScroll.SortPref pref = getHighestPreference(stack);
         return new InteractResult(pref, pref != ItemScroll.SortPref.INVALID);
     }
@@ -53,7 +57,7 @@ public class FilterableItemHandler {
     /**
      * If this inventory supports extraction or insertion of the given stack.
      */
-    public InteractResult canInteractFor(ItemStack stack, InteractType type){
+    public InteractResult canInteractFor(ItemStack stack, InteractType type) {
         return type == InteractType.EXTRACT ? canExtract(stack) : canInsert(stack);
     }
 
@@ -61,32 +65,12 @@ public class FilterableItemHandler {
      * Returns the highest preference from a list of predicates, unless it is invalid.
      * Invalid overrules all other preferences, as the user does NOT want that item to be inserted.
      */
-    public ItemScroll.SortPref getHighestPreference(ItemStack stack){
-        ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
-        for(Function<ItemStack, ItemScroll.SortPref> filter : filters){
-            ItemScroll.SortPref newPref = filter.apply(stack);
-            if(newPref == ItemScroll.SortPref.INVALID){
-                return ItemScroll.SortPref.INVALID;
-            }else if(newPref.ordinal() > pref.ordinal()){
-                pref = newPref;
-            }
-        }
-        return pref;
+    public ItemScroll.SortPref getHighestPreference(ItemStack stack) {
+        return filters.getHighestPreference(stack);
     }
 
     public IItemHandler getHandler() {
         return handler;
-    }
-
-    public List<Function<ItemStack, ItemScroll.SortPref>> getFilters() {
-        return filters;
-    }
-
-    public boolean addFilterScroll(ItemStack scrollStack){
-        if(scrollStack.getItem() instanceof ItemScroll itemScroll){
-            return filters.add(stackIn -> itemScroll.getSortPref(stackIn, scrollStack, handler));
-        }
-        return false;
     }
 
     /**
@@ -106,7 +90,7 @@ public class FilterableItemHandler {
 
         int sizeInventory = inventory.getSlots();
         stack = insertUsingCache(stack, simulate);
-        if(stack.isEmpty()){
+        if (stack.isEmpty()) {
             return stack;
         }
         Collection<Integer> slotsForStack = slotCache.getOrCreateSlots(stack.getItem());
@@ -117,13 +101,13 @@ public class FilterableItemHandler {
             if (ItemStack.isSameItemSameComponents(slot, stack)) {
                 int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
-                if(stack.getCount() != count){
+                if (stack.getCount() != count) {
                     slotsForStack.add(i);
                 }
                 if (stack.isEmpty()) {
                     return stack;
                 }
-            }else if(slot.isEmpty()){
+            } else if (slot.isEmpty()) {
                 emptySlots.add(i);
             }
         }
@@ -136,12 +120,12 @@ public class FilterableItemHandler {
                 if (stack.isEmpty()) {
                     break;
                 }
-            }else{
+            } else {
                 invalidSlots.add(slot);
             }
         }
 
-        for(int slot : invalidSlots){
+        for (int slot : invalidSlots) {
             emptySlots.remove(slot);
         }
 
@@ -160,13 +144,13 @@ public class FilterableItemHandler {
             return stack;
 
         stack = insertUsingCache(stack, simulate);
-        if(stack.isEmpty()){
+        if (stack.isEmpty()) {
             return stack;
         }
 
         stack = insertInCachedEmptySlots(stack, simulate);
 
-        if(stack.isEmpty()){
+        if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
         Item item = stack.getItem();
@@ -174,7 +158,7 @@ public class FilterableItemHandler {
         for (int i = 0; i < dest.getSlots(); i++) {
             int count = stack.getCount();
             stack = dest.insertItem(i, stack, simulate);
-            if(stack.getCount() != count){
+            if (stack.getCount() != count) {
                 slotCache.getOrCreateSlots(item).add(i);
 
             }
@@ -183,7 +167,7 @@ public class FilterableItemHandler {
                 return ItemStack.EMPTY;
             }
             ItemStack targetStack = dest.getStackInSlot(i);
-            if(targetStack.isEmpty()){
+            if (targetStack.isEmpty()) {
                 slotCache.getOrCreateSlots(Items.AIR).add(i);
             }
         }
@@ -195,19 +179,19 @@ public class FilterableItemHandler {
      * Inserts into cached slots if any and invalidates slots.
      * If there are no cached slots, this does nothing.
      */
-    private ItemStack insertUsingCache(ItemStack stack, boolean simulate){
+    private ItemStack insertUsingCache(ItemStack stack, boolean simulate) {
         IItemHandler dest = handler;
 
         Collection<Integer> slots = slotCache.getIfPresent(stack.getItem());
 
-        if(slots == null || stack.isEmpty()){
+        if (slots == null || stack.isEmpty()) {
             return stack;
         }
 
         List<Integer> invalidSlots = new ArrayList<>();
-        int maxSlots  = dest.getSlots();
-        for(int slot : slots){
-            if(slot >= maxSlots){
+        int maxSlots = dest.getSlots();
+        for (int slot : slots) {
+            if (slot >= maxSlots) {
                 invalidSlots.add(slot);
                 continue;
             }
@@ -217,60 +201,60 @@ public class FilterableItemHandler {
             // If this stack wants to stack and our cached slot is air but the slot is not, this means our item has moved locations.
             // If we blindly insert here, we can create partial stacks instead of combining.
             // If this is a non-stackable, ignore this and insert anywhere because our slot list is air.
-            if(stack.isStackable() && targetStack.isEmpty()){
+            if (stack.isStackable() && targetStack.isEmpty()) {
                 invalidSlots.add(slot);
                 continue;
             }
             stack = dest.insertItem(slot, stack, simulate);
-            if(stack.getCount() == count){
-                if(!ItemStack.isSameItemSameComponents(targetStack, stack)){
+            if (stack.getCount() == count) {
+                if (!ItemStack.isSameItemSameComponents(targetStack, stack)) {
                     invalidSlots.add(slot);
                 }
             }
 
-            if(stack.isEmpty()){
+            if (stack.isEmpty()) {
                 break;
             }
         }
 
-        for(int slot : invalidSlots){
+        for (int slot : invalidSlots) {
             slots.remove(slot);
         }
 
         return stack;
     }
 
-    private ItemStack insertInCachedEmptySlots(ItemStack stack, boolean simulate){
+    private ItemStack insertInCachedEmptySlots(ItemStack stack, boolean simulate) {
         IItemHandler dest = handler;
         Collection<Integer> slots = slotCache.getIfPresent(Items.AIR);
-        if(slots == null){
+        if (slots == null) {
             return stack;
         }
 
         List<Integer> invalidSlots = new ArrayList<>();
-        int maxSlots  = dest.getSlots();
-        for(int slot : slots){
-            if(slot >= maxSlots){
+        int maxSlots = dest.getSlots();
+        for (int slot : slots) {
+            if (slot >= maxSlots) {
                 invalidSlots.add(slot);
                 continue;
             }
             int count = stack.getCount();
             stack = dest.insertItem(slot, stack, simulate);
-            if(stack.getCount() == count){
+            if (stack.getCount() == count) {
                 invalidSlots.add(slot);
-            }else{
+            } else {
                 // If we successfully inserted into an empty slot, cache the inserted item slot and remove it from the empty slot list.
-                if(!dest.getStackInSlot(slot).isEmpty()){
+                if (!dest.getStackInSlot(slot).isEmpty()) {
                     slotCache.getOrCreateSlots(stack.getItem()).add(slot);
                     invalidSlots.add(slot);
                 }
             }
-            if(stack.isEmpty()){
+            if (stack.isEmpty()) {
                 break;
             }
         }
 
-        for(int slot : invalidSlots){
+        for (int slot : invalidSlots) {
             slots.remove(slot);
         }
 

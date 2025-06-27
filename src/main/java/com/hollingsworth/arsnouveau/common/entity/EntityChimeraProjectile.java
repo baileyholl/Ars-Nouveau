@@ -56,7 +56,8 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     @Override
     protected void onHitEntity(EntityHitResult rayTraceResult) {

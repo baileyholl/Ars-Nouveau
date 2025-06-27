@@ -17,10 +17,10 @@ public class FlyingItemEvent implements ITimedEvent {
 
     @Override
     public void tick(boolean serverSide) {
-        if(delay > 0){
+        if (delay > 0) {
             delay--;
         }
-        if(serverSide && delay <= 0){
+        if (serverSide && delay <= 0) {
             level.addFreshEntity(flyingItem);
         }
     }

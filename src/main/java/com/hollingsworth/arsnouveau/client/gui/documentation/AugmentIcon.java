@@ -40,7 +40,7 @@ public class AugmentIcon extends ItemButton {
 
     @Override
     public void gatherTooltips(List<Component> tooltip) {
-        if( parent != null && this.ingredient.getItems()[0].getItem() instanceof Glyph glyph) {
+        if (parent != null && this.ingredient.getItems()[0].getItem() instanceof Glyph glyph) {
             AbstractSpellPart spellPart = glyph.spellPart;
             tooltip.add(Component.translatable(spellPart.getLocalizationKey()));
 

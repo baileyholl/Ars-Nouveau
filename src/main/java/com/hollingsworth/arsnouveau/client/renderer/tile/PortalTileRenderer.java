@@ -13,15 +13,14 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import org.joml.Matrix4f;
 
-import java.util.Random;
-
 public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
     public PortalTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
 
     }
 
     public void render(PortalTile tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if (Config.ALTERNATE_PORTAL_RENDER.get() || tileEntityIn.getBlockState().getValue(PortalBlock.ALTERNATE)) return;
+        if (Config.ALTERNATE_PORTAL_RENDER.get() || tileEntityIn.getBlockState().getValue(PortalBlock.ALTERNATE))
+            return;
         float f = this.getOffset();
         Matrix4f pose = matrixStackIn.last().pose();
         VertexConsumer buffer = bufferIn.getBuffer(RenderType.endPortal());

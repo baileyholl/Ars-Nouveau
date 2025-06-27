@@ -18,218 +18,223 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFillTerminal {
-	public static class SlotCrafting extends Slot {
-		public boolean active;
+    public static class SlotCrafting extends Slot {
+        public boolean active;
 
-		public SlotCrafting(Container inventoryIn, int index, int xPosition, int yPosition) {
-			super(inventoryIn, index, xPosition, yPosition);
-			active = true;
-		}
+        public SlotCrafting(Container inventoryIn, int index, int xPosition, int yPosition) {
+            super(inventoryIn, index, xPosition, yPosition);
+            active = true;
+        }
 
-		@Override
-		public boolean isActive() {
-			return super.isActive() && active;
-		}
-	}
+        @Override
+        public boolean isActive() {
+            return super.isActive() && active;
+        }
+    }
 
-	public static class ActiveResultSlot extends ResultSlot{
-		public boolean active;
+    public static class ActiveResultSlot extends ResultSlot {
+        public boolean active;
 
-		public ActiveResultSlot(Player pPlayer, CraftingContainer pCraftSlots, Container pContainer, int pSlot, int pXPosition, int pYPosition) {
-			super(pPlayer, pCraftSlots, pContainer, pSlot, pXPosition, pYPosition);
-			active = true;
-		}
+        public ActiveResultSlot(Player pPlayer, CraftingContainer pCraftSlots, Container pContainer, int pSlot, int pXPosition, int pYPosition) {
+            super(pPlayer, pCraftSlots, pContainer, pSlot, pXPosition, pYPosition);
+            active = true;
+        }
 
-		@Override
-		public boolean isActive() {
-			return active;
-		}
-	}
-	protected List<SlotCrafting> craftSlotList = new ArrayList<>();
-	private final CraftingContainer craftMatrix;
-	private final ResultContainer craftResult;
-	private ActiveResultSlot craftingResultSlot;
-	private final List<ContainerListener> listeners = Lists.newArrayList();
+        @Override
+        public boolean isActive() {
+            return active;
+        }
+    }
 
-	@Override
-	public void addSlotListener(ContainerListener listener) {
-		super.addSlotListener(listener);
-		listeners.add(listener);
-	}
+    protected List<SlotCrafting> craftSlotList = new ArrayList<>();
+    private final CraftingContainer craftMatrix;
+    private final ResultContainer craftResult;
+    private ActiveResultSlot craftingResultSlot;
+    private final List<ContainerListener> listeners = Lists.newArrayList();
 
-	@Override
-	public void removeSlotListener(ContainerListener listener) {
-		super.removeSlotListener(listener);
-		listeners.remove(listener);
-	}
+    @Override
+    public void addSlotListener(ContainerListener listener) {
+        super.addSlotListener(listener);
+        listeners.add(listener);
+    }
 
-	public CraftingTerminalMenu(int id, Inventory inv, CraftingLecternTile te) {
-		super(MenuRegistry.STORAGE.get(), id, inv, te);
-		craftMatrix = te.getCraftingInv(inv.player);
-		craftResult = te.getCraftResult(inv.player);
-		init();
-		this.addPlayerSlots(inv, 13, 157);
-		te.registerCrafting(this);
-	}
+    @Override
+    public void removeSlotListener(ContainerListener listener) {
+        super.removeSlotListener(listener);
+        listeners.remove(listener);
+    }
 
-	public CraftingTerminalMenu(int id, Inventory inv) {
-		super(MenuRegistry.STORAGE.get(), id, inv);
-		craftMatrix = new TransientCraftingContainer(this, 3, 3);
-		craftResult = new ResultContainer();
-		init();
-		this.addPlayerSlots(inv, 13, 157);
-	}
+    public List<ItemStack> getItemsInCraftingSlots() {
+        return this.craftMatrix.getItems();
+    }
 
-	@Override
-	public void removed(Player playerIn) {
-		super.removed(playerIn);
-		if(te instanceof CraftingLecternTile craftingLecternTile) {
-			craftingLecternTile.unregisterCrafting(this);
-		}
-	}
+    public CraftingTerminalMenu(int id, Inventory inv, CraftingLecternTile te) {
+        super(MenuRegistry.STORAGE.get(), id, inv, te);
+        craftMatrix = te.getCraftingInv(inv.player);
+        craftResult = te.getCraftResult(inv.player);
+        init();
+        this.addPlayerSlots(inv, 13, 157);
+        te.registerCrafting(this);
+    }
 
-	private void init() {
-		int x = -4;
-		int y = 70;
-		this.addSlot(craftingResultSlot = new ActiveResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
-			@Override
-			public void onTake(Player thePlayer, ItemStack stack) {
-				if (thePlayer.level.isClientSide)
-					return;
-				this.checkTakeAchievements(stack);
-				if (!pinv.player.getCommandSenderWorld().isClientSide) {
-					((CraftingLecternTile) te).craft((ServerPlayer) thePlayer, tabs.get(thePlayer.getUUID()));
-				}
-			}
-		});
-		if(craftMatrix != null) {
-			for (int i = 0; i < 3; ++i) {
-				for (int j = 0; j < 3; ++j) {
-					SlotCrafting slot = new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18,  89 + i * 18);
-					this.addSlot(slot);
-					this.craftSlotList.add(slot);
-				}
-			}
-		}
-	}
+    public CraftingTerminalMenu(int id, Inventory inv) {
+        super(MenuRegistry.STORAGE.get(), id, inv);
+        craftMatrix = new TransientCraftingContainer(this, 3, 3);
+        craftResult = new ResultContainer();
+        init();
+        this.addPlayerSlots(inv, 13, 157);
+    }
 
-	@Override
-	public void addStorageSlots(boolean expanded) {
-		super.addStorageSlots(expanded);
-		if(craftSlotList != null){
-			for(SlotCrafting slot : craftSlotList){
-				slot.active = !expanded;
-			}
-			craftingResultSlot.active = !expanded;
-		}
-	}
+    @Override
+    public void removed(Player playerIn) {
+        super.removed(playerIn);
+        if (te instanceof CraftingLecternTile craftingLecternTile) {
+            craftingLecternTile.unregisterCrafting(this);
+        }
+    }
 
-	@Override
-	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
-		return slotIn.container != craftResult && super.canTakeItemForPickAll(stack, slotIn);
-	}
+    private void init() {
+        int x = -4;
+        int y = 70;
+        this.addSlot(craftingResultSlot = new ActiveResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
+            @Override
+            public void onTake(Player thePlayer, ItemStack stack) {
+                if (thePlayer.level.isClientSide)
+                    return;
+                this.checkTakeAchievements(stack);
+                if (!pinv.player.getCommandSenderWorld().isClientSide) {
+                    ((CraftingLecternTile) te).craft((ServerPlayer) thePlayer, tabs.get(thePlayer.getUUID()));
+                }
+            }
+        });
+        if (craftMatrix != null) {
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    SlotCrafting slot = new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18, 89 + i * 18);
+                    this.addSlot(slot);
+                    this.craftSlotList.add(slot);
+                }
+            }
+        }
+    }
 
-	@Override
-	public ItemStack shiftClickItems(ServerPlayer playerIn, int index) {
-		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(index);
-		if (slot != null && slot.hasItem()) {
-			ItemStack itemstack1 = slot.getItem();
-			itemstack = itemstack1.copy();
-			if (index == 0) {
-				if(te == null)return ItemStack.EMPTY;
-				((CraftingLecternTile) te).craftShift(playerIn, tabs.get(playerIn.getUUID()));
-				if (!playerIn.level.isClientSide)
-					broadcastChanges();
-				return ItemStack.EMPTY;
-			} else if (index > 0 && index < 10) {
-				if(te == null)return ItemStack.EMPTY;
-				ItemStack stack = te.pushStack(itemstack, tabs.get(playerIn.getUUID()));
-				slot.set(stack);
-				if (!playerIn.level.isClientSide)
-					broadcastChanges();
-			}
-			slot.onTake(playerIn, itemstack1);
-		}
-		return ItemStack.EMPTY;
-	}
+    @Override
+    public void addStorageSlots(boolean expanded) {
+        super.addStorageSlots(expanded);
+        if (craftSlotList != null) {
+            for (SlotCrafting slot : craftSlotList) {
+                slot.active = !expanded;
+            }
+            craftingResultSlot.active = !expanded;
+        }
+    }
 
-	public void onCraftMatrixChanged() {
-		for (int i = 0; i < slots.size(); ++i) {
-			Slot slot = slots.get(i);
+    @Override
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+        return slotIn.container != craftResult && super.canTakeItemForPickAll(stack, slotIn);
+    }
 
-			if (slot instanceof SlotCrafting || slot == craftingResultSlot) {
-				for (ContainerListener listener : listeners) {
-					if (listener instanceof ServerPlayer) {
-						((ServerPlayer) listener).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), i, slot.getItem()));
-					}
-				}
-			}
-		}
-	}
+    @Override
+    public ItemStack shiftClickItems(ServerPlayer playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+            if (index == 0) {
+                if (te == null) return ItemStack.EMPTY;
+                ((CraftingLecternTile) te).craftShift(playerIn, tabs.get(playerIn.getUUID()));
+                if (!playerIn.level.isClientSide)
+                    broadcastChanges();
+                return ItemStack.EMPTY;
+            } else if (index > 0 && index < 10) {
+                if (te == null) return ItemStack.EMPTY;
+                ItemStack stack = te.pushStack(itemstack, tabs.get(playerIn.getUUID()));
+                slot.set(stack);
+                if (!playerIn.level.isClientSide)
+                    broadcastChanges();
+            }
+            slot.onTake(playerIn, itemstack1);
+        }
+        return ItemStack.EMPTY;
+    }
 
-	@Override
-	public boolean clickMenuButton(Player playerIn, int id) {
-		if(te != null && id == 0)
-			((CraftingLecternTile) te).clear(playerIn, tabs.get(playerIn.getUUID()));
-		else super.clickMenuButton(playerIn, id);
-		return false;
-	}
+    public void onCraftMatrixChanged() {
+        for (int i = 0; i < slots.size(); ++i) {
+            Slot slot = slots.get(i);
 
-	@Override
-	public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
-		this.craftMatrix.fillStackedContents(itemHelperIn);
-	}
+            if (slot instanceof SlotCrafting || slot == craftingResultSlot) {
+                for (ContainerListener listener : listeners) {
+                    if (listener instanceof ServerPlayer) {
+                        ((ServerPlayer) listener).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), i, slot.getItem()));
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	public void clearCraftingContent() {
-		this.craftMatrix.clearContent();
-		this.craftResult.clearContent();
-	}
+    @Override
+    public boolean clickMenuButton(Player playerIn, int id) {
+        if (te != null && id == 0)
+            ((CraftingLecternTile) te).clear(playerIn, tabs.get(playerIn.getUUID()));
+        else super.clickMenuButton(playerIn, id);
+        return false;
+    }
 
-	@Override
-	public boolean recipeMatches(RecipeHolder pRecipe) {
-		return pRecipe.value().matches(this.craftMatrix.asCraftInput(), this.pinv.player.level);
-	}
+    @Override
+    public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
+        this.craftMatrix.fillStackedContents(itemHelperIn);
+    }
 
-	@Override
-	public int getResultSlotIndex() {
-		return 0;
-	}
+    @Override
+    public void clearCraftingContent() {
+        this.craftMatrix.clearContent();
+        this.craftResult.clearContent();
+    }
 
-	@Override
-	public int getGridWidth() {
-		return this.craftMatrix.getWidth();
-	}
+    @Override
+    public boolean recipeMatches(RecipeHolder pRecipe) {
+        return pRecipe.value().matches(this.craftMatrix.asCraftInput(), this.pinv.player.level);
+    }
 
-	@Override
-	public int getGridHeight() {
-		return this.craftMatrix.getHeight();
-	}
+    @Override
+    public int getResultSlotIndex() {
+        return 0;
+    }
 
-	@Override
-	public int getSize() {
-		return 10;
-	}
+    @Override
+    public int getGridWidth() {
+        return this.craftMatrix.getWidth();
+    }
 
-	@Override
-	public List<RecipeBookCategories> getRecipeBookCategories() {
-		return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
-	}
+    @Override
+    public int getGridHeight() {
+        return this.craftMatrix.getHeight();
+    }
 
-	public class TerminalRecipeItemHelper extends StackedContents {
-		@Override
-		public void clear() {
-			super.clear();
-			itemList.forEach(e -> {
-				accountSimpleStack(e.getActualStack());
-			});
-		}
-	}
+    @Override
+    public int getSize() {
+        return 10;
+    }
 
-	@Override
-	public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
-		//todo: reenable recipe placement
+    @Override
+    public List<RecipeBookCategories> getRecipeBookCategories() {
+        return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
+    }
+
+    public class TerminalRecipeItemHelper extends StackedContents {
+        @Override
+        public void clear() {
+            super.clear();
+            itemList.forEach(e -> {
+                accountSimpleStack(e.getActualStack());
+            });
+        }
+    }
+
+    @Override
+    public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
+        //todo: reenable recipe placement
 //		(new ServerPlaceRecipe<RecipeInput, Recipe>(this) {
 //			{
 //				stackedContents = new TerminalRecipeItemHelper();
@@ -285,19 +290,19 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 //				this.menu.clearCraftingContent();
 //			}
 //		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
-	}
+    }
 
-	public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList){
-		ItemStack[][] stacks = new ItemStack[9][];
-		for (int i = 0; i < stacksList.size(); i++) {
-			stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
-		}
+    public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList) {
+        ItemStack[][] stacks = new ItemStack[9][];
+        for (int i = 0; i < stacksList.size(); i++) {
+            stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
+        }
 
-		((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
-	}
+        ((CraftingLecternTile) te).transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
+    }
 
-	@Override
-	public List<StoredItemStack> getStoredItems() {
-		return itemList;
-	}
+    @Override
+    public List<StoredItemStack> getStoredItems() {
+        return itemList;
+    }
 }

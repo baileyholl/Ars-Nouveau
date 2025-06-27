@@ -21,26 +21,26 @@ public class JarEvents {
 
     @SubscribeEvent
     public static void onNoteblock(NoteBlockEvent.Play e) {
-        if(e.getLevel().isClientSide())
+        if (e.getLevel().isClientSide())
             return;
-        if(e.getLevel().getBlockEntity(e.getPos().below()) instanceof MobJarTile mobJarTile){
+        if (e.getLevel().getBlockEntity(e.getPos().below()) instanceof MobJarTile mobJarTile) {
             LevelAccessor level = e.getLevel();
             RandomSource random = level.getRandom();
-            if(mobJarTile.getEntity() instanceof MobAccessorMixin mob){
+            if (mobJarTile.getEntity() instanceof MobAccessorMixin mob) {
                 SoundEvent soundEvent = mob.callGetAmbientSound();
-                if(soundEvent == null)
+                if (soundEvent == null)
                     return;
                 e.getLevel().playSound(null, e.getPos(), soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
                 e.setCanceled(true);
-            }else if(mobJarTile.getEntity() instanceof LightningBolt bolt){
+            } else if (mobJarTile.getEntity() instanceof LightningBolt bolt) {
                 e.getLevel().playSound(null, e.getPos(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 10000.0F, 0.8F + random.nextFloat() * 0.2F);
-                e.getLevel().playSound(null, e.getPos(),  SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 2.0F,random.nextFloat() * 0.2F);
+                e.getLevel().playSound(null, e.getPos(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 2.0F, random.nextFloat() * 0.2F);
             }
         }
     }
 
     @SubscribeEvent
-    public static void onRide(EntityMountEvent mountEvent){
+    public static void onRide(EntityMountEvent mountEvent) {
         if (mountEvent.isDismounting()) return;
         if (mountEvent.getLevel().isClientSide) return;
         if (mountEvent.getEntityMounting() instanceof Player) {

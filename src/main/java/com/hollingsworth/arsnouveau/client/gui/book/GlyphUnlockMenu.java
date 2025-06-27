@@ -117,7 +117,7 @@ public class GlyphUnlockMenu extends BaseBook {
         layoutAllGlyphs(0);
 
         //Crafting slots
-        for(ItemButton button : itemButtons){
+        for (ItemButton button : itemButtons) {
             removeWidget(button);
         }
         itemButtons = new ArrayList<>();
@@ -310,7 +310,7 @@ public class GlyphUnlockMenu extends BaseBook {
         }
     }
 
-    public void updateRecipeButtons(){
+    public void updateRecipeButtons() {
         if (selectedRecipe == null)
             return;
         for (ItemButton itemButton : itemButtons) {

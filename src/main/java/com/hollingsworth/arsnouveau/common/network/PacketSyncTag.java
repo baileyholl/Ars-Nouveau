@@ -9,12 +9,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketSyncTag extends AbstractPacket{
+public class PacketSyncTag extends AbstractPacket {
 
     public CompoundTag tag;
     public int entityId;
 
-    public PacketSyncTag(CompoundTag tag, int entityId){
+    public PacketSyncTag(CompoundTag tag, int entityId) {
         this.tag = tag;
         this.entityId = entityId;
     }

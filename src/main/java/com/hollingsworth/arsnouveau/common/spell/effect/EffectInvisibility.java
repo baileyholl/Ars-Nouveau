@@ -45,7 +45,7 @@ public class EffectInvisibility extends AbstractEffect implements IPotionEffect 
         return 30;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
@@ -56,7 +56,7 @@ public class EffectInvisibility extends AbstractEffect implements IPotionEffect 
         return "Causes the target to turn invisible for a short time.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);

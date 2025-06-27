@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class TileCaster implements IWrappedCaster{
+public class TileCaster implements IWrappedCaster {
     protected SpellContext.CasterType casterType;
     protected BlockEntity tile;
 
-    public TileCaster(BlockEntity tile, SpellContext.CasterType casterType){
+    public TileCaster(BlockEntity tile, SpellContext.CasterType casterType) {
         this.tile = tile;
         this.casterType = casterType;
     }
@@ -34,13 +34,13 @@ public class TileCaster implements IWrappedCaster{
         return casterType;
     }
 
-    public BlockEntity getTile(){
+    public BlockEntity getTile() {
         return tile;
     }
 
     @Override
     public Direction getFacingDirection() {
-        if(tile.getBlockState().hasProperty(BlockStateProperties.FACING)){
+        if (tile.getBlockState().hasProperty(BlockStateProperties.FACING)) {
             return tile.getBlockState().getValue(BlockStateProperties.FACING);
         }
         return Direction.NORTH;
@@ -48,9 +48,9 @@ public class TileCaster implements IWrappedCaster{
 
     @Override
     public BlockEntity getNearbyBlockEntity(Predicate<BlockEntity> predicate) {
-        for(Direction dir : Direction.values()){
+        for (Direction dir : Direction.values()) {
             BlockEntity tile = this.tile.getLevel().getBlockEntity(this.tile.getBlockPos().relative(dir));
-            if(tile != null && predicate.test(tile)){
+            if (tile != null && predicate.test(tile)) {
                 return tile;
             }
         }

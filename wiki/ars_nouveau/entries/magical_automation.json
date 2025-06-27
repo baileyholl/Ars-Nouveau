@@ -1,0 +1,23 @@
+{
+  "id": "ars_nouveau:magical_automation",
+  "order": 10,
+  "icon": "ars_nouveau:basic_spell_turret",
+  "title": "10 - Magical Automation",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "10 - Magical Automation",
+      "description": "Ars Nouveau supports a wide variety of automation methods via Spell Turrets, magical helpers, and Rituals.  Using one or a combination of these options can achieve almost anything you want such as farming crops and trees, quarrying the earth, crafting and transporting items, smelting, and brewing potions.",
+      "icon": "ars_nouveau:basic_spell_turret"
+    },
+    {
+      "related": [
+        "ars_nouveau:basic_spell_turret",
+        "ars_nouveau:starbuncle_charm",
+        "ars_nouveau:whirlisprig_charm",
+        "ars_nouveau:drygmy_charm",
+        "ars_nouveau:wixie_charm"
+      ]
+    }
+  ]
+}

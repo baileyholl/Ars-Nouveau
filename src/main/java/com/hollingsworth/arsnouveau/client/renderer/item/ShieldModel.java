@@ -9,16 +9,16 @@ public class ShieldModel extends GeoModel<EnchantersShield> {
 
     @Override
     public ResourceLocation getModelResource(EnchantersShield wand) {
-        return ArsNouveau.prefix( "geo/shield.geo.json");
+        return ArsNouveau.prefix("geo/shield.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(EnchantersShield wand) {
-        return ArsNouveau.prefix( "textures/item/enchanters_shield.png");
+        return ArsNouveau.prefix("textures/item/enchanters_shield.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(EnchantersShield wand) {
-        return ArsNouveau.prefix( "animations/shield.json");
+        return ArsNouveau.prefix("animations/shield.json");
     }
 }

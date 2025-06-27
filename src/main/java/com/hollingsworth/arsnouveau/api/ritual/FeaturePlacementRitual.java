@@ -36,29 +36,29 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        for(ItemStack i : getConsumedItems()){
-            if(i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
+        for (ItemStack i : getConsumedItems()) {
+            if (i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
                 checkRadius += i.getCount();
             }
         }
         setup();
     }
 
-    public void setup(){
+    public void setup() {
         addFeatures(features);
-        for(IPlaceableFeature feature : features){
+        for (IPlaceableFeature feature : features) {
             featureMap.put(feature.getFeatureName(), new ArrayList<>());
         }
         targetPositions = getTargetPositions();
     }
 
-    public List<BlockPos> getTargetPositions(){
+    public List<BlockPos> getTargetPositions() {
         List<BlockPos> positions = new ArrayList<>();
         BlockPos pos = getPos();
         Pair<BlockPos, BlockPos> offsets = features.get(featureIndex).getCustomOffsets();
         BlockPos lowerBound = getPos().offset(-checkRadius, 0, -checkRadius).offset(lowerOffset).offset(offsets.getA());
         BlockPos upperBound = getPos().offset(checkRadius, 0, checkRadius).offset(upperOffset).offset(offsets.getB());
-        for(BlockPos nextPos : BlockPos.betweenClosed(lowerBound, upperBound)){
+        for (BlockPos nextPos : BlockPos.betweenClosed(lowerBound, upperBound)) {
             double x = nextPos.getX() + 0.5;
             double y = nextPos.getY() + 0.5;
             double z = nextPos.getZ() + 0.5;
@@ -74,11 +74,11 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
 
     @Override
     public void tick() {
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             return;
         }
 
-        while(true){
+        while (true) {
             if (positionIndex >= targetPositions.size()) {
                 featureIndex++;
                 if (featureIndex >= features.size()) {
@@ -98,12 +98,12 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
         }
     }
 
-    public boolean isEnoughBlocksFrom(String feature, BlockPos targetPos, double dist){
-        if(!featureMap.containsKey(feature)){
+    public boolean isEnoughBlocksFrom(String feature, BlockPos targetPos, double dist) {
+        if (!featureMap.containsKey(feature)) {
             return true;
         }
-        for(BlockPos pos : featureMap.get(feature)){
-            if(BlockUtil.distanceFrom(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= dist){
+        for (BlockPos pos : featureMap.get(feature)) {
+            if (BlockUtil.distanceFrom(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= dist) {
                 return false;
             }
         }
@@ -116,7 +116,7 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     }
 
     @Override
-    public void read(HolderLookup.Provider provider,  CompoundTag tag) {
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
         featureIndex = tag.getInt("featureIndex");
         positionIndex = tag.getInt("positionIndex");

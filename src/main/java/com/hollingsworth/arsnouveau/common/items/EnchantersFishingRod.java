@@ -29,6 +29,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -47,16 +48,20 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
         super(new Properties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
+    @Override
+    public boolean isEnchantable(@NotNull ItemStack stack) {
+        return true;
+    }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (player.fishing != null) {
             if (!level.isClientSide) {
                 Entity hookedIn = player.fishing.getHookedIn();
-                if(hookedIn != null && player.fishing instanceof EnchantedHook enchantedHook){
+                if (hookedIn != null && player.fishing instanceof EnchantedHook enchantedHook) {
                     enchantedHook.castSpell();
-                }else {
+                } else {
                     int i = player.fishing.retrieve(itemstack);
                     ItemStack original = itemstack.copy();
                     itemstack.hurtAndBreak(i, player, LivingEntity.getSlotForHand(hand));
@@ -89,7 +94,7 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
                     0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
             );
             if (level instanceof ServerLevel serverlevel) {
-                int j = (int)(EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
+                int j = (int) (EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
                 int k = EnchantmentHelper.getFishingLuckBonus(serverlevel, itemstack, player);
                 ItemStack stack = player.getItemInHand(hand);
                 AbstractCaster<?> caster = getSpellCaster(stack);
@@ -112,7 +117,7 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, net.neoforged.neoforge.common.ItemAbility itemAbility) {
+    public boolean canPerformAction(@NotNull ItemStack stack, @NotNull ItemAbility itemAbility) {
         return net.neoforged.neoforge.common.ItemAbilities.DEFAULT_FISHING_ROD_ACTIONS.contains(itemAbility);
     }
 
@@ -155,6 +160,7 @@ public class EnchantersFishingRod extends ModItem implements ICasterTool, GeoIte
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;

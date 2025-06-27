@@ -34,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ItemGrate extends ModBlock implements BucketPickup{
+public class ItemGrate extends ModBlock implements BucketPickup {
     protected static final VoxelShape BOTTOM_AABB = Block.box(0.0, 0.0, 0.0, 16.0, 3.0, 16.0);
     protected static final VoxelShape TOP_AABB = Block.box(0.0, 13.0, 0.0, 16.0, 16.0, 16.0);
     protected static final VoxelShape EAST_OPEN_AABB = Block.box(0.0, 0.0, 0.0, 3.0, 16.0, 16.0);
@@ -55,7 +55,6 @@ public class ItemGrate extends ModBlock implements BucketPickup{
     }
 
 
-
     @Override
     protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHitResult) {
         BlockState below = pLevel.getBlockState(pPos.below());
@@ -74,39 +73,39 @@ public class ItemGrate extends ModBlock implements BucketPickup{
         BlockPos below = pPos.below();
         BlockState stateAbove = pLevel.getBlockState(pPos.above());
         BlockState stateBelow = pLevel.getBlockState(below);
-        if(!stateAbove.getFluidState().isSource()){
+        if (!stateAbove.getFluidState().isSource()) {
             return;
         }
 
         if (stateBelow.getBlock() instanceof LiquidBlockContainer blockContainer
                 && blockContainer.canPlaceLiquid(null, pLevel, pPos.below(), stateBelow, stateAbove.getFluidState().getType())) {
-            if(blockContainer.placeLiquid(pLevel, pPos.below(), stateBelow, stateAbove.getFluidState())){
-                if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+            if (blockContainer.placeLiquid(pLevel, pPos.below(), stateBelow, stateAbove.getFluidState())) {
+                if (stateAbove.getBlock() instanceof BucketPickup bucketPickup) {
                     bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
                 }
-                if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
+                if (pLevel.getBlockState(pPos.above()).getFluidState().isSource()) {
                     pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
                 }
             }
         } else if (stateBelow.canBeReplaced()) {
-            if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+            if (stateAbove.getBlock() instanceof BucketPickup bucketPickup) {
                 ItemStack bucket = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
-                if(bucket.getItem() instanceof BucketItem bucketItem){
+                if (bucket.getItem() instanceof BucketItem bucketItem) {
                     pLevel.setBlockAndUpdate(below, stateAbove.getFluidState().createLegacyBlock());
                 }
             }
-        }else if (stateBelow.getBlock() instanceof CauldronBlock cauldronBlock
+        } else if (stateBelow.getBlock() instanceof CauldronBlock cauldronBlock
                 && !cauldronBlock.isFull(stateBelow)) {
-            if(stateAbove.getBlock() instanceof BucketPickup bucketPickup){
+            if (stateAbove.getBlock() instanceof BucketPickup bucketPickup) {
 
                 ItemStack stack = bucketPickup.pickupBlock(null, pLevel, pPos.above(), stateAbove);
-                if(!stack.isEmpty()){
+                if (!stack.isEmpty()) {
                     var accessor = (BlockBehaviourAccessor) cauldronBlock;
                     ANFakePlayer fakePlayer = ANFakePlayer.getPlayer(pLevel);
                     fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
                     ItemInteractionResult result = accessor.callUseItemOn(stack, stateBelow, pLevel, pPos.below(), fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(below.getX(), below.getY(), below.getZ()), Direction.UP, pPos.below(), false));
-                    if(!ItemStack.isSameItem(fakePlayer.getItemInHand(InteractionHand.MAIN_HAND), stack)){
-                        if(pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
+                    if (!ItemStack.isSameItem(fakePlayer.getItemInHand(InteractionHand.MAIN_HAND), stack)) {
+                        if (pLevel.getBlockState(pPos.above()).getFluidState().isSource()) {
                             pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
                         }
                     }
@@ -119,7 +118,7 @@ public class ItemGrate extends ModBlock implements BucketPickup{
     @Override
     protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock, BlockPos pNeighborPos, boolean pMovedByPiston) {
         super.neighborChanged(pState, pLevel, pPos, pNeighborBlock, pNeighborPos, pMovedByPiston);
-        if(!pLevel.isClientSide && pLevel.getBlockState(pPos.above()).getFluidState().isSource()){
+        if (!pLevel.isClientSide && pLevel.getBlockState(pPos.above()).getFluidState().isSource()) {
             pLevel.scheduleTick(pPos, this, 10);
         }
     }
@@ -127,15 +126,15 @@ public class ItemGrate extends ModBlock implements BucketPickup{
     @Override
     protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         Direction direction = pState.getValue(BlockStateProperties.FACING);
-        if(direction == Direction.DOWN){
+        if (direction == Direction.DOWN) {
             return TOP_AABB;
-        }else if(direction == Direction.WEST){
+        } else if (direction == Direction.WEST) {
             return WEST_OPEN_AABB;
-        }else if(direction == Direction.SOUTH){
+        } else if (direction == Direction.SOUTH) {
             return SOUTH_OPEN_AABB;
-        }else if(direction == Direction.NORTH){
+        } else if (direction == Direction.NORTH) {
             return NORTH_OPEN_AABB;
-        }else if(direction == Direction.EAST){
+        } else if (direction == Direction.EAST) {
             return EAST_OPEN_AABB;
         }
         return BOTTOM_AABB;
@@ -143,12 +142,12 @@ public class ItemGrate extends ModBlock implements BucketPickup{
 
     @Override
     protected VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if(pContext instanceof EntityCollisionContext entityCollisionContext){
+        if (pContext instanceof EntityCollisionContext entityCollisionContext) {
             var entity = entityCollisionContext.getEntity();
-            if(entity == null || entity.getType().is(EntityTags.ITEM_GRATE_COLLIDE)){
+            if (entity == null || entity.getType().is(EntityTags.ITEM_GRATE_COLLIDE)) {
                 return super.getCollisionShape(pState, pLevel, pPos, pContext);
             }
-            if(entity instanceof ItemEntity || entity instanceof Projectile || entity.getType().is(EntityTags.ITEM_GRATE_PASSABLE)){
+            if (entity instanceof ItemEntity || entity instanceof Projectile || entity.getType().is(EntityTags.ITEM_GRATE_PASSABLE)) {
                 return Shapes.empty();
             }
         }
@@ -173,7 +172,7 @@ public class ItemGrate extends ModBlock implements BucketPickup{
     @Override
     public ItemStack pickupBlock(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
         BlockState belowState = pLevel.getBlockState(pPos.below());
-        if(belowState.getBlock() instanceof BucketPickup bucketPickup){
+        if (belowState.getBlock() instanceof BucketPickup bucketPickup) {
             return bucketPickup.pickupBlock(pPlayer, pLevel, pPos.below(), belowState);
         }
         return ItemStack.EMPTY;

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class JarBehavior<T extends Entity> {
 
-    public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile){
+    public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
         T entity = entityFromJar(tile);
         if (entity.getType().is(EntityTags.INTERACT_JAR_BLACKLIST)) return;
 
@@ -44,22 +44,22 @@ public class JarBehavior<T extends Entity> {
         }
     }
 
-    public void tick(MobJarTile tile){
+    public void tick(MobJarTile tile) {
     }
 
     /**
      * A helper method to sync the jar change to the client, also sends a block update.
      */
-    public void syncClient(MobJarTile tile){
+    public void syncClient(MobJarTile tile) {
         tile.updateBlock();
     }
 
-    public @NotNull T entityFromJar(MobJarTile tile){
+    public @NotNull T entityFromJar(MobJarTile tile) {
         return (T) tile.getEntity();
     }
 
-    public boolean isEntityBaby(Entity entity){
-        if(!(entity instanceof AgeableMob ageableMob))
+    public boolean isEntityBaby(Entity entity) {
+        if (!(entity instanceof AgeableMob ageableMob))
             return false;
         return ageableMob.isBaby();
     }
@@ -67,25 +67,25 @@ public class JarBehavior<T extends Entity> {
     /**
      * @return Renderer scale for the entity in the jar.
      */
-    public Vec3 scaleOffset(MobJarTile pBlockEntity){
-        return new Vec3(0,0,0);
+    public Vec3 scaleOffset(MobJarTile pBlockEntity) {
+        return new Vec3(0, 0, 0);
     }
+
     /**
      * @return Renderer translation for the entity in the jar.
      */
-    public Vec3 translate(MobJarTile pBlockEntity){
-        return new Vec3(0,0,0);
+    public Vec3 translate(MobJarTile pBlockEntity) {
+        return new Vec3(0, 0, 0);
     }
 
-    public boolean shouldUsePartialTicks(MobJarTile pBlockEntity){
+    public boolean shouldUsePartialTicks(MobJarTile pBlockEntity) {
         return false;
     }
 
     /**
-     *
      * @return Light level the jar should give off
      */
-    public int lightLevel(MobJarTile pBlockEntity){
+    public int lightLevel(MobJarTile pBlockEntity) {
         return 0;
     }
 
@@ -104,7 +104,7 @@ public class JarBehavior<T extends Entity> {
         return 0;
     }
 
-    public void getTooltip(MobJarTile tile, List<Component> tooltips){
+    public void getTooltip(MobJarTile tile, List<Component> tooltips) {
 
     }
 

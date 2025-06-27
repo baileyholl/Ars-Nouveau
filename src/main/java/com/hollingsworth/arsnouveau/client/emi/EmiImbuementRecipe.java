@@ -29,8 +29,8 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     }
 
     @Override
-    public List<EmiIngredient> getInputs() {
-        var inputs = super.getInputs();
+    protected List<EmiIngredient> generateInputs() {
+        var inputs = super.generateInputs();
         for (int i = 1; i < inputs.size(); i++) {
             var ingredient = inputs.get(i);
             if (ingredient.getEmiStacks().size() == 1 && ingredient.getEmiStacks().get(0) instanceof EmiStack stack) {
@@ -47,6 +47,6 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         super.addWidgets(widgets);
-        widgets.addText(Component.translatable("ars_nouveau.source", recipe.source), 0, this.getDisplayHeight() - 10, 10,false);
+        widgets.addText(Component.translatable("ars_nouveau.source", recipe.source), 0, this.getDisplayHeight() - 10, 10, false);
     }
 }

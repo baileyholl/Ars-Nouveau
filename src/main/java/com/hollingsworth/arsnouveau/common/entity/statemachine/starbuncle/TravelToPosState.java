@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TravelToPosState extends StarbyState{
+public class TravelToPosState extends StarbyState {
     public BlockPos targetPos;
     public int ticksRunning;
     public StarbyState nextState;
@@ -33,7 +33,7 @@ public class TravelToPosState extends StarbyState{
             return nextState;
         }
 
-        if(BlockUtil.distanceFrom(starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D && isDestinationStillValid(targetPos)){
+        if (BlockUtil.distanceFrom(starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D && isDestinationStillValid(targetPos)) {
             return onDestinationReached();
         }
 
@@ -50,11 +50,11 @@ public class TravelToPosState extends StarbyState{
         return null;
     }
 
-    public StarbyState onDestinationReached(){
+    public StarbyState onDestinationReached() {
         return nextState;
     }
 
-    public boolean isDestinationStillValid(BlockPos pos){
+    public boolean isDestinationStillValid(BlockPos pos) {
         return true;
     }
 

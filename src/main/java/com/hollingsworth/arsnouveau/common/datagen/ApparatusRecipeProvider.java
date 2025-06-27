@@ -47,6 +47,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     }
 
     public List<ApparatusRecipeBuilder.RecipeWrapper<? extends EnchantingApparatusRecipe>> recipes = new ArrayList<>();
+
     public ApparatusRecipeBuilder builder() {
         return ApparatusRecipeBuilder.builder();
     }
@@ -1069,12 +1070,12 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(4, Tags.Items.CHESTS).build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.WARP_SCROLL,2)
+                .withResult(ItemsRegistry.WARP_SCROLL, 2)
                 .withReagent(ItemsRegistry.WARP_SCROLL)
                 .withPedestalItem(ItemsRegistry.WARP_SCROLL)
                 .keepNbtOfReagent(true)
                 .withSourceCost(1000)
-                .withId(ArsNouveau.prefix( "warp_scroll_copy"))
+                .withId(ArsNouveau.prefix("warp_scroll_copy"))
                 .build());
         addRecipe(builder().withResult(BlockRegistry.SPELL_SENSOR).withReagent(Blocks.SCULK_SENSOR).build());
         addRecipe(builder().withReagent(ItemsRegistry.RING_OF_POTENTIAL).withResult(ItemsRegistry.JUMP_RING)

@@ -3,6 +3,11 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.RuneTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -30,6 +35,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -48,6 +54,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     public int ticksUntilCharge;
     public UUID uuid = null;
     public Entity touchedEntity;
+    public String pattern = "";
 
     public RuneTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.RUNE_TILE, pos, state);
@@ -78,6 +85,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
             }
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
+
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
                 return;
@@ -99,7 +107,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.put("spell", ANCodecs.encode(Spell.CODEC.codec(), spell));
         tag.putBoolean("charged", isCharged);
@@ -109,10 +117,11 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         if (uuid != null)
             tag.putUUID("uuid", uuid);
         tag.putBoolean("sensitive", isSensitive);
+        tag.putString("pattern", pattern);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         this.spell = ANCodecs.decode(Spell.CODEC.codec(), tag.getCompound("spell"));
         this.isCharged = tag.getBoolean("charged");
@@ -122,6 +131,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
         if (tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
         this.isSensitive = tag.getBoolean("sensitive");
+        this.pattern = tag.getString("pattern");
     }
 
     @Override
@@ -153,7 +163,8 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
@@ -171,12 +182,15 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
     @Override
     public void setColor(ParticleColor color) {
-        this.spell = spell.withColor(color);
+        TimelineMap.MutableTimelineMap timelineMap = spell.particleTimeline().mutable();
+        RuneTimeline runeTimeline1 = timelineMap.getOrCreate(ParticleTimelineRegistry.RUNE_TIMELINE.get());
+        runeTimeline1.propMap.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(color, false));
+        this.spell = spell.withTimeline(timelineMap.immutable());
         updateBlock();
     }
 
     @Override
     public ParticleColor getColor() {
-        return spell.color();
+        return spell.particleTimeline().get(ParticleTimelineRegistry.RUNE_TIMELINE).getColor();
     }
 }

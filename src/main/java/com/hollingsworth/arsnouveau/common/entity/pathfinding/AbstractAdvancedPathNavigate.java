@@ -47,8 +47,8 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation 
      * Used to path away from a position.
      *
      * @param currentPosition the position to avoid.
-     * @param range the range he should move out of.
-     * @param speed the speed to run at.
+     * @param range           the range he should move out of.
+     * @param speed           the speed to run at.
      * @param safeDestination if the destination is save and should be set.
      * @return the result of the pathing.
      */

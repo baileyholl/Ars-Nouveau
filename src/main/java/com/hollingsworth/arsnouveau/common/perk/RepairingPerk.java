@@ -6,30 +6,28 @@ import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.Unbreakable;
 
 public class RepairingPerk extends Perk {
 
-    public static final RepairingPerk INSTANCE = new RepairingPerk(ArsNouveau.prefix( "thread_repairing"));
+    public static final RepairingPerk INSTANCE = new RepairingPerk(ArsNouveau.prefix("thread_repairing"));
 
     public RepairingPerk(ResourceLocation key) {
         super(key);
     }
 
-    public static void attemptRepair(ItemStack stack, LivingEntity entity){
-        if(entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
+    public static void attemptRepair(ItemStack stack, LivingEntity entity) {
+        if (entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
             return;
         double repairLevel = PerkUtil.countForPerk(RepairingPerk.INSTANCE, entity);
         var cap = CapabilityRegistry.getMana(entity);
-        if(cap != null){
-            if(cap.getCurrentMana() < 20)
+        if (cap != null) {
+            if (cap.getCurrentMana() < 20)
                 return;
             cap.removeMana(20);
-            stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int)repairLevel + Config.BASE_ARMOR_REPAIR_RATE.get()));
+            stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int) repairLevel + Config.BASE_ARMOR_REPAIR_RATE.get()));
         }
     }
 

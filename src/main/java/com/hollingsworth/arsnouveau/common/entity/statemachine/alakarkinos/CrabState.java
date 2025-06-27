@@ -9,6 +9,7 @@ public class CrabState implements IState<CrabState> {
 
     public Alakarkinos alakarkinos;
     public int ticksRunning;
+
     public CrabState(Alakarkinos alakarkinos) {
         this.alakarkinos = alakarkinos;
     }

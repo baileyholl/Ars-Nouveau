@@ -42,7 +42,7 @@ public class RitualBreed extends AbstractRitual {
     @Override
     public void modifyTooltips(List<Component> tooltips) {
         var lastCheck = getWorld().getGameTime();
-        if (lastCheck != lastTick && lastCheck  % 20 == 0) {
+        if (lastCheck != lastTick && lastCheck % 20 == 0) {
             List<Animal> animals = getWorld().getEntitiesOfClass(Animal.class, new AABB(getPos()).inflate(5));
             tooManyAnimals = animals.size() >= 20;
             lastTick = lastCheck;
@@ -74,6 +74,6 @@ public class RitualBreed extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.FERTILITY);
+        return ArsNouveau.prefix(RitualLib.FERTILITY);
     }
 }

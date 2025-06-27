@@ -15,6 +15,7 @@ public class LilyModel extends GeoModel<Lily> {
     public static ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/lily.png");
     public static ResourceLocation MODEL = ArsNouveau.prefix("geo/lily.geo.json");
     public static ResourceLocation ANIMATION = ArsNouveau.prefix("animations/lily_animations.json");
+
     @Override
     public void setCustomAnimations(Lily entity, long uniqueID, @Nullable AnimationState customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);

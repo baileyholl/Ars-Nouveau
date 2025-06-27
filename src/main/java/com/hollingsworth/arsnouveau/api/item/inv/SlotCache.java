@@ -13,18 +13,42 @@ import java.util.concurrent.TimeUnit;
 public class SlotCache {
     protected LoadingCache<Item, IntRBTreeSet> cache;
 
-    public SlotCache(){
-        this.cache = CacheBuilder.newBuilder()
-                .maximumSize(100)
-                .expireAfterAccess(30, TimeUnit.MINUTES)
-                .build(CacheLoader.from((key) -> new IntRBTreeSet()));;
+    public SlotCache() {
+        this(true);
     }
 
-    public Collection<Integer> getOrCreateSlots(Item item){
+    public SlotCache(boolean shouldExpire) {
+        if (shouldExpire) {
+            this.cache = CacheBuilder.newBuilder()
+                    .maximumSize(100)
+                    .expireAfterAccess(30, TimeUnit.MINUTES)
+                    .build(CacheLoader.from((key) -> new IntRBTreeSet()));
+            ;
+        } else {
+            this.cache = CacheBuilder.newBuilder()
+                    .maximumSize(100)
+                    .build(CacheLoader.from((key) -> new IntRBTreeSet()));
+            ;
+        }
+    }
+
+    public Collection<Integer> getOrCreateSlots(Item item) {
         return cache.getUnchecked(item);
     }
 
-    public @Nullable Collection<Integer> getIfPresent(Item item){
+    public @Nullable Collection<Integer> getIfPresent(Item item) {
         return cache.getIfPresent(item);
+    }
+
+    public void replaceSlotWithItem(Item extracted, Item newItem, int slot) {
+        cache.getUnchecked(extracted).remove(slot);
+        cache.getUnchecked(newItem).add(slot);
+    }
+
+    @Override
+    public String toString() {
+        return "SlotCache{" +
+                "cache=" + cache.asMap() +
+                '}';
     }
 }

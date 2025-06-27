@@ -54,20 +54,20 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         itemSet.add(getStack.getItem());
         for (BlockPos b : tile.getInventories()) {
             BlockEntity blockEntity = world.getBlockEntity(b);
-            if(blockEntity == null)
+            if (blockEntity == null)
                 continue;
             IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
             if (itemHandler == null)
                 continue;
-            for(int i = 0; i < itemHandler.getSlots(); i++){
+            for (int i = 0; i < itemHandler.getSlots(); i++) {
                 ItemStack stack = itemHandler.getStackInSlot(i);
-                if(stack.getItem() == getStack.getItem()){
+                if (stack.getItem() == getStack.getItem()) {
                     movePos = b.immutable();
                     this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
                     break;
                 }
             }
-            if(movePos != null){
+            if (movePos != null) {
                 break;
             }
         }
@@ -113,21 +113,21 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             List<ItemHandlerPos> handlers = new ArrayList<>();
             for (BlockPos b : tile.getInventories()) {
                 BlockEntity blockEntity = world.getBlockEntity(b);
-                if(blockEntity == null)
+                if (blockEntity == null)
                     continue;
                 IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
                 if (itemHandler == null)
                     continue;
-               handlers.add(new ItemHandlerPos(b.immutable(), itemHandler));
+                handlers.add(new ItemHandlerPos(b.immutable(), itemHandler));
             }
-            for(ItemStack needed : neededStacks) {
+            for (ItemStack needed : neededStacks) {
                 for (ItemHandlerPos handler : handlers) {
-                    if(tile.craftManager.neededItems.isEmpty()){
+                    if (tile.craftManager.neededItems.isEmpty()) {
                         found = true;
                         return;
                     }
                     IItemHandler itemHandler = handler.handler();
-                    if(itemHandler == null)
+                    if (itemHandler == null)
                         continue;
                     for (int j = 0; j < itemHandler.getSlots(); j++) {
                         ItemStack slotStack = itemHandler.getStackInSlot(j);
@@ -136,7 +136,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                             int size = slotStack.getCount();
                             int numNeeded = (int) tile.craftManager.neededItems.stream().filter(stack -> stack.getItem() == slotStack.getItem()).count();
                             int canExtract = Math.min(size, numNeeded);
-                            for(int count = 0; count < canExtract; count++) {
+                            for (int count = 0; count < canExtract; count++) {
                                 ItemStack stackToGive = itemHandler.extractItem(j, 1, false);
                                 spawnFlyingItem((ServerLevel) tile.getLevel(), tile.getBlockPos(), handler.pos(), stackToGive, 1 + 3 * spawnDelay++);
                                 tile.giveItem(stackToGive);
@@ -160,7 +160,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     }
 
     public void spawnFlyingItem(ServerLevel level, BlockPos worldPosition, BlockPos from, ItemStack stack, int delay) {
-        if(!NearbyPlayerCache.isPlayerNearby(worldPosition, level, 64)){
+        if (!NearbyPlayerCache.isPlayerNearby(worldPosition, level, 64)) {
             return;
         }
         BlockPos above = from.above();
@@ -176,6 +176,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         wixie.getNavigation().moveTo(wixie.getNavigation().createPath(x + 0.5, y + 0.5, z + 0.5, 0), speedIn);
     }
 
-    record ItemHandlerPos(BlockPos pos, IItemHandler handler) {}
+    record ItemHandlerPos(BlockPos pos, IItemHandler handler) {
+    }
 
 }

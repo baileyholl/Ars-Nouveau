@@ -7,7 +7,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-public class SpellCaster extends AbstractCaster<SpellCaster>{
+public class SpellCaster extends AbstractCaster<SpellCaster> {
     public static final MapCodec<SpellCaster> CODEC = createCodec(SpellCaster::new);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SpellCaster> STREAM_CODEC = createStream(SpellCaster::new);
@@ -22,11 +22,11 @@ public class SpellCaster extends AbstractCaster<SpellCaster>{
         return STREAM_CODEC;
     }
 
-    public SpellCaster(){
+    public SpellCaster() {
         this(0, "", false, "", 1);
     }
 
-    public SpellCaster(int maxSlots){
+    public SpellCaster(int maxSlots) {
         this(0, "", false, "", maxSlots);
     }
 
@@ -34,11 +34,11 @@ public class SpellCaster extends AbstractCaster<SpellCaster>{
         this(slot, flavorText, isHidden, hiddenText, maxSlots, new SpellSlotMap(ImmutableMap.of()));
     }
 
-    public SpellCaster(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells){
+    public SpellCaster(Integer slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots, SpellSlotMap spells) {
         super(slot, flavorText, isHidden, hiddenText, maxSlots, spells);
     }
 
-    public static SpellCaster create(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots){
+    public static SpellCaster create(int slot, String flavorText, Boolean isHidden, String hiddenText, int maxSlots) {
         return new SpellCaster(slot, flavorText, isHidden, hiddenText, maxSlots);
     }
 

@@ -40,7 +40,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
     public DummyRenderer(EntityRendererProvider.Context context, boolean slim) {
         super(context, new PlayerModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
-        playerModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER),false);
+        playerModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false);
         playerModelSlim = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getModelManager()));
         this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
@@ -59,9 +59,9 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
     }
 
     private void setModelProperties(EntityDummy pEntityDummy) {
-        if (pEntityDummy.isSlim()){
+        if (pEntityDummy.isSlim()) {
             this.model = playerModelSlim;
-        }else {
+        } else {
             this.model = playerModel;
         }
 
@@ -136,7 +136,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
     @Override
     protected void renderNameTag(EntityDummy pEntity, Component pDisplayName, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, float pPartialTick) {
-        if(!pEntity.shouldShowName()){
+        if (!pEntity.shouldShowName()) {
             return;
         }
         super.renderNameTag(pEntity, pDisplayName, pPoseStack, pBuffer, pPackedLight, pPartialTick);

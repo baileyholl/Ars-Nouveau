@@ -20,7 +20,7 @@ public class ServerConfig {
     public static ModConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
 
     public static ModConfigSpec.BooleanValue INFINITE_SPELLS;
-    public static ModConfigSpec.IntValue NOT_SO_INFINITE_SPELLS;
+    public static ModConfigSpec.IntValue INF_SPELLS_LENGHT_MODIFIER;
     public static ModConfigSpec.IntValue LECTERN_LINK_RANGE;
 
     static {
@@ -52,9 +52,9 @@ public class ServerConfig {
         SERVER_BUILDER.pop().push("warp_portals");
         ENABLE_WARP_PORTALS = SERVER_BUILDER.comment("Enable warp portals?").define("enableWarpPortals", true);
 
-        SERVER_BUILDER.pop().comment("Beta Features").push("beta");
-        INFINITE_SPELLS = SERVER_BUILDER.comment("Allow crafting infinite spells. This is a beta feature and may cause crashes.").define("infiniteSpells", false);
-        NOT_SO_INFINITE_SPELLS = SERVER_BUILDER.comment("Limits the crafting infinite spells beta, set a cap to the number of additional glyphs. This is a beta feature and may cause crashes.").defineInRange("infiniteSpellLimit", 30, 10, 1000);
+        SERVER_BUILDER.pop().comment("Infinite Spells Mode").push("spell_length");
+        INFINITE_SPELLS = SERVER_BUILDER.comment("If Enabled, the value below will be added to the base glyph limit for spellbooks.").define("infiniteSpells", false);
+        INF_SPELLS_LENGHT_MODIFIER = SERVER_BUILDER.comment("Only used if infinite spells is true, increases or decreases the spell length limit in spellbooks..").defineInRange("infiniteSpellLimit", 30, -9, 1000);
         SERVER_BUILDER.pop();
 
         SERVER_CONFIG = SERVER_BUILDER.build();

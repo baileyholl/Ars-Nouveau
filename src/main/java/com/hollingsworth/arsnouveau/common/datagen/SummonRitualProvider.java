@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SummonRitualProvider extends SimpleDataProvider{
+public class SummonRitualProvider extends SimpleDataProvider {
 
     public List<SummonRitualRecipeWrapper> recipes = new ArrayList<>();
 
@@ -34,9 +34,9 @@ public class SummonRitualProvider extends SimpleDataProvider{
     }
 
     protected void addEntries() {
-         ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
-         bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
-         recipes.add(new SummonRitualRecipeWrapper(ArsNouveau.prefix( "bats"), new SummonRitualRecipe(Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, WeightedRandomList.create(bats))));
+        ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
+        bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
+        recipes.add(new SummonRitualRecipeWrapper(ArsNouveau.prefix("bats"), new SummonRitualRecipe(Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, WeightedRandomList.create(bats))));
     }
 
     protected static Path getRecipePath(Path path, String id) {

@@ -15,15 +15,17 @@ import java.util.concurrent.CompletableFuture;
 public class DocProvider extends SimpleDataProvider {
     public CompletableFuture<HolderLookup.Provider> registries;
     List<DocCategory> categories = new ArrayList<>();
+
     public DocProvider(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> registries) {
         super(generatorIn);
         this.registries = registries;
     }
+
     @Override
     public void collectJsons(CachedOutput pOutput) {
         Documentation.initOnWorldReload();
-        for(DocCategory category : DocumentationRegistry.getMainCategoryMap().values()){
-            if(category.id().getNamespace().equals(ArsNouveau.MODID)){
+        for (DocCategory category : DocumentationRegistry.getMainCategoryMap().values()) {
+            if (category.id().getNamespace().equals(ArsNouveau.MODID)) {
                 categories.add(category);
             }
         }

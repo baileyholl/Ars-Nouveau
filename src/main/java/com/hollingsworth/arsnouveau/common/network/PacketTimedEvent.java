@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class PacketTimedEvent extends AbstractPacket{
+public class PacketTimedEvent extends AbstractPacket {
 
     CompoundTag tag;
 

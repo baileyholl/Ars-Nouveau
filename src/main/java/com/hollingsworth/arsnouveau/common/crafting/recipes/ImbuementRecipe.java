@@ -33,6 +33,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
     public ResourceLocation id;
 
     private NonNullList<Ingredient> ingredients;
+
     public ImbuementRecipe(Ingredient input, ItemStack output, int source, List<Ingredient> pedestalItems) {
         this.input = input;
         this.output = output;
@@ -124,7 +125,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
 
     public static class Serializer implements RecipeSerializer<ImbuementRecipe> {
 
-        public static final MapCodec<ImbuementRecipe> CODEC =  RecordCodecBuilder.mapCodec(instance -> instance.group(
+        public static final MapCodec<ImbuementRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Ingredient.CODEC.fieldOf("input").forGetter(ImbuementRecipe::getInput),
                 ItemStack.CODEC.fieldOf("output").forGetter(ImbuementRecipe::getOutput),
                 Codec.INT.fieldOf("source").forGetter(ImbuementRecipe::getSource),

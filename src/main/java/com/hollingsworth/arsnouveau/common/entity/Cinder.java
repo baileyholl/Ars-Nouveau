@@ -31,7 +31,7 @@ public class Cinder extends EnchantedFallingBlock {
     @Override
     public void tick() {
         super.tick();
-        if(level.isClientSide){
+        if (level.isClientSide) {
             level.addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), ParticleUtil.inRange(-0.05f, 0.05f), ParticleUtil.inRange(0.01f, 0.05f), ParticleUtil.inRange(-0.05f, 0.05f));
         }
     }
@@ -40,7 +40,7 @@ public class Cinder extends EnchantedFallingBlock {
     public void callOnBrokenAfterFall(Block p_149651_, BlockPos p_149652_) {
         super.callOnBrokenAfterFall(p_149651_, p_149652_);
 
-        if(level instanceof ServerLevel world){
+        if (level instanceof ServerLevel world) {
 //            for(LivingEntity living : world.getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(position)).inflate(1.25))){
 //                if(living == shooter)
 //                    continue;
@@ -50,14 +50,19 @@ public class Cinder extends EnchantedFallingBlock {
 
             world.sendParticles(ParticleTypes.SMOKE, position.x, position.y + 0.5, position.z, 10,
                     0, ParticleUtil.inRange(-0.1, 0.1), 0, 0.03);
-            world.playSound(null, BlockPos.containing(position),  SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.05f, 0.8f);
+            world.playSound(null, BlockPos.containing(position), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.05f, 0.8f);
         }
     }
 
     @Override
-    public void doPostHurtEffects(LivingEntity livingentity) {
-        super.doPostHurtEffects(livingentity);
-
+    public BlockPos groundBlock(boolean ignoreAir) {
+        BlockPos pos = super.groundBlock(ignoreAir);
+        if (pos == null) {
+            this.discard();
+            this.callOnBrokenAfterFall(this.blockState.getBlock(), this.blockPosition());
+            return null;
+        }
+        return pos;
     }
 
     @Override

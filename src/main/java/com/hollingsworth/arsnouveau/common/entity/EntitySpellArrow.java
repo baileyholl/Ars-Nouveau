@@ -1,16 +1,25 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -32,38 +41,79 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class EntitySpellArrow extends Arrow {
-    public SpellResolver spellResolver;
     public int pierceLeft;
     BlockPos lastPosHit;
     Entity lastEntityHit;
-    public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(EntitySpellArrow.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntitySpellArrow.class, DataSerializers.SPELL_RESOLVER.get());
+    public ParticleEmitter tickEmitter;
+    public ParticleEmitter resolveEmitter;
+    public ParticleEmitter onSpawnEmitter;
+    public ParticleEmitter flairEmitter;
+    public ConfiguredSpellSound castSound;
+    public ConfiguredSpellSound resolveSound;
+    protected boolean playedSpawnParticle;
 
     public EntitySpellArrow(EntityType<? extends Arrow> type, Level worldIn) {
         super(type, worldIn);
-        setDefaultColors();
     }
 
     public EntitySpellArrow(Level worldIn, double x, double y, double z, ItemStack pPickupItemStack, @Nullable ItemStack p_345233_) {
         super(worldIn, x, y, z, pPickupItemStack, p_345233_);
-        setDefaultColors();
     }
 
     public EntitySpellArrow(Level worldIn, LivingEntity shooter, ItemStack pPickupItemStack, @Nullable ItemStack weaponStack) {
         super(worldIn, shooter, pPickupItemStack, weaponStack);
-        setDefaultColors();
     }
 
-    public void setDefaultColors() {
-        setColors(ParticleColor.defaultParticleColor());
+
+    public SpellResolver resolver() {
+        return this.entityData.get(SPELL_RESOLVER);
     }
 
-    public void setColors(ParticleColor color) {
-        ParticleColor.IntWrapper wrapper = color.toWrapper();
-        this.entityData.set(RED, wrapper.r);
-        this.entityData.set(GREEN, wrapper.g);
-        this.entityData.set(BLUE, wrapper.b);
+    public void setResolver(SpellResolver resolver) {
+        this.entityData.set(SPELL_RESOLVER, resolver);
+        buildEmitters();
+    }
+
+    public void buildEmitters() {
+        TimelineMap timelineMap = this.resolver().spell.particleTimeline();
+        ProjectileTimeline projectileTimeline = timelineMap.get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+        TimelineEntryData trailConfig = projectileTimeline.trailEffect;
+        TimelineEntryData resolveConfig = projectileTimeline.onResolvingEffect;
+        TimelineEntryData spawnConfig = projectileTimeline.onSpawnEffect;
+        TimelineEntryData flairConfig = projectileTimeline.flairEffect;
+
+        this.tickEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, trailConfig);
+        this.resolveEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, resolveConfig);
+        this.onSpawnEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, spawnConfig);
+        this.flairEmitter = new ParticleEmitter(() -> this.getPosition(ClientInfo.partialTicks), this::getRotationVector, flairConfig);
+
+        Vec3 center = this.getDimensions(getPose()).makeBoundingBox(0, 0, 0).getCenter();
+        this.tickEmitter.setPositionOffset(center);
+        this.resolveEmitter.setPositionOffset(center);
+        this.onSpawnEmitter.setPositionOffset(center);
+        this.flairEmitter.setPositionOffset(center);
+
+        this.castSound = projectileTimeline.castSound.sound;
+        this.resolveSound = projectileTimeline.resolveSound.sound;
+    }
+
+    public void playParticles() {
+        if (tickEmitter == null && resolver() != null) {
+            buildEmitters();
+        }
+        if (this.tickEmitter != null) {
+            this.tickEmitter.tick(level);
+        }
+
+        if (flairEmitter != null) {
+            this.flairEmitter.tick(level);
+        }
+
+        if (!playedSpawnParticle && onSpawnEmitter != null) {
+            this.onSpawnEmitter.tick(level);
+            playedSpawnParticle = true;
+        }
     }
 
     @Override
@@ -77,10 +127,6 @@ public class EntitySpellArrow extends Arrow {
             this.yRotO = this.yRot;
             this.xRotO = this.xRot;
         }
-
-        BlockPos blockpos = this.blockPosition();
-        BlockState blockstate = this.level.getBlockState(blockpos);
-
 
         if (this.shakeTime > 0) {
             --this.shakeTime;
@@ -153,10 +199,8 @@ public class EntitySpellArrow extends Arrow {
         this.xRot = lerpRotation(this.xRotO, this.xRot);
         this.yRot = lerpRotation(this.yRotO, this.yRot);
         float f2 = 0.99F;
-        float f3 = 0.05F;
         if (this.isInWater()) {
             for (int j = 0; j < 4; ++j) {
-                float f4 = 0.25F;
                 this.level.addParticle(ParticleTypes.BUBBLE, d5 - d3 * 0.25D, d1 - d4 * 0.25D, d2 - d0 * 0.25D, d3, d4, d0);
             }
 
@@ -173,22 +217,11 @@ public class EntitySpellArrow extends Arrow {
         this.checkInsideBlocks();
 
         if (level.isClientSide && tickCount > 1) {
-
-            double deltaX = getX() - xOld;
-            double deltaY = getY() - yOld;
-            double deltaZ = getZ() - zOld;
-            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
-            int counter = 0;
-
-            for (double j = 0; j < dist; j++) {
-                double coeff = j / dist;
-                counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
-                    level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
-                }
-            }
+            playParticles();
         }
-
+        if (!level.isClientSide && tickCount == 1) {
+            castSound.playSound(level, position);
+        }
     }
 
     protected void attemptRemoval() {
@@ -207,22 +240,38 @@ public class EntitySpellArrow extends Arrow {
         return (byte) 12;
     }
 
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("resolver")) {
+            setResolver(ANCodecs.decode(SpellResolver.CODEC.codec(), tag.get("resolver")));
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        if (this.resolver() != null) {
+            tag.put("resolver", ANCodecs.encode(SpellResolver.CODEC.codec(), this.resolver()));
+        }
+    }
+
     protected void onHitEntity(EntityHitResult p_213868_1_) {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
-        float f = (float)this.getDeltaMovement().length();
+        float f = (float) this.getDeltaMovement().length();
         double d0 = this.getBaseDamage();
         Entity entity1 = this.getOwner();
         DamageSource damagesource = this.damageSources().arrow(this, entity1 != null ? entity1 : this);
-        if (this.getWeaponItem() != null && this.level() instanceof ServerLevel serverlevel) {
-            d0 = (double)EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float)d0);
+        if (level instanceof ServerLevel serverlevel) {
+            d0 = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float) d0);
         }
 
-        int j = Mth.ceil(Mth.clamp((double)f * d0, 0.0, 2.147483647E9));
+        int j = Mth.ceil(Mth.clamp((double) f * d0, 0.0, 2.147483647E9));
 
         if (this.isCritArrow()) {
-            long k = (long)this.random.nextInt(j / 2 + 2);
-            j = (int)Math.min(k + (long)j, 2147483647L);
+            long k = (long) this.random.nextInt(j / 2 + 2);
+            j = (int) Math.min(k + (long) j, 2147483647L);
         }
 
         if (entity1 instanceof LivingEntity livingentity1) {
@@ -235,7 +284,7 @@ public class EntitySpellArrow extends Arrow {
             entity.igniteForSeconds(5.0F);
         }
 
-        if (entity.hurt(damagesource, (float)j)) {
+        if (entity.hurt(damagesource, (float) j)) {
             if (flag) {
                 return;
             }
@@ -263,26 +312,30 @@ public class EntitySpellArrow extends Arrow {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
-        pBuilder.define(RED, 0);
-        pBuilder.define(GREEN, 0);
-        pBuilder.define(BLUE, 0);
+        pBuilder.define(SPELL_RESOLVER, new SpellResolver(new SpellContext(level, new Spell(), null, null)));
+    }
+
+    @Override
+    protected void doPostHurtEffects(LivingEntity living) {
+        super.doPostHurtEffects(living);
+        this.playResolve();
     }
 
     @Override
     protected void onHit(HitResult result) {
-        if (this.spellResolver != null)
-            this.spellResolver.onResolveEffect(level, result);
+        if (this.resolver() != null)
+            this.resolver().onResolveEffect(level, result);
         HitResult.Type raytraceresult$type = result.getType();
         if (raytraceresult$type == HitResult.Type.ENTITY) {
-            if (spellResolver != null) {
-                spellResolver.onResolveEffect(level, result);
+            if (resolver() != null) {
+                resolver().onResolveEffect(level, result);
             }
             this.onHitEntity((EntityHitResult) result);
             attemptRemoval();
             lastEntityHit = ((EntityHitResult) result).getEntity();
         } else if (raytraceresult$type == HitResult.Type.BLOCK && !((BlockHitResult) result).getBlockPos().equals(lastPosHit)) {
-            if (spellResolver != null) {
-                spellResolver.onResolveEffect(level, result);
+            if (resolver() != null) {
+                resolver().onResolveEffect(level, result);
             }
             this.onHitBlock((BlockHitResult) result);
             lastPosHit = ((BlockHitResult) result).getBlockPos();
@@ -294,7 +347,22 @@ public class EntitySpellArrow extends Arrow {
     protected void onHitBlock(BlockHitResult p_230299_1_) {
         BlockState blockstate = this.level.getBlockState(p_230299_1_.getBlockPos());
         blockstate.onProjectileHit(this.level, blockstate, p_230299_1_, this);
-        this.playSound(this.getHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+        playResolve();
+    }
+
+    public void playResolve() {
+        this.playSound(this.getDefaultHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+        if (this.resolveEmitter != null) {
+            this.resolveEmitter.tick(level);
+        }
+    }
+
+    @Override
+    protected SoundEvent getDefaultHitGroundSoundEvent() {
+        if (this.resolveSound != null) {
+            return this.resolveSound.getSound().getSoundEvent().value();
+        }
+        return super.getDefaultHitGroundSoundEvent();
     }
 
     @Override

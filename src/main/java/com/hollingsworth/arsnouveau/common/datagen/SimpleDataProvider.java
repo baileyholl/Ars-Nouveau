@@ -14,7 +14,8 @@ public abstract class SimpleDataProvider implements DataProvider {
     public ImmutableList.Builder<CompletableFuture<?>> futuresBuilder = new ImmutableList.Builder<>();
     public Path output;
     public final DataGenerator generator;
-    public SimpleDataProvider(DataGenerator dataGenerator){
+
+    public SimpleDataProvider(DataGenerator dataGenerator) {
         this.generator = dataGenerator;
         this.output = dataGenerator.getPackOutput().getOutputFolder();
     }
@@ -28,7 +29,7 @@ public abstract class SimpleDataProvider implements DataProvider {
         return CompletableFuture.allOf(futuresBuilder.build().toArray(CompletableFuture[]::new));
     }
 
-    public void saveStable(CachedOutput pOutput, JsonElement jsonElement, Path path){
+    public void saveStable(CachedOutput pOutput, JsonElement jsonElement, Path path) {
         futuresBuilder.add(DataProvider.saveStable(pOutput, jsonElement, path));
     }
 

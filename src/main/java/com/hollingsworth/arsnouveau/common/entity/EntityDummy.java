@@ -112,7 +112,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
             return ItemStack.EMPTY;
 
         ItemStack heldStack = level.getPlayerByUUID(getOwnerUUID()) != null ? level.getPlayerByUUID(getOwnerUUID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
-        if(heldStack.getItem() == BlockRegistry.MOB_JAR.asItem()){
+        if (heldStack.getItem() == BlockRegistry.MOB_JAR.asItem()) {
             return new ItemStack(BlockRegistry.MOB_JAR.asItem());
         }
 
@@ -194,7 +194,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
     public boolean isSlim() {
         if (this.playerInfo != null) {
             return playerInfo.getSkin().model() == PlayerSkin.Model.SLIM;
-        }else return false;
+        } else return false;
     }
 
 }

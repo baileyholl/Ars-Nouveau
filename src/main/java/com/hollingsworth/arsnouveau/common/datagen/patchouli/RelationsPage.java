@@ -19,7 +19,7 @@ public class RelationsPage extends AbstractPage {
         return withEntry(category.toString() + "/" + fileName);
     }
 
-    public RelationsPage withEntry(String path){
+    public RelationsPage withEntry(String path) {
         entries.add(path);
         return this;
     }
@@ -29,7 +29,7 @@ public class RelationsPage extends AbstractPage {
     }
 
     public RelationsPage withEntries(List<PatchouliProvider.PatchouliPage> pages) {
-        for(PatchouliProvider.PatchouliPage page : pages)
+        for (PatchouliProvider.PatchouliPage page : pages)
             withEntry(page);
         return this;
     }

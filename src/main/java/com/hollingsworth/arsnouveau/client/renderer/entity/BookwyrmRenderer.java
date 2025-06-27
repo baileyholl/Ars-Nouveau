@@ -19,7 +19,7 @@ import software.bernie.geckolib.util.RenderUtil;
 
 public class BookwyrmRenderer extends GeoEntityRenderer<EntityBookwyrm> {
 
-    public static ResourceLocation BLUE = ArsNouveau.prefix( "textures/entity/book_wyrm_blue.png");
+    public static ResourceLocation BLUE = ArsNouveau.prefix("textures/entity/book_wyrm_blue.png");
 
     public BookwyrmRenderer(EntityRendererProvider.Context manager) {
         super(manager, new BookwyrmModel<>());
@@ -34,7 +34,7 @@ public class BookwyrmRenderer extends GeoEntityRenderer<EntityBookwyrm> {
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = animatable.getHeldStack();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferIn,  animatable.level, (int) animatable.getOnPos().asLong());
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferIn, animatable.level, (int) animatable.getOnPos().asLong());
             stack.popPose();
         }
         super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, color);

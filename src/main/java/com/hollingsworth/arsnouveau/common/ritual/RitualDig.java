@@ -89,6 +89,6 @@ public class RitualDig extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.DIG);
+        return ArsNouveau.prefix(RitualLib.DIG);
     }
 }

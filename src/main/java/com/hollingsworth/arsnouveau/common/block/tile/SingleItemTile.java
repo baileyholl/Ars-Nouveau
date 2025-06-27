@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 
-public class SingleItemTile extends ModdedTile implements Container{
+public class SingleItemTile extends ModdedTile implements Container {
     protected ItemStack stack = ItemStack.EMPTY;
     public ItemEntity renderEntity;
 
@@ -79,11 +79,11 @@ public class SingleItemTile extends ModdedTile implements Container{
         updateBlock();
     }
 
-    public ItemStack getStack(){
+    public ItemStack getStack() {
         return this.stack;
     }
 
-    public void setStack(ItemStack otherStack){
+    public void setStack(ItemStack otherStack) {
         this.stack = otherStack;
         updateBlock();
     }
@@ -101,7 +101,7 @@ public class SingleItemTile extends ModdedTile implements Container{
             try {
                 Tag stackTag = stack.save(pRegistries);
                 tag.put("itemStack", stackTag);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

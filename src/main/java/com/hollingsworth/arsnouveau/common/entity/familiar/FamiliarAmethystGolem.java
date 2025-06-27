@@ -54,9 +54,10 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
         return ModEntities.FAMILIAR_AMETHYST_GOLEM.get();
     }
 
-    public static final Map<String,ResourceLocation> Variants = new HashMap<>();
+    public static final Map<String, ResourceLocation> Variants = new HashMap<>();
+
     static {
-        Variants.put("default", ArsNouveau.prefix( "textures/entity/amethyst_golem.png"));
+        Variants.put("default", ArsNouveau.prefix("textures/entity/amethyst_golem.png"));
     }
 
     public ResourceLocation getTexture() {

@@ -32,6 +32,19 @@ public class EmiLecternRecipeHandler<T extends CraftingTerminalMenu> implements 
             idx++;
         }
 
+        int numCraftingSlots = 0;
+        for (var slot : handler.slots) {
+            if (slot instanceof CraftingTerminalMenu.SlotCrafting) {
+                container.setItem(idx, slot.getItem());
+                fakeSlots.add(new Slot(container, idx, idx, 0));
+                idx++;
+                numCraftingSlots++;
+                if (numCraftingSlots >= 9) {
+                    break;
+                }
+            }
+        }
+
         for (Slot slot : playerInventory) {
             if (!(slot instanceof CraftingTerminalMenu.SlotCrafting) && !(slot instanceof CraftingTerminalMenu.ActiveResultSlot)) {
                 container.setItem(idx, slot.getItem());

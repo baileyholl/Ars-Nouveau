@@ -9,8 +9,6 @@ import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -22,13 +20,6 @@ public class DepositItemState extends TravelToPosState {
     @Override
     public StarbyState onDestinationReached() {
         this.starbuncle.getNavigation().stop();
-        Level world = starbuncle.level;
-        BlockEntity tileEntity = world.getBlockEntity(this.targetPos);
-        if (tileEntity == null) {
-            starbuncle.addGoalDebug(this, new DebugEvent("missing_tile", "store pos broken " + targetPos.toString()));
-            starbuncle.setBackOff(5 + starbuncle.level.random.nextInt(20));
-            return nextState;
-        }
 
         IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
@@ -50,17 +41,17 @@ public class DepositItemState extends TravelToPosState {
         ItemStack left = starbuncle.getHeldStack();
         starbuncle.addGoalDebug(this, new DebugEvent("stored_item", "successful at " + targetPos.toString() + "set stack to " + left.getCount() + "x " + left.getHoverName().getString()));
         boolean fetchPassengerStack = left.isEmpty();
-        while(fetchPassengerStack){
+        while (fetchPassengerStack) {
             fetchPassengerStack = false;
             starbuncle.getNextItemFromPassengers();
-            if(!starbuncle.getHeldStack().isEmpty()){
+            if (!starbuncle.getHeldStack().isEmpty()) {
                 fetchPassengerStack = depositStack(iItemHandler) && starbuncle.getHeldStack().isEmpty();
             }
         }
         return nextState;
     }
 
-    public boolean depositStack(IItemHandler iItemHandler){
+    public boolean depositStack(IItemHandler iItemHandler) {
         ItemStack oldStack = new ItemStack(starbuncle.getHeldStack().getItem(), starbuncle.getHeldStack().getCount());
         ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, starbuncle.getHeldStack(), false);
         starbuncle.setHeldStack(left);

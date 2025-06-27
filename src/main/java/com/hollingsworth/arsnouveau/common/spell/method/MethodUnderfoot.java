@@ -52,7 +52,7 @@ public class MethodUnderfoot extends AbstractCastMethod {
         return 5;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();

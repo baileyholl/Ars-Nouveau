@@ -33,23 +33,24 @@ import java.util.List;
 
 public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEntityRenderer<T> {
 
-    public MirrorweaveRenderer(BlockEntityRendererProvider.Context pContext) {}
+    public MirrorweaveRenderer(BlockEntityRendererProvider.Context pContext) {
+    }
 
     static final Direction[] DIRECTIONS = Direction.values();
 
     @Override
     public void render(MirrorWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState renderState = tileEntityIn.mimicState;
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
+        if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
             renderState = tileEntityIn.getDefaultBlockState();
         }
         if (renderState == null)
             return;
 
-        if(tileEntityIn.renderInvalid){
+        if (tileEntityIn.renderInvalid) {
             updateCulling(tileEntityIn, tileEntityIn.getStateForCulling());
         }
-        if(tileEntityIn.disableRender){
+        if (tileEntityIn.disableRender) {
             return;
         }
         ModelBlockRenderer.enableCaching();
@@ -59,27 +60,27 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
         ModelBlockRenderer.clearCache();
     }
 
-    public void updateCulling(MirrorWeaveTile tileEntityIn, BlockState renderState){
+    public void updateCulling(MirrorWeaveTile tileEntityIn, BlockState renderState) {
         boolean disableEntireRender = true;
         tileEntityIn.renderInvalid = false;
-        for(Direction direction : DIRECTIONS){
+        for (Direction direction : DIRECTIONS) {
             BlockPos blockingPos = tileEntityIn.getBlockPos().relative(direction);
             BlockState blockingState = tileEntityIn.getLevel().getBlockState(blockingPos);
             tileEntityIn.setRenderDirection(direction, false);
-            if(tileEntityIn.getLevel().getBlockEntity(blockingPos) instanceof MirrorWeaveTile neighborTile){
+            if (tileEntityIn.getLevel().getBlockEntity(blockingPos) instanceof MirrorWeaveTile neighborTile) {
                 blockingState = neighborTile.getStateForCulling();
             }
             var blockingShape = blockingState.getOcclusionShape(tileEntityIn.getLevel(), blockingPos);
-            if(!tileEntityIn.shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)){
+            if (!tileEntityIn.shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)) {
                 continue;
             }
-            if(!blockingState.canOcclude()) {
+            if (!blockingState.canOcclude()) {
                 tileEntityIn.setRenderDirection(direction, true);
                 disableEntireRender = false;
                 continue;
             }
 
-            if(blockingState.canOcclude() && !Shapes.blockOccudes(Shapes.block(), blockingShape, direction)){
+            if (blockingState.canOcclude() && !Shapes.blockOccudes(Shapes.block(), blockingShape, direction)) {
                 tileEntityIn.setRenderDirection(direction, true);
                 disableEntireRender = false;
                 continue;
@@ -105,7 +106,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
     /**
      * @param checkSides if {@code true}, only renders each side if {@link
      *                   net.minecraft.world.level.block.Block#shouldRenderFace(
-     *                   net.minecraft.world.level.block.state.BlockState,
+     *net.minecraft.world.level.block.state.BlockState,
      *                   net.minecraft.world.level.BlockGetter,
      *                   net.minecraft.core.BlockPos, net.minecraft.core.Direction,
      *                   net.minecraft.core.BlockPos)} returns {@code true}
@@ -126,7 +127,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
             net.neoforged.neoforge.client.model.data.ModelData modelData,
             net.minecraft.client.renderer.RenderType renderType
     ) {
-        boolean flag = Minecraft.useAmbientOcclusion() && switch(model.useAmbientOcclusion(state, modelData, renderType)) {
+        boolean flag = Minecraft.useAmbientOcclusion() && switch (model.useAmbientOcclusion(state, modelData, renderType)) {
             case TRUE -> true;
             case DEFAULT -> state.getLightEmission(level, pos) == 0;
             case FALSE -> false;
@@ -169,9 +170,9 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
         BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable();
 
         for (Direction direction : DIRECTIONS) {
-            if(checkSides && !tile.shouldRenderDirection(direction)){
+            if (checkSides && !tile.shouldRenderDirection(direction)) {
                 continue;
-                }
+            }
             random.setSeed(seed);
             List<BakedQuad> list = model.getQuads(state, direction, random, modelData, renderType);
             if (!list.isEmpty()) {
@@ -222,11 +223,10 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
     }
 
 
-
     /**
      * @param checkSides if {@code true}, only renders each side if {@link
      *                   net.minecraft.world.level.block.Block#shouldRenderFace(
-     *                   net.minecraft.world.level.block.state.BlockState,
+     *net.minecraft.world.level.block.state.BlockState,
      *                   net.minecraft.world.level.BlockGetter,
      *                   net.minecraft.core.BlockPos, net.minecraft.core.Direction,
      *                   net.minecraft.core.BlockPos)} returns {@code true}
@@ -252,7 +252,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
         BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable();
 
         for (Direction direction : DIRECTIONS) {
-            if(checkSides && !tile.shouldRenderDirection(direction)){
+            if (checkSides && !tile.shouldRenderDirection(direction)) {
                 continue;
             }
             random.setSeed(seed);

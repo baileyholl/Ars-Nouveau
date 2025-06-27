@@ -33,6 +33,7 @@ public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTil
             }
         }
     };
+
     public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         this(rendererDispatcherIn, model);
     }

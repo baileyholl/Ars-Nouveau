@@ -26,6 +26,7 @@ public class RitualLib {
     public static String DESERT = prependRitual("conjure_island_desert");
     public static String PLAINS = prependRitual("conjure_island_plains");
     public static String FORESTATION = prependRitual("forestation");
+
     public static String prependRitual(String ritual) {
         return "ritual_" + ritual;
     }

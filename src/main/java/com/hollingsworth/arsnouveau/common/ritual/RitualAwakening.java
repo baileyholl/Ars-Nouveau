@@ -97,20 +97,20 @@ public class RitualAwakening extends AbstractRitual {
             }
         }
         if (world instanceof ServerLevel serverLevel && serverLevel.getGameTime() % 20 == 0) {
-            if(isBookwyrms()){
+            if (isBookwyrms()) {
                 int progress = getProgress();
                 int numBookwyrms = getConsumedItems().stream().filter(i -> i.getItem() instanceof WritableBookItem).mapToInt(ItemStack::getCount).sum();
-                if(progress < numBookwyrms){
+                if (progress < numBookwyrms) {
                     ItemStack charm = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
                     ItemEntity itemEntity = new ItemEntity(serverLevel, getPos().getX() + 0.5, getPos().getY() + 1, getPos().getZ() + 0.5, charm);
                     float range = 0.1f;
-                    itemEntity.setDeltaMovement(ParticleUtil.inRange(-range, range),  ParticleUtil.inRange(0.4, 0.6), ParticleUtil.inRange(-range, range));
+                    itemEntity.setDeltaMovement(ParticleUtil.inRange(-range, range), ParticleUtil.inRange(0.4, 0.6), ParticleUtil.inRange(-range, range));
                     serverLevel.playSound(null, getPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.0F);
                     serverLevel.addFreshEntity(itemEntity);
-                }else{
+                } else {
                     setFinished();
                 }
-            }else {
+            } else {
                 if (getProgress() > 5) {
                     findTargets(serverLevel);
                     if (entity != null) {
@@ -126,7 +126,7 @@ public class RitualAwakening extends AbstractRitual {
         }
     }
 
-    public boolean isBookwyrms(){
+    public boolean isBookwyrms() {
         return getConsumedItems().stream().anyMatch(i -> i.getItem() instanceof WritableBookItem);
     }
 
@@ -152,6 +152,6 @@ public class RitualAwakening extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.AWAKENING);
+        return ArsNouveau.prefix(RitualLib.AWAKENING);
     }
 }

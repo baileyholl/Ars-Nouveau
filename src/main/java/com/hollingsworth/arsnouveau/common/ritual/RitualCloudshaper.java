@@ -16,6 +16,7 @@ public class RitualCloudshaper extends AbstractRitual {
     public static final IntProvider RAIN_DELAY = UniformInt.of(12000, 180000);
     public static final IntProvider RAIN_DURATION = UniformInt.of(12000, 24000);
     public static final IntProvider THUNDER_DURATION = UniformInt.of(3600, 15600);
+
     @Override
     protected void tick() {
         ParticleUtil.spawnRitualSkyEffect(this, tile, rand, getCenterColor().toWrapper());
@@ -80,6 +81,6 @@ public class RitualCloudshaper extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.CLOUDSHAPER);
+        return ArsNouveau.prefix(RitualLib.CLOUDSHAPER);
     }
 }

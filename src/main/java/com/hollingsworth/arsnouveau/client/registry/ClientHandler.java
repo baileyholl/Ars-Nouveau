@@ -3,8 +3,6 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
-import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
-import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
@@ -20,7 +18,6 @@ import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -38,6 +35,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -102,9 +100,9 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_TILE.get(), RepositoryRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REDSTONE_RELAY_TILE.get(), RedstoneRelayRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.DIM_TILE.get(), DimWorldRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (t) -> new GenericTileRenderer<>(t, new RepoControllerModel()));
 
-        event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(),
-                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(), StyledSpellRender::new);
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(),
                 renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_HOM.get(),
@@ -343,9 +341,10 @@ public class ClientHandler {
                         colorFromArmor(stack),
                 ItemsRegistry.BATTLEMAGE_LEGGINGS);
 
-        event.register((stack, color) -> {
-            if (color == 1 && SpellCasterRegistry.from(stack) != null) {
-                return FastColor.ABGR32.opaque(SpellCasterRegistry.from(stack).getColor().getColor());
+        event.register((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                DyeColor dyeColor = stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
+                return FastColor.ABGR32.opaque(dyeColor.getTextColor());
             }
             return -1;
 
@@ -362,10 +361,8 @@ public class ClientHandler {
     }
 
     public static int colorFromArmor(ItemStack stack) {
-        ArmorPerkHolder holder = PerkUtil.getPerkHolder(stack);
-        if (!(holder instanceof ArmorPerkHolder armorPerkHolder))
-            return FastColor.ABGR32.opaque(DyeColor.PURPLE.getTextColor());
-        return FastColor.ABGR32.opaque(DyeColor.byName(armorPerkHolder.getColor(), DyeColor.PURPLE).getTextColor());
+        DyeColor color = stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
+        return FastColor.ABGR32.opaque(color.getTextColor());
     }
 
     public static int colorFromFlask(ItemStack stack) {

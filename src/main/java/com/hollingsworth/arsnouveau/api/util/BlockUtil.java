@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -156,7 +155,7 @@ public class BlockUtil {
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
             var cap = world.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(d), null);
-            if(cap != null){
+            if (cap != null) {
                 iInventories.add(cap);
             }
         }
@@ -184,11 +183,11 @@ public class BlockUtil {
         return stack;
     }
 
-    public static boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
+    public static boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos) {
         return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && SpellUtil.isCorrectHarvestLevel(getBaseHarvestLevel(stats), world.getBlockState(pos));
     }
 
-    public static int getBaseHarvestLevel(SpellStats stats){
+    public static int getBaseHarvestLevel(SpellStats stats) {
         return (int) (3 + stats.getAmpMultiplier());
     }
 
@@ -301,7 +300,7 @@ public class BlockUtil {
         return result;
     }
 
-    public static void updateObservers(Level level, BlockPos pos ){
+    public static void updateObservers(Level level, BlockPos pos) {
         for (Direction d : Direction.values()) {
             BlockPos adjacentPos = pos.relative(d);
             if (level.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock) {
@@ -317,10 +316,11 @@ public class BlockUtil {
      * Vanilla Copy:  <br>
      * Attempts to harvest a block as if the player with the given uuid
      * harvested it while holding the passed item.
-     * @param world The world the block is in.
-     * @param pos The position of the block.
+     *
+     * @param world    The world the block is in.
+     * @param pos      The position of the block.
      * @param mainhand The main hand item that the player is supposibly holding.
-     * @param source The UUID of the breaking player.
+     * @param source   The UUID of the breaking player.
      * @return If the block was successfully broken.
      */
     public static boolean breakExtraBlock(ServerLevel level, BlockPos pos, ItemStack mainhand, @Nullable UUID source, boolean bypassTool) {
@@ -328,7 +328,7 @@ public class BlockUtil {
         FakePlayer player = ANFakePlayer.getPlayer(level);
         if (source != null) {
             var username = UsernameCache.getLastKnownUsername(source);
-            if(username != null){
+            if (username != null) {
                 player = FakePlayerFactory.get(level, new GameProfile(source, username));
                 Player realPlayer = level.getPlayerByUUID(source);
                 if (realPlayer != null) {
@@ -340,7 +340,7 @@ public class BlockUtil {
 
         player.getInventory().items.set(player.getInventory().selected, mainhand);
 
-        if (!bypassTool && (state.getDestroySpeed(level, pos) < 0 || !state.canHarvestBlock(level, pos, player ))) {
+        if (!bypassTool && (state.getDestroySpeed(level, pos) < 0 || !state.canHarvestBlock(level, pos, player))) {
             return false;
         }
 
@@ -348,24 +348,20 @@ public class BlockUtil {
         BlockEvent.BreakEvent exp = CommonHooks.fireBlockBreak(level, type, player, pos, state);
         if (exp.isCanceled()) {
             return false;
-        }
-        else {
+        } else {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             Block block = state.getBlock();
             if (block instanceof GameMasterBlock && !player.canUseGameMasterBlocks()) {
                 level.sendBlockUpdated(pos, state, state, 3);
                 return false;
-            }
-            else if (player.blockActionRestricted(level, pos, type)) {
+            } else if (player.blockActionRestricted(level, pos, type)) {
                 return false;
-            }
-            else {
+            } else {
                 BlockState newState = block.playerWillDestroy(level, pos, state, player);
                 if (player.getAbilities().instabuild) {
                     removeBlock(level, player, pos, newState, false);
                     return true;
-                }
-                else {
+                } else {
                     ItemStack tool = player.getMainHandItem();
                     ItemStack toolCopy = tool.copy();
                     boolean canHarvest = bypassTool || newState.canHarvestBlock(level, pos, player);

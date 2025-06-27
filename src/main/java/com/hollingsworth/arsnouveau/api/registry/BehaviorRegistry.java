@@ -15,23 +15,24 @@ public class BehaviorRegistry {
 
     private static final Map<ResourceLocation, CreateFromTag> REGISTRY = new HashMap<>();
 
-    public static void register(ResourceLocation name, CreateFromTag creator){
+    public static void register(ResourceLocation name, CreateFromTag creator) {
         REGISTRY.put(name, creator);
     }
 
-    public static ChangeableBehavior create(ResourceLocation id, Entity entity, CompoundTag tag){
+    public static ChangeableBehavior create(ResourceLocation id, Entity entity, CompoundTag tag) {
         CreateFromTag create = REGISTRY.get(id);
         return create == null ? null : create.create(entity, tag);
     }
 
-    static{
+    static {
         register(StarbyTransportBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyTransportBehavior((Starbuncle) entity, tag));
         register(StarbyPotionBehavior.POTION_ID, (entity, tag) -> new StarbyPotionBehavior((Starbuncle) entity, tag));
     }
 
-    public interface CreateFromTag{
+    public interface CreateFromTag {
         ChangeableBehavior create(Entity entity, CompoundTag tag);
     }
 
-    private BehaviorRegistry(){}
+    private BehaviorRegistry() {
+    }
 }

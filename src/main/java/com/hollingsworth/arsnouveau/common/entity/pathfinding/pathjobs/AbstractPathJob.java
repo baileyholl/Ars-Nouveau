@@ -1218,7 +1218,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
                     final PathType pathType = block.getBlockPathType(world, pos, (Mob) entity.get());
                     //TODO: Check readd danger check?
 //                    if (pathType == null || pathType.getDanger() == null) {
-                        return true;
+                    return true;
 //                    }
                 }
                 return false;

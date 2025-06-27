@@ -33,8 +33,9 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public record CasterTomeData(String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText, ParticleColor particleColor, ConfiguredSpellSound sound) implements SpecialSingleInputRecipe {
-
+public record CasterTomeData(String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText,
+                             ParticleColor particleColor,
+                             ConfiguredSpellSound sound) implements SpecialSingleInputRecipe {
 
 
     public CasterTomeData(String name,

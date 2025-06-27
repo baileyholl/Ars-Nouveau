@@ -127,7 +127,7 @@ public class SoundScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
+        graphics.blit(ArsNouveau.prefix("textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
         int color = -8355712;
         graphics.drawString(font, Component.translatable("ars_nouveau.sounds.title").getString(), 51, 24, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.save").getString(), 37, 160, color, false);

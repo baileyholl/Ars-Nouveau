@@ -38,28 +38,30 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerOnlyState(BlockRegistry.VITALIC_BLOCK.get(), LibBlockNames.VITALIC_SOURCELINK);
         registerOnlyState(BlockRegistry.VOLCANIC_BLOCK.get(), LibBlockNames.VOLCANIC_SOURCELINK);
         registerOnlyState(BlockRegistry.CRAB_HAT.get(), LibBlockNames.CRAB_HAT);
-        for (var pot : BlockRegistry.flowerPots.entrySet()){
+        for (var pot : BlockRegistry.flowerPots.entrySet()) {
             registerOnlyState(pot.getValue(), "pots/" + LibBlockNames.Pot(pot.getKey().get().getPath()));
         }
         registerDoor(BlockRegistry.ARCHWOOD_DOOR.get(), LibBlockNames.ARCHWOOD_DOOR);
 
         registerNormalCube(BlockRegistry.VOID_PRISM.get(), LibBlockNames.VOID_PRISM);
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            registerNormalCube(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s)), s);
+            registerNormalCube(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s)), s);
         }
         registerNormalCube(BlockRegistry.MAGEBLOOM_BLOCK.get(), LibBlockNames.MAGEBLOOM_BLOCK);
         registerNormalCube(BlockRegistry.FALSE_WEAVE.get(), LibBlockNames.FALSE_WEAVE);
         registerNormalCube(BlockRegistry.GHOST_WEAVE.get(), LibBlockNames.GHOST_WEAVE);
         registerNormalCube(BlockRegistry.MIRROR_WEAVE.get(), LibBlockNames.MIRROR_WEAVE);
-
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            ResourceLocation tex = ArsNouveau.prefix( "block/" + s);
-            Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_stairs"));
+        registerOnlyState(BlockRegistry.REPOSITORY_CONTROLLER.get(), LibBlockNames.REPOSITORY_CATALOG);
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
+            ResourceLocation tex = ArsNouveau.prefix("block/" + s);
+            Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs"));
             stairsBlock((StairBlock) block, tex);
 
-            Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix( s + "_slab"));
-            slabBlock((SlabBlock) slab, ArsNouveau.prefix( s), tex);
+            Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab"));
+            slabBlock((SlabBlock) slab, ArsNouveau.prefix(s), tex);
         }
+        signBlock(BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get(), ArsNouveau.prefix("block/archwood_planks"));
+        hangingSignBlock(BlockRegistry.ARCHWOOD_HANGING_SIGN.get(), BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN.get(), ArsNouveau.prefix("block/archwood_planks"));
     }
 
 
@@ -98,7 +100,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
     }
 
     public ResourceLocation getBlockLoc(String registryName) {
-        return ArsNouveau.prefix( "block" + "/" + registryName);
+        return ArsNouveau.prefix("block" + "/" + registryName);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
@@ -11,12 +12,14 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -68,6 +71,25 @@ public class ImbuementBlock extends TickableModBlock {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState pState) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+        ImbuementTile tile = (ImbuementTile) pLevel.getBlockEntity(pPos);
+
+        if (tile == null) return 0;
+        RecipeHolder<? extends IImbuementRecipe> holder = tile.getRecipeNow();
+        if (holder == null && tile.stack.isEmpty()) return 0;
+        if (holder == null) return 15;
+
+        IImbuementRecipe recipe = holder.value();
+        int cost = recipe.getSourceCost(tile);
+
+        return Mth.lerpDiscrete((float) tile.getSource() / cost, 1, 15);
+    }
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -82,8 +104,8 @@ public class ImbuementBlock extends TickableModBlock {
             var recipe = tile.getRecipeNow();
             if (recipe == null) {
                 List<ColorPos> colorPos = new ArrayList<>();
-                for(BlockPos pedPos : tile.getNearbyPedestals()){
-                    if(worldIn.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile){
+                for (BlockPos pedPos : tile.getNearbyPedestals()) {
+                    if (worldIn.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile) {
                         colorPos.add(ColorPos.centeredAbove(pedPos));
                     }
                 }

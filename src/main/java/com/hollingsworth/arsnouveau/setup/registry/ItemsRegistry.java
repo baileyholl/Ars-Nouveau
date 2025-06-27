@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.items.itemscrolls.AllowItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.*;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -27,6 +28,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -123,10 +125,12 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<DenyItemScroll> DENY_ITEM_SCROLL = register(LibItemNames.DENY_ITEM_SCROLL, DenyItemScroll::new);
     public static final ItemRegistryWrapper<MimicItemScroll> MIMIC_ITEM_SCROLL = register(LibItemNames.MIMIC_ITEM_SCROLL, MimicItemScroll::new);
     public static final ItemRegistryWrapper<BlankParchmentItem> BLANK_PARCHMENT = register(LibItemNames.BLANK_PARCHMENT, BlankParchmentItem::new);
+    // TODO: 1.22 rename to EnchantersWand
     public static final ItemRegistryWrapper<Wand> WAND = register(LibItemNames.WAND, Wand::new);
     public static final ItemRegistryWrapper<VoidJar> VOID_JAR = register(LibItemNames.VOID_JAR, VoidJar::new);
     public static final ItemRegistryWrapper<WixieCharm> WIXIE_CHARM = register(LibItemNames.WIXIE_CHARM, WixieCharm::new);
     public static final ItemRegistryWrapper<ModItem> WIXIE_SHARD = register(LibItemNames.WIXIE_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.wixie_shard")).withTooltip(Component.translatable("tooltip.wixie_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
+    // TODO: 1.22 rename to EnchantersBow
     public static final ItemRegistryWrapper<SpellBow> SPELL_BOW = register(LibItemNames.SPELL_BOW, SpellBow::new);
     public static final ItemRegistryWrapper<SpellArrow> AMPLIFY_ARROW = register(LibItemNames.AMPLIFY_ARROW, () -> new SpellArrow(AugmentAmplify.INSTANCE, 2));
     public static final ItemRegistryWrapper<FormSpellArrow> SPLIT_ARROW = register(LibItemNames.SPLIT_ARROW, () -> new FormSpellArrow(AugmentSplit.INSTANCE, 2));
@@ -165,7 +169,7 @@ public class ItemsRegistry {
         flask.withTooltip(Component.translatable("tooltip.potion_flask_extend_time"));
         return flask;
     });
-    public static ItemRegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () ->{
+    public static ItemRegistryWrapper<ExperienceGem> EXPERIENCE_GEM = register(LibItemNames.EXP_GEM, () -> {
         ExperienceGem gem = new ExperienceGem() {
             @Override
             public int getValue() {
@@ -175,7 +179,7 @@ public class ItemsRegistry {
         gem.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem"));
         return gem;
     });
-    public static ItemRegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () ->{
+    public static ItemRegistryWrapper<ExperienceGem> GREATER_EXPERIENCE_GEM = register(LibItemNames.GREATER_EXP_GEM, () -> {
         ExperienceGem gem = new ExperienceGem() {
             @Override
             public int getValue() {
@@ -189,7 +193,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, EnchantersShield::new);
     public static final ItemRegistryWrapper<CasterTome> CASTER_TOME = register(LibItemNames.CASTER_TOME, CasterTome::new);
     public static final ItemRegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, DrygmyCharm::new);
-    public static final ItemRegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")).    withTooltip(Component.translatable("tooltip.drygmy_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
+    public static final ItemRegistryWrapper<ModItem> DRYGMY_SHARD = register(LibItemNames.DRYGMY_SHARD, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.drygmy_shard")).withTooltip(Component.translatable("tooltip.drygmy_shard2").withStyle(ItemsRegistry.LORE_STYLE)));
     public static final ItemRegistryWrapper<ModItem> WILDEN_TRIBUTE = register(LibItemNames.WILDEN_TRIBUTE, () -> new ModItem(defaultItemProperties().fireResistant()).withTooltip(Component.translatable("tooltip.ars_nouveau.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE))).withRarity(Rarity.EPIC));
     public static final ItemRegistryWrapper<SummoningFocus> SUMMONING_FOCUS = register(LibItemNames.SUMMON_FOCUS, SummoningFocus::new);
     public static final ItemRegistryWrapper<ShapersFocus> SHAPERS_FOCUS = register(LibItemNames.SHAPERS_FOCUS, () -> new ShapersFocus(defaultItemProperties().stacksTo(1)));
@@ -209,13 +213,13 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_ROBES = register(LibItemNames.BATTLEMAGE_ROBES, () -> AnimatedMagicArmor.heavy(ArmorItem.Type.CHESTPLATE));
     public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_HOOD = register(LibItemNames.BATTLEMAGE_HOOD, () -> AnimatedMagicArmor.heavy(ArmorItem.Type.HELMET));
     public static final ItemRegistryWrapper<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, DowsingRod::new);
-    public static final ItemRegistryWrapper<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
-    public static final ItemRegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
-    public static final ItemRegistryWrapper<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+    public static final ItemRegistryWrapper<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, () -> new AbstractEssence("abjuration"));
+    public static final ItemRegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE, () -> new AbstractEssence("conjuration"));
+    public static final ItemRegistryWrapper<ModItem> AIR_ESSENCE = register(LibItemNames.AIR_ESSENCE, () -> new AbstractEssence("air"));
     public static final ItemRegistryWrapper<EarthEssence> EARTH_ESSENCE = register(LibItemNames.EARTH_ESSENCE, EarthEssence::new);
     public static final ItemRegistryWrapper<FireEssence> FIRE_ESSENCE = register(LibItemNames.FIRE_ESSENCE, FireEssence::new);
     public static final ItemRegistryWrapper<ManipulationEssence> MANIPULATION_ESSENCE = register(LibItemNames.MANIPULATION_ESSENCE, ManipulationEssence::new);
-    public static final ItemRegistryWrapper<ModItem> WATER_ESSENCE = register(LibItemNames.WATER_ESSENCE, () -> new ModItem().withTooltip(Component.translatable("tooltip.ars_nouveau.essences")));
+    public static final ItemRegistryWrapper<ModItem> WATER_ESSENCE = register(LibItemNames.WATER_ESSENCE, () -> new AbstractEssence("water"));
     public static final ItemRegistryWrapper<AmethystGolemCharm> AMETHYST_GOLEM_CHARM = register(LibItemNames.AMETHYST_GOLEM_CHARM, AmethystGolemCharm::new);
     public static final ItemRegistryWrapper<AnnotatedCodex> ANNOTATED_CODEX = register(LibItemNames.ANNOTATED_CODEX, AnnotatedCodex::new);
     public static final ItemRegistryWrapper<ScryerScroll> SCRYER_SCROLL = register(LibItemNames.SCRYER_SCROLL, ScryerScroll::new);
@@ -228,9 +232,11 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<Item> SOUND_OF_GLASS = register(LibItemNames.SOUND_OF_GLASS, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(JukeboxRegistry.SOUND_OF_GLASS)));
     public static final ItemRegistryWrapper<Item> WILD_HUNT = register(LibItemNames.FIREL_WILD_HUNT, () -> new Item(defaultItemProperties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(JukeboxRegistry.WILD_HUNT)));
     public static final ItemRegistryWrapper<Present> STARBY_GIFY = register(LibItemNames.STARBY_GIFT, () -> new Present(defaultItemProperties().rarity(Rarity.EPIC).component(DataComponentRegistry.PRESENT, new PresentData())));
-    public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
+    // TODO: 1.22 rename to EnchantersCrossbow
+    public static final ItemRegistryWrapper<SpellCrossbow> SPELL_CROSSBOW = register(LibItemNames.SPELL_CROSSBOW, () -> new SpellCrossbow(defaultItemProperties().stacksTo(1)
+            .component(DataComponents.BASE_COLOR, DyeColor.PURPLE).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
     public static final ItemRegistryWrapper<StableWarpScroll> STABLE_WARP_SCROLL = register(LibItemNames.STABLE_WARP_SCROLL, () -> new StableWarpScroll(defaultItemProperties().stacksTo(1)));
-    public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SCRY_CASTER, new ScryCasterData()).component(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty()))));
+    public static final ItemRegistryWrapper<ScryCaster> SCRY_CASTER = register(LibItemNames.SCRY_CASTER, () -> new ScryCaster(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SCRY_CASTER, new ScryCasterData()).component(DataComponents.BASE_COLOR, DyeColor.PURPLE).component(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty()))));
     public static final ItemRegistryWrapper<JumpingRing> JUMP_RING = register(LibItemNames.JUMP_RING, JumpingRing::new);
     public static final ItemRegistryWrapper<AlakarkinosCharm> ALAKARKINOS_CHARM = register(LibItemNames.ALAKARKINOS_CHARM, AlakarkinosCharm::new);
     public static final ItemRegistryWrapper<Item> ALAKARKINOS_SHARD = register(LibItemNames.ALAKARKINOS_SHARD, () -> new ModItem().withTooltip("tooltip.alakarkinos_shard1").withTooltip(Component.translatable("tooltip.alakarkinos_shard2").withStyle(LORE_STYLE)));
@@ -238,6 +244,9 @@ public class ItemsRegistry {
     public static final DeferredHolder<Item, BannerPatternItem> ARS_STENCIL = createPatternItem("ars_stencil", Rarity.UNCOMMON);
     public static final ItemRegistryWrapper<Item> ENCHANTERS_GAUNTLET = register(LibItemNames.ENCHANTERS_GAUNTLET, EnchantersGauntlet::new);
     public static final ItemRegistryWrapper<Item> ENCHANTERS_FISHING_ROD = register(LibItemNames.ENCHANTERS_ROD, EnchantersFishingRod::new);
+
+    public static final ItemRegistryWrapper<SignItem> ARCHWOOD_SIGN = register(LibBlockNames.ARCHWOOD_SIGN, () -> new SignItem(defaultItemProperties().stacksTo(16), BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get()));
+    public static final ItemRegistryWrapper<HangingSignItem> ARCHWOOD_HANGING_SIGN = register(LibBlockNames.ARCHWOOD_HANGING_SIGN, () -> new HangingSignItem(BlockRegistry.ARCHWOOD_HANGING_SIGN.get(), BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN.get(), defaultItemProperties().stacksTo(16)));
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
         return new ItemRegistryWrapper<>(ITEMS.register(name, item));
@@ -267,11 +276,11 @@ public class ItemsRegistry {
             helper.register(holder.getRegistryName(), script);
         }
 
-        for(IPerk perk : PerkRegistry.getPerkMap().values()) {
+        for (IPerk perk : PerkRegistry.getPerkMap().values()) {
             PerkItem perkItem = new PerkItem(perk);
             PerkRegistry.getPerkItemMap().put(perk.getRegistryName(), perkItem);
             helper.register(perk.getRegistryName(), perkItem);
-            if(perk instanceof EmptyPerk){
+            if (perk instanceof EmptyPerk) {
                 BLANK_THREAD = perkItem;
             }
         }

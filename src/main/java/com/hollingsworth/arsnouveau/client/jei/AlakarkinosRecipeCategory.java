@@ -68,7 +68,7 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRec
         if (lootDrops.isEmpty()) return;
 
         LootDrops drops = lootDrops.get();
-        
+
         String recipeChance = df.format((float) recipe.weight() / drops.weight());
         builder.addSlot(RecipeIngredientRole.INPUT, 0, 0).addIngredient(VanillaTypes.ITEM_STACK, recipe.input().asItem().getDefaultInstance()).addRichTooltipCallback(
                 (view, tooltip) -> tooltip.add(Component.translatable("ars_nouveau.alakarkinos_recipe.chance", recipeChance))

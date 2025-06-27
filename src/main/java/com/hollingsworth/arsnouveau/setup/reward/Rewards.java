@@ -29,7 +29,7 @@ public class Rewards {
                 String uuid = element.getAsString();
                 try {
                     CONTRIBUTORS.add(UUID.fromString(uuid.trim()));
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

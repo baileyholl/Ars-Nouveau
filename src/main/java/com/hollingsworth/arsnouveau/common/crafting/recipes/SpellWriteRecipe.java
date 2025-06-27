@@ -47,7 +47,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         ItemEnchantments enchantments = input.catalyst().get(DataComponents.ENCHANTMENTS);
-        if(enchantments == null){
+        if (enchantments == null) {
             return false;
         }
         int level1 = enchantments.getLevel(HolderHelper.unwrap(level, EnchantmentRegistry.REACTIVE_ENCHANTMENT));
@@ -61,8 +61,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
         ItemStack parchment = getParchment(input.pedestals());
         AbstractCaster<?> caster = SpellCasterRegistry.from(parchment);
         ItemStack result = input.catalyst().copy();
-        ReactiveCasterData data = new ReactiveCasterData(0, null, false, null, 1, caster.getSpells())
-                .setColor(caster.getColor(), 0);
+        ReactiveCasterData data = new ReactiveCasterData(0, null, false, null, 1, caster.getSpells());
         result.set(DataComponentRegistry.REACTIVE_CASTER, data);
         return result;
     }

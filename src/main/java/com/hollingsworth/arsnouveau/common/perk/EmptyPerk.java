@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class EmptyPerk extends Perk {
-    public static ResourceLocation registryName = ArsNouveau.prefix( "blank_thread");
+    public static ResourceLocation registryName = ArsNouveau.prefix("blank_thread");
 
     public static EmptyPerk INSTANCE = new EmptyPerk(registryName);
 

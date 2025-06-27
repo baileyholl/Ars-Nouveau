@@ -30,6 +30,7 @@ public class MaxManaCalcEvent extends LivingEvent {
     public void setReserve(float newReserve) {
         this.reserve = Mth.clamp(0, newReserve, 1);
     }
+
     public float getReserve() {
         return this.reserve;
     }

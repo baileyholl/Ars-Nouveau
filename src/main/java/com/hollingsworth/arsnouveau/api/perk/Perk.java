@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.api.perk;
 
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class Perk implements IPerk{
+import java.util.Objects;
+
+public abstract class Perk implements IPerk {
     private ResourceLocation id;
 
     public Perk(ResourceLocation key) {
@@ -13,4 +15,15 @@ public abstract class Perk implements IPerk{
         return id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Perk perk = (Perk) o;
+        return Objects.equals(id, perk.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

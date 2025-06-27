@@ -7,7 +7,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Musics;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -19,7 +18,7 @@ public class BiomeRegistry {
     public static final ResourceKey<Biome> ARCHWOOD_FOREST = register("archwood_forest");
 
     public static ResourceKey<Biome> register(String name) {
-        return ResourceKey.create(Registries.BIOME, ArsNouveau.prefix( name));
+        return ResourceKey.create(Registries.BIOME, ArsNouveau.prefix(name));
     }
 
     public static void bootstrap(BootstrapContext<Biome> context) {
@@ -35,11 +34,13 @@ public class BiomeRegistry {
         BiomeDefaultFeatures.addSurfaceFreezing(builder);
 
     }
+
     public static void softDisks(BiomeGenerationSettings.Builder pBuilder) {
         pBuilder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MiscOverworldPlacements.DISK_SAND);
         pBuilder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MiscOverworldPlacements.DISK_CLAY);
         pBuilder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MiscOverworldPlacements.DISK_GRAVEL);
     }
+
     public static Biome archwoodForest(BootstrapContext<Biome> context) {
         MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
         spawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE.get(), 2, 3, 5));

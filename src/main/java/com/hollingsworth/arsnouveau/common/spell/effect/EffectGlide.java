@@ -24,7 +24,7 @@ public class EffectGlide extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             this.applyConfigPotion(living, ModPotions.GLIDE_EFFECT, spellStats);
         }
@@ -52,13 +52,13 @@ public class EffectGlide extends AbstractEffect implements IPotionEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_AIR);

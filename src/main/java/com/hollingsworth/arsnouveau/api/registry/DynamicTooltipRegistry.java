@@ -14,12 +14,12 @@ import java.util.function.Consumer;
 public class DynamicTooltipRegistry {
     private static Set<DataComponentType<? extends TooltipProvider>> dataTypes = ConcurrentHashMap.newKeySet();
 
-    public static void register(DataComponentType<? extends TooltipProvider> type){
+    public static void register(DataComponentType<? extends TooltipProvider> type) {
         dataTypes.add(type);
     }
 
-    public static void appendTooltips(ItemStack stack, Item.TooltipContext context, Consumer<Component> adder, TooltipFlag flag){
-        for(DataComponentType<? extends TooltipProvider> type : dataTypes){
+    public static void appendTooltips(ItemStack stack, Item.TooltipContext context, Consumer<Component> adder, TooltipFlag flag) {
+        for (DataComponentType<? extends TooltipProvider> type : dataTypes) {
             stack.addToTooltip(type, context, adder, flag);
         }
     }

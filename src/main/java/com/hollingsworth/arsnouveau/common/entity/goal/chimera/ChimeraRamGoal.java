@@ -146,7 +146,7 @@ public class ChimeraRamGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         var canContinue = !finished && !boss.getPhaseSwapping();
-        if(!canContinue){
+        if (!canContinue) {
             boss.setRamming(false);
             boss.setRamPrep(false);
             boss.isRamGoal = false;

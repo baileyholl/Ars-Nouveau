@@ -34,7 +34,7 @@ public class GlyphButton extends ANButton {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if(!visible){
+        if (!visible) {
             return;
         }
         RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x, y, 16, !validationErrors.isEmpty(), 0);
@@ -42,7 +42,7 @@ public class GlyphButton extends ANButton {
 
     @Override
     public void getTooltip(List<Component> tip) {
-        if(!GlyphRegistry.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())){
+        if (!GlyphRegistry.getSpellpartMap().containsKey(this.abstractSpellPart.getRegistryName())) {
             return;
         }
         AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(this.abstractSpellPart.getRegistryName());
@@ -65,8 +65,8 @@ public class GlyphButton extends ANButton {
                     .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
             tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
         }
-        if(this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null){
-            if(validationErrors != null && !validationErrors.isEmpty()){
+        if (this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null) {
+            if (validationErrors != null && !validationErrors.isEmpty()) {
                 return;
             }
             Component augmentDescription = augmentingParent.augmentDescriptions.get(augment);

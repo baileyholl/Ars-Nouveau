@@ -127,7 +127,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, bPos, null);
             if (handler != null) {
                 for (int i = 0; i < handler.getSlots(); i++) {
-                    ItemStack stack = handler.getStackInSlot(i);
+                    ItemStack stack = handler.extractItem(i, 1, true);
                     if (canConsumeItemstack(stack)) {
                         ItemStack stack1 = handler.extractItem(i, 1, false);
                         stack1.copy().setCount(1);
@@ -386,11 +386,11 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             tile.getTooltip(tooltip);
             return;
         }
-        if(recipe != null){
+        if (recipe != null) {
             tooltip.add(Component.translatable("ars_nouveau.crafting", recipe.value().output.getHoverName()));
             tooltip.add(Component.translatable("ars_nouveau.scribes_table.throw_items").withStyle(ChatFormatting.GOLD));
         }
-        if(!autoYoink){
+        if (!autoYoink) {
             tooltip.add(Component.translatable("ars_nouveau.scribes_table.auto_take_disabled").withStyle(ChatFormatting.GOLD));
         }
     }

@@ -6,7 +6,10 @@ import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.entity.player.Player;
-import snownee.jade.api.*;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
 public class WailaArsNouveauPlugin implements IWailaPlugin {
@@ -23,7 +26,7 @@ public class WailaArsNouveauPlugin implements IWailaPlugin {
                 if (target.getBlockEntity() instanceof GhostWeaveTile tile && tile.isInvisible()) {
                     return null;
                 }
-                if(target.getBlockEntity() instanceof SkyBlockTile skyWeave && !skyWeave.showFacade()){
+                if (target.getBlockEntity() instanceof SkyBlockTile skyWeave && !skyWeave.showFacade()) {
                     return null;
                 }
 

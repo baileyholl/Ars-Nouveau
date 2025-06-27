@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EffectReset extends AbstractEffect implements IContextManipulator{
+public class EffectReset extends AbstractEffect implements IContextManipulator {
     public static EffectReset INSTANCE = new EffectReset();
 
     public static Set<AbstractSpellPart> RESET_LIMITS = ConcurrentHashMap.newKeySet();
@@ -38,7 +38,7 @@ public class EffectReset extends AbstractEffect implements IContextManipulator{
 
     @Override
     public boolean contextCanceled(SpellContext context) {
-        if(context.getCancelReason() == CancelReason.NEW_CONTEXT) {
+        if (context.getCancelReason() == CancelReason.NEW_CONTEXT) {
             context.setCanceled(false);
             Spell remainder = context.getRemainingSpell();
             int index = remainder.indexOf(EffectReset.INSTANCE);

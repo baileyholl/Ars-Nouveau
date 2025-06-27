@@ -32,8 +32,8 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void clientPlayerLogin(ClientPlayerNetworkEvent.LoggingIn e) {
-        if(e.getPlayer() != null){
-            if(Config.INFORM_LIGHTS.get()){
+        if (e.getPlayer() != null) {
+            if (Config.INFORM_LIGHTS.get()) {
                 Player entity = e.getPlayer();
                 PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
                 Config.INFORM_LIGHTS.set(false);

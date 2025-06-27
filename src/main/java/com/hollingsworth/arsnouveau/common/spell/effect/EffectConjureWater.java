@@ -90,10 +90,10 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
         return 80;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-       return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE);
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentExtendTime.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_WATER);

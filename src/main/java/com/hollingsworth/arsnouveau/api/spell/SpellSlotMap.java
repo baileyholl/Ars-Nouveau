@@ -14,7 +14,7 @@ public record SpellSlotMap(Map<Integer, Spell> slots) {
 
     public static final Codec<SpellSlotMap> CODEC = ANCodecs.intMap(Spell.CODEC.codec(), SpellSlotMap::new, SpellSlotMap::slots);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SpellSlotMap> STREAM = StreamCodec.ofMember((val, buf) ->{
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellSlotMap> STREAM = StreamCodec.ofMember((val, buf) -> {
         var entries = val.slots.entrySet();
         buf.writeInt(entries.size());
 
@@ -32,6 +32,7 @@ public record SpellSlotMap(Map<Integer, Spell> slots) {
         }
         return new SpellSlotMap(immutableMap.build());
     });
+
     public Spell getOrDefault(int slot, Spell spell) {
         return slots.getOrDefault(slot, spell);
     }
@@ -40,7 +41,7 @@ public record SpellSlotMap(Map<Integer, Spell> slots) {
         return slots.get(slot);
     }
 
-    public SpellSlotMap put(int slot, Spell spell){
+    public SpellSlotMap put(int slot, Spell spell) {
         return new SpellSlotMap(Util.copyAndPut(slots, slot, spell));
     }
 

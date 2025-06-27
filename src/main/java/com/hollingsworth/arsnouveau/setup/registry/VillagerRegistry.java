@@ -16,7 +16,7 @@ public class VillagerRegistry {
     public static final DeferredRegister<VillagerProfession> VILLAGERS = DeferredRegister.create(BuiltInRegistries.VILLAGER_PROFESSION, ArsNouveau.MODID);
     public static final DeferredRegister<PoiType> POIs = DeferredRegister.create(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ArsNouveau.MODID);
 
-    public static final DeferredHolder<PoiType, PoiType> ARCANE_POI = POIs.register("arcane_poi", () -> new PoiType(ImmutableSet.copyOf(BlockRegistry.ARCANE_CORE_BLOCK.get().getStateDefinition().getPossibleStates()),1,1));
+    public static final DeferredHolder<PoiType, PoiType> ARCANE_POI = POIs.register("arcane_poi", () -> new PoiType(ImmutableSet.copyOf(BlockRegistry.ARCANE_CORE_BLOCK.get().getStateDefinition().getPossibleStates()), 1, 1));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> SHARDS_TRADER = VILLAGERS.register(ARS_TRADER, () -> new VillagerProfession(ARS_TRADER, (x) -> x.value() == ARCANE_POI.get(), (x) -> x.value() == ARCANE_POI.get(), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CLERIC));
 
 }

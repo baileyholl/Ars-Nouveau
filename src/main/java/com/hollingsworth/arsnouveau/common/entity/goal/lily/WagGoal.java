@@ -21,10 +21,10 @@ public class WagGoal<T extends Mob & IAdorable> extends Goal {
     @Override
     public void tick() {
         super.tick();
-        if(wagAtTicks > 0){
+        if (wagAtTicks > 0) {
             wagAtTicks--;
         }
-        if(target != null){
+        if (target != null) {
             lily.getLookControl().setLookAt(target, 30, 30);
         }
 
@@ -34,7 +34,7 @@ public class WagGoal<T extends Mob & IAdorable> extends Goal {
     public boolean canUse() {
         target = null;
         ServerLevel level = (ServerLevel) lily.level;
-        for(Player player : level.getPlayers(p -> true)) {
+        for (Player player : level.getPlayers(p -> true)) {
             if (player.distanceTo(lily) < 5 && lily.isLookingAtMe(player)) {
                 target = player;
                 wagAtTicks = 100;

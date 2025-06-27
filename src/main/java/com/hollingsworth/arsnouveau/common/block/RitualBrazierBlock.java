@@ -72,7 +72,7 @@ public class RitualBrazierBlock extends TickableModBlock {
         if (heldStack.isEmpty() && tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual(player);
         }
-        if(!heldStack.isEmpty()){
+        if (!heldStack.isEmpty()) {
             tile.tryBurnStack(heldStack);
         }
         return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);

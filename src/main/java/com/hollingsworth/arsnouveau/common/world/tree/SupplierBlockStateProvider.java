@@ -10,7 +10,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 
 public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider {
     public SupplierBlockStateProvider(String path) {
-        this(ArsNouveau.prefix( path));
+        this(ArsNouveau.prefix(path));
     }
 
     public SupplierBlockStateProvider(ResourceLocation path) {

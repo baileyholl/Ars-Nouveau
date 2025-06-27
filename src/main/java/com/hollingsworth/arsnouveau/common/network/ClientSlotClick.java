@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class ClientSlotClick extends AbstractPacket{
+public class ClientSlotClick extends AbstractPacket {
     public static final Type<ClientSlotClick> TYPE = new Type<>(ArsNouveau.prefix("storage_slot_click"));
 
     public static StreamCodec<RegistryFriendlyByteBuf, ClientSlotClick> STREAM_CODEC = StreamCodec.composite(
@@ -38,7 +38,7 @@ public class ClientSlotClick extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
-        if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen){
+        if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen) {
             terminalScreen.onInteract(sender, this.stack.orElse(null), this.action, this.pullOne);
         }
     }

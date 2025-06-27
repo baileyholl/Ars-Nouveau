@@ -99,7 +99,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     public ResourceLocation getTexture() {
-        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
+        return ArsNouveau.prefix("textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
 
 }

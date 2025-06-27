@@ -45,29 +45,29 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         super(BlockRegistry.REDSTONE_RELAY_TILE.get(), pos, state);
     }
 
-    public int getOutputPower(){
+    public int getOutputPower() {
         return currentPower;
     }
 
     @Override
     public void tick() {
 
-        if(!level.isClientSide && updateListeners){
+        if (!level.isClientSide && updateListeners) {
             // force update a tick later to account for connection checks
             calculateNewPower();
             updateListeners = false;
         }
     }
 
-    public void onParentPowerChange(BlockPos pos, int newParentPower){
-        if(!this.poweredFrom.contains(pos)){
+    public void onParentPowerChange(BlockPos pos, int newParentPower) {
+        if (!this.poweredFrom.contains(pos)) {
             level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
             return;
         }
-        if(pos.equals(currentParent)){
+        if (pos.equals(currentParent)) {
             powerFromParentRelays = newParentPower;
             calculateNewPower();
-        }else if (newParentPower > powerFromParentRelays){
+        } else if (newParentPower > powerFromParentRelays) {
             currentParent = pos.immutable();
             powerFromParentRelays = newParentPower;
             calculateNewPower();
@@ -76,19 +76,19 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         level.updateNeighborsAt(worldPosition, BlockRegistry.REDSTONE_RELAY.get());
     }
 
-    public void calculateNewPower(){
-        if(level.isClientSide){
+    public void calculateNewPower() {
+        if (level.isClientSide) {
             return;
         }
         int oldPower = currentPower;
         int newPower = localPower;
 
-        for(BlockPos pos : poweredFrom){
-            if(!level.isLoaded(pos)){
+        for (BlockPos pos : poweredFrom) {
+            if (!level.isLoaded(pos)) {
                 continue;
             }
-            if(level.getBlockEntity(pos) instanceof RedstoneRelayTile redstoneRelayTile){
-                if(redstoneRelayTile.getOutputPower() > localPower){
+            if (level.getBlockEntity(pos) instanceof RedstoneRelayTile redstoneRelayTile) {
+                if (redstoneRelayTile.getOutputPower() > localPower) {
                     newPower = redstoneRelayTile.getOutputPower();
                     currentParent = pos.immutable();
                     powerFromParentRelays = redstoneRelayTile.getOutputPower();
@@ -96,12 +96,12 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
             }
         }
 
-        if(newPower != oldPower){
+        if (newPower != oldPower) {
             setNewPower(newPower);
         }
     }
 
-    protected void setNewPower(int power){
+    protected void setNewPower(int power) {
         this.currentPower = power;
         BlockState state = level.getBlockState(worldPosition);
         if (!state.hasProperty(RedstoneRelay.POWER)) {
@@ -122,21 +122,21 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         return super.updateBlock();
     }
 
-    public void updateListeners(){
-        for(BlockPos pos : powering){
-            if(!level.isLoaded(pos)){
+    public void updateListeners() {
+        for (BlockPos pos : powering) {
+            if (!level.isLoaded(pos)) {
                 continue;
             }
-            if(level.getBlockEntity(pos) instanceof RedstoneRelayTile redstoneRelayTile){
+            if (level.getBlockEntity(pos) instanceof RedstoneRelayTile redstoneRelayTile) {
                 redstoneRelayTile.onParentPowerChange(worldPosition, currentPower);
             }
         }
     }
 
-    public void onParentRemoved(BlockPos pos){
+    public void onParentRemoved(BlockPos pos) {
         poweredFrom.remove(pos);
         updateBlock();
-        if(currentParent != null && currentParent.equals(pos)){
+        if (currentParent != null && currentParent.equals(pos)) {
             calculateNewPower();
         }
     }
@@ -153,7 +153,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
         if (BlockUtil.distanceFrom(storedPos, this.worldPosition) <= getMaxDistance()) {
             storedPos = storedPos.immutable();
-            if(this.poweredFrom.contains(storedPos)){
+            if (this.poweredFrom.contains(storedPos)) {
                 this.poweredFrom.remove(storedPos);
             } else {
                 this.poweredFrom.add(storedPos);
@@ -163,7 +163,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         }
     }
 
-    public int getMaxDistance(){
+    public int getMaxDistance() {
         return 30;
     }
 
@@ -174,7 +174,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
         if (BlockUtil.distanceFrom(storedPos, this.worldPosition) <= getMaxDistance()) {
             storedPos = storedPos.immutable();
-            if(this.powering.contains(storedPos)){
+            if (this.powering.contains(storedPos)) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.remove", DominionWand.getPosString(storedPos)));
                 this.powering.remove(storedPos);
             } else {
@@ -191,10 +191,10 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
-        for(BlockPos pos : poweredFrom){
+        for (BlockPos pos : poweredFrom) {
             list.add(ColorPos.centered(pos, ParticleColor.FROM_HIGHLIGHT));
         }
-        for(BlockPos pos : powering){
+        for (BlockPos pos : powering) {
             list.add(ColorPos.centered(pos, ParticleColor.TO_HIGHLIGHT));
         }
         return list;
@@ -207,12 +207,12 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         powering = new ArrayList<>();
         currentParent = null;
         ListTag listTag = pTag.getList("poweredFrom", 10);
-        for(int i = 0; i < listTag.size(); i++){
+        for (int i = 0; i < listTag.size(); i++) {
             CompoundTag tag = listTag.getCompound(i);
             poweredFrom.add(BlockPos.of(tag.getLong("pos")));
         }
         ListTag poweringTag = pTag.getList("powering", 10);
-        for(int i = 0; i < poweringTag.size(); i++){
+        for (int i = 0; i < poweringTag.size(); i++) {
             CompoundTag tag = poweringTag.getCompound(i);
             powering.add(BlockPos.of(tag.getLong("pos")));
         }
@@ -220,7 +220,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         localPower = pTag.getInt("localPower");
         currentPower = pTag.getInt("currentPower");
         powerFromParentRelays = pTag.getInt("powerFromParentRelays");
-        if(pTag.contains("currentParent")){
+        if (pTag.contains("currentParent")) {
             currentParent = BlockPos.of(pTag.getLong("currentParent"));
         }
     }
@@ -229,7 +229,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         ListTag listTag = new ListTag();
-        for(BlockPos pos : poweredFrom){
+        for (BlockPos pos : poweredFrom) {
             CompoundTag posTag = new CompoundTag();
             posTag.putLong("pos", pos.asLong());
             listTag.add(posTag);
@@ -237,7 +237,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         tag.put("poweredFrom", listTag);
 
         ListTag poweringTag = new ListTag();
-        for(BlockPos pos : powering){
+        for (BlockPos pos : powering) {
             CompoundTag posTag = new CompoundTag();
             posTag.putLong("pos", pos.asLong());
             poweringTag.add(posTag);
@@ -247,7 +247,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         tag.putInt("localPower", localPower);
         tag.putInt("currentPower", currentPower);
         tag.putInt("powerFromParentRelays", powerFromParentRelays);
-        if(currentParent != null){
+        if (currentParent != null) {
             tag.putLong("currentParent", currentParent.asLong());
         }
     }
@@ -257,10 +257,10 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     public void setLocalPower(int newLocalPower) {
-        if(level.isClientSide){
+        if (level.isClientSide) {
             return;
         }
-        if(newLocalPower != localPower) {
+        if (newLocalPower != localPower) {
             this.localPower = newLocalPower;
             calculateNewPower();
         }
@@ -287,6 +287,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         data.add(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
 
     }
+
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     private <P extends GeoAnimatable> PlayState idlePredicate(AnimationState<P> event) {

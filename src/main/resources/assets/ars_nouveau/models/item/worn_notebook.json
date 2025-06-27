@@ -137,8 +137,5 @@
         0.67
       ]
     }
-  },
-  "textures": {
-    "particle": "item/tattered_tome"
   }
 }

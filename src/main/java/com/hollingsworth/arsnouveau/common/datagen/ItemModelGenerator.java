@@ -24,6 +24,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.function.Supplier;
 
+import static com.hollingsworth.arsnouveau.ArsNouveau.prefix;
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class ItemModelGenerator extends ItemModelProvider {
@@ -38,7 +39,7 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         for (Supplier<Glyph> i : GlyphRegistry.getGlyphItemMap().values()) {
             try {
-                if(i.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                if (i.get().spellPart.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.get().spellPart.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i.get()));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -47,7 +48,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         }
         for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
             try {
-                if(i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.ritual.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
             } catch (Exception e) {
                 System.out.println("No texture for " + i);
@@ -55,16 +56,16 @@ public class ItemModelGenerator extends ItemModelProvider {
         }
         for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
             try {
-                if(i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.familiar.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
             } catch (Exception e) {
                 System.out.println("No texture for " + i);
             }
-         }
+        }
 
         for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
             try {
-                if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
+                if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.perk.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
             } catch (Exception e) {
                 System.out.println("No texture for " + i);
@@ -100,7 +101,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         blockAsItem(LibBlockNames.BOMBEGRANATE_POD);
         itemUnchecked(ItemsRegistry.ALCHEMISTS_CROWN);
         stateUnchecked(LibBlockNames.POTION_DIFFUSER);
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             getBuilder(s).parent(BlockStatesDatagen.getUncheckedModel(s));
             getBuilder(s + "_slab").parent(BlockStatesDatagen.getUncheckedModel(s + "_slab"));
             getBuilder(s + "_stairs").parent(BlockStatesDatagen.getUncheckedModel(s + "_stairs"));
@@ -140,22 +141,22 @@ public class ItemModelGenerator extends ItemModelProvider {
     }
 
 
-    public void spawnEgg(String s){
+    public void spawnEgg(String s) {
         getBuilder("ars_nouveau:" + s).parent(new ModelFile.UncheckedModelFile("item/template_spawn_egg"));
     }
 
-    public void blockAsItem(String s){
+    public void blockAsItem(String s) {
         getBuilder("ars_nouveau:" + s).parent(new ModelFile.UncheckedModelFile("item/generated"))
                 .texture("layer0", itemTexture(s));
     }
 
-    public void itemUnchecked(ItemRegistryWrapper<? extends Item> item){
+    public void itemUnchecked(ItemRegistryWrapper<? extends Item> item) {
         getBuilder(item.getRegistryName()).parent(new ModelFile.UncheckedModelFile("item/generated"))
                 .texture("layer0", itemTexture(item.get()));
 
     }
 
-    public void stateUnchecked(String name){
+    public void stateUnchecked(String name) {
         getBuilder(name).parent(BlockStatesDatagen.getUncheckedModel(name));
     }
 
@@ -174,7 +175,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     }
 
     private ResourceLocation itemTexture(String item) {
-        return ArsNouveau.prefix( "item" + "/" + item);
+        return prefix("item" + "/" + item);
     }
 
     private ResourceLocation itemTexture(final Item item) {

@@ -20,7 +20,10 @@ import javax.annotation.Nullable;
 
 @Mixin(DamageSource.class)
 public class DamageSourceMixin {
-    @Shadow @Final @Nullable private Entity causingEntity;
+    @Shadow
+    @Final
+    @Nullable
+    private Entity causingEntity;
 
     @Inject(method = "getLocalizedDeathMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", shift = At.Shift.BEFORE), cancellable = true)
     private void spellDeathMessage(LivingEntity pLivingEntity, CallbackInfoReturnable<Component> cir, @Local(ordinal = 0) String attack) {

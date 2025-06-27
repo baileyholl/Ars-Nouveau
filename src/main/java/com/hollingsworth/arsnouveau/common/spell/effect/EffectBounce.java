@@ -20,9 +20,9 @@ public class EffectBounce extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
-            ((IPotionEffect)this).applyConfigPotion(living, ModPotions.BOUNCE_EFFECT, spellStats);
+            ((IPotionEffect) this).applyConfigPotion(living, ModPotions.BOUNCE_EFFECT, spellStats);
         }
     }
 
@@ -39,7 +39,7 @@ public class EffectBounce extends AbstractEffect implements IPotionEffect {
     }
 
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);
@@ -50,7 +50,7 @@ public class EffectBounce extends AbstractEffect implements IPotionEffect {
         return "Gives players the Bounce effect, causing them to bounce upwards upon falling. Amplification of Bounce will preserve additional forward facing motion per bounce.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getPotionAugments();

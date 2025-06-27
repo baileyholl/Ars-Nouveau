@@ -20,14 +20,17 @@ public class VoxelShapeUtils {
         Set<VoxelShape> rotatedShapes = new HashSet<>();
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-            x1 = (x1 * 16) - 8; x2 = (x2 * 16) - 8;
-            z1 = (z1 * 16) - 8; z2 = (z2 * 16) - 8;
+            x1 = (x1 * 16) - 8;
+            x2 = (x2 * 16) - 8;
+            z1 = (z1 * 16) - 8;
+            z2 = (z2 * 16) - 8;
 
             switch (rotation) {
                 case 90 -> rotatedShapes.add(boxSafe(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
                 case 180 -> rotatedShapes.add(boxSafe(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
                 case 270 -> rotatedShapes.add(boxSafe(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
-                default -> throw new IllegalArgumentException("invalid rotation " + rotation + " (must be 90,180 or 270)");
+                default ->
+                        throw new IllegalArgumentException("invalid rotation " + rotation + " (must be 90,180 or 270)");
             }
         });
 
@@ -38,14 +41,17 @@ public class VoxelShapeUtils {
         Set<VoxelShape> rotatedShapes = new HashSet<>();
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-            y1 = (y1 * 16) - 8; y2 = (y2 * 16) - 8;
-            z1 = (z1 * 16) - 8; z2 = (z2 * 16) - 8;
+            y1 = (y1 * 16) - 8;
+            y2 = (y2 * 16) - 8;
+            z1 = (z1 * 16) - 8;
+            z2 = (z2 * 16) - 8;
 
             switch (rotation) {
                 case 90 -> rotatedShapes.add(boxSafe(x1 * 16, 8 - z1, 8 + y1, x2 * 16, 8 - z2, 8 + y2));
                 case 180 -> rotatedShapes.add(boxSafe(x1 * 16, 8 - z1, 8 - y1, x2 * 16, 8 - z2, 8 - y2));
                 case 270 -> rotatedShapes.add(boxSafe(x1 * 16, 8 + z1, 8 - y1, x2 * 16, 8 + z2, 8 - y2));
-                default -> throw new IllegalArgumentException("invalid rotation " + rotation + " (must be 90,180 or 270)");
+                default ->
+                        throw new IllegalArgumentException("invalid rotation " + rotation + " (must be 90,180 or 270)");
             }
         });
 
@@ -78,7 +84,6 @@ public class VoxelShapeUtils {
      *
      * @param box  The {@link AABB} to rotate
      * @param side The side to rotate it to.
-     *
      * @return The rotated {@link AABB}
      */
     public static AABB rotate(AABB box, Direction side) {
@@ -97,7 +102,6 @@ public class VoxelShapeUtils {
      *
      * @param box      The {@link AABB} to rotate
      * @param rotation The rotation we are performing.
-     *
      * @return The rotated {@link AABB}
      */
     public static AABB rotate(AABB box, Rotation rotation) {
@@ -114,7 +118,6 @@ public class VoxelShapeUtils {
      *
      * @param box  The {@link AABB} to rotate
      * @param side The side to rotate it to.
-     *
      * @return The rotated {@link AABB}
      */
     public static AABB rotateHorizontal(AABB box, Direction side) {
@@ -132,7 +135,6 @@ public class VoxelShapeUtils {
      *
      * @param shape The {@link VoxelShape} to rotate
      * @param side  The side to rotate it to.
-     *
      * @return The rotated {@link VoxelShape}
      */
     public static VoxelShape rotate(VoxelShape shape, Direction side) {
@@ -144,7 +146,6 @@ public class VoxelShapeUtils {
      *
      * @param shape    The {@link VoxelShape} to rotate
      * @param rotation The rotation we are performing.
-     *
      * @return The rotated {@link VoxelShape}
      */
     public static VoxelShape rotate(VoxelShape shape, Rotation rotation) {
@@ -156,7 +157,6 @@ public class VoxelShapeUtils {
      *
      * @param shape The {@link VoxelShape} to rotate
      * @param side  The side to rotate it to.
-     *
      * @return The rotated {@link VoxelShape}
      */
     public static VoxelShape rotateHorizontal(VoxelShape shape, Direction side) {
@@ -168,7 +168,6 @@ public class VoxelShapeUtils {
      *
      * @param shape          The {@link VoxelShape} to rotate
      * @param rotateFunction The transformation function to apply to each {@link AABB} in the {@link VoxelShape}.
-     *
      * @return The rotated {@link VoxelShape}
      */
     public static VoxelShape rotate(VoxelShape shape, UnaryOperator<AABB> rotateFunction) {
@@ -189,7 +188,6 @@ public class VoxelShapeUtils {
      * Used for mass combining shapes
      *
      * @param shapes The list of {@link VoxelShape}s to include
-     *
      * @return A simplified {@link VoxelShape} including everything that is part of the input shapes.
      */
     public static VoxelShape combine(VoxelShape... shapes) {
@@ -200,7 +198,6 @@ public class VoxelShapeUtils {
      * Used for mass combining shapes
      *
      * @param shapes The collection of {@link VoxelShape}s to include
-     *
      * @return A simplified {@link VoxelShape} including everything that is part of the input shapes.
      */
     public static VoxelShape combine(Collection<VoxelShape> shapes) {
@@ -211,7 +208,6 @@ public class VoxelShapeUtils {
      * Used for cutting shapes out of a full cube
      *
      * @param shapes The list of {@link VoxelShape}s to cut out
-     *
      * @return A {@link VoxelShape} including everything that is not part of the input shapes.
      */
     public static VoxelShape exclude(VoxelShape... shapes) {
@@ -225,9 +221,7 @@ public class VoxelShapeUtils {
      * @param function The {@link BooleanOp} to perform
      * @param simplify True if the returned shape should run {@link VoxelShape#optimize()}, False otherwise
      * @param shapes   The collection of {@link VoxelShape}s to include
-     *
      * @return A {@link VoxelShape} based on the input parameters.
-     *
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a
      * performance hit in calculating the simplified shape each time if we still have more changers we are making to it.
      */
@@ -246,9 +240,7 @@ public class VoxelShapeUtils {
      * @param function The {@link BooleanOp} to perform
      * @param simplify True if the returned shape should run {@link VoxelShape#optimize()}, False otherwise
      * @param shapes   The list of {@link VoxelShape}s to include
-     *
      * @return A {@link VoxelShape} based on the input parameters.
-     *
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a
      * performance hit in calculating the simplified shape each time if we still have more changers we are making to it.
      */
@@ -265,7 +257,7 @@ public class VoxelShapeUtils {
     }
 
     public static void setShape(VoxelShape shape, VoxelShape[] dest, boolean verticalAxis, boolean invert) {
-        Direction[] dirs = verticalAxis ? Direction.values() : new Direction[] {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+        Direction[] dirs = verticalAxis ? Direction.values() : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
         for (Direction side : dirs) {
             dest[verticalAxis ? side.ordinal() : side.ordinal() - 2] = verticalAxis ? VoxelShapeUtils.rotate(shape, invert ? side.getOpposite() : side) : VoxelShapeUtils.rotateHorizontal(shape, side);
         }

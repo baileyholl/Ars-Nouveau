@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class ClientTransferHandlerPacket extends AbstractPacket{
+public class ClientTransferHandlerPacket extends AbstractPacket {
 
     public static final Type<ClientTransferHandlerPacket> TYPE = new Type<>(ArsNouveau.prefix("storage_transfer_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientTransferHandlerPacket> CODEC = StreamCodec.ofMember(ClientTransferHandlerPacket::toBytes, ClientTransferHandlerPacket::new);
@@ -34,7 +34,7 @@ public class ClientTransferHandlerPacket extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
-        if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen){
+        if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
             terminalScreen.onTransferHandler(sender, this.stacks);
         }
     }

@@ -27,8 +27,8 @@ import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class WildenStalker extends Monster implements GeoEntity {
@@ -118,7 +118,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     private PlayState flyPredicate(software.bernie.geckolib.animation.AnimationState event) {
-        if(isFlying()) {
+        if (isFlying()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
         }
@@ -126,9 +126,9 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     private PlayState groundPredicate(software.bernie.geckolib.animation.AnimationState e) {
-        if(isFlying()){
+        if (isFlying()) {
             return PlayState.STOP;
-        }else if(e.isMoving()){
+        } else if (e.isMoving()) {
             e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
@@ -138,6 +138,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     AnimationController<WildenStalker> flyController;
     AnimationController<WildenStalker> groundController;
     AnimationController<WildenStalker> idleController;
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         flyController = new AnimationController<>(this, "flyController", 1, this::flyPredicate);
@@ -150,7 +151,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
-        if(tAnimationState.isMoving() || isFlying()){
+        if (tAnimationState.isMoving() || isFlying()) {
             return PlayState.STOP;
         }
         tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
@@ -203,7 +204,7 @@ public class WildenStalker extends Monster implements GeoEntity {
             this.setDeltaMovement(this.getDeltaMovement().scale(f));
         }
 
-        this.calculateEntityAnimation( false);
+        this.calculateEntityAnimation(false);
     }
 
     public static AttributeSupplier.Builder getModdedAttributes() {

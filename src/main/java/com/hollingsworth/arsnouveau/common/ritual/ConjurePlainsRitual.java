@@ -27,7 +27,7 @@ public class ConjurePlainsRitual extends ConjureBiomeRitual {
     public void onStart(@Nullable Player player) {
         super.onStart(player);
         isSnowy = getConsumedItems().stream().anyMatch(i -> i.is(BlockRegistry.FROSTAYA_POD.asItem()));
-        if(isSnowy){
+        if (isSnowy) {
             biome = Biomes.SNOWY_PLAINS;
         }
     }
@@ -45,7 +45,7 @@ public class ConjurePlainsRitual extends ConjureBiomeRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.PLAINS);
+        return ArsNouveau.prefix(RitualLib.PLAINS);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ConjurePlainsRitual extends ConjureBiomeRitual {
     }
 
     @Override
-    public void write(HolderLookup.Provider provider,  CompoundTag tag) {
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
         super.write(provider, tag);
         tag.putBoolean("isSnowy", isSnowy);
     }
@@ -73,7 +73,7 @@ public class ConjurePlainsRitual extends ConjureBiomeRitual {
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
         isSnowy = tag.getBoolean("isSnowy");
-        if(isSnowy){
+        if (isSnowy) {
             biome = Biomes.SNOWY_PLAINS;
         }
     }

@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -66,7 +67,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
                         getBlockPos().getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), getBlockPos().getY() + 1 + ParticleUtil.inRange(-0.1, 0.1), getBlockPos().getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
                         0, 0, 0);
             }
-        }else {
+        } else {
             if (level.getGameTime() % 100 == 0) {
                 refreshEntitiesAndBonus();
             }
@@ -136,8 +137,8 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
             this.nearbyEntities.addAll(level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter())));
         }
         this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter()));
-        for(BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)){
-            if(level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity){
+        for (BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)) {
+            if (level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity) {
                 nearbyEntities.add(livingEntity);
             }
         }
@@ -154,7 +155,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
         DamageSource damageSource = level.damageSources().playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
-        if(!(this.level instanceof ServerLevel serverLevel)){
+        if (!(this.level instanceof ServerLevel serverLevel)) {
             return;
         }
         // Create the loot table and exp count
@@ -164,8 +165,11 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
             }
 
             var key = entity.getLootTable();
+            if (key == null) {
+                Log.getLogger().warn("Entity is missing loot table, report to that mods author! : {}", entity.getType().getDescriptionId());
+                continue;
+            }
             LootTable loottable = serverLevel.getServer().reloadableRegistries().getLootTable(key);
-
             LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)

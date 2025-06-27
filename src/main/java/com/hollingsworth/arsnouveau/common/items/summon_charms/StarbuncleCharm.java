@@ -7,9 +7,13 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,9 +43,19 @@ public class StarbuncleCharm extends AbstractSummonCharm implements AliasProvide
     @Override
     public Collection<Alias> getAliases() {
         return List.of(
-            new Alias("hopper", "Hopper"),
-            new Alias("pipe", "Pipe"),
-            new Alias("item_transporter", "Item Transporter")
+                new Alias("hopper", "Hopper"),
+                new Alias("pipe", "Pipe"),
+                new Alias("item_transporter", "Item Transporter")
         );
+    }
+
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip2, flagIn);
+        StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
+        if (data != null) {
+            data.addToTooltip(context, tooltip2::add, flagIn);
+        }
     }
 }

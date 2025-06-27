@@ -12,6 +12,7 @@ public class ManaCap implements IManaCap {
 
     private ManaData manaData;
     LivingEntity entity;
+
     public ManaCap(LivingEntity livingEntity) {
         manaData = livingEntity.getData(AttachmentsRegistry.MANA_ATTACHMENT);
         entity = livingEntity;
@@ -82,11 +83,11 @@ public class ManaCap implements IManaCap {
         entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
     }
 
-    public float getReserve(){
+    public float getReserve() {
         return manaData.getReservedMana();
     }
 
-    public void setReserve(float reserve){
+    public void setReserve(float reserve) {
         manaData.setReservedMana(reserve);
         entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
     }

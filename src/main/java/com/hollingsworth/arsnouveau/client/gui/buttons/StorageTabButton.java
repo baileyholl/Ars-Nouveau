@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
-public class StorageTabButton extends StateButton{
+public class StorageTabButton extends StateButton {
     public boolean isSelected;
     public String highlightText;
     public boolean isAll = false;
@@ -20,8 +20,8 @@ public class StorageTabButton extends StateButton{
 
     @Override
     public void renderWidget(GuiGraphics p_281670_, int mouseX, int mouseY, float pt) {
-        if(this.visible){
-            p_281670_.blit(ArsNouveau.prefix( "textures/gui/storage_tab2" + (isSelected ? "_selected" : "")  + ".png"), x , y, 0, 0, 18, 13, 18, 13);
+        if (this.visible) {
+            p_281670_.blit(ArsNouveau.prefix("textures/gui/storage_tab2" + (isSelected ? "_selected" : "") + ".png"), x, y, 0, 0, 18, 13, 18, 13);
         }
         super.renderWidget(p_281670_, mouseX, mouseY, pt);
     }

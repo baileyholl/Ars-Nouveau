@@ -53,7 +53,7 @@ public class EffectSummonDecoy extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // SummonEvent captures augments, but no uses of that field were found
@@ -71,7 +71,7 @@ public class EffectSummonDecoy extends AbstractEffect {
         return "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

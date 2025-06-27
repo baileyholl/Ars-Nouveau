@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-public class ServerToClientStoragePacket extends AbstractPacket{
+public class ServerToClientStoragePacket extends AbstractPacket {
 
     public String searchString;
 

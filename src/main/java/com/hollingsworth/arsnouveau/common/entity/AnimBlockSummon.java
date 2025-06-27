@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -35,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -48,28 +50,36 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon, IDispellable {
+public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon, IDispellable, IEntityWithComplexSpawn {
 
     public BlockState blockState;
+    public CompoundTag head_data = new CompoundTag();
     public int color;
     private int ticksLeft;
     public static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> CAN_WALK = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.BOOLEAN);
-    public boolean isAlternateSpawn;
     public boolean dropItem = true;
+    public boolean hasConverted = false;
+
     public AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        isAlternateSpawn = random.nextBoolean();
     }
 
-    public AnimBlockSummon(Level pLevel, BlockState state){
+    public AnimBlockSummon(EntityType<? extends TamableAnimal> pEntityType, Level pLevel, CompoundTag pHeadData) {
+        super(pEntityType, pLevel);
+        this.head_data = pHeadData;
+    }
+
+
+    public AnimBlockSummon(Level pLevel, BlockState state, CompoundTag head_data) {
         this(ModEntities.ANIMATED_BLOCK.get(), pLevel);
         this.blockState = state;
+        this.head_data = head_data;
     }
 
     @Override
     public double getAttributeValue(Holder<Attribute> pAttribute) {
-        if(pAttribute.is(Attributes.ATTACK_DAMAGE)){
+        if (pAttribute.is(Attributes.ATTACK_DAMAGE)) {
             return super.getAttributeValue(pAttribute) + getStateDamageBonus();
         }
         return super.getAttributeValue(pAttribute);
@@ -108,7 +118,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     public boolean doHurtTarget(Entity pEntity) {
         if (getOwner() != null && pEntity.isAlliedTo(getOwner())) return false;
         boolean result = super.doHurtTarget(pEntity);
-        if (result) ticksLeft -= 20*20;
+        if (result) ticksLeft -= 20 * 20;
         return result;
     }
 
@@ -134,10 +144,10 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         if (!level.isClientSide) {
             ticksLeft--;
             this.entityData.set(AGE, this.entityData.get(AGE) + 1);
-            if(this.entityData.get(AGE) > 20) {
+            if (this.entityData.get(AGE) > 20) {
                 this.entityData.set(CAN_WALK, true);
             }
-            if (ticksLeft <= 0) {
+            if (ticksLeft <= 0 && !isDeadOrDying()) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 returnToFallingBlock(blockState);
                 this.remove(RemovalReason.DISCARDED);
@@ -147,12 +157,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     public void returnToFallingBlock(BlockState blockState) {
-        if(blockState == null)
+        if (hasConverted || blockState == null)
             return;
-        EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState);
+        hasConverted = true;
+        EnchantedFallingBlock fallingBlock = new EnchantedFallingBlock(level, blockPosition(), blockState, null);
         fallingBlock.setOwner(this.getOwner());
         fallingBlock.setDeltaMovement(this.getDeltaMovement());
-        fallingBlock.setColor(ParticleColor.fromInt(color));
         fallingBlock.dropItem = this.dropItem;
         if (blockState.getBlock() instanceof MageBlock) {
             fallingBlock.dropItem = false;
@@ -179,12 +189,11 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         pBuilder.define(CAN_WALK, false);
     }
 
-
     @Override
-    public void die(DamageSource cause) {
-        super.die(cause);
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         returnToFallingBlock(getBlockState());
-        onSummonDeath(level, cause, false);
+        onSummonDeath(level, damageSource, false);
     }
 
     @Nullable
@@ -251,6 +260,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
                 e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
+
             return PlayState.STOP;
         }));
     }
@@ -271,11 +281,6 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         return new ClientboundAddEntityPacket(this, p_352287_, Block.getId(this.getBlockState()));
     }
 
-//    @Override
-//    public double getBoneResetTime() {
-//        return 0;
-//    }
-
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
@@ -286,7 +291,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.setPos(d0, d1, d2);
     }
 
-    public void setColor(int color){
+    public void setColor(int color) {
         this.color = color;
         this.getEntityData().set(COLOR, color);
     }
@@ -312,11 +317,13 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.getEntityData().set(AGE, pCompound.getInt("ticksAlive"));
         this.getEntityData().set(CAN_WALK, pCompound.getBoolean("canWalk"));
         this.dropItem = !pCompound.contains("dropItem") || pCompound.getBoolean("dropItem");
+        head_data = pCompound.getCompound("head_data");
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.put("head_data", head_data);
         pCompound.putInt("left", ticksLeft);
         pCompound.putInt("color", color);
         pCompound.putInt("blockState", Block.getId(blockState));
@@ -326,7 +333,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     public int getColor() {
-        if (color == 0){
+        if (color == 0) {
             color = entityData.get(COLOR);
         }
         return color;
@@ -342,5 +349,15 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     public boolean onDispel(@NotNull LivingEntity caster) {
         this.setTicksLeft(0);
         return true;
+    }
+
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
+        buffer.writeNbt(head_data);
+    }
+
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+        head_data = additionalData.readNbt();
     }
 }

@@ -9,12 +9,16 @@ import net.minecraft.world.entity.player.Player;
 
 public abstract class AbstractPacket implements CustomPacketPayload {
 
-    public AbstractPacket(){}
+    public AbstractPacket() {
+    }
 
-    void toBytes(RegistryFriendlyByteBuf buf){}
+    void toBytes(RegistryFriendlyByteBuf buf) {
+    }
 
-    public void onClientReceived(Minecraft minecraft, Player player){}
+    public void onClientReceived(Minecraft minecraft, Player player) {
+    }
 
-    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player){}
+    public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+    }
 
 }

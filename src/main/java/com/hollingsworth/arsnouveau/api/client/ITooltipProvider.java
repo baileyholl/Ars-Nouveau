@@ -4,6 +4,8 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
+// @Deprecated use Nuggets version
+@Deprecated(forRemoval = true)
 public interface ITooltipProvider {
 
     /**

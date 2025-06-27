@@ -40,13 +40,13 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity living) {
             if (spellStats.hasBuff(AugmentExtendTime.INSTANCE)) {
                 this.applyConfigPotion(living, ModPotions.GRAVITY_EFFECT, spellStats);
             } else {
                 Entity entity = rayTraceResult.getEntity();
-                entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - spellStats.getDurationMultiplier(), 0));
+                entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - spellStats.getAmpMultiplier(), 0));
                 entity.hurtMarked = true;
             }
         }
@@ -69,7 +69,7 @@ public class EffectGravity extends AbstractEffect implements IPotionEffect {
         addExtendTimeConfig(builder, 8);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(

@@ -94,7 +94,7 @@ public class RitualOvergrowth extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.OVERGROWTH);
+        return ArsNouveau.prefix(RitualLib.OVERGROWTH);
     }
 
     @Override

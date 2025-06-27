@@ -9,26 +9,26 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class RewindAttachment implements IContextAttachment {
-    public static final ResourceLocation ID = ArsNouveau.prefix( "rewind");
+    public static final ResourceLocation ID = ArsNouveau.prefix("rewind");
 
     private final Map<Long, List<IRewindCallback>> rewindEvents = new HashMap<>();
     private long lockedTime = 0;
 
-    public void addRewindEvents(long gameTime, Collection<IRewindCallback> callbacks){
-        if(lockedTime == gameTime){
+    public void addRewindEvents(long gameTime, Collection<IRewindCallback> callbacks) {
+        if (lockedTime == gameTime) {
             return;
         }
         rewindEvents.computeIfAbsent(gameTime, k -> new ArrayList<>()).addAll(callbacks);
     }
 
-    public void addRewindEvent(long gameTime, IRewindCallback callback){
-        if(lockedTime == gameTime){
+    public void addRewindEvent(long gameTime, IRewindCallback callback) {
+        if (lockedTime == gameTime) {
             return;
         }
         rewindEvents.computeIfAbsent(gameTime, k -> new ArrayList<>()).add(callback);
     }
 
-    public static RewindAttachment get(SpellContext context){
+    public static RewindAttachment get(SpellContext context) {
         return context.getOrCreateAttachment(ID, new RewindAttachment());
     }
 
@@ -41,16 +41,16 @@ public class RewindAttachment implements IContextAttachment {
         return rewindEvents;
     }
 
-    public @Nullable List<IRewindCallback> getForTime(long gameTime){
+    public @Nullable List<IRewindCallback> getForTime(long gameTime) {
         return rewindEvents.get(gameTime);
     }
 
-    public long setLockedTime(long lockedTime){
+    public long setLockedTime(long lockedTime) {
         this.lockedTime = lockedTime;
         return lockedTime;
     }
 
-    public long getLockedTime(){
+    public long getLockedTime() {
         return lockedTime;
     }
 }

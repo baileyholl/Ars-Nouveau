@@ -68,8 +68,8 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public void setType(Level pLevel, BlockPos pPos,boolean alternate){
-        if(pLevel.getBlockState(pPos).getValue(ALTERNATE) == alternate)
+    public void setType(Level pLevel, BlockPos pPos, boolean alternate) {
+        if (pLevel.getBlockState(pPos).getValue(ALTERNATE) == alternate)
             return;
         pLevel.setBlockAndUpdate(pPos, pLevel.getBlockState(pPos).setValue(ALTERNATE, alternate));
         for (BlockPos pos : BlockPos.betweenClosed(pPos.offset(-1, -1, -1), pPos.offset(1, 1, 1))) {
@@ -81,10 +81,10 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND)
+        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND)
             return ItemInteractionResult.SUCCESS;
-        if(pPlayer.getItemInHand(pHand).getItem() instanceof DominionWand){
-            if(pLevel.getBlockEntity(pPos) instanceof PortalTile){
+        if (pPlayer.getItemInHand(pHand).getItem() instanceof DominionWand) {
+            if (pLevel.getBlockEntity(pPos) instanceof PortalTile) {
                 boolean nextVal = !pLevel.getBlockState(pPos).getValue(ALTERNATE);
                 setType(pLevel, pPos, nextVal);
                 return ItemInteractionResult.CONSUME;
@@ -179,7 +179,7 @@ public class PortalBlock extends TickableModBlock {
             frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
             if (!frameTester.isValidFrame()) {
                 return Blocks.AIR.defaultBlockState();
-            }else if(flag && facingState.getBlock() != this){
+            } else if (flag && facingState.getBlock() != this) {
                 return Blocks.AIR.defaultBlockState();
             }
             return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);

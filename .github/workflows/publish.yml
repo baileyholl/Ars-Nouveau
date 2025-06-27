@@ -1,50 +1,69 @@
-name: Publish action
+name: Build and Publish
 
 on:
   workflow_dispatch:
-    branches: [ "main" ]
     inputs:
       version:
         description: 'Mod Version'
         required: true
         type: string
+      version_type:
+        description: 'Version Type'
+        required: true
+        type: choice
+        default: release
+        options:
+        - alpha
+        - beta
+        - release
 
 env:
-  MINECRAFT_VERSION: 1.20.1
-  JAVA_VERSION: 17
+  MC_MIN_VER: '1.21'
+  MC_MAX_VER: '1.21.1'
+  JAVA_VERSION: 21
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: checkout repository
-        uses: actions/checkout@v2
-      - name: validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-      - name: setup jdk 17
-        uses: actions/setup-java@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
         with:
-          java-version: "17"
-      - name: make gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./gradlew
-      - name: build
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: "temurin"
+          cache: gradle
+          cache-dependency-path: |
+            *.gradle
+            gradle.*
+            gradle/wrapper/gradle-wrapper.properties
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build with Gradle
         run: ./gradlew build
-      - name: Publish Minecraft Mods Forge
-        uses: Kir-Antipov/mc-publish@v3.3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-jar
+          path: build/libs/*-all.jar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sources-jar
+          path: build/libs/*-sources.jar
+      - uses: Kir-Antipov/mc-publish@v3.3
+        if: ${{ github.ref_type == 'branch' && github.ref_name == 'main' }}
         with:
           curseforge-id: 401955
           modrinth-id: TKB6INcv
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: |
-            build/libs/!(*-@(dev|sources|javadoc)).jar
-            build/libs/*-@(dev|sources|javadoc).jar
-          version-type: release
-          loaders: forge
-          name: Ars Nouveau ${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
-          version:  ars_nouveau-${{ env.MINECRAFT_VERSION }}-${{ inputs.version }}
+          name: ars_nouveau-${{ env.MC_MAX_VER }}-${{ inputs.version }}
+          version: ${{ inputs.version }}
+          version-type: ${{ inputs.version_type }}
+          java: ${{ env.JAVA_VERSION }}
+          changelog-file: changelog.md
           game-versions: |
-            ${{ env.MINECRAFT_VERSION }}
-          changelog: ""
+            >=${{ env.MC_MIN_VER }} <=${{ env.MC_MAX_VER }}

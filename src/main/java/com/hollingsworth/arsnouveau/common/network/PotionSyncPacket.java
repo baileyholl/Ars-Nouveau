@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-public class PotionSyncPacket extends AbstractPacket{
+public class PotionSyncPacket extends AbstractPacket {
 
     public int entity;
     public int duration;

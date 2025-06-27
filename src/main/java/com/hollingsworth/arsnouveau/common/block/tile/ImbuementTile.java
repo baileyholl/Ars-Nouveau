@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
-import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -57,7 +56,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     protected @NotNull SourceStorage createDefaultStorage() {
-        return new SourceStorage(10000000, 10000000, 0, 0){
+        return new SourceStorage(10000000, 10000000, 0, 0) {
             @Override
             public boolean canProvideSource(int source) {
                 return false;
@@ -72,9 +71,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void lightPedestal(Level level) {
         if (level != null) {
-            for (BlockPos pos : pedestalList(getBlockPos(), 1, level)) {
-                ParticleUtil.spawnOrb(level, ParticleColor.makeRandomColor(255, 255, 255, level.random), pos.above(), 300);
-            }
+            spawnParticlesForPedestal(level, pedestalList(getBlockPos(), 1, level));
         }
     }
 

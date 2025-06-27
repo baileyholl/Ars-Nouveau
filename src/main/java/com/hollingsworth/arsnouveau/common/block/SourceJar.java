@@ -92,7 +92,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-   @NotNull
+    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -111,7 +111,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     @Override
     public void tick(BlockState p_222945_, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
         super.tick(p_222945_, level, pos, p_222948_);
-        if(level.getBlockEntity(pos) instanceof SourceJarTile jarTile){
+        if (level.getBlockEntity(pos) instanceof SourceJarTile jarTile) {
             jarTile.updateBlock();
         }
     }
@@ -133,7 +133,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         int mana = BlockFillContents.get(stack);
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness",(mana * 100) / 10000));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (mana * 100) / 10000));
     }
 
     @Override

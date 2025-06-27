@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class PacketClientRewindEffect extends AbstractPacket{
+public class PacketClientRewindEffect extends AbstractPacket {
 
     public static final Type<PacketClientRewindEffect> TYPE = new Type<>(ArsNouveau.prefix("rewind_effect"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketClientRewindEffect> CODEC = StreamCodec.ofMember(PacketClientRewindEffect::toBytes, PacketClientRewindEffect::new);
@@ -38,7 +38,7 @@ public class PacketClientRewindEffect extends AbstractPacket{
     public void onClientReceived(Minecraft minecraft, Player player) {
         Level world = player.level;
         Entity hitEntity = world.getEntity(hitEntityID);
-        if(hitEntity != null) {
+        if (hitEntity != null) {
             EventQueue.getClientQueue().addEvent(new RewindEvent(hitEntity, hitEntity.level.getGameTime(), duration));
         }
     }

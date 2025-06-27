@@ -41,26 +41,26 @@ public class IndexScreen extends BaseDocScreen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        DocClientUtils.blit(graphics, DocAssets.SPLASH_FRAME, bookLeft + LEFT_PAGE_OFFSET - 3, bookTop + PAGE_TOP_OFFSET - 5);
-        DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.categories"), graphics, bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, 135, mouseX, mouseY, partialTicks);
+        DocClientUtils.blit(graphics, DocAssets.SPLASH_FRAME, screenLeft + LEFT_PAGE_OFFSET - 3, screenTop + PAGE_TOP_OFFSET - 5);
+        DocClientUtils.drawHeader(Component.translatable("ars_nouveau.doc.categories"), graphics, screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET, 135, mouseX, mouseY, partialTicks);
 
-        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro1"), graphics, bookLeft + LEFT_PAGE_OFFSET + 6, bookTop + PAGE_TOP_OFFSET + 20, 106, mouseX, mouseY, partialTicks);
+        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro1"), graphics, screenLeft + LEFT_PAGE_OFFSET + 6, screenTop + PAGE_TOP_OFFSET + 20, 106, mouseX, mouseY, partialTicks);
 
-        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro2"), graphics, bookLeft + LEFT_PAGE_OFFSET + 6, bookTop + PAGE_TOP_OFFSET + 85, 106, mouseX, mouseY, partialTicks);
+        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro2"), graphics, screenLeft + LEFT_PAGE_OFFSET + 6, screenTop + PAGE_TOP_OFFSET + 85, 106, mouseX, mouseY, partialTicks);
     }
 
-    public void initSections(){
-        for(DocSectionButton section : sections){
+    public void initSections() {
+        for (DocSectionButton section : sections) {
             removeWidget(section);
         }
         sections.clear();
         List<DocCategory> sliced = categoryList.subList(arrowIndex * 5, Math.min((arrowIndex + 1) * 5, categoryList.size()));
-        for(int i = 0; i < sliced.size(); i++){
+        for (int i = 0; i < sliced.size(); i++) {
             DocCategory category = sliced.get(i);
-            var button = new DocSectionButton(bookLeft + 18 + 135, bookTop + 34 + 28 * (i), category.getTitle(), category.renderIcon(), (b) -> {
-                if(!category.subCategories().isEmpty()){
+            var button = new DocSectionButton(screenLeft + 18 + 135, screenTop + 34 + 28 * (i), category.getTitle(), category.renderIcon(), (b) -> {
+                if (!category.subCategories().isEmpty()) {
                     transition(new IndexScreen(category.subCategories()));
-                }else{
+                } else {
                     transition(new EntriesScreen(category));
                 }
             });

@@ -13,12 +13,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public record PerkMap(Map<IPerk, CompoundTag> map) {
-    public static Codec<PerkMap> CODEC =  Codec.unboundedMap(Codec.STRING, CompoundTag.CODEC).xmap((stringMap) ->{
+    public static Codec<PerkMap> CODEC = Codec.unboundedMap(Codec.STRING, CompoundTag.CODEC).xmap((stringMap) -> {
         var builder = ImmutableMap.<IPerk, CompoundTag>builder();
-        stringMap.forEach((key, value) ->{
-            if(key != null) {
+        stringMap.forEach((key, value) -> {
+            if (key != null) {
                 var loc = ResourceLocation.tryParse(key);
-                if(loc == null){
+                if (loc == null) {
                     return;
                 }
                 var perk = PerkRegistry.getPerkMap().getOrDefault(loc, StarbunclePerk.INSTANCE);
@@ -40,7 +40,7 @@ public record PerkMap(Map<IPerk, CompoundTag> map) {
         return map.get(slot);
     }
 
-    public PerkMap put(IPerk slot, CompoundTag tag){
+    public PerkMap put(IPerk slot, CompoundTag tag) {
         return new PerkMap(Util.copyAndPut(map, slot, tag));
     }
 

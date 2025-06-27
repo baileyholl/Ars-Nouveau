@@ -63,7 +63,7 @@ public class DungeonLootTables {
 
         UNCOMMON_LOOT.add(() -> {
             List<RitualTablet> tablets = RitualRegistry.getRitualItemMap().values().stream().filter(tablet -> !(new ItemStack(tablet).is(ItemTagProvider.RITUAL_LOOT_BLACKLIST))).toList();
-            if(tablets.isEmpty()){
+            if (tablets.isEmpty()) {
                 return ItemStack.EMPTY;
             }
             return new ItemStack(tablets.get(r.nextInt(tablets.size())));

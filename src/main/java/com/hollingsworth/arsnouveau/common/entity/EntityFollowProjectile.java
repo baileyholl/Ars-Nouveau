@@ -64,16 +64,16 @@ public class EntityFollowProjectile extends ColoredProjectile {
      * These are preferred for any cases where entities could be spawned without a player nearby.
      * For instance, rituals don't need to check this, but automated source would.
      */
-    public static void spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+    public static void spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b) {
         boolean canSpawn = NearbyPlayerCache.isPlayerNearby(from, level, 64);
-        if(!canSpawn){
+        if (!canSpawn) {
             return;
         }
         EntityFollowProjectile entity = new EntityFollowProjectile(level, from, to, r, g, b);
         level.addFreshEntity(entity);
     }
 
-    public static void spawn(ServerLevel level, BlockPos from, BlockPos to){
+    public static void spawn(ServerLevel level, BlockPos from, BlockPos to) {
         EntityFollowProjectile.spawn(level, from, to, 255, 25, 180);
     }
 

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.emi;
 
 import com.google.common.collect.AbstractIterator;
+import com.hollingsworth.arsnouveau.client.events.ClientEvents;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -83,8 +84,29 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
         }
     }
 
+    List<EmiIngredient> cachedInputs = null;
+
+    /**
+     * Returns cached inputs generated once from {@link EmiMultiInputRecipe#generateInputs}.
+     * Do not call from {@link EmiMultiInputRecipe#generateInputs} as it will result in a stack overflow.
+     *
+     * @return A list of ingredients required for the recipe.
+     * Inputs will consider this recipe a use when exploring recipes.
+     */
     @Override
-    public List<EmiIngredient> getInputs() {
+    public final List<EmiIngredient> getInputs() {
+        if (this.cachedInputs == null) {
+            this.cachedInputs = this.generateInputs();
+            ClientEvents.recipeChangeListeners.add(e -> {
+                this.cachedInputs = null;
+                return false;
+            });
+        }
+
+        return this.cachedInputs;
+    }
+
+    protected List<EmiIngredient> generateInputs() {
         int size = this.multiProvider.input.size();
         if (this.multiProvider.hasCenter()) {
             size += 1;

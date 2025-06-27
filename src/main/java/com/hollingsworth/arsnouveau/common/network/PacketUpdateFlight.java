@@ -7,7 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketUpdateFlight extends AbstractPacket{
+public class PacketUpdateFlight extends AbstractPacket {
 
     public boolean canFly;
     public boolean wasFlying;
@@ -37,6 +37,7 @@ public class PacketUpdateFlight extends AbstractPacket{
     public void onClientReceived(Minecraft minecraft, Player player) {
 
     }
+
     public static final Type<PacketUpdateFlight> TYPE = new Type<>(ArsNouveau.prefix("update_flight"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateFlight> CODEC = StreamCodec.ofMember(PacketUpdateFlight::toBytes, PacketUpdateFlight::new);
 

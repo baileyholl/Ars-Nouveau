@@ -63,7 +63,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
 
     public int getSourceValue(ItemStack i) {
         var food = i.getItem().getFoodProperties(i, null);
-        if(food == null){
+        if (food == null) {
             return 0;
         }
 
@@ -75,7 +75,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
         if (i.is(ItemTagProvider.MAGIC_FOOD) || (i.getItem() instanceof BlockItem blockItem && blockItem.getBlock().defaultBlockState().is(BlockTagProvider.MAGIC_PLANTS))) {
             progress += 4;
             mana += 10;
-            mana += (int) ((float)mana * 1.5f);
+            mana += (int) ((float) mana * 1.5f);
         }
         return mana;
 

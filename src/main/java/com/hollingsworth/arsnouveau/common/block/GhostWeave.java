@@ -21,7 +21,7 @@ public class GhostWeave extends MirrorWeave {
         super(properties);
     }
 
-    public GhostWeave(){
+    public GhostWeave() {
         super();
     }
 
@@ -30,8 +30,8 @@ public class GhostWeave extends MirrorWeave {
         if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
             return ItemInteractionResult.SUCCESS;
         }
-        if(pLevel.getBlockEntity(pPos) instanceof GhostWeaveTile tile){
-            if(tile.isInvisible() && !pPlayer.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
+        if (pLevel.getBlockEntity(pPos) instanceof GhostWeaveTile tile) {
+            if (tile.isInvisible() && !pPlayer.hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
         }

@@ -29,10 +29,10 @@ public class Debug extends ModItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if(!pPlayer.level.isClientSide && pInteractionTarget instanceof IDebuggerProvider iDebuggerProvider){
+        if (!pPlayer.level.isClientSide && pInteractionTarget instanceof IDebuggerProvider iDebuggerProvider) {
             try {
                 // Write the file
-                Path path = Paths.get("ars_nouveau", "entity_log_" + System.currentTimeMillis() +  ".log");
+                Path path = Paths.get("ars_nouveau", "entity_log_" + System.currentTimeMillis() + ".log");
                 File file = path.toFile();
                 Files.createDirectories(path.getParent());
                 PrintWriter w = new PrintWriter(new FileWriterWithEncoding(file, "UTF-8", false));

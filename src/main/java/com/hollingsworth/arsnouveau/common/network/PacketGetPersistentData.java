@@ -9,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketGetPersistentData extends AbstractPacket{
+public class PacketGetPersistentData extends AbstractPacket {
     public static final Type<PacketGetPersistentData> TYPE = new Type<>(ArsNouveau.prefix("get_persistent_data"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketGetPersistentData> CODEC = StreamCodec.ofMember(PacketGetPersistentData::toBytes, PacketGetPersistentData::new);
     public CompoundTag tag;

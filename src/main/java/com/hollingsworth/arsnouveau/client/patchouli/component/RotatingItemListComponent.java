@@ -40,10 +40,10 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase {
         Map<ResourceLocation, ? extends Recipe<?>> map;
         if ("enchanting_apparatus".equals(recipeType)) {
             RecipeHolder<EnchantingApparatusRecipe> holder = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE.get()).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
-            var recipe =  holder != null ? holder.value() : null;
-            for(RecipeType<? extends IEnchantingRecipe>  type : ArsNouveauAPI.getInstance().getEnchantingRecipeTypes()) {
+            var recipe = holder != null ? holder.value() : null;
+            for (RecipeType<? extends IEnchantingRecipe> type : ArsNouveauAPI.getInstance().getEnchantingRecipeTypes()) {
                 RecipeHolder<? extends IEnchantingRecipe> recipe1 = world.getRecipeManager().getAllRecipesFor(type).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
-                if(recipe1 != null && recipe1.value() instanceof EnchantingApparatusRecipe enchantingApparatusRecipe){
+                if (recipe1 != null && recipe1.value() instanceof EnchantingApparatusRecipe enchantingApparatusRecipe) {
                     recipe = enchantingApparatusRecipe;
                     break;
                 }
@@ -55,7 +55,7 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase {
             for (RecipeType<? extends IImbuementRecipe> type : ImbuementRecipeRegistry.INSTANCE.getRecipeTypes()) {
                 RecipeType<IImbuementRecipe> imbuementRecipeType = (RecipeType<IImbuementRecipe>) type;
                 RecipeHolder<IImbuementRecipe> recipe1 = world.getRecipeManager().getAllRecipesFor(imbuementRecipeType).stream().filter(f -> f.id().toString().equals(recipeName)).findFirst().orElse(null);
-                if (recipe1 != null && recipe1.value() instanceof ImbuementRecipe imbuementRecipe){
+                if (recipe1 != null && recipe1.value() instanceof ImbuementRecipe imbuementRecipe) {
                     recipe = imbuementRecipe;
                     break;
                 }
