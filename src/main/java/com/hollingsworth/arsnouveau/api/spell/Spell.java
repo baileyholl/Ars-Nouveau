@@ -17,11 +17,18 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Spell {
 
@@ -110,14 +117,20 @@ public class Spell {
 
     public static Spell fromBinaryBase64(String base64) {
 
+
         try {
             byte[] bytes = Base64.getDecoder().decode(base64);
-            String jsonString = new DataInputStream(new ByteArrayInputStream(bytes)).readUTF();
-            return fromJson(jsonString);
-        } catch (IOException | NullPointerException e) {
-            System.out.println("Failed to read spell from binary base64: " + e.getMessage());
+            try (final GZIPInputStream gzipInput = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                 final StringWriter stringWriter = new StringWriter()) {
+                IOUtils.copy(gzipInput, stringWriter, StandardCharsets.UTF_8);
+                return fromJson(stringWriter.toString());
+            } catch (IOException e) {
+                System.out.println("Error reading spell from binary: " + e.getMessage());
+            }
         } catch (IllegalArgumentException e) {
-            System.out.println("String format not valid.");
+            System.out.println("Error decoding base64 string: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error reading spell from binary: " + e.getMessage());
         }
         return new Spell();
     }
@@ -129,16 +142,12 @@ public class Spell {
     }
 
     public String toBinaryBase64() {
-        try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(byteStream);
-
-            String json = this.toJson();
-
-            out.writeUTF(json);
-
-            out.close();
-            return Base64.getEncoder().encodeToString(byteStream.toByteArray());
+        String json = this.toJson();
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             final GZIPOutputStream gzipOutput = new GZIPOutputStream(baos)) {
+            gzipOutput.write(json.getBytes(StandardCharsets.UTF_8));
+            gzipOutput.finish();
+            return new String(Base64.getEncoder().encode(baos.toByteArray()));
         } catch (IOException e) {
             System.out.println("Error writing spell to binary: " + e.getMessage());
             return "";
