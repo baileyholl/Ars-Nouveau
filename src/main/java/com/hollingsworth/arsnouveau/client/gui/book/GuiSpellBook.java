@@ -700,7 +700,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     protected void saveSpell() {
         validate();
         if (validationErrors.isEmpty()) {
-            Spell spell = new Spell(this.spell.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+            Spell spell = getSpell();
             Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
             ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
@@ -772,12 +772,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     private int getCurrentManaCost() {
-        Spell spell = new Spell();
-        for (AbstractSpellPart part : this.spell) {
-            if (part != null) {
-                spell = spell.add(part);
-            }
-        }
+        Spell spell = getSpell();
         int cost = spell.getCost() - getPlayerDiscounts(Minecraft.getInstance().player, spell, bookStack);
         return Math.max(cost, 0);
     }
@@ -887,7 +882,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
                     if (spell.isEmpty()) {
                         return null;
                     }
-                    return new SpellTooltip(new Spell(spell), false);
+                    return new SpellTooltip(getSpell(), false);
                 }
 
                 Spell spellInSlot = caster.getSpell(spellSlot.slotNum);
@@ -901,7 +896,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
 
     public void onCopyOrExport(Button ignoredB) {
-        getMinecraft().keyboardHandler.setClipboard(new Spell(spell, spellNameBox.value).toBinaryBase64());
+        getMinecraft().keyboardHandler.setClipboard(getSpell().toBinaryBase64());
     }
 
     public void onPasteOrImport(Button ignoredB) {
@@ -931,5 +926,11 @@ public class GuiSpellBook extends SpellSlottedScreen {
             spell = oldSpell;
         }
         validate(spellValidator);
+    }
+
+    protected Spell getSpell() {
+        Spell.Mutable spell1 = new Spell(spell.stream().filter(Objects::nonNull).toList(), spellNameBox.getValue()).mutable();
+        spell1.particleTimeline = caster.getParticles(selectedSpellSlot);
+        return spell1.immutable();
     }
 }
