@@ -3,10 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -861,6 +858,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
         List<Ingredient> spellWriteList = new ArrayList<>();
         spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
         addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("spell_write"), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("prestidigitation_write"), new PrestidigitationRecipe(List.of(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()), Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE)), 0), PrestidigitationRecipe.CODEC));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))

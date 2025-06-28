@@ -51,8 +51,11 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
             return false;
         }
         int level1 = enchantments.getLevel(HolderHelper.unwrap(level, EnchantmentRegistry.REACTIVE_ENCHANTMENT));
+        if (level1 < 1) {
+            return false;
+        }
         ItemStack parchment = getParchment(input.pedestals());
-        return !parchment.isEmpty() && !SpellCasterRegistry.from(parchment).getSpell().isEmpty() && level1 > 0 && super.matches(input, level, player);
+        return !parchment.isEmpty() && !SpellCasterRegistry.from(parchment).getSpell().isEmpty() && super.matches(input, level, player);
 
     }
 
