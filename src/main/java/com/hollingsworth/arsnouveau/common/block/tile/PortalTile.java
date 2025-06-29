@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
@@ -62,7 +63,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             }
             Vec3 vec3 = e.position;
             Networking.sendToNearbyClient(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, rotationVec.x, rotationVec.y));
-            serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+            ParticleUtil.sendParticles(serverLevel, ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             e.placePortalTicket(warpPos);
             e.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(e));
@@ -115,7 +116,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                         continue;
                     if (dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null) {
                         level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                        serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+                        ParticleUtil.sendParticles(serverLevel, ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                                 4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                     }
                 }
