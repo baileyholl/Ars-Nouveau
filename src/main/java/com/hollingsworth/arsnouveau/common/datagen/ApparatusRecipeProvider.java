@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -857,8 +858,8 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
 
         List<Ingredient> spellWriteList = new ArrayList<>();
         spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
-        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("spell_write"), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
-        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("prestidigitation_write"), new PrestidigitationRecipe(List.of(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()), Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE)), 0), PrestidigitationRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix(RecipeRegistry.SPELL_WRITE_RECIPE_ID), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix(RecipeRegistry.PRESTIDIGITATION_RECIPE_ID), new PrestidigitationRecipe(List.of(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()), Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE)), 0), PrestidigitationRecipe.CODEC));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))

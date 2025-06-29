@@ -1784,7 +1784,11 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.explosion", "Explosion");
         add("ars_nouveau.particle.cloud", "Cloud");
         add("ars_nouveau.particle.breaking_circle", "Breaking Circle");
-
+        add("ars_nouveau.prestidigitation.tooltip", "Prestidigitation");
+        add("ars_nouveau.prestidigitation.prestidigitation_clear", "Prestidigitation Removed");
+        add("ars_nouveau.abjuration_essence.tooltip", "Can be used on the Scribes Table to remove Prestidigitation from items.");
+        add("ars_nouveau.page.prestidigitation", "Illusory Items");
+        add("ars_nouveau.page1.prestidigitation", "Prestidigitation can be applied to Items, causing them to emit particles when held or worn. Particle settings are determined by the Prestidigitation glyph settings for the spell contained within the Spell Parchment when used in the apparatus. To remove Prestidigitation, use an Abjuration Essence on the Scribes Table with the enchanted item inside it.");
     }
 
     public void addCategory(String key, String value) {

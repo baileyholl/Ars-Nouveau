@@ -5,14 +5,19 @@ import com.hollingsworth.arsnouveau.api.documentation.export.IJsonExportable;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.nuggets.client.gui.ITooltipRenderer;
 import com.hollingsworth.nuggets.client.gui.NestedWidgets;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +70,20 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
     public void gatherTooltips(List<Component> list) {
         if (!tooltipStack.isEmpty()) {
             list.addAll(tooltipStack.getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.NORMAL));
+        }
+    }
+
+    @Override
+    public void gatherTooltips(GuiGraphics stack, int mouseX, int mouseY, List<Component> tooltip) {
+        if (!tooltipStack.isEmpty()) {
+            tooltip.addAll(tooltipStack.getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.NORMAL));
+            List<Either<FormattedText, TooltipComponent>> components = new ArrayList<>();
+            NeoForge.EVENT_BUS.post(new RenderTooltipEvent.GatherComponents(tooltipStack, width, height, components, width));
+            components.forEach(component -> {
+                component.left().ifPresent(left -> {
+                    tooltip.add(Component.literal(left.getString()));
+                });
+            });
         }
     }
 
