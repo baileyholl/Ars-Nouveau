@@ -21,6 +21,7 @@ public class RecipeRegistry {
     public static final String ENCHANTMENT_RECIPE_ID = "enchantment";
     public static final String CRUSH_RECIPE_ID = "crush";
     public static final String IMBUEMENT_RECIPE_ID = "imbuement";
+    public static final String WARP_SCROLL_IMBUEMENT_RECIPE_ID = "imbuement_warp_scroll_copy";
     public static final String REACTIVE_RECIPE_ID = "reactive_enchantment";
     public static final String SPELL_WRITE_RECIPE_ID = "spell_write";
     public static final String GLYPH_RECIPE_ID = "glyph";
@@ -47,6 +48,8 @@ public class RecipeRegistry {
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<ImbuementRecipe>> IMBUEMENT_TYPE = RECIPE_TYPES.register(IMBUEMENT_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, ImbuementRecipe.Serializer> IMBUEMENT_SERIALIZER = RECIPE_SERIALIZERS.register(IMBUEMENT_RECIPE_ID, () -> new ImbuementRecipe.Serializer());
 
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<WarpScrollImbuementRecipe>> WARP_SCROLL_IMBUEMENT_TYPE = RECIPE_TYPES.register(WARP_SCROLL_IMBUEMENT_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, WarpScrollImbuementRecipe.Serializer> WARP_SCROLL_IMBUEMENT_SERIALIZER = RECIPE_SERIALIZERS.register(WARP_SCROLL_IMBUEMENT_RECIPE_ID, () -> new WarpScrollImbuementRecipe.Serializer());
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<BookUpgradeRecipe>> BOOK_UPGRADE_TYPE = RECIPE_TYPES.register(BOOK_UPGRADE_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BookUpgradeRecipe>> BOOK_UPGRADE_RECIPE = RECIPE_SERIALIZERS.register(BOOK_UPGRADE_RECIPE_ID, () -> ExtendableShapelessSerializer.create(BookUpgradeRecipe::new));
