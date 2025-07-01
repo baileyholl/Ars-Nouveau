@@ -2,10 +2,29 @@ package com.hollingsworth.arsnouveau.common.capability;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class ManaData implements INBTSerializable<CompoundTag> {
+    public static final StreamCodec<RegistryFriendlyByteBuf, ManaData> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.DOUBLE, ManaData::getMana,
+            ByteBufCodecs.INT, ManaData::getMaxMana,
+            ByteBufCodecs.FLOAT, ManaData::getReservedMana,
+            ByteBufCodecs.INT, ManaData::getGlyphBonus,
+            ByteBufCodecs.INT, ManaData::getBookTier,
+            (mana, max, reserved, glyph, bookTier) -> {
+                var instance = new ManaData();
+                instance.setMana(mana);
+                instance.setMaxMana(max);
+                instance.setReservedMana(reserved);
+                instance.setGlyphBonus(glyph);
+                instance.setBookTier(bookTier);
+                return instance;
+            }
+    );
 
     private double mana;
 
