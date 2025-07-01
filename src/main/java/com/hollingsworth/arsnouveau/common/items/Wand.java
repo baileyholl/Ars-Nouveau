@@ -66,7 +66,7 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
         }
         caster.castOnServer(handIn, Component.translatable("ars_nouveau.wand.invalid"));
 
-        return InteractionResultHolder.pass(stack);
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
