@@ -36,12 +36,26 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public boolean setTakeFrom(BlockPos pos) {
-        return closeEnough(pos) && fromList.add(pos) && updateBlock();
+        if (!closeEnough(pos)) return false;
+        boolean changed;
+        if (fromList.contains(pos)) {
+            changed = fromList.remove(pos);
+        } else {
+            changed = fromList.add(pos);
+        }
+        return changed && updateBlock();
     }
 
     @Override
     public boolean setSendTo(BlockPos pos) {
-        return closeEnough(pos) && toList.add(pos) && updateBlock();
+        if (!closeEnough(pos)) return false;
+        boolean changed;
+        if (toList.contains(pos)) {
+            changed = toList.remove(pos);
+        } else {
+            changed = toList.add(pos);
+        }
+        return changed && updateBlock();
     }
 
     @Override
