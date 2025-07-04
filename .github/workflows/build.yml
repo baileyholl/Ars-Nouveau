@@ -1,0 +1,46 @@
+name: Build Mod (Local)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Mod Version'
+        required: true
+        type: string
+      version_type:
+        description: 'Version Type'
+        required: true
+        type: choice
+        default: release
+        options:
+        - alpha
+        - beta
+        - release
+
+env:
+  JAVA_VERSION: 21
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Grant gradlew permission
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Upload Mod (.jar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-mod
+          path: build/libs/*.jar
