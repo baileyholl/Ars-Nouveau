@@ -39,6 +39,7 @@
     "looting.EnchantedCountIncreaseFunctionMixin",
     "looting.LootItemRandomChanceWithEnchantedBonusConditionMixin",
     "perks.PerkLivingEntity",
+    "perks.UnbreakablePerk",
     "redstone.RedstoneLevelMixin",
     "rewind.RewindEntityMixin",
     "structure.StructureProcessorAccessor",
