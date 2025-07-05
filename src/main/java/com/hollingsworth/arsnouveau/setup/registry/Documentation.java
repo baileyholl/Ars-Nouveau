@@ -21,6 +21,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.perk.EmptyPerk;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectPrestidigitation;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -242,7 +243,11 @@ public class Documentation {
                 .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3)))
                 .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 4)))
                 .withLocalizedText()
-                .withPage(SpellWriteEntry.create(ResourceLocation.parse("ars_nouveau:spell_write"))));
+                .withPage(SpellWriteEntry.create(ArsNouveau.prefix(RecipeRegistry.SPELL_WRITE_RECIPE_ID))));
+
+        var prestidigitation = addPage(new DocEntryBuilder(EQUIPMENT, "prestidigitation")
+                .withIcon(EffectPrestidigitation.INSTANCE.glyphItem).withIntroPage().withPage(PrestidigitationWriteEntry.create(ArsNouveau.prefix(RecipeRegistry.PRESTIDIGITATION_RECIPE_ID))));
+        prestidigitation.withSearchTag(Component.literal(EffectPrestidigitation.INSTANCE.getLocaleName()));
 
         var discountRing = addBasicItem(ItemsRegistry.RING_OF_GREATER_DISCOUNT, EQUIPMENT);
         addBasicItem(ItemsRegistry.RING_OF_LESSER_DISCOUNT, EQUIPMENT);

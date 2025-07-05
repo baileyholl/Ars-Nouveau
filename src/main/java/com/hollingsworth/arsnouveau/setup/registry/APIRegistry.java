@@ -198,6 +198,7 @@ public class APIRegistry {
         api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE.get());
         api.getEnchantingRecipeTypes().add(RecipeRegistry.ARMOR_UPGRADE_TYPE.get());
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.PRESTIDIGITATION_TYPE.get());
         PerkRegistry.registerPerkProvider(ItemsRegistry.BATTLEMAGE_BOOTS, Arrays.asList(
                 Arrays.asList(PerkSlot.ONE),
                 Arrays.asList(PerkSlot.ONE, PerkSlot.ONE),

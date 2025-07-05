@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
@@ -114,7 +115,9 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     public void clearItems() {
         for (BlockPos blockPos : pedestalList()) {
-            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.getStack() != null) {
+            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile
+                    && tile.getStack() != null
+                    && !tile.getStack().is(ItemTagProvider.APPARATUS_PRESERVES)) {
                 tile.setStack(tile.getStack().getCraftingRemainingItem());
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);

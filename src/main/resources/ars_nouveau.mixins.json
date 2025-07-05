@@ -22,6 +22,7 @@
     "BrushableBlockEntityAccessor",
     "DamageSourceMixin",
     "EntityMixin",
+    "ItemStackMixin",
     "LivingAccessor",
     "LivingEntityMixin",
     "MobAccessor",

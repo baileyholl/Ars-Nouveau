@@ -13,6 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -87,6 +88,10 @@ public class ParticleEmitter {
 
     public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, TimelineEntryData entryData) {
         this(getPosition, rot, entryData.motion(), entryData.particleOptions());
+    }
+
+    public ParticleEmitter(Entity entity, TimelineEntryData timelineEntryData) {
+        this(() -> entity.getBoundingBox().getCenter(), entity::getRotationVector, timelineEntryData);
     }
 
     public void setPositionOffset(Vec3 offset) {

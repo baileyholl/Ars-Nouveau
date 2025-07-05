@@ -40,6 +40,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> MAGIC_ROBE = ItemTags.create(ArsNouveau.prefix("magic_robe"));
     public static TagKey<Item> MAGIC_LEGS = ItemTags.create(ArsNouveau.prefix("magic_legs"));
     public static TagKey<Item> MAGIC_BOOT = ItemTags.create(ArsNouveau.prefix("magic_boots"));
+    public static TagKey<Item> APPARATUS_PRESERVES = ItemTags.create(ArsNouveau.prefix("apparatus_not_consumed"));
 
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
@@ -255,5 +256,6 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(Tags.Items.MINING_TOOL_TOOLS).add(ItemsRegistry.ENCHANTERS_GAUNTLET.get());
         this.tag(ItemTags.MINING_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_GAUNTLET.get());
         this.tag(ItemTags.MINING_LOOT_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_GAUNTLET.get());
+        this.tag(APPARATUS_PRESERVES).add(ItemsRegistry.SPELL_PARCHMENT.get());
     }
 }
