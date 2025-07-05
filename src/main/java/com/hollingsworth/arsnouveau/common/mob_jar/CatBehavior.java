@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.mob_jar;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.PlayerPostLogOutEvent;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
+import com.hollingsworth.arsnouveau.api.util.BlockPosSet;
 import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,6 @@ import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -107,7 +107,7 @@ public class CatBehavior extends JarBehavior<Cat> {
             return;
         }
 
-        var positions = CAT_MAP.posMap.getOrDefault(key, new HashSet<>());
+        var positions = CAT_MAP.posMap.getOrDefault(key, BlockPosSet.newHashSet());
         List<BlockPos> stale = new ArrayList<>();
         for (BlockPos p : positions) {
             if (!level.isLoaded(p)) {
