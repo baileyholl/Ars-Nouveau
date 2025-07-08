@@ -220,7 +220,7 @@ public class EntitySpellArrow extends Arrow {
         if (level.isClientSide) {
             playParticles();
         }
-        if (!level.isClientSide && tickCount == 1) {
+        if (!level.isClientSide && tickCount == 1 && castSound != null) {
             castSound.playSound(level, position);
         }
     }
