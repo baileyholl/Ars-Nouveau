@@ -1111,6 +1111,11 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .keepNbtOfReagent(true)
                 .build());
 
+        addRecipe(builder().withResult(BlockRegistry.DECOR_BLOSSOM)
+                .withReagent(Items.SPORE_BLOSSOM)
+                .withPedestalItem(1, Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE))
+                .build());
+
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

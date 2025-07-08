@@ -1789,6 +1789,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.abjuration_essence.tooltip", "Can be used on the Scribes Table to remove Prestidigitation from items.");
         add("ars_nouveau.page.prestidigitation", "Illusory Items");
         add("ars_nouveau.page1.prestidigitation", "Prestidigitation can be applied to Items, causing them to emit particles when held or worn. Particle settings are determined by the Prestidigitation glyph settings for the spell contained within the Spell Parchment when used in the apparatus. To remove Prestidigitation, use an Abjuration Essence on the Scribes Table with the enchanted item inside it.");
+        add("ars_nouveau.connection.range", "Can only connect within %s blocks.");
+        add("block.ars_nouveau.decor_blossom", "Decor Blossom");
+        add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
     }
 
     public void addCategory(String key, String value) {

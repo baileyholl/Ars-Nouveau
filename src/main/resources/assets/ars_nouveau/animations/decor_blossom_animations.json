@@ -1,0 +1,186 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"open": {
+			"animation_length": 1.6667,
+			"bones": {
+				"petal1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [20, 0, -27.5],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"petal2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [-20, 0, 27.5],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"petal3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [20, 0, 27.5],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"petal4": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [-20, 0, -27.5],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				}
+			}
+		},
+		"close": {
+			"animation_length": 1.75,
+			"bones": {
+				"petal1": {
+					"rotation": {
+						"0.0": {
+							"vector": [20, 0, -27.5],
+							"easing": "linear"
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"petal2": {
+					"rotation": {
+						"0.0": {
+							"vector": [-20, 0, 27.5],
+							"easing": "linear"
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"petal3": {
+					"rotation": {
+						"0.0": {
+							"vector": [20, 0, 27.5],
+							"easing": "linear"
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"petal4": {
+					"rotation": {
+						"0.0": {
+							"vector": [-20, 0, -27.5],
+							"easing": "linear"
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutBack",
+							"easingArgs": [3]
+						}
+					}
+				}
+			}
+		},
+		"active": {
+			"loop": true,
+			"animation_length": 5,
+			"bones": {
+				"petal1": {
+					"rotation": {
+						"0.0": {
+							"vector": [20, 0, -27.5],
+							"easing": "linear"
+						},
+						"2.5": {
+							"vector": [10, 0, -12.5],
+							"easing": "easeInOutSine"
+						},
+						"5.0": {
+							"vector": [20, 0, -27.5],
+							"easing": "easeInOutSine"
+						}
+					}
+				},
+				"petal2": {
+					"rotation": {
+						"0.0": {
+							"vector": [-20, 0, 27.5],
+							"easing": "linear"
+						},
+						"2.5": {
+							"vector": [-10, 0, 12.5],
+							"easing": "easeInOutSine"
+						},
+						"5.0": {
+							"vector": [-20, 0, 27.5],
+							"easing": "easeInOutSine"
+						}
+					}
+				},
+				"petal3": {
+					"rotation": {
+						"0.0": {
+							"vector": [20, 0, 27.5],
+							"easing": "linear"
+						},
+						"2.5": {
+							"vector": [10, 0, 12.5],
+							"easing": "easeInOutSine"
+						},
+						"5.0": {
+							"vector": [20, 0, 27.5],
+							"easing": "easeInOutSine"
+						}
+					}
+				},
+				"petal4": {
+					"rotation": {
+						"0.0": {
+							"vector": [-20, 0, -27.5],
+							"easing": "linear"
+						},
+						"2.5": {
+							"vector": [-10, 0, -12.5],
+							"easing": "easeInOutSine"
+						},
+						"5.0": {
+							"vector": [-20, 0, -27.5],
+							"easing": "easeInOutSine"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
