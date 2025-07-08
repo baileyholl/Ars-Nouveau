@@ -5,7 +5,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
-@FunctionalInterface
 public interface IResolveListener {
-    void onResolve(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver);
+
+    default ResolveStatus onPreResolve(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+        return ResolveStatus.CONTINUE;
+    }
+
+    default void onPostResolve(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+
+    }
+
+
+    enum ResolveStatus {
+        /* Continue the effect resolution as normal */
+        CONTINUE,
+        /* Skip the resolution of the current effect and continue the spell*/
+        CONSUME,
+        /* Stop the spell resolution entirely */
+        STOP_ALL
+    }
 }

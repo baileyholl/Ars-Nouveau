@@ -23,11 +23,11 @@ import javax.annotation.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class ParticleBlock extends ModBlock implements ITickableBlock, SimpleWaterloggedBlock {
+public class PrestidigitationBlock extends ModBlock implements ITickableBlock, SimpleWaterloggedBlock {
 
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
-    public ParticleBlock() {
+    public PrestidigitationBlock() {
         super(defaultProperties().noCollission().noOcclusion().dynamicShape().strength(0f, 0f));
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
     }
