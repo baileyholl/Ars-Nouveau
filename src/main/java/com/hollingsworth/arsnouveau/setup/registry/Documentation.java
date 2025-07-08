@@ -674,6 +674,7 @@ public class Documentation {
         addBasicItem(BlockRegistry.SPELL_SENSOR, AUTOMATION);
         addBasicItem(ItemsRegistry.JUMP_RING, EQUIPMENT);
         addBasicItem(BlockRegistry.REDSTONE_RELAY, AUTOMATION);
+        addBasicItem(BlockRegistry.DECOR_BLOSSOM, MACHINES);
 
         addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE)
                 .withIntroPage()
