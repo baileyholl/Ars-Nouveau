@@ -35,6 +35,9 @@ public class MagelightTorchTile extends SconceTile {
         BlockPos pos = getBlockPos();
         double xzOffset = 0.0375;
         BlockState state = getLevel().getBlockState(getBlockPos());
+        if (!state.is(BlockRegistry.MAGELIGHT_TORCH.get())) {
+            return;
+        }
         boolean onFloor = state.hasProperty(MagelightTorch.FLOOR) && state.getValue(MagelightTorch.FLOOR);
         boolean onRoof = state.hasProperty(MagelightTorch.ROOF) && state.getValue(MagelightTorch.ROOF);
         double yOffset = onFloor ? 0.4 : 0.5;
