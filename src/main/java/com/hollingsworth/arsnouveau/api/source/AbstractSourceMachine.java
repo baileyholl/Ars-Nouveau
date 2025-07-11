@@ -204,7 +204,10 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     @Override
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(this.getSourceStorage().getSource()));
+        int source = this.getSourceStorage().getSource();
+        if (source != 0) {
+            pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(source));
+        }
     }
 }
 
