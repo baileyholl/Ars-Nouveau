@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectRedstone;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
@@ -49,6 +50,8 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
         cost -= spell.getInstanceCount(MethodTouch.INSTANCE) * MethodTouch.INSTANCE.getCastingCost();
         cost -= spell.getInstanceCount(EffectRedstone.INSTANCE) * EffectRedstone.INSTANCE.getCastingCost();
         cost -= spell.getInstanceCount(MethodProjectile.INSTANCE) * MethodProjectile.INSTANCE.getCastingCost();
+        // TODO: Consider either limiting the discount to sensitive on form and redstone, or account for dynamic mana cost of augments
+        cost -= spell.getInstanceCount(AugmentSensitive.INSTANCE) * AugmentSensitive.INSTANCE.getCastingCost();
         return Math.max(0, cost);
     }
 
