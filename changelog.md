@@ -1,5 +1,3 @@
 # Changelog
-Adds fully customizable particle and sound timelines to particle generating glyphs, merging the Color and Sound menu into Spell Styles.
-Adds Presdigitation, a particle generating glyph that uses the new Spell Style system.
-Lectern auto-import can now be disabled with a redstone signal
-Fixes blink and warp not firing sound events
+Adds Decor Blossom, a new decorative block that can spawn Prestidigitation particles at a nearby position.
+Adds the Prestidigitation enchant. Can be applied to any item and emits particles when held or worn.
