@@ -54,6 +54,11 @@ public class GuiRadialMenu<T> extends Screen {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
+    public GuiRadialMenu<T> setHoldToOpenGUI(boolean ignore) {
+        this.holdToOpenGUI = ignore;
+        return this;
+    }
+
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
