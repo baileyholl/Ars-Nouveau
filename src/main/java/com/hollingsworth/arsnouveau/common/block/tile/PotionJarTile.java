@@ -168,7 +168,9 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        pComponents.set(DataComponentRegistry.POTION_JAR, new PotionJarData(this.currentFill, this.data, this.isLocked));
+        if ((this.currentFill != 0 && !this.data.equals(PotionContents.EMPTY)) || this.isLocked) {
+            pComponents.set(DataComponentRegistry.POTION_JAR, new PotionJarData(this.currentFill, this.data, this.isLocked));
+        }
     }
 }
 
