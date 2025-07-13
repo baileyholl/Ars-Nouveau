@@ -98,7 +98,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
             return;
         BlockPos pos = getBlockPos();
         double xzOffset = 0.15;
-        BlockState state = getLevel().getBlockState(getBlockPos());
+        BlockState state = getBlockState();
         if (!(state.hasProperty(ScribesBlock.FACING)))
             return;
 
