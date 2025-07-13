@@ -37,45 +37,11 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
     }
 
     @Override
-    public void preRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
-            return;
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
-            return;
-        stack.pushPose();
-//        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
-//        if (direction == Direction.NORTH) {
-//            stack.mulPose(Axis.YP.rotationDegrees(-90));
-//            stack.translate(1, 0, -1);
-//        }
-//
-//        if (direction == Direction.SOUTH) {
-//            stack.mulPose(Axis.YP.rotationDegrees(270));
-//            stack.translate(-1, 0, -1);
-//        }
-//
-//        if (direction == Direction.WEST) {
-//            stack.mulPose(Axis.YP.rotationDegrees(270));
-//
-//            stack.translate(0, 0, -2);
-//        }
-//
-//        if (direction == Direction.EAST) {
-//            stack.mulPose(Axis.YP.rotationDegrees(-90));
-//            stack.translate(0, 0, 0);
-//
-//        }
-        super.preRender(stack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        stack.popPose();
-    }
-
-    @Override
     public void actuallyRender(PoseStack stack, ScribesTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
+        BlockState state = tile.getBlockState();
+        if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
             return;
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
-            return;
-        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
+        Direction direction = state.getValue(ScribesBlock.FACING);
         stack.pushPose();
         stack.translate(-0.5, 0, 0.5);
         if (direction == Direction.NORTH) {
@@ -106,22 +72,21 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
 
     @Override
     public void renderFinal(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int color) {
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
+        BlockState state = tile.getBlockState();
+        if (state.getBlock() != BlockRegistry.SCRIBES_BLOCK.get())
             return;
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
+        if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
             return;
 
         renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.value().output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), stack, bufferSource, packedLight, packedOverlay, ClientInfo.ticksInGame + partialTick);
     }
 
     public void renderPressedItem(ScribesTile tile, ItemStack itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight, int packedOverlay, float partialTicks) {
-        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
+        BlockState state = tile.getBlockState();
+        Direction direction = state.getValue(ScribesBlock.FACING);
 
         matrixStack.pushPose();
         matrixStack.translate(0, 1.D, 0);
-        BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
-        if (!(state.getBlock() instanceof ScribesBlock))
-            return;
         Quaternionf quat = Axis.ZP.rotationDegrees(90f);
         Vec3 translationOffset = new Vec3(0, 0, 0);
         if (direction == Direction.WEST) {

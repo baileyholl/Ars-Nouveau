@@ -40,10 +40,7 @@ public class TileCaster implements IWrappedCaster {
 
     @Override
     public Direction getFacingDirection() {
-        if (tile.getBlockState().hasProperty(BlockStateProperties.FACING)) {
-            return tile.getBlockState().getValue(BlockStateProperties.FACING);
-        }
-        return Direction.NORTH;
+        return tile.getBlockState().getOptionalValue(BlockStateProperties.FACING).orElse(Direction.NORTH);
     }
 
     @Override

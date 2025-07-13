@@ -71,7 +71,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     public boolean updateBlock() {
         if (level != null) {
             // force update the capability
-            BlockState state = level.getBlockState(worldPosition);
+            BlockState state = getBlockState();
             level.sendBlockUpdated(worldPosition, state, state, 3);
             setChanged();
             return true;

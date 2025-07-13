@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
 
 public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedestalTile> {
@@ -22,12 +23,12 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
 
     @Override
     public void render(ArcanePedestalTile tileEntityIn, float pPartialTick, PoseStack matrixStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-
         if (tileEntityIn.getStack() == null || tileEntityIn.getStack().isEmpty()) return;
+        BlockState state = tileEntityIn.getBlockState();
         if (!(tileEntityIn.getBlockState().getBlock() instanceof ArcanePedestal pedestal)) {
             return;
         }
-        Vector3f offsetVec = pedestal.getItemOffset(tileEntityIn.getBlockState(), tileEntityIn.getBlockPos());
+        Vector3f offsetVec = pedestal.getItemOffset(state, tileEntityIn.getBlockPos());
         float yOffset = offsetVec.y - tileEntityIn.getBlockPos().getY();
         float xOffset = offsetVec.x - tileEntityIn.getBlockPos().getX();
         float zOffset = offsetVec.z - tileEntityIn.getBlockPos().getZ();
