@@ -31,6 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class EffectExchange extends AbstractEffect {
         Vec3 origLoc = shooter.position;
 
         Level shooterLevel = shooter.level;
-        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)) {
+        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED) || entity instanceof FakePlayer) {
             return;
         }
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
