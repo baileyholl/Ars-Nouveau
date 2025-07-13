@@ -82,7 +82,7 @@ public class Documentation {
         for (AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = addPage(new DocEntryBuilder(spellPart.getRegistryName().getNamespace(), glyphCategory(spellPart.getConfigTier()), spellPart.getLocalizationKey(), spellPart.getRegistryName())
-                    .withTitle(Component.translatable(spellPart.getName()))
+                    .withTitle(Component.translatable(spellPart.getLocalizationKey()))
                     .withIcon(renderStack));
             entry.addPage(GlyphEntry.create(spellPart));
             entry.withSearchTag(Component.translatable("ars_nouveau.keyword.glyph"));
