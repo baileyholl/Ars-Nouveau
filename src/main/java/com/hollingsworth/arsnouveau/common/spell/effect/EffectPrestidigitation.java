@@ -85,10 +85,12 @@ public class EffectPrestidigitation extends AbstractEffect {
             return;
         }
         PrestidigitationData prestidigitationData = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());
-
+        if (prestidigitationData == null) {
+            return;
+        }
         // Current item, held in hand or armor slots.
         if (isCurrentItem || (inventorySlot > 35 && inventorySlot < 41)) {
-            ParticleEmitter emitter = new ParticleEmitter(entity, prestidigitationData.timeline().onTickEffect);
+            ParticleEmitter emitter = prestidigitationData.getEmitter(entity, prestidigitationData.timeline().onTickEffect);
             emitter.tick(level);
         }
     }
