@@ -36,7 +36,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     public void tick() {
         super.tick();
         if (!level.isClientSide && level.getGameTime() % 60 == 0) {
-            for (AgeableMob entity : level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition).inflate(6))) {
+            for (AgeableMob entity : level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition).inflate(15))) {
                 if (!entity.getType().is(EntityTags.VITALIC_GROWTH_BLACKLIST) && entity.isBaby()) {
                     if (entity.getAge() < 0) {
                         if (ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)) {
