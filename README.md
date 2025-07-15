@@ -6,7 +6,7 @@ For more information or to download: https://www.curseforge.com/minecraft/mc-mod
 
 For developing an addon, consult this example addon project! https://github.com/baileyholl/Ars-Nouveau-Example-Addon
 
-License: Textures are models are All Rights Reserved unless otherwise given permission. Addon authors are encouraged to reuse Ars Nouveau assets and to reach out in the discord. 
+License: Textures and models are All Rights Reserved unless otherwise given permission. Addon authors are encouraged to reuse Ars Nouveau assets and to reach out in the discord. 
 
 This code of this mod is licensed under LGPL V3.
 Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use
