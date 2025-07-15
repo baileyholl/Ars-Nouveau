@@ -43,32 +43,29 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
             return;
         Direction direction = state.getValue(ScribesBlock.FACING);
         stack.pushPose();
-        stack.translate(-0.5, 0, 0.5);
         if (direction == Direction.NORTH) {
             stack.mulPose(Axis.YP.rotationDegrees(-90));
-            stack.translate(1, 0, -1);
+            stack.translate(1, 0, 0);
         }
 
         if (direction == Direction.SOUTH) {
             stack.mulPose(Axis.YP.rotationDegrees(270));
-            stack.translate(-1, 0, -1);
+            stack.translate(-1, 0, 0);
         }
 
         if (direction == Direction.WEST) {
             stack.mulPose(Axis.YP.rotationDegrees(270));
-
-            stack.translate(0, 0, -2);
+            stack.translate(0, 0, -1);
         }
 
         if (direction == Direction.EAST) {
             stack.mulPose(Axis.YP.rotationDegrees(-90));
-            stack.translate(0, 0, 0);
+            stack.translate(0, 0, 1);
 
         }
         super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         stack.popPose();
     }
-
 
     @Override
     public void renderFinal(PoseStack stack, ScribesTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, int color) {
@@ -97,12 +94,12 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         }
         if (direction == Direction.EAST) {
             matrixStack.translate(0, 0, 0.5f);
-            quat = Axis.ZP.rotationDegrees(180);
+            quat = Axis.ZP.rotationDegrees(270f);
             translationOffset = new Vec3(0, 0, 0.5f);
         }
         if (direction == Direction.SOUTH) {
             matrixStack.translate(0.5f, 0, 0);
-            quat = Axis.ZP.rotationDegrees(180);
+            quat = Axis.ZP.rotationDegrees(90f);
             translationOffset = new Vec3(0.5f, 0, 0);
         }
         if (direction == Direction.NORTH) {

@@ -65,7 +65,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
         tileEntityIn.renderInvalid = false;
         for (Direction direction : DIRECTIONS) {
             BlockPos blockingPos = tileEntityIn.getBlockPos().relative(direction);
-            BlockState blockingState = tileEntityIn.getBlockState();
+            BlockState blockingState = tileEntityIn.getLevel().getBlockState(blockingPos);
             tileEntityIn.setRenderDirection(direction, false);
             if (tileEntityIn.getLevel().getBlockEntity(blockingPos) instanceof MirrorWeaveTile neighborTile) {
                 blockingState = neighborTile.getStateForCulling();
