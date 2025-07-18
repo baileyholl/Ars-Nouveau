@@ -14,12 +14,14 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateGlowColor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -62,32 +64,40 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+        BlockPos pos = rayTraceResult.getBlockPos();
+        BlockEntity tile = world.getBlockEntity(pos);
+        BlockState state = world.getBlockState(pos);
+        if (!state.canBeReplaced() && !(tile instanceof ILightable || state.getBlock() instanceof ILightable || tile instanceof SignBlockEntity)) {
+            Direction direction = rayTraceResult.getDirection();
+            pos = pos.relative(direction);
+            rayTraceResult = new BlockHitResult(rayTraceResult.getLocation().relative(direction, 1), direction, pos, rayTraceResult.isInside());
+        }
+
         Player player = getPlayer(shooter, (ServerLevel) world);
         if (!BlockUtil.destroyRespectsClaim(player, world, pos))
             return;
 
-        if (world.getBlockEntity(rayTraceResult.getBlockPos()) instanceof ILightable lightable) {
+        if (tile instanceof ILightable lightable) {
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
-        } else if (world.getBlockState(rayTraceResult.getBlockPos()).getBlock() instanceof ILightable lightable) {
+        } else if (state.getBlock() instanceof ILightable lightable) {
             lightable.onLight(rayTraceResult, world, shooter, spellStats, spellContext);
             return;
-        } else if (world.getBlockEntity(pos) instanceof SignBlockEntity sign) {
+        } else if (tile instanceof SignBlockEntity sign) {
             sign.updateText((a) -> sign.getText(true).setHasGlowingText(true),
                     sign.isFacingFrontText(player)
             );
             world.gameEvent(GameEvent.BLOCK_CHANGE, sign.getBlockPos(), GameEvent.Context.of(player, sign.getBlockState()));
         }
 
-        if (world.getBlockState(pos).canBeReplaced()
+        if (state.canBeReplaced()
                 && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))
                 && world.isInWorldBounds(pos)) {
             BlockState lightBlockState = (spellStats.getDurationMultiplier() != 0 ? BlockRegistry.T_LIGHT_BLOCK.get() : BlockRegistry.LIGHT_BLOCK.get()).defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
             world.setBlockAndUpdate(pos, lightBlockState.setValue(SconceBlock.LIGHT_LEVEL, Math.max(0, Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
-            if (world.getBlockEntity(pos) instanceof LightTile tile) {
-                tile.setTimeline(spellContext.getParticleTimeline(ParticleTimelineRegistry.LIGHT_TIMELINE.get()));
-                if (tile instanceof TempLightTile tempLightTile)
+            if (world.getBlockEntity(pos) instanceof LightTile light) {
+                light.setTimeline(spellContext.getParticleTimeline(ParticleTimelineRegistry.LIGHT_TIMELINE.get()));
+                if (light instanceof TempLightTile tempLightTile)
                     tempLightTile.lengthModifier = spellStats.getDurationMultiplier();
             }
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
