@@ -19,10 +19,14 @@ import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -116,6 +120,38 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
         for (var recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get())) {
             registry.addRecipe(new EmiImbuementRecipe(recipe.id(), recipe.value()));
         }
+
+        registry.addRecipe(EmiWorldInteractionRecipe
+                .builder()
+                .id(ArsNouveau.prefix("/interaction/drygmy_henge"))
+                .leftInput(EmiStack.of(Items.MOSSY_COBBLESTONE))
+                .rightInput(EmiStack.of(ItemsRegistry.DRYGMY_CHARM), false)
+                .output(EmiStack.of(BlockRegistry.DRYGMY_BLOCK))
+                .build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe
+                .builder()
+                .id(ArsNouveau.prefix("/interaction/whirlisprig_flower"))
+                .leftInput(EmiIngredient.of(BlockTags.FLOWERS))
+                .rightInput(EmiStack.of(ItemsRegistry.WHIRLISPRIG_CHARM), false)
+                .output(EmiStack.of(BlockRegistry.WHIRLISPRIG_FLOWER))
+                .build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe
+                .builder()
+                .id(ArsNouveau.prefix("/interaction/wixie_cauldron"))
+                .leftInput(EmiStack.of(Items.CAULDRON))
+                .rightInput(EmiStack.of(ItemsRegistry.WIXIE_CHARM), false)
+                .output(EmiStack.of(BlockRegistry.WIXIE_CAULDRON))
+                .build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe
+                .builder()
+                .id(ArsNouveau.prefix("/interaction/scryer_scroll"))
+                .leftInput(EmiStack.of(ItemsRegistry.BLANK_PARCHMENT))
+                .rightInput(EmiStack.of(BlockRegistry.SCRYERS_CRYSTAL), true)
+                .output(EmiStack.of(ItemsRegistry.SCRYER_SCROLL))
+                .build());
     }
 
     public void registerStacks(@NotNull EmiRegistry registry) {
@@ -146,6 +182,14 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 registry.addEmiStackAfter(EmiStack.of(stack.copy()), s -> s.getItemStack().is(stack.getItem()) && s.getItemStack().get(DataComponentRegistry.ARMOR_PERKS).getTier() == finalTier - 1);
             }
         }
+
+        registry.removeEmiStacks(EmiStack.of(BlockRegistry.RUNE_BLOCK));
+        registry.removeEmiStacks(EmiStack.of(BlockRegistry.MAGIC_FIRE));
+        registry.removeEmiStacks(EmiStack.of(BlockRegistry.MAGE_BLOCK));
+        registry.removeEmiStacks(EmiStack.of(BlockRegistry.PORTAL_BLOCK));
+        registry.removeEmiStacks(EmiStack.of(BlockRegistry.CRAB_HAT));
+        registry.removeEmiStacks(EmiStack.of(ItemsRegistry.BLANK_GLYPH));
+        registry.removeEmiStacks(EmiStack.of(ItemsRegistry.debug));
     }
 
     static {
