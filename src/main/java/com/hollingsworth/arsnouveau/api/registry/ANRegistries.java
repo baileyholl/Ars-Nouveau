@@ -33,15 +33,15 @@ public class ANRegistries {
     }
 
     public static class Keys {
-        public static final ResourceKey<Registry<AbstractSpellPart>> GLYPH_TYPES = key("glyph_types");
-        public static final ResourceKey<Registry<Supplier<Glyph>>> GLYPH_ITEMS = key("glyph_items");
-        public static final ResourceKey<Registry<IParticleProvider>> PARTICLE_PROVIDERS = key("particle_providers");
-        public static final ResourceKey<Registry<IPerk>> PERK_TYPES = key("perk_types");
-        public static final ResourceKey<Registry<PerkItem>> PERK_ITEMS = key("perk_items");
-        public static final ResourceKey<Registry<AbstractRitual>> RITUAL_TYPES = key("ritual_types");
-        public static final ResourceKey<Registry<RitualTablet>> RITUAL_TABLETS = key("ritual_tablets");
-        public static final ResourceKey<Registry<SpellSound>> SPELL_SOUNDS = key("spell_sounds");
-        public static final ResourceKey<Registry<ItemCasterProvider>> SPELL_CASTER_TYPES = key("spell_caster_types");
+        public static final ResourceKey<Registry<AbstractSpellPart>> GLYPH_TYPES = key("glyph_type");
+        public static final ResourceKey<Registry<Supplier<Glyph>>> GLYPH_ITEMS = key("glyph_item");
+        public static final ResourceKey<Registry<IParticleProvider>> PARTICLE_PROVIDERS = key("particle_provider");
+        public static final ResourceKey<Registry<IPerk>> PERK_TYPES = key("perk_type");
+        public static final ResourceKey<Registry<PerkItem>> PERK_ITEMS = key("perk_item");
+        public static final ResourceKey<Registry<AbstractRitual>> RITUAL_TYPES = key("ritual_type");
+        public static final ResourceKey<Registry<RitualTablet>> RITUAL_TABLETS = key("ritual_tablet");
+        public static final ResourceKey<Registry<SpellSound>> SPELL_SOUNDS = key("spell_sound");
+        public static final ResourceKey<Registry<ItemCasterProvider>> SPELL_CASTER_TYPES = key("spell_caster_type");
 
         private static <T> ResourceKey<Registry<T>> key(String name) {
             return ResourceKey.createRegistryKey(ArsNouveau.prefix(name));
