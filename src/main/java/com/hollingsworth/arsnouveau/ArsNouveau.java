@@ -78,7 +78,6 @@ public class ArsNouveau {
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
         modEventBus.addListener(this::registerRegistries);
-        modEventBus.addListener(APIRegistry::onRegisterEvent);
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
@@ -194,6 +193,7 @@ public class ArsNouveau {
         event.register(ANRegistries.GLYPH_ITEMS);
         event.register(ANRegistries.PERK_TYPES);
         event.register(ANRegistries.PERK_ITEMS);
+        event.register(ANRegistries.PERK_SLOTS);
         event.register(ANRegistries.PARTICLE_PROVIDERS);
         event.register(ANRegistries.RITUAL_TYPES);
         event.register(ANRegistries.RITUAL_TABLETS);

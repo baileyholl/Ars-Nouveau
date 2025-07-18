@@ -189,6 +189,16 @@ public class APIRegistry {
         registerPerk(VampiricPerk.INSTANCE);
         registerPerk(KnockbackResistPerk.INSTANCE);
 
+        SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
+        SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
+        SpellSoundRegistry.registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
+        SpellSoundRegistry.registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
+        SpellSoundRegistry.registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
+
+        PerkSlot.register(PerkSlot.ONE);
+        PerkSlot.register(PerkSlot.TWO);
+        PerkSlot.register(PerkSlot.THREE);
+
         ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
     }
 
@@ -423,13 +433,7 @@ public class APIRegistry {
 
     public static void onRegisterEvent(RegisterEvent event) {
         var key = event.getRegistryKey();
-        if (ANRegistries.Keys.SPELL_SOUNDS.equals(key)) {
-            SpellSoundRegistry.registerSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND);
-            SpellSoundRegistry.registerSpellSound(SoundRegistry.EMPTY_SPELL_SOUND);
-            SpellSoundRegistry.registerSpellSound(SoundRegistry.GAIA_SPELL_SOUND);
-            SpellSoundRegistry.registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
-            SpellSoundRegistry.registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
-        } else if (ANRegistries.Keys.PARTICLE_PROVIDERS.equals(key)) {
+        if (ANRegistries.Keys.PARTICLE_PROVIDERS.equals(key)) {
             ParticleColorRegistry.register(ParticleColor.ID, ParticleColorRegistry.DEFAULT);
             ParticleColorRegistry.register(RainbowParticleColor.ID, new IParticleProvider() {
                 @Override
@@ -443,13 +447,13 @@ public class APIRegistry {
                 }
             });
         } else if (ANRegistries.Keys.SPELL_CASTER_TYPES.equals(key)) {
-            SpellCasterRegistry.register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-            SpellCasterRegistry.register(ItemsRegistry.APPRENTICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-            SpellCasterRegistry.register(ItemsRegistry.ARCHMAGE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-            SpellCasterRegistry.register(ItemsRegistry.CREATIVE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-            SpellCasterRegistry.register(ItemsRegistry.SCRY_CASTER, (stack) -> stack.get(DataComponentRegistry.SCRY_CASTER));
-            SpellCasterRegistry.register(ItemsRegistry.CASTER_TOME, (stack) -> stack.get(DataComponentRegistry.TOME_CASTER));
-            SpellCasterRegistry.register(ItemsRegistry.SPELL_PARCHMENT, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
+            SpellCasterRegistry.registerGeneric(ItemsRegistry.NOVICE_SPELLBOOK);
+            SpellCasterRegistry.registerGeneric(ItemsRegistry.APPRENTICE_SPELLBOOK);
+            SpellCasterRegistry.registerGeneric(ItemsRegistry.ARCHMAGE_SPELLBOOK);
+            SpellCasterRegistry.registerGeneric(ItemsRegistry.CREATIVE_SPELLBOOK);
+            SpellCasterRegistry.registerScry(ItemsRegistry.SCRY_CASTER);
+            SpellCasterRegistry.registerTome(ItemsRegistry.CASTER_TOME);
+            SpellCasterRegistry.registerGeneric(ItemsRegistry.SPELL_PARCHMENT);
         }
     }
 

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
+import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
@@ -26,6 +27,7 @@ public class ANRegistries {
     public static final Registry<IParticleProvider> PARTICLE_PROVIDERS = create(Keys.PARTICLE_PROVIDERS).defaultKey(ParticleColor.ID).sync(true).create();
     public static final Registry<IPerk> PERK_TYPES = create(Keys.PERK_TYPES).sync(true).create();
     public static final Registry<PerkItem> PERK_ITEMS = create(Keys.PERK_ITEMS).sync(true).create();
+    public static final Registry<PerkSlot> PERK_SLOTS = create(Keys.PERK_SLOTS).sync(true).create();
     public static final Registry<AbstractRitual> RITUAL_TYPES = create(Keys.RITUAL_TYPES).sync(true).create();
     public static final Registry<RitualTablet> RITUAL_TABLETS = create(Keys.RITUAL_TABLETS).sync(true).create();
     public static final Registry<SpellSound> SPELL_SOUNDS = create(Keys.SPELL_SOUNDS).sync(true).create();
@@ -44,6 +46,7 @@ public class ANRegistries {
         public static final ResourceKey<Registry<IParticleProvider>> PARTICLE_PROVIDERS = key("particle_provider");
         public static final ResourceKey<Registry<IPerk>> PERK_TYPES = key("perk_type");
         public static final ResourceKey<Registry<PerkItem>> PERK_ITEMS = key("perk_item");
+        public static final ResourceKey<Registry<PerkSlot>> PERK_SLOTS = key("perk_slot");
         public static final ResourceKey<Registry<AbstractRitual>> RITUAL_TYPES = key("ritual_type");
         public static final ResourceKey<Registry<RitualTablet>> RITUAL_TABLETS = key("ritual_tablet");
         public static final ResourceKey<Registry<SpellSound>> SPELL_SOUNDS = key("spell_sound");
