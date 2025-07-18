@@ -201,6 +201,7 @@ public class ArsNouveau {
         event.register(ANRegistries.SPELL_CASTER_TYPES);
         event.register(ANRegistries.FAMILIAR_TYPES);
         event.register(ANRegistries.FAMILIAR_SCRIPTS);
+        event.register(ANRegistries.SCRYER_TYPES);
     }
 
     public static ResourceLocation prefix(String str) {

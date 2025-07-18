@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
@@ -31,6 +32,7 @@ public class ANRegistries {
     public static final Registry<ItemCasterProvider> SPELL_CASTER_TYPES = create(Keys.SPELL_CASTER_TYPES).sync(true).create();
     public static final Registry<AbstractFamiliarHolder> FAMILIAR_TYPES = create(Keys.FAMILIAR_TYPES).sync(true).create();
     public static final Registry<FamiliarScript> FAMILIAR_SCRIPTS = create(Keys.FAMILIAR_SCRIPTS).sync(true).create();
+    public static final Registry<IScryer> SCRYER_TYPES = create(Keys.SCRYER_TYPES).sync(true).create();
 
     private static <T> RegistryBuilder<T> create(ResourceKey<Registry<T>> key) {
         return new RegistryBuilder<>(key);
@@ -48,6 +50,7 @@ public class ANRegistries {
         public static final ResourceKey<Registry<ItemCasterProvider>> SPELL_CASTER_TYPES = key("spell_caster_type");
         public static final ResourceKey<Registry<AbstractFamiliarHolder>> FAMILIAR_TYPES = key("familiar_type");
         public static final ResourceKey<Registry<FamiliarScript>> FAMILIAR_SCRIPTS = key("familiar_script");
+        public static final ResourceKey<Registry<IScryer>> SCRYER_TYPES = key("scryer_type");
 
         private static <T> ResourceKey<Registry<T>> key(String name) {
             return ResourceKey.createRegistryKey(ArsNouveau.prefix(name));
