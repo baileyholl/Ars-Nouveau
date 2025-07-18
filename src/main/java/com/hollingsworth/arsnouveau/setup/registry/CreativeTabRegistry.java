@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
@@ -44,13 +41,13 @@ public class CreativeTabRegistry {
                         output.accept(entry.get().getDefaultInstance());
                     }
                 }
-                for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
+                for (PerkItem perk : ANRegistries.PERK_ITEMS) {
                     output.accept(perk.getDefaultInstance());
                 }
-                for (RitualTablet ritual : RitualRegistry.getRitualItemMap().values()) {
+                for (RitualTablet ritual : ANRegistries.RITUAL_TABLETS) {
                     output.accept(ritual.getDefaultInstance());
                 }
-                for (FamiliarScript familiar : FamiliarRegistry.getFamiliarScriptMap().values()) {
+                for (FamiliarScript familiar : ANRegistries.FAMILIAR_SCRIPTS) {
                     output.accept(familiar.getDefaultInstance());
                 }
 
@@ -62,7 +59,7 @@ public class CreativeTabRegistry {
             .icon(() -> MethodProjectile.INSTANCE.glyphItem.getDefaultInstance())
             .displayItems((params, output) -> {
 
-                for (var glyph : GlyphRegistry.getSpellpartMap().values().stream()
+                for (var glyph : ANRegistries.GLYPH_TYPES.stream()
                         .sorted(COMPARE_SPELL_TYPE_NAME).toList()) {
                     output.accept(glyph.getGlyph().getDefaultInstance());
                 }

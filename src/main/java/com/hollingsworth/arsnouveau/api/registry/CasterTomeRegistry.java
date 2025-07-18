@@ -15,7 +15,7 @@ public class CasterTomeRegistry {
 
     private static List<RecipeHolder<CasterTomeData>> TOME_DATA = new ArrayList<>();
 
-    public static List<RecipeHolder<CasterTomeData>> getTomeData() {
+    public static List<RecipeHolder<CasterTomeData>> getTomeData(){
         return Collections.unmodifiableList(TOME_DATA);
     }
 

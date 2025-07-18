@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
@@ -25,6 +25,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class RitualBrazierBlock extends TickableModBlock {
@@ -101,7 +102,7 @@ public class RitualBrazierBlock extends TickableModBlock {
             if (tile.ritual != null) {
                 tile.ritual.onDestroy();
                 if (!tile.ritual.isRunning() && !tile.ritual.isDone()) {
-                    worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RitualRegistry.getRitualItemMap().get(tile.ritual.getRegistryName()))));
+                    worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(tile.ritual.getRegistryName())))));
                     for (ItemStack item : tile.ritual.getConsumedItems()) {
                         worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item));
                     }

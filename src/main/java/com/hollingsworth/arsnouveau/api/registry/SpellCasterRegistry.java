@@ -2,43 +2,67 @@ package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
-import java.util.concurrent.ConcurrentHashMap;
 
-@SuppressWarnings("deprecation")
 public class SpellCasterRegistry {
-
-    private static final ConcurrentHashMap<ResourceLocation, ItemCasterProvider> MAP = new ConcurrentHashMap<>();
-
-    static {
-        register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.APPRENTICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.ARCHMAGE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.CREATIVE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.SCRY_CASTER, (stack) -> stack.get(DataComponentRegistry.SCRY_CASTER));
-        register(ItemsRegistry.CASTER_TOME, (stack) -> stack.get(DataComponentRegistry.TOME_CASTER));
-        register(ItemsRegistry.SPELL_PARCHMENT, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
+    public static @Nullable AbstractCaster<?> from(ItemStack stack) {
+        var key = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        var type = ANRegistries.SPELL_CASTER_TYPES.get(key);
+        if (type == null) {
+            return stack.get(DataComponentRegistry.SPELL_CASTER);
+        }
+        return type.getSpellCaster(stack);
     }
 
-    public static @Nullable AbstractCaster<?> from(ItemStack stack) {
-        return MAP.getOrDefault(stack.getItem().builtInRegistryHolder().key().location(), (s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
+    public static AbstractCaster<?> fromOrCreate(ItemStack stack) {
+        var key = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        var type = ANRegistries.SPELL_CASTER_TYPES.get(key);
+        if (type == null) {
+            var component = stack.get(DataComponentRegistry.SPELL_CASTER);
+            if (component == null) {
+                component = new SpellCaster();
+                stack.set(DataComponentRegistry.SPELL_CASTER, component);
+            }
+            return component;
+        }
+        return type.getSpellCaster(stack);
     }
 
     public static boolean hasCaster(ItemStack stack) {
-        return MAP.containsKey(stack.getItem().builtInRegistryHolder().key().location());
+        return ANRegistries.SPELL_CASTER_TYPES.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()));
     }
 
     public static void register(ItemLike itemLike, ItemCasterProvider provider) {
-        MAP.put(itemLike.asItem().builtInRegistryHolder().key().location(), provider);
+        Registry.registerForHolder(ANRegistries.SPELL_CASTER_TYPES, BuiltInRegistries.ITEM.getKey(itemLike.asItem()), provider);
     }
 
-    public static void register(ResourceLocation location, ItemCasterProvider provider) {
-        MAP.put(location, provider);
+    public static <C extends AbstractCaster<?>> void registerComponent(ItemLike itemLike, DeferredHolder<DataComponentType<?>, DataComponentType<C>> type) {
+        register(itemLike, s -> s.get(type));
+    }
+
+    public static void registerGeneric(ItemLike itemLike) {
+        registerComponent(itemLike, DataComponentRegistry.SPELL_CASTER);
+    }
+
+    public static void registerTome(ItemLike itemLike) {
+        registerComponent(itemLike, DataComponentRegistry.TOME_CASTER);
+    }
+
+    public static void registerScry(ItemLike itemLike) {
+        registerComponent(itemLike, DataComponentRegistry.SCRY_CASTER);
+    }
+
+    public static void register(ResourceLocation location, ItemCasterProvider provider){
+        Registry.registerForHolder(ANRegistries.SPELL_CASTER_TYPES, location, provider);
     }
 }

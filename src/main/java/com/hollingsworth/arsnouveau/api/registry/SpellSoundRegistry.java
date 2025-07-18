@@ -1,25 +1,18 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SpellSoundRegistry {
-    private static ConcurrentHashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new ConcurrentHashMap<>();
-
-
-    public static List<SpellSound> getSpellSounds() {
-        return List.copyOf(spellSoundsRegistry.values());
-    }
-
     public static SpellSound registerSpellSound(SpellSound sound) {
-        spellSoundsRegistry.put(sound.getId(), sound);
+        Registry.registerForHolder(ANRegistries.SPELL_SOUNDS, sound.getId(), sound);
         return sound;
     }
 
     public static SpellSound get(ResourceLocation loc) {
-        return spellSoundsRegistry.get(loc);
+        return ANRegistries.SPELL_SOUNDS.get(loc);
     }
 }

@@ -79,7 +79,7 @@ public class Documentation {
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.NOVICE_SPELLBOOK));
 
-        for (AbstractSpellPart spellPart : GlyphRegistry.getSpellpartMap().values()) {
+        for (AbstractSpellPart spellPart : ANRegistries.GLYPH_TYPES) {
             ItemStack renderStack = spellPart.glyphItem.getDefaultInstance();
             var entry = addPage(new DocEntryBuilder(spellPart.getRegistryName().getNamespace(), glyphCategory(spellPart.getConfigTier()), spellPart.getLocalizationKey(), spellPart.getRegistryName())
                     .withTitle(Component.translatable(spellPart.getLocalizationKey()))
@@ -95,7 +95,7 @@ public class Documentation {
         }
 
 
-        for (RitualTablet r : RitualRegistry.getRitualItemMap().values()) {
+        for (RitualTablet r : ANRegistries.RITUAL_TABLETS) {
             ItemStack renderStack = r.getDefaultInstance();
             AbstractRitual ritual = r.ritual;
 
@@ -108,7 +108,7 @@ public class Documentation {
             entry.addPages(pages).withSearchTag(Component.translatable("ars_nouveau.keyword.ritual"));
         }
 
-        for (PerkItem perk : PerkRegistry.getPerkItemMap().values()) {
+        for (PerkItem perk : ANRegistries.PERK_ITEMS) {
             if (perk.perk instanceof EmptyPerk)
                 continue;
 
@@ -120,7 +120,7 @@ public class Documentation {
             entry.withSearchTag(Component.translatable("ars_nouveau.keyword.thread"));
         }
 
-        for (AbstractFamiliarHolder r : FamiliarRegistry.getFamiliarHolderMap().values()) {
+        for (AbstractFamiliarHolder r : ANRegistries.FAMILIAR_TYPES) {
             ItemStack renderstack = r.getOutputItem();
             var entry = addPage(new DocEntryBuilder(r.getRegistryName().getNamespace(), FAMILIARS, renderstack.getItem()).withName("entity." + r.getRegistryName().getNamespace() + "." + r.getRegistryName().getPath())
                     .withIntroPageNoIncrement(r.getLangDescription(), renderstack.getHoverName(), renderstack));
@@ -322,7 +322,7 @@ public class Documentation {
 
         int walkerOffset = -20;
         addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
-                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.AWAKENING)))
+                .withIcon(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.AWAKENING))))
                 .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2)))
                 .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3)))
@@ -457,14 +457,14 @@ public class Documentation {
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withIntroPage()
                 .withLocalizedText()
-                .withCraftingPages(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SUNRISE))))
+                .withCraftingPages(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.SUNRISE)))))
                 .withRelation(ritualBrazier);
         addPage(new DocEntryBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
-                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING)))
+                .withIcon(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING))))
                 .withIntroPage()
                 .withLocalizedText()
-                .withCraftingPages(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING))))
+                .withCraftingPages(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING)))))
                 .withRelations(ritualBrazier)
                 .withRelation(ArsNouveau.prefix(RitualLib.BINDING));
 

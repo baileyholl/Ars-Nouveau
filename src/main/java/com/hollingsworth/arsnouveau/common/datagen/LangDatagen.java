@@ -3,10 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
@@ -49,7 +46,7 @@ public class LangDatagen extends LanguageProvider {
         }
 
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
-        for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
+        for (Supplier<Glyph> supplier : ANRegistries.GLYPH_ITEMS) {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
             ResourceLocation registryName = glyph.spellPart.getRegistryName();
@@ -65,21 +62,21 @@ public class LangDatagen extends LanguageProvider {
                 }
             }
         }
-        for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
+        for (FamiliarScript i : ANRegistries.FAMILIAR_SCRIPTS) {
             if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
                 add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
                 add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
             }
         }
-        for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
+        for (RitualTablet i : ANRegistries.RITUAL_TABLETS) {
             if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
                 add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
             }
         }
 
-        for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
+        for (PerkItem i : ANRegistries.PERK_ITEMS) {
             if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());

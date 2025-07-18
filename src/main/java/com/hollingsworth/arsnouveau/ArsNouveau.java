@@ -40,6 +40,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,7 @@ public class ArsNouveau {
         patchouliLoaded = ModList.get().isLoaded("patchouli");
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
+        modEventBus.addListener(this::registerRegistries);
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
@@ -138,7 +140,6 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
-            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
             AlakarkinosConversionRegistry.initLootParams(e.getServer().overworld());
             AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(e.getServer().getRecipeManager(), e.getServer().reloadableRegistries());
@@ -185,6 +186,22 @@ public class ArsNouveau {
         } catch (Exception e) {
             optifineLoaded = false;
         }
+    }
+
+    private void registerRegistries(NewRegistryEvent event) {
+        event.register(ANRegistries.GLYPH_TYPES);
+        event.register(ANRegistries.GLYPH_ITEMS);
+        event.register(ANRegistries.PERK_TYPES);
+        event.register(ANRegistries.PERK_ITEMS);
+        event.register(ANRegistries.PERK_SLOTS);
+        event.register(ANRegistries.PARTICLE_PROVIDERS);
+        event.register(ANRegistries.RITUAL_TYPES);
+        event.register(ANRegistries.RITUAL_TABLETS);
+        event.register(ANRegistries.SPELL_SOUNDS);
+        event.register(ANRegistries.SPELL_CASTER_TYPES);
+        event.register(ANRegistries.FAMILIAR_TYPES);
+        event.register(ANRegistries.FAMILIAR_SCRIPTS);
+        event.register(ANRegistries.SCRYER_TYPES);
     }
 
     public static ResourceLocation prefix(String str) {

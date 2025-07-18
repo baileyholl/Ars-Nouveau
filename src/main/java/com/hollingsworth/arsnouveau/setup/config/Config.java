@@ -84,7 +84,7 @@ public class Config {
 
 
     public static boolean isGlyphEnabled(ResourceLocation tag) {
-        AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(tag);
+        AbstractSpellPart spellPart = GlyphRegistry.getSpellPart(tag);
         if (spellPart == null) {
             throw new IllegalArgumentException("Spell Part with id " + tag + " does not exist in registry. Did you pass the right ID?");
         }

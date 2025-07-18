@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
@@ -19,8 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-
-import java.util.List;
 
 public class SoundScreen extends BaseBook {
 
@@ -76,10 +74,7 @@ public class SoundScreen extends BaseBook {
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 22;
         int adjustedXPlaced = 0;
-        List<SpellSound> sounds = SpellSoundRegistry.getSpellSounds();
-        for (int i = 0; i < sounds.size(); i++) {
-            SpellSound part = sounds.get(i);
-
+        for (SpellSound part : ANRegistries.SPELL_SOUNDS) {
             if (adjustedXPlaced >= PER_ROW) {
                 adjustedRowsPlaced++;
                 adjustedXPlaced = 0;

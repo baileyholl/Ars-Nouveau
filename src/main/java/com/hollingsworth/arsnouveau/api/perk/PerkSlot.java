@@ -24,15 +24,7 @@ public record PerkSlot(ResourceLocation id, int value, DocAssets.BlitInfo icon) 
 
     public static Codec<List<List<PerkSlot>>> TIERED_LIST_CODEC = Codec.list(LIST_CODEC);
 
-    public static ConcurrentHashMap<ResourceLocation, PerkSlot> PERK_SLOTS = new ConcurrentHashMap<>();
-
     public static final PerkSlot ONE = new PerkSlot(ArsNouveau.prefix("one"), 1, DocAssets.ICON_THREAD_TIER1);
     public static final PerkSlot TWO = new PerkSlot(ArsNouveau.prefix("two"), 2, DocAssets.ICON_THREAD_TIER2);
     public static final PerkSlot THREE = new PerkSlot(ArsNouveau.prefix("three"), 3, DocAssets.ICON_THREAD_TIER3);
-
-    static {
-        PERK_SLOTS.put(ONE.id, ONE);
-        PERK_SLOTS.put(TWO.id, TWO);
-        PERK_SLOTS.put(THREE.id, THREE);
-    }
 }

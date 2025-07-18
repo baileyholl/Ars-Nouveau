@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
@@ -32,7 +32,7 @@ import java.util.List;
 
 public class DispenserBehaviorRegistry {
     public static void register() {
-        for (RitualTablet tablet : RitualRegistry.getRitualItemMap().values()) {
+        for (RitualTablet tablet : ANRegistries.RITUAL_TABLETS) {
             DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
         }
 

@@ -2,38 +2,35 @@ package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RitualRegistry {
-
-    private static ConcurrentHashMap<ResourceLocation, AbstractRitual> ritualMap = new ConcurrentHashMap<>();
-
-    private static ConcurrentHashMap<ResourceLocation, RitualTablet> ritualItemMap = new ConcurrentHashMap<>();
-
     public static @Nullable AbstractRitual getRitual(ResourceLocation id) {
-        if (!ritualMap.containsKey(id))
+        AbstractRitual ritual = ANRegistries.RITUAL_TYPES.get(id);
+        if (ritual == null) {
             return null;
+        }
+
         try {
-            return ritualMap.get(id).getClass().getDeclaredConstructor().newInstance();
+            return ritual.getClass().getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static Map<ResourceLocation, AbstractRitual> getRitualMap() {
-        return ritualMap;
+    public static void registerRitual(AbstractRitual ritual) {
+        Registry.registerForHolder(ANRegistries.RITUAL_TYPES, ritual.getRegistryName(), ritual);
     }
 
-    public static Map<ResourceLocation, RitualTablet> getRitualItemMap() {
-        return ritualItemMap;
-    }
+    public static void registerTablet(RitualTablet tablet) {
+        if (!ANRegistries.RITUAL_TYPES.containsValue(tablet.ritual)) {
+            throw new IllegalStateException("Ritual '" + tablet.ritual.getRegistryName() + "' for '" + tablet.getDescriptionId() + "' is not registered");
+        }
 
-    public static AbstractRitual registerRitual(AbstractRitual ritual) {
-        return ritualMap.put(ritual.getRegistryName(), ritual);
+        Registry.registerForHolder(ANRegistries.RITUAL_TABLETS, tablet.ritual.getRegistryName(), tablet);
     }
 }

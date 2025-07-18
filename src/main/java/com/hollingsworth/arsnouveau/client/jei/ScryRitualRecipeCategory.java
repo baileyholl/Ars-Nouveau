@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ScryRitualRecipe;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import mezz.jei.api.constants.VanillaTypes;
@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecipe> {
     public static final ResourceLocation SCRY_RITUAL = ArsNouveau.prefix(RitualLib.SCRYING);
@@ -35,7 +36,7 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
 
     public ScryRitualRecipeCategory(IGuiHelper helper) {
         background = helper.createBlankDrawable(120, 24);
-        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance());
+        icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(SCRY_RITUAL)).asItem().getDefaultInstance());
         arrow = helper.createAnimatedRecipeArrow(40);
     }
 

@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ListParticleWidgetProvider;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.HorizontalSlider;
@@ -55,7 +55,7 @@ public class SoundProperty extends BaseProperty<SoundProperty> {
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<DocEntryButton> buttons = new ArrayList<>();
-        List<SpellSound> spellSounds = new ArrayList<>(SpellSoundRegistry.getSpellSounds());
+        List<SpellSound> spellSounds = ANRegistries.SPELL_SOUNDS.stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         spellSounds.sort(Comparator.<SpellSound>comparingInt(o -> DocPlayerData.favoriteSounds.contains(o) ? -1 : 1).thenComparingInt(SpellSound::sortNum).thenComparing(o -> o.getSoundName().getString().toLowerCase(Locale.ROOT)));
         for (SpellSound spellSound : spellSounds) {

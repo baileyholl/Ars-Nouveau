@@ -3,12 +3,14 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -37,8 +39,6 @@ public class ArsNouveauAPI {
 
     //This is intended as a dev debug tool, used in mana bars. Do not make into a config option with a PR. A Starkiller will be dispatched if you do.
     public static boolean ENABLE_DEBUG_NUMBERS;
-
-    private ConcurrentHashMap<ResourceLocation, IScryer> scryerMap = new ConcurrentHashMap<>();
 
     private Set<RecipeType<? extends IEnchantingRecipe>> enchantingRecipeTypes = ConcurrentHashMap.newKeySet();
 
@@ -110,12 +110,11 @@ public class ArsNouveauAPI {
     }
 
     public @Nullable IScryer getScryer(ResourceLocation id) {
-        return this.scryerMap.get(id);
+        return ANRegistries.SCRYER_TYPES.get(id);
     }
 
-    public boolean registerScryer(IScryer scryer) {
-        this.scryerMap.put(scryer.getRegistryName(), scryer);
-        return true;
+    public void registerScryer(IScryer scryer) {
+        Registry.registerForHolder(ANRegistries.SCRYER_TYPES, scryer.getRegistryName(), scryer);
     }
 
     public void onResourceReload() {

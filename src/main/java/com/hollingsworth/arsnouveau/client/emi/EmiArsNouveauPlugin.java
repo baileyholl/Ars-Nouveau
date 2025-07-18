@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.emi;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.IPerkHolder;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -28,6 +28,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 @EmiEntrypoint
 public class EmiArsNouveauPlugin implements EmiPlugin {
     public static final EmiStack ENCHANTING_APPARATUS = EmiStack.of(BlockRegistry.ENCHANTING_APP_BLOCK);
@@ -47,7 +49,7 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
     public static final EmiStack CRUSH_GLYPH = EmiStack.of(EffectCrush.INSTANCE.glyphItem);
     public static final EmiRecipeCategory CRUSH_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("crush"), CRUSH_GLYPH);
 
-    public static final EmiStack SCRY_TABLET = EmiStack.of(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SCRYING)));
+    public static final EmiStack SCRY_TABLET = EmiStack.of(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.SCRYING))));
     public static final EmiRecipeCategory SCRY_RITUAL_CATEGORY = new EmiRecipeCategory(ArsNouveau.prefix("scry_ritual"), SCRY_TABLET);
 
     public static final EmiStack ALAKARKINOS_CHARM = EmiStack.of(ItemsRegistry.ALAKARKINOS_CHARM);
