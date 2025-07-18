@@ -62,7 +62,7 @@ public class LangDatagen extends LanguageProvider {
                 }
             }
         }
-        for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
+        for (FamiliarScript i : ANRegistries.FAMILIAR_SCRIPTS) {
             if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
                 add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());

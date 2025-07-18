@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -43,7 +43,7 @@ public class RitualBinding extends AbstractRitual {
                 List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(5));
 
                 for (Entity entity : entities) {
-                    for (AbstractFamiliarHolder familiarHolder : FamiliarRegistry.getFamiliarHolderMap().values()) {
+                    for (AbstractFamiliarHolder familiarHolder : ANRegistries.FAMILIAR_TYPES) {
                         if (familiarHolder.isEntity.test(entity)) {
                             entity.remove(Entity.RemovalReason.DISCARDED);
                             ParticleUtil.spawnPoof((ServerLevel) world, entity.blockPosition());

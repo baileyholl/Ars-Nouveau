@@ -27,6 +27,10 @@ public class RitualRegistry {
     }
 
     public static void registerTablet(RitualTablet tablet) {
+        if (!ANRegistries.RITUAL_TYPES.containsValue(tablet.ritual)) {
+            throw new IllegalStateException("Ritual '" + tablet.ritual.getRegistryName() + "' for '" + tablet.getDescriptionId() + "' is not registered");
+        }
+
         Registry.registerForHolder(ANRegistries.RITUAL_TABLETS, tablet.ritual.getRegistryName(), tablet);
     }
 }

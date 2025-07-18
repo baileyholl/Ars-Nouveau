@@ -78,7 +78,7 @@ public class PatchouliProvider extends SimpleDataProvider {
                 addRitualPage(r);
         }
 
-        for (AbstractFamiliarHolder r : FamiliarRegistry.getFamiliarHolderMap().values()) {
+        for (AbstractFamiliarHolder r : ANRegistries.FAMILIAR_TYPES) {
             if (r.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                 addFamiliarPage(r);
         }

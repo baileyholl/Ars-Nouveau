@@ -120,7 +120,7 @@ public class Documentation {
             entry.withSearchTag(Component.translatable("ars_nouveau.keyword.thread"));
         }
 
-        for (AbstractFamiliarHolder r : FamiliarRegistry.getFamiliarHolderMap().values()) {
+        for (AbstractFamiliarHolder r : ANRegistries.FAMILIAR_TYPES) {
             ItemStack renderstack = r.getOutputItem();
             var entry = addPage(new DocEntryBuilder(r.getRegistryName().getNamespace(), FAMILIARS, renderstack.getItem()).withName("entity." + r.getRegistryName().getNamespace() + "." + r.getRegistryName().getPath())
                     .withIntroPageNoIncrement(r.getLangDescription(), renderstack.getHoverName(), renderstack));

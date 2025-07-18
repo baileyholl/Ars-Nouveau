@@ -47,7 +47,7 @@ public class CreativeTabRegistry {
                 for (RitualTablet ritual : ANRegistries.RITUAL_TABLETS) {
                     output.accept(ritual.getDefaultInstance());
                 }
-                for (FamiliarScript familiar : FamiliarRegistry.getFamiliarScriptMap().values()) {
+                for (FamiliarScript familiar : ANRegistries.FAMILIAR_SCRIPTS) {
                     output.accept(familiar.getDefaultInstance());
                 }
 

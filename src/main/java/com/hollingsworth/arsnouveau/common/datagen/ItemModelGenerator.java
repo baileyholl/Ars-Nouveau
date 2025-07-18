@@ -51,7 +51,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 System.out.println("No texture for " + i);
             }
         }
-        for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
+        for (FamiliarScript i : ANRegistries.FAMILIAR_SCRIPTS) {
             try {
                 if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.familiar.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));

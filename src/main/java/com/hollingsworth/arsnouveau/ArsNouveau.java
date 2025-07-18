@@ -199,6 +199,8 @@ public class ArsNouveau {
         event.register(ANRegistries.RITUAL_TABLETS);
         event.register(ANRegistries.SPELL_SOUNDS);
         event.register(ANRegistries.SPELL_CASTER_TYPES);
+        event.register(ANRegistries.FAMILIAR_TYPES);
+        event.register(ANRegistries.FAMILIAR_SCRIPTS);
     }
 
     public static ResourceLocation prefix(String str) {

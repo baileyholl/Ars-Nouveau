@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
-import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -420,7 +419,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.getRegistryName()).collect(Collectors.toList());
         }
         Collection<ResourceLocation> finalFamiliarHolders = familiarHolders;
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(FamiliarRegistry.getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(ANRegistries.FAMILIAR_TYPES.stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
     }
 
     public void onCraftingSlotClick(Button button) {

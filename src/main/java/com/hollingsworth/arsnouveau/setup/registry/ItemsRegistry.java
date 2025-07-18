@@ -265,9 +265,9 @@ public class ItemsRegistry {
             RitualRegistry.registerTablet(tablet);
         }
 
-        for (AbstractFamiliarHolder holder : FamiliarRegistry.getFamiliarHolderMap().values()) {
+        for (AbstractFamiliarHolder holder : ANRegistries.FAMILIAR_TYPES) {
             FamiliarScript script = new FamiliarScript(holder);
-            FamiliarRegistry.getFamiliarScriptMap().put(holder.getRegistryName(), script);
+            FamiliarRegistry.registerScript(script);
             helper.register(holder.getRegistryName(), script);
         }
 

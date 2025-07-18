@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,7 +57,7 @@ public class DocumentationRegistry {
     public static final DocCategory ARMOR = new DocCategory(ArsNouveau.prefix("armor"), ItemsRegistry.ARCANIST_HOOD.asItem().getDefaultInstance(), 300);
 
 
-    public static final DocCategory FAMILIARS = new DocCategory(ArsNouveau.prefix("familiars"), FamiliarRegistry.getFamiliarScriptMap().get(ArsNouveau.prefix(LibEntityNames.FAMILIAR_STARBUNCLE)).asItem().getDefaultInstance(), 800);
+    public static final DocCategory FAMILIARS = new DocCategory(ArsNouveau.prefix("familiars"), Objects.requireNonNull(ANRegistries.FAMILIAR_SCRIPTS.get(ArsNouveau.prefix(LibEntityNames.FAMILIAR_STARBUNCLE))).asItem().getDefaultInstance(), 800);
 
 
     private static final Map<ResourceLocation, DocCategory> mainCategoryMap = new ConcurrentHashMap<>();
