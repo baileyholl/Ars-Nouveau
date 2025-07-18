@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
@@ -811,7 +811,7 @@ public class RecipeDatagen extends RecipeProvider {
     }
 
     public static RitualTablet getRitualItem(String name) {
-        return RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(name));
+        return ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(name));
     }
 
     public ShapedRecipeBuilder shapedBuilder(ItemLike item) {

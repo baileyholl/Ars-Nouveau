@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api.registry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -13,17 +12,6 @@ import net.minecraft.world.level.ItemLike;
 import javax.annotation.Nullable;
 
 public class SpellCasterRegistry {
-
-    static {
-        register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.APPRENTICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.ARCHMAGE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.CREATIVE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-        register(ItemsRegistry.SCRY_CASTER, (stack) -> stack.get(DataComponentRegistry.SCRY_CASTER));
-        register(ItemsRegistry.CASTER_TOME, (stack) -> stack.get(DataComponentRegistry.TOME_CASTER));
-        register(ItemsRegistry.SPELL_PARCHMENT, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
-    }
-
     public static @Nullable AbstractCaster<?> from(ItemStack stack){
         return ANRegistries.SPELL_CASTER_TYPES.getOptional(BuiltInRegistries.ITEM.getKey(stack.getItem())).orElse((s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
     }

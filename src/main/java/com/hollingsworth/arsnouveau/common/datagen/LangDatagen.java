@@ -69,14 +69,14 @@ public class LangDatagen extends LanguageProvider {
                 add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
             }
         }
-        for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
+        for (RitualTablet i : ANRegistries.RITUAL_TABLETS) {
             if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
                 add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
             }
         }
 
-        for (PerkItem i : PerkRegistry.PERK_ITEMS) {
+        for (PerkItem i : ANRegistries.PERK_ITEMS) {
             if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());

@@ -262,7 +262,7 @@ public class ItemsRegistry {
         for (AbstractRitual ritual : ANRegistries.RITUAL_TYPES) {
             RitualTablet tablet = new RitualTablet(ritual);
             helper.register(ritual.getRegistryName(), tablet);
-            RitualRegistry.getRitualItemMap().put(ritual.getRegistryName(), tablet);
+            RitualRegistry.registerTablet(tablet);
         }
 
         for (AbstractFamiliarHolder holder : FamiliarRegistry.getFamiliarHolderMap().values()) {
@@ -271,7 +271,7 @@ public class ItemsRegistry {
             helper.register(holder.getRegistryName(), script);
         }
 
-        for (IPerk perk : PerkRegistry.PERK_TYPES) {
+        for (IPerk perk : ANRegistries.PERK_TYPES) {
             PerkItem perkItem = new PerkItem(perk);
             PerkRegistry.registerPerkItem(perkItem);
             helper.register(perk.getRegistryName(), perkItem);

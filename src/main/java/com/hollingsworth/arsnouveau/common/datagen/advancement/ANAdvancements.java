@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen.advancement;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -57,7 +57,7 @@ public class ANAdvancements implements AdvancementProvider.AdvancementGenerator 
 
         AdvancementHolder rituals = saveBasicItem(BlockRegistry.RITUAL_BLOCK, root);
         saveBasicItem(ItemsRegistry.AMETHYST_GOLEM_CHARM, rituals);
-        builder("familiar").display(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING)), AdvancementType.GOAL)
+        builder("familiar").display(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING)), AdvancementType.GOAL)
                 .addCriterion(ANCriteriaTriggers.createCriterion(ANCriteriaTriggers.FAMILIAR)).parent(rituals).save(con);
         AdvancementHolder jars = saveBasicItem(BlockRegistry.MOB_JAR, rituals);
         builder("shrunk_starbuncle").display(ItemsRegistry.STARBUNCLE_CHARM, AdvancementType.CHALLENGE, true).addCriterion(ANCriteriaTriggers.createCriterion(ANCriteriaTriggers.SHRUNK_STARBY)).parent(jars).save(con);
@@ -80,7 +80,7 @@ public class ANAdvancements implements AdvancementProvider.AdvancementGenerator 
         builder("create_portal").display(BlockRegistry.CREATIVE_SOURCE_JAR, AdvancementType.CHALLENGE, false).addCriterion(ANCriteriaTriggers.createCriterion(ANCriteriaTriggers.CREATE_PORTAL)).parent(warpScroll).save(con);
         AdvancementHolder alteration = saveBasicItem(BlockRegistry.ALTERATION_TABLE, magebloom);
 
-        builder("ritual_gravity").display(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.GRAVITY)), AdvancementType.GOAL).addCriterion("gravity_effect", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.Builder.effects().and(ModPotions.GRAVITY_EFFECT))).parent(rituals).save(con);
+        builder("ritual_gravity").display(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.GRAVITY)), AdvancementType.GOAL).addCriterion("gravity_effect", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.Builder.effects().and(ModPotions.GRAVITY_EFFECT))).parent(rituals).save(con);
     }
 
     public ANAdvancementBuilder buildBasicItem(ItemLike item, AdvancementHolder parent) {

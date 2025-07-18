@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.loot;
 
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -62,7 +62,7 @@ public class DungeonLootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW.get(), 16 + r.nextInt(16)));
 
         UNCOMMON_LOOT.add(() -> {
-            List<RitualTablet> tablets = RitualRegistry.getRitualItemMap().values().stream().filter(tablet -> !(new ItemStack(tablet).is(ItemTagProvider.RITUAL_LOOT_BLACKLIST))).toList();
+            List<RitualTablet> tablets = ANRegistries.RITUAL_TABLETS.stream().filter(tablet -> !(new ItemStack(tablet).is(ItemTagProvider.RITUAL_LOOT_BLACKLIST))).toList();
             if (tablets.isEmpty()) {
                 return ItemStack.EMPTY;
             }

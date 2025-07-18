@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
-import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
@@ -69,7 +69,7 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
         if (this.particleColor != null)
             spell.color = this.particleColor;
         for (ResourceLocation rl : this.spell) {
-            AbstractSpellPart part = GlyphRegistry.GLYPH_TYPES.get(rl);
+            AbstractSpellPart part = ANRegistries.GLYPH_TYPES.get(rl);
             if (part != null)
                 spell.recipe.add(part);
         }

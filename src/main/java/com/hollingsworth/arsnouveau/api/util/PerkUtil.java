@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -39,7 +39,7 @@ public class PerkUtil {
             return perkItems;
         }
         for (IPerk perk : holder.getPerks()) {
-            PerkItem item = PerkRegistry.PERK_ITEMS.get(perk.getRegistryName());
+            PerkItem item = ANRegistries.PERK_ITEMS.get(perk.getRegistryName());
             if (item != null) {
                 perkItems.add(item);
             }

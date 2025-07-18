@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
@@ -21,7 +21,7 @@ public record PerkMap(Map<IPerk, CompoundTag> map) {
                 if (loc == null) {
                     return;
                 }
-                var perk = PerkRegistry.PERK_TYPES.getOptional(loc).orElse(StarbunclePerk.INSTANCE);
+                var perk = ANRegistries.PERK_TYPES.getOptional(loc).orElse(StarbunclePerk.INSTANCE);
                 builder.put(perk, value);
             }
         });

@@ -379,8 +379,7 @@ public class EventHandler {
                 level2.add((trader, rand) -> itemToEmer(trader, wilden.getItem(), 4, 8, 12));
             }
 
-            List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
-            for (RitualTablet tablet : tablets) {
+            for (RitualTablet tablet : ANRegistries.RITUAL_TABLETS) {
                 if (tablet.getDefaultInstance().is(ItemTagProvider.RITUAL_TRADE_BLACKLIST)) continue;
                 level3.add((trader, rand) -> emerToItem(trader, tablet, 4, 1, 12));
             }

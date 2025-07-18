@@ -193,9 +193,12 @@ public class ArsNouveau {
         event.register(ANRegistries.GLYPH_TYPES);
         event.register(ANRegistries.GLYPH_ITEMS);
         event.register(ANRegistries.PERK_TYPES);
+        event.register(ANRegistries.PERK_ITEMS);
         event.register(ANRegistries.PARTICLE_PROVIDERS);
         event.register(ANRegistries.RITUAL_TYPES);
+        event.register(ANRegistries.RITUAL_TABLETS);
         event.register(ANRegistries.SPELL_SOUNDS);
+        event.register(ANRegistries.SPELL_CASTER_TYPES);
     }
 
     public static ResourceLocation prefix(String str) {

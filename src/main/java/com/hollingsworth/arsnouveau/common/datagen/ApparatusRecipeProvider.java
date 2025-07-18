@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
@@ -1127,7 +1127,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     }
 
     public PerkItem getPerkItem(ResourceLocation id) {
-        return PerkRegistry.PERK_ITEMS.get(id);
+        return ANRegistries.PERK_ITEMS.get(id);
     }
 
     public void addRecipe(ApparatusRecipeBuilder.RecipeWrapper recipe) {

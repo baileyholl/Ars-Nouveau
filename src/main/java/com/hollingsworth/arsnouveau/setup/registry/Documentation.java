@@ -95,7 +95,7 @@ public class Documentation {
         }
 
 
-        for (RitualTablet r : RitualRegistry.getRitualItemMap().values()) {
+        for (RitualTablet r : ANRegistries.RITUAL_TABLETS) {
             ItemStack renderStack = r.getDefaultInstance();
             AbstractRitual ritual = r.ritual;
 
@@ -322,7 +322,7 @@ public class Documentation {
 
         int walkerOffset = -20;
         addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
-                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.AWAKENING)))
+                .withIcon(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.AWAKENING))))
                 .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2)))
                 .withPage(EntityEntry.create(ModEntities.ENTITY_CASCADING_WEALD.get(), getLangPath("weald_walker", 3)))
@@ -457,14 +457,14 @@ public class Documentation {
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withIntroPage()
                 .withLocalizedText()
-                .withCraftingPages(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SUNRISE))))
+                .withCraftingPages(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.SUNRISE)))))
                 .withRelation(ritualBrazier);
         addPage(new DocEntryBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
-                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING)))
+                .withIcon(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING))))
                 .withIntroPage()
                 .withLocalizedText()
-                .withCraftingPages(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING))))
+                .withCraftingPages(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING)))))
                 .withRelations(ritualBrazier)
                 .withRelation(ArsNouveau.prefix(RitualLib.BINDING));
 

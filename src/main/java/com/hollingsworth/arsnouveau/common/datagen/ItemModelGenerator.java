@@ -43,7 +43,7 @@ public class ItemModelGenerator extends ItemModelProvider {
                 System.out.println("No texture for " + i.get());
             }
         }
-        for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
+        for (RitualTablet i : ANRegistries.RITUAL_TABLETS) {
             try {
                 if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.ritual.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
@@ -60,7 +60,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             }
         }
 
-        for (PerkItem i : PerkRegistry.PERK_ITEMS) {
+        for (PerkItem i : ANRegistries.PERK_ITEMS) {
             try {
                 if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID))
                     getBuilder(i.perk.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));

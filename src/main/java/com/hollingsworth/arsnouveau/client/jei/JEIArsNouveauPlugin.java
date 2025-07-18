@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
-import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
@@ -30,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import static com.hollingsworth.arsnouveau.client.jei.ScryRitualRecipeCategory.SCRY_RITUAL;
@@ -127,7 +127,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM), BUDDING_CONVERSION_RECIPE_TYPE);
-        registry.addRecipeCatalyst(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance(), SCRY_RITUAL_RECIPE_TYPE);
+        registry.addRecipeCatalyst(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(SCRY_RITUAL)).asItem().getDefaultInstance(), SCRY_RITUAL_RECIPE_TYPE);
         registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM), ALAKARKINOS_RECIPE_TYPE);
     }
 

@@ -41,10 +41,10 @@ public class CreativeTabRegistry {
                         output.accept(entry.get().getDefaultInstance());
                     }
                 }
-                for (PerkItem perk : PerkRegistry.PERK_ITEMS) {
+                for (PerkItem perk : ANRegistries.PERK_ITEMS) {
                     output.accept(perk.getDefaultInstance());
                 }
-                for (RitualTablet ritual : RitualRegistry.getRitualItemMap().values()) {
+                for (RitualTablet ritual : ANRegistries.RITUAL_TABLETS) {
                     output.accept(ritual.getDefaultInstance());
                 }
                 for (FamiliarScript familiar : FamiliarRegistry.getFamiliarScriptMap().values()) {

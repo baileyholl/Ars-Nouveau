@@ -442,6 +442,14 @@ public class APIRegistry {
                     return new RainbowParticleColor(r, g, b);
                 }
             });
+        } else if (ANRegistries.Keys.SPELL_CASTER_TYPES.equals(key)) {
+            SpellCasterRegistry.register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
+            SpellCasterRegistry.register(ItemsRegistry.APPRENTICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
+            SpellCasterRegistry.register(ItemsRegistry.ARCHMAGE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
+            SpellCasterRegistry.register(ItemsRegistry.CREATIVE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
+            SpellCasterRegistry.register(ItemsRegistry.SCRY_CASTER, (stack) -> stack.get(DataComponentRegistry.SCRY_CASTER));
+            SpellCasterRegistry.register(ItemsRegistry.CASTER_TOME, (stack) -> stack.get(DataComponentRegistry.TOME_CASTER));
+            SpellCasterRegistry.register(ItemsRegistry.SPELL_PARCHMENT, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
         }
     }
 

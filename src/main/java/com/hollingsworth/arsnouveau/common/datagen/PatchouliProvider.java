@@ -34,10 +34,7 @@ import net.minecraft.world.level.block.Block;
 import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -92,7 +89,7 @@ public class PatchouliProvider extends SimpleDataProvider {
             }
         }
 
-        for (Map.Entry<ResourceKey<IPerk>, IPerk> entry : PerkRegistry.PERK_TYPES.entrySet()) {
+        for (Map.Entry<ResourceKey<IPerk>, IPerk> entry : ANRegistries.PERK_TYPES.entrySet()) {
             var perk = entry.getValue();
             if (entry.getKey().location().getNamespace().equals(ArsNouveau.MODID) && !(perk instanceof EmptyPerk))
                 addPerkPage(perk);
@@ -288,7 +285,7 @@ public class PatchouliProvider extends SimpleDataProvider {
                 .withPage(new CraftingPage(ItemsRegistry.SOURCE_BERRY_PIE).withRecipe2(ItemsRegistry.SOURCE_BERRY_ROLL)), getPath(RESOURCES, "sourceberry"));
 
         addPage(new PatchouliBuilder(RESOURCES, "weald_walker")
-                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.AWAKENING)))
+                .withIcon(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.AWAKENING))))
                 .withLocalizedText()
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BLAZING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 2)))
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_CASCADING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 3)))
@@ -437,14 +434,14 @@ public class PatchouliProvider extends SimpleDataProvider {
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.SUNRISE))))
+                .withPage(new CraftingPage(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.SUNRISE)))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier")), getPath(RITUALS, "performing_rituals"));
         addPage(new PatchouliBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
-                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING)))
+                .withIcon(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING))))
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.BINDING))))
+                .withPage(new CraftingPage(Objects.requireNonNull(ANRegistries.RITUAL_TABLETS.get(ArsNouveau.prefix(RitualLib.BINDING)))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "ritual_binding")), getPath(FAMILIARS, "summoning_familiars"));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
@@ -796,7 +793,7 @@ public class PatchouliProvider extends SimpleDataProvider {
     }
 
     public void addPerkPage(IPerk perk) {
-        PerkItem perkItem = PerkRegistry.PERK_ITEMS.get(perk.getRegistryName());
+        PerkItem perkItem = ANRegistries.PERK_ITEMS.get(perk.getRegistryName());
         PatchouliBuilder builder = new PatchouliBuilder(ARMOR, perkItem)
                 .withIcon(perkItem)
                 .withTextPage(perk.getDescriptionKey())
