@@ -2,10 +2,8 @@ package com.hollingsworth.arsnouveau.api.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
-import com.hollingsworth.arsnouveau.api.registry.ANRegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -31,8 +29,4 @@ public record PerkSlot(ResourceLocation id, int value, DocAssets.BlitInfo icon) 
     public static final PerkSlot ONE = new PerkSlot(ArsNouveau.prefix("one"), 1, DocAssets.ICON_THREAD_TIER1);
     public static final PerkSlot TWO = new PerkSlot(ArsNouveau.prefix("two"), 2, DocAssets.ICON_THREAD_TIER2);
     public static final PerkSlot THREE = new PerkSlot(ArsNouveau.prefix("three"), 3, DocAssets.ICON_THREAD_TIER3);
-
-    public static void register(PerkSlot slot) {
-        Registry.registerForHolder(ANRegistries.PERK_SLOTS, slot.id, slot);
-    }
 }

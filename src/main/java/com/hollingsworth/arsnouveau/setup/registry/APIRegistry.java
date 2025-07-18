@@ -195,9 +195,9 @@ public class APIRegistry {
         SpellSoundRegistry.registerSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND);
         SpellSoundRegistry.registerSpellSound(SoundRegistry.FIRE_SPELL_SOUND);
 
-        PerkSlot.register(PerkSlot.ONE);
-        PerkSlot.register(PerkSlot.TWO);
-        PerkSlot.register(PerkSlot.THREE);
+        PerkRegistry.registerSlot(PerkSlot.ONE);
+        PerkRegistry.registerSlot(PerkSlot.TWO);
+        PerkRegistry.registerSlot(PerkSlot.THREE);
 
         ImbuementRecipeRegistry.INSTANCE.addRecipeType(RecipeRegistry.IMBUEMENT_TYPE);
     }

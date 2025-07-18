@@ -50,4 +50,8 @@ public class PerkRegistry {
         }
         return list;
     }
+
+    public static void registerSlot(PerkSlot slot) {
+        Registry.registerForHolder(ANRegistries.PERK_SLOTS, slot.id(), slot);
+    }
 }
