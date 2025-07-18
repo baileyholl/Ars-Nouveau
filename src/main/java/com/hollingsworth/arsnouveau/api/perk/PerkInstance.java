@@ -15,7 +15,7 @@ public class PerkInstance {
     public PerkInstance(CompoundTag tag) {
         ResourceLocation perkId = ResourceLocation.tryParse(tag.getString("perkId"));
         perk = ANRegistries.PERK_TYPES.getOptional(perkId).orElse(StarbunclePerk.INSTANCE);
-        slot = PerkSlot.PERK_SLOTS.getOrDefault(ResourceLocation.tryParse(tag.getString("slotId")), PerkSlot.ONE);
+        slot = ANRegistries.PERK_SLOTS.getOptional(ResourceLocation.tryParse(tag.getString("slotId"))).orElse(PerkSlot.ONE);
     }
 
     public PerkInstance(PerkSlot slot, IPerk perk) {
