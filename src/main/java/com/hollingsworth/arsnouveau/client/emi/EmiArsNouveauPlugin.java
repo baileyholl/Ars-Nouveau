@@ -30,6 +30,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 @EmiEntrypoint
@@ -151,6 +152,14 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 .leftInput(EmiStack.of(ItemsRegistry.BLANK_PARCHMENT))
                 .rightInput(EmiStack.of(BlockRegistry.SCRYERS_CRYSTAL), true)
                 .output(EmiStack.of(ItemsRegistry.SCRYER_SCROLL))
+                .build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe
+                .builder()
+                .id(ArsNouveau.prefix("/interaction/earth_essence_grass"))
+                .leftInput(EmiIngredient.of(BlockTags.DIRT))
+                .rightInput(EmiStack.of(ItemsRegistry.EARTH_ESSENCE), false)
+                .output(EmiStack.of(Blocks.GRASS_BLOCK))
                 .build());
     }
 
