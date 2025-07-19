@@ -33,6 +33,9 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EmiEntrypoint
 public class EmiArsNouveauPlugin implements EmiPlugin {
     public static final EmiStack ENCHANTING_APPARATUS = EmiStack.of(BlockRegistry.ENCHANTING_APP_BLOCK);
@@ -154,10 +157,19 @@ public class EmiArsNouveauPlugin implements EmiPlugin {
                 .output(EmiStack.of(ItemsRegistry.SCRYER_SCROLL))
                 .build());
 
+        var dirtStacks = EmiIngredient.of(BlockTags.DIRT).getEmiStacks();
+        List<EmiStack> nonGrassDirtStacks = new ArrayList<>();
+        for (var stack : dirtStacks) {
+            if (!stack.getItemStack().is(Items.GRASS_BLOCK)) {
+                nonGrassDirtStacks.add(stack);
+            }
+        }
+        var nonGrassDirt = EmiIngredient.of(nonGrassDirtStacks);
+
         registry.addRecipe(EmiWorldInteractionRecipe
                 .builder()
                 .id(ArsNouveau.prefix("/interaction/earth_essence_grass"))
-                .leftInput(EmiIngredient.of(BlockTags.DIRT))
+                .leftInput(nonGrassDirt)
                 .rightInput(EmiStack.of(ItemsRegistry.EARTH_ESSENCE), false)
                 .output(EmiStack.of(Blocks.GRASS_BLOCK))
                 .build());
