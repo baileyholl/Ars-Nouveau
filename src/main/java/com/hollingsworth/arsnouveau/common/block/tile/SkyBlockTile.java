@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.event.timed.SkyweaveVisibilityEvent;
+import com.hollingsworth.arsnouveau.common.light.SkyLightOverrider;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,6 +44,9 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
             if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != previousLight) {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
             }
+        }
+        if (!showFacade && !level.isClientSide) {
+            SkyLightOverrider.setSkyLight(level, getBlockPos(), 15);
         }
     }
 
