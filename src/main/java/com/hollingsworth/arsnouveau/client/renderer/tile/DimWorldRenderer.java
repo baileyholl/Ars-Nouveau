@@ -55,9 +55,9 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
 
     @Override
     public void render(DimTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        if(blockEntity.template == null)
+        if (blockEntity.getTemplate() == null)
             return;
-        StructureTemplate structureTemplate = blockEntity.template;
+        StructureTemplate structureTemplate = blockEntity.getTemplate();
         BlockPos pos = BlockPos.ZERO;
         Vec3i size = new Vec3i(16, 16, 16);
 
@@ -80,7 +80,7 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         for (StructureTemplate.StructureEntityInfo entityInfo : accessor.getEntityInfoList()) {
             Entity entity = EntityType.loadEntityRecursive(entityInfo.nbt, blockEntity.getLevel(), (entityx) -> entityx);
-            if(entity == null){
+            if (entity == null) {
                 continue;
             }
             entity.setDeltaMovement(0, 0, 0);
