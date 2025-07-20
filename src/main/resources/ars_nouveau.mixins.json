@@ -39,6 +39,8 @@
     "light.LayerLightSectionStorageAccessor",
     "light.LevelLightEngineAccessor",
     "light.LightEngineAccessor",
+    "light.SkyLightEngineAccessor",
+    "light.SkyLightEngineMixin",
     "looting.EnchantedCountIncreaseFunctionMixin",
     "looting.LootItemRandomChanceWithEnchantedBonusConditionMixin",
     "perks.PerkLivingEntity",

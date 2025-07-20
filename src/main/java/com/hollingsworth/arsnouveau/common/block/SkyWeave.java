@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.light.ISkyLightSource;
+import com.hollingsworth.arsnouveau.common.light.SkyLightOverrider;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -15,7 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SkyWeave extends MirrorWeave implements ITickableBlock {
+public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSource {
 
     public SkyWeave(Properties properties) {
         super(properties);
@@ -49,5 +51,25 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock {
             }
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
+    }
+
+    @Override
+    public boolean emitsDirectSkyLight(BlockState state, BlockGetter level, BlockPos pos) {
+        // FIXME getBlockEntity returns null on the server side
+        if (level.getBlockEntity(pos) instanceof SkyBlockTile tile) {
+            return !tile.showFacade();
+        }
+        return true;
+    }
+
+    @Override
+    public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof SkyBlockTile tile) {
+            if (!tile.showFacade()) {
+                return 0;
+            }
+            return level.getMaxLightLevel();
+        }
+        return 0;
     }
 }

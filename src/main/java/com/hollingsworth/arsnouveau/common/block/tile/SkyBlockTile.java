@@ -45,9 +45,12 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
             }
         }
-        if (!showFacade && !level.isClientSide) {
-            SkyLightOverrider.setSkyLight(level, getBlockPos(), 15);
-        }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        level.getLightEngine().checkBlock(worldPosition);
     }
 
     public void setShowFacade(boolean showFacade) {
