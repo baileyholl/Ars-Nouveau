@@ -8,4 +8,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface LayerLightSectionStorageAccessor {
     @Invoker("setStoredLevel")
     void set(long packedPos, int lightLevel);
+
+    @Invoker("getStoredLevel")
+    int get(long packedPos);
+
+    @Invoker
+    public abstract boolean callLightOnInSection(long packedSectionPos);
 }

@@ -68,14 +68,6 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSo
     }
 
     @Override
-    public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        if (!state.getValue(SHOW_FACADE)) {
-            return 0;
-        }
-        return super.getLightBlock(state, level, pos);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(SHOW_FACADE);

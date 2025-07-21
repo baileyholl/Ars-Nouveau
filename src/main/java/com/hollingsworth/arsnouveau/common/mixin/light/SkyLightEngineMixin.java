@@ -15,18 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SkyLightEngine.class)
 public abstract class SkyLightEngineMixin implements SkyLightEngineAccessor {
-    private SkyLightOverrider overrider = null;
+    private SkyLightOverrider an$overrider = null;
 
-    private SkyLightOverrider getOverrider() {
-        if (overrider != null) {
-            return overrider;
+    private SkyLightOverrider an$getOverrider() {
+        if (an$overrider != null) {
+            return an$overrider;
         }
-        overrider = SkyLightOverrider.forLevel((Level) getChunkSource().getLevel());
-        return overrider;
+        an$overrider = SkyLightOverrider.forLevel((Level) getChunkSource().getLevel());
+        return an$overrider;
     }
 
     @Inject(method = "propagateDecrease", at = @At("HEAD"), cancellable = true)
-    private void beforePropagateDecrease(long packedPos, long flags, CallbackInfo ci) {
+    private void an$beforePropagateDecrease(long packedPos, long flags, CallbackInfo ci) {
         BlockPos pos = BlockPos.of(packedPos);
         BlockState blockState = callGetState(pos);
         Block block = blockState.getBlock();
@@ -39,9 +39,26 @@ public abstract class SkyLightEngineMixin implements SkyLightEngineAccessor {
     }
 
     @Inject(method = "checkNode", at = @At("HEAD"), cancellable = true)
-    private void beforeCheckNode(long packedPos, CallbackInfo ci) {
-        if (getOverrider().beforeCheckNode(this, BlockPos.of(packedPos))) {
+    private void an$beforeCheckNode(long packedPos, CallbackInfo ci) {
+        if (an$getOverrider().beforeCheckNode(this, BlockPos.of(packedPos))) {
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "removeSourcesBelow", at = @At("HEAD"), cancellable = true)
+    private void an$beforeRemoveSourcesBelow(int x, int z, int surfaceY, int minValidY, CallbackInfo ci) {
+        if (surfaceY <= minValidY) {
+            return;
+        }
+        int y = surfaceY - 1;
+        BlockPos pos = new BlockPos(x, y, z);
+        BlockState blockState = callGetState(pos);
+        Block block = blockState.getBlock();
+
+        if (block instanceof ISkyLightSource source) {
+            if (source.emitsDirectSkyLight(blockState, getChunkSource().getLevel(), pos)) {
+                ci.cancel();
+            }
         }
     }
 }

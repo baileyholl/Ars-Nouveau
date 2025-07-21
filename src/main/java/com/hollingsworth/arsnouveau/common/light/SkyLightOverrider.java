@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -32,7 +33,7 @@ public class SkyLightOverrider {
 
         private SourceEntry(ISkyLightSource source, BlockPos position, boolean isFloorKey, boolean isCeilingKey) {
             this.source = source;
-            this.position = position;
+            this.position = position.immutable();
             this.isFloorKey = isFloorKey;
             this.isCeilingKey = isCeilingKey;
         }
@@ -133,6 +134,9 @@ public class SkyLightOverrider {
     // Private constants of SkyLightEngine
     public static final long REMOVE_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseSkipOneDirection(15, Direction.UP);
     public static final long ADD_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.increaseSkipOneDirection(15, false, Direction.UP);
+    // Custom constants
+    public static final long REMOVE_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseAllDirections(15);
+    public static final long ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.increaseSkipOneDirection(15, false, Direction.DOWN);
 
     public final Level level;
     protected final int MAX_LIGHT_LEVEL;
@@ -207,16 +211,32 @@ public class SkyLightOverrider {
         }
 
         boolean underSource = false;
-        for (Iterator<SourceEntry> it = column.descendingIterator(); it.hasNext();) {
+        for (Iterator<SourceEntry> it = column.iterator(); it.hasNext();) {
             SourceEntry source = it.next();
             int surfaceY = findSurfaceBelow(skyEngine, source.position);
             if (!checkSourceExists(source, it, skyEngine) || !source.isActive()) {
                 skyEngine.callRemoveSourcesBelow(x, z, source.position.getY(), surfaceY);
+                skyEngine.callEnqueueDecrease(source.position.asLong(), REMOVE_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);
                 continue;
             }
-            storage.set(source.position.asLong(), MAX_LIGHT_LEVEL);
+            long packedSourcePos = source.position.asLong();
+            long packedGuardPos = source.position.offset(0, 1, 0).asLong();
+            if (!storage.callLightOnInSection(SectionPos.blockToSection(packedSourcePos))) {
+                continue;
+            }
+            if (storage.get(packedSourcePos) < MAX_LIGHT_LEVEL) {
+                storage.set(packedSourcePos, MAX_LIGHT_LEVEL);
+                skyEngine.callEnqueueIncrease(packedSourcePos, ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);
+            }
+            if (storage.callLightOnInSection(SectionPos.blockToSection(packedSourcePos)) && storage.get(packedGuardPos) >= MAX_LIGHT_LEVEL) {
+                // The block just above was under real sky or another skylight source
+                // We need to make sure that if it's no longer the case
+                // Then the caused update will stop before it reaches the current source
+                // Else it will be restored to the max level
+                storage.set(packedSourcePos, MAX_LIGHT_LEVEL - 1);
+            }
             skyEngine.callUpdateSourcesInColumn(x, z, surfaceY);
-            if (surfaceY <= y && y < source.position.getY())  {
+            if (surfaceY - 1 <= y && y < source.position.getY())  {
                 underSource = true;
             }
         }

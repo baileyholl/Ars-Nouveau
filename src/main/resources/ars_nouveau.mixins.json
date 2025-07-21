@@ -39,6 +39,7 @@
     "light.LayerLightSectionStorageAccessor",
     "light.LevelLightEngineAccessor",
     "light.LightEngineAccessor",
+    "light.LightEngineMixin",
     "light.SkyLightEngineAccessor",
     "light.SkyLightEngineMixin",
     "looting.EnchantedCountIncreaseFunctionMixin",
