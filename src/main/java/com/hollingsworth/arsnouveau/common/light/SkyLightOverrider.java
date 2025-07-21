@@ -20,13 +20,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.lighting.LightEngine;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.ChunkEvent;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
-@EventBusSubscriber(modid = MODID)
 public class SkyLightOverrider {
     public class SourceEntry {
         public final ISkyLightSource source;
@@ -140,7 +136,7 @@ public class SkyLightOverrider {
 
     public final Level level;
     protected final int MAX_LIGHT_LEVEL;
-    protected Map<ChunkPos, Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>>> sourceStorage = new HashMap();
+    protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>>> sourceStorage = new WeakHashMap();
 
     private SkyLightOverrider(Level level) {
         this.level = level;
@@ -154,16 +150,16 @@ public class SkyLightOverrider {
     }
 
     protected NavigableSet<SourceEntry> getSourceColumn(BlockPos pos) {
-        ChunkPos chunkPos = new ChunkPos(pos);
-        Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>> chunkLocalStorage = sourceStorage.computeIfAbsent(chunkPos, p -> new HashMap());
+        LevelChunk chunk = level.getChunkAt(pos);
+        Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>> chunkLocalStorage = sourceStorage.computeIfAbsent(chunk, c -> new HashMap());
         ChunkLocalColumnPos columnOffset = new ChunkLocalColumnPos(pos);
         Comparator<SourceEntry> cmp = SourceEntry::compareByY;
         return chunkLocalStorage.computeIfAbsent(columnOffset, o -> new TreeSet<SourceEntry>(cmp));
     }
 
     protected NavigableSet<SourceEntry> getSourceColumnIfExists(BlockPos pos) {
-        ChunkPos chunkPos = new ChunkPos(pos);
-        Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>> chunkLocalStorage = sourceStorage.get(chunkPos);
+        LevelChunk chunk = level.getChunkAt(pos);
+        Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>> chunkLocalStorage = sourceStorage.get(chunk);
         if (chunkLocalStorage == null) {
             return null;
         }
@@ -235,24 +231,6 @@ public class SkyLightOverrider {
         }
 
         return false;
-    }
-
-    @SubscribeEvent
-    public static void onChunkUnload(ChunkEvent.Unload ev) {
-        LevelChunk chunk = (LevelChunk) ev.getChunk();
-        Level level = chunk.getLevel();
-        SkyLightOverrider instance;
-        synchronized (perLevelInstances) {
-            instance = perLevelInstances.get(level);
-            if (instance == null) {
-                return;
-            }
-        }
-        instance.onOwnChunkUnload(chunk);
-    }
-
-    public void onOwnChunkUnload(LevelChunk chunk) {
-        sourceStorage.remove(chunk.getPos());
     }
 
     protected int findSurfaceBelow(SkyLightEngineAccessor skyEngine, BlockPos topPos) {
