@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     public int previousLight;
+    private boolean hadFirstTick = false;
 
     public SkyBlockTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.SKYWEAVE_TILE.get(), pos, state);
@@ -28,6 +29,10 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     @Override
     public void tick() {
+        if (!hadFirstTick) {
+            hadFirstTick = true;
+            level.getLightEngine().checkBlock(worldPosition);
+        }
         if (showFacade() && !level.isClientSide) {
             if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission(level, worldPosition)) {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
@@ -45,12 +50,6 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
             }
         }
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        level.getLightEngine().checkBlock(worldPosition);
     }
 
     public void setShowFacade(boolean showFacade) {

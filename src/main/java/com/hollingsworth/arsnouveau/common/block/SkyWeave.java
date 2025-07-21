@@ -43,6 +43,7 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSo
         return super.getOcclusionShape(state, level, pos);
     }
 
+    @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
         return new SkyBlockTile(p_153215_, p_153216_);
     }
