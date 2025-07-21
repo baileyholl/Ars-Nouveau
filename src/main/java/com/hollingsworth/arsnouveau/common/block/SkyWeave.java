@@ -11,13 +11,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSource {
+    public static final BooleanProperty SHOW_FACADE = BooleanProperty.create("show_facade");
 
     public SkyWeave(Properties properties) {
         super(properties);
@@ -25,6 +29,10 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSo
 
     public SkyWeave() {
         super();
+    }
+
+    {
+        registerDefaultState(defaultBlockState().setValue(SHOW_FACADE, false));
     }
 
     @Override
@@ -55,21 +63,20 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSo
 
     @Override
     public boolean emitsDirectSkyLight(BlockState state, BlockGetter level, BlockPos pos) {
-        // FIXME getBlockEntity returns null on the server side
-        if (level.getBlockEntity(pos) instanceof SkyBlockTile tile) {
-            return !tile.showFacade();
-        }
-        return true;
+        return !state.getValue(SHOW_FACADE);
     }
 
     @Override
     public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof SkyBlockTile tile) {
-            if (!tile.showFacade()) {
-                return 0;
-            }
-            return level.getMaxLightLevel();
+        if (!state.getValue(SHOW_FACADE)) {
+            return 0;
         }
-        return 0;
+        return super.getLightBlock(state, level, pos);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(SHOW_FACADE);
     }
 }

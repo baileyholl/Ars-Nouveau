@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
+import com.hollingsworth.arsnouveau.common.block.SkyWeave;
 import com.hollingsworth.arsnouveau.common.event.timed.SkyweaveVisibilityEvent;
 import com.hollingsworth.arsnouveau.common.light.SkyLightOverrider;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -19,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
-    private boolean showFacade;
     public int previousLight;
 
     public SkyBlockTile(BlockPos pos, BlockState state) {
@@ -28,7 +28,7 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     @Override
     public void tick() {
-        if (showFacade && !level.isClientSide) {
+        if (showFacade() && !level.isClientSide) {
             if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission(level, worldPosition)) {
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
             }
@@ -54,7 +54,7 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
     }
 
     public void setShowFacade(boolean showFacade) {
-        if (this.showFacade == showFacade) {
+        if (this.showFacade() == showFacade) {
             return;
         }
 
@@ -68,9 +68,8 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
                 }
             }
         }
-        this.showFacade = showFacade;
         EventQueue.getServerInstance().addEvent(new InvalidateMirrorweaveRender(getBlockPos(), level));
-        this.updateBlock();
+        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(SkyWeave.SHOW_FACADE, showFacade));
     }
 
     @Override
@@ -80,25 +79,23 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     @Override
     public BlockState getStateForCulling() {
-        return showFacade ? super.getStateForCulling() : Blocks.COBBLESTONE.defaultBlockState();
+        return showFacade() ? super.getStateForCulling() : Blocks.COBBLESTONE.defaultBlockState();
     }
 
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        tag.putBoolean("showFacade", showFacade);
         tag.putInt("previousLight", previousLight);
     }
 
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        showFacade = pTag.getBoolean("showFacade");
         previousLight = pTag.getInt("previousLight");
     }
 
     public boolean showFacade() {
-        return showFacade;
+        return getBlockState().getValue(SkyWeave.SHOW_FACADE);
     }
 
     @Override
