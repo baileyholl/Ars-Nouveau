@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
+    private boolean migrateShowFacade = false;
+    private boolean migrateShowFacadeValue = false;
     public int previousLight;
     private boolean hadFirstTick = false;
 
@@ -31,6 +34,10 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
     public void tick() {
         if (!hadFirstTick) {
             hadFirstTick = true;
+            if (migrateShowFacade) {
+                EventQueue.getServerInstance().addEvent(new InvalidateMirrorweaveRender(getBlockPos(), level));
+                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(SkyWeave.SHOW_FACADE, migrateShowFacadeValue));
+            }
             level.getLightEngine().checkBlock(worldPosition);
         }
         if (showFacade() && !level.isClientSide) {
@@ -91,6 +98,10 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         previousLight = pTag.getInt("previousLight");
+        if (pTag.contains("showFacade", Tag.TAG_BYTE)) {
+            migrateShowFacade = true;
+            migrateShowFacadeValue = pTag.getBoolean("showFacade");
+        }
     }
 
     public boolean showFacade() {
