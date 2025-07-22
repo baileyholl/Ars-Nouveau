@@ -7,9 +7,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
@@ -141,6 +143,7 @@ public class SkyLightOverrider {
     public final Level level;
     protected final int MAX_LIGHT_LEVEL;
     protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>>> sourceStorage = new WeakHashMap();
+    protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>>> transparentRunCache = new WeakHashMap();  // Maps the lowest transparent block in a run to some block in the same run or the non-transparent one immediately above
 
     private SkyLightOverrider(Level level) {
         this.level = level;
@@ -171,6 +174,23 @@ public class SkyLightOverrider {
         return chunkLocalStorage.get(columnOffset);
     }
 
+    protected NavigableMap<Integer, Integer> getTransparentRunCacheColumn(BlockPos pos) {
+        LevelChunk chunk = level.getChunkAt(pos);
+        Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>> chunkLocal = transparentRunCache.computeIfAbsent(chunk, c -> new HashMap());
+        ChunkLocalColumnPos columnOffset = new ChunkLocalColumnPos(pos);
+        return chunkLocal.computeIfAbsent(columnOffset, o -> new TreeMap<Integer, Integer>());
+    }
+
+    protected NavigableMap<Integer, Integer> getTransparentRunCacheColumnIfExists(BlockPos pos) {
+        LevelChunk chunk = level.getChunkAt(pos);
+        Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>> chunkLocal = transparentRunCache.get(chunk);
+        if (chunkLocal == null) {
+            return null;
+        }
+        ChunkLocalColumnPos columnOffset = new ChunkLocalColumnPos(pos);
+        return chunkLocal.get(columnOffset);
+    }
+
     protected boolean checkSourceExists(SourceEntry entry, Iterator<SourceEntry> it, SkyLightEngineAccessor engine) {
         if (entry.stillExists()) {
             return true;
@@ -187,6 +207,7 @@ public class SkyLightOverrider {
      * @return true if the normal checking code should be skipped
      */
     public boolean beforeCheckNode(SkyLightEngineAccessor skyEngine, BlockPos pos) {
+        invalidateTransparentRunCache(skyEngine, pos);
         BlockState blockState = skyEngine.callGetState(pos);
         Block block = blockState.getBlock();
         int x = pos.getX();
@@ -213,7 +234,7 @@ public class SkyLightOverrider {
         boolean underSource = false;
         for (Iterator<SourceEntry> it = column.iterator(); it.hasNext();) {
             SourceEntry source = it.next();
-            int surfaceY = findSurfaceBelow(skyEngine, source.position);
+            int surfaceY = findSurfaceBelowCached(skyEngine, source.position);
             if (!checkSourceExists(source, it, skyEngine) || !source.isActive()) {
                 skyEngine.callRemoveSourcesBelow(x, z, source.position.getY(), surfaceY);
                 skyEngine.callEnqueueDecrease(source.position.asLong(), REMOVE_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);
@@ -255,6 +276,10 @@ public class SkyLightOverrider {
 
     protected int findSurfaceBelow(SkyLightEngineAccessor skyEngine, BlockPos topPos) {
         final int minY = level.dimensionType().minY();
+        return findSurfaceBelowWithLimit(skyEngine, topPos, minY);
+    }
+
+    protected int findSurfaceBelowWithLimit(SkyLightEngineAccessor skyEngine, BlockPos topPos, int minY) {
         BlockPos.MutableBlockPos prevPos = topPos.mutable();
         BlockPos.MutableBlockPos pos = topPos.mutable();
         BlockState prevBlockState = skyEngine.callGetState(prevPos);
@@ -272,5 +297,132 @@ public class SkyLightOverrider {
             prevBlockState = blockState;
         }
         return y + 1;
+    }
+
+    protected int findSurfaceBelowCached(SkyLightEngineAccessor skyEngine, BlockPos topPos) {
+        NavigableMap<Integer, Integer> cache = getTransparentRunCacheColumn(topPos);
+        Integer topY = topPos.getY();
+        Map.Entry<Integer, Integer> entry = cache.floorEntry(topY);  // The block at the topPos cannot be like a lower slab!
+        if (entry == null) {
+            // Below everything cached
+            int result = findSurfaceBelow(skyEngine, topPos);
+            cache.put(result, topY);
+            return result;
+        }
+        int foundTopY = entry.getValue();
+        if (foundTopY >= topY) {
+            // We are inside a cached run
+            return entry.getKey();
+        }
+        int result = findSurfaceBelowWithLimit(skyEngine, topPos, foundTopY);  // Stop the search when we hit a cached run
+        if (result <= foundTopY) {
+            // If we hit a cached run, we may increase its high element
+            Integer key = entry.getKey();
+            cache.put(key, topY);
+            return key;
+        }
+        // Otherwise cache a new run
+        cache.put(result, topY);
+        return result;
+    }
+
+    protected void invalidateTransparentRunCache(SkyLightEngineAccessor skyEngine, BlockPos pos) {
+        NavigableMap<Integer, Integer> cache = getTransparentRunCacheColumnIfExists(pos);
+        if (cache == null) {
+            return;
+        }
+        final int y = pos.getY();
+        Map.Entry<Integer, Integer> entry = cache.floorEntry(y + 1);  // Prefer the top face entry
+        if (entry == null) {
+            // Below everything cached
+            return;
+        }
+        if (entry.getValue() < y) {
+            // Not inside a cached run
+            return;
+        }
+        // Previous and next when going upside down
+        BlockPos prevPos = pos.offset(0, 1, 0);
+        BlockPos nextPos = pos.offset(0, -1, 0);
+        BlockState prevState = skyEngine.callGetState(prevPos);
+        BlockState state = skyEngine.callGetState(pos);
+        BlockState nextState = skyEngine.callGetState(nextPos);
+        boolean transparentTopFace = false;
+        boolean transparentBottomFace = false;
+        if (state.getLightBlock(level, pos) < 1) {
+            transparentTopFace    = !skyEngine.callShapeOccludes(prevPos.asLong(), prevState, pos.asLong(), state, Direction.DOWN);
+            transparentBottomFace = !skyEngine.callShapeOccludes(pos.asLong(), state, nextPos.asLong(), nextState, Direction.DOWN);
+        }
+        if (!transparentTopFace && !transparentBottomFace) {
+            // Solid block
+            Integer runBottom = entry.getKey();
+            if (runBottom <= y) {
+                Integer runTop = entry.getValue();
+                if (runTop > y) {
+                    // The block is just below the upper run
+                    cache.put(y + 1, runTop);
+                }
+                if (runBottom == y) {
+                    // No lower run
+                    cache.remove(entry.getKey());
+                } else {
+                    // The block is just above the lower run
+                    cache.put(runBottom, y);
+                }
+            } else {  // runBottom == y + 1
+                Map.Entry<Integer, Integer> lowerEntry = cache.floorEntry(y);
+                if (lowerEntry != null && lowerEntry.getValue() > y) {
+                    // Convert from an upper slab
+                    cache.put(lowerEntry.getKey(), y);
+                }
+            }
+        } else if (!transparentTopFace && transparentBottomFace) {
+            // Upper slab
+            Integer runBottom = entry.getKey();
+            if (runBottom <= y) {
+                Integer runTop = entry.getValue();
+                if (runTop > y) {
+                    // The block is just below the upper run
+                    cache.put(y + 1, runTop);
+                }
+                cache.put(runBottom, y + 1);  // The slab is a part of the lower run
+            } else {  // runBottom == y + 1
+                Map.Entry<Integer, Integer> lowerEntry = cache.floorEntry(y);
+                if (lowerEntry != null && lowerEntry.getValue() == y) {
+                    // Convert from a solid block
+                    cache.put(lowerEntry.getKey(), y + 1);
+                }
+            }
+        } else if (transparentTopFace && !transparentBottomFace) {
+            // Lower slab
+            Integer runBottom = entry.getKey();
+            if (runBottom <= y) {
+                Integer runTop = entry.getValue();
+                if (runTop > y) {
+                    // The block is the lowest in the upper run
+                    cache.put(y, runTop);
+                }
+                if (runBottom < y) {
+                    // The block is just above the lower run
+                    cache.put(runBottom, y);
+                }
+                if (runTop == (int) runBottom) {
+                    cache.remove(runBottom);
+                }
+            } else {  // runBottom == y + 1
+                // Include the slab into the upper run
+                cache.put(y, entry.getValue());
+                cache.remove(y + 1);
+            }
+        } else {
+            // Fully transparent (air/glass)
+            Integer runBottom = entry.getKey();
+            if (runBottom >= y) {
+                // The block just below the upper run was broken
+                int newBottom = findSurfaceBelowCached(skyEngine, pos);
+                cache.put(newBottom, entry.getValue());
+                cache.remove(runBottom);
+            }
+        }
     }
 }
