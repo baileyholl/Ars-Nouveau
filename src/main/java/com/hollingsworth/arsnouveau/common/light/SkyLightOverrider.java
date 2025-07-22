@@ -226,7 +226,7 @@ public class SkyLightOverrider {
             }
             if (storage.get(packedSourcePos) < MAX_LIGHT_LEVEL) {
                 storage.set(packedSourcePos, MAX_LIGHT_LEVEL);
-                skyEngine.callEnqueueIncrease(packedSourcePos, ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);
+                skyEngine.callEnqueueIncrease(packedSourcePos, ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);  // FIXME it seems to only propagate side/upward when something else caused the column update later
             }
             if (storage.callLightOnInSection(SectionPos.blockToSection(packedSourcePos)) && storage.get(packedGuardPos) >= MAX_LIGHT_LEVEL) {
                 // The block just above was under real sky or another skylight source
