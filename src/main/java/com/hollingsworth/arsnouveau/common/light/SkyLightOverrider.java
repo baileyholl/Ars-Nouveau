@@ -255,11 +255,12 @@ public class SkyLightOverrider {
 
     protected int findSurfaceBelow(SkyLightEngineAccessor skyEngine, BlockPos topPos) {
         final int minY = level.dimensionType().minY();
-        BlockPos prevPos = topPos;
+        BlockPos.MutableBlockPos prevPos = topPos.mutable();
+        BlockPos.MutableBlockPos pos = topPos.mutable();
         BlockState prevBlockState = skyEngine.callGetState(prevPos);
         int y;
         for (y = topPos.getY() - 1; y >= minY; --y) {
-            BlockPos pos = topPos.atY(y);
+            pos.setY(y);
             BlockState blockState = skyEngine.callGetState(pos);
             if (blockState.getLightBlock(level, pos) > 0) {
                 break;
@@ -267,7 +268,7 @@ public class SkyLightOverrider {
             if (skyEngine.callShapeOccludes(prevPos.asLong(), prevBlockState, pos.asLong(), blockState, Direction.DOWN)) {
                 break;
             }
-            prevPos = pos;
+            prevPos.setY(y);
             prevBlockState = blockState;
         }
         return y + 1;
