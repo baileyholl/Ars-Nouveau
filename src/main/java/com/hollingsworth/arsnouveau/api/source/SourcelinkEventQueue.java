@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.source;
 
+import com.hollingsworth.arsnouveau.api.util.BlockPosSet;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -16,14 +17,14 @@ public class SourcelinkEventQueue {
     public static void addPosition(Level world, BlockPos pos) {
         String key = world.dimension().location().toString();
         if (!posMap.containsKey(key))
-            posMap.put(key, new HashSet<>());
+            posMap.put(key, BlockPosSet.newHashSet());
 
         posMap.get(key).add(pos);
     }
 
     public static void addManaEvent(Level world, Class<? extends SourcelinkTile> tileType, int amount, Event event, BlockPos sourcePos) {
         List<BlockPos> stalePos = new ArrayList<>();
-        Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().location().toString(), new HashSet<>());
+        Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().location().toString(), BlockPosSet.newHashSet());
         for (BlockPos p : worldList) {
             if (!world.isLoaded(p))
                 continue;
