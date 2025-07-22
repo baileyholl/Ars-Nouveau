@@ -257,7 +257,7 @@ public class SkyLightOverrider {
                 storage.set(packedSourcePos, MAX_LIGHT_LEVEL - 1);
             }
             skyEngine.callUpdateSourcesInColumn(x, z, surfaceY);
-            if (surfaceY - 1 <= y && y < source.position.getY())  {
+            if (surfaceY <= y && y < source.position.getY())  {
                 underSource = true;
             }
         }
