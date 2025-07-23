@@ -22,7 +22,7 @@ public abstract class SkyLightEngineMixin implements SkyLightEngineAccessor {
         if (an$overrider != null) {
             return an$overrider;
         }
-        an$overrider = SkyLightOverrider.forLevel((Level) getChunkSource().getLevel());
+        an$overrider = SkyLightOverrider.forEngine(this);
         return an$overrider;
     }
 
@@ -46,7 +46,7 @@ public abstract class SkyLightEngineMixin implements SkyLightEngineAccessor {
 
     @Inject(method = "checkNode", at = @At("HEAD"), cancellable = true)
     private void an$beforeCheckNode(long packedPos, CallbackInfo ci) {
-        if (an$getOverrider().beforeCheckNode(this, BlockPos.of(packedPos))) {
+        if (an$getOverrider().beforeCheckNode(BlockPos.of(packedPos))) {
             ci.cancel();
         }
     }

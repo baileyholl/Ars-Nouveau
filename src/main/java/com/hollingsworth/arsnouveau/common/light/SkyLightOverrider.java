@@ -17,14 +17,14 @@ import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LightChunk;
+import net.minecraft.world.level.chunk.LightChunkGetter;
 import net.minecraft.world.level.lighting.LightEngine;
-
-import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class SkyLightOverrider {
     public class SourceEntry {
@@ -56,7 +56,7 @@ public class SkyLightOverrider {
         }
 
         public static int compareByY(SourceEntry lhs, SourceEntry rhs) {
-            if (!lhs.getLevel().equals(rhs.getLevel())) {
+            if (!lhs.getChunkSource().equals(rhs.getChunkSource())) {
                 return System.identityHashCode(lhs) - System.identityHashCode(rhs);
             }
             if (lhs == rhs) {
@@ -82,14 +82,14 @@ public class SkyLightOverrider {
             return System.identityHashCode(lhs) - System.identityHashCode(rhs);
         }
 
-        public Level getLevel() {
-            return level;
+        public LightChunkGetter getChunkSource() {
+            return chunkSource;
         }
 
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof SourceEntry other) {
-                if (!getLevel().equals(other.getLevel())) {
+                if (!getChunkSource().equals(other.getChunkSource())) {
                     return false;
                 }
                 if (isFloorKey && other.isFloorKey || isCeilingKey && other.isCeilingKey) {
@@ -102,22 +102,22 @@ public class SkyLightOverrider {
         @Override
         public int hashCode() {
             if (isFloorKey) {
-                return (position.getY() << 1) ^ -1 ^ getLevel().hashCode();
+                return (position.getY() << 1) ^ -1 ^ getChunkSource().hashCode();
             }
             if (isCeilingKey) {
-                return (position.getY() << 1) ^ -2 ^ getLevel().hashCode();
+                return (position.getY() << 1) ^ -2 ^ getChunkSource().hashCode();
             }
             return super.hashCode();
         }
 
         public boolean stillExists() {
-            BlockState blockState = level.getBlockState(position);
+            BlockState blockState = skyEngine.callGetState(position);
             return blockState.getBlock().equals(source);
         }
 
         public boolean isActive() {
-            BlockState blockState = level.getBlockState(position);
-            return source.emitsDirectSkyLight(blockState, getLevel(), position);
+            BlockState blockState = skyEngine.callGetState(position);
+            return source.emitsDirectSkyLight(blockState, chunkSource.getLevel(), position);
         }
     }
 
@@ -131,7 +131,7 @@ public class SkyLightOverrider {
         }
     }
 
-    static Map<Level, SkyLightOverrider> perLevelInstances = new WeakHashMap();
+    static Map<SkyLightEngineAccessor, SkyLightOverrider> perEngineInstances = new WeakHashMap();
 
     // Private constants of SkyLightEngine
     public static final long REMOVE_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseSkipOneDirection(15, Direction.UP);
@@ -140,24 +140,26 @@ public class SkyLightOverrider {
     public static final long REMOVE_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseAllDirections(15);
     public static final long ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.increaseSkipOneDirection(15, false, Direction.DOWN);
 
-    public final Level level;
+    public final LightChunkGetter chunkSource;
+    public final SkyLightEngineAccessor skyEngine;
     public final int MAX_LIGHT_LEVEL;
-    protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>>> sourceStorage = new WeakHashMap();
-    protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>>> transparentRunCache = new WeakHashMap();  // Maps the lowest transparent block in a run to some block in the same run or the non-transparent one immediately above
+    protected Map<LightChunk, Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>>> sourceStorage = new WeakHashMap();
+    protected Map<LightChunk, Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>>> transparentRunCache = new WeakHashMap();  // Maps the lowest transparent block in a run to some block in the same run or the non-transparent one immediately above
 
-    private SkyLightOverrider(Level level) {
-        this.level = level;
-        this.MAX_LIGHT_LEVEL = level.getMaxLightLevel();
+    private SkyLightOverrider(SkyLightEngineAccessor skyEngine) {
+        this.skyEngine = skyEngine;
+        this.chunkSource = skyEngine.getChunkSource();
+        this.MAX_LIGHT_LEVEL = chunkSource.getLevel().getMaxLightLevel();
     }
 
-    public static SkyLightOverrider forLevel(Level level) {
-        synchronized (perLevelInstances) {
-            return perLevelInstances.computeIfAbsent(level, SkyLightOverrider::new);
+    public static SkyLightOverrider forEngine(SkyLightEngineAccessor engine) {
+        synchronized (perEngineInstances) {
+            return perEngineInstances.computeIfAbsent(engine, SkyLightOverrider::new);
         }
     }
 
     protected NavigableSet<SourceEntry> getSourceColumn(BlockPos pos) {
-        LevelChunk chunk = level.getChunkAt(pos);
+        LightChunk chunk = chunkSource.getChunkForLighting(pos.getX() >> 4, pos.getZ() >> 4);
         Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>> chunkLocalStorage = sourceStorage.computeIfAbsent(chunk, c -> new HashMap());
         ChunkLocalColumnPos columnOffset = new ChunkLocalColumnPos(pos);
         Comparator<SourceEntry> cmp = SourceEntry::compareByY;
@@ -165,7 +167,7 @@ public class SkyLightOverrider {
     }
 
     protected NavigableSet<SourceEntry> getSourceColumnIfExists(BlockPos pos) {
-        LevelChunk chunk = level.getChunkAt(pos);
+        LightChunk chunk = chunkSource.getChunkForLighting(pos.getX() >> 4, pos.getZ() >> 4);
         Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>> chunkLocalStorage = sourceStorage.get(chunk);
         if (chunkLocalStorage == null) {
             return null;
@@ -175,14 +177,14 @@ public class SkyLightOverrider {
     }
 
     protected NavigableMap<Integer, Integer> getTransparentRunCacheColumn(BlockPos pos) {
-        LevelChunk chunk = level.getChunkAt(pos);
+        LightChunk chunk = chunkSource.getChunkForLighting(pos.getX() >> 4, pos.getZ() >> 4);
         Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>> chunkLocal = transparentRunCache.computeIfAbsent(chunk, c -> new HashMap());
         ChunkLocalColumnPos columnOffset = new ChunkLocalColumnPos(pos);
         return chunkLocal.computeIfAbsent(columnOffset, o -> new TreeMap<Integer, Integer>());
     }
 
     protected NavigableMap<Integer, Integer> getTransparentRunCacheColumnIfExists(BlockPos pos) {
-        LevelChunk chunk = level.getChunkAt(pos);
+        LightChunk chunk = chunkSource.getChunkForLighting(pos.getX() >> 4, pos.getZ() >> 4);
         Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>> chunkLocal = transparentRunCache.get(chunk);
         if (chunkLocal == null) {
             return null;
@@ -191,23 +193,22 @@ public class SkyLightOverrider {
         return chunkLocal.get(columnOffset);
     }
 
-    protected boolean checkSourceExists(SourceEntry entry, Iterator<SourceEntry> it, SkyLightEngineAccessor engine) {
+    protected boolean checkSourceExists(SourceEntry entry, Iterator<SourceEntry> it) {
         if (entry.stillExists()) {
             return true;
         }
         it.remove();
-        ((LightEngine) engine).checkBlock(entry.position);
+        ((LightEngine) skyEngine).checkBlock(entry.position);
         return false;
     }
 
     /**
      * Called by SkyLightEngine before it actually handles positions scheduled by {@link SkyLightEngine#checkBlock}
-     * @param skyEngine mush be equal to this.level.getLightEngine().getSkyEngine()
      * @param pos the position that was scheduled by {@link SkyLightEngine#checkBlock}
      * @return true if the normal checking code should be skipped
      */
-    public boolean beforeCheckNode(SkyLightEngineAccessor skyEngine, BlockPos pos) {
-        invalidateTransparentRunCache(skyEngine, pos);
+    public boolean beforeCheckNode(BlockPos pos) {
+        invalidateTransparentRunCache(pos);
         BlockState blockState = skyEngine.callGetState(pos);
         Block block = blockState.getBlock();
         int x = pos.getX();
@@ -217,9 +218,12 @@ public class SkyLightOverrider {
 
         if (block instanceof ISkyLightSource source) {
             NavigableSet<SourceEntry> column = getSourceColumn(pos);
+            if (column == null) {
+                return false;
+            }
             Set<SourceEntry> candidates = column.subSet(SourceEntry.ceilingKey(this, y), SourceEntry.floorKey(this, y));
             for (Iterator<SourceEntry> it = candidates.iterator(); it.hasNext();) {
-                checkSourceExists(it.next(), it, skyEngine);
+                checkSourceExists(it.next(), it);
             }
             if (candidates.isEmpty()) {
                 column.add(SourceEntry.of(this, block, pos));
@@ -234,8 +238,8 @@ public class SkyLightOverrider {
         boolean underSource = false;
         for (Iterator<SourceEntry> it = column.iterator(); it.hasNext();) {
             SourceEntry source = it.next();
-            int surfaceY = findSurfaceBelowCached(skyEngine, source.position);
-            if (!checkSourceExists(source, it, skyEngine) || !source.isActive()) {
+            int surfaceY = findSurfaceBelowCached(source.position);
+            if (!checkSourceExists(source, it) || !source.isActive()) {
                 skyEngine.callRemoveSourcesBelow(x, z, source.position.getY(), surfaceY);
                 skyEngine.callEnqueueDecrease(source.position.asLong(), REMOVE_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);
                 continue;
@@ -274,16 +278,17 @@ public class SkyLightOverrider {
         return false;
     }
 
-    protected int findSurfaceBelow(SkyLightEngineAccessor skyEngine, BlockPos topPos) {
-        final int minY = level.dimensionType().minY();
-        return findSurfaceBelowWithLimit(skyEngine, topPos, minY);
+    protected int findSurfaceBelow(BlockPos topPos) {
+        final int minY = ((Level) chunkSource.getLevel()).dimensionType().minY();
+        return findSurfaceBelowWithLimit(topPos, minY);
     }
 
-    protected int findSurfaceBelowWithLimit(SkyLightEngineAccessor skyEngine, BlockPos topPos, int minY) {
+    protected int findSurfaceBelowWithLimit(BlockPos topPos, int minY) {
         BlockPos.MutableBlockPos prevPos = topPos.mutable();
         BlockPos.MutableBlockPos pos = topPos.mutable();
         BlockState prevBlockState = skyEngine.callGetState(prevPos);
         int y;
+        BlockGetter level = chunkSource.getLevel();
         for (y = topPos.getY() - 1; y >= minY; --y) {
             pos.setY(y);
             BlockState blockState = skyEngine.callGetState(pos);
@@ -299,13 +304,13 @@ public class SkyLightOverrider {
         return y + 1;
     }
 
-    protected int findSurfaceBelowCached(SkyLightEngineAccessor skyEngine, BlockPos topPos) {
+    protected int findSurfaceBelowCached(BlockPos topPos) {
         NavigableMap<Integer, Integer> cache = getTransparentRunCacheColumn(topPos);
         Integer topY = topPos.getY();
         Map.Entry<Integer, Integer> entry = cache.floorEntry(topY);  // The block at the topPos cannot be like a lower slab!
         if (entry == null) {
             // Below everything cached
-            int result = findSurfaceBelow(skyEngine, topPos);
+            int result = findSurfaceBelow(topPos);
             cache.put(result, topY);
             return result;
         }
@@ -314,7 +319,7 @@ public class SkyLightOverrider {
             // We are inside a cached run
             return entry.getKey();
         }
-        int result = findSurfaceBelowWithLimit(skyEngine, topPos, foundTopY);  // Stop the search when we hit a cached run
+        int result = findSurfaceBelowWithLimit(topPos, foundTopY);  // Stop the search when we hit a cached run
         if (result <= foundTopY) {
             // If we hit a cached run, we may increase its high element
             Integer key = entry.getKey();
@@ -326,7 +331,7 @@ public class SkyLightOverrider {
         return result;
     }
 
-    protected void invalidateTransparentRunCache(SkyLightEngineAccessor skyEngine, BlockPos pos) {
+    protected void invalidateTransparentRunCache(BlockPos pos) {
         NavigableMap<Integer, Integer> cache = getTransparentRunCacheColumnIfExists(pos);
         if (cache == null) {
             return;
@@ -347,6 +352,7 @@ public class SkyLightOverrider {
         BlockState prevState = skyEngine.callGetState(prevPos);
         BlockState state = skyEngine.callGetState(pos);
         BlockState nextState = skyEngine.callGetState(nextPos);
+        BlockGetter level = chunkSource.getLevel();
         boolean transparentTopFace = false;
         boolean transparentBottomFace = false;
         if (state.getLightBlock(level, pos) < 1) {
@@ -419,7 +425,7 @@ public class SkyLightOverrider {
             Integer runBottom = entry.getKey();
             if (runBottom >= y) {
                 // The block just below the upper run was broken
-                int newBottom = findSurfaceBelowCached(skyEngine, pos);
+                int newBottom = findSurfaceBelowCached(pos);
                 cache.put(newBottom, entry.getValue());
                 cache.remove(runBottom);
             }
