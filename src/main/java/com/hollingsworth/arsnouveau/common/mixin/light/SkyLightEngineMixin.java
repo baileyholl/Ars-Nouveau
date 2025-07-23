@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.mixin.light;
 import com.hollingsworth.arsnouveau.common.light.ISkyLightSource;
 import com.hollingsworth.arsnouveau.common.light.SkyLightOverrider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,6 +34,11 @@ public abstract class SkyLightEngineMixin implements SkyLightEngineAccessor {
 
         if (block instanceof ISkyLightSource source) {
             if (source.emitsDirectSkyLight(blockState, getChunkSource().getLevel(), pos)) {
+                if (getStorage() instanceof LayerLightSectionStorageAccessor storage) {
+                    if (storage.callLightOnInSection(SectionPos.blockToSection(packedPos))) {
+                        storage.set(packedPos, an$getOverrider().MAX_LIGHT_LEVEL);
+                    }
+                }
                 ci.cancel();
             }
         }

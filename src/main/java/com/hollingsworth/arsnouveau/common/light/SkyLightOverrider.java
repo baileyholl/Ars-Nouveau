@@ -141,7 +141,7 @@ public class SkyLightOverrider {
     public static final long ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.increaseSkipOneDirection(15, false, Direction.DOWN);
 
     public final Level level;
-    protected final int MAX_LIGHT_LEVEL;
+    public final int MAX_LIGHT_LEVEL;
     protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableSet<SourceEntry>>> sourceStorage = new WeakHashMap();
     protected Map<LevelChunk, Map<ChunkLocalColumnPos, NavigableMap<Integer, Integer>>> transparentRunCache = new WeakHashMap();  // Maps the lowest transparent block in a run to some block in the same run or the non-transparent one immediately above
 
@@ -247,14 +247,14 @@ public class SkyLightOverrider {
             }
             if (storage.get(packedSourcePos) < MAX_LIGHT_LEVEL) {
                 storage.set(packedSourcePos, MAX_LIGHT_LEVEL);
-                skyEngine.callEnqueueIncrease(packedSourcePos, ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);  // FIXME it seems to only propagate side/upward when something else caused the column update later
+                skyEngine.callEnqueueIncrease(packedSourcePos, ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY);
             }
-            if (storage.callLightOnInSection(SectionPos.blockToSection(packedSourcePos)) && storage.get(packedGuardPos) >= MAX_LIGHT_LEVEL) {
+            if (storage.callLightOnInSection(SectionPos.blockToSection(packedGuardPos)) && storage.get(packedGuardPos) >= MAX_LIGHT_LEVEL) {
                 // The block just above was under real sky or another skylight source
                 // We need to make sure that if it's no longer the case
                 // Then the caused update will stop before it reaches the current source
                 // Else it will be restored to the max level
-                storage.set(packedSourcePos, MAX_LIGHT_LEVEL - 1);
+                storage.set(packedGuardPos, MAX_LIGHT_LEVEL - 1);
             }
             skyEngine.callUpdateSourcesInColumn(x, z, surfaceY);
             if (surfaceY <= y && y < source.position.getY())  {
