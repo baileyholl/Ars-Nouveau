@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
@@ -16,6 +17,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,6 +33,7 @@ public class DimTile extends ModdedTile implements ITickable {
     public ResourceKey<Level> key;
     private StructureTemplate template;
     private long lastUpdated = 0;
+    boolean playersNearby = true;
 
     public DimTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -44,6 +47,18 @@ public class DimTile extends ModdedTile implements ITickable {
     public void tick() {
         if (key == null || !(level instanceof ServerLevel serverLevel))
             return;
+        if (level.getGameTime() % 200 == 0) {
+            playersNearby = false;
+            for (ServerPlayer serverPlayer : serverLevel.players()) {
+                if (BlockPosHelpers.distanceBetween(worldPosition, serverPlayer.blockPosition()) < 64) {
+                    playersNearby = true;
+                    break;
+                }
+            }
+        }
+        if (!playersNearby) {
+            return;
+        }
         DimManager.Entry entry1 = dimManager.getOrCreateTemplate(serverLevel, worldPosition, key);
         if (entry1 != null) {
             this.template = entry1.template;
@@ -122,12 +137,13 @@ public class DimTile extends ModdedTile implements ITickable {
                 if (template == null) {
                     return null;
                 }
-                System.out.println("creating");
                 entries.put(key, new Entry(template, false, serverLevel.getGameTime()));
                 return entries.get(key);
             }
 
-            if (!entry.dirty && entry.template != null) {
+            long timeSinceLastUpdate = serverLevel.getGameTime() - entry.lastUpdated;
+
+            if (!entry.dirty && entry.template != null && timeSinceLastUpdate < 200) {
                 return entry;
             }
             StructureTemplate template = loadTemplate(serverLevel, worldPosition, key);
