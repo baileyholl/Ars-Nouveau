@@ -37,7 +37,6 @@
     "jar.DispenserMixin",
     "jar.MobAccessorMixin",
     "light.LayerLightSectionStorageAccessor",
-    "light.LevelLightEngineAccessor",
     "light.LightEngineAccessor",
     "light.LightEngineMixin",
     "light.SkyLightEngineAccessor",

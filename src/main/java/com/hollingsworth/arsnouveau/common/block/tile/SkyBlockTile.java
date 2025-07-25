@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.block.SkyWeave;
 import com.hollingsworth.arsnouveau.common.event.timed.SkyweaveVisibilityEvent;
-import com.hollingsworth.arsnouveau.common.light.SkyLightOverrider;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

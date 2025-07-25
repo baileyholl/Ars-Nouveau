@@ -1,19 +1,7 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.common.mixin.light.LayerLightSectionStorageAccessor;
-import com.hollingsworth.arsnouveau.common.mixin.light.LevelLightEngineAccessor;
 import com.hollingsworth.arsnouveau.common.mixin.light.SkyLightEngineAccessor;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
@@ -25,6 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LightChunk;
 import net.minecraft.world.level.chunk.LightChunkGetter;
 import net.minecraft.world.level.lighting.LightEngine;
+import net.minecraft.world.level.lighting.SkyLightEngine;
+
+import java.util.*;
 
 public class SkyLightOverrider {
     public class SourceEntry {
@@ -131,7 +122,7 @@ public class SkyLightOverrider {
         }
     }
 
-    static Map<SkyLightEngineAccessor, SkyLightOverrider> perEngineInstances = new WeakHashMap();
+    static final Map<SkyLightEngineAccessor, SkyLightOverrider> perEngineInstances = new WeakHashMap();
 
     // Private constants of SkyLightEngine
     public static final long REMOVE_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseSkipOneDirection(15, Direction.UP);

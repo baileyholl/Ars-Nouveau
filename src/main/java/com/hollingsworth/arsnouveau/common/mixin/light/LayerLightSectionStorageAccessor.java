@@ -13,5 +13,5 @@ public interface LayerLightSectionStorageAccessor {
     int get(long packedPos);
 
     @Invoker
-    public abstract boolean callLightOnInSection(long packedSectionPos);
+    boolean callLightOnInSection(long packedSectionPos);
 }

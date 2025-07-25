@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.common.light.ISkyLightSource;
-import com.hollingsworth.arsnouveau.common.light.SkyLightOverrider;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

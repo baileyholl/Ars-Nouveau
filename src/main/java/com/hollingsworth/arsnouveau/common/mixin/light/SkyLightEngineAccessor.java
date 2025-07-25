@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.mixin.light;
 
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.lighting.SkyLightEngine;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
