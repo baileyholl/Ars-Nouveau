@@ -139,6 +139,7 @@ public class SkyLightOverrider {
     // Custom constants
     public static final long REMOVE_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseAllDirections(15);
     public static final long ADD_TOP_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.increaseSkipOneDirection(15, false, Direction.DOWN);
+    public static final long REMOVE_ABOVE_ARTIFICIAL_SKY_SOURCE_ENTRY = LightEngine.QueueEntry.decreaseSkipOneDirection(14, Direction.DOWN);
 
     public final LightChunkGetter chunkSource;
     public final SkyLightEngineAccessor skyEngine;
@@ -259,6 +260,7 @@ public class SkyLightOverrider {
                 // Then the caused update will stop before it reaches the current source
                 // Else it will be restored to the max level
                 storage.set(packedGuardPos, MAX_LIGHT_LEVEL - 1);
+                skyEngine.callEnqueueDecrease(packedGuardPos, REMOVE_ABOVE_ARTIFICIAL_SKY_SOURCE_ENTRY);
             }
             skyEngine.callUpdateSourcesInColumn(x, z, surfaceY);
             if (surfaceY <= y && y < source.position.getY())  {
