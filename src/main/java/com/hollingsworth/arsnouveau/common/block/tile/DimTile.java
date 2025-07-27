@@ -1,24 +1,30 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -34,6 +40,7 @@ public class DimTile extends ModdedTile implements ITickable {
     private StructureTemplate template;
     private long lastUpdated = 0;
     boolean playersNearby = true;
+    public Component name;
 
     public DimTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -90,6 +97,9 @@ public class DimTile extends ModdedTile implements ITickable {
         if (key != null) {
             tag.putString("key", key.location().toString());
         }
+        if (name != null) {
+            tag.putString("name", Component.Serializer.toJson(this.name, registries));
+        }
     }
 
     @Override
@@ -97,6 +107,9 @@ public class DimTile extends ModdedTile implements ITickable {
         super.loadAdditional(tag, registries);
         if (tag.contains("key"))
             key = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("key")));
+        if (tag.contains("name")) {
+            this.name = parseCustomNameSafe(tag.getString("name"), registries);
+        }
     }
 
     @Override
@@ -125,6 +138,27 @@ public class DimTile extends ModdedTile implements ITickable {
 
     public StructureTemplate getTemplate() {
         return template;
+    }
+
+    @Override
+    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        this.name = componentInput.get(DataComponents.CUSTOM_NAME);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(DataComponents.CUSTOM_NAME, this.name);
+    }
+
+    public IResolveListener onResolve() {
+        return (world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver) -> {
+            if (resolveEffect instanceof EffectName && spell.name() != null) {
+                name = Component.literal(spell.name());
+                updateBlock();
+            }
+        };
     }
 
     public static class DimManager {

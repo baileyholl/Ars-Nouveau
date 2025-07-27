@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.DimTile;
 import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
+import com.hollingsworth.arsnouveau.common.world.saved_data.DimSavedData;
 import net.commoble.infiniverse.internal.DimensionManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -25,38 +26,38 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class DimBlock extends TickableModBlock{
+public class DimBlock extends TickableModBlock {
 
     public DimBlock(Properties properties) {
         super(properties);
     }
 
-    public DimBlock(){
+    public DimBlock() {
         super(defaultProperties().noOcclusion());
     }
 
-    public static LevelStem createDimension(MinecraftServer server)
-    {
+    public static LevelStem createDimension(MinecraftServer server) {
         return new LevelStem(getDimensionTypeHolder(server), new VoidChunkGenerator(server));
     }
 
-    public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server)
-    {
+    public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server) {
         return server.registryAccess() // get dynamic registries
                 .registryOrThrow(Registries.DIMENSION_TYPE)
                 .getHolderOrThrow(ArsNouveau.DIMENSION_TYPE_KEY);
     }
+
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if(level instanceof ServerLevel serverLevel) {
-            var key = ResourceKey.create(Registries.DIMENSION, ArsNouveau.prefix( "test"));
-            var newLevel = DimensionManager.INSTANCE.getOrCreateLevel(serverLevel.getServer(), key, () ->{
+        if (level instanceof ServerLevel serverLevel) {
+            var dimEntry = DimSavedData.from(serverLevel.getServer().overworld()).getOrCreate("test");
+            var key = ResourceKey.create(Registries.DIMENSION, dimEntry.key());
+            var newLevel = DimensionManager.INSTANCE.getOrCreateLevel(serverLevel.getServer(), key, () -> {
                 return createDimension(serverLevel.getServer());
             });
-            if(level.getBlockEntity(pos) instanceof DimTile tile){
+            if (level.getBlockEntity(pos) instanceof DimTile tile) {
                 tile.key = key;
             }
-            if(player.isCrouching()){
+            if (player.isCrouching()) {
                 player.teleportTo(newLevel, 7, 2, 7, Set.of(), player.getYRot(), player.getXRot());
             }
         }
