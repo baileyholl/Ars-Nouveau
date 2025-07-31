@@ -72,6 +72,9 @@ public class EntitySpellArrow extends Arrow {
     }
 
     public void setResolver(SpellResolver resolver) {
+        if (resolver.spellContext != null) {
+            resolver.spellContext.level = this.level;
+        }
         this.entityData.set(SPELL_RESOLVER, resolver);
         buildEmitters();
     }
