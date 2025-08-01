@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.common.block.tile.DimTile;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.client.rendering.FakeRenderingWorld;
 import com.hollingsworth.nuggets.client.rendering.StatePos;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -54,12 +55,71 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
     }
 
     @Override
+    public boolean shouldRender(DimTile blockEntity, Vec3 cameraPos) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRenderOffScreen(DimTile blockEntity) {
+        return true;
+    }
+
+    @Override
+    public int getViewDistance() {
+        return BlockEntityRenderer.super.getViewDistance();
+    }
+
+    @Override
     public void render(DimTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        BlockState state = BlockRegistry.MOB_JAR.defaultBlockState();
+        poseStack.pushPose();
+        poseStack.scale(16, 16, 16);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
         if (blockEntity.getTemplate() == null)
             return;
+        //        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0.5, 0);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0.5, 0, 0);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0, 0.5);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0.5, 0, 0.5);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0.5, 0.5);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0.5, 0.5, 0);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0.5, 0.5, 0.5);
+//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        poseStack.popPose();
+    }
+
+    public void doRender(DimTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         StructureTemplate structureTemplate = blockEntity.getTemplate();
         BlockPos pos = BlockPos.ZERO;
-        Vec3i size = new Vec3i(16, 16, 16);
+        int dim = 16 * 2;
+        Vec3i size = new Vec3i(dim, dim, dim);
 
         List<StatePos> statePosCache = new ArrayList<>();
         for (StructureTemplate.StructureBlockInfo blockInfo : structureTemplate.palettes.getFirst().blocks()) {

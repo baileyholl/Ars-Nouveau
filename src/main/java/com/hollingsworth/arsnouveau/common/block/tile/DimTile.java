@@ -6,12 +6,13 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
+import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
+import com.hollingsworth.arsnouveau.common.world.saved_data.DimSavedData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.SectionPos;
-import net.minecraft.core.Vec3i;
+import com.hollingsworth.nuggets.common.util.WorldHelpers;
+import net.commoble.infiniverse.internal.DimensionManager;
+import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,16 +22,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DimTile extends ModdedTile implements ITickable {
@@ -154,15 +162,73 @@ public class DimTile extends ModdedTile implements ITickable {
 
     public IResolveListener onResolve() {
         return (world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver) -> {
-            if (resolveEffect instanceof EffectName && spell.name() != null) {
+            if (world instanceof ServerLevel serverLevel && resolveEffect instanceof EffectName && spell.name() != null) {
                 name = Component.literal(spell.name());
-                updateBlock();
+                setDimension(spell.name(), serverLevel);
             }
         };
     }
 
+    public ServerLevel setDimension(String dimName, ServerLevel serverLevel) {
+        Tuple<ServerLevel, DimManager.Entry> dimension = dimManager.getOrCreateLevel(dimName, serverLevel, worldPosition);
+        DimSavedData.Entry dimData = DimSavedData.from(serverLevel).getOrCreate(dimName);
+        this.key = ResourceKey.create(Registries.DIMENSION, dimData.key());
+        var managerEntry = dimension.getB();
+        if (managerEntry != null) {
+            this.template = managerEntry.template;
+            lastUpdated = managerEntry.lastUpdated;
+            Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
+            updateBlock();
+        }
+        return dimension.getA();
+    }
+
+    public void sendEntityTo(Entity entity) {
+        if (key != null && level instanceof ServerLevel) {
+            ServerLevel dimLevel = level.getServer().getLevel(key);
+            entity.teleportTo(dimLevel, 7, 2, 7, Set.of(), entity.getYRot(), entity.getXRot());
+        }
+    }
+
     public static class DimManager {
         public Map<ResourceKey<Level>, Entry> entries = new ConcurrentHashMap<>();
+
+        public static void onBlockBroken(BlockEvent.BreakEvent event) {
+            if (event.getLevel() instanceof Level level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+                System.out.println("broke in dim!");
+            }
+        }
+
+        public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+            if (event.getLevel() instanceof Level level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+                System.out.println("placed in dim!");
+            }
+        }
+
+        public Tuple<ServerLevel, Entry> getOrCreateLevel(String dimName, ServerLevel serverLevel, BlockPos ownerPos) {
+            DimSavedData.Entry dimEntry = DimSavedData.from(serverLevel.getServer().overworld()).getOrCreate(dimName);
+            var dimKey = ResourceKey.create(Registries.DIMENSION, dimEntry.key());
+            return getOrCreateLevel(serverLevel, dimKey, ownerPos);
+        }
+
+        public Tuple<ServerLevel, Entry> getOrCreateLevel(ServerLevel serverLevel, ResourceKey<Level> key, BlockPos ownerPos) {
+            var newLevel = DimensionManager.INSTANCE.getOrCreateLevel(serverLevel.getServer(), key, () -> {
+                return createDimension(serverLevel.getServer());
+            });
+            var entry = getOrCreateTemplate(serverLevel, ownerPos, key);
+
+            return new Tuple<>(newLevel, entry);
+        }
+
+        public static LevelStem createDimension(MinecraftServer server) {
+            return new LevelStem(getDimensionTypeHolder(server), new VoidChunkGenerator(server));
+        }
+
+        public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server) {
+            return server.registryAccess() // get dynamic registries
+                    .registryOrThrow(Registries.DIMENSION_TYPE)
+                    .getHolderOrThrow(ArsNouveau.DIMENSION_TYPE_KEY);
+        }
 
         public Entry getOrCreateTemplate(ServerLevel serverLevel, BlockPos worldPosition, ResourceKey<Level> key) {
             Entry entry = entries.get(key);

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.block.tile.DimTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
@@ -51,8 +52,8 @@ import java.util.function.Supplier;
 
 @Mod(ArsNouveau.MODID)
 public class ArsNouveau {
-    public static final ResourceKey<DimensionType> DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("test"));
-    public static final ResourceKey<Biome> BIOME_KEY = ResourceKey.create(Registries.BIOME, ArsNouveau.prefix("test"));
+    public static final ResourceKey<DimensionType> DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("jar"));
+    public static final ResourceKey<Biome> BIOME_KEY = ResourceKey.create(Registries.BIOME, ArsNouveau.prefix("jar"));
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
     public static IProxy proxy;
@@ -134,6 +135,9 @@ public class ArsNouveau {
         } else {
             ArsNouveau.proxy = new ServerProxy();
         }
+
+        NeoForge.EVENT_BUS.addListener(DimTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(DimTile.DimManager::onBlockPlaced);
     }
 
     public void setup(final FMLCommonSetupEvent event) {

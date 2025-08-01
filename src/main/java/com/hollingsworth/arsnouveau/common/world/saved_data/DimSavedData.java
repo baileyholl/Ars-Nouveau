@@ -52,7 +52,7 @@ public class DimSavedData extends SavedData {
     }
 
     public static DimSavedData from(ServerLevel level) {
-        return level.getDataStorage()
+        return level.getServer().overworld().getDataStorage()
                 .computeIfAbsent(factory(), "an_dimensions");
     }
 
