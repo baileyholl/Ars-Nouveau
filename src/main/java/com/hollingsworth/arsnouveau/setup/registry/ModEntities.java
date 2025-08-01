@@ -316,6 +316,12 @@ public class ModEntities {
     );
 
 
+    public static final DeferredHolder<EntityType<?>, EntityType<DiscEntity>> DISC_ENTITY = registerEntity(
+            LibEntityNames.DISC,
+            EntityType.Builder.<DiscEntity>of(DiscEntity::new, MobCategory.MISC).noSave().noSummon().sized(1, 1).setTrackingRange(10)
+    );
+
+
     @SubscribeEvent
     public static void registerPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(STARBUNCLE_TYPE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
@@ -379,6 +385,7 @@ public class ModEntities {
             event.put(LILY.get(), Lily.createAttributes().build());
             event.put(NOOK.get(), Nook.createAttributes().build());
             event.put(ALAKARKINOS_TYPE.get(), Starbuncle.attributes().build());
+//            event.put(DISC_ENTITY.get(), DiscEntity.createAttributes().build());
         }
     }
 

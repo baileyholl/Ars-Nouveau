@@ -24,6 +24,7 @@ public class LibEntityNames {
     public static final String NOOK = "nook";
     public static final String BUBBLE = "bubble";
     public static final String ENCHANTED_HOOK = "enchanters_hook";
+    public static final String DISC = "disc";
 
     public static final String ORBIT_PROJECTILE = "orbit";
     public static final String CHIMERA_SPIKE = "spike";
