@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -18,6 +17,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class SpawnLootState extends CrabState {
@@ -61,17 +61,26 @@ public class SpawnLootState extends CrabState {
         }
         alakarkinos.setBlowingBubbles(false);
         alakarkinos.findBlockCooldown = 60 * 20;
-        ItemStack loot = getLoot();
-        EntityFlyingItem.spawn(alakarkinos.getHome(), (ServerLevel) alakarkinos.level, hatPos, alakarkinos.getHome().above())
-                .setStack(loot)
-                .getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
-        IItemHandler handler = alakarkinos.level.getCapability(Capabilities.ItemHandler.BLOCK, alakarkinos.getHome(), null);
-        ItemHandlerHelper.insertItemStacked(handler, loot, false);
+        List<ItemStack> loot = getLoot();
+        if (!loot.isEmpty()) {
+            IItemHandler handler = alakarkinos.level.getCapability(Capabilities.ItemHandler.BLOCK, alakarkinos.getHome(), null);
+
+            for (ItemStack stack : loot) {
+                if (stack.isEmpty()) {
+                    continue;
+                }
+
+                EntityFlyingItem.spawn(alakarkinos.getHome(), (ServerLevel) alakarkinos.level, hatPos, alakarkinos.getHome().above())
+                        .setStack(stack)
+                        .getEntityData().set(EntityFlyingItem.IS_BUBBLE, true);
+                ItemHandlerHelper.insertItemStacked(handler, stack, false);
+            }
+        }
         return new DecideCrabActionState(alakarkinos);
     }
 
 
-    public ItemStack getLoot() {
+    public List<ItemStack> getLoot() {
         var level = this.alakarkinos.level;
         LootTable loottable = alakarkinos.level.getServer().reloadableRegistries().getLootTable(this.recipe.table());
         var player = ANFakePlayer.getPlayer((ServerLevel) level);
@@ -79,7 +88,6 @@ public class SpawnLootState extends CrabState {
                 .withParameter(LootContextParams.ORIGIN, alakarkinos.position())
                 .withParameter(LootContextParams.THIS_ENTITY, player)
                 .create(LootContextParamSets.CHEST);
-        ObjectArrayList<ItemStack> objectarraylist = loottable.getRandomItems(lootparams, alakarkinos.level.random);
-        return objectarraylist.isEmpty() ? ItemStack.EMPTY : objectarraylist.getFirst();
+        return loottable.getRandomItems(lootparams, alakarkinos.level.random);
     }
 }
