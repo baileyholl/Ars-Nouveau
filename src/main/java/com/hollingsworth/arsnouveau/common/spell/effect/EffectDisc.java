@@ -27,6 +27,8 @@ public class EffectDisc extends AbstractEffect {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         Entity entity = rayTraceResult.getEntity();
         DiscEntity discEntity = new DiscEntity(world, entity.getX(), entity.getY(), entity.getZ());
+        discEntity.setXRot(entity.getXRot());
+        discEntity.setYRot(entity.getYRot());
         entity.startRiding(discEntity);
         world.addFreshEntity(discEntity);
     }

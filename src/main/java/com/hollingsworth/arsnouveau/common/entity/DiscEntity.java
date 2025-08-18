@@ -12,8 +12,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class DiscEntity extends Entity implements PlayerRideableJumping {
+public class DiscEntity extends Entity implements PlayerRideableJumping, GeoEntity {
 
     public float prevBoardRot = 0;
     private boolean rocking;
@@ -62,10 +66,6 @@ public class DiscEntity extends Entity implements PlayerRideableJumping {
 
     public static boolean canVehicleCollide(Entity p_242378_0_, Entity entity) {
         return (entity.canBeCollidedWith() || entity.isPushable()) && !p_242378_0_.isPassengerOfSameVehicle(entity);
-    }
-
-    protected void defineSynchedData() {
-
     }
 
     public boolean shouldRiderSit() {
@@ -315,5 +315,17 @@ public class DiscEntity extends Entity implements PlayerRideableJumping {
     @Override
     public void handleStopJump() {
 
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }

@@ -1,21 +1,21 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.entity.DiscEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class DiscRenderer extends EntityRenderer<DiscEntity> {
+public class DiscRenderer extends GeoEntityRenderer<DiscEntity> {
 
     public DiscRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager);
+        super(renderManager, new GenericModel<>("terra_top").withEmptyAnim());
     }
 
     @Override
@@ -26,7 +26,7 @@ public class DiscRenderer extends EntityRenderer<DiscEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(DiscEntity entity) {
-        return ArsNouveau.prefix("textures/entity/spell_proj.png");
+        return ResourceLocation.withDefaultNamespace("textures/block/dirt.png");
     }
 
 }
