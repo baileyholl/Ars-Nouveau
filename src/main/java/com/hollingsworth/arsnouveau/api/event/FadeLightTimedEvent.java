@@ -42,15 +42,15 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
         }
         if (!serverSide && LightManager.shouldUpdateDynamicLight()) {
             if (this.isExpired()) {
-                this.setDynamicLightEnabled(false);
+                this.ars_nouveau$setDynamicLightEnabled(false);
             } else {
-                this.dynamicLightTick();
+                this.ars_nouveau$dynamicLightTick();
                 LightManager.updateTracking(this);
             }
         }
         ticksLeft--;
         if (ticksLeft <= 0) {
-            this.setDynamicLightEnabled(false);
+            this.ars_nouveau$setDynamicLightEnabled(false);
         }
     }
 
@@ -60,37 +60,37 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     }
 
     @Override
-    public double getDynamicLightX() {
+    public double ars_nouveau$getDynamicLightX() {
         return targetPos.x;
     }
 
     @Override
-    public double getDynamicLightY() {
+    public double ars_nouveau$getDynamicLightY() {
         return targetPos.y;
     }
 
     @Override
-    public double getDynamicLightZ() {
+    public double ars_nouveau$getDynamicLightZ() {
         return targetPos.z;
     }
 
     @Override
-    public Level getDynamicLightWorld() {
+    public Level ars_nouveau$getDynamicLightWorld() {
         return level;
     }
 
     @Override
-    public void resetDynamicLight() {
+    public void ars_nouveau$resetDynamicLight() {
         this.lambdynlights$lastLuminance = 0;
     }
 
     @Override
-    public int getLuminance() {
+    public int ars_nouveau$getLuminance() {
         return lambdynlights$luminance;
     }
 
     @Override
-    public void dynamicLightTick() {
+    public void ars_nouveau$dynamicLightTick() {
         lambdynlights$luminance = starterTicks == 0 ? 0 : (int) ((double) startLuminance * ((double) ticksLeft / (double) this.starterTicks));
     }
 
@@ -101,7 +101,7 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
 
     @Override
     public boolean ars_nouveau$updateDynamicLight(LevelRenderer renderer) {
-        int luminance = this.getLuminance();
+        int luminance = this.ars_nouveau$getLuminance();
 
         if (luminance != this.lambdynlights$lastLuminance) {
             this.lambdynlights$lastLuminance = luminance;

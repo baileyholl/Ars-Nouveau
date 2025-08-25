@@ -2,17 +2,14 @@ package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,18 +32,11 @@ public class LightManager {
     public static int lastUpdateCount = 0;
     private static final Map<EntityType<?>, List<Function<?, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
+    static boolean isLambDynamicLightsPresent = false;
+
     public static void init() {
 
-        register(EntityType.PLAYER, (p -> {
-            NonNullList<ItemStack> list = p.inventory.items;
-            for (int i = 0; i < 9; i++) {
-                ItemStack jar = list.get(i);
-                if (jar.getItem() == ItemsRegistry.JAR_OF_LIGHT.asItem()) {
-                    return 15;
-                }
-            }
-            return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
-        }));
+        register(EntityType.PLAYER, DynamLightUtil::getJarOfLightLuminance);
 
         register(EntityType.FALLING_BLOCK, (p) -> {
             return p.getBlockState().getLightEmission(p.level, p.blockPosition());
@@ -129,7 +119,7 @@ public class LightManager {
      * @param lightSource the light source to add
      */
     public static void addLightSource(LambDynamicLight lightSource) {
-        if (!lightSource.getDynamicLightWorld().isClientSide())
+        if (!lightSource.ars_nouveau$getDynamicLightWorld().isClientSide())
             return;
         if (!shouldUpdateDynamicLight())
             return;
@@ -147,7 +137,7 @@ public class LightManager {
      * @return {@code true} if the light source is tracked, else {@code false}
      */
     public static boolean containsLightSource(@NotNull LambDynamicLight lightSource) {
-        if (!lightSource.getDynamicLightWorld().isClientSide())
+        if (!lightSource.ars_nouveau$getDynamicLightWorld().isClientSide())
             return false;
 
         boolean result;
@@ -207,8 +197,8 @@ public class LightManager {
             it = sourceIterator.next();
             sourceIterator.remove();
             if (ArsNouveau.proxy.getMinecraft().levelRenderer != null) {
-                if (it.getLuminance() > 0)
-                    it.resetDynamicLight();
+                if (it.ars_nouveau$getLuminance() > 0)
+                    it.ars_nouveau$resetDynamicLight();
                 it.ars_nouveau$scheduleTrackedChunksRebuild(ArsNouveau.proxy.getMinecraft().levelRenderer);
             }
         }
@@ -343,12 +333,12 @@ public class LightManager {
      * @return the dynamic light level at the specified position
      */
     public static double maxDynamicLightLevel(@NotNull BlockPos pos, @NotNull LambDynamicLight lightSource, double currentLightLevel) {
-        int luminance = lightSource.getLuminance();
+        int luminance = lightSource.ars_nouveau$getLuminance();
         if (luminance > 0) {
             // Can't use Entity#squaredDistanceTo because of eye Y coordinate.
-            double dx = pos.getX() - lightSource.getDynamicLightX() + 0.5;
-            double dy = pos.getY() - lightSource.getDynamicLightY() + 0.5;
-            double dz = pos.getZ() - lightSource.getDynamicLightZ() + 0.5;
+            double dx = pos.getX() - lightSource.ars_nouveau$getDynamicLightX() + 0.5;
+            double dy = pos.getY() - lightSource.ars_nouveau$getDynamicLightY() + 0.5;
+            double dz = pos.getZ() - lightSource.ars_nouveau$getDynamicLightZ() + 0.5;
 
             double distanceSquared = dx * dx + dy * dy + dz * dz;
             // 7.75 because else we would have to update more chunks and that's not a good idea.
@@ -370,20 +360,22 @@ public class LightManager {
      * @param lightSource the light source
      */
     public static void updateTracking(@NotNull LambDynamicLight lightSource) {
-        boolean enabled = lightSource.isDynamicLightEnabled();
-        int luminance = lightSource.getLuminance();
+        boolean enabled = lightSource.ars_nouveau$isDynamicLightEnabled();
+        int luminance = lightSource.ars_nouveau$getLuminance();
         if (!enabled && luminance > 0) {
-            lightSource.setDynamicLightEnabled(true);
+            lightSource.ars_nouveau$setDynamicLightEnabled(true);
         } else if (enabled && luminance < 1) {
-            lightSource.setDynamicLightEnabled(false);
+            lightSource.ars_nouveau$setDynamicLightEnabled(false);
         }
     }
 
     public static boolean shouldUpdateDynamicLight() {
-        return Config.DYNAMIC_LIGHTS_ENABLED != null && Config.DYNAMIC_LIGHTS_ENABLED.get();
+        return !isLambDynamicLightsPresent && Config.DYNAMIC_LIGHTS_ENABLED != null && Config.DYNAMIC_LIGHTS_ENABLED.get();
     }
 
     public static void toggleLightsAndConfig(boolean enabled) {
+        if (isLambDynamicLightsPresent) return;
+
         Config.DYNAMIC_LIGHTS_ENABLED.set(enabled);
         Config.DYNAMIC_LIGHTS_ENABLED.save();
         if (!enabled) {
