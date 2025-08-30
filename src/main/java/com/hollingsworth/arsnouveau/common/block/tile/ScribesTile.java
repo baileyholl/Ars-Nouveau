@@ -259,6 +259,13 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
 
     @Override
     public void onWanded(Player playerEntity) {
+        if (!this.isMasterTile()) {
+            ScribesTile tile = getLogicTile();
+            if (tile != null) {
+                tile.onWanded(playerEntity);
+            }
+            return;
+        }
         autoYoink = !autoYoink;
         updateBlock();
     }
