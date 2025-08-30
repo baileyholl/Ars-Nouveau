@@ -36,12 +36,16 @@ public class DiscEntity extends Entity implements PlayerRideableJumping, GeoEnti
     private double lxd;
     private double lyd;
     private double lzd;
+    public float rotation;
 
     private int rideForTicks = 0;
 
     private float boardForwards = 0.0F;
     private int removeIn;
     private Player returnToPlayer = null;
+    public float spinAngle;
+    public float spinAngleO;
+    public float spinSpeed;
 
     int jumpWindow = 0;
 
@@ -114,6 +118,18 @@ public class DiscEntity extends Entity implements PlayerRideableJumping, GeoEnti
 
     public void tick() {
         super.tick();
+        if (level().isClientSide) {
+            spinAngleO = spinAngle;
+
+            float rawSpeed = (float) this.getDeltaMovement().length();
+
+            float smooth = 0.85F; // higher = smoother, slower response
+            spinSpeed = spinSpeed * smooth + rawSpeed * (1F - smooth);
+
+            float spinFactor = 360F * 0.25F; // deg per block traveled; tune this
+            spinAngle += spinSpeed * spinFactor;
+            
+        }
         if (jumpFor > 0) {
             jumpFor--;
         }
