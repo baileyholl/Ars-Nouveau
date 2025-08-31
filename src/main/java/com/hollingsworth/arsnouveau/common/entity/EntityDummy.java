@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -18,10 +19,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -32,13 +30,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityDummy extends PathfinderMob implements ISummon {
+public class EntityDummy extends PathfinderMob implements ISummon, IDispellable {
     @OnlyIn(Dist.CLIENT)
     private PlayerInfo playerInfo;
 
@@ -197,4 +196,9 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         } else return false;
     }
 
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.ticksLeft = 0;
+        return true;
+    }
 }

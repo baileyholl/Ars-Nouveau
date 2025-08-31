@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
@@ -33,12 +34,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummon {
+public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummon, IDispellable {
     public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(SummonSkeleton.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private final RangedBowAttackGoal<SummonSkeleton> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
@@ -335,4 +337,9 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
     }
 
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.limitedLifeTicks = 0;
+        return true;
+    }
 }
