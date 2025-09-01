@@ -131,6 +131,13 @@ repositories {
             includeGroup 'dev.emi'
         }
     }
+    maven {
+        name = "Gegy"
+        url = uri("https://maven.gegy.dev/releases/")
+        content {
+            includeGroup "dev.lambdaurora.lambdynamiclights"
+        }
+    }
 }
 
 dependencies {
@@ -148,6 +155,11 @@ dependencies {
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21.1"
+    compileOnly("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
+        capabilities {
+            requireCapability("dev.lambdaurora.lambdynamiclights:api-mojmap")
+        }
+    }
 
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
