@@ -193,11 +193,11 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                     if (f >= 1.0F) {
                         arr.setCritArrow(true);
                     }
-                    if (isArrowInfinite && use == 0) {
+                    if (use == 0) {
                         arrowStack = arrowStack.copyWithCount(1);
                         arrowStack.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
                     }
-                    addArrow(arr, bowStack, arrowStack, isArrowInfinite, playerentity);
+                    addArrow(arr, bowStack, arrowStack, use == 0, playerentity);
                 }
                 if (!isArrowInfinite && !playerentity.hasInfiniteMaterials()) {
                     arrowStack.shrink(use);

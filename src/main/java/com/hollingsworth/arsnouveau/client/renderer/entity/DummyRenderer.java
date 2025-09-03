@@ -43,6 +43,7 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
         playerModel = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false);
         playerModelSlim = new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
         this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getModelManager()));
+        this.addLayer(new DummyCapeLayer(this));
         this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
         this.addLayer(new ArrowLayer<>(context, this));
         this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
