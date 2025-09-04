@@ -9,15 +9,18 @@ import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -35,39 +38,49 @@ public class LangDatagen extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        for (DeferredHolder<Item, ? extends Item> entry : ItemsRegistry.ITEMS.getEntries()) {
+            if (entry.get() instanceof AliasProvider provider) {
+                for (AliasProvider.Alias alias : provider.getAliases()) {
+                    String key = alias.toTranslationKey();
+                    if (data.containsKey(key)) continue;
+                    add(key, alias.name());
+                }
+            }
+        }
+
         ArsNouveauAPI arsNouveauAPI = ArsNouveauAPI.getInstance();
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
             ResourceLocation registryName = glyph.spellPart.getRegistryName();
-            if(registryName.getNamespace().equals(ArsNouveau.MODID)) {
+            if (registryName.getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.glyph_desc." + registryName.getPath(), spellPart.getBookDescription());
                 add("ars_nouveau.glyph_name." + registryName.getPath(), spellPart.getName());
 
                 Map<AbstractAugment, String> augmentDescriptions = new HashMap<>();
                 spellPart.addAugmentDescriptions(augmentDescriptions);
 
-                for(AbstractAugment augment : augmentDescriptions.keySet()){
+                for (AbstractAugment augment : augmentDescriptions.keySet()) {
                     add("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath(), augmentDescriptions.get(augment));
                 }
             }
         }
         for (FamiliarScript i : FamiliarRegistry.getFamiliarScriptMap().values()) {
-            if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)){
+            if (i.familiar.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.familiar_desc." + i.familiar.getRegistryName().getPath(), i.familiar.getBookDescription());
                 add("ars_nouveau.familiar_name." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
                 add("item.ars_nouveau." + i.familiar.getRegistryName().getPath(), i.familiar.getBookName());
             }
         }
         for (RitualTablet i : RitualRegistry.getRitualItemMap().values()) {
-            if(i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
+            if (i.ritual.getRegistryName().getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.ritual_desc." + i.ritual.getRegistryName().getPath(), i.ritual.getLangDescription());
                 add("item.ars_nouveau." + i.ritual.getRegistryName().getPath(), i.ritual.getLangName());
             }
         }
 
         for (PerkItem i : PerkRegistry.getPerkItemMap().values()) {
-            if(i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
+            if (i.perk.getRegistryName().getNamespace().equals(ArsNouveau.MODID) && !i.perk.getRegistryName().getPath().equals("blank_thread")) {
                 add("ars_nouveau.perk_desc." + i.perk.getRegistryName().getPath(), i.perk.getLangDescription());
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());
             }
@@ -118,6 +131,14 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.amulet_of_mana_regen", "Amulet of Mana Regen");
         add("item.ars_nouveau.dominion_wand", "Dominion Wand");
         add("item.ars_nouveau.dominion_wand.strict", "Dominion Wand (Strict Mode)");
+        add("item.ars_nouveau.ars_stencil", "Banner Pattern");
+        add("item.ars_nouveau.ars_stencil.desc", "Nouveau");
+        add("item.ars_nouveau.archwood_sign", "Archwood Sign");
+        add("item.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
+        add("block.ars_nouveau.archwood_sign", "Archwood Sign");
+        add("block.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
+        add("block.ars_nouveau.archwood_wall_sign", "Archwood Sign");
+        add("block.ars_nouveau.archwood_hanging_wall_sign", "Archwood Hanging Sign");
         add("block.ars_nouveau.scribes_table", "Scribe's Table");
         add("block.ars_nouveau.light_block", "Magelight");
         add("block.ars_nouveau.temporary_light_block", "Temporary Magelight");
@@ -162,7 +183,8 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.spell_parchment", "Spell Parchment");
         add("item.ars_nouveau.ring_of_greater_discount", "Ring of Greater Discount");
         add("item.ars_nouveau.ring_of_lesser_discount", "Ring of Lesser Discount");
-        add("alert.core", "An Arcane Core must be placed beneath this block.");
+        add("alert.core", "An Arcane Core must be placed next to the base of the Enchanting Apparatus.");
+        add("alert.core.wrong_axis", "The Arcane Core must be aligned with the base of the Enchanting Apparatus.");
         add("whirlisprig.unhappy", "The Whirlisprig seems very unhappy in her home. Try sprucing it up!");
         add("whirlisprig.content", "The Whirlisprig seems content, but could be better.");
         add("whirlisprig.happy", "The Whirlisprig appears happy enough.");
@@ -184,7 +206,8 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.magebloom", "Crafted using the Enchanting Apparatus");
         add("ars_nouveau.alert.turret_type", "Selected form cannot be used by a turret.");
         add("ars_nouveau.alert.spell_set", "Spell set.");
-        add("ars_nouveau.alert.duplicate_method", "No duplicate cast methods are allowed.");
+        add("ars_nouveau.alert.duplicate_method", "No duplicate cast forms are allowed.");
+        add("ars_nouveau.relay.current_power", "Current Power: %d");
         add("ars_nouveau.relay.no_to", "No send location set.");
         add("ars_nouveau.relay.one_to", "Sending to %d location(s).");
         add("ars_nouveau.relay.no_from", "No take location set.");
@@ -229,8 +252,9 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.void_jar", "Jar of Voiding");
         add("ars_nouveau.rune.setperm", "This rune is now permanent.");
         add("ars_nouveau.page.void_jar", "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.");
-        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.");
+        add("ars_nouveau.page.runic_chalk", "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one. Using an essence on the rune will change its pattern.");
         add("ars_nouveau.wand.invalid", "Invalid spell. Wands accept Effects and Augments only.");
+        add("ars_nouveau.gauntlet.invalid", "Invalid spell. Gauntlets accept Effects and Augments only.");
         add("item.ars_nouveau.wand", "Enchanter's Wand");
         add("ars_nouveau.wixie.has_wixie", "This cauldron already has a wixie.");
         add("ars_nouveau.wixie.no_recipe", "No recipes found.");
@@ -253,7 +277,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.green_archwood_leaves", "Flourishing Archwood Leaves");
         add("block.ars_nouveau.red_archwood_leaves", "Blazing Archwood Leaves");
         add("block.ars_nouveau.archwood_planks", "Archwood Planks");
-        add("ars_nouveau.page.wand", "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another method. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.");
+        add("ars_nouveau.page.wand", "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another form. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.");
         add("ars_nouveau.starbuncle.cleared", "Tasks cleared.");
         add("block.ars_nouveau.red_archwood_wood", "Blazing Archwood Wood");
         add("block.ars_nouveau.green_archwood_wood", "Flourishing Archwood Wood");
@@ -329,9 +353,9 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_book_gui.augment", "Augment");
         add("ars_nouveau.spell_book_gui.create", "Create");
         add("ars_nouveau.spell_book_gui.clear", "Clear");
-        add("ars_nouveau.color_gui.red_slider", "Red: ");
-        add("ars_nouveau.color_gui.green_slider", "Green: ");
-        add("ars_nouveau.color_gui.blue_slider", "Blue: ");
+        add("ars_nouveau.color_gui.red_slider", "Red: %s");
+        add("ars_nouveau.color_gui.green_slider", "Green: %s");
+        add("ars_nouveau.color_gui.blue_slider", "Blue: %s");
         add("ars_nouveau.color_gui.title", "Spell Color");
         add("ars_nouveau.color_gui.presets", "Presets");
         add("ars_nouveau.color_gui.default", "Default");
@@ -445,6 +469,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.tooltip.running", "Running");
         add("ars_nouveau.tooltip.conditions_unmet", "Conditions Unmet");
         add("ars_nouveau.tooltip.exp_gem", "Grants experience on use. Sneak to consume the entire stack.");
+        add("ars_nouveau.tooltip.too_many_animals", "Too many animals nearby.");
         add("item.ars_nouveau.experience_gem", "Experience Gem");
         add("item.ars_nouveau.greater_experience_gem", "Greater Experience Gem");
         add("effect.ars_nouveau.hex", "Hex");
@@ -605,33 +630,44 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.crush_recipe", "Crush Glyph");
         add("ars_nouveau.budding_conversion_recipe", "Amethyst Golem Conversion");
         add("ars_nouveau.scry_ritual_recipe", "Scry Ritual");
+        add("ars_nouveau.alakarkinos_recipe", "Alakarkinos Conversion");
+        add("ars_nouveau.alakarkinos_recipe.chance", "Chance: %s");
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
-        add("ars_nouveau.page.apparatus_crafting", "Apparatus Crafting");
-        add("ars_nouveau.page1.apparatus_crafting", "The Enchanting Apparatus is used for crafting special machines, curios, and equipment used to progress in Ars Nouveau. Crafting with the Enchanting Apparatus requires up to eight Arcane Pedestals, an Arcane Core, and the Enchanting Apparatus block. Once you have setup your apparatus, you should craft your first Magebloom Seed.");
-        add("ars_nouveau.page.better_casting", "Better Casting");
-        add("ars_nouveau.page1.better_casting", "Your mana pool may be expanded with special mage armors, enchantments, learning new glyphs, or by drinking potions. Once you have acquired a Magebloom Seed you may craft a variety of configurable magic armors, altered using Threads.");
-        add("ars_nouveau.page.new_glyphs", "New Glyphs");
-        add("ars_nouveau.page1.new_glyphs", "Accessing new spells will require a small amount of setup, resources, and base building. New spells can be learned by obtaining Glyphs. Glyphs are created using the Scribe's Table with EXP and items. Once you have obtained a glyph, simply use it to memorize the glyph. Glyphs can be shared between players with an Annotated Codex. See the section on the Scribes Table for more information.");
-        add("ars_nouveau.page.source", "Source");
-        add("ars_nouveau.page1.source", "Source is a special resource that must be gathered using devices in the world. Source is used for powering devices like the Imbuement Chamber and Enchanting Apparatus. To begin gathering Source, you will need a Source Jar and a Sourcelink.");
-        add("ars_nouveau.page.spell_casting", "Spell Casting");
-        add("ars_nouveau.page1.spell_casting", "To begin spell casting, you will need to first obtain a spell book. A spell book will allow you to create, store, and cast spells using Mana. To craft your first spell, you must first select the Form that the spell will take on. A Form glyph must always be the first glyph in a spell recipe.");
-        add("ars_nouveau.page2.spell_casting", "Next, add any number of Effects to the chain. Effects refer to what the spell will do and they will resolve in the order they are placed in the book at the target or location the spell hits. An Augment can be used to modify the way an Effect or Form behaves. Augments may be placed after an Effect or Form. An Augment will only apply to the glyph to the left of it. Multiple augments may also be applied on the same Effect or Form by chaining Augments together.");
-        add("ars_nouveau.page3.spell_casting", "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook, check settings for more information.");
-        add("ars_nouveau.page.spell_mana", "Spell Mana");
-        add("ars_nouveau.page1.spell_mana", "Mana is used to cast spells with a Spell Book. Your max mana and regeneration, may be increased by wearing special Mage Armor or by applying the Mana Boost or Mana Regen enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spell book.");
-        add("ars_nouveau.page2.spell_mana", "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book.");
-        add("ars_nouveau.page.starting_automation", "Starting Automation");
-        add("ars_nouveau.page1.starting_automation", "Spells may be used in Automation using Spell Turrets. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms.");
-        add("ars_nouveau.page.trinkets", "Trinkets");
-        add("ars_nouveau.page1.trinkets", "Items and curios can expand your casting and can provide unique buffs. For more casting, you may want to craft a Ring of Discount or an Amulet of Mana Regen. For travel, see the Belt of Levitation, or improve your mining efficiency with the Jar of Voiding.");
-        add("ars_nouveau.page.upgrades", "Upgrades");
-        add("ars_nouveau.page1.upgrades", "Tier 2 and 3 glyphs will require an Apprentice and Archmage spell book respectively. Higher tier books will allow you to cast higher tier spells, use them in automation, and provide additional mana and mana regeneration as a bonus. Once you are able to upgrade your book, upgrading your armor to the next tier of robes will also grant you another boost in casting.");
-        add("ars_nouveau.page.world_generation", "World Generation");
-        add("ars_nouveau.page1.world_generation", "Archwood trees come in several decorative variants and is needed to craft several important blocks. Archwood fruits may also spawn on these trees, used for potions. Source Berries, found in Taigas, are essential for crafting Mana Regeneration potions or powering a Mycelial Sourcelink. Various mobs will also spawn, but can be revealed by using a Dowsing Rod or Sense Magic with a Tier 2 spell book.");
+
         add("ars_nouveau.page.archwood", "Archwood Trees");
         add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
+
+        add("ars_nouveau.page.spell_casting", "1 - Spells");
+        add("ars_nouveau.page1.spell_casting", "Ars Nouveau grants aspiring wizards the ability to craft powerful spells. Through creative spellcrafting, you can vanquish foes, reshape the world, automate tasks, create spectacles, and so much more!\nTo begin spellcasting, you will need to craft a Novice’s Spell Book which will allow you to create, store, and cast spells using Mana.\nUpgrading your Spell Book, learning new Glyphs, and crafting magical equipment will further enhance your ability to cast new and more powerful spells.");
+
+        add("ars_nouveau.page.introduction_to_glyphs", "2 - Glyphs");
+        add("ars_nouveau.page1.introduction_to_glyphs", "Glyphs are the building blocks that make up spells. A spell’s outcome is determined by which Glyphs are used and in what order they appear. They fall under three major categories: Forms, Effects, and Augments.\nForm Glyphs are the vessels that deliver the contents of a spell to the target. Every spell must begin with a Form, and only one Form may be present. Effect Glyphs determine what a spell will do once it reaches its target. Spells can contain multiple Effects and will resolve in the order they are placed during spellcrafting.\nAugment Glyphs change the properties of the Form or Effect Glyph to their left as long as they are compatible. Multiple Augments may be chained together to modify the same Glyph. Augments have no effect on other Augments. Glyphs fall into tiers of I, II, or III. The Novice’s Spell Book can only cast tier I Glyphs, but higher tiers will be available each time you upgrade your Spell Book.");
+
+        add("ars_nouveau.page.introduction_to_spellcrafting", "3 - Spellcrafting");
+        add("ars_nouveau.page1.introduction_to_spellcrafting", "Spellcrafting is accessed by pressing [C] while your Spell Book is selected on the inventory bar. Clicking Glyphs from the list will add them to the bottom of the page to represent they are part of the spell. Clicking Glyphs inside your spell will remove them.\nOnce satisfied, you may name the spell and click “Create” to save it. Spell Books may hold up to ten spells at once as shown by the bookmarks on the right side of the book. Clicking one will swap the spell you are working on.");
+
+        add("ars_nouveau.page.spellcasting", "4 - Spellcasting");
+        add("ars_nouveau.page1.spellcasting", "To use a spell, select your Spell Book on the inventory bar and right-click to cast it.\nYour active spell is shown above your Mana bar. Press [X] to swap to your next spell and [Z] to swap your previous spell. Press [V] to open a radial menu that allows you to quickly swap between spells on your book. Each spell may also be hotkeyed individually via the Key Bind menu.\nIf the spell fails to cast, check to make sure that:\nYou have enough Mana to cast the spell.\nThe spell begins with a Form Glyph and has at least one Effect Glyph.\n");
+
+        add("ars_nouveau.page.spell_mana", "5 - Mana");
+        add("ars_nouveau.page1.spell_mana", "Casting a spell consumes your Mana based on the total cost of all the Glyphs that make up the spell. Your current Mana stores can be seen on the bar in the bottom left corner of your screen.\n\nExpended Mana will regenerate over time. Mana may also be consumed or reserved by other things such as magical items or familiars.\nEach new Glyph you learn will give a small permanent boost to your Mana’s regeneration and maximum capacity. These boosts can also be gained by upgrading your spell book, equipping some pieces of magical gear, or drinking a Mana potion.");
+
+        add("ars_nouveau.page.learning_glyphs", "6 - Learning Glyphs");
+        add("ars_nouveau.page1.learning_glyphs", "New Glyphs may be created through the Scribe’s Table from certain items and paying EXP. Once crafted, the Glyph can be consumed to learn it, making it available during spellcrafting.\nPlayers can share their current Glyph knowledge with each other by crafting an Annotated Codex.");
+
+        add("ars_nouveau.page.important_resources", "7 - Important Resources");
+        add("ars_nouveau.page1.important_resources", "It's recommended to keep stock of certain resources as they will be used in many crafting recipes.\nWhile exploring, look for Iron Ore, Gold Ore, Amethyst Shards (or Lapis Lazuli), Diamond, Sourceberries, and Archwood Logs.\nDowsing Rods can help with locating Budding Amethyst Blocks and magical creatures.");
+
+        add("ars_nouveau.page.source", "8 - Source");
+        add("ars_nouveau.page1.source", "Source is a magical resource used for many purposes such as speeding up the Imbuement Chamber, fueling devices, powering magical helpers, creating portals, or fueling powerful Enchanting Apparatus recipes.\nSourcelinks are specialized artifacts that can collect and concentrate Source from the world into Source Jars. Source Relays can be used to transfer Source over large distances between jars.\nThe Agronomic and Mycelial Sourcelinks are good early options for building up your Source supply.");
+
+        add("ars_nouveau.page.magical_crafting", "9 - Magical Crafting");
+        add("ars_nouveau.page1.magical_crafting", "The Imbuement Chamber allows the conversion of Amethyst Shards or Lapis Lazuli into Source Gems. By placing three Arcane Pedestals bearing certain items adjacent to the chamber, Source Gems can be imbued further into Essences which are used in many Glyph recipes.\nPlacing an Enchanting Apparatus on top of an Arcane Core allows the crafting of essentials such as Magebloom Seeds, magical equipment, and charms to summon magical helpers. It can also directly enchant your gear with enchantments of your choice.\nThe Alteration Table allows for slotting in various Threads into magical armor that grant special properties while worn.");
+
+        add("ars_nouveau.page.magical_automation", "10 - Magical Automation");
+        add("ars_nouveau.page1.magical_automation", "Ars Nouveau supports a wide variety of automation methods via Spell Turrets, magical helpers, and Rituals.\nUsing one or a combination of these options can achieve almost anything you want such as farming crops and trees, quarrying the earth, crafting and transporting items, smelting, and brewing potions.");
+
         add("ars_nouveau.page1.decorative", "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.");
         add("ars_nouveau.wilden", "Wilden");
         add("ars_nouveau.page.decorative", "Decorative Blocks");
@@ -656,7 +692,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.whirlisprig_flower", "Whirlisprig Blossom");
         add("ars_nouveau.page.relay", "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.");
         add("ars_nouveau.page.relay_splitter", "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.");
-        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.");
+        add("ars_nouveau.page1.enchanting_apparatus", "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core next to its base in order to work.");
         add("ars_nouveau.page1.imbuement_chamber", "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.");
         add("ars_nouveau.page.potion_melder", "Converts three doses of a potion from two Potion Jars and outputs a potion with the combined effects. Use the Dominion Wand from a Potion Jar to Melder to link a jar for consumption. Link two input potion jars to the melder. Then, use the wand on the Melder and then to a third jar to set the output. The Potion Melder requires source per mix.");
         add("ars_nouveau.page.warp_portal", "Warp Portals");
@@ -667,15 +703,15 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.ritual_brazier", "A brazier that may be used as decoration or for performing rituals. To light the brazier for decoration, cast a Light spell on the brazier. The color of the brazier corresponds with the color of the spell. Applying a redstone signal will disable a running ritual. For information on performing rituals, see the dedicated section on rituals.");
         add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
         add("ars_nouveau.page2.basic_spell_turret", "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.");
-        add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, and Redstone for free.");
+        add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, Sensitive and Redstone glyphs for free.");
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
         add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
         add("ars_nouveau.page2.bookwyrm_charm", "In the event that they die or are dispelled, they will drop their charm.");
         add("ars_nouveau.page.dominion_wand", "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay. You can switch into Strict mode using the radial menu, allowing to specify the side of the blocks to use.");
         add("ars_nouveau.page1.drygmy_charm", "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it! You may dye a Drygmy Cyan, Orange, or Brown.");
         add("ars_nouveau.page2.drygmy_charm", "A Drygmy can also produce experience gems!");
-        add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
-        add("ars_nouveau.page4.drygmy_charm", "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home. Nearby Containment Jars will also count as an entity.");
+        add("ars_nouveau.page3.drygmy_charm", "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drygmy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.");
+        add("ars_nouveau.page4.drygmy_charm", "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drygmy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home. Nearby Containment Jars will also count as an entity.");
         add("ars_nouveau.page5.drygmy_charm", "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into adjacent chests. Each time this occurs, the henge will require Source to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of Source next to the Henge.");
         add("ars_nouveau.happiness", "Happiness");
         add("ars_nouveau.production", "Production");
@@ -813,8 +849,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.relay_collector", "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.");
         add("block.ars_nouveau.relay_collector", "Source Relay: Collector");
         add("ars_nouveau.page2.relay", "A redstone signal will disable the relay.");
-        add("ars_nouveau.sounds.pitch", "Pitch: ");
-        add("ars_nouveau.sounds.volume", "Volume: ");
+        add("ars_nouveau.sounds.pitch", "Pitch: %s");
+        add("ars_nouveau.sounds.volume", "Volume: %s");
         add("ars_nouveau.gui.sounds", "Sounds");
         add("ars_nouveau.sounds.title", "Spell Sound");
         add("ars_nouveau.sound.empty", "No Sound");
@@ -988,13 +1024,13 @@ public class LangDatagen extends LanguageProvider {
         add("item.minecraft.tipped_arrow.effect.shielding_potion", "Arrow of Shielding");
         add("item.minecraft.tipped_arrow.effect.shielding_potion_long", "Arrow of Shielding");
         add("effect.ars_nouveau.recovery", "Recovery");
-        add("effect.ars_nouveau.recovery.desc","Increases healing received from all sources.");
+        add("effect.ars_nouveau.recovery.desc", "Increases healing received from all sources.");
         add("effect.ars_nouveau.blasting", "Blasting");
-        add("effect.ars_nouveau.blasting.desc","Causes the target to explode when the duration ends.");
+        add("effect.ars_nouveau.blasting.desc", "Causes the target to explode when the duration ends.");
         add("effect.ars_nouveau.freezing", "Freezing");
-        add("effect.ars_nouveau.freezing.desc","Freezes the target over time.");
+        add("effect.ars_nouveau.freezing.desc", "Freezes the target over time.");
         add("effect.ars_nouveau.shielding", "Shielding");
-        add("effect.ars_nouveau.shielding.desc","Reduces the amount of damage taken.");
+        add("effect.ars_nouveau.shielding.desc", "Reduces the amount of damage taken.");
         add("item.ars_nouveau.wixie_hat", "Wixie Hat");
         add("tooltip.ars_nouveau.wixie_hat", "Give to a Starbuncle to make them transport potions.");
         add("ars_nouveau.starbuncle.default_behavior", "Starbuncle will now transport items!");
@@ -1064,6 +1100,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.jump_height.desc", "Increases the height of your jumps.");
         add("ars_nouveau.perk.feather", "Fall Damage Reduction");
         add("ars_nouveau.perk.feather.desc", "Reduces the amount of fall damage taken.");
+        add("ars_nouveau.perk.weight", "Weight");
+        add("ars_nouveau.perk.weight.desc", "Affects how much gravity is applied.");
         add("ars_nouveau.page.threads", "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.");
         add("ars_nouveau.threads", "Thread Slots");
         add("ars_nouveau.thread_layout", "Thread Tiers");
@@ -1079,10 +1117,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perks.duplicated", "You have equipped armor that contains a perk you already have. You will only receive the effect of the perk once.");
         add("ars_nouveau.totem_perk.trigger", "Thread of Undying will reactive the next time you sleep.");
         add("ars_nouveau.totem_perk.active", "Thread of Undying is now active.");
-        add("ars_nouveau.sound.fire_family", "Fire Family");
+        add("ars_nouveau.sound.fire_family", "Fire");
         add("ars_nouveau.sound.default_family", "Default");
-        add("ars_nouveau.sound.tempestry_family", "Tempestry Family");
-        add("ars_nouveau.sound.gaia_family", "Gaia Family");
+        add("ars_nouveau.sound.tempestry_family", "Tempestry");
+        add("ars_nouveau.sound.gaia_family", "Gaia");
         add("block.ars_nouveau.mob_jar", "Containment Jar");
         add("ars_nouveau.page.mob_jar", "Containment Jar");
         add("ars_nouveau.page1.mob_jar", "Allows you to capture and store mobs for transportation or decoration. To capture a mob, you must perform a Ritual of Containment. See the Ritual of Containment for more info. To release a mob, cast Dispel on the jar and the mob will be released above the jar. Note Blocks placed above a jar will play an ambient sound of the mob inside.");
@@ -1189,6 +1227,8 @@ public class LangDatagen extends LanguageProvider {
         add("entity.minecraft.villager.shady_wizard", "Shady Wizard");
         add("death.attack.an_enchantedBlock", "%1$s was crushed by %2$s magic blocks");
         add("death.attack.freeze.item", "%1$s was frozen to death by %2$s using %3$");
+        add("death.attack.sourceberry_bush", "%1$s was poked to death by a sourceberry bush");
+        add("death.attack.sourceberry_bush.player", "%1$s was poked to death by a sourceberry bush while trying to escape %2$s");
         add("block.ars_nouveau.magelight_torch", "Magelight Torch");
         add("block.ars_nouveau.arcane_platform", "Arcane Platform");
         add("ars_nouveau.arcane_platform.tooltip", "Can be placed in any direction and can be used in place of a pedestal.");
@@ -1240,7 +1280,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
         add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.");
         add("ars_nouveau.storage", "Advanced Usage");
-        add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 30 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
+        add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. Automatic import may be disabled by providing a redstone signal. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 30 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
         add("ars_nouveau.tooltip.bookwyrm", "Obtained by augmenting a Ritual of Awakening with Book and Quills.");
         add("ars_nouveau.item_detector.count", "Emit at %s");
         add("block.ars_nouveau.item_detector", "Display Case");
@@ -1254,12 +1294,14 @@ public class LangDatagen extends LanguageProvider {
         add("key.ars_nouveau.familiar_toggle", "Summon/Dispel Familiar");
         add("ars_nouveau.spell_book_gui.dispel", "Dispel");
         add("tooltip.ars_nouveau.master_tab", "All Items");
-        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern.");
+        add("ars_nouveau.page1.repository", "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern. A Repository Catalog can be used as a proxy for a chain of connected repositories, and respects filter scrolls on repositories when inserting items.");
         add("ars_nouveau.storage_tabs", "Storage Tabs");
         add("ars_nouveau.page3.storage", "Linked inventories that are named will create a tab in the Storage Lectern, allowing you to view and manipulate all inventories that share that name. Unlike normal chests, Repositories will preserve their name when dropped. The Name Effect can also name inventories placed in the world.");
+        add("ars_nouveau.storage_performance", "Performance");
+        add("ars_nouveau.page4.storage", "Repository Catalogs should be used when possible for large or frequent item automations involving the storage lectern. Repository catalogs are bound to a single location that exposes all connected repositories, and is optimized for server performance over other large slot inventories or chests.");
         add("ars_nouveau.page2.item_detector", "If a Filter Scroll is given to the Display Case, it will count all items that match the filter.");
         add("config.jade.plugin_ars_nouveau.mob_jar", "Mob Jar");
-        add("mob_jar.villager","Can be traded with in a jar, periodically resetting its trades.");
+        add("mob_jar.villager", "Can be traded with in a jar, periodically resetting its trades.");
         add("mob_jar.piglin", "Can be traded with by throwing gold ingots at the jar.");
         add("mob_jar.ender_dragon", "Use a bottle to obtain Dragon's Breath.");
         add("mob_jar.sheep", "Can be sheared. Will eat Grass beneath the jar if available.");
@@ -1271,6 +1313,11 @@ public class LangDatagen extends LanguageProvider {
         add("mob_jar.panda", "Baby pandas will occasionally sneeze, creating Slimeballs. Sick Pandas will sneeze more often.");
         add("mob_jar.allay.title", "Allay Behavior");
         add("mob_jar.allay", "A jarred Allay can pickup and deposit items within 5 blocks of the jar. Giving an Allay an item will cause it to only pickup that item. Giving an Allay an Item Scroll will pickup any item that matches the scroll. Items will be deposited into inventories placed adjacent to the jar. Allays will also respect any filters placed on the adjacent inventories.");
+        add("mob_jar.armadillo", "Will occasionally shed scutes.");
+        add("mob_jar.breeze", "Shoots a wind charge when powered with redstone.");
+        add("mob_jar.cat", "Will give gifts if its owner sleeps nearby. Produces a redstone signal if the owner is online.");
+        add("mob_jar.sniffer", "Will occasionally dig up ancient seeds.");
+        add("mob_jar.snow_golem", "Shoots a snowball when powered with redstone.");
         add("ars_nouveau.cauldron.num_bounded", "%s bounded inventories");
         add("ars_nouveau.wixie_cauldron.bound", "Inventory bound.");
         add("ars_nouveau.wixie_cauldron.removed", "Inventory removed.");
@@ -1305,59 +1352,59 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sensor.on_resolve", "Mode: On Resolve");
         add("ars_nouveau.sensor.on_cast", "Mode: On Cast");
         add("block.ars_nouveau.spell_sensor", "Spell Sensor");
-        add("ars_nouveau.page1.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
+        add("ars_nouveau.page.spell_sensor", "Outputs a redstone signal when a spell is cast nearby. Output strength is determined by the length of the spell cast. Using a Dominion Wand will cause it to trigger when a spell resolves nearby, instead of being cast. Using a Spell Parchment will set the sensor to only output when that exact spell is detected.");
         add("ars_nouveau.no_stack_crafting", "No valid craft nearby.");
         add("item.ars_nouveau.jump_ring", "Ring of Jumping");
-        add("ars_nouveau.page1.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
+        add("ars_nouveau.page.jump_ring", "Allows the user to continue jumping in the air. Each jump will expend mana.");
         add("ars_nouveau.connections.remove", "Connection removed.");
         add("ars_nouveau.powered_from", "Receiving signal from %d relays");
         add("block.ars_nouveau.redstone_relay", "Redstone Relay");
-        add("ars_nouveau.page1.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
+        add("ars_nouveau.page.redstone_relay", "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.");
         add("block.ars_nouveau.magic_fire", "Mage Fire");
         add("effect.ars_nouveau.immolate", "Immolate");
         add("effect.ars_nouveau.immolate.desc", "Enhances fire spells.");
         add("effect.ars_nouveau.soaked", "Soaked");
         add("effect.ars_nouveau.soaked.desc", "Wets the target, protecting from fire and triggering effects as if under the rain.");
         add("block.ars_nouveau.sourceberry_sack", "Sourceberry Sack");
-        add("ars_nouveau.empty","Empty");
+        add("ars_nouveau.empty", "Empty");
         add("ars_nouveau.melder.output_not_unique", "Output potion is not a unique mix.");
         add("ars_nouveau.melder.output_duplicate_effect", "Cannot mix potions with the same effect but different levels.");
         add("ars_nouveau.page1.archwood_grate", "Liquids placed on top of them will be transported below, waterlogging the below block if possible. Interacting with the grate will also act as if you are interacting with the block below it, allowing you to bucket liquids below. Additionally, items and projectiles will pass through it. Can be placed in any direction.");
-        for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
+        for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
             String key = "block.ars_nouveau." + s;
             String val = data.get(key);
             add(key + "_slab", val + " Slab");
             add(key + "_stairs", val + " Stairs");
         }
-        add("block.ars_nouveau.sourcestone_grate","Sourcestone Grate");
-        add("block.ars_nouveau.gold_grate","Gold Grate");
-        add("block.ars_nouveau.archwood_grate","Archwood Grate");
-        add("block.ars_nouveau.smooth_sourcestone_grate","Smooth Sourcestone Grate");
+        add("block.ars_nouveau.sourcestone_grate", "Sourcestone Grate");
+        add("block.ars_nouveau.gold_grate", "Gold Grate");
+        add("block.ars_nouveau.archwood_grate", "Archwood Grate");
+        add("block.ars_nouveau.smooth_sourcestone_grate", "Smooth Sourcestone Grate");
         add("block.ars_nouveau.source_lamp", "Source Gem Lamp");
-        add("ars_nouveau.page1.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
+        add("ars_nouveau.page.source_lamp", "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.");
         add("ars_nouveau.patchouli.missing", "Patchouli missing: opening online wiki");
         add("ars_nouveau.dependency.install", "Open mod page");
         add("tooltip.starbuncle_shard2", "Made with love.");
-        add("tooltip.whirlisprig_shard2","A natural portrait.");
-        add("tooltip.drygmy_shard2","A tribute to what once was.");
+        add("tooltip.whirlisprig_shard2", "A natural portrait.");
+        add("tooltip.drygmy_shard2", "A tribute to what once was.");
         add("tooltip.wixie_shard2", "Knowledge for freedom.");
         add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
         add("entity.ars_nouveau.bubble", "Bubble");
         add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
         add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");
         add("item.ars_nouveau.alakarkinos_token", "Alakarkinos Token");
-        add("ars_nouveau.page1.alakarkinos_charm","Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
-        add("ars_nouveau.page2.alakarkinos_charm","Loves to dance to nearby jukeboxes.");
-        add("ars_nouveau.page3.alakarkinos_charm","Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
-        add("ars_nouveau.page4.alakarkinos_charm","Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
+        add("ars_nouveau.page1.alakarkinos_charm", "Alakarkinos can sift sand and gravel to find items found in archaeology sites. They can be found on beaches and will give you a token if they receive a Pottery Sherd of any kind.");
+        add("ars_nouveau.page2.alakarkinos_charm", "Loves to dance to nearby jukeboxes.");
+        add("ars_nouveau.page3.alakarkinos_charm", "Alakarkinos can be summoned anywhere by using a charm on a block. To set its home, use the Dominion Wand to bind Alakarkinos to a chest or inventory.");
+        add("ars_nouveau.page4.alakarkinos_charm", "Alakarkinos will seek out gravel or sand that is placed within 3 blocks horizontal and one block vertical around its bound inventory. In order to convert blocks into items, Source must be provided near its chest. After some time and a few magic tricks, Alakarkinos will destroy the sand or gravel and insert items into the inventory.");
         add("ars_nouveau.alakarkinos.set_home", "Home set. Place source and gravel or sand within 3 blocks.");
         add("ars_nouveau.sifting", "Sifting");
         add("tooltip.alakarkinos_shard1", "Found by giving an Alakarkinos a Sherd.");
         add("tooltip.alakarkinos_shard2", "What's that behind your ear?");
         addCategory("getting_started", "Getting Started");
-        addCategory("crafting","Crafting and Automation");
-        addCategory("glyph_index","Glyph Index");
-        addCategory("ritual_index","Ritual Index");
+        addCategory("crafting", "Crafting and Automation");
+        addCategory("glyph_index", "Glyph Index");
+        addCategory("ritual_index", "Ritual Index");
         addCategory("source", "Source");
         addCategory("creature_compendium", "Creature Compendium");
         addCategory("items_equipment", "Items and Equipment");
@@ -1391,9 +1438,365 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.slots_armor", "Thread Slots and Tiers");
         add("ars_nouveau.thread_tier", "Tier %s thread slot");
         add("ars_nouveau.search_desc", "Search for any entry, item, or concepts such as Glyph, Familiar, Ritual, Spell School, etc.");
+
+        // EMI Categories
+        add("emi.category.ars_nouveau.apparatus_enchanting", data.get("ars_nouveau.enchanting"));
+        add("emi.category.ars_nouveau.scry_ritual", data.get("ars_nouveau.scry_ritual_recipe"));
+        add("emi.category.ars_nouveau.crush", data.get("ars_nouveau.crush_recipe"));
+        add("emi.category.ars_nouveau.glyph_recipe", data.get("block.ars_nouveau.scribes_table"));
+        add("emi.category.ars_nouveau.budding_conversion", data.get("ars_nouveau.budding_conversion_recipe"));
+        add("emi.category.ars_nouveau.enchanting_apparatus", data.get("ars_nouveau.enchanting_apparatus"));
+        add("emi.category.ars_nouveau.armor_upgrade", data.get("ars_nouveau.armor_upgrade"));
+        add("emi.category.ars_nouveau.imbuement", data.get("block.ars_nouveau.imbuement_chamber"));
+        add("emi.category.ars_nouveau.alakarkinos", data.get("ars_nouveau.alakarkinos_recipe"));
+
+        add("block.ars_nouveau.banner.fire", "Fire School");
+        add("block.ars_nouveau.banner.water", "Water School");
+        add("block.ars_nouveau.banner.air", "Air School");
+        add("block.ars_nouveau.banner.earth", "Earth School");
+        add("block.ars_nouveau.banner.manipulation", "Manipulation School");
+        add("block.ars_nouveau.banner.abjuration", "Abjuration School");
+        add("block.ars_nouveau.banner.conjuration", "Conjuration School");
+        add("ars_nouveau.lectern_blacklist", "This block has been disabled from being connected to the Storage Lectern.");
+        add("key.ars_nouveau.open_documentation", "Open Documentation");
+
+        add("block.ars_nouveau.repository_controller", "Repository Catalog");
+        add("ars_nouveau.page1.repository_controller", "Catalogs can insert and extract items from any adjacent and connected repository. Catalogs respect filters placed on repositories via item frames while inserting items, and will prioritize existing stacks of an item. Filter scrolls can be used on the Catalog, storing the filter and applying it to all connected repositories when interacted with directly.");
+        add("ars_nouveau.page2.repository_controller", "Catalogs are highly performant when used with the Storage Lectern and should be used over other big inventories or systems with many slots. Filters are not applied when items are extracted from other systems like a Hopper, and insertions via hopper will not respect the catalogs own filter, but will respect inserting into a filtered repository.");
+        add("item.ars_nouveau.enchanters_fishing_rod", "Enchanter's Fishing Rod");
+        add("item.ars_nouveau.enchanters_gauntlet", "Enchanter's Gauntlet");
+        add("ars_nouveau.fishing_rod.invalid", "Invalid Spell. Enchanter's Fishing Rod accept Effects and Augments only.");
+        add("ars_nouveau.page1.enchanters_gauntlet", "Gauntlets are a spell casting multi-tool that can break blocks at diamond hardness. Gauntlets accept a single spell and are inscribed using the Scribes Table. Gauntlets always start with Touch and MUST be inscribed with a spell that does not contain a form. Spells cast with the gauntlet are cast with a discount.");
+        add("ars_nouveau.page1.enchanters_fishing_rod", "Fishing Rods accept a single spell and are inscribed using the Scribes Table. Rods always start with Touch and MUST be inscribed with a spell that does not contain a form. Fishing Rods can be used like a normal fishing rod, but hooking an entity will allow the user to cast the spell on the hooked entity until the line is broken.");
+        add("ars_nouveau.particle_config.trail", "Line");
+        add("ars_nouveau.particle_config.burst", "Burst");
+        add("ars_nouveau.particle_config.helix", "Helix");
+        add("ars_nouveau.particle_config.spiral", "Spiral");
+        add("ars_nouveau.particle.property.color", "Color");
+        add("ars_nouveau.particle.property.particle_type", "Particle");
+        add("ars_nouveau.spell_styles", "Spell Styles");
+        add("ars_nouveau.timeline.trail", "Trail");
+        add("ars_nouveau.timeline.impact", "On Resolve");
+        add("ars_nouveau.particle_timelines", "Configurable Particles");
+        add("ars_nouveau.particle.new_glow", "Glow");
+        add("ars_nouveau.particle.snow", "Snow");
+        add("ars_nouveau.particle.smoke", "Smoke");
+        add("ars_nouveau.gui.spell_style", "Spell Style");
+        add("ars_nouveau.density_slider", "Particles/Sec: %s");
+        add("ars_nouveau.particle.property.density", "Particle Spawning");
+        add("ars_nouveau.particle.leaf", "Leaf");
+        add("ars_nouveau.spawn.point", "Point");
+        add("ars_nouveau.spawn.sphere", "Sphere");
+        add("ars_nouveau.spawn.box", "Box");
+        add("ars_nouveau.radius_slider", "Radius: %s");
+        add("ars_nouveau.particle_config.upward_wall", "Upward Wall");
+        add("ars_nouveau.particle.dripping_water", "Water");
+        add("ars_nouveau.particle.an_bubble", "Bubble");
+        add("ars_nouveau.particle.dripping_lava", "Lava");
+        add("ars_nouveau.particle_config.upward_field", "Field");
+        add("ars_nouveau.particle.property.model", "Body");
+        add("ars_nouveau.model.empty", "None");
+        add("ars_nouveau.model.cube", "Cube");
+        add("ars_nouveau.spawn_header", "Spawn Shape: %s");
+        add("ars_nouveau.spawn.cube", "Cube");
+        add("ars_nouveau.hue", "Hue");
+        add("ars_nouveau.sat", "Saturation");
+        add("ars_nouveau.lightness", "Lightness");
+        add("ars_nouveau.particle.end_rod", "End Rod");
+        add("ars_nouveau.particle.glow_squid", "Glow Squid");
+        add("ars_nouveau.particle.glow_ink", "Glow Ink");
+        add("ars_nouveau.particle.crit", "Crit");
+        add("ars_nouveau.particle.enchant", "Enchant");
+        add("ars_nouveau.particle.spit", "Spit");
+        add("ars_nouveau.particle.dust_plume", "Dust Plume");
+        add("ars_nouveau.particle.small_gust", "Small Gust");
+        add("ars_nouveau.particle.big_gust", "Big Gust");
+        add("ars_nouveau.particle.dragon_breath", "Dragon Breath");
+        add("ars_nouveau.particle.enchanted_hit", "Enchanted Hit");
+        add("ars_nouveau.particle.sonic_boom", "Sonic Boom");
+        add("ars_nouveau.particle.firework", "Firework");
+        add("ars_nouveau.particle.flame", "Flame");
+        add("ars_nouveau.particle.infested", "Infested");
+        add("ars_nouveau.particle.sculk_soul", "Sculk Soul");
+        add("ars_nouveau.particle.soul_fire_flame", "Soul Fire Flame");
+        add("ars_nouveau.color_rainbow", "Rainbow");
+        add("ars_nouveau.color_none", "No Tinting");
+        add("ars_nouveau.timeline.spawn", "On Spawn");
+        add("ars_nouveau.timeline.flair", "Flair");
+        add("ars_nouveau.particle_config.none", "None");
+        add("ars_nouveau.particle_config.wave", "Wave");
+        add("ars_nouveau.particle_config.zigzag", "Zigzag");
+        add("ars_nouveau.timeline.tick", "On Tick");
+        add("ars_nouveau.particle_config.light", "Light");
+        add("ars_nouveau.particle.heart", "Heart");
+        add("ars_nouveau.particle.instant_effect", "Instant Effect");
+        add("ars_nouveau.particle.cobweb", "Cobweb");
+        add("ars_nouveau.particle.large_smoke", "Large Smoke");
+        add("ars_nouveau.particle.lava", "Lava");
+        add("ars_nouveau.particle.mycelium", "Mycelium");
+        add("ars_nouveau.particle.note", "Note");
+        add("ars_nouveau.particle.poof", "Poof");
+        add("ars_nouveau.particle.splash", "Splash");
+        add("ars_nouveau.particle.minecraft_smoke", "Smoke (MC)");
+        add("ars_nouveau.particle.white_smoke", "White Smoke");
+        add("ars_nouveau.particle.sneeze", "Sneeze");
+        add("ars_nouveau.particle.squid_ink", "Squid Ink");
+        add("ars_nouveau.particle.sweep_attack", "Sweep Attack");
+        add("ars_nouveau.particle.totem_of_undying", "Totem of Undying");
+        add("ars_nouveau.particle.witch", "Witch");
+        add("ars_nouveau.particle.bubble_pop", "Bubble Pop");
+        add("ars_nouveau.particle.nautilus", "Nautilus");
+        add("ars_nouveau.particle.campfire_cosy_smoke", "Campfire Cosy Smoke");
+        add("ars_nouveau.particle.campfire_signal_smoke", "Campfire Signal Smoke");
+        add("ars_nouveau.particle.ash", "Ash");
+        add("ars_nouveau.particle.crimson_spore", "Crimson Spore");
+        add("ars_nouveau.particle.warped_spore", "Warped Spore");
+        add("ars_nouveau.particle.reverse_portal", "Reverse Portal");
+        add("ars_nouveau.particle.white_ash", "White Ash");
+        add("ars_nouveau.particle.small_flame", "Small Flame");
+        add("ars_nouveau.particle.snowflake", "Snowflake");
+        add("ars_nouveau.particle.electric_spark", "Electric Spark");
+        add("ars_nouveau.particle.scrape", "Scrape");
+        add("ars_nouveau.particle.wax", "Wax");
+        add("ars_nouveau.particle.trial_spawner", "Trial Spawner");
+        add("ars_nouveau.particle.ominous_spawning", "Ominous Spawning");
+        add("ars_nouveau.particle.raid_omen", "Raid Omen");
+        add("ars_nouveau.particle.composter", "Composter");
+        add("ars_nouveau.particle.item_cobweb", "Item Cobweb");
+        add("ars_nouveau.particle.soul", "Soul");
+        add("ars_nouveau.particle.happy_villager", "Happy Villager");
+        add("ars_nouveau.particle.property.motion", "Motion");
+        add("ars_nouveau.particle.property.rune", "Texture");
+        add("ars_nouveau.rune.rune", "Default");
+        add("ars_nouveau.rune.rune_abjuration", "Abjuration");
+        add("ars_nouveau.rune.rune_conjuration", "Conjuration");
+        add("ars_nouveau.rune.rune_manipulation", "Manipulation");
+        add("ars_nouveau.rune.rune_fire", "Fire");
+        add("ars_nouveau.rune.rune_water", "Water");
+        add("ars_nouveau.rune.rune_air", "Air");
+        add("ars_nouveau.rune.rune_earth", "Earth");
+        add("ars_nouveau.yspeed_slider", "Min Vertical Speed: %s");
+        add("ars_nouveau.ymaxspeed_slider", "Max Vertical Speed: %s");
+
+        add("ars_nouveau.xzspeed_slider", "Min XZ Speed: %s");
+        add("ars_nouveau.xzmaxspeed_slider", "Horizontal Speed: %s");
+        add("ars_nouveau.particle.property.speed", "Particle Speed");
+        add("ars_nouveau.particle_config.brazier", "Brazier");
+        add("ars_nouveau.particle_config.wisp", "Wisp");
+        add("ars_nouveau.particle.property.sound", "Sound");
+        add("ars_nouveau.sound.pyro", "Pyro");
+        add("ars_nouveau.sound.allay_ambient_with_item", "Allay Ambient With Item");
+        add("ars_nouveau.sound.allay_ambient_without_item", "Allay Ambient Without Item");
+        add("ars_nouveau.sound.allay_death", "Allay Death");
+        add("ars_nouveau.sound.allay_hurt", "Allay Hurt");
+        add("ars_nouveau.sound.ambient_underwater_enter", "Ambient Underwater Enter");
+        add("ars_nouveau.sound.amethyst_block_break", "Amethyst Block Break");
+        add("ars_nouveau.sound.amethyst_block_chime", "Amethyst Block Chime");
+        add("ars_nouveau.sound.anvil_land", "Anvil Land");
+        add("ars_nouveau.sound.arrow_hit", "Arrow Hit");
+        add("ars_nouveau.sound.arrow_shoot", "Arrow Shoot");
+        add("ars_nouveau.sound.axe_strip", "Axe Strip");
+        add("ars_nouveau.sound.axe_scrape", "Axe Scrape");
+        add("ars_nouveau.sound.bamboo_fall", "Bamboo Fall");
+        add("ars_nouveau.sound.bat_ambient", "Bat Ambient");
+        add("ars_nouveau.sound.beacon_activate", "Beacon Activate");
+        add("ars_nouveau.sound.beacon_deactivate", "Beacon Deactivate");
+        add("ars_nouveau.sound.beacon_power_select", "Beacon Power Select");
+        add("ars_nouveau.sound.bee_sting", "Bee Sting");
+        add("ars_nouveau.sound.beehive_work", "Beehive Work");
+        add("ars_nouveau.sound.bell_block", "Bell Block");
+        add("ars_nouveau.sound.bell_resonate", "Bell Resonate");
+        add("ars_nouveau.sound.blaze_burn", "Blaze Burn");
+        add("ars_nouveau.sound.blaze_shoot", "Blaze Shoot");
+        add("ars_nouveau.sound.bogged_ambient", "Bogged Ambient");
+        add("ars_nouveau.sound.bogged_hurt", "Bogged Hurt");
+        add("ars_nouveau.sound.bone_meal_use", "Bone Meal Use");
+        add("ars_nouveau.sound.bottle_empty", "Bottle Empty");
+        add("ars_nouveau.sound.bottle_fill", "Bottle Fill");
+        add("ars_nouveau.sound.bottle_fill_dragonbreath", "Bottle Fill Dragonbreath");
+        add("ars_nouveau.sound.breeze_charge", "Breeze Charge");
+        add("ars_nouveau.sound.breeze_deflect", "Breeze Deflect");
+        add("ars_nouveau.sound.breeze_shoot", "Breeze Shoot");
+        add("ars_nouveau.sound.breeze_jump", "Breeze Jump");
+        add("ars_nouveau.sound.breeze_wind_charge_burst", "Breeze Wind Charge Burst");
+        add("ars_nouveau.sound.brewing_stand_brew", "Brewing Stand Brew");
+        add("ars_nouveau.sound.bubble_column_upwards_inside", "Bubble Column Upwards Inside");
+        add("ars_nouveau.sound.bucket_empty", "Bucket Empty");
+        add("ars_nouveau.sound.bucket_fill", "Bucket Fill");
+        add("ars_nouveau.sound.cat_ambient", "Cat Ambient");
+        add("ars_nouveau.sound.cat_hiss", "Cat Hiss");
+        add("ars_nouveau.sound.chain_break", "Chain Break");
+        add("ars_nouveau.sound.chain_fall", "Chain Fall");
+        add("ars_nouveau.sound.chicken_egg", "Chicken Egg");
+        add("ars_nouveau.sound.chicken_ambient", "Chicken Ambient");
+        add("ars_nouveau.sound.chorus_fruit_teleport", "Chorus Fruit Teleport");
+        add("ars_nouveau.sound.comparator_click", "Comparator Click");
+        add("ars_nouveau.sound.cow_ambient", "Cow Ambient");
+        add("ars_nouveau.sound.creeper_primed", "Creeper Primed");
+        add("ars_nouveau.sound.dolphin_ambient", "Dolphin Ambient");
+        add("ars_nouveau.sound.dolphin_attack", "Dolphin Attack");
+        add("ars_nouveau.sound.dolphin_play", "Dolphin Play");
+        add("ars_nouveau.sound.donkey_ambient", "Donkey Ambient");
+        add("ars_nouveau.sound.drowned_ambient", "Drowned Ambient");
+        add("ars_nouveau.sound.elder_guardian_curse", "Elder Guardian Curse");
+        add("ars_nouveau.sound.enchantment_table_use", "Enchantment Table Use");
+        add("ars_nouveau.sound.dragon_fireball_explode", "Dragon Fireball Explode");
+        add("ars_nouveau.sound.ender_dragon_flap", "Ender Dragon Flap");
+        add("ars_nouveau.sound.ender_eye_death", "Ender Eye Death");
+        add("ars_nouveau.sound.enderman_ambient", "Enderman Ambient");
+        add("ars_nouveau.sound.enderman_teleport", "Enderman Teleport");
+        add("ars_nouveau.sound.endermite_ambient", "Endermite Ambient");
+        add("ars_nouveau.sound.end_gateway_spawn", "End Gateway Spawn");
+        add("ars_nouveau.sound.end_portal_frame_fill", "End Portal Frame Fill");
+        add("ars_nouveau.sound.evoker_ambient", "Evoker Ambient");
+        add("ars_nouveau.sound.evoker_cast_spell", "Evoker Cast Spell");
+        add("ars_nouveau.sound.evoker_fangs_attack", "Evoker Fangs Attack");
+        add("ars_nouveau.sound.experience_orb_pickup", "Experience Orb Pickup");
+        add("ars_nouveau.sound.firework_rocket_blast", "Firework Rocket Blast");
+        add("ars_nouveau.sound.firework_rocket_large_blast", "Firework Rocket Large Blast");
+        add("ars_nouveau.sound.firework_rocket_launch", "Firework Rocket Launch");
+        add("ars_nouveau.sound.firework_rocket_twinkle", "Firework Rocket Twinkle");
+        add("ars_nouveau.sound.fire_ambient", "Fire Ambient");
+        add("ars_nouveau.sound.fire_extinguish", "Fire Extinguish");
+        add("ars_nouveau.sound.fox_ambient", "Fox Ambient");
+        add("ars_nouveau.sound.fox_screech", "Fox Screech");
+        add("ars_nouveau.sound.frog_ambient", "Frog Ambient");
+        add("ars_nouveau.sound.generic_drink", "Generic Drink");
+        add("ars_nouveau.sound.generic_eat", "Generic Eat");
+        add("ars_nouveau.sound.ghast_ambient", "Ghast Ambient");
+        add("ars_nouveau.sound.ghast_scream", "Ghast Scream");
+        add("ars_nouveau.sound.ghast_warn", "Ghast Warn");
+        add("ars_nouveau.sound.glass_break", "Glass Break");
+        add("ars_nouveau.sound.grindstone_use", "Grindstone Use");
+        add("ars_nouveau.sound.growing_plant_crop", "Growing Plant Crop");
+        add("ars_nouveau.sound.guardian_hurt", "Guardian Hurt");
+        add("ars_nouveau.sound.trial_spawner_spawn_mob", "Trial Spawner Spawn Mob");
+        add("ars_nouveau.sound.trial_spawner_detect_player", "Trial Spawner Detect Player");
+        add("ars_nouveau.sound.honey_drink", "Honey Drink");
+        add("ars_nouveau.sound.horse_gallop", "Horse Gallop");
+        add("ars_nouveau.sound.horse_ambient", "Horse Ambient");
+        add("ars_nouveau.sound.hostile_hurt", "Hostile Hurt");
+        add("ars_nouveau.sound.illusioner_ambient", "Illusioner Ambient");
+        add("ars_nouveau.sound.illusioner_cast_spell", "Illusioner Cast Spell");
+        add("ars_nouveau.sound.illusioner_mirror_move", "Illusioner Mirror Move");
+        add("ars_nouveau.sound.lava_extinguish", "Lava Extinguish");
+        add("ars_nouveau.sound.lava_pop", "Lava Pop");
+        add("ars_nouveau.sound.lightning_bolt_impact", "Lightning Bolt Impact");
+        add("ars_nouveau.sound.mace_smash_air", "Mace Smash Air");
+        add("ars_nouveau.sound.mace_smash_ground", "Mace Smash Ground");
+        add("ars_nouveau.sound.mace_smash_ground_heavy", "Mace Smash Ground Heavy");
+        add("ars_nouveau.sound.mooshroom_convert", "Mooshroom Convert");
+        add("ars_nouveau.sound.phantom_bite", "Phantom Bite");
+        add("ars_nouveau.sound.piglin_converted_to_zombified", "Piglin Converted To Zombified");
+        add("ars_nouveau.sound.piston_contract", "Piston Contract");
+        add("ars_nouveau.sound.piston_extend", "Piston Extend");
+        add("ars_nouveau.sound.player_attack_crit", "Player Attack Crit");
+        add("ars_nouveau.sound.player_levelup", "Player Levelup");
+        add("ars_nouveau.sound.portal_trigger", "Portal Trigger");
+        add("ars_nouveau.sound.puffer_fish_blow_out", "Puffer Fish Blow Out");
+        add("ars_nouveau.sound.puffer_fish_blow_up", "Puffer Fish Blow Up");
+        add("ars_nouveau.sound.puffer_fish_sting", "Puffer Fish Sting");
+        add("ars_nouveau.sound.pumpkin_carve", "Pumpkin Carve");
+        add("ars_nouveau.sound.ravager_stunned", "Ravager Stunned");
+        add("ars_nouveau.sound.ravager_roar", "Ravager Roar");
+        add("ars_nouveau.sound.sculk_clicking", "Sculk Clicking");
+        add("ars_nouveau.sound.sculk_shrieker_shriek", "Sculk Shrieker Shriek");
+        add("ars_nouveau.sound.shield_block", "Shield Block");
+        add("ars_nouveau.sound.shield_break", "Shield Break");
+        add("ars_nouveau.sound.shulker_bullet_hit", "Shulker Bullet Hit");
+        add("ars_nouveau.sound.skeleton_converted_to_stray", "Skeleton Converted To Stray");
+        add("ars_nouveau.sound.silverfish_ambient", "Silverfish Ambient");
+        add("ars_nouveau.sound.skeleton_shoot", "Skeleton Shoot");
+        add("ars_nouveau.sound.sniffer_sniffing", "Sniffer Sniffing");
+        add("ars_nouveau.sound.sniffer_happy", "Sniffer Happy");
+        add("ars_nouveau.sound.sniffer_egg_crack", "Sniffer Egg Crack");
+        add("ars_nouveau.sound.sponge_absorb", "Sponge Absorb");
+        add("ars_nouveau.sound.tnt_primed", "Tnt Primed");
+        add("ars_nouveau.sound.thorns_hit", "Thorns Hit");
+        add("ars_nouveau.sound.trident_return", "Trident Return");
+        add("ars_nouveau.sound.trident_riptide_3", "Trident Riptide 3");
+        add("ars_nouveau.sound.vault_activate", "Vault Activate");
+        add("ars_nouveau.sound.vex_charge", "Vex Charge");
+        add("ars_nouveau.sound.villager_ambient", "Villager Ambient");
+        add("ars_nouveau.sound.warden_attack_impact", "Warden Attack Impact");
+        add("ars_nouveau.sound.warden_heartbeat", "Warden Heartbeat");
+        add("ars_nouveau.sound.warden_listening", "Warden Listening");
+        add("ars_nouveau.sound.warden_sonic_boom", "Warden Sonic Boom");
+        add("ars_nouveau.sound.warden_sonic_charge", "Warden Sonic Charge");
+        add("ars_nouveau.sound.warden_tendril_clicks", "Warden Tendril Clicks");
+        add("ars_nouveau.sound.weather_rain", "Weather Rain");
+        add("ars_nouveau.sound.wind_charge_burst", "Wind Charge Burst");
+        add("ars_nouveau.sound.witch_ambient", "Witch Ambient");
+        add("ars_nouveau.sound.witch_celebrate", "Witch Celebrate");
+        add("ars_nouveau.sound.witch_drink", "Witch Drink");
+        add("ars_nouveau.sound.wolf_armor_break", "Wolf Armor Break");
+        add("ars_nouveau.sound.wolf_armor_crack", "Wolf Armor Crack");
+        add("ars_nouveau.sound.wolf_ambient", "Wolf Ambient");
+        add("ars_nouveau.sound.wolf_howl", "Wolf Howl");
+        add("ars_nouveau.sound.wolf_shake", "Wolf Shake");
+        add("ars_nouveau.sound.zombie_infect", "Zombie Infect");
+        add("ars_nouveau.sound.zombie_villager_converted", "Zombie Villager Converted");
+        add("ars_nouveau.sound.zombie_villager_cure", "Zombie Villager Cure");
+        add("ars_nouveau.sound.apply_effect_bad_omen", "Apply Effect Bad Omen");
+        add("ars_nouveau.sound.apply_effect_trial_omen", "Apply Effect Trial Omen");
+        add("ars_nouveau.sound.apply_effect_raid_omen", "Apply Effect Raid Omen");
+        add("ars_nouveau.right_click_sound", "Right-Click to preview");
+        add("ars_nouveau.sound.pointed_dripstone_drip_water", "Dripping Water");
+        add("ars_nouveau.sound.pointed_dripstone_drip_lava", "Dripping Lava");
+        add("ars_nouveau.model_tooltip", "Projectile Model");
+        add("ars_nouveau.particle_type_tooltip", "Particle Texture");
+        add("ars_nouveau.speed_tooltip", "Initial Particle Speed");
+        add("ars_nouveau.density_tooltip", "Amount and shape of particles spawned over time");
+        add("ars_nouveau.timeline.spawn.tooltip", "Sound and particles created when spawned or cast");
+        add("ars_nouveau.timeline.trail.tooltip", "Creates particles that follow the projectile");
+        add("ars_nouveau.timeline.impact.tooltip", "Creates particles and sound where the spell resolves");
+        add("ars_nouveau.timeline.flair.tooltip", "Additional particles that play on the projectile's path");
+        add("ars_nouveau.timeline.tick.tooltip", "Creates particles every tick");
+        add("block.ars_nouveau.particle_block", "Prestidigitation Block");
+        add("ars_nouveau.expand_button", "Toggle Expanded View");
+
+        add("ars_nouveau.model.spike", "Spike");
+        add("ars_nouveau.sound.horse_death", "Horse Death");
+        add("ars_nouveau.sound.armadillo_hurt_reduced", "Armadillo Hurt Reduced");
+        add("ars_nouveau.sound.wither_ambient", "Wither Ambient");
+        add("ars_nouveau.sound.wither_death", "Wither Death");
+        add("ars_nouveau.sound.wither_hurt", "Wither Hurt");
+        add("ars_nouveau.sound.wither_shoot", "Wither Shoot");
+        add("ars_nouveau.sound.wither_break_block", "Wither Break Block");
+        add("ars_nouveau.sound.zoglin_ambient", "Zoglin Ambient");
+        add("ars_nouveau.sound.zoglin_angry", "Zoglin Angry");
+        add("ars_nouveau.sound.zoglin_attack", "Zoglin Attack");
+        add("ars_nouveau.sound.water_ambient", "Water Ambient");
+        add("ars_nouveau.sound.warden_agitated", "Warden Agitated");
+        add("ars_nouveau.sound.warden_ambient", "Warden Ambient");
+        add("ars_nouveau.sound.warden_death", "Warden Death");
+        add("ars_nouveau.sound.warden_dig", "Warden Dig");
+        add("ars_nouveau.sound.warden_emerge", "Warden Emerge");
+        add("ars_nouveau.sound.warden_hurt", "Warden Hurt");
+        add("ars_nouveau.sound.warden_sniff", "Warden Sniff");
+        add("ars_nouveau.sound.trident_thunder", "Trident Thunder");
+        add("ars_nouveau.sound.trident_throw", "Trident Throw");
+        add("ars_nouveau.sound.totem_use", "Totem Use");
+        add("ars_nouveau.sound.squid_squirt", "Squid Squirt");
+        add("ars_nouveau.particle.sculk_charge", "Sculk Charge");
+        add("ars_nouveau.particle.sculk_charge_pop", "Sculk Charge Pop");
+        // explosion
+        add("ars_nouveau.particle.explosion", "Explosion");
+        add("ars_nouveau.particle.cloud", "Cloud");
+        add("ars_nouveau.particle.breaking_circle", "Breaking Circle");
+        add("ars_nouveau.prestidigitation.tooltip", "Prestidigitation");
+        add("ars_nouveau.prestidigitation.prestidigitation_clear", "Prestidigitation Removed");
+        add("ars_nouveau.abjuration_essence.tooltip", "Can be used on the Scribes Table to remove Prestidigitation from items.");
+        add("ars_nouveau.page.prestidigitation", "Illusory Items");
+        add("ars_nouveau.page1.prestidigitation", "Prestidigitation can be applied to Items, causing them to emit particles when held or worn. Particle settings are determined by the Prestidigitation glyph settings for the spell contained within the Spell Parchment when used in the apparatus. To remove Prestidigitation, use an Abjuration Essence on the Scribes Table with the enchanted item inside it.");
+        add("ars_nouveau.connection.range", "Can only connect within %s blocks.");
+        add("block.ars_nouveau.decor_blossom", "Decor Blossom");
+        add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
+        add("ars_nouveau.learn_glyph", "Unlocked %s");
+        add("ars_nouveau.already_learned", "You have already learned this Glyph.");
     }
 
-    public void addCategory(String key, String value){
+    public void addCategory(String key, String value) {
         add("ars_nouveau.section." + key, value);
     }
 

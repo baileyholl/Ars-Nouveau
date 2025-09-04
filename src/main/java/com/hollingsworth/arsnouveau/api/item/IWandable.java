@@ -17,6 +17,7 @@ public interface IWandable {
      * When the wand has made 2 connections, block -> block, block -> entity, entity -> block, or entity -> entity.
      * The FIRST IWandable in the chain is called.
      */
+    @Deprecated(forRemoval = true)
     default void onFinishedConnectionFirst(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
         if (dim == null) {
@@ -32,6 +33,7 @@ public interface IWandable {
      * When the wand has made 2 connections, block -> block, block -> entity, entity -> block, or entity -> entity.
      * The LAST IWandable in the chain is called.
      */
+    @Deprecated(forRemoval = true)
     default void onFinishedConnectionLast(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
         if (dim == null) {
@@ -61,7 +63,7 @@ public interface IWandable {
 
 
     //Face-Sensitive versions
-
+    @Deprecated(forRemoval = true)
     default void onFinishedConnectionFirst(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
         ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
         if (dim == null) {
@@ -73,6 +75,7 @@ public interface IWandable {
         }
     }
 
+    @Deprecated(forRemoval = true)
     default void onFinishedConnectionLast(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
         ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
         if (dim == null) {
@@ -94,9 +97,43 @@ public interface IWandable {
         onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
     }
 
+    default Result onFirstConnection(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
+        if (dim == null) {
+            return Result.FAIL;
+        }
+
+        if (playerEntity.level.dimension().equals(dim)) {
+            onFinishedConnectionFirst(storedPos != null ? storedPos.pos() : null, face, storedEntity, playerEntity);
+        }
+        return Result.SUCCESS;
+    }
+
+    default Result onLastConnection(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        ResourceKey<Level> dim = getStoredDimension(storedPos, storedEntity);
+        if (dim == null) {
+            return Result.FAIL;
+        }
+
+        if (playerEntity.level.dimension().equals(dim)) {
+            onFinishedConnectionLast(storedPos != null ? storedPos.pos() : null, face, storedEntity, playerEntity);
+        }
+        return Result.SUCCESS;
+    }
+
+    /**
+     * Called when the player is sneaking and wands the target.
+     */
+    default Result onClearConnections(Player playerEntity) {
+        onWanded(playerEntity);
+        return Result.NONE;
+    }
+
+
     /**
      * Called on the time of wanding.
      */
+    @Deprecated(forRemoval = true)
     default void onWanded(Player playerEntity) {
     }
 
@@ -117,5 +154,13 @@ public interface IWandable {
         }
 
         return null;
+    }
+
+    enum Result {
+        SUCCESS,
+        SELECT,
+        FAIL,
+        CLEAR,
+        NONE
     }
 }

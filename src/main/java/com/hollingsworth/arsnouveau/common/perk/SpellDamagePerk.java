@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpellDamagePerk extends Perk {
 
-    public static final SpellDamagePerk INSTANCE = new SpellDamagePerk(ArsNouveau.prefix( "thread_spellpower"));
+    public static final SpellDamagePerk INSTANCE = new SpellDamagePerk(ArsNouveau.prefix("thread_spellpower"));
 
     public SpellDamagePerk(ResourceLocation key) {
         super(key);

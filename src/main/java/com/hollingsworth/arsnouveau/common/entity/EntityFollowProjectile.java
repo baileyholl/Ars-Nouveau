@@ -64,16 +64,16 @@ public class EntityFollowProjectile extends ColoredProjectile {
      * These are preferred for any cases where entities could be spawned without a player nearby.
      * For instance, rituals don't need to check this, but automated source would.
      */
-    public static void spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+    public static void spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b) {
         boolean canSpawn = NearbyPlayerCache.isPlayerNearby(from, level, 64);
-        if(!canSpawn){
+        if (!canSpawn) {
             return;
         }
         EntityFollowProjectile entity = new EntityFollowProjectile(level, from, to, r, g, b);
         level.addFreshEntity(entity);
     }
 
-    public static void spawn(ServerLevel level, BlockPos from, BlockPos to){
+    public static void spawn(ServerLevel level, BlockPos from, BlockPos to) {
         EntityFollowProjectile.spawn(level, from, to, 255, 25, 180);
     }
 
@@ -152,7 +152,8 @@ public class EntityFollowProjectile extends ColoredProjectile {
             float dist = (float) (Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8.0f);
             for (double i = 0.0; i <= dist; i++) {
                 double coeff = (i / dist);
-                level.addParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
+                level.addAlwaysVisibleParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
+                        true,
                         (getX() + deltaX * coeff), (getY() + deltaY * coeff), (getZ() + deltaZ * coeff),
                         0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
 

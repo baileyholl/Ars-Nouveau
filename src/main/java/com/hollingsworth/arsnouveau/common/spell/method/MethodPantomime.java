@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.PantomimeTimeline;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -37,15 +40,18 @@ public class MethodPantomime extends AbstractCastMethod {
         double dist = viewXRot < 45.0f ? 2 + offset : 3 + offset;
         Vec3 to = eyes.add(shooter.getViewVector(1.0f).scale(dist));
         BlockPos toPos = BlockPos.containing(to);
-        return new BlockHitResult(eyes, Direction.getNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
+        return new BlockHitResult(to, Direction.getNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
     }
 
     public CastResolveType getTarget(Level world, LivingEntity shooter, SpellResolver resolver, SpellStats stats) {
         BlockHitResult res = findPosition(shooter, stats);
 
         if (res == null) return CastResolveType.FAILURE;
-
+        PantomimeTimeline pantomimeTimeline = resolver.spellContext.getParticleTimeline(ParticleTimelineRegistry.PANTOMIME_TIMELINE.get());
+        ParticleEmitter emitter = createStaticEmitter(pantomimeTimeline.onResolvingEffect, res.getLocation());
         resolver.onResolveEffect(world, res);
+        emitter.tick(world);
+        pantomimeTimeline.resolveSound.sound.playSound(world, res.getLocation().x, res.getLocation().y, res.getLocation().z);
         return CastResolveType.SUCCESS;
     }
 

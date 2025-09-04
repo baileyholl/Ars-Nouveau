@@ -49,7 +49,8 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
@@ -71,21 +72,23 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         return getBlockState().getValue(AlterationTable.PART) == ThreePartBlock.HEAD;
     }
 
-    public void setArmorStack(ItemStack stack, Player player){
+    public void setArmorStack(ItemStack stack, Player player) {
         ArmorPerkHolder holder = stack.getOrDefault(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder(null, List.of(), 0, new HashMap<>()));
         this.perkList = new ArrayList<>(PerkUtil.getPerksAsItems(stack).stream().map(Item::getDefaultInstance).toList());
         stack.set(DataComponentRegistry.ARMOR_PERKS, holder.setPerks(new ArrayList<>()));
         this.armorStack = stack.copy();
-        stack.shrink(1);
+        if (!player.hasInfiniteMaterials()) {
+            stack.shrink(1);
+        }
         this.newPerkTimer = 0;
         updateBlock();
 
     }
 
     public void removePerk(Player player) {
-        if(!perkList.isEmpty()){
+        if (!perkList.isEmpty()) {
             ItemStack stack = perkList.get(0);
-            if(!player.addItem(stack.copy())){
+            if (!player.addItem(stack.copy())) {
                 level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), stack.copy()));
             }
             perkList.remove(0);
@@ -93,14 +96,14 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         updateBlock();
     }
 
-    public void removeArmorStack(Player player){
+    public void removeArmorStack(Player player) {
         ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(armorStack);
         Map<IPerk, CompoundTag> perkTags = new HashMap<>();
-        var newHolder = perkHolder.setPerks(new ArrayList<>(perkList.stream().map(i ->{
-            if(i.getItem() instanceof PerkItem perkItem){
+        var newHolder = perkHolder.setPerks(new ArrayList<>(perkList.stream().map(i -> {
+            if (i.getItem() instanceof PerkItem perkItem) {
                 var perk = perkItem.perk;
                 CompoundTag initTag = perk.getInitTag();
-                if(initTag != null && perkHolder.getTagForPerk(perk) == null){
+                if (initTag != null && perkHolder.getTagForPerk(perk) == null) {
                     perkTags.put(perk, initTag);
                 }
                 return perk;
@@ -109,7 +112,7 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         }).filter(Objects::nonNull).toList()));
         var copyStack = armorStack.copy();
         copyStack.set(DataComponentRegistry.ARMOR_PERKS, newHolder.setPerkTags(perkTags));
-        if(!player.addItem(copyStack)){
+        if (!player.addItem(copyStack)) {
             level.addFreshEntity(new ItemEntity(level, player.position().x(), player.position().y(), player.position().z(), copyStack));
         }
         this.armorStack = ItemStack.EMPTY;
@@ -117,18 +120,18 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         updateBlock();
     }
 
-    public void addPerkStack(ItemStack stack, Player player){
+    public void addPerkStack(ItemStack stack, Player player) {
         ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(armorStack);
         if (perkHolder == null) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.set_armor"));
             return;
         }
-        if(this.perkList.size() >= 3 || this.perkList.size() >= perkHolder.getSlotsForTier(armorStack).size()){
+        if (this.perkList.size() >= 3 || this.perkList.size() >= perkHolder.getSlotsForTier(armorStack).size()) {
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.max_perks"));
             return;
         }
         PerkSlot foundSlot = getAvailableSlot(perkHolder);
-        if(stack.getItem() instanceof PerkItem perkItem) {
+        if (stack.getItem() instanceof PerkItem perkItem) {
             IPerk perk = perkItem.perk;
             if (foundSlot != null && perk.validForSlot(foundSlot, armorStack, player)) {
                 this.perkList.add(stack.split(1));
@@ -140,34 +143,36 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         }
     }
 
-    private PerkSlot getAvailableSlot(ArmorPerkHolder perkHolder){
-        if(this.perkList.size() >= perkHolder.getSlotsForTier(armorStack).size()){
+    private PerkSlot getAvailableSlot(ArmorPerkHolder perkHolder) {
+        if (this.perkList.size() >= perkHolder.getSlotsForTier(armorStack).size()) {
             return null;
-        }else{
+        } else {
             return perkHolder.getSlotsForTier(armorStack).get(this.perkList.size());
         }
     }
 
-    public void dropItems(){
-        if(!armorStack.isEmpty()){
+    public void dropItems() {
+        if (!armorStack.isEmpty()) {
             level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), armorStack.copy()));
+            armorStack = ItemStack.EMPTY;
         }
-        for(ItemStack stack : perkList){
+        for (ItemStack stack : perkList) {
             level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), stack.copy()));
+            stack.setCount(0);
         }
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        if(!armorStack.isEmpty()) {
+        if (!armorStack.isEmpty()) {
             Tag armorTag = armorStack.save(pRegistries);
             tag.put("armorStack", armorTag);
         }
         tag.putInt("numPerks", perkList.size());
         int count = 0;
-        for(ItemStack i : perkList){
-            Tag perkTag = i.save(pRegistries);
+        for (ItemStack i : perkList) {
+            Tag perkTag = i.saveOptional(pRegistries);
             tag.put("perk" + count, perkTag);
             count++;
         }
@@ -180,10 +185,12 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
         this.armorStack = ItemStack.parseOptional(pRegistries, compound.getCompound("armorStack"));
         int count = compound.getInt("numPerks");
         perkList = new ArrayList<>();
-        for(int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             CompoundTag perkTag = compound.getCompound("perk" + i);
             ItemStack perk = ItemStack.parseOptional(pRegistries, perkTag);
-            perkList.add(perk);
+            if (!perk.isEmpty()) {
+                perkList.add(perk);
+            }
         }
         this.newPerkTimer = compound.getInt("newPerkTimer");
     }

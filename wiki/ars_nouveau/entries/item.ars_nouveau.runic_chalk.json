@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.runic_chalk",
+  "order": 100,
+  "icon": "ars_nouveau:runic_chalk",
+  "title": "Runic Chalk",
+  "category": "ars_nouveau:spell_casting",
+  "pages": [
+    {
+      "title": "Runic Chalk",
+      "description": "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby source jars. Using Runic Chalk on a temporary rune will convert it to a permanent one. Using an essence on the rune will change its pattern.",
+      "icon": "ars_nouveau:runic_chalk"
+    },
+    {
+      "recipe_1": "ars_nouveau:runic_chalk"
+    }
+  ]
+}

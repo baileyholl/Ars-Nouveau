@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 
 public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
 
-    public static TagKey<Block> KINDA_LIKES = BlockTags.create(ArsNouveau.prefix( "whirlisprig/kinda_likes"));
-    public static TagKey<Block> GREATLY_LIKES = BlockTags.create(ArsNouveau.prefix( "whirlisprig/greatly_likes"));
-    public static TagKey<Item> DENIED_DROP = ItemTags.create(ArsNouveau.prefix( "whirlisprig/denied_drop"));
+    public static TagKey<Block> KINDA_LIKES = BlockTags.create(ArsNouveau.prefix("whirlisprig/kinda_likes"));
+    public static TagKey<Block> GREATLY_LIKES = BlockTags.create(ArsNouveau.prefix("whirlisprig/greatly_likes"));
+    public static TagKey<Item> DENIED_DROP = ItemTags.create(ArsNouveau.prefix("whirlisprig/denied_drop"));
     public List<ItemStack> ignoreItems = new ArrayList<>();
     public int ticksToNextEval;
     public int moodScore;

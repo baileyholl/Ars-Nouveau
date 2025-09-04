@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.renderer.item.ScryCasterRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
 import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
@@ -42,8 +41,8 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     public @NotNull InteractionResult useOn(UseOnContext pContext) {
         BlockPos pos = pContext.getClickedPos();
         ItemStack stack = pContext.getItemInHand();
-        if(pContext.getLevel().getBlockState(pos).getBlock() instanceof ScryerCrystal){
-            if(!pContext.getLevel().isClientSide) {
+        if (pContext.getLevel().getBlockState(pos).getBlock() instanceof ScryerCrystal) {
+            if (!pContext.getLevel().isClientSide) {
                 stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(pos));
                 PortUtil.sendMessage(pContext.getPlayer(), Component.translatable("ars_nouveau.dominion_wand.position_set"));
             }
@@ -55,8 +54,17 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        AbstractCaster<?> caster = getSpellCaster(stack);
-        return caster.castSpell(pLevel, pPlayer, pUsedHand, Component.translatable("ars_nouveau.invalid_spell"));
+        if (!pLevel.isClientSide) {
+            return InteractionResultHolder.pass(stack);
+        }
+
+        var caster = this.getSpellCaster(stack);
+        if (caster == null) {
+            return InteractionResultHolder.pass(stack);
+        }
+        caster.castOnServer(pUsedHand, Component.translatable("ars_nouveau.invalid_spell"));
+
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override
@@ -65,9 +73,9 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
         var pos = data.pos().orElse(null);
 
-        if(pos == null){
+        if (pos == null) {
             tooltip2.add(Component.translatable("ars_nouveau.scry_caster.no_pos"));
-        }else{
+        } else {
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
         }
         super.appendHoverText(stack, context, tooltip2, flagIn);
@@ -88,7 +96,8 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

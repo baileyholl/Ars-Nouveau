@@ -58,39 +58,40 @@ public class EntityFlyingItem extends ColoredProjectile {
     }
 
     public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
-        this(worldIn, new Vec3(from.getX() + 0.5, from.getY(), from.getZ() + 0.5), new Vec3(to.getX() + 0.5, to.getY(), to.getZ() + 0.5), r,g,b);
+        this(worldIn, new Vec3(from.getX() + 0.5, from.getY(), from.getZ() + 0.5), new Vec3(to.getX() + 0.5, to.getY(), to.getZ() + 0.5), r, g, b);
     }
 
     public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
     }
 
-    public static @NotNull EntityFlyingItem spawn(ServerLevel level, Vec3 from, Vec3 to, int r, int g, int b){
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, Vec3 from, Vec3 to, int r, int g, int b) {
         boolean canSpawn = NearbyPlayerCache.isPlayerNearby(BlockPos.containing(from), level, 64);
         EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
-        if(canSpawn && level.isLoaded(BlockPos.containing(to))) {
+        if (canSpawn && level.isLoaded(BlockPos.containing(to))) {
             level.addFreshEntity(entity);
         }
         return entity;
     }
 
-    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b) {
         return spawn(from, level, from, to, r, g, b);
     }
-    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b){
+
+    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to, int r, int g, int b) {
         boolean canSpawn = NearbyPlayerCache.isPlayerNearby(checkCachePos, level, 64);
         EntityFlyingItem entity = new EntityFlyingItem(level, from, to, r, g, b);
-        if(canSpawn && level.isLoaded(to)) {
+        if (canSpawn && level.isLoaded(to)) {
             level.addFreshEntity(entity);
         }
         return entity;
     }
 
-    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to){
+    public static @NotNull EntityFlyingItem spawn(BlockPos checkCachePos, ServerLevel level, BlockPos from, BlockPos to) {
         return spawn(checkCachePos, level, from, to, 255, 25, 180);
     }
 
-    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to){
+    public static @NotNull EntityFlyingItem spawn(ServerLevel level, BlockPos from, BlockPos to) {
         return spawn(from, level, from, to);
     }
 
@@ -183,8 +184,9 @@ public class EntityFlyingItem extends ColoredProjectile {
                 double coeff = i / dist;
                 counter += level.random.nextInt(3);
                 if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
-                    level.addParticle(GlowParticleData.createData(
+                    level.addAlwaysVisibleParticle(GlowParticleData.createData(
                                     new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
+                            true,
                             (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }

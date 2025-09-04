@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -12,12 +13,14 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Set;
 
+//todo: 1.22 rename this to EffectConjureMageBlock
 public class EffectPhantomBlock extends AbstractEffect {
     public static EffectPhantomBlock INSTANCE = new EffectPhantomBlock();
 
@@ -38,7 +42,7 @@ public class EffectPhantomBlock extends AbstractEffect {
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
             pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
-            if(!world.isInWorldBounds(pos))
+            if (!world.isInWorldBounds(pos))
                 continue;
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
                 continue;
@@ -47,15 +51,21 @@ public class EffectPhantomBlock extends AbstractEffect {
 
                 world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.get().defaultBlockState().setValue(MageBlock.TEMPORARY, !spellStats.hasBuff(AugmentAmplify.INSTANCE)));
                 if (world.getBlockEntity(pos) instanceof MageBlockTile tile) {
-                    tile.color = spellContext.getColors();
+                    tile.setColor(spellContext.getParticleTimeline(ParticleTimelineRegistry.MAGEBLOCK_TIMELINE.get()).getColor());
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);
-                    world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+                    tile.updateBlock();
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
                             rayTraceResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
                 }
             }
         }
+    }
+
+    @Override
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        var entity = rayTraceResult.getEntity();
+        onResolveBlock(new BlockHitResult(entity.position, Direction.DOWN, entity.blockPosition().below(), true), world, shooter, spellStats, spellContext, resolver);
     }
 
     @Override
@@ -68,7 +78,7 @@ public class EffectPhantomBlock extends AbstractEffect {
         return 5;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentAmplify.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
@@ -85,10 +95,10 @@ public class EffectPhantomBlock extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly.";
+        return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly. Casting on an entity will create blocks around them in the upwards direction.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

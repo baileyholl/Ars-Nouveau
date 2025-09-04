@@ -76,11 +76,11 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     private final String adopter;
     private final String bio;
 
-    public StarbuncleCharmData(Optional<Component> name, String color,  Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color, Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
         this(name, color, null, bedPos, cosmetic, behavior, behaviorTag, adopter, bio);
     }
 
-    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock,  Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic,ResourceLocation behavior,  CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock, Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
         this.name = name;
         this.color = color;
         this.cosmetic = cosmetic;
@@ -108,23 +108,21 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip2, TooltipFlag pTooltipFlag) {
-        if (!name.isEmpty()) {
-            tooltip2.accept(name.get());
-        }
-        if(adopter != null){
+        name.ifPresent(tooltip2);
+        if (adopter != null && !adopter.isEmpty()) {
             tooltip2.accept(Component.translatable("ars_nouveau.adopter", adopter).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
-        if(bio != null){
+        if (bio != null && !bio.isEmpty()) {
             tooltip2.accept(Component.literal(bio).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
         }
-        if(behavior != null){
+        if (behavior != null) {
             // danger zone
-            try{
+            try {
                 ChangeableBehavior behavior = BehaviorRegistry.create(this.behavior, new Starbuncle(ArsNouveau.proxy.getClientWorld(), true), this.behaviorTag);
-                if(behavior != null){
+                if (behavior != null) {
                     behavior.getTooltip(tooltip2);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 // :-)
             }

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
@@ -17,7 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CauldronBlock;
 import org.jetbrains.annotations.NotNull;
 
-public class WixieCharm extends AbstractSummonCharm {
+import java.util.Collection;
+import java.util.List;
+
+public class WixieCharm extends AbstractSummonCharm implements AliasProvider {
     public WixieCharm() {
         super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData().setColor("black")));
     }
@@ -55,4 +59,12 @@ public class WixieCharm extends AbstractSummonCharm {
         return InteractionResult.PASS;
     }
 
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+                new Alias("auto_crafter", "Auto Crafter"),
+                new Alias("potion_brewer", "Potion Brewer"),
+                new Alias("brewing_stand", "Brewing Stand")
+        );
+    }
 }

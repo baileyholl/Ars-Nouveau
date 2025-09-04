@@ -155,7 +155,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         String color = getColorFromStack(stack);
         if (color != null && !getColor().equals(color)) {
             this.entityData.set(COLOR, color);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
@@ -241,7 +243,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         super.tick();
         SummonUtil.healOverTime(this);
         if (!this.level.isClientSide) {
-            if(!this.isRemoved() && !this.isTamed()) {
+            if (!this.isRemoved() && !this.isTamed()) {
                 Whirlisprig.WHIRLI_MAP.addEntity(level, this.getUUID());
             }
             if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
@@ -307,13 +309,13 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public void die(DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, this.createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
-        super.die(source);
     }
 
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
@@ -419,7 +421,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         tag.putInt("bonemeal", timeSinceBonemeal);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("score", this.entityData.get(Whirlisprig.MOOD_SCORE));
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
         tag.putInt("genTime", timeSinceGen);
@@ -453,10 +455,10 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     public ResourceLocation getTexture() {
         var color = getColor();
-        if(color.isEmpty()){
+        if (color.isEmpty()) {
             color = "summer";
         }
         String finalColor = color;
-        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix( "textures/entity/whirlisprig_" + finalColor + ".png"));
+        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix("textures/entity/whirlisprig_" + finalColor + ".png"));
     }
 }

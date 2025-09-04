@@ -11,22 +11,14 @@ import net.minecraft.network.codec.StreamCodec;
  */
 public class CheatSerializer {
 
-    public static <T>StreamCodec<RegistryFriendlyByteBuf, T> create(MapCodec<T> codec){
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, T> create(MapCodec<T> codec) {
         return create(codec.codec());
     }
 
-    public static <T> StreamCodec<RegistryFriendlyByteBuf, T> create(Codec<T> codec){
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, T> create(Codec<T> codec) {
         return StreamCodec.of(
                 (buf, val) -> CheatSerializer.toNetwork(codec, buf, val), (buf) -> CheatSerializer.fromNetwork(codec, buf)
         );
-    }
-
-    public static <T> T fromNetwork(MapCodec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf) {
-        return fromNetwork(codec.codec(), friendlyByteBuf);
-    }
-
-    public static <T> void toNetwork(MapCodec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf, T obj) {
-        toNetwork(codec.codec(), friendlyByteBuf, obj);
     }
 
     public static <T> T fromNetwork(Codec<T> codec, RegistryFriendlyByteBuf friendlyByteBuf) {

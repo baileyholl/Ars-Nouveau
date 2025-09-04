@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
+import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.*;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.core.BlockPos;
@@ -15,11 +16,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
-
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -878,6 +874,17 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
         nodesOpen.offer(node);
 
+        if (world.getBlockEntity(pos) instanceof PortalTile portal) {
+            if (portal.dimID != null && portal.dimID.equals(portal.getLevel().dimension().location().toString())) {
+                BlockPos warpPos = portal.warpPos;
+                double portalHeuristic = computeHeuristic(warpPos);
+                double portalCost = node.getCost();
+                double portalScore = cost + heuristic;
+                ModNode portalNode = createNode(node, warpPos, nodeKey, isSwimming, portalHeuristic, portalCost, portalScore);
+                nodesOpen.offer(portalNode);
+            }
+        }
+
         //  Jump Point Search-ish optimization:
         // If this node was a (heuristic-based) improvement on our parent,
         // lets go another step in the same direction...
@@ -1072,13 +1079,13 @@ public abstract class AbstractPathJob implements Callable<Path> {
         double parentMaxY = parentY + parent.pos.below().getY();
         final double targetMaxY = target.getCollisionShape(world, pos).max(Direction.Axis.Y) + pos.getY();
         if (targetMaxY - parentMaxY < MAX_JUMP_HEIGHT) {
-            return pos.getY() + (isSmall ? 0 : 1);
+            return pos.getY() + 1;
         }
         if (target.getBlock() instanceof StairBlock
                 && parentY - HALF_A_BLOCK < MAX_JUMP_HEIGHT
                 && target.getValue(StairBlock.HALF) == Half.BOTTOM
                 && getXZFacing(parent.pos, pos) == target.getValue(StairBlock.FACING)) {
-            return pos.getY() + (isSmall ? 0 : 1);
+            return pos.getY() + 1;
         }
         return -100;
     }
@@ -1211,7 +1218,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
                     final PathType pathType = block.getBlockPathType(world, pos, (Mob) entity.get());
                     //TODO: Check readd danger check?
 //                    if (pathType == null || pathType.getDanger() == null) {
-                        return true;
+                    return true;
 //                    }
                 }
                 return false;

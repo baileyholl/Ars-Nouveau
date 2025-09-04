@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
-public class BrazierRelayTile extends RitualBrazierTile{
+public class BrazierRelayTile extends RitualBrazierTile {
 
     int ticksToLightOff = 0;
     public BlockPos brazierPos;
@@ -39,18 +39,18 @@ public class BrazierRelayTile extends RitualBrazierTile{
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.transition((int) level.getGameTime() * 10), color.transition((int) level.getGameTime() * 10), 5);
+            makeParticle(color.nextColor((int) level.getGameTime() * 10), color.nextColor((int) level.getGameTime() * 10), 5);
         }
 
-        if(!level.isClientSide){
+        if (!level.isClientSide) {
             ticksToLightOff--;
-            if(ticksToLightOff <= 0){
+            if (ticksToLightOff <= 0) {
                 ticksToLightOff = 0;
-                if(!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
+                if (!this.isDecorative && level.getBlockState(worldPosition).getValue(LIT)) {
                     level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, false));
                 }
             }
-            if( !level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0){
+            if (!level.getBlockState(worldPosition).getValue(LIT) && ticksToLightOff > 0) {
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(LIT, true));
             }
         }
@@ -63,13 +63,13 @@ public class BrazierRelayTile extends RitualBrazierTile{
         double xzOffset = 0.25;
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(centerColor.transition((int) level.getGameTime() * 20)),
+                    GlowParticleData.createData(centerColor.nextColor((int) level.getGameTime() * 20)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 0.2 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor.transition((int) level.getGameTime() * 20)),
+                    GlowParticleData.createData(outerColor.nextColor((int) level.getGameTime() * 20)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 0.2 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }

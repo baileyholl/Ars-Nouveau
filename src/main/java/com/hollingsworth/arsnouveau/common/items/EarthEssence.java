@@ -9,27 +9,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class EarthEssence extends ModItem {
+public class EarthEssence extends AbstractEssence {
 
     public EarthEssence() {
-        super();
-        withTooltip(Component.translatable("tooltip.ars_nouveau.essences"));
+        super("earth");
     }
 
     @Override
-    public @NotNull InteractionResult useOn(UseOnContext pContext) {
-
-        if (pContext.getPlayer().level.isClientSide) {
+    public @NotNull InteractionResult useOn(@NotNull UseOnContext pContext) {
+        if (pContext.getPlayer() != null && pContext.getPlayer().level.isClientSide) {
             return super.useOn(pContext);
         }
 
-        if (pContext.getLevel().getBlockState(pContext.getClickedPos()).is(BlockTags.DIRT)) {
+        BlockState state = pContext.getLevel().getBlockState(pContext.getClickedPos());
+        if (state.is(BlockTags.DIRT) && !state.is(Blocks.GRASS_BLOCK)) {
             pContext.getLevel().setBlock(pContext.getClickedPos(), Blocks.GRASS_BLOCK.defaultBlockState(), 3);
-            pContext.getItemInHand().shrink(1);
+            if (!pContext.getPlayer().hasInfiniteMaterials()) {
+                pContext.getItemInHand().shrink(1);
+            }
+            return InteractionResult.SUCCESS;
         }
 
         return super.useOn(pContext);

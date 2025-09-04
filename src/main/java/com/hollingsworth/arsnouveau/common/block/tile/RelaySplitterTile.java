@@ -68,7 +68,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         ArrayList<BlockPos> stale = new ArrayList<>();
 
         int ratePer = getTransferRate() / fromList.size();
-        if(ratePer == 0){
+        if (ratePer == 0) {
             return;
         }
         for (BlockPos fromPos : fromList) {
@@ -105,7 +105,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getSource() / toList.size();
-        if(ratePer == 0){
+        if (ratePer == 0) {
             return;
         }
         for (BlockPos toPos : toList) {

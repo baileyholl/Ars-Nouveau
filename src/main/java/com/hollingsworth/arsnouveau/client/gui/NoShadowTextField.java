@@ -1,12 +1,14 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -15,65 +17,88 @@ public class NoShadowTextField extends EditBox {
 
     public Function<String, Void> onClear;
 
-    public NoShadowTextField(Font p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, Component p_i232260_6_) {
-        super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
+    public NoShadowTextField(Font font, int x, int y, int width, int height, Component message) {
+        super(font, x, y, width, height, message);
     }
 
-    public NoShadowTextField(Font p_i232259_1_, int p_i232259_2_, int p_i232259_3_, int p_i232259_4_, int p_i232259_5_, @Nullable EditBox p_i232259_6_, Component p_i232259_7_) {
-        super(p_i232259_1_, p_i232259_2_, p_i232259_3_, p_i232259_4_, p_i232259_5_, p_i232259_6_, p_i232259_7_);
+    public NoShadowTextField(Font font, int x, int y, int width, int height, @Nullable EditBox editBox, Component message) {
+        super(font, x, y, width, height, editBox, message);
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        PoseStack matrixStack = graphics.pose();
-        if(!this.visible){
+    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        if (!this.visible) {
             return;
         }
 
-        int i2 = this.isEditable ? this.textColor : this.textColorUneditable;
-        int j = this.cursorPos - this.displayPos;
-        int k = this.highlightPos - this.displayPos;
+        int textColor = this.isEditable ? this.textColor : this.textColorUneditable;
+        int offset = this.cursorPos - this.displayPos;
         String s = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
-        boolean flag = j >= 0 && j <= s.length();
-        boolean flag1 = this.isFocused() && (Util.getMillis() - this.focusedTime) / 300L % 2L == 0L && flag;
-        int l = this.bordered ? this.x + 4 : this.x;
-        int i1 = this.bordered ? this.y + (this.height - 8) / 2 : this.y;
-        int j1 = l;
-        if (k > s.length()) {
-            k = s.length();
-        }
+        int selectionVisualEnd = Mth.clamp(this.highlightPos - this.displayPos, 0, s.length());
+        boolean offsetInBounds = offset >= 0 && offset <= s.length();
+        boolean shouldFlash = this.isFocused() && (Util.getMillis() - this.focusedTime) / 300L % 2L == 0L && offsetInBounds;
+        int xStart = this.bordered ? this.x + 4 : this.x;
+        int yStart = this.bordered ? this.y + (this.height - 8) / 2 : this.y;
+        int textStartX = xStart;
 
         if (!s.isEmpty()) {
-            String s1 = flag ? s.substring(0, j) : s;
-            j1 = graphics.drawString(font, this.formatter.apply(s1, this.displayPos),  l,  i1, -8355712, false);
-
+            String s1 = offsetInBounds ? s.substring(0, offset) : s;
+            textStartX = graphics.drawString(font, this.formatter.apply(s1, this.displayPos), xStart, yStart, -8355712, false);
         }
 
-        boolean flag2 = this.cursorPos < this.value.length() || this.value.length() >= 32;
-        int k1 = j1;
-        if (!flag) {
-            k1 = j > 0 ? l + this.width : l;
-        } else if (flag2) {
-            k1 = j1 - 1;
-            --j1;
+        boolean outOfSpace = this.font.width(s + "_") > this.width;
+        int decorationStartX = textStartX;
+        if (!offsetInBounds) {
+            decorationStartX = offset > 0 ? xStart + this.width : xStart;
+        } else if (outOfSpace) {
+            decorationStartX = textStartX - 1;
+            --textStartX;
         }
 
-        if (!s.isEmpty() && flag && j < s.length()) {
-            graphics.drawString(font, this.formatter.apply(s.substring(j), this.cursorPos), j1, i1, i2);
+        if (!s.isEmpty() && offsetInBounds && offset < s.length()) {
+            graphics.drawString(font, this.formatter.apply(s.substring(offset), this.cursorPos), textStartX, yStart, textColor);
         }
 
-        if (!flag2 && this.suggestion != null) {
-            graphics.drawString(this.font, this.suggestion, k1 - 1, i1, -8355712, false);
+        if (!outOfSpace && this.suggestion != null && (this.value == null || this.value.isEmpty())) {
+            graphics.drawString(this.font, this.suggestion, decorationStartX - 1, yStart, -8355712, false);
         }
 
-        if (flag1) {
-            if (flag2) {
-                graphics.fill(k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
+        if (shouldFlash) {
+            if (outOfSpace) {
+                graphics.fill(decorationStartX, yStart - 1, decorationStartX + 1, yStart + 1 + 9, -3092272);
             } else {
-                graphics.drawString(this.font, "_", k1, i1, i2, false);
+                graphics.drawString(this.font, "_", decorationStartX, yStart, textColor, false);
             }
         }
 
+        if (selectionVisualEnd != offset) {
+            int selectionVisualEndX = xStart + this.font.width(s.substring(0, selectionVisualEnd));
+            this.renderHighlight(graphics, decorationStartX, yStart - 1, selectionVisualEndX - 1, yStart + 9);
+        }
+    }
+
+    private void renderHighlight(GuiGraphics guiGraphics, int minX, int minY, int maxX, int maxY) {
+        if (minX < maxX) {
+            int i = minX;
+            minX = maxX;
+            maxX = i;
+        }
+
+        if (minY < maxY) {
+            int j = minY;
+            minY = maxY;
+            maxY = j;
+        }
+
+        if (maxX > this.getX() + this.width) {
+            maxX = this.getX() + this.width;
+        }
+
+        if (minX > this.getX() + this.width) {
+            minX = this.getX() + this.width;
+        }
+
+        guiGraphics.fill(RenderType.guiTextHighlight(), minX, minY, maxX, maxY, FastColor.ARGB32.color(255, 0, 0, 255));
     }
 
     @Override
@@ -96,12 +121,14 @@ public class NoShadowTextField extends EditBox {
                 this.moveCursorTo(this.font.plainSubstrByWidth(s, i).length() + this.displayPos, true);
                 return true;
             } else if (this.isFocused() && mouseButton == 1) {
-                if (this.value.isEmpty())
+                if (this.value.isEmpty()) {
                     return clickedThis;
+                }
 
-
-                if (onClear != null)
+                if (onClear != null) {
                     onClear.apply("");
+                }
+
                 setValue("");
                 return clickedThis;
             } else {

@@ -50,7 +50,7 @@ public class SpellArrow extends ArrowItem {
         AbstractCaster<?> spellCaster = caster.getSpellCaster(entity.getMainHandItem());
         var mutableSpell = spellCaster.getSpell().mutable();
         modifySpell(mutableSpell);
-        spellArrow.spellResolver = new SpellResolver(new SpellContext(world, mutableSpell.immutable(), entity, new PlayerCaster(entity), shooter.getMainHandItem())).withSilent(true);
+        spellArrow.setResolver(new SpellResolver(new SpellContext(world, mutableSpell.immutable(), entity, new PlayerCaster(entity), shooter.getMainHandItem())).withSilent(true));
         spellArrow.pierceLeft = mutableSpell.immutable().getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
         return spellArrow;
     }

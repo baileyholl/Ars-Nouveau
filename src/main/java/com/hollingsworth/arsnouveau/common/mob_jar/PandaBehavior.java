@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Panda;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 
@@ -13,13 +12,13 @@ public class PandaBehavior extends JarBehavior<Panda> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if(tile.getLevel().isClientSide)
+        if (tile.getLevel().isClientSide)
             return;
         Panda panda = entityFromJar(tile);
-        if(!panda.isSneezing() && canSneeze(panda)){
+        if (!panda.isSneezing() && canSneeze(panda)) {
             panda.sneeze(true);
         }
-        if(panda.isSneezing()){
+        if (panda.isSneezing()) {
 
             panda.setSneezeCounter(panda.getSneezeCounter() + 1);
             if (panda.getSneezeCounter() > 20) {
@@ -31,17 +30,14 @@ public class PandaBehavior extends JarBehavior<Panda> {
         }
     }
 
-    public void afterSneeze(Panda panda, MobJarTile tile){
+    public void afterSneeze(Panda panda, MobJarTile tile) {
         panda.playSound(SoundEvents.PANDA_SNEEZE, 1.0F, 1.0F);
         if (!panda.level.isClientSide() && panda.getRandom().nextInt(700) == 0 && panda.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
-
-            ItemEntity itementity = new ItemEntity(tile.getLevel(), tile.getX(), tile.getY() + 1, tile.getZ(), Items.SLIME_BALL.getDefaultInstance());
-            itementity.setDefaultPickUpDelay();
-            tile.getLevel().addFreshEntity(itementity);
+            JarBehavior.insertOrCreateItem(tile, Items.SLIME_BALL.getDefaultInstance());
         }
     }
 
-    public boolean canSneeze(Panda panda){
+    public boolean canSneeze(Panda panda) {
         if (panda.isBaby()) {
             if (panda.isWeak() && panda.getRandom().nextInt(reducedTickDelay(500)) == 1) {
                 return true;

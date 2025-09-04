@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api.spell.wrapped_caster;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.common.capability.ManaCap;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,12 +18,12 @@ import java.util.List;
 public class LivingCaster implements IWrappedCaster {
     public LivingEntity livingEntity;
 
-    public LivingCaster(LivingEntity livingEntity){
+    public LivingCaster(LivingEntity livingEntity) {
         this.livingEntity = livingEntity;
     }
 
-    public static LivingCaster from(LivingEntity livingEntity){
-        if(livingEntity instanceof Player player && !(player instanceof FakePlayer)){
+    public static LivingCaster from(LivingEntity livingEntity) {
+        if (livingEntity instanceof Player player && !(player instanceof FakePlayer)) {
             return new PlayerCaster(player);
         }
         return new LivingCaster(livingEntity);
@@ -39,7 +38,7 @@ public class LivingCaster implements IWrappedCaster {
     public @NotNull List<FilterableItemHandler> getInventory() {
         List<FilterableItemHandler> filterableItemHandlers = new ArrayList<>();
         var cap = livingEntity.getCapability(Capabilities.ItemHandler.ENTITY);
-        if(cap != null){
+        if (cap != null) {
             filterableItemHandlers.add(new FilterableItemHandler(cap));
         }
         return filterableItemHandlers;

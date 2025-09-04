@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -46,12 +45,14 @@ public class Glyph extends ModItem {
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
-                playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
+                playerIn.sendSystemMessage(Component.translatable("ars_nouveau.already_learned"));
                 return super.use(worldIn, playerIn, handIn);
             } else if (playerDataCap.unlockGlyph(spellPart)) {
                 CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
-                playerIn.getItemInHand(handIn).shrink(1);
-                playerIn.sendSystemMessage(Component.literal("Unlocked " + this.spellPart.getName()));
+                if (!playerIn.hasInfiniteMaterials()) {
+                    playerIn.getItemInHand(handIn).shrink(1);
+                }
+                playerIn.sendSystemMessage(Component.translatable("ars_nouveau.learn_glyph", Component.translatable(spellPart.getLocalizationKey()).getString()));
             }
         }
         return super.use(worldIn, playerIn, handIn);
@@ -60,6 +61,10 @@ public class Glyph extends ModItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack pStack) {
         return Component.translatable("ars_nouveau.glyph_of", this.spellPart.getLocaleName());
+    }
+
+    public @NotNull Component getName() {
+        return getName(ItemStack.EMPTY);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class Glyph extends ModItem {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
         } else if (spellPart != null) {
             tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-            if (Screen.hasShiftDown()) {
+            if (Screen.hasShiftDown() && !spellPart.spellSchools.isEmpty()) {
                 tooltip2.add(Component.translatable("ars_nouveau.schools"));
                 for (SpellSchool s : spellPart.spellSchools) {
                     tooltip2.add(s.getTextComponent());
@@ -79,7 +84,7 @@ public class Glyph extends ModItem {
             }
         }
         var player = ArsNouveau.proxy.getPlayer();
-        if (player == null )
+        if (player == null)
             return;
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(player);
         if (playerDataCap != null) {
@@ -89,10 +94,10 @@ public class Glyph extends ModItem {
                 tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
             }
         }
-        if (InputConstants.isKeyDown(ArsNouveau.proxy.getMinecraft().getWindow().getWindow(),ArsNouveau.proxy.getMinecraft().options.keyShift.getKey().getValue())) {
+        if (flagIn.hasShiftDown()) {
             tooltip2.add(spellPart.getBookDescLang());
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", ArsNouveau.proxy.getMinecraft().options.keyShift.getKey().getDisplayName()));
+            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")));
         }
     }
 

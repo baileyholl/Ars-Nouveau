@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_interact",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_interact",
+  "title": "Interact",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Interact",
+      "description": "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals. Sensitive will use your off-hand item on the block or entity, Amplify will use left-click instead of right-click on blocks.",
+      "icon": "ars_nouveau:glyph_interact",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_interact"
+    }
+  ]
+}

@@ -25,20 +25,20 @@ public record PresentData(String name, Optional<UUID> uuid) implements TooltipPr
 
     public static StreamCodec<RegistryFriendlyByteBuf, PresentData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, PresentData::name, ByteBufCodecs.STRING_UTF8, p -> p.uuid().toString(), PresentData::new);
 
-    public PresentData(String name, String uuid){
+    public PresentData(String name, String uuid) {
         this(name, Optional.ofNullable(uuid == null ? null : UUID.fromString(uuid)));
     }
 
-    public PresentData(){
+    public PresentData() {
         this(null, (String) null);
     }
 
     @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
-        if(uuid().isPresent()){
-            if(uuid().get().equals(ArsNouveau.proxy.getPlayer().getUUID())){
+        if (uuid().isPresent()) {
+            if (uuid().get().equals(ArsNouveau.proxy.getPlayer().getUUID())) {
                 pTooltipAdder.accept(Component.translatable("ars_nouveau.present.give"));
-            }else {
+            } else {
                 pTooltipAdder.accept(Component.translatable("ars_nouveau.present.from", name()).withStyle(ChatFormatting.GOLD));
             }
         }

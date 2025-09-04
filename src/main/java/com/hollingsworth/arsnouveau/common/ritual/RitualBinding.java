@@ -70,6 +70,6 @@ public class RitualBinding extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.BINDING);
+        return ArsNouveau.prefix(RitualLib.BINDING);
     }
 }

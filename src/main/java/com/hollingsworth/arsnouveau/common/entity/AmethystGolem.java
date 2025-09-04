@@ -38,7 +38,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -117,7 +116,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new GoBackHomeGoal(this, this::getHome, 10, () -> true));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getMainHandItem().isEmpty()));
@@ -149,7 +147,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
         if (level.isClientSide && isImbueing() && getImbuePos() != null) {
             Vec3 vec = new Vec3(getImbuePos().getX() + 0.5, getImbuePos().getY(), getImbuePos().getZ() + 0.5);
-            level.addParticle(GlowParticleData.createData(new ParticleColor(255, 50, 150)),
+            level.addAlwaysVisibleParticle(GlowParticleData.createData(new ParticleColor(255, 50, 150)),
+                    true,
                     (float) (vec.x) - Math.sin((ClientInfo.ticksInGame) / 8D),
                     (float) (vec.y) + Math.sin(ClientInfo.ticksInGame / 5d) / 8D + 0.5,
                     (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D),
@@ -229,7 +228,8 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
-    public void die(DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM.get());
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
@@ -237,7 +237,6 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             if (this.getMainHandItem() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getMainHandItem()));
         }
-        super.die(source);
     }
 
     @Override
@@ -293,7 +292,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "run_controller", 1, e ->{
+        data.add(new AnimationController<>(this, "run_controller", 1, e -> {
             AnimationController controller = e.getController();
             if (isStomping()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("harvest2"));
@@ -316,11 +315,10 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController<>(this, "attack_controller", 5, e ->{
+        data.add(new AnimationController<>(this, "attack_controller", 5, e -> {
             return PlayState.CONTINUE;
         }));
     }
-
 
 
     public void setHome(BlockPos home) {

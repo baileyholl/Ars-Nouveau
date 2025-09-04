@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
@@ -29,7 +31,7 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpellWriteEntry extends PedestalRecipeEntry{
+public class SpellWriteEntry extends PedestalRecipeEntry {
     RecipeHolder<SpellWriteRecipe> spellWriteRecipe;
 
     public SpellWriteEntry(RecipeHolder<SpellWriteRecipe> spellWriteRecipe, BaseDocScreen parent, int x, int y, int width, int height) {
@@ -37,13 +39,13 @@ public class SpellWriteEntry extends PedestalRecipeEntry{
         this.title = Component.translatable("block.ars_nouveau.enchanting_apparatus");
         this.spellWriteRecipe = spellWriteRecipe;
         List<Ingredient> ingredients1 = new ArrayList<>();
-        if(spellWriteRecipe != null) {
-            for(Ingredient ingredient : spellWriteRecipe.value().pedestalItems()){
-                if(ingredient.test(new ItemStack(ItemsRegistry.SPELL_PARCHMENT))){
+        if (spellWriteRecipe != null) {
+            for (Ingredient ingredient : spellWriteRecipe.value().pedestalItems()) {
+                if (ingredient.test(new ItemStack(ItemsRegistry.SPELL_PARCHMENT))) {
                     ItemStack replacementParchment = new ItemStack(ItemsRegistry.SPELL_PARCHMENT);
                     replacementParchment.set(DataComponentRegistry.SPELL_CASTER, new SpellCaster(0, "", false, "", 1).setSpell(new Spell().add(MethodTouch.INSTANCE).add(EffectLight.INSTANCE)));
                     ingredients1.add(Ingredient.of(replacementParchment));
-                }else{
+                } else {
                     ingredients1.add(ingredient);
                 }
             }
@@ -65,10 +67,18 @@ public class SpellWriteEntry extends PedestalRecipeEntry{
         this.outputStack = outputStick;
     }
 
-    public static SinglePageCtor create(ResourceLocation id){
+    public static SinglePageCtor create(ResourceLocation id) {
         return (parent, x, y, width, height) -> {
             RecipeHolder<SpellWriteRecipe> recipe = parent.recipeManager().byKeyTyped(RecipeRegistry.SPELL_WRITE_TYPE.get(), id);
             return new SpellWriteEntry(recipe, parent, x, y, width, height);
         };
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if (spellWriteRecipe != null) {
+            object.addProperty(DocExporter.RECIPE_PROPERTY, spellWriteRecipe.id().toString());
+        }
     }
 }

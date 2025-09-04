@@ -42,13 +42,14 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             .expireAfterAccess(20, TimeUnit.SECONDS)
             .build();
 
-    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix( "starby_transport");
+    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix("starby_transport");
 
     public ItemStack itemScroll = ItemStack.EMPTY;
 
     public SimpleStateMachine<StarbyState, IStateEvent> stateMachine;
 
     public int berryBackoff;
+    public int nextBerryBackoff = 20;
     public int findItemBackoff;
     public int takeItemBackoff;
 
@@ -64,14 +65,18 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide) {
-            if(berryBackoff > 0){
+        if (!this.starbuncle.isEffectiveAi()) {
+            return;
+        }
+
+        if (!level.isClientSide) {
+            if (berryBackoff > 0) {
                 berryBackoff--;
             }
-            if(findItemBackoff > 0){
+            if (findItemBackoff > 0) {
                 findItemBackoff--;
             }
-            if(takeItemBackoff > 0){
+            if (takeItemBackoff > 0) {
                 takeItemBackoff--;
             }
             stateMachine.tick();
@@ -164,7 +169,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
 
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
-            ItemStack stack = iItemHandler.getStackInSlot(j);
+            ItemStack stack = iItemHandler.extractItem(j, 1, true);
             if (!stack.isEmpty() && getValidStorePos(stack) != null) {
                 return true;
             }

@@ -29,7 +29,7 @@ public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProv
         this.items = List.copyOf(items);
     }
 
-    public ItemScrollData(){
+    public ItemScrollData() {
         this(List.of());
     }
 

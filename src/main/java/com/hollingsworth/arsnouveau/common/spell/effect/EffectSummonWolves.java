@@ -55,7 +55,7 @@ public class EffectSummonWolves extends AbstractEffect {
         return 100;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // SummonEvent captures augments, but no uses of that field were found
@@ -78,7 +78,7 @@ public class EffectSummonWolves extends AbstractEffect {
         return SpellTier.ONE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

@@ -3,11 +3,10 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -26,16 +25,16 @@ public class WhirlisprigModel<T extends LivingEntity & GeoAnimatable> extends Ge
 
     @Override
     public ResourceLocation getModelResource(T whirlisprig) {
-        return ArsNouveau.prefix( "geo/whirlisprig.geo.json");
+        return ArsNouveau.prefix("geo/whirlisprig.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(T whirlisprig) {
-        return ArsNouveau.prefix( "textures/entity/whirlisprig.png");
+        return ArsNouveau.prefix("textures/entity/whirlisprig.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(T whirlisprig) {
-        return ArsNouveau.prefix( "animations/whirlisprig_animations.json");
+        return ArsNouveau.prefix("animations/whirlisprig_animations.json");
     }
 }

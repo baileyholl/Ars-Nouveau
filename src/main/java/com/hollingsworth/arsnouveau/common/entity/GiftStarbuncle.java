@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
@@ -37,7 +39,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     int tamingTime;
     public static final EntityDataAccessor<Boolean> BEING_TAMED = SynchedEntityData.defineId(GiftStarbuncle.class, EntityDataSerializers.BOOLEAN);
 
-    public GiftStarbuncle(EntityType<GiftStarbuncle> type, Level level){
+    public GiftStarbuncle(EntityType<GiftStarbuncle> type, Level level) {
         super(type, level);
     }
 
@@ -53,7 +55,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
                 }
             }
         }
-        if(!isTaming())
+        if (!isTaming())
             return;
         tamingTime++;
 
@@ -82,20 +84,36 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     }
 
     @Override
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || isTaming() || !this.getMainHandItem().isEmpty()) {
+            return super.mobInteract(player, hand);
+        }
+
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(Tags.Items.NUGGETS_GOLD)) {
+            setItemInHand(InteractionHand.MAIN_HAND, player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+            setTaming(true);
+            return InteractionResult.SUCCESS;
+        }
+
+        return InteractionResult.PASS;
+    }
+
+    @Override
     protected void pickUpItem(ItemEntity itemEntity) {
-        if(!this.getMainHandItem().isEmpty())
+        if (!this.getMainHandItem().isEmpty())
             return;
-        if(!this.isTaming() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)){
+        if (!this.isTaming() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)) {
             setItemInHand(InteractionHand.MAIN_HAND, itemEntity.getItem().split(1));
             setTaming(true);
         }
     }
 
-    public boolean isTaming(){
+    public boolean isTaming() {
         return this.entityData.get(BEING_TAMED);
     }
 
-    public void setTaming(boolean taming){
+    public void setTaming(boolean taming) {
         this.entityData.set(BEING_TAMED, taming);
     }
 

@@ -5,22 +5,22 @@ import net.minecraft.world.item.ItemStack;
 
 public interface ICharmSerializable {
 
-    private LivingEntity asEntity(){
+    private LivingEntity asEntity() {
         return (LivingEntity) this;
     }
 
-    default PersistentFamiliarData createCharmData(){
+    default PersistentFamiliarData createCharmData() {
         LivingEntity entity = asEntity();
         return new PersistentFamiliarData(entity.getCustomName(), getColor(), getCosmetic());
     }
 
     void fromCharmData(PersistentFamiliarData data);
 
-    default String getColor(){
+    default String getColor() {
         return "";
     }
 
-    default ItemStack getCosmetic(){
+    default ItemStack getCosmetic() {
         return ItemStack.EMPTY;
     }
 }

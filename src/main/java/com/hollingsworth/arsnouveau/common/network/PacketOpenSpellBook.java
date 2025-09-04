@@ -10,10 +10,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 
 
-public class PacketOpenSpellBook extends AbstractPacket{
+public class PacketOpenSpellBook extends AbstractPacket {
     boolean isMainHand;
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, PacketOpenSpellBook> CODEC  = StreamCodec.ofMember(PacketOpenSpellBook::toBytes, PacketOpenSpellBook::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketOpenSpellBook> CODEC = StreamCodec.ofMember(PacketOpenSpellBook::toBytes, PacketOpenSpellBook::new);
     public static final Type<PacketOpenSpellBook> TYPE = new Type<>(ArsNouveau.prefix("open_spell_book"));
 
     public PacketOpenSpellBook(boolean isMainHand) {
@@ -29,7 +29,7 @@ public class PacketOpenSpellBook extends AbstractPacket{
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeBoolean(isMainHand);
     }
-    
+
     public PacketOpenSpellBook(InteractionHand hand) {
         this.isMainHand = hand == InteractionHand.MAIN_HAND;
     }

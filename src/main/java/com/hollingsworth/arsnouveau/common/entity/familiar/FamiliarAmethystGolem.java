@@ -32,7 +32,9 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
 
         if (player.getMainHandItem().is(Tags.Items.GEMS_AMETHYST)) {
             player.addEffect(new MobEffectInstance(ModPotions.DEFENCE_EFFECT, 20 * 60 * 3));
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
@@ -52,9 +54,10 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
         return ModEntities.FAMILIAR_AMETHYST_GOLEM.get();
     }
 
-    public static final Map<String,ResourceLocation> Variants = new HashMap<>();
+    public static final Map<String, ResourceLocation> Variants = new HashMap<>();
+
     static {
-        Variants.put("default", ArsNouveau.prefix( "textures/entity/amethyst_golem.png"));
+        Variants.put("default", ArsNouveau.prefix("textures/entity/amethyst_golem.png"));
     }
 
     public ResourceLocation getTexture() {

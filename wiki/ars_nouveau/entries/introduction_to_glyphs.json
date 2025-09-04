@@ -1,0 +1,20 @@
+{
+  "id": "ars_nouveau:introduction_to_glyphs",
+  "order": 2,
+  "icon": "ars_nouveau:novice_spell_book",
+  "title": "2 - Glyphs",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "2 - Glyphs",
+      "description": "Glyphs are the building blocks that make up spells. A spell’s outcome is determined by which Glyphs are used and in what order they appear. They fall under three major categories: Forms, Effects, and Augments.  Form Glyphs are the vessels that deliver the contents of a spell to the target. Every spell must begin with a Form, and only one Form may be present.",
+      "icon": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "description": "Effect Glyphs determine what a spell will do once it reaches its target. Spells can contain multiple Effects and will resolve in the order they are placed during spellcrafting.  Augment Glyphs change the properties of the Form or Effect Glyph to their left as long as they are compatible. Multiple Augments may be chained together to modify the same Glyph. Augments have no effect on other Augments."
+    },
+    {
+      "description": "Glyphs fall into tiers of I, II, or III. The Novice’s Spell Book can only cast tier I Glyphs, but higher tiers will be available each time you upgrade your Spell Book."
+    }
+  ]
+}

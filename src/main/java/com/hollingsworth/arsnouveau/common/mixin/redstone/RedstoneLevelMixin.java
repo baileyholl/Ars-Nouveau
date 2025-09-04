@@ -17,7 +17,7 @@ public abstract class RedstoneLevelMixin {
 
     @Inject(method = "getSignal", at = @At("RETURN"), cancellable = true)
     public void getArsSignal(BlockGetter pLevel, BlockPos pPos, Direction pDirection, CallbackInfoReturnable<Integer> cir) {
-        if(pLevel instanceof ServerLevel serverLevel) {
+        if (pLevel instanceof ServerLevel serverLevel) {
             RedstoneUtil.getArsSignal(serverLevel, pPos, pDirection, cir);
         }
     }

@@ -2,11 +2,13 @@ package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectBreak;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -50,6 +52,12 @@ public class GlyphRegistry {
     public static @Nullable AbstractSpellPart getSpellPart(ResourceLocation id) {
         return spellpartMap.get(id);
     }
+
+    public static @NotNull AbstractSpellPart getSpellPartOrDefault(ResourceLocation id) {
+        AbstractSpellPart part = spellpartMap.get(id);
+        return part == null ? EffectBreak.INSTANCE : part;
+    }
+
 
     public static Map<ResourceLocation, AbstractSpellPart> getSpellpartMap() {
         return spellpartMap;

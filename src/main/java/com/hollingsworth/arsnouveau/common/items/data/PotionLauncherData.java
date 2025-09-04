@@ -19,8 +19,8 @@ import java.util.Objects;
 public record PotionLauncherData(PotionContents renderData, int lastSlot) {
 
     public static MapCodec<PotionLauncherData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        PotionContents.CODEC.fieldOf("lastDataForRender").forGetter(PotionLauncherData::renderData),
-        Codec.INT.fieldOf("lastSlot").forGetter(PotionLauncherData::lastSlot)
+            PotionContents.CODEC.fieldOf("lastDataForRender").forGetter(PotionLauncherData::renderData),
+            Codec.INT.fieldOf("lastSlot").forGetter(PotionLauncherData::lastSlot)
     ).apply(instance, PotionLauncherData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, PotionLauncherData> STREAM = StreamCodec.composite(
@@ -31,30 +31,30 @@ public record PotionLauncherData(PotionContents renderData, int lastSlot) {
             PotionLauncherData::new
     );
 
-    public PotionLauncherData(){
+    public PotionLauncherData() {
         this(PotionContents.EMPTY, -1);
     }
 
-    public @Nullable IPotionProvider getPotionDataFromSlot(Player player){
+    public @Nullable IPotionProvider getPotionDataFromSlot(Player player) {
         ItemStack stack = getSelectedStack(player);
         return PotionProviderRegistry.from(stack);
     }
 
-    public ItemStack getSelectedStack(Player player){
-        if(lastSlot < 0 || lastSlot >= player.inventory.getContainerSize())
+    public ItemStack getSelectedStack(Player player) {
+        if (lastSlot < 0 || lastSlot >= player.inventory.getContainerSize())
             return ItemStack.EMPTY;
         return player.inventory.getItem(lastSlot);
     }
 
-    public PotionContents expendPotion(Player player, ItemStack launcherStack){
-        if(lastSlot >= player.inventory.getContainerSize())
+    public PotionContents expendPotion(Player player, ItemStack launcherStack) {
+        if (lastSlot >= player.inventory.getContainerSize())
             return PotionContents.EMPTY;
         ItemStack item = player.inventory.getItem(lastSlot);
         var provider = PotionProviderRegistry.from(item);
-        if(provider == null){
+        if (provider == null) {
             return PotionContents.EMPTY;
         }
-        if(provider.usesRemaining(item) <= 0){
+        if (provider.usesRemaining(item) <= 0) {
             return PotionContents.EMPTY;
         }
         PotionContents contents = provider.getPotionData(item);
@@ -63,10 +63,10 @@ public record PotionLauncherData(PotionContents renderData, int lastSlot) {
         return contents;
     }
 
-    public int amountLeft(Player player){
+    public int amountLeft(Player player) {
         ItemStack stack = getSelectedStack(player);
         var provider = PotionProviderRegistry.from(stack);
-        if(provider == null){
+        if (provider == null) {
             return 0;
         }
         return provider.usesRemaining(stack);

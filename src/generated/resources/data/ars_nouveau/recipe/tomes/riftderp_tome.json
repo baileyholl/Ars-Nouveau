@@ -1,0 +1,20 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 255,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 120
+  },
+  "flavour_text": "Just like that one guy, from that one thing! This spell will put you right in the enemy's face, so be ready for some swordplay!",
+  "name": "Rift's Blink Strike",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_projectile",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_accelerate",
+    "ars_nouveau:glyph_harm",
+    "ars_nouveau:glyph_blink"
+  ],
+  "tome_type": "ars_nouveau:caster_tome"
+}

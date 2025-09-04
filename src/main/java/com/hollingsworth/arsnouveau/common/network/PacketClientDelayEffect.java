@@ -42,6 +42,7 @@ public class PacketClientDelayEffect extends AbstractPacket {
         spell = ANCodecs.decode(Spell.CODEC.codec(), buf.readNbt());
         shooterID = buf.readInt();
         hitEntityID = buf.readInt();
+
         if (hitEntityID == -1) {
             hitPos = buf.readBlockHitResult();
         }
@@ -78,7 +79,7 @@ public class PacketClientDelayEffect extends AbstractPacket {
         } else if (hitEntity == null) {
             result = BlockHitResult.miss(new Vec3(0, 0, 0), Direction.UP, BlockPos.ZERO);
         } else {
-            result = new EntityHitResult(hitEntity);
+            result = new EntityHitResult(hitEntity, hitEntity.getBoundingBox().getCenter());
         }
         LivingEntity entity = (LivingEntity) world.getEntity(shooterID);
         EventQueue.getClientQueue().addEvent(new DelayedSpellEvent(duration, result, world,

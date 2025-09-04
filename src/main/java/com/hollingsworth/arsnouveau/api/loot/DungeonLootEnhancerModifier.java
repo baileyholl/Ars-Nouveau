@@ -37,18 +37,18 @@ public class DungeonLootEnhancerModifier extends LootModifier {
     }
 
     public static final MapCodec<DungeonLootEnhancerModifier> CODEC = RecordCodecBuilder.mapCodec(instance ->
-        codecStart(instance)
-            .and(
-                instance.group(
-                    Codec.DOUBLE.optionalFieldOf("common_chance", 0.30).forGetter(d -> d.commonChance),
-                    Codec.DOUBLE.optionalFieldOf("uncommon_chance", 0.2).forGetter(d -> d.uncommonChance),
-                    Codec.DOUBLE.optionalFieldOf("rare_chance", 0.1).forGetter(d -> d.rareChance),
-                    Codec.INT.optionalFieldOf("common_rolls", 3).forGetter(d -> d.commonRolls),
-                    Codec.INT.optionalFieldOf("uncommon_rolls", 2).forGetter(d -> d.uncommonRolls),
-                    Codec.INT.optionalFieldOf("rare_rolls", 1).forGetter(d -> d.rareRolls)
-                )
-            )
-            .apply(instance, DungeonLootEnhancerModifier::new));
+            codecStart(instance)
+                    .and(
+                            instance.group(
+                                    Codec.DOUBLE.optionalFieldOf("common_chance", 0.30).forGetter(d -> d.commonChance),
+                                    Codec.DOUBLE.optionalFieldOf("uncommon_chance", 0.2).forGetter(d -> d.uncommonChance),
+                                    Codec.DOUBLE.optionalFieldOf("rare_chance", 0.1).forGetter(d -> d.rareChance),
+                                    Codec.INT.optionalFieldOf("common_rolls", 3).forGetter(d -> d.commonRolls),
+                                    Codec.INT.optionalFieldOf("uncommon_rolls", 2).forGetter(d -> d.uncommonRolls),
+                                    Codec.INT.optionalFieldOf("rare_rolls", 1).forGetter(d -> d.rareRolls)
+                            )
+                    )
+                    .apply(instance, DungeonLootEnhancerModifier::new));
 
     @Override
     public MapCodec<DungeonLootEnhancerModifier> codec() {

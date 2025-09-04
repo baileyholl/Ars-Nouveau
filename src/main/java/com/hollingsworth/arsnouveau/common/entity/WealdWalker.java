@@ -41,8 +41,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -97,7 +97,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     protected void usePlayerItem(Player p_175505_1_, ItemStack p_175505_2_) {
-        if (!p_175505_1_.getAbilities().instabuild) {
+        if (!p_175505_1_.hasInfiniteMaterials()) {
             p_175505_2_.shrink(1);
         }
     }
@@ -193,12 +193,12 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new SmashGoal(this, true, () -> smashCooldown <= 0 && !this.entityData.get(BABY), Animations.SMASH.ordinal(), 25, 5));
-        this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d,  15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
+        this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d, 15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
     }
 
     @Override
     public boolean isAlliedTo(Entity pEntity) {
-        return !(pEntity instanceof Enemy) || (pEntity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) || super.isAlliedTo(pEntity) ;
+        return !(pEntity instanceof Enemy) || (pEntity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) || super.isAlliedTo(pEntity);
     }
 
     @Override
@@ -315,7 +315,6 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     public void performRangedAttack(LivingEntity entity, float p_82196_2_) {
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spell, this, new LivingCaster(this)).withColors(color));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
-        projectileSpell.setColor(color);
         projectileSpell.shoot(this, this.getXRot(), this.getYRot(), 0.0F, 1.0f, 0.8f);
         level.addFreshEntity(projectileSpell);
         this.castCooldown = 40;

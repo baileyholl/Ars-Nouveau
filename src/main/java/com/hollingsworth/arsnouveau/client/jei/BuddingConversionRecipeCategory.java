@@ -49,12 +49,12 @@ public class BuddingConversionRecipeCategory implements IRecipeCategory<BuddingC
 
     @Override
     public void draw(BuddingConversionRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
-        arrow.draw(matrixStack, 48, 5   );
+        arrow.draw(matrixStack, 48, 5);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BuddingConversionRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 120-16-6, 4).addIngredient(VanillaTypes.ITEM_STACK, recipe.result().asItem().getDefaultInstance());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 120 - 16 - 6, 4).addIngredient(VanillaTypes.ITEM_STACK, recipe.result().asItem().getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 4).addIngredient(VanillaTypes.ITEM_STACK, recipe.input().asItem().getDefaultInstance());
     }
 }

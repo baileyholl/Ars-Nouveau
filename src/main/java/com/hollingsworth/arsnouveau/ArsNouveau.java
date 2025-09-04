@@ -1,15 +1,13 @@
 package com.hollingsworth.arsnouveau;
 
-
 import com.hollingsworth.arsnouveau.api.registry.*;
-import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
-import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -23,10 +21,8 @@ import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -38,6 +34,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
@@ -61,15 +59,17 @@ public class ArsNouveau {
 
     public static List<String> postLoadWarnings = new ArrayList<>();
 
-    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"),  (level, ticketHelper) -> {
+    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"), (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
             if (level.getEntity(uuid) == null)
                 ticketHelper.removeAllTickets(uuid);
         }));
     });
     public static boolean isDebug = false && !FMLEnvironment.production;
-    public ArsNouveau(IEventBus modEventBus, ModContainer modContainer){
+
+    public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
+        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onPlayerLoggedOut);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
@@ -91,28 +91,41 @@ public class ArsNouveau {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener((RegisterTicketControllersEvent e) ->{
+        modEventBus.addListener((RegisterTicketControllersEvent e) -> {
             e.register(ticketController);
         });
         NeoForge.EVENT_BUS.addListener(BubbleEntity::onAttacked);
         NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
+        NeoForge.EVENT_BUS.addListener(BubbleEntity::preEntityRemoval);
         NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
+
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
+            ClientInfo.endClientTick();
+        });
+
+        NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Pre e) -> {
+            ClientInfo.renderTickStart(e.getPartialTick().getGameTimeDeltaPartialTick(false));
+        });
+        NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Post e) -> {
+            ClientInfo.renderTickEnd();
+        });
+
         ANCriteriaTriggers.init();
         try {
             Thread thread = new Thread(Rewards::init);
             thread.setDaemon(true);
             thread.start();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if(FMLEnvironment.dist.isClient()){
+        if (FMLEnvironment.dist.isClient()) {
             ArsNouveau.proxy = new Supplier<IProxy>() {
                 @Override
                 public IProxy get() {
                     return new ClientProxy();
                 }
             }.get();
-        }else{
+        } else {
             ArsNouveau.proxy = new ServerProxy();
         }
     }
@@ -125,8 +138,9 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> {
             GenericRecipeRegistry.reloadAll(e.getServer().getRecipeManager());
-            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().getLevel(Level.OVERWORLD));
+            CasterTomeRegistry.reloadTomeData(e.getServer().getRecipeManager(), e.getServer().registryAccess());
             BuddingConversionRegistry.reloadBuddingConversionRecipes(e.getServer().getRecipeManager());
+            AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(e.getServer().getRecipeManager(), e.getServer());
             ScryRitualRegistry.reloadScryRitualRecipes(e.getServer().getRecipeManager());
         });
 
@@ -141,26 +155,23 @@ public class ArsNouveau {
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.SOURCEBERRY_BUSH.asItem(), 0.3f);
             ComposterBlock.COMPOSTABLES.putIfAbsent(ItemsRegistry.MAGE_BLOOM.get(), 0.65F);
             ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MAGE_BLOOM_CROP.asItem(), 0.65F);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BOMBEGRANTE_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MENDOSTEEN_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FROSTAYA_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BASTION_POD.asItem(),0.65f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_LEAVES.asItem(),0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_LEAVES.asItem(),0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_LEAVE.asItem(),0.3f);
-            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_LEAVES.asItem(),0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BOMBEGRANTE_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.MENDOSTEEN_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FROSTAYA_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BASTION_POD.asItem(), 0.65f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.FLOURISHING_LEAVES.asItem(), 0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.VEXING_LEAVES.asItem(), 0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.CASCADING_LEAVE.asItem(), 0.3f);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(BlockRegistry.BLAZING_LEAVES.asItem(), 0.3f);
 
             FlowerPotBlock flowerPot = (FlowerPotBlock) Blocks.FLOWER_POT;
-            for (var pot : BlockRegistry.flowerPots.entrySet()){
+            for (var pot : BlockRegistry.flowerPots.entrySet()) {
                 flowerPot.addPlant(pot.getKey().get(), pot::getValue);
             }
 
-            for (RitualTablet tablet : RitualRegistry.getRitualItemMap().values()){
-                DispenserBlock.registerBehavior(tablet, new DispenserRitualBehavior());
-            }
-
+            DispenserBehaviorRegistry.register();
         });
-        for(String warning : postLoadWarnings){
+        for (String warning : postLoadWarnings) {
             Log.getLogger().error(warning);
         }
     }

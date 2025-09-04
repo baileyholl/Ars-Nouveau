@@ -34,7 +34,7 @@ public class FamiliarStarbyModel<T extends FamiliarStarbuncle> extends GeoModel<
 
     @Override
     public ResourceLocation getAnimationResource(FamiliarStarbuncle carbuncle) {
-        return ArsNouveau.prefix( "animations/starbuncle_animations.json");
+        return ArsNouveau.prefix("animations/starbuncle_animations.json");
     }
 
 }

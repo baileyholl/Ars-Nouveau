@@ -21,7 +21,8 @@ import java.util.List;
 public class DyeRecipeCategory implements ICraftingCategoryExtension<DyeRecipe> {
 
 
-    public DyeRecipeCategory() {}
+    public DyeRecipeCategory() {
+    }
 
     @Override
     public void setRecipe(RecipeHolder<DyeRecipe> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {

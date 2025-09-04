@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -14,17 +15,39 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 public class ParticleRenderTypes {
+    static final ParticleRenderType ADDITIVE = new ParticleRenderType() {
+
+        @Override
+        public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
+
+            RenderSystem.enableBlend();
+            RenderSystem.depthMask(false);
+            RenderSystem.blendEquation(GlConst.GL_FUNC_REVERSE_SUBTRACT);
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA.value, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.value);
+
+            RenderSystem.enableCull();
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            RenderSystem.enableDepthTest();
+            RenderSystem.blendEquation(GlConst.GL_FUNC_ADD);
+            return buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+
+        @Override
+        public String toString() {
+            return "ars_nouveau:additive";
+        }
+    };
+
     static final ParticleRenderType EMBER_RENDER = new ParticleRenderType() {
 
         @Override
         public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
             Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
-            if(Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
+            if (Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
                 RenderSystem.disableBlend();
                 RenderSystem.depthMask(true);
                 RenderSystem.setShader(GameRenderer::getParticleShader);
-            }
-            else {
+            } else {
                 RenderSystem.enableBlend();
                 RenderSystem.depthMask(false);
                 RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
@@ -44,15 +67,13 @@ public class ParticleRenderTypes {
     static final ParticleRenderType EMBER_RENDER_NO_MASK = new ParticleRenderType() {
 
 
-
         @Override
         public BufferBuilder begin(Tesselator buffer, TextureManager textureManager) {
-            if(Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
+            if (Config.DISABLE_TRANSLUCENT_PARTICLES.get()) {
                 RenderSystem.disableBlend();
                 RenderSystem.depthMask(true);
                 RenderSystem.setShader(GameRenderer::getParticleShader);
-            }
-            else {
+            } else {
                 RenderSystem.enableBlend();
                 RenderSystem.depthMask(false);
                 RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);

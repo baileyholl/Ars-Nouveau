@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.registry.BannerRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.BiomeRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.registry.WorldgenRegistry;
@@ -33,7 +34,8 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.CONFIGURED_FEATURE, WorldgenRegistry::bootstrapConfiguredFeatures)
             .add(Registries.PLACED_FEATURE, WorldgenRegistry::bootstrapPlacedFeatures)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, BiomeModifierRegistry::bootstrap)
-            .add(Registries.BIOME, BiomeRegistry::bootstrap);
+            .add(Registries.BIOME, BiomeRegistry::bootstrap)
+            .add(Registries.BANNER_PATTERN, BannerRegistry::bootstrapPatterns);
 
     public WorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(ArsNouveau.MODID));
@@ -72,7 +74,7 @@ public class WorldgenProvider extends DatapackBuiltinEntriesProvider {
 
         @NotNull
         private static ResourceLocation prefix(String path) {
-            return ArsNouveau.prefix( path);
+            return ArsNouveau.prefix(path);
         }
 
     }

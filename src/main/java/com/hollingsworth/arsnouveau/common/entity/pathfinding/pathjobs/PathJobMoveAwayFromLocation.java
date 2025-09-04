@@ -9,8 +9,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Job that handles moving away from something.
  */
-public class PathJobMoveAwayFromLocation extends AbstractPathJob
-{
+public class PathJobMoveAwayFromLocation extends AbstractPathJob {
     /**
      * Position to run to, in order to avoid something.
      */
@@ -19,7 +18,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
     /**
      * Required avoidDistance.
      */
-    protected final int      avoidDistance;
+    protected final int avoidDistance;
 
     /**
      * Prepares the PathJob for the path finding system.
@@ -37,8 +36,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
             @NotNull final BlockPos avoid,
             final int avoidDistance,
             final int range,
-            final LivingEntity entity)
-    {
+            final LivingEntity entity) {
         super(world, start, avoid, range, entity);
 
         this.avoid = new BlockPos(avoid);
@@ -53,8 +51,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
      * @return heuristic as a double - Manhatten Distance with tie-breaker.
      */
     @Override
-    protected double computeHeuristic(@NotNull final BlockPos pos)
-    {
+    protected double computeHeuristic(@NotNull final BlockPos pos) {
         return -avoid.distSqr(pos);
     }
 
@@ -65,8 +62,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
      * @return true if so.
      */
     @Override
-    protected boolean isAtDestination(@NotNull final ModNode n)
-    {
+    protected boolean isAtDestination(@NotNull final ModNode n) {
         return Math.sqrt(avoid.distSqr(n.pos)) > avoidDistance;
     }
 
@@ -77,8 +73,7 @@ public class PathJobMoveAwayFromLocation extends AbstractPathJob
      * @return double amount.
      */
     @Override
-    protected double getNodeResultScore(@NotNull final ModNode n)
-    {
+    protected double getNodeResultScore(@NotNull final ModNode n) {
         return -avoid.distSqr(n.pos);
     }
 }

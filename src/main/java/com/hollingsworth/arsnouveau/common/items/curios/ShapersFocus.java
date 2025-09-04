@@ -37,13 +37,13 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
         fallingblockentity.context = context;
         EntityHitResult hitResult = new EntityHitResult(fallingblockentity, fallingblockentity.position);
         SpellResolver newResolver = resolver.getNewResolver(context);
-        if(spellContext.isDelayed()){
+        if (spellContext.isDelayed()) {
             var currenDelay = spellContext.getDelayedSpellEvent();
             newResolver.hitResult = hitResult;
             DelayedSpellEvent delayedSpellEvent = new DelayedSpellEvent(currenDelay.duration, hitResult, level, newResolver);
             EventQueue.getServerInstance().addEvent(delayedSpellEvent);
             context.delay(delayedSpellEvent);
-        }else {
+        } else {
             newResolver.onResolveEffect(level, new EntityHitResult(fallingblockentity, fallingblockentity.position));
         }
         return context;
@@ -58,13 +58,13 @@ public class ShapersFocus extends ArsNouveauCurio implements ISpellModifierItem 
         SpellContext context = spellContext.makeChildContext();
         spellContext.setCanceled(true);
         SpellResolver newResolver = resolver.getNewResolver(context);
-        if(spellContext.isDelayed()){
+        if (spellContext.isDelayed()) {
             var currenDelay = spellContext.getDelayedSpellEvent();
             newResolver.hitResult = blockHitResult;
             DelayedSpellEvent delayedSpellEvent = new DelayedSpellEvent(currenDelay.duration, blockHitResult, level, newResolver);
             EventQueue.getServerInstance().addEvent(delayedSpellEvent);
             context.delay(delayedSpellEvent);
-        }else {
+        } else {
             newResolver.onResolveEffect(level, blockHitResult);
         }
 

@@ -74,8 +74,8 @@ public class EffectToss extends AbstractEffect {
 
     public void summonStack(LivingEntity shooter, SpellContext context, SpellStats spellStats, Level world, BlockPos pos, InventoryManager inventoryManager) {
         this.processStacks(shooter, context, spellStats, inventoryManager, stack -> {
-                world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, stack.stack.copy()));
-                stack.stack.setCount(0);
+            world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, stack.stack.copy()));
+            stack.stack.setCount(0);
         });
     }
 
@@ -83,13 +83,9 @@ public class EffectToss extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
         InventoryManager manager = new InventoryManager(spellContext.getCaster());
-        if (world.getBlockEntity(rayTraceResult.getBlockPos()) == null) {
-            summonStack(shooter, spellContext, spellStats, world, pos, manager);
-            return;
-        }
         IItemHandler targetInv = world.getCapability(Capabilities.ItemHandler.BLOCK, rayTraceResult.getBlockPos(), null);
-
         if (targetInv == null) {
+            summonStack(shooter, spellContext, spellStats, world, pos, manager);
             return;
         }
 
@@ -99,7 +95,7 @@ public class EffectToss extends AbstractEffect {
         });
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
@@ -115,7 +111,7 @@ public class EffectToss extends AbstractEffect {
         return "Causes the caster to place an item from their inventory to a location. If this glyph is used on an inventory, the item will attempt to be inserted into it. Toss throws 64 items by default. Dampen will halve the amount each time. Amplify will double the amount each time. Randomize will select a random stack.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtract.INSTANCE, AugmentRandomize.INSTANCE, AugmentDampen.INSTANCE, AugmentAmplify.INSTANCE);

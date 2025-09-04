@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -31,6 +33,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     private final boolean keepNbtOfReagent;
 
     private NonNullList<Ingredient> ingredients;
+
     public EnchantingApparatusRecipe(Ingredient reagent, ItemStack result, List<Ingredient> pedestalItems, int sourceCost, boolean keepNbtOfReagent) {
         this.reagent = reagent;
         this.result = result;
@@ -48,14 +51,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @Nullable Player player) {
-        if(this.pedestalItems.size() != input.pedestals().size()){
+        if (this.pedestalItems.size() != input.pedestals().size()) {
             return false;
         }
         return doesReagentMatch(input, level, player) && doPedestalsMatch(input);
     }
 
-    public boolean doPedestalsMatch(ApparatusRecipeInput input){
-        if(this.pedestalItems.size() != input.pedestals().size()){
+    public boolean doPedestalsMatch(ApparatusRecipeInput input) {
+        if (this.pedestalItems.size() != input.pedestals().size()) {
             return false;
         }
         var pedestalItems = input.pedestals().stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
@@ -68,7 +71,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     // Function to check if both arrays are same
     public static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
-        if(inputs.size() != recipeItems.size()){
+        if (inputs.size() != recipeItems.size()) {
             return false;
         }
         StackedContents recipeitemhelper = new StackedContents();
@@ -84,7 +87,9 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         ItemStack reagent = input.catalyst();
         if (keepNbtOfReagent) {
             result.applyComponents(reagent.getComponentsPatch());
-            result.setDamageValue(0);
+            if (result.has(DataComponents.DAMAGE)) {
+                result.setDamageValue(0);
+            }
         }
         return result.copy();
     }
@@ -150,7 +155,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
                 EnchantingApparatusRecipe::reagent,
                 ItemStack.STREAM_CODEC,
                 EnchantingApparatusRecipe::result,
-                Serializers.INGREDIENT_LIST_STREAM,
+                ANCodecs.INGREDIENT_LIST_STREAM,
                 EnchantingApparatusRecipe::pedestalItems,
                 ByteBufCodecs.VAR_INT,
                 EnchantingApparatusRecipe::sourceCost,

@@ -36,10 +36,12 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
         this("", new ArrayList<>(), 0, new HashMap<>());
     }
 
+    @Deprecated(forRemoval = true) // Use the BASE_COLOR data component
     public String getColor() {
         return color == null ? DyeColor.PURPLE.getName() : color;
     }
 
+    @Deprecated(forRemoval = true) // Use the BASE_COLOR data component
     public ArmorPerkHolder setColor(String color) {
         return new ArmorPerkHolder(color, getPerks(), getTier(), getPerkTags());
     }
@@ -51,7 +53,7 @@ public class ArmorPerkHolder extends StackPerkHolder<ArmorPerkHolder> {
 
     @Override
     public List<PerkSlot> getSlotsForTier(ItemStack stack) {
-        List<List<PerkSlot>> slotsForTier = PerkRegistry.getPerkProvider(stack.getItem());
+        List<List<PerkSlot>> slotsForTier = PerkRegistry.getPerkProvider(stack);
         if (slotsForTier == null) {
             return Collections.emptyList();
         }

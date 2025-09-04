@@ -10,24 +10,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 
 
-public class TakeItemState extends TravelToPosState{
+public class TakeItemState extends TravelToPosState {
     public TakeItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
         super(starbuncle, behavior, target, new DecideStarbyActionState(starbuncle, behavior));
     }
 
     @Override
     public StarbyState onDestinationReached() {
-        Level world = starbuncle.level;
-        BlockEntity tileEntity = world.getBlockEntity(targetPos);
-        if (tileEntity == null) {
-            starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken" ));
-            return nextState;
-        }
         IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
@@ -35,7 +27,7 @@ public class TakeItemState extends TravelToPosState{
         }
 
         giveStarbyStack(starbuncle, iItemHandler);
-        if(starbuncle.getHeldStack().isEmpty()) {
+        if (starbuncle.getHeldStack().isEmpty()) {
             starbuncle.addGoalDebug(this, new DebugEvent("TakeFromChest", "No items to take? Cancelling goal."));
             return nextState;
         }
@@ -48,12 +40,12 @@ public class TakeItemState extends TravelToPosState{
         event.open();
         EventQueue.getServerInstance().addEvent(event);
 
-        for(Entity entity : starbuncle.getIndirectPassengers()){
-            if(!(entity instanceof Starbuncle passenger) || !passenger.getHeldStack().isEmpty()){
+        for (Entity entity : starbuncle.getIndirectPassengers()) {
+            if (!(entity instanceof Starbuncle passenger) || !passenger.getHeldStack().isEmpty()) {
                 break;
             }
             giveStarbyStack(passenger, iItemHandler);
-            if(passenger.getHeldStack().isEmpty()){
+            if (passenger.getHeldStack().isEmpty()) {
                 break;
             }
             starbuncle.addGoalDebug(this, new DebugEvent("SetHeldPassenger", "Taking " + passenger.getHeldStack().getHoverName().getString() + " from " + targetPos.toString()));
@@ -63,7 +55,7 @@ public class TakeItemState extends TravelToPosState{
         return nextState;
     }
 
-    public void giveStarbyStack(Starbuncle starbuncle, IItemHandler iItemHandler){
+    public void giveStarbyStack(Starbuncle starbuncle, IItemHandler iItemHandler) {
         for (int j = 0; j < iItemHandler.getSlots() && starbuncle.getHeldStack().isEmpty(); j++) {
             ItemStack stack = iItemHandler.getStackInSlot(j);
             if (!stack.isEmpty()) {

@@ -1,10 +1,13 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.scrying.IScryer;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.Potion;
@@ -13,12 +16,12 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ArsNouveauAPI {
 
     //This is intended as a dev debug tool, used in mana bars. Do not make into a config option with a PR. A Starkiller will be dispatched if you do.
-    public static boolean ENABLE_DEBUG_NUMBERS = !FMLEnvironment.production;
+    public static boolean ENABLE_DEBUG_NUMBERS;
 
     private ConcurrentHashMap<ResourceLocation, IScryer> scryerMap = new ConcurrentHashMap<>();
 
@@ -74,7 +77,7 @@ public class ArsNouveauAPI {
                 if (ib instanceof BrewingRecipe brewingRecipe)
                     brewingRecipes.add(brewingRecipe);
             });
-            for(PotionBrewing.Mix<Potion> mix : world.potionBrewing().potionMixes){
+            for (PotionBrewing.Mix<Potion> mix : world.potionBrewing().potionMixes) {
                 brewingRecipes.add(new BrewingRecipe(
                         PotionIngredient.fromPotion(mix.from()),
                         mix.ingredient(),
@@ -115,8 +118,10 @@ public class ArsNouveauAPI {
         return true;
     }
 
-    public void onResourceReload(){
+    public void onResourceReload() {
         this.brewingRecipes = new ArrayList<>();
+        MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
+        EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
     }
 
     private ArsNouveauAPI() {

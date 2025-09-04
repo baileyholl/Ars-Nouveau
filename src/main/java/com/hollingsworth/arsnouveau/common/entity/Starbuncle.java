@@ -176,13 +176,6 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) -> {
-            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
-                return PlayState.CONTINUE;
-            }
-            return PlayState.STOP;
-        }));
         animatableManager.add(new AnimationController<>(this, "sleepController", 1, (event) -> {
             boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
             if (!event.isMoving() && shouldSleep) {
@@ -197,6 +190,13 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
             boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
             if (!event.isMoving() && !shouldSleep) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                return PlayState.CONTINUE;
+            }
+            return PlayState.STOP;
+        }));
+        animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) -> {
+            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
+                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -252,6 +252,11 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
     }
 
     @Override
+    public boolean isEffectiveAi() {
+        return !this.isPassenger() && super.isEffectiveAi();
+    }
+
+    @Override
     public void tick() {
         try {
             super.tick();
@@ -285,7 +290,7 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
         if (this.dead)
             return;
 
-        if (!level.isClientSide && this.getStarbuncleWithSpace() != null) {
+        if (!level.isClientSide && !this.isPassenger() && this.getStarbuncleWithSpace() != null) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     this.pickUpItem(itementity);
@@ -416,11 +421,11 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
     }
 
     @Override
-    public void die(@NotNull DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide && isTamed()) {
             dropData();
         }
-        super.die(source);
     }
 
     public void dropData() {
@@ -453,7 +458,15 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
         if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !isTamed())
             return super.mobInteract(player, hand);
 
+
         ItemStack stack = player.getItemInHand(hand);
+
+        if (!isTamed() && this.getHeldStack().isEmpty() && stack.is(Tags.Items.NUGGETS_GOLD)) {
+            setHeldStack(player.hasInfiniteMaterials() ? stack.copyWithCount(1) : stack.split(1));
+
+            return InteractionResult.SUCCESS;
+        }
+
         if (player.getMainHandItem().getItem() instanceof StarbuncleCharm) {
             Starbuncle toRide = this;
             while (toRide.getFirstPassenger() instanceof Starbuncle riding) {
@@ -470,7 +483,9 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
             level.addFreshEntity(carbuncle);
             carbuncle.restoreFromTag();
             carbuncle.startRiding(toRide);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
@@ -479,7 +494,9 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(carbyColors).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             setColor(color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
 
@@ -676,20 +693,20 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
         return this.entityData.get(COLOR);
     }
 
-    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>(){
+    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>() {
         {
             put("Gootastic", ArsNouveau.prefix("textures/entity/starbuncle_goo.png"));
             put("Sir Squirrely", ArsNouveau.prefix("textures/entity/sir_squirrely.png"));
             put("Zieg", ArsNouveau.prefix("textures/entity/zieg.png"));
             put("Xacris", ArsNouveau.prefix("textures/entity/xacris.png"));
             put("Xollus", ArsNouveau.prefix("textures/entity/starbuncle_jarva.png"));
-            for(DyeColor color : DyeColor.values()) {
+            for (DyeColor color : DyeColor.values()) {
                 put(color.getName(), ArsNouveau.prefix("textures/entity/starbuncle_" + color.getName().toLowerCase() + ".png"));
             }
         }
     };
 
-    public static Map<String, ResourceLocation> MODELS = new HashMap<>(){
+    public static Map<String, ResourceLocation> MODELS = new HashMap<>() {
         {
             put("Gootastic", ArsNouveau.prefix("geo/goobuncle.geo.json"));
             put("Sir Squirrely", ArsNouveau.prefix("geo/sir_squirrely.geo.json"));
@@ -697,12 +714,13 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
             put("Xacris", ArsNouveau.prefix("geo/xacris.geo.json"));
             put("starbuncle", ArsNouveau.prefix("geo/starbuncle.geo.json"));
             put("Xollus", ArsNouveau.prefix("geo/starbuncle_jarva.geo.json"));
+            put("Bootybuncle", ArsNouveau.prefix("geo/bootybuncle.geo.json"));
         }
     };
 
     public ResourceLocation getTexture() {
         var nameTexture = TEXTURES.get(this.getName().getString());
-        if(nameTexture != null){
+        if (nameTexture != null) {
             return nameTexture;
         }
         String color = getColor();
@@ -710,7 +728,7 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
         return TEXTURES.get(color);
     }
 
-    public ResourceLocation getModel(){
+    public ResourceLocation getModel() {
         String key = getName().getString();
         return MODELS.getOrDefault(key, MODELS.get("starbuncle"));
     }

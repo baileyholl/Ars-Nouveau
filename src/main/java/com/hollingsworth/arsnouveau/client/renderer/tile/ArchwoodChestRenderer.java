@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -105,12 +104,12 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
         String type = "archwood";
         switch (chestType) {
             case LEFT:
-                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/left"));
+                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/left"));
             case RIGHT:
-                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix( "model/chest/" + type + "/right"));
+                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/right"));
             case SINGLE:
             default:
-                return new Material(Sheets.CHEST_SHEET,ArsNouveau.prefix( "model/chest/" + type + "/" + type));
+                return new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/" + type));
         }
     }
 }

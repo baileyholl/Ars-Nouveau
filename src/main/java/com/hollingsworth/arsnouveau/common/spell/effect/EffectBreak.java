@@ -64,11 +64,11 @@ public class EffectBreak extends AbstractEffect {
 
         int numFortune = spellStats.getBuffCount(AugmentFortune.INSTANCE);
         int numSilkTouch = spellStats.getBuffCount(AugmentExtract.INSTANCE);
-        if (numFortune > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.FORTUNE)) < numFortune) {
-            stack.enchant(HolderHelper.unwrap(world,Enchantments.FORTUNE), numFortune);
+        if (numFortune > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world, Enchantments.FORTUNE)) < numFortune) {
+            stack.enchant(HolderHelper.unwrap(world, Enchantments.FORTUNE), numFortune);
         }
-        if (numSilkTouch > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH)) < numSilkTouch) {
-            stack.enchant(HolderHelper.unwrap(world,Enchantments.SILK_TOUCH), numSilkTouch);
+        if (numSilkTouch > 0 && stack.getEnchantmentLevel(HolderHelper.unwrap(world, Enchantments.SILK_TOUCH)) < numSilkTouch) {
+            stack.enchant(HolderHelper.unwrap(world, Enchantments.SILK_TOUCH), numSilkTouch);
         }
         for (BlockPos pos1 : posList) {
             if (world.isOutsideBuildHeight(pos1) || world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {

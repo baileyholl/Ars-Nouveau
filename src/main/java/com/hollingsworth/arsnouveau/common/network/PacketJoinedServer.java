@@ -10,12 +10,13 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketJoinedServer extends AbstractPacket{
+public class PacketJoinedServer extends AbstractPacket {
     public static final Type<PacketJoinedServer> TYPE = new Type<>(ArsNouveau.prefix("joined_server"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketJoinedServer> CODEC = StreamCodec.ofMember(PacketJoinedServer::toBytes, PacketJoinedServer::new);
 
     public boolean isSupporter;
-    public PacketJoinedServer(boolean isSupporter){
+
+    public PacketJoinedServer(boolean isSupporter) {
         this.isSupporter = isSupporter;
     }
 
@@ -30,7 +31,7 @@ public class PacketJoinedServer extends AbstractPacket{
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         ClientInfo.isSupporter = isSupporter;
-        if(Config.SHOW_SUPPORTER_MESSAGE.get()) {
+        if (Config.SHOW_SUPPORTER_MESSAGE.get()) {
             Minecraft.getInstance().player.sendSystemMessage(Component.translatable("ars_nouveau.rewards.enabled"));
             Config.SHOW_SUPPORTER_MESSAGE.set(false);
             Config.SHOW_SUPPORTER_MESSAGE.save();

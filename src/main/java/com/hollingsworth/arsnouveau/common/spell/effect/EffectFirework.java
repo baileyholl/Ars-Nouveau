@@ -61,9 +61,9 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
     public ItemStack fireworkFromInv(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter) {
         InventoryManager manager = spellContext.getCaster().getInvManager();
         SlotReference slotReference = manager.findItem(i -> i.getItem() == Items.FIREWORK_ROCKET, InteractType.EXTRACT);
-        if(slotReference.getHandler() != null){
+        if (slotReference.getHandler() != null) {
             ItemStack firework = slotReference.getHandler().getStackInSlot(slotReference.getSlot());
-            if(!firework.isEmpty()){
+            if (!firework.isEmpty()) {
                 return firework;
             }
         }
@@ -109,13 +109,13 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
         return "Creates a firework at the location or entity. Amplify will add Firework Stars, while Extend Time will add additional flight time. If a firework exists in the casters inventory, the created firework will mimic the held one. Spell Turrets with Touch will create fireworks as if they were dispensed.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_FIRE);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentAmplify.INSTANCE, AugmentSplit.INSTANCE);

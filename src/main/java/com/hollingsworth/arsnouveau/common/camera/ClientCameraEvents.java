@@ -30,14 +30,14 @@ public class ClientCameraEvents {
         }
     }
 
-    public static final  ResourceLocation[] overlays = new ResourceLocation[]{VanillaGuiLayers.JUMP_METER, VanillaGuiLayers.EXPERIENCE_BAR, VanillaGuiLayers.EFFECTS};
+    public static final ResourceLocation[] overlays = new ResourceLocation[]{VanillaGuiLayers.JUMP_METER, VanillaGuiLayers.EXPERIENCE_BAR, VanillaGuiLayers.EFFECTS};
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void onGuiOpen(RenderGuiLayerEvent.Pre event) {
-        if(ClientCameraUtil.isPlayerMountedOnCamera()){
-            for(ResourceLocation overlay : overlays){
-                if(event.getName().equals(overlay)){
+        if (ClientCameraUtil.isPlayerMountedOnCamera()) {
+            for (ResourceLocation overlay : overlays) {
+                if (event.getName().equals(overlay)) {
                     event.setCanceled(true);
                 }
             }

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.common.block.ArcanePedestal;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -10,7 +11,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
 public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedestalTile> {
     private final EntityRenderDispatcher entityRenderer;
@@ -21,27 +23,17 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
 
     @Override
     public void render(ArcanePedestalTile tileEntityIn, float pPartialTick, PoseStack matrixStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-
         if (tileEntityIn.getStack() == null || tileEntityIn.getStack().isEmpty()) return;
-
-        float yOffset = 0.5f;
-        float xOffset = 0.5f;
-        float zOffset = 0.5f;
+        BlockState state = tileEntityIn.getBlockState();
+        if (!(tileEntityIn.getBlockState().getBlock() instanceof ArcanePedestal pedestal)) {
+            return;
+        }
+        Vector3f offsetVec = pedestal.getItemOffset(state, tileEntityIn.getBlockPos());
+        float yOffset = offsetVec.y - tileEntityIn.getBlockPos().getY();
+        float xOffset = offsetVec.x - tileEntityIn.getBlockPos().getX();
+        float zOffset = offsetVec.z - tileEntityIn.getBlockPos().getZ();
 
         matrixStack.pushPose();
-
-        if (tileEntityIn.getBlockState().hasProperty(BlockStateProperties.FACING)) {
-            switch (tileEntityIn.getBlockState().getValue(BlockStateProperties.FACING)) {
-                case DOWN -> yOffset = 0.4f;
-                case WEST -> xOffset = 0.45f;
-                case EAST -> xOffset = 0.55f;
-                case SOUTH -> zOffset = 0.55f;
-                case NORTH -> zOffset = 0.45f;
-                default -> yOffset = 0.6f;
-            }
-        } else {
-            yOffset = 1.1f;
-        }
         matrixStack.translate(xOffset, yOffset, zOffset);
         matrixStack.scale(0.5f, 0.5f, 0.5f);
         matrixStack.mulPose(Axis.YP.rotationDegrees((pPartialTick + (float) ClientInfo.ticksInGame) * 3f));

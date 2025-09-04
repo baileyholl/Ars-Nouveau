@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.source_lamp",
+  "order": 100,
+  "icon": "ars_nouveau:source_lamp",
+  "title": "Source Gem Lamp",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Source Gem Lamp",
+      "description": "Behaves like a copper bulb, but the light and comparator values can be adjusted by casting Light with dampen.",
+      "icon": "ars_nouveau:source_lamp"
+    },
+    {
+      "recipe_1": "ars_nouveau:source_lamp"
+    }
+  ]
+}

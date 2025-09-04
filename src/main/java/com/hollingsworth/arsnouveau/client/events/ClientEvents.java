@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
-import com.hollingsworth.arsnouveau.client.gui.PatchouliTooltipEvent;
+import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
@@ -21,6 +23,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -35,6 +38,10 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
@@ -70,6 +77,11 @@ public class ClientEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onRecipesUpdate(RecipesUpdatedEvent event) {
+        GenericRecipeRegistry.reloadAll(event.getRecipeManager());
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
@@ -79,11 +91,22 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
-        try {
-            // Uses patchouli internals, don't crash if they change something :)
-            PatchouliTooltipEvent.onTooltip(e.getGraphics().pose(), e.getItemStack(), e.getX(), e.getY());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        DocItemTooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
+    }
+
+    private static Slot slotUnderMouse = null;
+
+    @SubscribeEvent
+    public static void containerRenderBackground(ContainerScreenEvent.Render.Background e) {
+        var screen = e.getContainerScreen();
+        slotUnderMouse = screen.getSlotUnderMouse();
+    }
+
+    @SubscribeEvent
+    public static void containerRenderForeground(ContainerScreenEvent.Render.Foreground e) {
+        var screen = e.getContainerScreen();
+        if (slotUnderMouse != screen.getSlotUnderMouse()) {
+            DocItemTooltipHandler.resetLexiconLookupTime();
         }
     }
 
@@ -94,6 +117,9 @@ public class ClientEvents {
             if (caster != null && caster.getSpell().isValid()) {
                 event.getTooltipElements().add(Either.right(new SpellTooltip(caster)));
             }
+        }
+        if (event.getItemStack().has(DataComponentRegistry.PRESTIDIGITATION)) {
+            event.getTooltipElements().add(Either.left(Component.translatable("ars_nouveau.prestidigitation.tooltip")));
         }
     }
 
@@ -123,6 +149,9 @@ public class ClientEvents {
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
+        for (var tooltip : ClientInfo.storageTooltip) {
+            event.getToolTip().add(tooltip);
+        }
     }
 
     public static Component localize(String key, Object... params) {
@@ -134,4 +163,10 @@ public class ClientEvents {
         return Component.translatable(key, params);
     }
 
+    public static final List<Predicate<RecipesUpdatedEvent>> recipeChangeListeners = new ArrayList<>();
+
+    @SubscribeEvent
+    public static void onClientResourcesReload(RecipesUpdatedEvent event) {
+        recipeChangeListeners.removeIf(p -> !p.test(event));
+    }
 }

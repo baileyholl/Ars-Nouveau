@@ -18,7 +18,7 @@ public class MixinLivingEntity {
             )
     )
     public boolean elytraOverride(boolean original) {
-        return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
+        return original || EffectGlide.canGlide(((LivingEntity) ((Object) this)));
     }
 
     @ModifyExpressionValue(
@@ -30,6 +30,6 @@ public class MixinLivingEntity {
             )
     )
     public boolean eytraValidOverride(boolean original) {
-        return  original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
+        return original || EffectGlide.canGlide(((LivingEntity) ((Object) this)));
     }
 }

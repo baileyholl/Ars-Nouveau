@@ -6,25 +6,35 @@ import com.hollingsworth.arsnouveau.client.gui.Color;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
-public class RainbowParticleColor extends ParticleColor{
+import java.util.Objects;
 
-    public static final ResourceLocation ID = ArsNouveau.prefix( "rainbow");
+public class RainbowParticleColor extends ParticleColor {
 
-    public final int tickOffset;
+    public static final ResourceLocation ID = ArsNouveau.prefix("rainbow");
 
-    public RainbowParticleColor(int r, int g, int b){
+    public int tickOffset;
+
+    public RainbowParticleColor(int r, int g, int b) {
         super(r, g, b);
         this.tickOffset = random.nextInt(1536);
     }
 
-    public RainbowParticleColor(CompoundTag compoundTag){
+    public RainbowParticleColor(CompoundTag compoundTag) {
         super(compoundTag);
         tickOffset = compoundTag.getInt("tickOffset");
     }
 
     @Override
-    public ParticleColor transition(int ticks) {
+    public ParticleColor nextColor(int ticks) {
         return Color.rainbowColor(ticks).toParticle();
+    }
+
+    @Override
+    public ParticleColor transition(int ticks) {
+        Color color = Color.rainbowColor(ticks);
+        RainbowParticleColor color1 = new RainbowParticleColor(color.getRed(), color.getGreen(), color.getBlue());
+        color1.tickOffset = this.tickOffset;
+        return color1;
     }
 
     @Override
@@ -65,5 +75,17 @@ public class RainbowParticleColor extends ParticleColor{
     @Override
     public ResourceLocation getRegistryName() {
         return ID;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRegistryName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || (o instanceof RainbowParticleColor color &&
+                this.getRegistryName().equals(color.getRegistryName()));
     }
 }

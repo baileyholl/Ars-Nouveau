@@ -9,6 +9,7 @@ public class ANGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
     public ResourceLocation modelLocation;
     public ResourceLocation textLoc;
     public ResourceLocation animationLoc;
+
     public ANGeoModel(ResourceLocation modelLocation, ResourceLocation textLoc, ResourceLocation animationLoc) {
         this.modelLocation = modelLocation;
         this.textLoc = textLoc;
@@ -16,7 +17,7 @@ public class ANGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
     }
 
     public ANGeoModel(String modelLoc, String textLoc, String animationLoc) {
-        this(ArsNouveau.prefix( modelLoc), ArsNouveau.prefix(textLoc), ArsNouveau.prefix( animationLoc));
+        this(ArsNouveau.prefix(modelLoc), ArsNouveau.prefix(textLoc), ArsNouveau.prefix(animationLoc));
     }
 
     @Override

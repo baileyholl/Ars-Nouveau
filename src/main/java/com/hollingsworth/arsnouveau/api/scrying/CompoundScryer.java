@@ -52,6 +52,6 @@ public class CompoundScryer implements IScryer {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( "compound_scryer");
+        return ArsNouveau.prefix("compound_scryer");
     }
 }

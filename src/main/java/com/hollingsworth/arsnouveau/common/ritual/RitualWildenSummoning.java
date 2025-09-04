@@ -27,7 +27,7 @@ public class RitualWildenSummoning extends AbstractRitual {
         WildenChimera.spawnPhaseParticles(getPos().above(), getWorld(), 1);
         if (getWorld().getGameTime() % 20 == 0)
             incrementProgress();
-        if (getWorld().getGameTime() % 60 == 0 && (getWorld() instanceof  ServerLevel serverLevel)) {
+        if (getWorld().getGameTime() % 60 == 0 && (getWorld() instanceof ServerLevel serverLevel)) {
             FakePlayer fakePlayer = ANFakePlayer.getPlayer(serverLevel, this.playerUUID);
             if (!isBossSpawn()) {
                 int wild = rand.nextInt(3);
@@ -45,7 +45,7 @@ public class RitualWildenSummoning extends AbstractRitual {
                 if (getProgress() >= 8) {
                     WildenChimera chimera = new WildenChimera(serverLevel);
                     summon(chimera, getPos().above());
-                    for(BlockPos b : BlockPos.betweenClosed(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))){
+                    for (BlockPos b : BlockPos.betweenClosed(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))) {
                         if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(serverLevel, chimera)) {
                             continue;
                         }
@@ -86,6 +86,6 @@ public class RitualWildenSummoning extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.WILDEN_SUMMON);
+        return ArsNouveau.prefix(RitualLib.WILDEN_SUMMON);
     }
 }

@@ -57,10 +57,10 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         // If the held caster is not null, set the spell to the held caster's spell
         if (heldCaster != null) {
             spell = heldCaster.getSpell();
-            tableCaster.setColor(heldCaster.getColor())
+            tableCaster
                     .setFlavorText(heldCaster.getFlavorText())
                     .setSpellName(heldCaster.getSpellName())
-                    .setSound(heldCaster.getCurrentSound())
+                    .setParticles(heldCaster.getSpell().particleTimeline())
                     .saveToStack(tableStack);
 
         }

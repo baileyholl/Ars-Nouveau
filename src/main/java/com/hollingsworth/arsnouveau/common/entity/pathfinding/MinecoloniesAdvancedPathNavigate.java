@@ -102,8 +102,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
 
     @Nullable
-    public PathResult moveAwayFromXYZ(final BlockPos avoid, final double range, final double speedFactor, final boolean safeDestination)
-    {
+    public PathResult moveAwayFromXYZ(final BlockPos avoid, final double range, final double speedFactor, final boolean safeDestination) {
         final BlockPos start = AbstractPathJob.prepareStart(ourEntity);
 
         return setPathJob(new PathJobMoveAwayFromLocation(ourEntity.level,
@@ -280,7 +279,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     public boolean tryMoveToBlockPos(final BlockPos pos, final double speedFactor) {
-        if(pos == null){
+        if (pos == null) {
             return false;
         }
         moveToXYZ(pos.getX(), pos.getY(), pos.getZ(), speedFactor);
@@ -311,7 +310,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     @Override
     protected boolean canMoveDirectly(Vec3 start, Vec3 end) {
         //  special path blocks go into the false as !specialPathBlocks
-        return  super.canMoveDirectly(start, end);
+        return super.canMoveDirectly(start, end);
     }
 
     public double getSpeedFactor() {
@@ -425,7 +424,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
                 if (!pEx.isOnLadder() && pExNext != null && pExNext.isOnLadder()) {
                     speedModifier = getSpeedFactor() / 4.0;
                 } else if (false
-                //WorkerUtil.isPathBlock(level.getBlockState(findBlockUnderEntity(ourEntity)).getBlock())
+                    //WorkerUtil.isPathBlock(level.getBlockState(findBlockUnderEntity(ourEntity)).getBlock())
                 ) {
                     speedModifier = ON_PATH_SPEED_MULTIPLIER * getSpeedFactor();
                 } else {

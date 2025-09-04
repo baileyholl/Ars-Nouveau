@@ -20,7 +20,6 @@ public class ScryerOculusRenderer extends ArsGeoBlockRenderer<ScryersOculusTile>
     }
 
 
-
     @Override
     public void actuallyRender(PoseStack poseStack, ScryersOculusTile pBlockEntity, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         GeoBone eye = this.getGeoModel().getBone("eye").orElse(null);

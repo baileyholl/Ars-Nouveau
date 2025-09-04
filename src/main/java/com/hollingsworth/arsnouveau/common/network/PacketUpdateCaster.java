@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 
-public class PacketUpdateCaster extends AbstractPacket{
+public class PacketUpdateCaster extends AbstractPacket {
 
     Spell spellRecipe;
     int cast_slot;
@@ -50,7 +50,7 @@ public class PacketUpdateCaster extends AbstractPacket{
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         InteractionHand hand = mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         ItemStack stack = player.getItemInHand(hand);
-        if(!(stack.getItem() instanceof ICasterTool))
+        if (!(stack.getItem() instanceof ICasterTool))
             return;
         if (spellRecipe != null) {
             AbstractCaster<?> caster = SpellCasterRegistry.from(stack);

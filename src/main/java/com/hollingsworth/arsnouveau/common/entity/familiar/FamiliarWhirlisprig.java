@@ -40,7 +40,9 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         String color = Whirlisprig.getColorFromStack(stack);
         if (color != null && !getColor().equals(color)) {
             setColor(color);
-            stack.shrink(1);
+            if (!pPlayer.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.interactAt(pPlayer, pVec, hand);
@@ -73,8 +75,8 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
                 float saturationModifier = food.saturation();
                 int nutrition = food.nutrition();
                 float satAmount = nutrition * saturationModifier * 2.0f;
-                if (event.getEntity() instanceof Player) {
-                    FoodData stats = ((Player) event.getEntity()).getFoodData();
+                if (event.getEntity() instanceof Player player) {
+                    FoodData stats = player.getFoodData();
                     stats.saturationLevel += satAmount * .4f;
                 }
             }
@@ -97,7 +99,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     public ResourceLocation getTexture() {
-        return ArsNouveau.prefix( "textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
+        return ArsNouveau.prefix("textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
 
 }

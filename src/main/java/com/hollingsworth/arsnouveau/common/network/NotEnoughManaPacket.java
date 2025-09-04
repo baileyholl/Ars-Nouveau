@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class NotEnoughManaPacket extends AbstractPacket{
+public class NotEnoughManaPacket extends AbstractPacket {
     public static final Type<NotEnoughManaPacket> TYPE = new Type<>(ArsNouveau.prefix("not_enough_mana"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, NotEnoughManaPacket> CODEC = StreamCodec.ofMember(NotEnoughManaPacket::toBytes, NotEnoughManaPacket::new);

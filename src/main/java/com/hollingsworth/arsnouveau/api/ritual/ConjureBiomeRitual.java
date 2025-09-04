@@ -21,7 +21,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     public ResourceKey<Biome> biome;
     public ManhattenTracker tracker;
 
-    public ConjureBiomeRitual(ResourceKey<Biome> biome){
+    public ConjureBiomeRitual(ResourceKey<Biome> biome) {
         super();
         this.biome = biome;
     }
@@ -29,11 +29,11 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             return;
         }
-        for(ItemStack i : getConsumedItems()){
-            if(i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
+        for (ItemStack i : getConsumedItems()) {
+            if (i.is(ItemTagProvider.SOURCE_GEM_TAG)) {
                 radius += i.getCount();
             }
         }
@@ -42,10 +42,10 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
 
     @Override
     protected void tick() {
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             return;
         }
-        for(int i = 0; i < radius; i++) {
+        for (int i = 0; i < radius; i++) {
             BlockPos pos = getPos();
             BlockPos nextPos = tracker.computeNext();
             if (nextPos == null) {
@@ -62,7 +62,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
                 RitualUtil.changeBiome(getWorld(), nextPos, biome);
                 getWorld().playSound(null, nextPos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0f, 1.0f);
                 blocksPlaced++;
-                if (blocksPlaced >= blocksBeforeSourceNeeded){
+                if (blocksPlaced >= blocksBeforeSourceNeeded) {
                     blocksPlaced = 0;
                     setNeedsSource(true);
                 }
@@ -83,14 +83,14 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
 
     public abstract BlockState stateForPos(BlockPos placePos);
 
-    public void setState(BlockPos pos, BlockState state){
+    public void setState(BlockPos pos, BlockState state) {
         getWorld().setBlock(pos, state, 2);
     }
 
     @Override
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
-        if(tag.contains("tracker")){
+        if (tag.contains("tracker")) {
             tracker = new ManhattenTracker(tag.getCompound("tracker"));
         }
         radius = tag.getInt("radius");
@@ -99,7 +99,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     @Override
     public void write(HolderLookup.Provider provider, CompoundTag tag) {
         super.write(provider, tag);
-        if(tracker != null){
+        if (tracker != null) {
             tag.put("tracker", tracker.serialize(new CompoundTag()));
         }
         tag.putInt("radius", radius);

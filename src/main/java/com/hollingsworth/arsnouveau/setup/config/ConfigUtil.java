@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.config;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -17,7 +18,9 @@ public class ConfigUtil {
      */
     public static final Pattern STRING_INT_MAP = Pattern.compile("(.+?)=(\\d+)");
 
-    /** Parse glyph_limits into a Map from augment glyph tags to limits. */
+    /**
+     * Parse glyph_limits into a Map from augment glyph tags to limits.
+     */
     public static Map<String, Integer> parseMapConfig(ModConfigSpec.ConfigValue<List<? extends String>> configValue) {
         return configValue.get().stream()
                 .map(STRING_INT_MAP::matcher)
@@ -28,21 +31,27 @@ public class ConfigUtil {
                 ));
     }
 
-    /** Produces a list of tag=limit strings suitable for saving to the configuration. */
+    /**
+     * Produces a list of tag=limit strings suitable for saving to the configuration.
+     */
     public static List<String> writeConfig(Map<String, Integer> map) {
         return map.entrySet().stream()
                 .map(e -> e.getKey() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());
     }
 
-    /** Produces a list of tag=limit strings suitable for saving to the configuration. */
+    /**
+     * Produces a list of tag=limit strings suitable for saving to the configuration.
+     */
     public static List<String> writeResConfig(Map<ResourceLocation, Integer> map) {
         return map.entrySet().stream()
                 .map(e -> e.getKey().toString() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());
     }
 
-    /** Ensure glyph_limits matches the expected regex pattern. */
+    /**
+     * Ensure glyph_limits matches the expected regex pattern.
+     */
     public static boolean validateMap(Object rawConfig) {
         if (rawConfig instanceof CharSequence raw) {
             return STRING_INT_MAP.matcher(raw).matches();

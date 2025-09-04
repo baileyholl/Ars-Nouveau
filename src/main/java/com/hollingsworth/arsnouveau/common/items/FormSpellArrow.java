@@ -10,7 +10,7 @@ public class FormSpellArrow extends SpellArrow {
 
     @Override
     public void modifySpell(Spell.Mutable spell) {
-        if(spell.recipe.isEmpty())
+        if (spell.recipe.isEmpty())
             return;
         for (int i = 0; i < numParts; i++) {
             spell.recipe.add(1, this.part);

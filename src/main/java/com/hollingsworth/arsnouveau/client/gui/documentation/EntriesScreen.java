@@ -9,17 +9,18 @@ import net.minecraft.client.gui.GuiGraphics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntriesScreen extends BaseDocScreen{
+public class EntriesScreen extends BaseDocScreen {
     List<DocEntry> entries;
     List<DocEntryButton> buttons = new ArrayList<>();
     DocCategory category;
+
     public EntriesScreen(DocCategory category) {
         super();
         this.category = category;
         var entries = new ArrayList<>(DocumentationRegistry.getEntries(category));
         entries.sort(category.entryComparator());
         this.entries = new ArrayList<>(entries);
-        if(this.entries.size() > 17){
+        if (this.entries.size() > 17) {
             maxArrowIndex = 1 + (this.entries.size() - 17) / 18;
         }
     }
@@ -33,8 +34,8 @@ public class EntriesScreen extends BaseDocScreen{
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        if(arrowIndex == 0) {
-            DocClientUtils.drawHeader(category.getTitle(), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
+        if (arrowIndex == 0) {
+            DocClientUtils.drawHeader(category.getTitle(), graphics, screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -44,28 +45,28 @@ public class EntriesScreen extends BaseDocScreen{
         initButtons();
     }
 
-    public void initButtons(){
-        for(DocEntryButton button : buttons){
+    public void initButtons() {
+        for (DocEntryButton button : buttons) {
             removeWidget(button);
         }
         buttons.clear();
         int offset = 17;
-        if(arrowIndex == 0){
+        if (arrowIndex == 0) {
             getLeftPageButtons(0, 8);
             getRightPageButtons(8, offset);
-        }else{
+        } else {
             int offsetIndex = arrowIndex * 18 - 1;
             getLeftPageButtons(offsetIndex, offsetIndex + 9);
             getRightPageButtons(offsetIndex + 9, offsetIndex + 18);
         }
     }
 
-    public void getLeftPageButtons(int from, int to){
+    public void getLeftPageButtons(int from, int to) {
         List<DocEntry> sliced = entries.subList(from, Math.min(to, entries.size()));
         boolean offset = to - from == 8;
-        for(int i = 0; i < sliced.size(); i++){
+        for (int i = 0; i < sliced.size(); i++) {
             DocEntry entry = sliced.get(i);
-            var button = new DocEntryButton(bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 3  +  (16 * i) + (offset ? 16 : 0), entry, (b) -> {
+            var button = new DocEntryButton(screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + 3 + (16 * i) + (offset ? 16 : 0), entry, (b) -> {
                 transition(new PageHolderScreen(entry));
             });
             addRenderableWidget(button);
@@ -73,14 +74,14 @@ public class EntriesScreen extends BaseDocScreen{
         }
     }
 
-    public void getRightPageButtons(int from, int to){
-        if(from > entries.size()){
+    public void getRightPageButtons(int from, int to) {
+        if (from > entries.size()) {
             return;
         }
         List<DocEntry> sliced = entries.subList(from, Math.min(to, entries.size()));
-        for(int i = 0; i < sliced.size(); i++){
+        for (int i = 0; i < sliced.size(); i++) {
             DocEntry entry = sliced.get(i);
-            var button = new DocEntryButton(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 3 + 16 * i, entry, (b) -> {
+            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + 3 + 16 * i, entry, (b) -> {
                 transition(new PageHolderScreen(entry));
             });
             addRenderableWidget(button);

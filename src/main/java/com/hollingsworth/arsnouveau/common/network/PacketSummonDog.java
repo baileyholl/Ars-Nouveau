@@ -9,9 +9,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
-public class PacketSummonDog extends AbstractPacket{
+public class PacketSummonDog extends AbstractPacket {
 
-    public enum DogType{
+    public enum DogType {
         NOOK,
         LILY
     }
@@ -37,13 +37,13 @@ public class PacketSummonDog extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
-        if(dogType == DogType.NOOK){
+        if (dogType == DogType.NOOK) {
             Nook nook = new Nook(player.level);
             nook.setPos(player.getX(), player.getY(), player.getZ());
             nook.setOwnerUUID(player.getUUID());
             player.level.addFreshEntity(nook);
             Nook.ownerNookMap.put(player.getUUID(), nook.getUUID());
-        }else {
+        } else {
             Lily lily = new Lily(player.level);
             lily.setPos(player.getX(), player.getY(), player.getZ());
             lily.setOwnerUUID(player.getUUID());

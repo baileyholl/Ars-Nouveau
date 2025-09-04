@@ -18,6 +18,6 @@ public class ApparatusPage extends AbstractPage {
 
     @Override
     public ResourceLocation getType() {
-        return ArsNouveau.prefix( "apparatus_recipe");
+        return ArsNouveau.prefix("apparatus_recipe");
     }
 }

@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
 
-public class PacketSummonFamiliar extends AbstractPacket{
+public class PacketSummonFamiliar extends AbstractPacket {
 
     public static final Type<PacketSummonFamiliar> TYPE = new Type<>(ArsNouveau.prefix("summon_familiar"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSummonFamiliar> CODEC = StreamCodec.ofMember(PacketSummonFamiliar::toBytes, PacketSummonFamiliar::new);
@@ -43,7 +43,7 @@ public class PacketSummonFamiliar extends AbstractPacket{
         if (cap == null)
             return;
 
-        if(owner == null)
+        if (owner == null)
             return;
 
         IFamiliar familiarEntity = cap.getFamiliarData(familiarID).getEntity(owner.level);

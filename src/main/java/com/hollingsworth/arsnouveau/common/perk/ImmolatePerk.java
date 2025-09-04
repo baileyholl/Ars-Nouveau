@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ImmolatePerk extends Perk implements IEffectResolvePerk {
-    public static final ImmolatePerk INSTANCE = new ImmolatePerk(ArsNouveau.prefix( "thread_immolation"));
+    public static final ImmolatePerk INSTANCE = new ImmolatePerk(ArsNouveau.prefix("thread_immolation"));
 
     public ImmolatePerk(ResourceLocation key) {
         super(key);
@@ -24,11 +24,11 @@ public class ImmolatePerk extends Perk implements IEffectResolvePerk {
         LivingEntity caster = spellCastEvent.context.getUnwrappedCaster();
         int level = PerkUtil.countForPerk(INSTANCE, caster);
 
-        if(caster.isOnFire()){
+        if (caster.isOnFire()) {
             caster.extinguishFire();
             caster.addEffect(new MobEffectInstance(ModPotions.IMMOLATE_EFFECT, 20 * 5, level - 1));
         }
-        if(caster.level.getBlockState(caster.blockPosition()).is(BlockTags.FIRE)){
+        if (caster.level.getBlockState(caster.blockPosition()).is(BlockTags.FIRE)) {
             caster.level.removeBlock(caster.blockPosition(), false);
             caster.addEffect(new MobEffectInstance(ModPotions.IMMOLATE_EFFECT, 20 * 5, level - 1));
         }

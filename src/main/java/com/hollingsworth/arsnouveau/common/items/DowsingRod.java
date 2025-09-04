@@ -31,7 +31,7 @@ public class DowsingRod extends ModItem {
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel() instanceof ServerLevel && pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof IPedestalMachine ipm){
+        if (pContext.getLevel() instanceof ServerLevel && pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof IPedestalMachine ipm) {
             ipm.lightPedestal(pContext.getLevel());
             return InteractionResult.SUCCESS;
         }
@@ -41,9 +41,11 @@ public class DowsingRod extends ModItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack heldStack = pPlayer.getItemInHand(pUsedHand);
-        heldStack.setDamageValue(pPlayer.getItemInHand(pUsedHand).getDamageValue() + 1);
-        if (heldStack.getDamageValue() >= getMaxDamage(heldStack))
-            heldStack.shrink(1);
+        if (!pPlayer.hasInfiniteMaterials()) {
+            heldStack.setDamageValue(pPlayer.getItemInHand(pUsedHand).getDamageValue() + 1);
+            if (heldStack.getDamageValue() >= getMaxDamage(heldStack))
+                heldStack.shrink(1);
+        }
         if (!pLevel.isClientSide) {
             pPlayer.addEffect(new MobEffectInstance(ModPotions.MAGIC_FIND_EFFECT, 60 * 20));
             TagScryer tagScryer = new TagScryer(BlockTagProvider.DOWSING_ROD);

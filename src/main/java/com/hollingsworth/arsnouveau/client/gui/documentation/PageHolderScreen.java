@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageHolderScreen extends BaseDocScreen{
+public class PageHolderScreen extends BaseDocScreen {
 
     List<SinglePageWidget> allWidgets = new ArrayList<>();
 
@@ -23,7 +23,8 @@ public class PageHolderScreen extends BaseDocScreen{
 
     public SinglePageWidget rightPage = null;
     List<SinglePageCtor> pages;
-    DocEntry entry;
+    public DocEntry entry;
+
     public PageHolderScreen(DocEntry entry) {
         super();
         this.entry = entry;
@@ -35,9 +36,9 @@ public class PageHolderScreen extends BaseDocScreen{
     public void init() {
         super.init();
         allWidgets = new ArrayList<>();
-        for(int i = 0; i < pages.size(); i++){
+        for (int i = 0; i < pages.size(); i++) {
             SinglePageCtor page = pages.get(i);
-            SinglePageWidget widget = page.create(this,  (i + 1) % 2 == 0 ? bookLeft + RIGHT_PAGE_OFFSET : bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
+            SinglePageWidget widget = page.create(this, (i + 1) % 2 == 0 ? screenLeft + RIGHT_PAGE_OFFSET : screenLeft + LEFT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
             allWidgets.add(widget);
         }
         initPages();
@@ -47,8 +48,8 @@ public class PageHolderScreen extends BaseDocScreen{
     public void initBookmarks() {
         super.initBookmarks();
         List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
-        if(bookmarks.size() < 10){
-            var addBookmark = addRenderableWidget(new NuggetImageButton(bookLeft + 281, bookTop + 1 + 15 * (bookmarks.size() + 1), DocAssets.BOOKMARK.width(), DocAssets.BOOKMARK.height(), DocAssets.BOOKMARK.location(), (b) -> {
+        if (bookmarks.size() < 10) {
+            var addBookmark = addRenderableWidget(new NuggetImageButton(screenLeft + 281, screenTop + 1 + 15 * (bookmarks.size() + 1), DocAssets.BOOKMARK.width(), DocAssets.BOOKMARK.height(), DocAssets.BOOKMARK.location(), (b) -> {
                 bookmarks.add(this.entry.id());
                 initBookmarks();
             }).withTooltip(Component.translatable("ars_nouveau.add_bookmark").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))));
@@ -64,10 +65,10 @@ public class PageHolderScreen extends BaseDocScreen{
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        if(leftPage != null){
+        if (leftPage != null) {
             leftPage.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         }
-        if(rightPage != null){
+        if (rightPage != null) {
             rightPage.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
@@ -78,20 +79,20 @@ public class PageHolderScreen extends BaseDocScreen{
         this.rebuildWidgets();
     }
 
-    public void initPages(){
-        if(leftPage != null){
+    public void initPages() {
+        if (leftPage != null) {
             removeWidget(leftPage);
         }
-        if(rightPage != null){
+        if (rightPage != null) {
             removeWidget(rightPage);
         }
         leftPage = null;
         rightPage = null;
-        if(arrowIndex * 2 < allWidgets.size()){
+        if (arrowIndex * 2 < allWidgets.size()) {
             leftPage = allWidgets.get(arrowIndex * 2);
             addRenderableWidget(leftPage);
         }
-        if(arrowIndex * 2 + 1 < allWidgets.size()){
+        if (arrowIndex * 2 + 1 < allWidgets.size()) {
             rightPage = allWidgets.get(arrowIndex * 2 + 1);
             addRenderableWidget(rightPage);
         }

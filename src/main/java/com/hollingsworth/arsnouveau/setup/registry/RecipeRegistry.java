@@ -34,6 +34,7 @@ public class RecipeRegistry {
     public static final String SCRY_RITUAL_RECIPE_ID = "scry_ritual";
     public static final String BOOK_UPGRADE_RECIPE_ID = "book_upgrade";
     public static final String POTION_FLASK_RECIPE_ID = "potion_flask";
+    public static final String PRESTIDIGITATION_RECIPE_ID = "prestidigitation";
 
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<EnchantingApparatusRecipe>> APPARATUS_TYPE = RECIPE_TYPES.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, EnchantingApparatusRecipe.Serializer> APPARATUS_SERIALIZER = RECIPE_SERIALIZERS.register(ENCHANTING_APPARATUS_RECIPE_ID, () -> new EnchantingApparatusRecipe.Serializer());
@@ -87,6 +88,9 @@ public class RecipeRegistry {
     public static final DeferredHolder<RecipeSerializer<?>, DispelEntityRecipe.Serializer> DISPEL_ENTITY_SERIALIZER = RECIPE_SERIALIZERS.register(DISPEL_ENTITY_RECIPE_ID, () -> new DispelEntityRecipe.Serializer());
     public static final DeferredHolder<RecipeType<?>, ModRecipeType<ScryRitualRecipe>> SCRY_RITUAL_TYPE = RECIPE_TYPES.register(SCRY_RITUAL_RECIPE_ID, () -> new ModRecipeType<>());
     public static final DeferredHolder<RecipeSerializer<?>, ScryRitualRecipe.Serializer> SCRY_RITUAL_SERIALIZER = RECIPE_SERIALIZERS.register(SCRY_RITUAL_RECIPE_ID, () -> new ScryRitualRecipe.Serializer());
+
+    public static final DeferredHolder<RecipeType<?>, ModRecipeType<PrestidigitationRecipe>> PRESTIDIGITATION_TYPE = RECIPE_TYPES.register(PRESTIDIGITATION_RECIPE_ID, () -> new ModRecipeType<>());
+    public static final DeferredHolder<RecipeSerializer<?>, PrestidigitationRecipe.Serializer> PRESTIDIGITATION_SERIALIZER = RECIPE_SERIALIZERS.register(PRESTIDIGITATION_RECIPE_ID, () -> new PrestidigitationRecipe.Serializer());
 
 
     public static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {

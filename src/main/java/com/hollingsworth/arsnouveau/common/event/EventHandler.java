@@ -5,15 +5,14 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
+import com.hollingsworth.arsnouveau.api.event.SuccessfulTreeGrowthEvent;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.command.*;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
@@ -21,7 +20,6 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -35,13 +33,14 @@ import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -55,7 +54,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -63,6 +61,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
@@ -71,7 +70,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -79,43 +78,49 @@ import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
+            @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
             @Override
             protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
                 return null;
             }
 
+            @SuppressWarnings("NullableProblems")
             @Override
             protected void apply(Object pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
-                MultiRecipeWrapper.RECIPE_CACHE = new HashMap<>();
-                EffectWololo.recipeCache = new FixedStack<>(EffectWololo.MAX_RECIPE_CACHE);
                 ArsNouveauAPI.getInstance().onResourceReload();
+
                 EventQueue.getServerInstance().addEvent(new ITimedEvent() {
                     boolean expired;
 
                     @Override
                     public void tick(ServerTickEvent serverTickEvent) {
-                        GenericRecipeRegistry.reloadAll(serverTickEvent.getServer().getRecipeManager());
-                        CasterTomeRegistry.reloadTomeData(serverTickEvent.getServer().getRecipeManager(), serverTickEvent.getServer().getLevel(Level.OVERWORLD));
-                        BuddingConversionRegistry.reloadBuddingConversionRecipes(serverTickEvent.getServer().getRecipeManager());
-                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(serverTickEvent.getServer().getRecipeManager());
-                        ScryRitualRegistry.reloadScryRitualRecipes(serverTickEvent.getServer().getRecipeManager());
-                        for(ServerPlayer player : serverTickEvent.getServer().getPlayerList().getPlayers()) {
+                        MinecraftServer server = serverTickEvent.getServer();
+                        RecipeManager recipeManager = server.getRecipeManager();
+                        RegistryAccess access = server.registryAccess();
+
+                        GenericRecipeRegistry.reloadAll(recipeManager);
+                        CasterTomeRegistry.reloadTomeData(recipeManager, access);
+                        BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server);
+                        ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
+                        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
                         expired = true;
@@ -209,18 +214,6 @@ public class EventHandler {
             e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
         }
     }
-
-
-    @SubscribeEvent
-    public static void clientTickEnd(ClientTickEvent.Post event) {
-
-        ClientInfo.ticksInGame++;
-        if (ClientInfo.redTicks()) {
-            ClientInfo.redOverlayTicks--;
-        }
-
-    }
-
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(PlayerTickEvent.Pre event) {
@@ -330,13 +323,6 @@ public class EventHandler {
         if (event.rayTraceResult instanceof EntityHitResult hit && event.world instanceof ServerLevel level) {
             Entity entity = hit.getEntity();
             if (!entity.isAlive()) return;
-            // TODO: Replace with EntitySubPredicate when it becomes a registry in 1.21
-            if (entity instanceof Witch witch) {
-                if (witch.getHealth() <= witch.getMaxHealth() / 2) {
-                    replaceEntityWithItems(level, witch, new ItemStack(ItemsRegistry.WIXIE_SHARD));
-                    return;
-                }
-            }
             for (RecipeHolder<DispelEntityRecipe> holder : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
                 var recipe = holder.value();
                 if (recipe.matches(event.shooter, entity)) {
@@ -357,6 +343,10 @@ public class EventHandler {
         LearnGlyphCommand.register(event.getDispatcher());
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
+        DebugNumberCommand.register(event.getDispatcher());
+        if (!FMLEnvironment.production) {
+            ExportDocsCommand.register(event.getDispatcher());
+        }
     }
 
     @SubscribeEvent
@@ -412,14 +402,6 @@ public class EventHandler {
         return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
     }
 
-    //TODO: restore looting level event
-
-//    @SubscribeEvent
-//    public static void onLootingEvent(LootingLevelEvent event) {
-//        if (event.getDamageSource() != null && event.getDamageSource().getEntity() instanceof LivingEntity living) {
-//            event.setLootingLevel(event.getLootingLevel() + Math.round(PerkUtil.countForPerk(LootingPerk.INSTANCE, living)));
-//        }
-//    }
 
     @SubscribeEvent
     public static void onPotionAdd(MobEffectEvent.Added event) {
@@ -467,16 +449,13 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void treeGrow(BlockGrowFeatureEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel level))
-            return;
-
-        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
+    public static void treeGrow(SuccessfulTreeGrowthEvent event) {
+        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(event.level);
         List<UUID> sprigsToRemove = new ArrayList<>();
 
         for (UUID uuid : sprigs) {
-            if (level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
-                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.getPos()) <= 10 && !whirlisprig.isTamed()) {
+            if (event.level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
+                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
                     whirlisprig.droppingShards = true;
                 }
             } else {
@@ -484,7 +463,7 @@ public class EventHandler {
             }
         }
         for (UUID uuid : sprigsToRemove) {
-            Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+            Whirlisprig.WHIRLI_MAP.removeEntity(event.level, uuid);
         }
     }
 

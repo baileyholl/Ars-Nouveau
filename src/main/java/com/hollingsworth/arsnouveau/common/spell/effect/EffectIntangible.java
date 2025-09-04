@@ -44,7 +44,7 @@ public class EffectIntangible extends AbstractEffect {
             int id = Block.getId(state);
             world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
             IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
-            if(tile != null) {
+            if (tile != null) {
                 tile.stateID = id;
                 tile.maxLength = duration * 20;
             }
@@ -68,7 +68,7 @@ public class EffectIntangible extends AbstractEffect {
         return 30;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -93,7 +93,7 @@ public class EffectIntangible extends AbstractEffect {
         return "Causes blocks to temporarily turn into air. Can be modified with Amplify for blocks of higher hardness, AOE, Duration Down, and Extend Time.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

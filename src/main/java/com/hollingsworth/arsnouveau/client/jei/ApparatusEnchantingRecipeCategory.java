@@ -31,7 +31,7 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
         double angleBetweenEach = 360.0 / inputs.size();
 
         Level level = Minecraft.getInstance().level;
-        ItemStack dummy = recipe.enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(level, recipe.enchantmentKey), recipe.enchantLevel-1)) : Items.BOOK.getDefaultInstance();
+        ItemStack dummy = recipe.enchantLevel > 1 ? EnchantedBookItem.createForEnchantment(new EnchantmentInstance(HolderHelper.unwrap(level, recipe.enchantmentKey), recipe.enchantLevel - 1)) : Items.BOOK.getDefaultInstance();
         Component message = recipe.enchantLevel == 1 ? Component.literal("Any compatible item") : Component.literal("Needs lower level enchantment");
         dummy.set(DataComponents.CUSTOM_NAME, message); //TODO Translatable
 

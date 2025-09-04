@@ -33,7 +33,7 @@ public abstract class AbstractRitual {
     public AbstractRitual() {
     }
 
-    public void tryTick(RitualBrazierTile tickingTile){
+    public void tryTick(RitualBrazierTile tickingTile) {
         if (tickingTile == null || !getContext().isStarted || getContext().isDone) {
             return;
         }
@@ -74,10 +74,10 @@ public abstract class AbstractRitual {
         return false;
     }
 
-    public int itemConsumedCount(Predicate<ItemStack> stackPredicate){
+    public int itemConsumedCount(Predicate<ItemStack> stackPredicate) {
         int total = 0;
-        for(ItemStack stack : getConsumedItems()){
-            if(stackPredicate.test(stack)){
+        for (ItemStack stack : getConsumedItems()) {
+            if (stackPredicate.test(stack)) {
                 total += stack.getCount();
             }
         }
@@ -164,7 +164,7 @@ public abstract class AbstractRitual {
         return getContext().needsSourceToRun;
     }
 
-    public boolean takeSourceNow(){
+    public boolean takeSourceNow() {
         setNeedsSource(true);
         return tile.takeSource();
     }
@@ -220,11 +220,16 @@ public abstract class AbstractRitual {
      * If this ritual can appear in villager trades
      */
     @Deprecated(since = "4.11.0", forRemoval = true)
-    public boolean canBeTraded(){
+    public boolean canBeTraded() {
         return true;
     }
 
-    public void onDestroy() {}
+    public void onDestroy() {
+    }
 
-    public void onStatusChanged(boolean status) {}
+    public void onStatusChanged(boolean status) {
+    }
+
+    public void modifyTooltips(List<Component> tooltips) {
+    }
 }

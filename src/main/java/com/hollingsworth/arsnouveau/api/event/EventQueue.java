@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -26,14 +27,13 @@ public class EventQueue {
         }
 
         List<ITimedEvent> stale = new ObjectArrayList<>();
-        // Enhanced-for or iterator will cause a concurrent modification.
-        int size = events.size();
-        for (int i = 0; i < size; i++) {
+        // Enhanced-for or iterator will cause a concurrent modification on integrated servers.
+        for (int i = 0; i < events.size(); i++) {
             ITimedEvent event = events.get(i);
             if (event.isExpired()) {
                 stale.add(event);
             } else {
-                if(e == null)
+                if (e == null)
                     event.tick(false);
                 else
                     event.tick(e);
@@ -61,7 +61,7 @@ public class EventQueue {
 
     // Tear down on world unload
     public void clear() {
-        for(ITimedEvent event : events){
+        for (ITimedEvent event : events) {
             event.onServerStopping();
         }
         this.events = new ObjectArrayList<>();
@@ -95,6 +95,8 @@ public class EventQueue {
 
     @SubscribeEvent
     public static void clientTickEvent(ClientTickEvent.Post e) {
-        EventQueue.getClientQueue().tick(null);
+        if (!Minecraft.getInstance().isPaused()) {
+            EventQueue.getClientQueue().tick(null);
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
+import com.hollingsworth.arsnouveau.setup.registry.EntitySubPredicatesRegistry;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -18,7 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DispelEntityProvider extends SimpleDataProvider{
+public class DispelEntityProvider extends SimpleDataProvider {
 
     public List<Wrapper> recipes = new ArrayList<>();
 
@@ -36,12 +37,16 @@ public class DispelEntityProvider extends SimpleDataProvider{
     }
 
     protected void addEntries() {
-        recipes.add(new Wrapper(ArsNouveau.prefix( "blaze_powder"), new DispelEntityRecipe(EntityType.BLAZE, EntityType.BLAZE.getDefaultLootTable().location(), new LootItemCondition[]{
+        recipes.add(new Wrapper(ArsNouveau.prefix("blaze_powder"), new DispelEntityRecipe(EntityType.BLAZE, EntityType.BLAZE.getDefaultLootTable().location(), new LootItemCondition[]{
                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnFire(true))).build()
+        })));
+
+        recipes.add(new Wrapper(ArsNouveau.prefix("wixie_shard"), new DispelEntityRecipe(EntityType.WITCH, ArsNouveau.prefix("dispel_witch"), new LootItemCondition[]{
+                LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(new EntitySubPredicatesRegistry.PercentHealthEqualOrLowerPredicate(0.5f))).build(),
         })));
     }
 
-    public record Wrapper(ResourceLocation location, DispelEntityRecipe recipe){
+    public record Wrapper(ResourceLocation location, DispelEntityRecipe recipe) {
 
     }
 

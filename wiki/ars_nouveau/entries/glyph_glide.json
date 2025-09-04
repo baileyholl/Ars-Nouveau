@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_glide",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_glide",
+  "title": "Glide",
+  "category": "ars_nouveau:glyphs_tier_three",
+  "pages": [
+    {
+      "title": "Glide",
+      "description": "Grants the Glide effect, allowing the wearer to fly as if they were wearing an Elytra.",
+      "icon": "ars_nouveau:glyph_glide",
+      "tier": 3
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_glide"
+    }
+  ]
+}

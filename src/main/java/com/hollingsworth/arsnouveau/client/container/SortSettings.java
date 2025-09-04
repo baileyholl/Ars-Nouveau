@@ -30,7 +30,11 @@ public record SortSettings(int controlMode, boolean reverseSort, int sortType, i
             SortSettings::new
     );
 
-    public SortSettings(){
+    public SortSettings() {
         this(0, false, 0, 0, false);
+    }
+
+    public SortSettings setExpanded(boolean expanded) {
+        return new SortSettings(controlMode, reverseSort, sortType, searchType, expanded);
     }
 }

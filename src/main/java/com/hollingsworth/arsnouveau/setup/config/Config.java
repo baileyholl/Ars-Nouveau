@@ -39,6 +39,7 @@ public class Config {
     public static ModConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
     public static ModConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
     public static ModConfigSpec.IntValue JUMP_RING_COST;
+    public static ModConfigSpec.IntValue BASE_ARMOR_REPAIR_RATE;
 
     public static ModConfigSpec.IntValue MELDER_OUTPUT;
     public static ModConfigSpec.IntValue MELDER_INPUT_COST;
@@ -156,6 +157,7 @@ public class Config {
         SERVER_BUILDER.comment("Items").push("item");
         SPAWN_TOMES = SERVER_BUILDER.comment("Spawn Caster Tomes in Dungeon Loot?").define("spawnTomes", true);
         JUMP_RING_COST = SERVER_BUILDER.comment("How much mana the Ring of Jumping consumes per jump").defineInRange("jumpRingCost", 30, 0, 10000);
+        BASE_ARMOR_REPAIR_RATE = SERVER_BUILDER.comment("How much durability to repair armor by every 10 seconds without any Thread of Repairing").defineInRange("baseArmorRepairRate", 1, 0, 10000);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Blocks").push("block");
         MELDER_INPUT_COST = SERVER_BUILDER.comment("How much potion a melder takes from each input jar. 100 = 1 potion").defineInRange("melderInputCost", 200, 100, Integer.MAX_VALUE);
@@ -178,33 +180,33 @@ public class Config {
 
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent.Loading configEvent) {
-        if(configEvent.getConfig().getSpec() == CLIENT_CONFIG){
+        if (configEvent.getConfig().getSpec() == CLIENT_CONFIG) {
             resetLightMaps();
         }
     }
 
     @SubscribeEvent
     public static void onReload(final ModConfigEvent.Reloading configEvent) {
-        if(configEvent.getConfig().getSpec() == CLIENT_CONFIG){
-           resetLightMaps();
+        if (configEvent.getConfig().getSpec() == CLIENT_CONFIG) {
+            resetLightMaps();
         }
     }
 
-    public static void resetLightMaps(){
+    public static void resetLightMaps() {
         ENTITY_LIGHT_MAP = new HashMap<>();
         ITEM_LIGHTMAP = new HashMap<>();
         // Copy values from ENTITY_LIGHT_CONFIG to ENTITY_LIGHT_MAP
-        for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()){
+        for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()) {
             ENTITY_LIGHT_MAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
         // Copy values from ITEM_LIGHT_CONFIG to ITEM_LIGHT_MAP
-        for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()){
+        for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()) {
             ITEM_LIGHTMAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
     }
 
 
-    public static Map<String, Integer> getDefaultEntityLight(){
+    public static Map<String, Integer> getDefaultEntityLight() {
         Map<String, Integer> map = new HashMap<>();
         map.put(an(LibEntityNames.SPELL_PROJ), 15);
         map.put(an(LibEntityNames.ORBIT_PROJECTILE), 15);
@@ -217,7 +219,7 @@ public class Config {
         return map;
     }
 
-    public static Map<String, Integer> getDefaultItemLight(){
+    public static Map<String, Integer> getDefaultItemLight() {
         Map<String, Integer> map = new HashMap<>();
         map.put("minecraft:glowstone", 15);
         map.put("minecraft:torch", 14);
@@ -238,7 +240,7 @@ public class Config {
         return map;
     }
 
-    public static String an(String s){
-        return ArsNouveau.prefix( s).toString();
+    public static String an(String s) {
+        return ArsNouveau.prefix(s).toString();
     }
 }

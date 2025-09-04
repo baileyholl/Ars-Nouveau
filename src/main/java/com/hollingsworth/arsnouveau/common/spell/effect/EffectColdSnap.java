@@ -51,7 +51,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
         spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats, spellContext, resolver);
-        if(livingEntity.hasEffect(ModPotions.FREEZING_EFFECT)){
+        if (livingEntity.hasEffect(ModPotions.FREEZING_EFFECT)) {
             livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze() + 3);
         }
     }
@@ -59,19 +59,19 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        if(!world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.ICE))
+        if (!world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.ICE))
             return;
         world.setBlock(rayTraceResult.getBlockPos(), Blocks.AIR.defaultBlockState(), 3);
         spawnIce(shooter, world, rayTraceResult.getBlockPos(), spellStats, spellContext, resolver);
     }
 
-    public void spawnIce(LivingEntity shooter, Level level, BlockPos targetPos, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+    public void spawnIce(LivingEntity shooter, Level level, BlockPos targetPos, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 middleVec = new Vec3(0.2, 0.3, 0.2);
         Vec3 cornerScaleVec = new Vec3(0.1, 0.2, 0.1);
         Set<BlockPos> corners = new HashSet<>();
         Set<BlockPos> sides = new HashSet<>();
 
-        for(int i = 1; i < 2 + spellStats.getAoeMultiplier(); i++) {
+        for (int i = 1; i < 2 + spellStats.getAoeMultiplier(); i++) {
             // Middle sides
             sides.addAll(replaceableBetween(level, targetPos.offset(-i, -i, 0), targetPos.offset(-i, i, 0)));
             sides.addAll(replaceableBetween(level, targetPos.offset(i, -i, 0), targetPos.offset(i, i, 0)));
@@ -102,7 +102,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         }
     }
 
-    public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter){
+    public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter) {
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState(), resolver);
         // Send the falling block the opposite direction of the target
@@ -140,6 +140,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
             livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
         }
     }
+
     @Override
     public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
         return DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
@@ -173,7 +174,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         return 30;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -193,7 +194,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_WATER);

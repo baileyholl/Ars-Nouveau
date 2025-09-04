@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.IntangibleAirBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.mixin.BlockItemAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +52,9 @@ public class EffectExchange extends AbstractEffect {
         Vec3 origLoc = shooter.position;
 
         Level shooterLevel = shooter.level;
+        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED) || entity instanceof FakePlayer) {
+            return;
+        }
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             if (entity.level instanceof ServerLevel serverLevel) {
                 shooter.teleportTo(serverLevel, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYRot(), entity.getXRot());
@@ -71,8 +77,8 @@ public class EffectExchange extends AbstractEffect {
             BlockState state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock()
-                || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
-                || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
+                    || !world.getBlockState(pos1).isAir() && world.getBlockState(pos1).getBlock() instanceof IntangibleAirBlock
+                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)) {
                 continue;
             }
             Block finalFirstBlock = firstBlock;
@@ -108,17 +114,19 @@ public class EffectExchange extends AbstractEffect {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
-        if (placeState != null && placeState.getBlock() == world.getBlockState(pos1).getBlock())
+        if (placeState == null || placeState.getBlock() == world.getBlockState(pos1).getBlock()) {
             return;
-
+        }
         if (!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID(), true)) {
             return;
         }
-        if (placeState == null)
-            return;
+
         world.setBlock(pos1, placeState, 3);
         item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
+
+        ((BlockItemAccessor) item).invokeUpdateBlockStateFromTag(pos1, world, stack, placeState);
         BlockItem.updateCustomBlockEntityTag(world, shooter instanceof Player player ? player : fakePlayer, pos1, stack);
+        BlockItemAccessor.invokeUpdateBlockEntityComponents(world, pos1, stack);
         stack.shrink(1);
         ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), result.getDirection(), pos1, false), world, shooter, spellContext, resolver);
     }
@@ -150,7 +158,7 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. "
-               + "When used on entities, the locations of the caster and the entity hit are swapped.";
+                + "When used on entities, the locations of the caster and the entity hit are swapped.";
     }
 
     @Override

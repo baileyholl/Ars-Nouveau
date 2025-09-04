@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.setup.registry.MaterialRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -49,7 +50,7 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     }
 
     public AnimatedMagicArmor(Holder<ArmorMaterial> materialIn, ArmorItem.Type slot, GeoModel<AnimatedMagicArmor> model) {
-        this(materialIn, slot, ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder()), model);
+        this(materialIn, slot, ItemsRegistry.defaultItemProperties().stacksTo(1).component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder()).component(DataComponents.BASE_COLOR, DyeColor.PURPLE), model);
     }
 
     public static AnimatedMagicArmor light(ArmorItem.Type slot) {
@@ -57,20 +58,23 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
                 ItemsRegistry.defaultItemProperties()
                         .stacksTo(1)
                         .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                        .component(DataComponents.BASE_COLOR, DyeColor.PURPLE)
                         .durability(slot.getDurability(20)), new GenericModel<AnimatedMagicArmor>("light_armor", "item/light_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor medium(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot,ItemsRegistry.defaultItemProperties()
+        return new AnimatedMagicArmor(MaterialRegistry.MEDIUM, slot, ItemsRegistry.defaultItemProperties()
                 .stacksTo(1)
                 .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                .component(DataComponents.BASE_COLOR, DyeColor.PURPLE)
                 .durability(slot.getDurability(25)), new GenericModel<AnimatedMagicArmor>("medium_armor", "item/medium_armor").withEmptyAnim());
     }
 
     public static AnimatedMagicArmor heavy(ArmorItem.Type slot) {
-        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot,ItemsRegistry.defaultItemProperties()
+        return new AnimatedMagicArmor(MaterialRegistry.HEAVY, slot, ItemsRegistry.defaultItemProperties()
                 .stacksTo(1)
                 .component(DataComponentRegistry.ARMOR_PERKS, new ArmorPerkHolder())
+                .component(DataComponents.BASE_COLOR, DyeColor.PURPLE)
                 .durability(slot.getDurability(35)), new GenericModel<AnimatedMagicArmor>("heavy_armor", "item/heavy_armor").withEmptyAnim());
     }
 
@@ -86,10 +90,10 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity player, int slotId, boolean pIsSelected) {
         super.inventoryTick(stack, world, player, slotId, pIsSelected);
-        if(slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.INVENTORY_SIZE + 4){
+        if (slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.INVENTORY_SIZE + 4) {
             if (world.isClientSide())
                 return;
-            if(player instanceof LivingEntity livingEntity) {
+            if (player instanceof LivingEntity livingEntity) {
                 RepairingPerk.attemptRepair(stack, livingEntity);
                 var perkHolder = PerkUtil.getPerkHolder(stack);
                 if (perkHolder == null)
@@ -130,15 +134,6 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     }
 
     @Override
-    public void onDye(ItemStack stack, DyeColor dyeColor) {
-        var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
-        if(data == null){
-            return;
-        }
-        stack.set(DataComponentRegistry.ARMOR_PERKS, data.setColor(dyeColor.getName()));
-    }
-
-    @Override
     public boolean makesPiglinsNeutral(@NotNull ItemStack stack, @NotNull LivingEntity wearer) {
         return true;
     }
@@ -158,12 +153,17 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
 
             @Override
             public @Nullable <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
-                if(renderer == null){
+                if (renderer == null) {
                     renderer = new ArmorRenderer(getArmorModel());
                 }
                 return this.renderer;
             }
         });
+    }
+
+    @Override
+    public boolean isDamageable(ItemStack stack) {
+        return !stack.has(DataComponentRegistry.UNBREAKING);
     }
 
     public GeoModel<AnimatedMagicArmor> getArmorModel() {
@@ -176,16 +176,12 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
     @Override
     public @Nullable ResourceLocation getArmorTexture(@NotNull ItemStack stack, @NotNull Entity entity, @NotNull EquipmentSlot slot, ArmorMaterial.@NotNull Layer layer, boolean innerModel) {
         GenericModel<AnimatedMagicArmor> genericModel = (GenericModel<AnimatedMagicArmor>) model;
-        return ArsNouveau.prefix( "textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
+        return ArsNouveau.prefix("textures/" + genericModel.textPathRoot + "/" + genericModel.name + "_" + this.getColor(stack) + ".png");
     }
 
-
+    @Deprecated(forRemoval = true) // Use BASE_COLOR data component instead
     public String getColor(ItemStack object) {
-        var perkHolder = PerkUtil.getPerkHolder(object);
-        if(!(perkHolder instanceof ArmorPerkHolder data)){
-            return "purple";
-        }
-        return data.getColor() == null || data.getColor().isEmpty() ? "purple" : data.getColor();
+        return object.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE).getName();
     }
 
     //needed to exclude armors that can't be upgraded via recipe from jei info

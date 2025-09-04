@@ -8,7 +8,7 @@ public class SkyweaveVisibilityEvent implements ITimedEvent {
     SkyBlockTile skyweave;
     boolean visible;
 
-    public SkyweaveVisibilityEvent(SkyBlockTile skyweave, int ticks, boolean visible){
+    public SkyweaveVisibilityEvent(SkyBlockTile skyweave, int ticks, boolean visible) {
         this.ticks = ticks;
         this.skyweave = skyweave;
         this.visible = visible;
@@ -17,7 +17,7 @@ public class SkyweaveVisibilityEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         ticks--;
-        if(ticks <= 0 && skyweave != null && !skyweave.isRemoved()){
+        if (ticks <= 0 && skyweave != null && !skyweave.isRemoved()) {
             skyweave.setShowFacade(visible);
         }
     }

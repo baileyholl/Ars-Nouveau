@@ -103,7 +103,7 @@ public class EffectSmelt extends AbstractEffect {
             }
 
             if (optional.isPresent()) {
-                ItemStack result = ((RecipeHolder<?>)(optional.get())).value().getResultItem(world.registryAccess()).copy();
+                ItemStack result = ((RecipeHolder<?>) (optional.get())).value().getResultItem(world.registryAccess()).copy();
                 if (result.isEmpty()) continue;
                 while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
                     itemEntity.getItem().shrink(1);

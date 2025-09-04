@@ -71,7 +71,7 @@ public class Relay extends TickableModBlock implements SimpleWaterloggedBlock {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-   @NotNull
+    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());

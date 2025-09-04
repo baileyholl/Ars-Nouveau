@@ -21,11 +21,11 @@ public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem> {
     public void render(EntityFlyingItem entityIn, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStack, bufferIn, packedLightIn);
         var isBubble = entityIn.getEntityData().get(EntityFlyingItem.IS_BUBBLE);
-        if(isBubble){
+        if (isBubble) {
             BubbleRenderer.renderBubble(entityIn, this.entityRenderDispatcher, matrixStack, bufferIn);
         }
         matrixStack.pushPose();
-        if(isBubble){
+        if (isBubble) {
             matrixStack.translate(0, 0.5, 0);
         }
         matrixStack.scale(0.35f, 0.35f, 0.35F);
@@ -35,6 +35,6 @@ public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem> {
 
     @Override
     public ResourceLocation getTextureLocation(EntityFlyingItem entity) {
-        return ArsNouveau.prefix( "textures/entity/spell_proj.png");
+        return ArsNouveau.prefix("textures/entity/spell_proj.png");
     }
 }

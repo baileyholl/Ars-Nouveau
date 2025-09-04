@@ -36,6 +36,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
             final MobJarItemRenderer renderer = new MobJarItemRenderer();
+
             @Override
             public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
                 return renderer;
@@ -49,6 +50,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
     }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
@@ -58,7 +60,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext pLevel, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
         super.appendHoverText(stack, pLevel, pTooltip, pFlag);
         Entity entity = fromItem(stack, ArsNouveau.proxy.getClientWorld());
-        if(entity == null)
+        if (entity == null)
             return;
         pTooltip.add(entity.getDisplayName());
         if (entity.hasCustomName()) {
@@ -72,12 +74,12 @@ public class MobJarItem extends BlockItem implements GeoItem {
         }
     }
 
-    public static Entity fromItem(ItemStack stack, Level level){
+    public static Entity fromItem(ItemStack stack, Level level) {
         var jarData = stack.get(DataComponentRegistry.MOB_JAR);
-        if(jarData == null)
+        if (jarData == null)
             return null;
         CompoundTag entityTag = jarData.entityTag().orElse(new CompoundTag());
-        if(entityTag.isEmpty())
+        if (entityTag.isEmpty())
             return null;
         return MobJarTile.loadEntityFromTag(level, entityTag);
     }

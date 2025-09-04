@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -31,13 +33,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
+public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDispellable {
     public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityAllyVex.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private LivingEntity owner;
@@ -93,7 +96,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
                 (entity) -> (entity instanceof Mob mob && mob.getTarget() != null &&
-                             mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+                        mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
 
@@ -131,6 +134,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     @Override
     public LivingEntity getOwnerAlt() {
         return owner;
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.limitedLifeTicks = 0;
+        return true;
     }
 
     class ChargeAttackGoal extends Goal {
@@ -311,6 +320,37 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     @Override
     public void setOwnerID(UUID uuid) {
         this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
+    }
+
+
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+
+    }
+
+    @Override
+    protected void dropAllDeathLoot(ServerLevel p_level, DamageSource damageSource) {
+
+    }
+
+    @Override
+    protected void dropEquipment() {
+
+    }
+
+    @Override
+    protected void dropExperience(@org.jetbrains.annotations.Nullable Entity entity) {
+
+    }
+
+    @Override
+    protected void dropFromLootTable(DamageSource damageSource, boolean attackedRecently) {
+
+    }
+
+    @Override
+    public void dropPreservedEquipment() {
+
     }
 
     class MoveHelperController extends MoveControl {

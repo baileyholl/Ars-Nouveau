@@ -29,7 +29,6 @@ public class EffectSummonDecoy extends AbstractEffect {
             EntityDummy dummy = new EntityDummy(world);
             dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));
             dummy.setPos(pos.x, pos.y + 1, pos.z);
-            dummy.setOwnerID(shooter.getUUID());
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, dummy);
             world.getEntitiesOfClass(Mob.class, dummy.getBoundingBox().inflate(20, 10, 20)).forEach(l -> l.setTarget(dummy));
             applySummoningSickness(shooter, 1);
@@ -53,7 +52,7 @@ public class EffectSummonDecoy extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // SummonEvent captures augments, but no uses of that field were found
@@ -71,7 +70,7 @@ public class EffectSummonDecoy extends AbstractEffect {
         return "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

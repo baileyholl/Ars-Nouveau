@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:spell_mana",
+  "order": 5,
+  "icon": "ars_nouveau:novice_spell_book",
+  "title": "5 - Mana",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "5 - Mana",
+      "description": "Casting a spell consumes your Mana based on the total cost of all the Glyphs that make up the spell. Your current Mana stores can be seen on the bar in the bottom left corner of your screen.  Expended Mana will regenerate over time. Mana may also be consumed or reserved by other things such as magical items or familiars.",
+      "icon": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "description": "Each new Glyph you learn will give a small permanent boost to your Mana’s regeneration and maximum capacity. These boosts can also be gained by upgrading your spell book, equipping some pieces of magical gear, or drinking a Mana potion."
+    }
+  ]
+}

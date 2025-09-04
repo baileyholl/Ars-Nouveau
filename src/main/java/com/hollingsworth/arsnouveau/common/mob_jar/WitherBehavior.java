@@ -30,7 +30,7 @@ public class WitherBehavior extends JarBehavior<WitherBoss> {
         Level level = tile.getLevel();
         if (level == null) return;
 
-        if(level.getGameTime() % 20 == 0){
+        if (level.getGameTime() % 20 == 0) {
             WITHER_MAP.addPosition(level, tile.getBlockPos());
         }
     }
@@ -60,8 +60,8 @@ public class WitherBehavior extends JarBehavior<WitherBoss> {
         if (level.isClientSide() || entity instanceof IDispellable || entity instanceof ISummon)
             return;
 
-        WITHER_MAP.applyForRange(level, entity.blockPosition(), 4, (pos) ->{
-            if(level.getBlockEntity(pos) instanceof MobJarTile tile && tile.getEntity() instanceof WitherBoss){
+        WITHER_MAP.applyForRange(level, entity.blockPosition(), 4, (pos) -> {
+            if (level.getBlockEntity(pos) instanceof MobJarTile tile && tile.getEntity() instanceof WitherBoss) {
                 ItemStack rose = new ItemStack(Items.WITHER_ROSE);
                 BlockPos blockPos = entity.blockPosition();
                 level.addFreshEntity(new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), rose));

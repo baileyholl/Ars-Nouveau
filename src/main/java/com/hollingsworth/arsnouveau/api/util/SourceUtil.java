@@ -2,7 +2,10 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.hollingsworth.arsnouveau.api.source.*;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceManager;
+import com.hollingsworth.arsnouveau.api.source.SourceProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
@@ -11,18 +14,21 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SourceUtil {
 
     public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
-        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+        for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
             if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
                 posList.add(new SourceProvider(jar, b.immutable()));
-        });
+        }
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canGiveSourceNearby(pos, world, range);
-        for(ISpecialSourceProvider p : provider){
+        for (ISpecialSourceProvider p : provider) {
             posList.add(new SourceProvider(p));
         }
         return posList;
@@ -30,30 +36,30 @@ public class SourceUtil {
 
     public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
-        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b -> {
+        for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
             if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0)
                 posList.add(new SourceProvider(jar, b.immutable()));
-        });
+        }
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canTakeSourceNearby(pos, world, range);
-        for(ISpecialSourceProvider p : provider){
+        for (ISpecialSourceProvider p : provider) {
             posList.add(new SourceProvider(p));
         }
         return posList;
     }
 
     /**
-     * @deprecated Use {@link SourceUtil#takeSourceMultiple}
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
+     * @param pos    Position around which to find source providers
+     * @param level  Level to find source providers in
+     * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return Provider that was extracted from, or null if none had enough source.
+     * @deprecated Use {@link SourceUtil#takeSourceMultiple}
      */
     @Deprecated(forRemoval = true)
-    public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source){
+    public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
-        for(ISpecialSourceProvider provider : providers){
-            if(provider.getSource().getSource() >= source){
+        for (ISpecialSourceProvider provider : providers) {
+            if (provider.getSource().getSource() >= source) {
                 provider.getSource().removeSource(source);
                 return provider;
             }
@@ -62,9 +68,9 @@ public class SourceUtil {
     }
 
     /**
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
+     * @param pos    Position around which to find source providers
+     * @param level  Level to find source providers in
+     * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
      */
@@ -108,57 +114,58 @@ public class SourceUtil {
 
         return new ArrayList<>(takenFrom.keys());
     }
+
     /**
-     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, Level, int, int)}
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
+     * @param pos    Position around which to find source providers
+     * @param level  Level to find source providers in
+     * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return Provider that was extracted from, or null if none had enough source.
+     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, Level, int, int)}
      */
     @Deprecated(forRemoval = true)
-    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source){
+    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source) {
         return takeSourceWithParticles(pos, pos, level, range, source);
     }
 
     /**
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
+     * @param pos    Position around which to find source providers
+     * @param level  Level to find source providers in
+     * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
      */
-    public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, Level level, int range, int source){
+    public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, Level level, int range, int source) {
         return takeSourceMultipleWithParticles(pos, pos, level, range, source);
     }
 
     /**
-     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, BlockPos, Level, int, int)}
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
+     * @param pos    Position around which to find source providers
+     * @param level  Level to find source providers in
+     * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return Provider that was extracted from, or null if none had enough source.
+     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, BlockPos, Level, int, int)}
      */
     @Deprecated(forRemoval = true)
-    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
+    public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source) {
         ISpecialSourceProvider result = takeSource(pos, level, range, source);
-        if(result != null && level instanceof ServerLevel serverLevel){
+        if (result != null && level instanceof ServerLevel serverLevel) {
             EntityFollowProjectile.spawn(serverLevel, result.getCurrentPos(), particlesTo);
         }
         return result;
     }
 
     /**
-     * @param pos Position around which to find source providers
-     * @param level Level to find source providers in
-     * @param range Range to check around `pos`
+     * @param pos    Position around which to find source providers
+     * @param level  Level to find source providers in
+     * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
      */
-    public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source){
+    public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source) {
         List<ISpecialSourceProvider> result = takeSourceMultiple(pos, level, range, source);
-        if(result != null && level instanceof ServerLevel serverLevel){
+        if (result != null && level instanceof ServerLevel serverLevel) {
             for (ISpecialSourceProvider provider : result) {
                 EntityFollowProjectile.spawn(serverLevel, provider.getCurrentPos(), particlesTo);
             }
@@ -167,14 +174,22 @@ public class SourceUtil {
     }
 
     /**
-     * Searches for nearby mana jars that have enough mana.
-     * Returns the position where the source was taken, or null if none were found.
+     * Searches for source in nearby source jars.
+     * Returns whether enough source was found.
      */
     public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int source) {
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() >= source);
-        if(loc.isPresent()){
-            return true;
+        for (var provider : SourceUtil.canTakeSource(pos, world, range)) {
+            ISourceTile sourceTile = provider.getSource();
+            if (sourceTile instanceof CreativeSourceJarTile) {
+                return true;
+            }
+
+            source -= sourceTile.removeSource(source, true);
+            if (source <= 0) {
+                return true;
+            }
         }
-        return SourceManager.INSTANCE.hasSourceNearby(pos, world, range, source) != null;
+
+        return false;
     }
 }

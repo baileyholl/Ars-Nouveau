@@ -43,9 +43,17 @@
     "floor=true,facing=east,roof=false": {
       "model": "ars_nouveau:block/magelight_torch",
       "y": 90
-    },"floor=true,facing=west": {
+    },
+    "floor=true,facing=west": {
       "model": "ars_nouveau:block/magelight_torch",
       "y": 90
+    },
+    "facing=east,floor=true,roof=true": {
+      "model": "ars_nouveau:block/magelight_torch",
+      "y": 90
+    },
+    "facing=north,floor=true,roof=true": {
+      "model": "ars_nouveau:block/magelight_torch"
     }
   }
 }

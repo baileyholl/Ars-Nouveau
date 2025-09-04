@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -12,8 +13,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -30,10 +34,10 @@ public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
     @Override
     public void renderRecursively(PoseStack poseStack, SpellCrossbow animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         if (bone.getName().equals("gem")) {
-            //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
+            DyeColor color1 = getCurrentItemStack().getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, FastColor.ABGR32.color(200, color1.getTextColor()));
         } else {
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.argbInt());
+            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         }
     }
 
@@ -77,15 +81,15 @@ public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
             Vec3 down = right.cross(forward);
             int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
             //These are used to calculate where the particles are going. We want them going into the laser, so we move the destination right, down, and forward a bit.
-            if(timeHeld > 72000){
+            if (timeHeld > 72000) {
                 right = right.scale(0.1 - player.attackAnim);
                 forward = forward.scale(0.25f);
                 down = down.scale(-0.1 - player.attackAnim);
-            }else if(SpellCrossbow.isCharged(itemStack)){
+            } else if (SpellCrossbow.isCharged(itemStack)) {
                 right = right.scale(-0.05 - player.attackAnim);
                 forward = forward.scale(0.35f);
                 down = down.scale(-0.2 - player.attackAnim);
-            }else {
+            } else {
                 right = right.scale(-player.attackAnim);
                 forward = forward.scale(0.45f);
                 down = down.scale(-0.3 - player.attackAnim);
@@ -95,14 +99,14 @@ public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
             laserPos = laserPos.add(down);
             AbstractCaster<?> tool = SpellCasterRegistry.from(itemStack);
 
-
+            DyeColor color1 = itemStack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
             if (timeHeld > 0 && timeHeld != 72000 || SpellCrossbow.isCharged(itemStack)) {
                 float scaleAge = (float) ParticleUtil.inRange(0.05, 0.1);
-                if (player.level.random.nextInt(6) == 0) {
+                if (player.level.random.nextInt(20) == 0) {
                     for (int i = 0; i < 1; i++) {
                         Vec3 particlePos = new Vec3(laserPos.x, laserPos.y, laserPos.z);
                         particlePos = particlePos.add(ParticleUtil.pointInSphere().scale(0.3f));
-                        player.level.addParticle(ParticleLineData.createData(tool.getColor(), scaleAge, 5 + player.level.random.nextInt(20)),
+                        player.level.addParticle(ParticleLineData.createData(ParticleColor.fromInt(color1.getTextColor()), scaleAge, 5 + player.level.random.nextInt(20)),
                                 particlePos.x(), particlePos.y(), particlePos.z(),
                                 laserPos.x(), laserPos.y(), laserPos.z());
                     }
@@ -116,8 +120,9 @@ public class SpellCrossbowRenderer extends GeoItemRenderer<SpellCrossbow> {
     public Color getRenderColor(SpellCrossbow animatable, float partialTick, int packedLight) {
         ParticleColor color = ParticleColor.defaultParticleColor();
         var caster = SpellCasterRegistry.from(currentItemStack);
-        if (caster != null){
-            color = caster.getColor();
+        if (caster != null) {
+            var timeline = caster.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+            color = timeline.trailEffect.particleOptions().colorProp().color();
         }
         return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
     }

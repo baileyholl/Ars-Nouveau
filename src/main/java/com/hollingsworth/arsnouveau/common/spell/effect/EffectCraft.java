@@ -26,8 +26,8 @@ public class EffectCraft extends AbstractEffect {
     private static final Component CONTAINER_NAME = Component.translatable("container.crafting");
 
     @Override
-    public void onResolve(HitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (shooter instanceof Player playerEntity && isRealPlayer(shooter)) {
+    public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (shooter instanceof Player playerEntity && isNotFakePlayer(shooter)) {
             playerEntity.openMenu(new SimpleMenuProvider((id, inventory, player) -> new CustomWorkbench(id, inventory, ContainerLevelAccess.create(player.getCommandSenderWorld(), player.blockPosition())), CONTAINER_NAME));
         }
     }
@@ -53,7 +53,7 @@ public class EffectCraft extends AbstractEffect {
         }
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();
@@ -64,7 +64,7 @@ public class EffectCraft extends AbstractEffect {
         return "Opens the crafting menu.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

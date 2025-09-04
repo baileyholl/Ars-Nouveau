@@ -15,7 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
@@ -51,8 +50,8 @@ public class EffectName extends AbstractEffect {
             item.getItem().set(DataComponents.CUSTOM_NAME, newName);
         }
 
-        if (shooter instanceof Player player && isRealPlayer(shooter) && player.equals(entity)) {
-            ItemStack offhand = player.getOffhandItem();
+        ItemStack offhand = shooter.getOffhandItem();
+        if (!offhand.isEmpty()) {
             offhand.set(DataComponents.CUSTOM_NAME, newName);
         }
     }
@@ -65,8 +64,8 @@ public class EffectName extends AbstractEffect {
             ItemStack stack = slotRef.getHandler().getStackInSlot(slotRef.getSlot());
             newName = stack.getDisplayName().plainCopy();
         }
-        if (newName == null && isRealPlayer(shooter) && shooter instanceof Player player) {
-            ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(player);
+        if (newName == null) {
+            ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(shooter);
             if (stack != ItemStack.EMPTY) {
                 AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
                 newName = Component.literal(caster.getSpellName());
@@ -95,6 +94,7 @@ public class EffectName extends AbstractEffect {
             nameable.setChanged();
             return;
         }
+
         for (Entity entity : world.getEntities(null, new AABB(pos).inflate(0.08))) {
             entity.setCustomName(name);
             if (entity instanceof Mob mob) {

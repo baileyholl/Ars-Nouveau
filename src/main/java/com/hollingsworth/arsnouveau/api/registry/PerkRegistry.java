@@ -31,25 +31,25 @@ public class PerkRegistry {
         return perkItemMap;
     }
 
-    public static boolean registerPerk(IPerk perk){
+    public static boolean registerPerk(IPerk perk) {
         perkMap.put(perk.getRegistryName(), perk);
         return true;
     }
 
-    public static boolean registerPerkProvider(ItemLike item, List<List<PerkSlot>> tierList){
+    public static boolean registerPerkProvider(ItemLike item, List<List<PerkSlot>> tierList) {
         itemPerkProviderMap.put(item.asItem(), tierList);
         return true;
     }
 
-    public static @Nullable List<List<PerkSlot>> getPerkProvider(Item item){
+    public static @Nullable List<List<PerkSlot>> getPerkProvider(Item item) {
         return itemPerkProviderMap.get(item);
     }
 
-    public static @Nullable List<List<PerkSlot>> getPerkProvider(ItemStack item){
+    public static @Nullable List<List<PerkSlot>> getPerkProvider(ItemStack item) {
         return getPerkProvider(item.getItem());
     }
 
-    public static @NotNull List<Item> getPerkProviderItems(){
+    public static @NotNull List<Item> getPerkProviderItems() {
         List<Item> list = new ArrayList<>();
         for (Iterator<Item> it = itemPerkProviderMap.keys().asIterator(); it.hasNext(); ) {
             Item i = it.next();

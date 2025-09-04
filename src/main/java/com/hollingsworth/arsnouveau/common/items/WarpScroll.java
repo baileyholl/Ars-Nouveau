@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -24,13 +25,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class WarpScroll extends ModItem {
+public class WarpScroll extends ModItem implements AliasProvider {
     public WarpScroll() {
         super(ItemsRegistry.defaultItemProperties().component(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(false)));
     }
@@ -43,10 +47,10 @@ public class WarpScroll extends ModItem {
         String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : null;
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (data.isValid()
-            && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
-            && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
-            && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-            && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+                && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
+                && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+                && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
+                && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
@@ -54,6 +58,7 @@ public class WarpScroll extends ModItem {
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CREATE_PORTAL.get(), world, pos, 4);
             stack.shrink(1);
+
             return true;
         }
         return false;
@@ -75,15 +80,20 @@ public class WarpScroll extends ModItem {
                 return InteractionResultHolder.fail(stack);
             }
             BlockPos pos = data.pos().get();
-            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec2 rotation = data.rotation();
+            Vec3 vec3 = player.position;
+            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(), pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+            player.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+            player.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(player));
             player.setXRot(rotation.x);
             player.setYRot(rotation.y);
-            Networking.sendToNearbyClient(world, player, new PacketWarpPosition(player.getId(),pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, rotation.x, rotation.y));
+
             serverLevel.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
                     10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
-            stack.shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
             return InteractionResultHolder.pass(stack);
         }
         if (player.isShiftKeyDown()) {
@@ -95,8 +105,9 @@ public class WarpScroll extends ModItem {
                 didAdd = true;
             } else {
                 didAdd = player.addItem(newWarpStack);
-                if (didAdd)
+                if (didAdd && !player.hasInfiniteMaterials()) {
                     stack.shrink(1);
+                }
             }
             if (!didAdd) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));
@@ -112,5 +123,12 @@ public class WarpScroll extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
+    }
+
+    @Override
+    public Collection<Alias> getAliases() {
+        return List.of(
+                new Alias("warp_portal", "Warp Portal")
+        );
     }
 }

@@ -31,6 +31,7 @@ import java.util.Set;
 
 public class EffectRedstone extends AbstractEffect {
     public static EffectRedstone INSTANCE = new EffectRedstone();
+
     private EffectRedstone() {
         super(GlyphLib.EffectRedstoneID, "Redstone Signal");
     }
@@ -60,12 +61,12 @@ public class EffectRedstone extends AbstractEffect {
                 if (notReplaceable)
                     continue;
                 var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
-                if(event.isCanceled()){
+                if (event.isCanceled()) {
                     continue;
                 }
                 BlockState state1 = BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState().setValue(TemporaryBlock.POWER, signalModifier);
                 world.setBlockAndUpdate(pos1, state1);
-                if(world.getBlockEntity(pos1) instanceof TemporaryTile tile){
+                if (world.getBlockEntity(pos1) instanceof TemporaryTile tile) {
                     tile.gameTime = world.getGameTime();
                     tile.tickDuration = delay;
                     tile.mimicState = Blocks.REDSTONE_BLOCK.defaultBlockState();

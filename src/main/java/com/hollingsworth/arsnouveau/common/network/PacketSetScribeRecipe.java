@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class PacketSetScribeRecipe extends AbstractPacket{
+public class PacketSetScribeRecipe extends AbstractPacket {
     public static final Type<PacketSetScribeRecipe> TYPE = new Type<>(ArsNouveau.prefix("set_scribe_recipe"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetScribeRecipe> CODEC = StreamCodec.ofMember(PacketSetScribeRecipe::toBytes, PacketSetScribeRecipe::new);
     BlockPos scribePos;

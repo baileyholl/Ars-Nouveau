@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 //TODO: Make relevant source methods final and defaulted in interface
 public abstract class AbstractSourceMachine extends ModdedTile implements ISourceTile, IWololoable {
 
@@ -39,7 +40,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
         this.sourceStorage = createDefaultStorage();
-        if(tag.contains(SOURCE_TAG)) {
+        if (tag.contains(SOURCE_TAG)) {
             this.sourceStorage.setSource(tag.getInt(SOURCE_TAG));
         }
         color = ParticleColor.fromInt(tag.getInt(COLOR_TAG));
@@ -52,7 +53,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         tag.putInt(COLOR_TAG, getColor().getColor());
     }
 
-    protected @NotNull SourceStorage createDefaultStorage(){
+    protected @NotNull SourceStorage createDefaultStorage() {
         return new SourceStorage(10000, 1000, 1000, 0) {
             public void onContentsChanged() {
                 AbstractSourceMachine.this.updateBlock();
@@ -70,7 +71,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     public boolean updateBlock() {
         if (level != null) {
             // force update the capability
-            BlockState state = level.getBlockState(worldPosition);
+            BlockState state = getBlockState();
             level.sendBlockUpdated(worldPosition, state, state, 3);
             setChanged();
             return true;
@@ -203,7 +204,10 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     @Override
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(this.getSourceStorage().getSource()));
+        int source = this.getSourceStorage().getSource();
+        if (source != 0) {
+            pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(source));
+        }
     }
 }
 

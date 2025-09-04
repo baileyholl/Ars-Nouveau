@@ -1,0 +1,26 @@
+{
+  "id": "ars_nouveau:repository_controller",
+  "order": 100,
+  "icon": "ars_nouveau:repository_controller",
+  "title": "Repository Catalog",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Repository Catalog",
+      "description": "Catalogs can insert and extract items from any adjacent and connected repository. Catalogs respect filters placed on repositories via item frames while inserting items, and will prioritize existing stacks of an item. Filter scrolls can be used on the Catalog, storing the filter and applying it to all connected repositories when interacted with directly.",
+      "icon": "ars_nouveau:repository_controller"
+    },
+    {
+      "description": "Catalogs are highly performant when used with the Storage Lectern and should be used over other big inventories or systems with many slots. Filters are not applied when items are extracted from other systems like a Hopper, and insertions via hopper will not respect the catalogs own filter, but will respect inserting into a filtered repository."
+    },
+    {
+      "recipe_1": "ars_nouveau:repository_controller"
+    },
+    {
+      "related": [
+        "ars_nouveau:repository",
+        "ars_nouveau:storage_lectern"
+      ]
+    }
+  ]
+}

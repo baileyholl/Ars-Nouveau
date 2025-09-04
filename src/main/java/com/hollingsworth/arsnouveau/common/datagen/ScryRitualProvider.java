@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScryRitualProvider extends SimpleDataProvider{
+public class ScryRitualProvider extends SimpleDataProvider {
 
     public List<ScryRecipeWrapper> recipes = new ArrayList<>();
 
@@ -39,11 +39,10 @@ public class ScryRitualProvider extends SimpleDataProvider{
         for (String ore : defaultOres) {
             addForgeOreRecipe(ore);
         }
-        recipes.add(new ScryRecipeWrapper(ArsNouveau.prefix( "amethyst_gems"), forgeItemTag("gems/amethyst"), forgeBlockTag("storage_blocks/amethyst")));
     }
 
     private void addForgeOreRecipe(String ore) {
-        recipes.add(new ScryRecipeWrapper(ArsNouveau.prefix( ore + "_ores"), forgeItemTag("ores/" + ore), forgeBlockTag("ores/" + ore)));
+        recipes.add(new ScryRecipeWrapper(ArsNouveau.prefix(ore + "_ores"), forgeItemTag("ores/" + ore), forgeBlockTag("ores/" + ore)));
     }
 
     private TagKey<Block> forgeBlockTag(String path) {
@@ -70,9 +69,9 @@ public class ScryRitualProvider extends SimpleDataProvider{
         return "Scry Ritual Datagen";
     }
 
-    public record ScryRecipeWrapper(ResourceLocation id, TagKey<Item> augment, TagKey<Block> highlight){
+    public record ScryRecipeWrapper(ResourceLocation id, TagKey<Item> augment, TagKey<Block> highlight) {
 
-        public ScryRitualRecipe recipe(){
+        public ScryRitualRecipe recipe() {
             return new ScryRitualRecipe(augment, highlight);
         }
     }

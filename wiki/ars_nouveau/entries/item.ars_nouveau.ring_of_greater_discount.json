@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:item.ars_nouveau.ring_of_greater_discount",
+  "order": 100,
+  "icon": "ars_nouveau:ring_of_greater_discount",
+  "title": "Ring of Greater Discount",
+  "category": "ars_nouveau:items",
+  "pages": [
+    {
+      "title": "Ring of Greater Discount",
+      "description": "Provides a slightly larger discount over the Lesser Ring of Discount.",
+      "icon": "ars_nouveau:ring_of_greater_discount"
+    },
+    {
+      "recipe_1": "ars_nouveau:ring_of_greater_discount"
+    }
+  ]
+}

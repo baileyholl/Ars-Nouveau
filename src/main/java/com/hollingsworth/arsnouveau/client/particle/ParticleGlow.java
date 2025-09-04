@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -55,6 +57,11 @@ public class ParticleGlow extends TextureSheetParticle {
 
 
     @Override
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
+        super.render(buffer, renderInfo, partialTicks);
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -67,10 +74,5 @@ public class ParticleGlow extends TextureSheetParticle {
 
         this.oRoll = roll;
         roll += 1.0f;
-    }
-
-    @Override
-    public boolean isAlive() {
-        return this.age < this.lifetime;
     }
 }

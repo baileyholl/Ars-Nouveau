@@ -15,13 +15,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class MobJarItemRenderer extends GeoItemRenderer<MobJarItem> {
     private static MobJarTile jarTile;
+
     public MobJarItemRenderer() {
         super(new GenericModel<>("mob_jar"));
     }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        if(transformType == ItemDisplayContext.GUI){
+        if (transformType == ItemDisplayContext.GUI) {
             pPackedLight = LightTexture.FULL_BRIGHT;
             pPackedOverlay = LightTexture.FULL_BRIGHT;
         }
@@ -29,14 +30,14 @@ public class MobJarItemRenderer extends GeoItemRenderer<MobJarItem> {
 
         jarTile = new MobJarTile(Minecraft.getInstance().player.getOnPos().above(), BlockRegistry.MOB_JAR.defaultBlockState());
         Entity entity = MobJarItem.fromItem(stack, Minecraft.getInstance().level);
-        if(entity == null)
+        if (entity == null)
             return;
         jarTile.setLevel(Minecraft.getInstance().level);
         jarTile.cachedEntity = entity;
         entity.setPos(Minecraft.getInstance().player.getOnPos().getX(), Minecraft.getInstance().player.getOnPos().getY() + 1, Minecraft.getInstance().player.getOnPos().getZ());
         pPoseStack.pushPose();
         pPoseStack.translate(0, .5, 0);
-        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(jarTile,  pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(jarTile, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
         pPoseStack.popPose();
     }
 }

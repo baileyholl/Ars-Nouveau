@@ -50,8 +50,8 @@ public class ArchfruitPod extends CocoaBlock implements ILightable {
 
     @Deprecated(since = "4.12.0", forRemoval = true)
     public ArchfruitPod(Supplier<Block> surviveBlock) {
-       this(BlockBehaviour.Properties.of().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
-       this.surviveBlock = surviveBlock;
+        this(BlockBehaviour.Properties.of().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
+        this.surviveBlock = surviveBlock;
     }
 
     public ArchfruitPod(TagKey<Block> surviveBlocks) {
@@ -105,7 +105,7 @@ public class ArchfruitPod extends CocoaBlock implements ILightable {
             BlockState state = world.getBlockState(blockHitResult.getBlockPos());
             world.setBlock(blockHitResult.getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 8 - stats.getBuffCount(AugmentDampen.INSTANCE)), 8)), 3);
             world.sendBlockUpdated(blockHitResult.getBlockPos(), state,
-                    state.setValue(SconceBlock.LIGHT_LEVEL,  Math.min(Math.max(0, 8 - stats.getBuffCount(AugmentDampen.INSTANCE)), 8)), 3);
+                    state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 8 - stats.getBuffCount(AugmentDampen.INSTANCE)), 8)), 3);
         }
     }
 }

@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:spellcasting",
+  "order": 4,
+  "icon": "ars_nouveau:novice_spell_book",
+  "title": "4 - Spellcasting",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "4 - Spellcasting",
+      "description": "To use a spell, select your Spell Book on the inventory bar and right-click to cast it.  Your active spell is shown above your Mana bar. Press [X] to swap to your next spell and [Z] to swap your previous spell. Press [V] to open a radial menu that allows you to quickly swap between spells on your book. Each spell may also be hotkeyed individually via the Key Bind menu.",
+      "icon": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "description": "If the spell fails to cast, check to make sure that:  You have enough Mana to cast the spell.  The spell begins with a Form Glyph and has at least one Effect Glyph."
+    }
+  ]
+}

@@ -19,9 +19,9 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.block.SourceBerryBush.AGE;
 
-public class HarvestBerryState extends TravelToPosState{
+public class HarvestBerryState extends TravelToPosState {
     public HarvestBerryState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
-        super(starbuncle, behavior,target, new DecideStarbyActionState(starbuncle, behavior));
+        super(starbuncle, behavior, target, new DecideStarbyActionState(starbuncle, behavior));
     }
 
     @Override
@@ -35,8 +35,8 @@ public class HarvestBerryState extends TravelToPosState{
             level.playSound(null, targetPos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + level.random.nextFloat() * 0.4F);
             level.setBlock(targetPos, level.getBlockState(targetPos).setValue(AGE, 1), 2);
             starbuncle.addGoalDebug(this, new DebugEvent("PickedBerry", "Popped berries at " + targetPos.getX() + "," + targetPos.getY() + "," + targetPos.getZ()));
-            for(ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, starbuncle.getBoundingBox().inflate(2.0D))){
-                if(itemEntity.getItem().getItem() == BlockRegistry.SOURCEBERRY_BUSH.asItem()){
+            for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, starbuncle.getBoundingBox().inflate(2.0D))) {
+                if (itemEntity.getItem().getItem() == BlockRegistry.SOURCEBERRY_BUSH.asItem()) {
                     starbuncle.pickUpItem(itemEntity);
                     break;
                 }

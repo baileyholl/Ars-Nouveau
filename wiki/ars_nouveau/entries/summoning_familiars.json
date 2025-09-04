@@ -1,0 +1,26 @@
+{
+  "id": "ars_nouveau:summoning_familiars",
+  "order": -1,
+  "icon": "ars_nouveau:ritual_binding",
+  "title": "Summoning Familiars",
+  "category": "ars_nouveau:familiars",
+  "pages": [
+    {
+      "title": "Summoning Familiars",
+      "description": "To begin summoning familiars, you will need to obtain a Bound Script of the entity you wish to befriend. These can be obtained by performing the Ritual of Binding near a relevant entity. See the full list of eligible entities in the Familiars section. Once you have obtained a Bound Script, use it to learn the familiar.",
+      "icon": "ars_nouveau:ritual_binding"
+    },
+    {
+      "description": "Once you have obtained a bound script, you may access your list of familiars from your Spellbook crafting menu in the Familiars section. Selecting a Familiar will summon it in the world and give you Familiar Sickness, preventing you from summoning another one for a short time. To obtain your first familiar, perform the Ritual of Binding near a Starbuncle. Familiars are bound to the player and cannot be transferred between books."
+    },
+    {
+      "recipe_1": "ars_nouveau:ritual_binding"
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.ritual_brazier",
+        "ars_nouveau:ritual_binding"
+      ]
+    }
+  ]
+}

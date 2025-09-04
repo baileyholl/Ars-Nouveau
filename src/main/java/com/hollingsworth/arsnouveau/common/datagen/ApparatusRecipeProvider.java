@@ -3,15 +3,13 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +45,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     }
 
     public List<ApparatusRecipeBuilder.RecipeWrapper<? extends EnchantingApparatusRecipe>> recipes = new ArrayList<>();
+
     public ApparatusRecipeBuilder builder() {
         return ApparatusRecipeBuilder.builder();
     }
@@ -859,7 +858,8 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
 
         List<Ingredient> spellWriteList = new ArrayList<>();
         spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
-        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("spell_write"), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix(RecipeRegistry.SPELL_WRITE_RECIPE_ID), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix(RecipeRegistry.PRESTIDIGITATION_RECIPE_ID), new PrestidigitationRecipe(List.of(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()), Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE)), 0), PrestidigitationRecipe.CODEC));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
@@ -1069,12 +1069,12 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(4, Tags.Items.CHESTS).build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.WARP_SCROLL,2)
+                .withResult(ItemsRegistry.WARP_SCROLL, 2)
                 .withReagent(ItemsRegistry.WARP_SCROLL)
                 .withPedestalItem(ItemsRegistry.WARP_SCROLL)
                 .keepNbtOfReagent(true)
                 .withSourceCost(1000)
-                .withId(ArsNouveau.prefix( "warp_scroll_copy"))
+                .withId(ArsNouveau.prefix("warp_scroll_copy"))
                 .build());
         addRecipe(builder().withResult(BlockRegistry.SPELL_SENSOR).withReagent(Blocks.SCULK_SENSOR).build());
         addRecipe(builder().withReagent(ItemsRegistry.RING_OF_POTENTIAL).withResult(ItemsRegistry.JUMP_RING)
@@ -1096,6 +1096,25 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .build());
 
         addRecipe(builder().withResult(ItemsRegistry.ALAKARKINOS_CHARM).withReagent(ItemsRegistry.ALAKARKINOS_SHARD).withPedestalItem(Items.BRUSH).withPedestalItem(3, Ingredient.of(ItemTags.DECORATED_POT_SHERDS)).build());
+
+        addRecipe(builder().withResult(ItemsRegistry.ENCHANTERS_GAUNTLET)
+                .withReagent(Ingredient.of(Tags.Items.LEATHERS))
+                .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
+                .build());
+        addRecipe(builder().withResult(ItemsRegistry.ENCHANTERS_FISHING_ROD)
+                .withReagent(Items.FISHING_ROD)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .keepNbtOfReagent(true)
+                .build());
+
+        addRecipe(builder().withResult(BlockRegistry.DECOR_BLOSSOM)
+                .withReagent(Items.SPORE_BLOSSOM)
+                .withPedestalItem(1, Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE))
+                .build());
 
     }
 

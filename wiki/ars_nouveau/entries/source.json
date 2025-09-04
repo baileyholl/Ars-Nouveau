@@ -1,0 +1,25 @@
+{
+  "id": "ars_nouveau:source",
+  "order": 8,
+  "icon": "ars_nouveau:source_jar",
+  "title": "8 - Source",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "8 - Source",
+      "description": "Source is a magical resource used for many purposes such as speeding up the Imbuement Chamber, fueling devices, powering magical helpers, creating portals, or fueling powerful Enchanting Apparatus recipes.  Sourcelinks are specialized artifacts that can collect and concentrate Source from the world into Source Jars. Source Relays can be used to transfer",
+      "icon": "ars_nouveau:source_jar"
+    },
+    {
+      "description": "Source over large distances between jars.  The Agronomic and Mycelial Sourcelinks are good early options for building up your Source supply."
+    },
+    {
+      "related": [
+        "ars_nouveau:block.ars_nouveau.source_jar",
+        "ars_nouveau:block.ars_nouveau.agronomic_sourcelink",
+        "ars_nouveau:block.ars_nouveau.mycelial_sourcelink",
+        "ars_nouveau:block.ars_nouveau.relay"
+      ]
+    }
+  ]
+}

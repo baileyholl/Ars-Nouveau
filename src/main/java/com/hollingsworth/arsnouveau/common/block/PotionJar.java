@@ -51,7 +51,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
-    public PotionJar(){
+    public PotionJar() {
         this(ModBlock.defaultProperties().noOcclusion());
     }
 
@@ -79,26 +79,26 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
 
         if (stack.getItem() == Items.POTION && potion != null && potion != PotionContents.EMPTY) {
-            if (tile.canAccept(potion,100)) {
+            if (tile.canAccept(potion, 100)) {
                 tile.add(potion, 100);
-                if (!player.isCreative()) {
+                if (!player.hasInfiniteMaterials()) {
                     stack.shrink(1);
                     player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                 }
             }
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
-        }else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
+        } else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionContents contents = tile.getData();
             potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
-            if(ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)){
+            if (ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
                 tile.remove(100);
             }
-        }else if(stack.getItem() == Items.ARROW && tile.getAmount() >= 10){
+        } else if (stack.getItem() == Items.ARROW && tile.getAmount() >= 10) {
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
             PotionContents contents = tile.getData();
             potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
-            if(ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
+            if (ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
                 tile.remove(10);
             }
         }
@@ -124,11 +124,11 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
         var potion = stack.get(DataComponentRegistry.POTION_JAR);
-        if(potion == null)
+        if (potion == null)
             return;
         var fill = potion.fill();
         var data = potion.contents();
-        if(!data.equals(PotionContents.EMPTY)) {
+        if (!data.equals(PotionContents.EMPTY)) {
             ItemStack potionItem = new ItemStack(Items.POTION);
             potionItem.set(DataComponents.POTION_CONTENTS, data);
             tooltip.add(Component.translatable(potionItem.getDescriptionId()));
@@ -142,7 +142,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
-   @NotNull
+    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -153,7 +153,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     @Override
     public void tick(BlockState p_222945_, ServerLevel level, BlockPos pos, RandomSource p_222948_) {
         super.tick(p_222945_, level, pos, p_222948_);
-        if(level.getBlockEntity(pos) instanceof PotionJarTile jarTile){
+        if (level.getBlockEntity(pos) instanceof PotionJarTile jarTile) {
             jarTile.updateBlock();
         }
     }

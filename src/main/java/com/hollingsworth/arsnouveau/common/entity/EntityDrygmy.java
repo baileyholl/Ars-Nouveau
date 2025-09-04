@@ -102,7 +102,6 @@ public class EntityDrygmy extends MagicalBuddyMob implements GeoEntity, ITooltip
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
-        super.die(source);
     }
 
     @Override
@@ -111,12 +110,23 @@ public class EntityDrygmy extends MagicalBuddyMob implements GeoEntity, ITooltip
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
+        if (!isTamed() && !this.entityData.get(BEING_TAMED) && stack.is(ItemTagProvider.WILDEN_DROP_TAG)) {
+            entityData.set(BEING_TAMED, true);
+            if (!player.hasInfiniteMaterials()) {
+                stack.shrink(1);
+            }
+
+            return InteractionResult.SUCCESS;
+        }
+
         if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
             if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
             this.entityData.set(COLOR, color.getName());
-            player.getMainHandItem().shrink(1);
+            if (!player.hasInfiniteMaterials()) {
+                player.getMainHandItem().shrink(1);
+            }
             return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
@@ -140,7 +150,8 @@ public class EntityDrygmy extends MagicalBuddyMob implements GeoEntity, ITooltip
             if (entity == null || entity.isRemoved())
                 return;
             Vec3 vec = entity.position;
-            level.addParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
+            level.addAlwaysVisibleParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
+                    false,
                     (float) (vec.x) - Math.sin((ClientInfo.ticksInGame) / 8D),
                     (float) (vec.y) + Math.sin(ClientInfo.ticksInGame / 5d) / 8D + 0.5,
                     (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D),
@@ -306,7 +317,7 @@ public class EntityDrygmy extends MagicalBuddyMob implements GeoEntity, ITooltip
         tag.putInt("cooldown", channelCooldown);
         tag.putInt("taming", tamingTime);
         tag.putBoolean("beingTamed", this.entityData.get(BEING_TAMED));
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
     }

@@ -76,9 +76,9 @@ public class ScryEvents {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
         ClientLevel world = Minecraft.getInstance().level;
 
-        if(ClientInfo.highlightTicks > 0){
+        if (ClientInfo.highlightTicks > 0) {
             ClientInfo.highlightTicks--;
-            for(ColorPos pos : ClientInfo.highlightPositions){
+            for (ColorPos pos : ClientInfo.highlightPositions) {
                 double xzOffset = 0.15;
                 double xOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4) + 0.5;
                 double zOffset = ParticleUtil.inRange(-xzOffset / 4, xzOffset / 4) + 0.5;
@@ -93,9 +93,10 @@ public class ScryEvents {
                 zSpeedOffset = ParticleUtil.inRange(-0.01f, 0.01f);
                 Vec3 renderPos = pos.pos;
                 ParticleColor color = pos.color;
-                world.addParticle(
+                world.addAlwaysVisibleParticle(
                         GlowParticleData.createData(color, true),
-                        renderPos.x, renderPos.y  + ParticleUtil.inRange(-0.00, 0.1), renderPos.z,
+                        false,
+                        renderPos.x, renderPos.y + ParticleUtil.inRange(-0.00, 0.1), renderPos.z,
                         xSpeedOffset, ySpeedOffset, zSpeedOffset);
             }
         }
@@ -137,8 +138,9 @@ public class ScryEvents {
                         rand.nextInt(255));
             }
 
-            world.addParticle(
+            world.addAlwaysVisibleParticle(
                     GlowParticleData.createData(color, true),
+                    false,
                     renderPos.getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), renderPos.getY() + 0.2 + ParticleUtil.inRange(-0.1, 0.1), renderPos.getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
                     0, 0.03f, 0);
         }

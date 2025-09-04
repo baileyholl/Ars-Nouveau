@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.shader;
 
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.resources.ResourceLocation;
 
 /**

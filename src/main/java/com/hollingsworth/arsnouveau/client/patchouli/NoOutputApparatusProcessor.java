@@ -18,10 +18,10 @@ public class NoOutputApparatusProcessor implements IComponentProcessor {
     RecipeHolder<EnchantingApparatusRecipe> holder;
 
     @Override
-    public void setup(Level level,  IVariableProvider variables) {
+    public void setup(Level level, IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         String recipeID = variables.get("recipe", level.registryAccess()).asString();
-        holder =  (RecipeHolder<EnchantingApparatusRecipe>)manager.byKey(ResourceLocation.tryParse(recipeID)).orElse(null);
+        holder = (RecipeHolder<EnchantingApparatusRecipe>) manager.byKey(ResourceLocation.tryParse(recipeID)).orElse(null);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class NoOutputApparatusProcessor implements IComponentProcessor {
         if (key.equals("recipe")) {
             return IVariable.wrap(holder.id().toString(), level.registryAccess());
         }
-        if(recipe instanceof ITextOutput textOutput && key.equals("output")){
+        if (recipe instanceof ITextOutput textOutput && key.equals("output")) {
             return IVariable.wrap(textOutput.getOutputComponent().getString(), level.registryAccess());
         }
         if (key.equals("footer")) {

@@ -56,7 +56,7 @@ public abstract class GoToPosGoal<T extends StarbyBehavior> extends ExtendedRang
     @Override
     public void tick() {
         super.tick();
-        if(targetPos == null)
+        if (targetPos == null)
             return;
         if (this.ticksRunning % 100 == 0 && !isDestinationStillValid(targetPos)) {
             starbuncle.addDebugEvent(new DebugEvent("became_invalid", "Invalid position " + targetPos.toString()));
@@ -64,7 +64,7 @@ public abstract class GoToPosGoal<T extends StarbyBehavior> extends ExtendedRang
             return;
         }
 
-        if(BlockUtil.distanceFrom(starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D + this.extendedRange && isDestinationStillValid(targetPos)){
+        if (BlockUtil.distanceFrom(starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D + this.extendedRange && isDestinationStillValid(targetPos)) {
             isDone = onDestinationReached();
             return;
         }

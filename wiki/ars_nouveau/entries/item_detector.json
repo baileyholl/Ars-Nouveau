@@ -1,0 +1,30 @@
+{
+  "id": "ars_nouveau:item_detector",
+  "order": 100,
+  "icon": "ars_nouveau:item_detector",
+  "title": "Display Case",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Display Case",
+      "description": "A Display Case can be configured to output a redstone signal when a certain level of inventory is reached. To set the item for tracking, use an item on the case. Interact with the block to increase the count, and punch to decrease. To link to an inventory, Dominion Wand an inventory to the display case. Wanding while sneaking will invert if the signal outputs below or greater than the set count.",
+      "icon": "ars_nouveau:item_detector"
+    },
+    {
+      "description": "If a Filter Scroll is given to the Display Case, it will count all items that match the filter."
+    },
+    {
+      "recipe_1": "ars_nouveau:item_detector"
+    },
+    {
+      "related": [
+        "ars_nouveau:bookwyrm_charm",
+        "ars_nouveau:storage_lectern",
+        "ars_nouveau:item.ars_nouveau.dominion_wand",
+        "ars_nouveau:deny_scroll",
+        "ars_nouveau:mimic_scroll",
+        "ars_nouveau:allow_scroll"
+      ]
+    }
+  ]
+}

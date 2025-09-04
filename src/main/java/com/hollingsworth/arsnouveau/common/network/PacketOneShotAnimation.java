@@ -10,7 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketOneShotAnimation extends AbstractPacket{
+public class PacketOneShotAnimation extends AbstractPacket {
     public static final Type<PacketOneShotAnimation> TYPE = new Type<>(ArsNouveau.prefix("one_shot_animation"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketOneShotAnimation> CODEC = StreamCodec.ofMember(PacketOneShotAnimation::encode, PacketOneShotAnimation::decode);

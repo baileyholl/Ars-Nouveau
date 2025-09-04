@@ -29,7 +29,7 @@ public class LootItemRandomChanceWithEnchantedBonusConditionMixin {
             return original.call(enchantment, attacker);
         }
         int perkLooting = (int) attacker.getAttributeValue(PerkAttributes.DRYGMY);
-        int spellLuck = context.getParam(LootContextParams.DAMAGE_SOURCE) instanceof DamageUtil.SpellDamageSource spellDamageSource ? spellDamageSource.getLuckLevel() : 0;
+        int spellLuck = context.getParamOrNull(LootContextParams.DAMAGE_SOURCE) instanceof DamageUtil.SpellDamageSource spellDamageSource ? spellDamageSource.getLuckLevel() : 0;
         return Math.max(spellLuck, original.call(enchantment, attacker)) + perkLooting;
     }
 

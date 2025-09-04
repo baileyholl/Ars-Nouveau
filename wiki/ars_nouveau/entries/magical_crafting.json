@@ -1,0 +1,25 @@
+{
+  "id": "ars_nouveau:magical_crafting",
+  "order": 9,
+  "icon": "ars_nouveau:imbuement_chamber",
+  "title": "9 - Magical Crafting",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "9 - Magical Crafting",
+      "description": "The Imbuement Chamber allows the conversion of Amethyst Shards or Lapis Lazuli into Source Gems. By placing three Arcane Pedestals bearing certain items adjacent to the chamber, Source Gems can be imbued further into Essences which are used in many Glyph recipes.  Placing an Enchanting Apparatus on top of an Arcane Core allows the crafting of",
+      "icon": "ars_nouveau:imbuement_chamber"
+    },
+    {
+      "description": "essentials such as Magebloom Seeds, magical equipment, and charms to summon magical helpers. It can also directly enchant your gear with enchantments of your choice.  The Alteration Table allows for slotting in various Threads into magical armor that grant special properties while worn."
+    },
+    {
+      "related": [
+        "ars_nouveau:imbuement_chamber",
+        "ars_nouveau:enchanting_apparatus",
+        "ars_nouveau:armor",
+        "ars_nouveau:magebloom_crop"
+      ]
+    }
+  ]
+}

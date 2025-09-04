@@ -81,7 +81,7 @@ public class AnnotatedCodex extends ModItem {
                     var newData = new CodexData(pPlayer.getUUID(), pPlayer.getName().getString(), playerCap.getKnownGlyphs().stream().map(AbstractSpellPart::getRegistryName).toList());
                     stack.set(DataComponentRegistry.CODEX_DATA, newData);
 
-                    PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.updated_codex"));
+                    PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.updated_codex", difference.size()));
                 }
             } else {
                 PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.codex_up_to_date"));
@@ -95,7 +95,9 @@ public class AnnotatedCodex extends ModItem {
                 }
             }
             if (numUnlocked > 0) {
-                stack.shrink(1);
+                if (!pPlayer.hasInfiniteMaterials()) {
+                    stack.shrink(1);
+                }
                 PortUtil.sendMessageNoSpam(pPlayer, Component.translatable("ars_nouveau.consumed_codex", numUnlocked));
                 CapabilityRegistry.EventHandler.syncPlayerCap(pPlayer);
             } else {

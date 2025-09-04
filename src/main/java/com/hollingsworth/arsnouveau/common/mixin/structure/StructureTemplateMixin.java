@@ -21,11 +21,11 @@ public class StructureTemplateMixin {
             at = @At(value = "HEAD")
     )
     private void ars_nouveau_preventAutoWaterlogging(ServerLevelAccessor serverLevelAccessor, BlockPos blockPos1,
-                                                              BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
-                                                              RandomSource random, int flag, CallbackInfoReturnable<Boolean> cir) {
+                                                     BlockPos blockPos2, StructurePlaceSettings structurePlaceSettings,
+                                                     RandomSource random, int flag, CallbackInfoReturnable<Boolean> cir) {
 
-        if(structurePlaceSettings.getProcessors().stream().anyMatch(processor ->
-                ((StructureProcessorAccessor)processor).callGetType() == StructureRegistry.WATERLOGGING_FIX_PROCESSOR.get())) {
+        if (structurePlaceSettings.getProcessors().stream().anyMatch(processor ->
+                ((StructureProcessorAccessor) processor).callGetType() == StructureRegistry.WATERLOGGING_FIX_PROCESSOR.get())) {
             structurePlaceSettings.setLiquidSettings(LiquidSettings.IGNORE_WATERLOGGING);
         }
     }

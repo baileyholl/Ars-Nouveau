@@ -14,7 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketANEffect extends AbstractPacket{
+public class PacketANEffect extends AbstractPacket {
     public static final Type<PacketANEffect> TYPE = new Type<>(ArsNouveau.prefix("effect"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketANEffect> CODEC = StreamCodec.ofMember(PacketANEffect::toBytes, PacketANEffect::decode);
     private final EffectType type;
@@ -95,7 +95,9 @@ public class PacketANEffect extends AbstractPacket{
                     double d0 = x + 0.5; //+ world.rand.nextFloat();
                     double d1 = y + 1.2;//+ world.rand.nextFloat() ;
                     double d2 = z + .5; //+ world.rand.nextFloat();
-                    world.addParticle(GlowParticleData.createData(color), d0, d1, d2,
+                    world.addAlwaysVisibleParticle(GlowParticleData.createData(color),
+                            true,
+                            d0, d1, d2,
                             (world.random.nextFloat() - 0.5) / 3.0,
                             (world.random.nextFloat() - 0.5) / 3.0,
                             (world.random.nextFloat() - 0.5) / 3.0);
@@ -105,11 +107,12 @@ public class PacketANEffect extends AbstractPacket{
 
                 int numParticles = 8;
                 for (int i = 0; i < numParticles; i++) {
-                    world.addParticle(HelixParticleData.createData(color, 0.25f, 1.00f, 50, i * 360F / numParticles), x + 0.5, y + 0.1 * i, z + 0.5, 0, 0, 0);
+                    world.addAlwaysVisibleParticle(HelixParticleData.createData(color, 0.25f, 1.00f, 50, i * 360F / numParticles), true, x + 0.5, y + 0.1 * i, z + 0.5, 0, 0, 0);
                 }
             }
         }
     }
+
     public enum EffectType {
         TIMED_GLOW(4), //dest xyz num_particles
         TIMED_HELIX(0),

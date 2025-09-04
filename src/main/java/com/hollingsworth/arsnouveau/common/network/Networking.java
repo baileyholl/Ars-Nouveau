@@ -21,10 +21,12 @@ public class Networking {
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sets the current network version
         final PayloadRegistrar reg = event.registrar("1");
-        reg.playToClient(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC,  Networking::handle);
+        reg.playToClient(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC, Networking::handle);
         reg.playToClient(ChangeBiomePacket.TYPE, ChangeBiomePacket.CODEC, Networking::handle);
         reg.playToServer(PacketSetLauncher.TYPE, PacketSetLauncher.CODEC, Networking::handle);
-        reg.playToServer(ClientToServerStoragePacket.TYPE, ClientToServerStoragePacket.CODEC, Networking::handle);
+        reg.playToServer(ClientSearchPacket.TYPE, ClientSearchPacket.CODEC, Networking::handle);
+        reg.playToServer(ClientSlotClick.TYPE, ClientSlotClick.STREAM_CODEC, Networking::handle);
+        reg.playToServer(ClientTransferHandlerPacket.TYPE, ClientTransferHandlerPacket.CODEC, Networking::handle);
         reg.playBidirectional(SetTerminalSettingsPacket.TYPE, SetTerminalSettingsPacket.CODEC, new DirectionalPayloadHandler<>((msg, ctx) -> ClientMessageHandler.handleClient(msg, ctx), (msg, ctx) -> msg.onServerReceived(ctx.player().getServer(), (ServerPlayer) ctx.player())));
         reg.playToClient(HighlightAreaPacket.TYPE, HighlightAreaPacket.CODEC, Networking::handle);
         reg.playToClient(NotEnoughManaPacket.TYPE, NotEnoughManaPacket.CODEC, Networking::handle);
@@ -40,6 +42,7 @@ public class Networking {
         reg.playToServer(PacketHotkeyPressed.TYPE, PacketHotkeyPressed.CODEC, Networking::handle);
         reg.playToClient(PacketJoinedServer.TYPE, PacketJoinedServer.CODEC, Networking::handle);
         reg.playToClient(PacketInitDocs.TYPE, PacketInitDocs.CODEC, Networking::handle);
+        reg.playToClient(PacketExportDocs.TYPE, PacketExportDocs.CODEC, Networking::handle);
         reg.playToServer(PacketGenericClientMessage.TYPE, PacketGenericClientMessage.CODEC, Networking::handle);
         reg.playToServer(PacketMountCamera.TYPE, PacketMountCamera.CODEC, Networking::handle);
         reg.playToClient(PacketNoSpamChatMessage.TYPE, PacketNoSpamChatMessage.CODEC, Networking::handle);
@@ -55,7 +58,7 @@ public class Networking {
         reg.playToServer(PacketSummonDog.TYPE, PacketSummonDog.CODEC, Networking::handle);
         reg.playToClient(PacketSyncLitEntities.TYPE, PacketSyncLitEntities.CODEC, Networking::handle);
         reg.playToClient(PacketSyncPlayerCap.TYPE, PacketSyncPlayerCap.CODEC, Networking::handle);
-        reg.playToClient(PacketSyncTag.TYPE , PacketSyncTag.CODEC, Networking::handle);
+        reg.playToClient(PacketSyncTag.TYPE, PacketSyncTag.CODEC, Networking::handle);
         reg.playToClient(PacketTimedEvent.TYPE, PacketTimedEvent.CODEC, Networking::handle);
         reg.playToServer(PacketToggleFamiliar.TYPE, PacketToggleFamiliar.CODEC, Networking::handle);
         reg.playToClient(PacketToggleLight.TYPE, PacketToggleLight.CODEC, Networking::handle);
@@ -73,9 +76,14 @@ public class Networking {
         reg.playToClient(UpdateStorageItemsPacket.TYPE, UpdateStorageItemsPacket.CODEC, Networking::handle);
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateParticleTimeline.TYPE, PacketUpdateParticleTimeline.CODEC, Networking::handle);
+        reg.playToServer(PacketCastSpell.TYPE, PacketCastSpell.CODEC, Networking::handle);
+        reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
+        reg.playToClient(TickEmitterPacket.TYPE, TickEmitterPacket.CODEC, Networking::handle);
+        reg.playToClient(PacketPrestidigitation.TYPE, PacketPrestidigitation.CODEC, Networking::handle);
     }
 
-    private static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
+    public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
         if (ctx.flow().getReceptionSide() == LogicalSide.SERVER) {
             handleServer(message, ctx);
         } else {
@@ -100,9 +108,7 @@ public class Networking {
 
     public static void sendToNearbyClient(Level world, BlockPos pos, CustomPacketPayload toSend) {
         if (world instanceof ServerLevel ws) {
-            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
-                    .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
-                    .forEach(p -> Networking.sendToPlayerClient(toSend, p));
+            PacketDistributor.sendToPlayersTrackingChunk(ws, new ChunkPos(pos), toSend);
         }
     }
 

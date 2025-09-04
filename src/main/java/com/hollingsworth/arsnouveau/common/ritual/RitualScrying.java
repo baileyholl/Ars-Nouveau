@@ -46,7 +46,8 @@ public class RitualScrying extends AbstractRitual {
                     Optional<ScryRitualRecipe> hasRecipe = ScryRitualRegistry.getRecipes().stream().filter(recipe -> recipe.matches(new SingleRecipeInput(item), getWorld())).findFirst();
                     IScryer scryer = null;
                     if (hasRecipe.isPresent()) scryer = new TagScryer(hasRecipe.get().highlight());
-                    else if (item.getItem() instanceof BlockItem blockItem) scryer = new SingleBlockScryer(blockItem.getBlock());
+                    else if (item.getItem() instanceof BlockItem blockItem)
+                        scryer = new SingleBlockScryer(blockItem.getBlock());
                     if (scryer != null) {
                         RitualScrying.grantScrying(playerEntity, 60 * 20 * 5 * modifier, scryer);
                     }
@@ -58,7 +59,7 @@ public class RitualScrying extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.SCRYING);
+        return ArsNouveau.prefix(RitualLib.SCRYING);
     }
 
     public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer) {

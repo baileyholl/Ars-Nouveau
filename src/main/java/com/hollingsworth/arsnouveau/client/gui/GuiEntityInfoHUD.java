@@ -20,7 +20,9 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -50,20 +52,18 @@ public class GuiEntityInfoHUD {
         HitResult objectMouseOver = mc.hitResult;
         List<Component> tooltip = new ArrayList<>();
         Object hovering = null;
-        if(objectMouseOver instanceof BlockHitResult hitResult){
+        if (objectMouseOver instanceof BlockHitResult hitResult) {
             hovering = hitResult.getBlockPos();
-            if(mc.level.getBlockEntity(hitResult.getBlockPos()) instanceof ITooltipProvider iTooltipProvider){
+            if (mc.level.getBlockEntity(hitResult.getBlockPos()) instanceof ITooltipProvider iTooltipProvider) {
                 iTooltipProvider.getTooltip(tooltip);
             }
-        }else if(objectMouseOver instanceof EntityHitResult result){
+        } else if (objectMouseOver instanceof EntityHitResult result) {
             if (result.getEntity() instanceof ITooltipProvider iTooltipProvider) {
                 iTooltipProvider.getTooltip(tooltip);
             }
             if (result.getEntity() instanceof ItemFrame frame) {
                 ItemScrollData data = frame.getItem().getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
-                for(ItemStack i : data.getItems()){
-                    tooltip.add(i.getHoverName());
-                }
+                data.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL);
             }
             hovering = result.getEntity();
         }
@@ -117,13 +117,14 @@ public class GuiEntityInfoHUD {
             colorBorderTop.scaleAlpha(fade);
             colorBorderBot.scaleAlpha(fade);
         }
-        drawHoveringText(ItemStack.EMPTY, graphics, tooltip,  posX, posY, width, height, -1, colorBackground.getRGB(),
+        drawHoveringText(ItemStack.EMPTY, graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
         poseStack.popPose();
     }
+
     public static final Color VANILLA_TOOLTIP_BORDER_1 = new Color(0x50_5000ff, true);
     public static final Color VANILLA_TOOLTIP_BORDER_2 = new Color(0x50_28007f, true);
-    public static final Color VANILLA_TOOLTIP_BACKGROUND =  new Color(0xf0_100010, true);
+    public static final Color VANILLA_TOOLTIP_BACKGROUND = new Color(0xf0_100010, true);
 
 
     public static void drawHoveringText(@NotNull final ItemStack stack, GuiGraphics graphics,
@@ -255,8 +256,7 @@ public class GuiEntityInfoHUD {
 
             if (lineNumber + 1 == titleLinesCount)
                 tooltipY += 2;
-
-            tooltipY += 10;
+            tooltipY += line == null ? 10 : line.getHeight();
         }
         renderType.endBatch();
         pStack.popPose();

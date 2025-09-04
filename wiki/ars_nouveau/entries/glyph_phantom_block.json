@@ -1,0 +1,18 @@
+{
+  "id": "ars_nouveau:glyph_phantom_block",
+  "order": 100,
+  "icon": "ars_nouveau:glyph_phantom_block",
+  "title": "Conjure Mageblock",
+  "category": "ars_nouveau:glyphs_tier_one",
+  "pages": [
+    {
+      "title": "Conjure Mageblock",
+      "description": "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. Dispelling this block will destroy it instantly. Casting on an entity will create blocks around them in the upwards direction.",
+      "icon": "ars_nouveau:glyph_phantom_block",
+      "tier": 1
+    },
+    {
+      "recipe_1": "ars_nouveau:glyph_phantom_block"
+    }
+  ]
+}

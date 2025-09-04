@@ -1,0 +1,25 @@
+{
+  "id": "ars_nouveau:spell_casting",
+  "order": 1,
+  "icon": "ars_nouveau:novice_spell_book",
+  "title": "1 - Spells",
+  "category": "ars_nouveau:getting_started",
+  "pages": [
+    {
+      "title": "1 - Spells",
+      "description": "Ars Nouveau grants aspiring wizards the ability to craft powerful spells. Through creative spellcrafting, you can vanquish foes, reshape the world, automate tasks, create spectacles, and so much more!  To begin spellcasting, you will need to craft a Novice’s Spell Book which will allow you to create, store, and cast spells using Mana.",
+      "icon": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "description": "Upgrading your Spell Book, learning new Glyphs, and crafting magical equipment will further enhance your ability to cast new and more powerful spells."
+    },
+    {
+      "recipe_1": "ars_nouveau:novice_spell_book"
+    },
+    {
+      "related": [
+        "ars_nouveau:spell_books"
+      ]
+    }
+  ]
+}

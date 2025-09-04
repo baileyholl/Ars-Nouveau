@@ -1,0 +1,50 @@
+{
+  "id": "ars_nouveau:imbuement_chamber",
+  "order": 1,
+  "icon": "ars_nouveau:imbuement_chamber",
+  "title": "Imbuement Chamber",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Imbuement Chamber",
+      "description": "Imbues items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be",
+      "icon": "ars_nouveau:imbuement_chamber"
+    },
+    {
+      "description": "consumed."
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_chamber"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_lapis"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_amethyst"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_amethyst_block"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_fire_essence"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_earth_essence"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_water_essence"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_air_essence"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_abjuration_essence"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_conjuration_essence"
+    },
+    {
+      "recipe_1": "ars_nouveau:imbuement_manipulation_essence"
+    }
+  ]
+}

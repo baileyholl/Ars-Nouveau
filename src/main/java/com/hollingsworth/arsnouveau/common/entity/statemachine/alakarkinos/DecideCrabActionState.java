@@ -12,23 +12,23 @@ public class DecideCrabActionState extends CrabState {
 
     @Override
     public @Nullable CrabState tick() {
-        if(!alakarkinos.tamed || alakarkinos.getEntityData().get(Alakarkinos.HOME).isEmpty()){
+        if (!alakarkinos.tamed || alakarkinos.getEntityData().get(Alakarkinos.HOME).isEmpty()) {
             return null;
         }
 
-        if(!alakarkinos.getEntityData().get(Alakarkinos.HAS_HAT)){
+        if (!alakarkinos.getEntityData().get(Alakarkinos.HAS_HAT)) {
             return new GetHatState(alakarkinos);
         }
 
-        if(alakarkinos.needSource() && alakarkinos.level.getGameTime() % 20 == 0){
+        if (alakarkinos.needSource() && alakarkinos.level.getGameTime() % 20 == 0) {
             var result = SourceUtil.takeSourceMultipleWithParticles(alakarkinos.getHome(), alakarkinos.blockPosition().above(), alakarkinos.level, 5, Config.ALAKARKINOS_SOURCE_COST.get());
 
-            if(result != null ){
+            if (result != null) {
                 alakarkinos.setNeedSource(false);
             }
         }
 
-        if(!alakarkinos.needSource() && alakarkinos.findBlockCooldown <= 0){
+        if (!alakarkinos.needSource() && alakarkinos.findBlockCooldown <= 0) {
             return new FindBlockState(alakarkinos);
         }
 

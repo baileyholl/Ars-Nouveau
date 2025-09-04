@@ -13,11 +13,11 @@ public class BuddingConversionRegistry {
 
     private static List<BuddingConversionRecipe> RECIPES = new ArrayList<>();
 
-    public static List<BuddingConversionRecipe> getRecipes(){
+    public static List<BuddingConversionRecipe> getRecipes() {
         return Collections.unmodifiableList(RECIPES);
     }
 
-    public static void reloadBuddingConversionRecipes(RecipeManager recipeManager){
+    public static void reloadBuddingConversionRecipes(RecipeManager recipeManager) {
         RECIPES = new ArrayList<>();
         List<BuddingConversionRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.BUDDING_CONVERSION_TYPE.get()).stream().map(RecipeHolder::value).toList();
         RECIPES.addAll(recipes);

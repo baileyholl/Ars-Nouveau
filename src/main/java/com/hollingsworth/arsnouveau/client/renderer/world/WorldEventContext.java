@@ -10,13 +10,11 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
  * Main class for handling world rendering.
  * Also holds all possible values which may be needed during rendering.
  */
-public class WorldEventContext
-{
+public class WorldEventContext {
     public static final WorldEventContext INSTANCE = new WorldEventContext();
 
-//    public static MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
-    private WorldEventContext()
-    {
+    //    public static MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+    private WorldEventContext() {
         // singleton
     }
 
@@ -32,8 +30,7 @@ public class WorldEventContext
      */
     int clientRenderDist;
 
-    public void renderWorldLastEvent(final RenderLevelStageEvent event)
-    {
+    public void renderWorldLastEvent(final RenderLevelStageEvent event) {
         poseStack = event.getPoseStack();
 //        partialTicks = event.getPartialTick();
 //        clientLevel = Minecraft.getInstance().level;

@@ -40,7 +40,7 @@ public class MooshroomBehavior extends JarBehavior<MushroomCow> {
             tile.setEntityData(cow);
 
             Block mushroomType = mooshroom.getVariant().getBlockState().getBlock();
-            for(int i = 0; i < 5; ++i) {
+            for (int i = 0; i < 5; ++i) {
                 world.addFreshEntity(new ItemEntity(world, mooshroom.getX(), mooshroom.getY(1.0D), mooshroom.getZ(), new ItemStack(mushroomType)));
             }
         } else {

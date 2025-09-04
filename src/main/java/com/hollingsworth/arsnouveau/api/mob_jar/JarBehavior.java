@@ -1,15 +1,18 @@
 package com.hollingsworth.arsnouveau.api.mob_jar;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,7 +25,7 @@ import java.util.List;
 
 public class JarBehavior<T extends Entity> {
 
-    public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile){
+    public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
         T entity = entityFromJar(tile);
         if (entity.getType().is(EntityTags.INTERACT_JAR_BLACKLIST)) return;
 
@@ -41,22 +44,22 @@ public class JarBehavior<T extends Entity> {
         }
     }
 
-    public void tick(MobJarTile tile){
+    public void tick(MobJarTile tile) {
     }
 
     /**
      * A helper method to sync the jar change to the client, also sends a block update.
      */
-    public void syncClient(MobJarTile tile){
+    public void syncClient(MobJarTile tile) {
         tile.updateBlock();
     }
 
-    public @NotNull T entityFromJar(MobJarTile tile){
+    public @NotNull T entityFromJar(MobJarTile tile) {
         return (T) tile.getEntity();
     }
 
-    public boolean isEntityBaby(Entity entity){
-        if(!(entity instanceof AgeableMob ageableMob))
+    public boolean isEntityBaby(Entity entity) {
+        if (!(entity instanceof AgeableMob ageableMob))
             return false;
         return ageableMob.isBaby();
     }
@@ -64,25 +67,25 @@ public class JarBehavior<T extends Entity> {
     /**
      * @return Renderer scale for the entity in the jar.
      */
-    public Vec3 scaleOffset(MobJarTile pBlockEntity){
-        return new Vec3(0,0,0);
+    public Vec3 scaleOffset(MobJarTile pBlockEntity) {
+        return new Vec3(0, 0, 0);
     }
+
     /**
      * @return Renderer translation for the entity in the jar.
      */
-    public Vec3 translate(MobJarTile pBlockEntity){
-        return new Vec3(0,0,0);
+    public Vec3 translate(MobJarTile pBlockEntity) {
+        return new Vec3(0, 0, 0);
     }
 
-    public boolean shouldUsePartialTicks(MobJarTile pBlockEntity){
+    public boolean shouldUsePartialTicks(MobJarTile pBlockEntity) {
         return false;
     }
 
     /**
-     *
      * @return Light level the jar should give off
      */
-    public int lightLevel(MobJarTile pBlockEntity){
+    public int lightLevel(MobJarTile pBlockEntity) {
         return 0;
     }
 
@@ -101,7 +104,26 @@ public class JarBehavior<T extends Entity> {
         return 0;
     }
 
-    public void getTooltip(MobJarTile tile, List<Component> tooltips){
+    public void getTooltip(MobJarTile tile, List<Component> tooltips) {
 
+    }
+
+    public static boolean insertOrCreateItem(MobJarTile tile, ItemStack stack) {
+        if (!(tile.getLevel() instanceof ServerLevel level)) {
+            return false;
+        }
+
+        var pos = tile.getBlockPos();
+        var inv = InventoryManager.fromTile(tile);
+        var remaining = inv.insertStack(stack);
+
+        if (!remaining.isEmpty()) {
+            var center = pos.above().getCenter();
+            var item = new ItemEntity(level, center.x, center.y, center.z, remaining);
+            item.setDefaultPickUpDelay();
+            level.addFreshEntity(item);
+        }
+
+        return true;
     }
 }

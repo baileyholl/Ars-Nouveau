@@ -37,7 +37,7 @@ public class ModItem extends Item {
         return this;
     }
 
-    protected static Properties defaultProps(){
+    protected static Properties defaultProps() {
         return new Item.Properties();
     }
 

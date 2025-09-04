@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.mixin.camera;
 import com.hollingsworth.arsnouveau.common.camera.ANIChunkStorageProvider;
 import com.hollingsworth.arsnouveau.common.camera.CameraController;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -99,31 +102,23 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
     }
 
     /**
+     * checks if the camera storage should be used
+     */
+    @Inject(method = "replaceWithPacketData", at = @At("HEAD"))
+    private void as$useStorage(int x, int z, FriendlyByteBuf buffer, CompoundTag tag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> consumer, CallbackInfoReturnable<LevelChunk> cir, @Share("as$useCamera") LocalBooleanRef ref) {
+        ref.set(CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && CameraController.getCameraStorage().inRange(x, z));
+    }
+
+    /**
      * Handles chunks that get sent to the client which are in range of the camera storage, i.e. place them into the storage for
      * them to be acquired afterwards
      */
-    @Inject(method = "replaceWithPacketData", at = @At(value = "HEAD"), cancellable = true)
-    private void an$onReplace(int x, int z, FriendlyByteBuf buffer, CompoundTag chunkTag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> tagOutputConsumer, CallbackInfoReturnable<LevelChunk> callback) {
-        ClientChunkCache.Storage cameraStorage = CameraController.getCameraStorage();
-
-        if (CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && cameraStorage.inRange(x, z)) {
-            int index = cameraStorage.getIndex(x, z);
-            LevelChunk chunk = cameraStorage.getChunk(index);
-            ChunkPos chunkPos = new ChunkPos(x, z);
-
-            if (!isValidChunk(chunk, x, z)) {
-                chunk = new LevelChunk(level, chunkPos);
-                chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
-                cameraStorage.replace(index, chunk);
-            }
-            else
-                chunk.replaceWithPacketData(buffer, chunkTag, tagOutputConsumer);
-
-            level.onChunkLoaded(chunkPos);
-
-
-            NeoForge.EVENT_BUS.post(new ChunkEvent.Load(chunk, false));
-            callback.setReturnValue(chunk);
+    @Redirect(method = "replaceWithPacketData", at = @At(value = "FIELD", target = "Lnet/minecraft/client/multiplayer/ClientChunkCache;storage:Lnet/minecraft/client/multiplayer/ClientChunkCache$Storage;"))
+    private ClientChunkCache.Storage an$redirectStorage(ClientChunkCache instance, int x, int z, @Share("as$useCamera") LocalBooleanRef ref) {
+        if (ref.get()) {
+            return CameraController.getCameraStorage();
+        } else {
+            return this.storage;
         }
     }
 

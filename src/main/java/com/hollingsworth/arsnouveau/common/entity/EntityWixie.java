@@ -193,7 +193,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
     }
@@ -210,13 +210,13 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    public void die(DamageSource source) {
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
-        super.die(source);
     }
 
     @Override
@@ -241,7 +241,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         if (color.isEmpty())
             color = "blue";
         String finalColor = color;
-        return TEXTURES.computeIfAbsent(color, (k) -> ArsNouveau.prefix( "textures/entity/wixie_" + finalColor + ".png"));
+        return TEXTURES.computeIfAbsent(color, (k) -> ArsNouveau.prefix("textures/entity/wixie_" + finalColor + ".png"));
     }
 
     @Override

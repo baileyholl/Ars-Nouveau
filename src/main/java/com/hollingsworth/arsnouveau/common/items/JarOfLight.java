@@ -52,7 +52,7 @@ public class JarOfLight extends ModItem {
             if (!placeLight(worldIn, preferredLightPos)) {
                 placeLight(worldIn, preferredLightPos.above(2));
                 stack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(preferredLightPos.above(2), true));
-            }else {
+            } else {
                 stack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(preferredLightPos, true));
             }
         }
@@ -86,7 +86,7 @@ public class JarOfLight extends ModItem {
     }
 
     public void removeLight(Level world, LightJarData lightJarData) {
-        if(lightJarData.pos().isEmpty()){
+        if (lightJarData.pos().isEmpty()) {
             return;
         }
         BlockPos pos = lightJarData.pos().get();

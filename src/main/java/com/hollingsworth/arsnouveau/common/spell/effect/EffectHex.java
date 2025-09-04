@@ -23,7 +23,7 @@ public class EffectHex extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         if (!(entity instanceof LivingEntity living))
             return;
@@ -37,7 +37,7 @@ public class EffectHex extends AbstractEffect implements IPotionEffect {
         addExtendTimeConfig(builder, 8);
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getPotionAugments();
@@ -63,7 +63,7 @@ public class EffectHex extends AbstractEffect implements IPotionEffect {
         return 100;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);

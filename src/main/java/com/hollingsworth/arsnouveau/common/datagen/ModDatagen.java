@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class ModDatagen {
     public static CompletableFuture<HolderLookup.Provider> registries;
     public static PackOutput output;
+
     @SubscribeEvent
     public static void datagen(GatherDataEvent event) {
         APIRegistry.postInit();
@@ -36,6 +37,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new EntityTagProvider(output, provider, fileHelper));
+        event.getGenerator().addProvider(event.includeServer(), new BannerTagsProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));

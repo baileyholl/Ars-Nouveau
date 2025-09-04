@@ -1,0 +1,17 @@
+{
+  "id": "ars_nouveau:block.ars_nouveau.redstone_relay",
+  "order": 100,
+  "icon": "ars_nouveau:redstone_relay",
+  "title": "Redstone Relay",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Redstone Relay",
+      "description": "Can be connected to other Redstone Relays to wirelessly send a redstone signal. Takes input from one side and outputs in all other directions. Can be connected within 30 blocks of another relay, and multiple relays can be connected.",
+      "icon": "ars_nouveau:redstone_relay"
+    },
+    {
+      "recipe_1": "ars_nouveau:redstone_relay"
+    }
+  ]
+}

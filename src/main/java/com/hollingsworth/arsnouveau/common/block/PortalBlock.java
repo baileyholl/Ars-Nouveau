@@ -68,8 +68,8 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    public void setType(Level pLevel, BlockPos pPos,boolean alternate){
-        if(pLevel.getBlockState(pPos).getValue(ALTERNATE) == alternate)
+    public void setType(Level pLevel, BlockPos pPos, boolean alternate) {
+        if (pLevel.getBlockState(pPos).getValue(ALTERNATE) == alternate)
             return;
         pLevel.setBlockAndUpdate(pPos, pLevel.getBlockState(pPos).setValue(ALTERNATE, alternate));
         for (BlockPos pos : BlockPos.betweenClosed(pPos.offset(-1, -1, -1), pPos.offset(1, 1, 1))) {
@@ -81,10 +81,10 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND)
+        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND)
             return ItemInteractionResult.SUCCESS;
-        if(pPlayer.getItemInHand(pHand).getItem() instanceof DominionWand){
-            if(pLevel.getBlockEntity(pPos) instanceof PortalTile){
+        if (pPlayer.getItemInHand(pHand).getItem() instanceof DominionWand) {
+            if (pLevel.getBlockEntity(pPos) instanceof PortalTile) {
                 boolean nextVal = !pLevel.getBlockState(pPos).getValue(ALTERNATE);
                 setType(pLevel, pPos, nextVal);
                 return ItemInteractionResult.CONSUME;
@@ -108,10 +108,10 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
-            if(entityIn instanceof Player player) {
+        if (entityIn.canUsePortal(false) && worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
+            if (entityIn instanceof Player player) {
                 tile.entityQueue.add(player);
-            }else{
+            } else {
                 tile.warp(entityIn);
                 entityIn.fallDistance = 0;
             }
@@ -140,9 +140,7 @@ public class PortalBlock extends TickableModBlock {
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
                 worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.Y), 18);
                 if (worldIn.getBlockEntity(blockPos) instanceof PortalTile tile) {
-                    tile.warpPos = data.pos().orElse(null);
-                    tile.dimID = data.dimension();
-                    tile.rotationVec = data.rotation();
+                    tile.setFromScroll(data);
                     tile.displayName = displayName;
                     tile.isHorizontal = true;
                     tile.updateBlock();
@@ -181,7 +179,7 @@ public class PortalBlock extends TickableModBlock {
             frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
             if (!frameTester.isValidFrame()) {
                 return Blocks.AIR.defaultBlockState();
-            }else if(flag && facingState.getBlock() != this){
+            } else if (flag && facingState.getBlock() != this) {
                 return Blocks.AIR.defaultBlockState();
             }
             return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);

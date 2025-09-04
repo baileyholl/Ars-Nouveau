@@ -10,16 +10,16 @@ import net.minecraft.world.level.gameevent.GameEvent;
 public class ChickenBehavior extends JarBehavior<Chicken> {
     @Override
     public void tick(MobJarTile tile) {
-        if(tile.getLevel().isClientSide)
+        if (tile.getLevel().isClientSide)
             return;
         Chicken chicken = this.entityFromJar(tile);
-        if(isEntityBaby(chicken)){
+        if (isEntityBaby(chicken)) {
             return;
         }
         chicken.eggTime -= 1;
-        if(chicken.eggTime <= 0){
+        if (chicken.eggTime <= 0) {
             chicken.playSound(SoundEvents.CHICKEN_EGG, 1.0F, (chicken.getRandom().nextFloat() - chicken.getRandom().nextFloat()) * 0.2F + 1.0F);
-            chicken.spawnAtLocation(Items.EGG);
+            JarBehavior.insertOrCreateItem(tile, Items.EGG.getDefaultInstance());
             chicken.gameEvent(GameEvent.ENTITY_PLACE);
             chicken.eggTime = chicken.getRandom().nextInt(6000) + 6000;
         }

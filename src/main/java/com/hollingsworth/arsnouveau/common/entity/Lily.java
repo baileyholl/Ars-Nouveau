@@ -200,6 +200,7 @@ public class Lily extends ShoulderRidingEntity implements GeoEntity, IDispellabl
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "walk", 1, (event) -> {
+
             if (event.isMoving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;

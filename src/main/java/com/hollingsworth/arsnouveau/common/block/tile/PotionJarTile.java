@@ -67,7 +67,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.handleUpdateTag(tag, lookupProvider);
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 8);
     }
 
     public @NotNull PotionContents getData() {
@@ -78,32 +78,32 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         return this.data.equals(PotionContents.EMPTY) ? 16253176 : this.data.getColor();
     }
 
-    public boolean canAccept(PotionContents otherData, int amount){
-        if(otherData == null || !validContentTypeForJar(otherData))
+    public boolean canAccept(PotionContents otherData, int amount) {
+        if (otherData == null || !validContentTypeForJar(otherData))
             return false;
         return (!this.isLocked && this.getAmount() <= 0) || (amount <= (this.getMaxFill() - this.getAmount()) && PotionUtil.arePotionContentsEqual(otherData, this.data));
     }
 
-    public boolean validContentTypeForJar(PotionContents otherData){
+    public boolean validContentTypeForJar(PotionContents otherData) {
         return !otherData.is(Potions.WATER) && !otherData.is(Potions.MUNDANE);
     }
 
-    public void add(PotionContents other, int amount){
-        if(this.currentFill == 0){
-            if(!this.data.equals(other) || (this.data.equals(PotionContents.EMPTY))) {
+    public void add(PotionContents other, int amount) {
+        if (this.currentFill == 0) {
+            if (!this.data.equals(other) || (this.data.equals(PotionContents.EMPTY))) {
                 this.data = other;
             }
             currentFill += amount;
-        }else{
+        } else {
             currentFill = Math.min(this.getAmount() + amount, this.getMaxFill());
         }
         currentFill = Math.min(currentFill, this.getMaxFill());
         updateBlock();
     }
 
-    public void remove(int amount){
+    public void remove(int amount) {
         currentFill = Math.max(currentFill - amount, 0);
-        if(currentFill == 0 && !isLocked){
+        if (currentFill == 0 && !isLocked) {
             this.data = PotionContents.EMPTY;
         }
         updateBlock();
@@ -111,7 +111,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(!data.equals(PotionContents.EMPTY)) {
+        if (!data.equals(PotionContents.EMPTY)) {
             ItemStack potion = new ItemStack(Items.POTION);
             potion.set(DataComponents.POTION_CONTENTS, data);
             tooltip.add(Component.translatable(potion.getDescriptionId()));
@@ -125,7 +125,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        if(tag.contains("potionData"))
+        if (tag.contains("potionData"))
             this.data = ANCodecs.decode(pRegistries, PotionContents.CODEC, tag.get("potionData"));
         this.isLocked = tag.getBoolean("locked");
         this.currentFill = tag.getInt("currentFill");
@@ -168,7 +168,9 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        pComponents.set(DataComponentRegistry.POTION_JAR, new PotionJarData(this.currentFill, this.data, this.isLocked));
+        if ((this.currentFill != 0 && !this.data.equals(PotionContents.EMPTY)) || this.isLocked) {
+            pComponents.set(DataComponentRegistry.POTION_JAR, new PotionJarData(this.currentFill, this.data, this.isLocked));
+        }
     }
 }
 

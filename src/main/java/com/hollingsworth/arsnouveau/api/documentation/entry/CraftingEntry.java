@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.api.documentation.entry;
 
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
+import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.client.Minecraft;
@@ -38,19 +40,19 @@ public class CraftingEntry extends SinglePageWidget {
         return (parent, x, y, width, height) -> new CraftingEntry(recipe1, null, description, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1){
+    public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1) {
         return (parent, x, y, width, height) -> new CraftingEntry(recipe1, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1, RecipeHolder<CraftingRecipe> recipe2){
+    public static SinglePageCtor create(RecipeHolder<CraftingRecipe> recipe1, RecipeHolder<CraftingRecipe> recipe2) {
         return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, null, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(ItemLike item1, ItemLike item2){
+    public static SinglePageCtor create(ItemLike item1, ItemLike item2) {
         Level level = ArsNouveau.proxy.getClientWorld();
         RecipeManager manager = level.getRecipeManager();
-        RecipeHolder<CraftingRecipe> recipe1 = manager.byKeyTyped(RecipeType.CRAFTING,  RegistryHelper.getRegistryName(item1.asItem()));
-        RecipeHolder<CraftingRecipe> recipe2 = manager.byKeyTyped(RecipeType.CRAFTING,  RegistryHelper.getRegistryName(item2.asItem()));
+        RecipeHolder<CraftingRecipe> recipe1 = manager.byKeyTyped(RecipeType.CRAFTING, RegistryHelper.getRegistryName(item1.asItem()));
+        RecipeHolder<CraftingRecipe> recipe2 = manager.byKeyTyped(RecipeType.CRAFTING, RegistryHelper.getRegistryName(item2.asItem()));
         return (parent, x, y, width, height) -> new CraftingEntry(recipe1, recipe2, null, parent, x, y, width, height);
     }
 
@@ -59,27 +61,27 @@ public class CraftingEntry extends SinglePageWidget {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         DocClientUtils.drawHeader(Component.translatable("block.minecraft.crafting_table"), guiGraphics, x, y, width, mouseX, mouseY, partialTick);
-        if(recipe1 == null && recipe2 == null){
+        if (recipe1 == null && recipe2 == null) {
             return;
         }
-        if(recipe1 != null) {
+        if (recipe1 != null) {
             drawCraftingGrid(guiGraphics, x + 14, y + 16, mouseX, mouseY, recipe1);
         }
 
-        if(recipe2 != null) {
+        if (recipe2 != null) {
             drawCraftingGrid(guiGraphics, x + 14, y + 84, mouseX, mouseY, recipe2);
         }
     }
 
-    public void drawCraftingGrid(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, RecipeHolder<CraftingRecipe> recipe){
+    public void drawCraftingGrid(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, RecipeHolder<CraftingRecipe> recipe) {
         ItemStack outputStack = recipe.value().getResultItem(Minecraft.getInstance().level.registryAccess());
         List<Ingredient> ingredients = recipe.value().getIngredients();
         DocClientUtils.blit(guiGraphics, DocAssets.CRAFTING_ENTRY_1, x, y);
         int row = 0;
-        for(int i = 0; i < ingredients.size(); i++){
+        for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
             int col = i % 3;
-            if(col == 0 && i != 0){
+            if (col == 0 && i != 0) {
                 row++;
             }
             int renderX = x + 3 + (col * 21);
@@ -88,5 +90,19 @@ public class CraftingEntry extends SinglePageWidget {
         }
 
         this.setTooltipIfHovered(DocClientUtils.renderItemStack(guiGraphics, x + 86, y + 24, mouseX, mouseY, outputStack));
+    }
+
+    @Override
+    public void addExportProperties(JsonObject object) {
+        super.addExportProperties(object);
+        if (recipe1 != null) {
+            object.addProperty(DocExporter.RECIPE_PROPERTY, recipe1.id().toString());
+        }
+        if (recipe2 != null) {
+            object.addProperty(DocExporter.RECIPE2_PROPERTY, recipe2.id().toString());
+        }
+        if (description != null) {
+            object.addProperty(DocExporter.DESCRIPTION_PROPERTY, description.getString());
+        }
     }
 }

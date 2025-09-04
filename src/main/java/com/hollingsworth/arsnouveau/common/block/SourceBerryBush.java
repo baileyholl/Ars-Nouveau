@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -93,7 +95,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
                 double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
                 if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
-                    entityIn.hurt(worldIn.damageSources().sweetBerryBush(), 1.0F);
+                    entityIn.hurt(DamageUtil.source(worldIn, DamageTypesRegistry.SOURCE_BERRY_BUSH), 1.0F);
                 }
             }
         }
@@ -141,7 +143,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     @Nullable
     @Override
     public PathType getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
-        if(entity instanceof Starbuncle){
+        if (entity instanceof Starbuncle) {
             return PathType.WALKABLE;
         }
         return PathType.DAMAGE_OTHER;

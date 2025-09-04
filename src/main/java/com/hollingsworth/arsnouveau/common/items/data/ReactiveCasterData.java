@@ -37,7 +37,7 @@ public class ReactiveCasterData extends AbstractCaster<ReactiveCasterData> {
 
     @Override
     public SpellResolver getSpellResolver(SpellContext context, Level worldIn, LivingEntity playerIn, InteractionHand handIn) {
-        if(!(playerIn instanceof Player) || playerIn instanceof FakePlayer){
+        if (!(playerIn instanceof Player) || playerIn instanceof FakePlayer) {
             return new EntitySpellResolver(context);
         }
         return super.getSpellResolver(context, worldIn, playerIn, handIn);

@@ -1,0 +1,17 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    }
+  ],
+  "reagent": {
+    "item": "minecraft:spore_blossom"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:decor_blossom"
+  },
+  "sourceCost": 0
+}

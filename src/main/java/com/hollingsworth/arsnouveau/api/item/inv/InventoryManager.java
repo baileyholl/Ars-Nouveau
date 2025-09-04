@@ -9,14 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
 
 /**
  * Stores a list of {@link FilterableItemHandler}s and provides methods to interact with them.
@@ -25,7 +20,7 @@ public class InventoryManager {
 
     private static final Random random = new Random();
 
-    private List<FilterableItemHandler> filterables;
+    public List<FilterableItemHandler> filterables;
 
     private int extractSlotMax = -1;
 
@@ -57,10 +52,6 @@ public class InventoryManager {
         return this;
     }
 
-    public boolean addFilterable(FilterableItemHandler filterable) {
-        return this.filterables.add(filterable);
-    }
-
     public List<FilterableItemHandler> getInventory() {
         return filterables;
     }
@@ -88,9 +79,10 @@ public class InventoryManager {
 
     public MultiInsertReference insertStackWithReference(ItemStack stack) {
         List<SlotReference> references = new ArrayList<>();
-        for (FilterableItemHandler filterable : preferredForStack(stack, false)) {
+        for (var filterPref : preferredForStack(stack, false)) {
+            FilterableItemHandler filterable = filterPref.handler;
             int count = stack.getCount();
-            stack = ItemHandlerHelper.insertItemStacked(filterable.getHandler(), stack, false);
+            stack = filterable.insertItemStacked(stack, false);
             if (count != stack.getCount()) {
                 references.add(new SlotReference(filterable.getHandler(), filterable.getHandler().getSlots()));
             }
@@ -99,46 +91,6 @@ public class InventoryManager {
             }
         }
         return new MultiInsertReference(stack, references);
-    }
-
-    public ExtractedStack extractByAmount(ToIntFunction<ItemStack> getExtractAmount) {
-        ItemScroll.SortPref highestPref = ItemScroll.SortPref.INVALID;
-        FilterableItemHandler highestHandler = null;
-        int toExtract = 0;
-        int slot = -1;
-        for (FilterableItemHandler wrapper : getInventory()) {
-            ItemScroll.SortPref pref = ItemScroll.SortPref.INVALID;
-            // Get the highest pref item in the handler
-            int forAmount = 0;
-            int forSlot = 0;
-            for (int i = 0; i < getExtractSlotMax(wrapper); i++) {
-                ItemStack stack = wrapper.getHandler().getStackInSlot(i);
-                if (stack.isEmpty()) {
-                    continue;
-                }
-                int amount = getExtractAmount.applyAsInt(stack);
-                if (amount <= 0)
-                    continue;
-                ItemScroll.SortPref foundPref = wrapper.getHighestPreference(stack);
-                if (pref == ItemScroll.SortPref.HIGHEST) {
-                    return extractItem(wrapper, stack1 -> true, amount);
-                } else if (foundPref == ItemScroll.SortPref.INVALID) {
-                    continue;
-                }
-                if (foundPref.ordinal() > pref.ordinal()) {
-                    pref = foundPref;
-                    forAmount = amount;
-                    forSlot = i;
-                }
-            }
-            if (pref.ordinal() > highestPref.ordinal()) {
-                highestHandler = wrapper;
-                highestPref = pref;
-                toExtract = forAmount;
-                slot = forSlot;
-            }
-        }
-        return highestHandler == null ? ExtractedStack.empty() : ExtractedStack.from(highestHandler.getHandler(), slot, toExtract);
     }
 
     /**
@@ -181,7 +133,7 @@ public class InventoryManager {
         IItemHandler itemHandler = filterableItemHandler.getHandler();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             ItemStack stack = itemHandler.extractItem(i, remaining, true);
-            if(stack.isEmpty()){
+            if (stack.isEmpty()) {
                 continue;
             }
             if (!(ItemStack.isSameItem(stack, desiredStack) && ItemStack.isSameItemSameComponents(stack, desiredStack))) {
@@ -209,9 +161,10 @@ public class InventoryManager {
     public MultiExtractedReference extractItemFromAll(ItemStack desiredStack, int count, boolean includeInvalidInvs) {
         ItemStack merged = ItemStack.EMPTY;
         int remaining = count;
-        List<FilterableItemHandler> preferred = preferredForStack(desiredStack, includeInvalidInvs);
+        Collection<FilterablePreference> preferred = preferredForStack(desiredStack, includeInvalidInvs);
         List<ExtractedStack> extracted = new ArrayList<>();
-        for (FilterableItemHandler filterable : preferred) {
+        for (FilterablePreference filterPref : preferred) {
+            FilterableItemHandler filterable = filterPref.handler;
             if (remaining <= 0)
                 break;
             MultiExtractedReference extractedFromHandler = extractAllFromHandler(filterable, desiredStack, remaining);
@@ -266,7 +219,7 @@ public class InventoryManager {
                 validSlots.add(slot);
             }
         }
-        if(validSlots.isEmpty()){
+        if (validSlots.isEmpty()) {
             return SlotReference.empty();
         }
         //apply uniform chance if there are any valid slots
@@ -274,32 +227,22 @@ public class InventoryManager {
     }
 
     /**
-     * Returns a list with up to maxSlots references to matching stacks, if any. Does not modify the inventory.
-     */
-    public List<SlotReference> findItems(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type, int maxSlots) {
-        List<SlotReference> slots = new ArrayList<>();
-        int numSlots = Math.min(maxSlotForType(itemHandler, type), maxSlots);
-        for (int slot = 0; slot < numSlots; slot++) {
-            ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if (!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()) {
-                slots.add(new SlotReference(itemHandler.getHandler(), slot));
-            }
-        }
-        return slots;
-    }
-
-    /**
      * Returns the sorted list of highest preferred inventories for a given stack based on their list of filters.
      *
      * @return The list of inventories sorted by highest preference.
      */
-    public List<FilterableItemHandler> preferredForStack(ItemStack stack, boolean includeInvalid) {
-        List<FilterableItemHandler> filtered = new ArrayList<>(getInventory());
-        filtered = filtered.stream()
-                .filter(filterableItemHandler -> includeInvalid || filterableItemHandler.getHighestPreference(stack) != ItemScroll.SortPref.INVALID)
-                .collect(Collectors.toCollection(ArrayList::new));
-        /// Sort by highest pref first
-        filtered.sort((o1, o2) -> o2.getHighestPreference(stack).ordinal() - o1.getHighestPreference(stack).ordinal());
+    public Collection<FilterablePreference> preferredForStack(ItemStack stack, boolean includeInvalid) {
+        PriorityQueue<FilterablePreference> filtered = new PriorityQueue<>((o1, o2) -> {
+            ItemScroll.SortPref pref1 = o1.pref();
+            ItemScroll.SortPref pref2 = o2.pref();
+            return pref2.ordinal() - pref1.ordinal();
+        });
+        for (FilterableItemHandler filterableItemHandler : getInventory()) {
+            ItemScroll.SortPref sortPref = filterableItemHandler.getHighestPreference(stack);
+            if (includeInvalid || sortPref != ItemScroll.SortPref.INVALID) {
+                filtered.add(new FilterablePreference(filterableItemHandler, sortPref));
+            }
+        }
         return filtered;
     }
 
@@ -351,5 +294,8 @@ public class InventoryManager {
         if (insertSlotMax == -1)
             return handler.getHandler().getSlots();
         return Math.min(insertSlotMax, handler.getHandler().getSlots());
+    }
+
+    public record FilterablePreference(FilterableItemHandler handler, ItemScroll.SortPref pref) {
     }
 }

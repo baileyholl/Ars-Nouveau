@@ -9,6 +9,7 @@ public class LibBlockNames {
 
     public final static String MAGE_BLOCK = "mage_block";
     public final static String LIGHT_BLOCK = "light_block";
+    public final static String PARTICLE_BLOCK = "particle_block";
     public static final String T_LIGHT_BLOCK = "temporary_light_block";
 
     public final static String ENCHANTING_APPARATUS = "enchanting_apparatus";
@@ -56,7 +57,10 @@ public class LibBlockNames {
     public final static String RITUAL_BRAZIER = "ritual_brazier";
     public final static String ARCHWOOD_STAIRS = "archwood_stairs";
     public final static String ARCHWOOD_SLABS = "archwood_slab";
-    public final static String ARCHWOOD_SIGN = "archwood_wall_sign";
+    public final static String ARCHWOOD_SIGN = "archwood_sign";
+    public final static String ARCHWOOD_WALL_SIGN = "archwood_wall_sign";
+    public final static String ARCHWOOD_HANGING_SIGN = "archwood_hanging_sign";
+    public final static String ARCHWOOD_HANGING_WALL_SIGN = "archwood_hanging_wall_sign";
     public final static String ARCHWOOD_TRAPDOOR = "archwood_trapdoor";
     public final static String ARCHWOOD_PRESSURE_PLATE = "archwood_pressure_plate";
     public final static String ARCHWOOD_FENCE_GATE = "archwood_fence_gate";
@@ -173,6 +177,8 @@ public class LibBlockNames {
     public static final String SOURCEBERRY_SACK = "sourceberry_sack";
 
     public static final String CRAB_HAT = "alakarkinos_hat";
+    public static final String REPOSITORY_CATALOG = "repository_controller";
+    public static final String DECOR_BLOSSOM = "decor_blossom";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
@@ -183,11 +189,12 @@ public class LibBlockNames {
 
     public static final List<String> DECORATIVE_STAIRS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
     public static final List<String> DECORATIVE_SLABS = new ArrayList<>(DECORATIVE_SOURCESTONE.length);
+
     static {
-        for(String s : DECORATIVE_SOURCESTONE) {
+        for (String s : DECORATIVE_SOURCESTONE) {
             DECORATIVE_STAIRS.add(s + "_stairs");
         }
-        for(String s : DECORATIVE_SOURCESTONE) {
+        for (String s : DECORATIVE_SOURCESTONE) {
             DECORATIVE_SLABS.add(s + "_slab");
         }
     }

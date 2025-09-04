@@ -7,9 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.ai.village.VillageSiege;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,11 +19,12 @@ public class DenySpawnRitual extends RangeRitual {
     public int radius = 32;
     public boolean deniedSpawn;
 
-    public boolean denySpawn(FinalizeSpawnEvent checkSpawn){
-        boolean shouldDeny = checkSpawn.getSpawnType() == MobSpawnType.NATURAL
+    public boolean denySpawn(FinalizeSpawnEvent checkSpawn) {
+        boolean shouldDeny = !this.tile.isOff
+                && checkSpawn.getSpawnType() == MobSpawnType.NATURAL
                 && checkSpawn.getEntity() instanceof Enemy
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
-        if(shouldDeny){
+        if (shouldDeny) {
             checkSpawn.setSpawnCancelled(true);
             deniedSpawn = true;
         }
@@ -33,7 +32,7 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     public boolean denySiege(VillageSiegeEvent checkSpawn) {
-        boolean shouldDeny = checkSpawn.getAttemptedSpawnPos().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
+        boolean shouldDeny = !this.tile.isOff && getPos() != null && checkSpawn.getAttemptedSpawnPos().distanceToSqr(getPos().getBottomCenter()) <= radius * radius;
         if (shouldDeny) {
             checkSpawn.setCanceled(true);
             deniedSpawn = true;
@@ -44,11 +43,11 @@ public class DenySpawnRitual extends RangeRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             return;
         }
-        for(ItemStack i : getConsumedItems()){
-            if(i.is(Items.ROTTEN_FLESH)) {
+        for (ItemStack i : getConsumedItems()) {
+            if (i.is(Items.ROTTEN_FLESH)) {
                 radius += i.getCount();
             }
         }
@@ -57,10 +56,10 @@ public class DenySpawnRitual extends RangeRitual {
     @Override
     protected void tick() {
         super.tick();
-        if(getWorld().isClientSide){
+        if (getWorld().isClientSide) {
             return;
         }
-        if(deniedSpawn && getWorld().getGameTime() % 1200 == 0){
+        if (deniedSpawn && getWorld().getGameTime() % 1200 == 0) {
             deniedSpawn = false;
             takeSourceNow();
         }
@@ -78,7 +77,7 @@ public class DenySpawnRitual extends RangeRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.SANCTUARY);
+        return ArsNouveau.prefix(RitualLib.SANCTUARY);
     }
 
     @Override

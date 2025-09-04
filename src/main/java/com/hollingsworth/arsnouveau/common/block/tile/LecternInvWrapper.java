@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class LecternInvWrapper extends CombinedHandlerInv {
     public StorageLecternTile lecternTile;
 
-    public LecternInvWrapper(StorageLecternTile lecternTile, IItemHandler... itemHandler)
-    {
+    public LecternInvWrapper(StorageLecternTile lecternTile, IItemHandler... itemHandler) {
         super(itemHandler);
         this.lecternTile = lecternTile;
     }

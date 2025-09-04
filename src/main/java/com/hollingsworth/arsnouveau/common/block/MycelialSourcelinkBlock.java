@@ -26,26 +26,27 @@ public class MycelialSourcelinkBlock extends SourcelinkBlock {
                     Block.box(7, 0, 0, 9, 5, 6)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
-            Block.box(4, 5, 7, 6, 10, 9),
-            Block.box(0, 9, 7, 4, 10, 9),
-            Block.box(0, 10, 7, 1, 13, 9),
-            Block.box(0, 13, 7, 4, 16, 9),
-            Block.box(0, 0, 7, 6, 5, 9)
+                    Block.box(4, 5, 7, 6, 10, 9),
+                    Block.box(0, 9, 7, 4, 10, 9),
+                    Block.box(0, 10, 7, 1, 13, 9),
+                    Block.box(0, 13, 7, 4, 16, 9),
+                    Block.box(0, 0, 7, 6, 5, 9)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
-            Block.box(7, 5, 10, 9, 10, 12),
-            Block.box(7, 9, 12, 9, 10, 16),
-            Block.box(7, 10, 15, 9, 13, 16),
-            Block.box(7, 13, 12, 9, 16, 16),
-            Block.box(7, 0, 10, 9, 5, 16)
+                    Block.box(7, 5, 10, 9, 10, 12),
+                    Block.box(7, 9, 12, 9, 10, 16),
+                    Block.box(7, 10, 15, 9, 13, 16),
+                    Block.box(7, 13, 12, 9, 16, 16),
+                    Block.box(7, 0, 10, 9, 5, 16)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
-            Block.box(10, 5, 7, 12, 10, 9),
-            Block.box(12, 9, 7, 16, 10, 9),
-            Block.box(15, 10, 7, 16, 13, 9),
-            Block.box(12, 13, 7, 16, 16, 9),
-            Block.box(10, 0, 7, 16, 5, 9)
+                    Block.box(10, 5, 7, 12, 10, 9),
+                    Block.box(12, 9, 7, 16, 10, 9),
+                    Block.box(15, 10, 7, 16, 13, 9),
+                    Block.box(12, 13, 7, 16, 16, 9),
+                    Block.box(10, 0, 7, 16, 5, 9)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
     public MycelialSourcelinkBlock() {
         this(TickableModBlock.defaultProperties().noOcclusion());
     }

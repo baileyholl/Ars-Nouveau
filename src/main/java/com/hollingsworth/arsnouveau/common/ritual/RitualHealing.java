@@ -14,6 +14,7 @@ import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public class RitualHealing extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.RESTORATION);
+        return ArsNouveau.prefix(RitualLib.RESTORATION);
     }
 
     @Override

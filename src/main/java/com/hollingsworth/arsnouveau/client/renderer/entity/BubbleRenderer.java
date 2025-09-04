@@ -35,7 +35,7 @@ public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
         renderBubble(entityIn, this.entityRenderDispatcher, matrixStack, buffer);
     }
 
-    public static void renderBubble(Entity entityIn, EntityRenderDispatcher entityRenderDispatcher, PoseStack matrixStack, MultiBufferSource buffer){
+    public static void renderBubble(Entity entityIn, EntityRenderDispatcher entityRenderDispatcher, PoseStack matrixStack, MultiBufferSource buffer) {
         double y = entityIn.getPassengers().isEmpty() ? 0.25f : entityIn.getBbHeight();
         matrixStack.pushPose();
         matrixStack.translate(0, y, 0);
@@ -44,7 +44,7 @@ public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
         matrixStack.scale(0.025F, -0.025F, 0.025F);
         float base = 2.0f;
         var passenger = entityIn.getFirstPassenger();
-        if(passenger != null){
+        if (passenger != null) {
             base += 1f;
             // Compare the size difference between the bubble hitbox and the passenger
             base *= passenger.getBbWidth() / entityIn.getBbWidth();
@@ -53,17 +53,17 @@ public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
         final Matrix4f pose = matrixStack.last().pose();
         ResourceLocation texture = TEXTURE;
 
-        if(entityIn instanceof BubbleEntity bubbleEntity && bubbleEntity.poppingTicks > 0){
+        if (entityIn instanceof BubbleEntity bubbleEntity && bubbleEntity.poppingTicks > 0) {
             int popTicks = bubbleEntity.poppingTicks;
-            if(popTicks < 2){
+            if (popTicks < 2) {
                 texture = POP_1;
-            }else if(popTicks < 3) {
+            } else if (popTicks < 3) {
                 texture = POP_2;
-            }else if(popTicks < 4) {
+            } else if (popTicks < 4) {
                 texture = POP_3;
-            }else if(popTicks < 5) {
+            } else if (popTicks < 5) {
                 texture = POP_4;
-            }else{
+            } else {
                 texture = POP_5;
             }
         }

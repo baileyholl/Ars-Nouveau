@@ -13,14 +13,16 @@ public class ItemUtil {
         return ItemEntity.areMergable(singleA, singleB);
     }
 
-    public static boolean shrinkHandAndAddStack(ItemStack stack, InteractionHand hand, Player player){
+    public static boolean shrinkHandAndAddStack(ItemStack stack, InteractionHand hand, Player player) {
         ItemStack heldStack = player.getItemInHand(hand);
-        if(heldStack.isEmpty() || heldStack.getCount() == 1){
+        if (heldStack.isEmpty() || heldStack.getCount() == 1) {
             player.setItemInHand(hand, stack);
             return true;
         }
-        if(player.inventory.add(stack)){
-            heldStack.shrink(1);
+        if (player.inventory.add(stack)) {
+            if (!player.hasInfiniteMaterials()) {
+                heldStack.shrink(1);
+            }
             return true;
         }
         return false;

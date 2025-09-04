@@ -9,7 +9,7 @@ public record EasingFunctionArgs(EasingType easingType, Double arg0) {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        EasingFunctionArgs that = (EasingFunctionArgs)o;
+        EasingFunctionArgs that = (EasingFunctionArgs) o;
         return easingType == that.easingType && Objects.equals(arg0, that.arg0);
     }
 }

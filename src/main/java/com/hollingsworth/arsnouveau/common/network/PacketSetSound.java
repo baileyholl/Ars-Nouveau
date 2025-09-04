@@ -13,12 +13,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class PacketSetSound extends AbstractPacket{
+public class PacketSetSound extends AbstractPacket {
     public static final Type<PacketSetSound> TYPE = new Type<>(ArsNouveau.prefix("set_sound"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetSound> CODEC = StreamCodec.ofMember(PacketSetSound::toBytes, PacketSetSound::new);
     int castSlot;
     ConfiguredSpellSound sound;
     boolean mainHand;
+
     public PacketSetSound(int castSlot, @NotNull ConfiguredSpellSound sound, boolean mainHand) {
         this.castSlot = castSlot;
         this.sound = sound;

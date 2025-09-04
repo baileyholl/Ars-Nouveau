@@ -41,20 +41,20 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
 
     @Override
     public void tick() {
-        if(isOff)
+        if (isOff)
             return;
-        if(level.isClientSide && !isOff && ticksToConsume > 0 && !PotionUtil.isEmpty(lastConsumedPotion) && level.getGameTime() % 8 == 0) {
+        if (level.isClientSide && !isOff && ticksToConsume > 0 && !PotionUtil.isEmpty(lastConsumedPotion) && level.getGameTime() % 8 == 0) {
             level.addParticle(ParticleTypes.SMOKE, getX() + 0.5, getY() + 1, getZ() + 0.5, 0, 0, 0);
             return;
         }
 
-        if(ticksToConsume <= 0 && boundPos != null && level.getGameTime() % 60 == 0){
+        if (ticksToConsume <= 0 && boundPos != null && level.getGameTime() % 60 == 0) {
             obtainPotion();
         }
-        if(ticksToConsume > 0){
+        if (ticksToConsume > 0) {
             ticksToConsume--;
-            if(level.getGameTime() % (15 * 20) == 0){
-                for(LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos()).inflate(10))){
+            if (level.getGameTime() % (15 * 20) == 0) {
+                for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos()).inflate(10))) {
                     lastConsumedPotion.forEachEffect(effectinstance -> {
                         if (effectinstance.getEffect().value().isInstantenous()) {
                             effectinstance.getEffect().value().applyInstantenousEffect(null, null, entity, effectinstance.getAmplifier(), 1.0D);
@@ -67,9 +67,9 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
         }
     }
 
-    public void obtainPotion(){
-        if(level instanceof ServerLevel serverLevel && level.isLoaded(boundPos) && level.getBlockEntity(boundPos) instanceof PotionJarTile jar){
-            if(!PotionUtil.isEmpty(jar.getData()) && jar.getAmount() >= 100){
+    public void obtainPotion() {
+        if (level instanceof ServerLevel serverLevel && level.isLoaded(boundPos) && level.getBlockEntity(boundPos) instanceof PotionJarTile jar) {
+            if (!PotionUtil.isEmpty(jar.getData()) && jar.getAmount() >= 100) {
                 lastConsumedPotion = jar.getData();
                 ticksToConsume = 20 * 60 * 10; // 10 mins
                 jar.remove(100);
@@ -84,14 +84,14 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile jar){
+        if (storedPos != null && level.getBlockEntity(storedPos) instanceof PotionJarTile jar) {
             boundPos = storedPos.immutable();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.potion_diffuser.set_pos"));
-            if(this.lastConsumedPotion != null && !PotionUtil.isEmpty(lastConsumedPotion) && !PotionUtil.arePotionContentsEqual(lastConsumedPotion, jar.getData())){
+            if (this.lastConsumedPotion != null && !PotionUtil.isEmpty(lastConsumedPotion) && !PotionUtil.arePotionContentsEqual(lastConsumedPotion, jar.getData())) {
                 obtainPotion();
             }
             updateBlock();
-        }else{
+        } else {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.potion_diffuser.bind_to_jar"));
         }
     }
@@ -104,7 +104,7 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
 
         isOff = pTag.getBoolean("isOff");
         ticksToConsume = pTag.getInt("ticksToConsume");
-        if(pTag.contains("lastConsumedPotion")){
+        if (pTag.contains("lastConsumedPotion")) {
             lastConsumedPotion = ANCodecs.decode(pRegistries, PotionContents.CODEC, pTag.getCompound("lastConsumedPotion"));
         }
     }
@@ -112,32 +112,32 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        if(boundPos != null){
+        if (boundPos != null) {
             NBTUtil.storeBlockPos(tag, "boundPos", boundPos);
         }
         tag.putBoolean("isOff", isOff);
         tag.putInt("ticksToConsume", ticksToConsume);
-        if(lastConsumedPotion != null){
+        if (lastConsumedPotion != null) {
             tag.put("lastConsumedPotion", ANCodecs.encode(pRegistries, PotionContents.CODEC, lastConsumedPotion));
         }
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(boundPos == null){
+        if (boundPos == null) {
             tooltip.add(Component.translatable("ars_nouveau.potion_diffuser.no_pos").withStyle(ChatFormatting.GOLD));
         }
-        if(isOff){
+        if (isOff) {
             tooltip.add(Component.translatable("ars_nouveau.potion_diffuser.off").withStyle(ChatFormatting.GOLD));
         }
-        if(lastConsumedPotion != null){
+        if (lastConsumedPotion != null) {
             lastConsumedPotion.addPotionTooltip(tooltip::add, 1.0f, 20f);
         }
     }
 
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> colorPos) {
-        if(boundPos != null){
+        if (boundPos != null) {
             colorPos.add(ColorPos.centered(boundPos));
         }
         return colorPos;

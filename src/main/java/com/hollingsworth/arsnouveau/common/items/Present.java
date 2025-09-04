@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public class Present extends ModItem{
+public class Present extends ModItem {
 
     public Present(Properties properties) {
         super(properties);
@@ -29,34 +29,36 @@ public class Present extends ModItem{
     @Override
     public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-        if(pLevel.isClientSide)
+        if (pLevel.isClientSide)
             return;
-        if(pEntity instanceof Player player && !pStack.has(DataComponentRegistry.PRESENT)){
+        if (pEntity instanceof Player player && !pStack.has(DataComponentRegistry.PRESENT)) {
             pStack.set(DataComponentRegistry.PRESENT, new PresentData(player.getName().getString(), Optional.of(player.getUUID())));
         }
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        if(pLevel.isClientSide)
+        if (pLevel.isClientSide)
             return super.use(pLevel, pPlayer, pUsedHand);
         PresentData presentData = pPlayer.getItemInHand(pUsedHand).get(DataComponentRegistry.PRESENT);
-        if(presentData == null)
+        if (presentData == null)
             return super.use(pLevel, pPlayer, pUsedHand);
         int bonusRolls = presentData.uuid().isPresent() && !presentData.uuid().get().equals(pPlayer.getUUID()) ? 2 : 0;
         DungeonLootEnhancerModifier modifier = new DungeonLootEnhancerModifier(new LootItemCondition[]{},
-                0.5, 0.2, 0.1,3 + bonusRolls, 1 + bonusRolls, 1 + bonusRolls);
+                0.5, 0.2, 0.1, 3 + bonusRolls, 1 + bonusRolls, 1 + bonusRolls);
         List<ItemStack> stacks = DungeonLootTables.getRandomRoll(modifier);
-        if(stacks.isEmpty()){
+        if (stacks.isEmpty()) {
             Starbuncle giftStarby = new Starbuncle(pLevel, true);
             giftStarby.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
             pLevel.addFreshEntity(giftStarby);
         }
-        for(ItemStack stack : stacks){
+        for (ItemStack stack : stacks) {
             ItemEntity entity = new ItemEntity(pLevel, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), stack);
             pLevel.addFreshEntity(entity);
         }
-        pPlayer.getItemInHand(pUsedHand).shrink(1);
+        if (!pPlayer.hasInfiniteMaterials()) {
+            pPlayer.getItemInHand(pUsedHand).shrink(1);
+        }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 

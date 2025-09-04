@@ -20,7 +20,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -40,12 +39,14 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> STREAM_CODEC = createStream(ScryCasterData::new);
 
-    public MapCodec<ScryCasterData> codec(){
+    public MapCodec<ScryCasterData> codec() {
         return CODEC;
     }
-    public StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> streamCodec(){
+
+    public StreamCodec<RegistryFriendlyByteBuf, ScryCasterData> streamCodec() {
         return STREAM_CODEC;
     }
+
     public ScryCasterData() {
         super();
     }
@@ -73,7 +74,7 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
         SpellResolver resolver = getSpellResolver(new SpellContext(worldIn, spell, entity, wrappedCaster, stack), worldIn, player, handIn);
         ITurretBehavior behavior = BasicSpellTurret.TURRET_BEHAVIOR_MAP.get(spell.getCastMethod());
-        if(behavior == null){
+        if (behavior == null) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.invalid_behavior"));
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
@@ -81,30 +82,30 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
         boolean playerHoldingScroll = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ScryerScroll;
         BlockPos scryPos = playerHoldingScroll ? player.getItemInHand(InteractionHand.OFF_HAND).getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty())).pos().orElse(null) : data.pos().orElse(null);
-        if(scryPos == null){
+        if (scryPos == null) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.no_pos"));
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
-        if(!worldIn.isLoaded(scryPos)){
+        if (!worldIn.isLoaded(scryPos)) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.camera.not_loaded"));
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
         BlockState castingAtState = worldIn.getBlockState(scryPos);
-        if(!(castingAtState.getBlock() instanceof ScryerCrystal)){
+        if (!(castingAtState.getBlock() instanceof ScryerCrystal)) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.not_crystal"));
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        if(!resolver.canCast(player)){
+        if (!resolver.canCast(player)) {
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         Position position;
         Direction direction = castingAtState.getValue(ScryerCrystal.FACING);
         // Target the block the crystal is facing if the spell is a touch spell.
-        if(spell.getCastMethod() instanceof MethodTouch){
+        if (spell.getCastMethod() instanceof MethodTouch) {
             position = BasicSpellTurret.getDispensePosition(scryPos, direction);
-        }else{
+        } else {
             position = ScryerCrystal.getDispensePosition(scryPos, direction);
         }
         behavior.onCast(resolver, (ServerLevel) worldIn, scryPos,
@@ -112,7 +113,6 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
                 position,
                 direction);
         resolver.expendMana();
-        playSound(entity.getOnPos(), worldIn, entity, getCurrentSound(), SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 

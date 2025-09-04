@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 public class EntityTagProvider extends EntityTypeTagsProvider {
 
 
-    public EntityTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider,  @Nullable ExistingFileHelper existingFileHelper) {
+    public EntityTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, pProvider, ArsNouveau.MODID, existingFileHelper);
     }
 
@@ -46,6 +46,28 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 .add(ModEntities.WILDEN_HUNTER.get(), ModEntities.WILDEN_GUARDIAN.get(),
                         ModEntities.WILDEN_STALKER.get()
                 );
+        this.tag(EntityTags.VITALIC_GROWTH_BLACKLIST).add(
+                ModEntities.ENTITY_BLAZING_WEALD.get(),
+                ModEntities.ENTITY_CASCADING_WEALD.get(),
+                ModEntities.ENTITY_FLOURISHING_WEALD.get(),
+                ModEntities.ENTITY_VEXING_WEALD.get()
+        );
+        this.tag(EntityTags.VITALIC_DEATH_BLACKLIST).add(
+                ModEntities.ENTITY_BLAZING_WEALD.get(),
+                ModEntities.ENTITY_CASCADING_WEALD.get(),
+                ModEntities.ENTITY_FLOURISHING_WEALD.get(),
+                ModEntities.ENTITY_VEXING_WEALD.get()
+        );
+        this.tag(EntityTags.BUBBLE_BLACKLIST).addTags(
+                Tags.EntityTypes.BOSSES
+        ).add(
+                ModEntities.BUBBLE.get(),
+                ModEntities.ENTITY_FOLLOW_PROJ.get(),
+                ModEntities.ENTITY_FLYING_ITEM.get(),
+                EntityType.WITHER_SKULL,
+                EntityType.SMALL_FIREBALL,
+                EntityType.DRAGON_FIREBALL
+        );
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), ModEntities.LILY.get());

@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_wind_burst",
+  "name": "ars_nouveau.glyph_name.glyph_wind_burst",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.glyph_desc.glyph_wind_burst"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "ars_nouveau:glyph_wind_burst"
+    }
+  ],
+  "sortnum": 2
+}

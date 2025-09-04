@@ -66,7 +66,7 @@ public class EffectSummonVex extends AbstractEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getSummonAugments();
@@ -84,7 +84,7 @@ public class EffectSummonVex extends AbstractEffect {
                 "Extend Time augment.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.CONJURATION);

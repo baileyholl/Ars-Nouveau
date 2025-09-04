@@ -1,0 +1,24 @@
+{
+  "id": "ars_nouveau:repository",
+  "order": 100,
+  "icon": "ars_nouveau:repository",
+  "title": "Repository",
+  "category": "ars_nouveau:crafting",
+  "pages": [
+    {
+      "title": "Repository",
+      "description": "A repository can store a double chests worth of items. When named, it will display the name as a tooltip, and preserve it when dropped as an item. Useful for creating named inventory tabs with the Storage Lectern. A Repository Catalog can be used as a proxy for a chain of connected repositories, and respects filter scrolls on repositories when inserting items.",
+      "icon": "ars_nouveau:repository"
+    },
+    {
+      "recipe_1": "ars_nouveau:repository",
+      "recipe_2": "ars_nouveau:archwood_chest"
+    },
+    {
+      "related": [
+        "ars_nouveau:storage_lectern",
+        "ars_nouveau:repository_controller"
+      ]
+    }
+  ]
+}

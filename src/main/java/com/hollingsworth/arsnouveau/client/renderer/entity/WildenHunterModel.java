@@ -22,16 +22,16 @@ public class WildenHunterModel extends GeoModel<WildenHunter> {
 
     @Override
     public ResourceLocation getModelResource(WildenHunter hunter) {
-        return ArsNouveau.prefix( "geo/wilden_hunter.geo.json");
+        return ArsNouveau.prefix("geo/wilden_hunter.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WildenHunter hunter) {
-        return ArsNouveau.prefix( "textures/entity/wilden_hunter.png");
+        return ArsNouveau.prefix("textures/entity/wilden_hunter.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WildenHunter hunter) {
-        return ArsNouveau.prefix( "animations/wilden_hunter_animations.json");
+        return ArsNouveau.prefix("animations/wilden_hunter_animations.json");
     }
 }

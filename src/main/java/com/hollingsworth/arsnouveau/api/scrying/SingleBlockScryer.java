@@ -43,6 +43,6 @@ public class SingleBlockScryer implements IScryer {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( "single_block");
+        return ArsNouveau.prefix("single_block");
     }
 }

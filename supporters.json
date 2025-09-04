@@ -35,7 +35,16 @@
   "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
   "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
   "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee",
-  "26170985-ac0e-4e3c-b171-141e2193ce32"],
+  "26170985-ac0e-4e3c-b171-141e2193ce32", "d153d78a-99bd-48c1-8c00-ea6ae02c0395", "860802dc-6314-46a6-b991-4ba8e7d061dc",
+  "5f6a9e19-7021-4fd3-9873-6beee620f5fa", "9431623c-476c-4417-a51a-d4993a04e5b2", "465e651c-9928-4c32-aa41-7fc09f102f01",
+  "066f67d4-51dc-4767-b48f-d03dd7359f4a", "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9", "6d60f894-2a95-4dfd-8afb-64980e0a6d17",
+  "9529428c-25ea-443e-b56f-f24a18ebb5f1", "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8", "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
+  "7e0a1802-2a6a-403d-a487-d3a60cb2d037", "4295cb3b-245c-481d-ad3c-60b179b8cc27", "5abd7fb8-61fd-4fcd-bf6b-10da638f5174",
+  "eb5adebb-130f-4a56-9a52-e99c455b628d", "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5", "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
+  "d41bfe34-e558-4c52-9797-bdd88fcbc88a", "3ad9da32-51f9-49ad-b94d-34a09182d63d", "3422a0bf-4edf-44ca-9d79-7c897424e69a",
+  "aa025c0e-8649-4623-a634-ad778ea9c2d1", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "03b6eedd-91f8-430c-80e6-b2ea7cc1a789",
+  "401dc34a-0111-4f25-9c4c-526d77650e21", "087647a0-77e5-40ec-97f9-ee8a4bdd333b", "ef241661-c372-46d6-8583-d96d051223ed",
+  "552587c7-7527-4f93-9646-d9ea615b2537"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -562,6 +571,124 @@
       "color": "black",
       "name": "Shadow",
       "bio": "This little guy has been everywhere! Whether that be in your back yard, or the future, he's been there!"
+    },{
+      "adopter": "Delmeir",
+      "color": "brown",
+      "name": "Fuzz, the timid",
+      "bio": "The qualities which a person must possess to put Fuzz at ease are an enigma, known only to Fuzz. Just know that if he has chosen you, you must be quite special... and he's probably gonna be stuck to you like glue for a while."
+    },{
+      "adopter": "ardinosaur_",
+      "color": "gray",
+      "name": "Chiaroscuro",
+      "bio": "Initially shy and skittish, Chiaroscuro becomes a deeply loyal and affectionate companion once she bonds with you. With an uncanny ability to sense your moods, she's always there to cuddle, comfort, and add a touch of playful mischief to your day!"
+    },{
+      "adopter": "SloppyBox",
+      "color": "purple",
+      "name": "Orion",
+      "bio": "Orion is a traveler he has explored countless worlds throught out the universe and he will continue this journey until the end of time."
+    },
+    {
+      "adopter": "lotz",
+      "color": "cyan",
+      "name": "Lootz",
+      "bio": ""
+    },
+    {
+      "adopter": "YuukiUkami",
+      "color": "black",
+      "name": "Void",
+      "bio": "Void, the loyal familiar of Yuuki, was altered by their prolonged time in the Beyond. The dimension’s strange magic granted Void the ability to open wormholes, allowing him to collect and store items from across vast distances, forever tied to the mysteries of the void."
+    },{
+      "adopter": "Riftderp",
+      "color": "red",
+      "name": "Strawbee",
+      "bio": "This little starbuncle searches for strawberries. So far, she has not been successful."
+    },{
+      "adopter": "Andrey",
+      "color": "pink",
+      "bio": "oiiaiioiiiaii",
+      "name": "Nikkkkkkk"
+    },{
+      "adopter": "CocoaEyebrows",
+      "color": "purple",
+      "name": "Violet",
+      "bio": "This Starbuncle figured out how to ferment sourceberries into a strange beverage. If it moves erratically, that's the reason."
+    },{
+      "adopter": "ConeOfTraffic",
+      "name": "Connor",
+      "color": "orange",
+      "bio": "Connor got in trouble for blowing up a tree house once, I wouldn't let him near any respawn anchors if I were you. He also has a strange liking to cone shaped objects, couldn't tell you why though"
+    },
+    {
+      "adopter": "Beepsterr",
+      "color": "brown",
+      "name": "Pansy",
+      "bio": "A lost looking critter that loves cinnamon."
+    },{
+      "adopter": "Rayne Drogoth",
+      "color": "red",
+      "name": "Gerald Viripotens",
+      "bio": "A big pyromaniac in a little package. Gerald's only goal in life is to someday cast fireball."
+    },{
+      "adopter": "Emmulah",
+      "color": "yellow",
+      "bio": "Camembert, once a simple pet ferret, attained eternal life when his owner sealed his soul safely in this Starbuncle. He still likes butt scratches and cheese.",
+      "name": "Camembert"
+    },{
+      "adopter": "Imperial Mage",
+      "bio": "He stared into the Abyss and the Abyss gave scritches back",
+      "color": "black",
+      "name": "Sir Wiggles the Dour"
+    },{
+      "adopter": "kuzhcola",
+      "color": "purple",
+      "name": "The Doctor",
+      "bio": "The Doctor utilizes a strange power over their own timeline to rewrite its own history to include more naps. They still seems to always be tired..."
+    },{
+      "adopter": "Axalotl",
+      "name": "Jacob",
+      "bio": "He loves to calculate plane geometry in Cartesian coordinates.",
+      "color": "purple"
+    },{
+      "adopter": "Dadamalda",
+      "color": "red",
+      "bio": "He throws the clock out of the window every morning.",
+      "name": "Sleepy Bill"
+    },{
+      "adopter": "Breadcrumb",
+      "bio": "Came looking for balance, promptly got lost",
+      "color": "purple",
+      "name": "Loaf"
+    },{
+      "adopter": "WorseCookie",
+      "name": "Hastur the Unspeakable One",
+      "color": "yellow",
+      "bio": "Probably not part of a cult!"
+    },{
+      "adopter": "Shoob",
+      "name": "Shoob Jr.",
+      "color": "gray",
+      "bio": "This lil guy has been travelling everywhere in search of ultimate power, and now it has found you! Keep an eye on 'em!"
+    },{
+      "adopter": "FayneProto",
+      "color": "black",
+      "name": "Lil' Fayne",
+      "bio": "Fayne cannot give good names for things so Fayne decided to name his Starbuncle Lil' Fayne. His reasoning? \"Because I don't know what else to name him, and he sort of looks like me\". Other than that this little guy likes staring blankly at people and thats about it.\n"
+    },{
+      "adopter": "WaywardxWanderer",
+      "color": "black",
+      "name": "Sir Bernard the Valiant",
+      "bio": "Sir Bernard is scared of everything and hopes that no one will ever find out that he only earned his title because he was mistaken for another much braver starbuncle."
+    },{
+      "adopter": "Alphapplepie",
+      "color": "pink",
+      "bio": "She is on the hunt for everything pink, such is herself.",
+      "name": "Alpha Noctiluca"
+    },{
+      "adopter": "Fighter_Kitsune",
+      "name": "Hildi",
+      "color": "white",
+      "bio": "May die when woken up."
     }
   ]
 }

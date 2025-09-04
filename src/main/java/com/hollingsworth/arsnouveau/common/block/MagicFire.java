@@ -117,7 +117,7 @@ public class MagicFire extends BaseFireBlock {
         if (!this.canCatchFire(pLevel, pPos, Direction.UP) && !blockstate.isFaceSturdy(pLevel, blockpos, Direction.UP)) {
             BlockState blockstate1 = this.defaultBlockState();
 
-            for(Direction direction : Direction.values()) {
+            for (Direction direction : Direction.values()) {
                 BooleanProperty booleanproperty = PROPERTY_BY_DIRECTION.get(direction);
                 if (booleanproperty != null) {
                     blockstate1 = blockstate1.setValue(booleanproperty, Boolean.valueOf(this.canCatchFire(pLevel, pPos.relative(direction), direction.getOpposite())));
@@ -186,7 +186,7 @@ public class MagicFire extends BaseFireBlock {
 
 
     private boolean isValidFireLocation(BlockGetter pLevel, BlockPos pPos) {
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             if (this.canCatchFire(pLevel, pPos.relative(direction), direction.getOpposite())) {
                 return true;
             }
@@ -215,8 +215,8 @@ public class MagicFire extends BaseFireBlock {
      * Side sensitive version that calls the block function.
      *
      * @param world The current world
-     * @param pos Block position
-     * @param face The side the fire is coming from
+     * @param pos   Block position
+     * @param face  The side the fire is coming from
      * @return True if the face can catch fire.
      */
     public boolean canCatchFire(BlockGetter world, BlockPos pos, Direction face) {
