@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.nbt.CompoundTag;
@@ -28,6 +29,7 @@ public abstract class MagicalBuddyMob extends PathfinderMob implements GeoEntity
 
     protected MagicalBuddyMob(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        onShoulder = false;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -40,7 +42,7 @@ public abstract class MagicalBuddyMob extends PathfinderMob implements GeoEntity
         pMatrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 
         this.yHeadRot = pLivingEntity.yHeadRot;
-        this.yHeadRotO = pLivingEntity.yHeadRot;
+        this.yHeadRotO = pLivingEntity.yHeadRotO;
 
     }
 
@@ -49,8 +51,12 @@ public abstract class MagicalBuddyMob extends PathfinderMob implements GeoEntity
         var id = this.getEncodeId();
         if (id == null) return;
         compoundtag.putString("id", id);
+        if (this instanceof FamiliarEntity) {
+            compoundtag.putBoolean("familiar", true);
+        }
         this.saveWithoutId(compoundtag);
         if (pPlayer.setEntityOnShoulder(compoundtag)) {
+            this.onShoulder = true;
             this.discard();
         }
     }
@@ -75,4 +81,11 @@ public abstract class MagicalBuddyMob extends PathfinderMob implements GeoEntity
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;
     }
+
+    boolean onShoulder;
+
+    public boolean isOnShoulder() {
+        return onShoulder;
+    }
+
 }

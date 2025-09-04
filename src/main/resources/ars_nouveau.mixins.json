@@ -5,7 +5,6 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
-    "AddLayerPlayerMixin",
     "ChatComponentAccessor",
     "GameRendererMixin",
     "camera.ClientChunkCacheMixin",
@@ -15,7 +14,8 @@
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
-    "light.LightEntityMixin"
+    "light.LightEntityMixin",
+    "shoulder.AddLayerPlayerMixin"
   ],
   "mixins": [
     "BlockBehaviourAccessor",
@@ -44,6 +44,7 @@
     "perks.UnbreakablePerk",
     "redstone.RedstoneLevelMixin",
     "rewind.RewindEntityMixin",
+    "shoulder.ShoulderPlayerMixin",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
     "structure.StructureTemplateMixin"

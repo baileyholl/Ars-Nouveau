@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.mixin;
+package com.hollingsworth.arsnouveau.common.mixin.shoulder;
 
 import com.hollingsworth.arsnouveau.client.renderer.layer.GeoShoulderLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
