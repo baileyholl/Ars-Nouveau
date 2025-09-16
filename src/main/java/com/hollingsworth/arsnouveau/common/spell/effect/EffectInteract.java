@@ -29,6 +29,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
@@ -166,9 +167,26 @@ public class EffectInteract extends AbstractEffect {
         }
 
         ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
+        if (iteminteractionresult == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+            if (itemstack.getItem() instanceof BucketItem bucket) {
+                handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, getHand(player));
+                return;
+            }
 
-        if (itemstack.getItem() instanceof BucketItem bucket) {
-            handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, getHand(player));
+            UseOnContext ctx = new UseOnContext(pLevel, pPlayer, pHand, itemstack.copy(), pHitResult);
+            var interactionResult = itemstack.useOn(ctx);
+
+            if (interactionResult.consumesAction()) {
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(pPlayer, blockpos, itemstack);
+            }
+
+            if (interactionResult == InteractionResult.PASS && pHand == InteractionHand.MAIN_HAND) {
+                InteractionResult interactionresult = blockstate.useWithoutItem(pLevel, pPlayer, pHitResult);
+                if (interactionresult.consumesAction()) {
+                    CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
+                }
+            }
+
             return;
         }
 
