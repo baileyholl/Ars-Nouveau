@@ -31,7 +31,7 @@ public class RepairingPerk extends Perk {
         }
 
         var cap = CapabilityRegistry.getMana(entity);
-        if (cap != null && cap.getCurrentMana() < 20) {
+        if (cap != null && cap.getCurrentMana() >= 20) {
             cap.removeMana(20);
             stack.setDamageValue(damage - repairAmount);
         }
