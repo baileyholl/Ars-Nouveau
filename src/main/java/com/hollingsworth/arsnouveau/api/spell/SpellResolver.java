@@ -168,7 +168,11 @@ public class SpellResolver implements Cloneable {
     /**
      * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
      */
+    // TODO: 1.22 make params ServerLevel
     public void onResolveEffect(Level world, HitResult result) {
+        if (world.isClientSide) {
+            return;
+        }
         this.hitResult = result;
         this.resolveAllEffects(world);
     }
@@ -177,6 +181,9 @@ public class SpellResolver implements Cloneable {
      * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
      */
     protected void resolveAllEffects(Level world) {
+        if (world.isClientSide) {
+            return;
+        }
         spellContext.resetCastCounter();
         resume(world);
     }
@@ -185,6 +192,9 @@ public class SpellResolver implements Cloneable {
      * Attempts to resolve the remaining effects of the SpellContext without restarting.
      */
     public void resume(Level world) {
+        if (world.isClientSide) {
+            return;
+        }
         LivingEntity shooter = spellContext.getUnwrappedCaster();
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, this.hitResult, spell, spellContext, this);
         NeoForge.EVENT_BUS.post(spellResolveEvent);
@@ -211,18 +221,40 @@ public class SpellResolver implements Cloneable {
             NeoForge.EVENT_BUS.post(preEvent);
             if (preEvent.isCanceled())
                 continue;
-            effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
+
+            IResolveListener.ResolveStatus resolveStatus = IResolveListener.ResolveStatus.CONTINUE;
+
             if (hitPos != null) {
                 var resolveListener = world.getCapability(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, hitPos);
                 if (resolveListener != null)
-                    resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+                    resolveStatus = resolveListener.onPreResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             }
 
             if (hitEntity != null) {
                 var resolveListener = hitEntity.getCapability(CapabilityRegistry.ENTITY_SPELL_RESOLVE_CAP);
                 if (resolveListener != null)
-                    resolveListener.onResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+                    resolveStatus = resolveListener.onPreResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
             }
+
+            if (resolveStatus == IResolveListener.ResolveStatus.STOP_ALL) {
+                NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
+                break;
+            } else if (resolveStatus == IResolveListener.ResolveStatus.CONTINUE) {
+                effect.onResolve(this.hitResult, world, shooter, stats, spellContext, this);
+            }
+
+            if (hitPos != null) {
+                var resolveListener = world.getCapability(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, hitPos);
+                if (resolveListener != null)
+                    resolveListener.onPostResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+            }
+
+            if (hitEntity != null) {
+                var resolveListener = hitEntity.getCapability(CapabilityRegistry.ENTITY_SPELL_RESOLVE_CAP);
+                if (resolveListener != null)
+                    resolveListener.onPostResolve(world, shooter, this.hitResult, spell, spellContext, effect, stats, this);
+            }
+
             NeoForge.EVENT_BUS.post(new EffectResolveEvent.Post(world, shooter, this.hitResult, spell, spellContext, effect, stats, this));
         }
 

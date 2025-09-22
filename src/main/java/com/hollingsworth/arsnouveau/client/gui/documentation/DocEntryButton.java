@@ -97,7 +97,7 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
 
     @Override
     protected boolean isValidClickButton(int button) {
-        return super.isValidClickButton(button) || button == 1;
+        return super.isValidClickButton(button) || (onClickFunction != null && button == 1);
     }
 
     @Override
@@ -106,13 +106,6 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public void onClick(double mouseX, double mouseY, int button) {
-        if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && (onClickFunction == null || !onClickFunction.apply(mouseX, mouseY, button))) {
-            super.onClick(mouseX, mouseY, button);
-        }
     }
 
     @Override

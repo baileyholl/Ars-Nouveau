@@ -288,6 +288,7 @@ public class DefaultTableProvider extends LootTableProvider {
                             .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
                     );
             add(BlockRegistry.DIM_BLOCK.get(), LootTable.lootTable().withPool(dimBlockBuilder));
+            registerDropSelf(BlockRegistry.DECOR_BLOSSOM);
         }
 
         protected LootTable.Builder createCropDrops(Block pCropBlock, Item pGrownCropItem, Item pSeedsItem, LootItemCondition.Builder pDropGrownCropCondition, int bonus) {

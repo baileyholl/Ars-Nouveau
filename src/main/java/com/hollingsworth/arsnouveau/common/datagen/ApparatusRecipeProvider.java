@@ -3,15 +3,13 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -860,7 +858,8 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
 
         List<Ingredient> spellWriteList = new ArrayList<>();
         spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()));
-        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix("spell_write"), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix(RecipeRegistry.SPELL_WRITE_RECIPE_ID), new SpellWriteRecipe(spellWriteList, 3000), SpellWriteRecipe.CODEC));
+        addRecipe(new ApparatusRecipeBuilder.RecipeWrapper<>(ArsNouveau.prefix(RecipeRegistry.PRESTIDIGITATION_RECIPE_ID), new PrestidigitationRecipe(List.of(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT.get()), Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE)), 0), PrestidigitationRecipe.CODEC));
 
         addRecipe(builder()
                 .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
@@ -1110,6 +1109,11 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
                 .keepNbtOfReagent(true)
+                .build());
+
+        addRecipe(builder().withResult(BlockRegistry.DECOR_BLOSSOM)
+                .withReagent(Items.SPORE_BLOSSOM)
+                .withPedestalItem(1, Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE))
                 .build());
 
     }

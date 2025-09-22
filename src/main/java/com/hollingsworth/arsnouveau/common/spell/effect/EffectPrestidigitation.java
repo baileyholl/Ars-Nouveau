@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.timelines.PrestidigitationTimeline;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.ParticleTile;
+import com.hollingsworth.arsnouveau.common.items.data.PrestidigitationData;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketPrestidigitation;
@@ -12,10 +14,13 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -72,6 +77,21 @@ public class EffectPrestidigitation extends AbstractEffect {
             }
             world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
 
+        }
+    }
+
+    public static void onInventoryTick(ItemStack stack, Level level, Entity entity, int inventorySlot, boolean isCurrentItem) {
+        if (!level.isClientSide || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
+            return;
+        }
+        PrestidigitationData prestidigitationData = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());
+        if (prestidigitationData == null) {
+            return;
+        }
+        // Current item, held in hand or armor slots.
+        if (isCurrentItem || (inventorySlot > 35 && inventorySlot < 41)) {
+            ParticleEmitter emitter = prestidigitationData.getEmitter(entity, prestidigitationData.timeline().onTickEffect);
+            emitter.tick(level);
         }
     }
 

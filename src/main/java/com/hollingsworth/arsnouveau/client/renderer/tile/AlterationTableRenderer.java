@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.AlterationTile;
 import com.hollingsworth.arsnouveau.common.items.data.StackPerkHolder;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -70,9 +69,6 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
     public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, int packedLightIn, int packedOverlayIn) {
         matrixStack.pushPose();
-        BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
-        if (!(state.getBlock() instanceof AlterationTable))
-            return;
         ItemStack stack = tile.armorStack;
 //        if (stack.getItem() instanceof ArmorItem armorItem) {
         // to rotate around a point: scale, point translate, rotate, object translate
@@ -239,11 +235,10 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
     @Override
     public void actuallyRender(PoseStack stack, AlterationTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE.get())
+        BlockState state = tile.getBlockState();
+        if (state.getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
             return;
-        if (tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-            return;
-        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(AlterationTable.FACING);
+        Direction direction = state.getValue(AlterationTable.FACING);
         stack.pushPose();
 
         if (direction == Direction.NORTH) {
@@ -274,11 +269,10 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
     @Override
     public void render(AlterationTile animatable, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         super.render(animatable, partialTick, stack, bufferSource, packedLight, packedOverlay);
-        if (animatable.getLevel().getBlockState(animatable.getBlockPos()).getBlock() != BlockRegistry.ALTERATION_TABLE.get())
+        BlockState state = animatable.getBlockState();
+        if (state.getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
             return;
-        if (animatable.getLevel().getBlockState(animatable.getBlockPos()).getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-            return;
-        Direction direction = animatable.getLevel().getBlockState(animatable.getBlockPos()).getValue(AlterationTable.FACING);
+        Direction direction = state.getValue(AlterationTable.FACING);
         Vector3d perkTranslate = new Vector3d(0, 0, 0);
         Quaternionf perkQuat = Axis.YP.rotationDegrees(-90);
         if (direction == Direction.NORTH) {

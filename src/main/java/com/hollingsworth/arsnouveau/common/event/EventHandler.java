@@ -118,7 +118,7 @@ public class EventHandler {
                         GenericRecipeRegistry.reloadAll(recipeManager);
                         CasterTomeRegistry.reloadTomeData(recipeManager, access);
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
-                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server.reloadableRegistries());
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server);
                         ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
                         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);

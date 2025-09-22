@@ -178,6 +178,7 @@ public class LibBlockNames {
 
     public static final String CRAB_HAT = "alakarkinos_hat";
     public static final String REPOSITORY_CATALOG = "repository_controller";
+    public static final String DECOR_BLOSSOM = "decor_blossom";
 
     public static final String DIM_BLOCK = "dim_block";
 

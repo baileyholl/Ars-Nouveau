@@ -22,11 +22,13 @@ public class ServerConfig {
     public static ModConfigSpec.BooleanValue INFINITE_SPELLS;
     public static ModConfigSpec.IntValue INF_SPELLS_LENGHT_MODIFIER;
     public static ModConfigSpec.IntValue LECTERN_LINK_RANGE;
+    public static ModConfigSpec.IntValue DECOR_BLOSSOM_RANGE;
 
     static {
         ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
         SERVER_BUILDER.comment("Blocks").push("blocks");
         LECTERN_LINK_RANGE = SERVER_BUILDER.comment("Maximum storage lectern linking range").defineInRange("lecternLinkRange", 30, 1, Integer.MAX_VALUE);
+        DECOR_BLOSSOM_RANGE = SERVER_BUILDER.comment("Maximum range of the decor blossom").defineInRange("decorBlossomRange", 30, 1, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Mana").push("mana");

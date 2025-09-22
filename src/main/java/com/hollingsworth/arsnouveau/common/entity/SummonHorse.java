@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.Util;
@@ -19,12 +20,13 @@ import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonHorse extends Horse implements ISummon {
+public class SummonHorse extends Horse implements ISummon, IDispellable {
     public int ticksLeft;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonHorse.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -59,6 +61,12 @@ public class SummonHorse extends Horse implements ISummon {
                 onSummonDeath(level, null, true);
             }
         }
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.ticksLeft = 0;
+        return true;
     }
 
     @Nullable

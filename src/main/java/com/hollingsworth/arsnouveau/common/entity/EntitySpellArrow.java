@@ -37,6 +37,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nullable;
 
@@ -71,6 +72,9 @@ public class EntitySpellArrow extends Arrow {
     }
 
     public void setResolver(SpellResolver resolver) {
+        if (resolver.spellContext != null) {
+            resolver.spellContext.level = this.level;
+        }
         this.entityData.set(SPELL_RESOLVER, resolver);
         buildEmitters();
     }
@@ -163,7 +167,7 @@ public class EntitySpellArrow extends Arrow {
                 }
             }
 
-            if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !isNoClip && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
+            if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !isNoClip && !EventHooks.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
                 this.hasImpulse = true;
             }
@@ -216,10 +220,10 @@ public class EntitySpellArrow extends Arrow {
         this.setPos(d5, d1, d2);
         this.checkInsideBlocks();
 
-        if (level.isClientSide && tickCount > 1) {
+        if (level.isClientSide) {
             playParticles();
         }
-        if (!level.isClientSide && tickCount == 1) {
+        if (!level.isClientSide && tickCount == 1 && castSound != null) {
             castSound.playSound(level, position);
         }
     }

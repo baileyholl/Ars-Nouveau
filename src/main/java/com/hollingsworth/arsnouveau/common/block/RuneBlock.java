@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IFilter;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -121,12 +122,17 @@ public class RuneBlock extends TickableModBlock {
         }));
         if (!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile rune) {
             if (rune.spell != null) {
+                // Ignore form and its augment, only check effects
                 for (AbstractSpellPart part : rune.spell.recipe()) {
-                    if (part instanceof IFilter filter) {
-                        if (!filter.shouldResolveOnEntity(entityIn, worldIn)) {
-                            return;
-                        }
-                    } else break;
+                    if (part instanceof AbstractEffect) {
+                        // If the effect is not a filter, proceed with rune activation
+                        if (part instanceof IFilter filter) {
+                            // If one or more filters are detected, all must match to let the rune activate
+                            if (!filter.shouldResolveOnEntity(entityIn, worldIn)) {
+                                return;
+                            }
+                        } else break;
+                    }
                 }
             }
             rune.touchedEntity = entities.getFirst();

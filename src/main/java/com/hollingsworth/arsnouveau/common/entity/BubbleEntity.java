@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -190,6 +191,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             if (this.hasDismounted.contains(pTarget.getUUID())) {
                 return false;
             }
+        }
+        if (pTarget instanceof Player player && player.isSleeping()) {
+            return false;
         }
         return !pTarget.getType().is(EntityTags.BUBBLE_BLACKLIST) && !(pTarget.getVehicle() instanceof BubbleEntity);
     }

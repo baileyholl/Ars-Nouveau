@@ -55,4 +55,6 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PotionJarData>> POTION_JAR = DATA.register("potion_jar", () -> DataComponentType.<PotionJarData>builder().persistent(PotionJarData.CODEC).networkSynchronized(PotionJarData.STREAM).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> UNBREAKING = DATA.register("unbreaking", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PrestidigitationData>> PRESTIDIGITATION = DATA.register("prestidigitation", () -> DataComponentType.<PrestidigitationData>builder().persistent(PrestidigitationData.CODEC).networkSynchronized(PrestidigitationData.STREAM).build());
 }

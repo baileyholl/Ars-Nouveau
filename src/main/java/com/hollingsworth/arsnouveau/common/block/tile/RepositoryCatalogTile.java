@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.IFiltersetProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
-import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RepositoryBlock;
@@ -31,15 +31,19 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -196,9 +200,12 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     }
 
     public IResolveListener getSpellListener() {
-        return (world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver) -> {
-            if (resolveEffect instanceof EffectName && spell.name() != null) {
-                setName(Component.literal(spell.name()));
+        return new IResolveListener() {
+            @Override
+            public void onPostResolve(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+                if (resolveEffect instanceof EffectName && spell.name() != null) {
+                    setName(Component.literal(spell.name()));
+                }
             }
         };
     }

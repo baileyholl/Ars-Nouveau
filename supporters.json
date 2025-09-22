@@ -41,7 +41,10 @@
   "9529428c-25ea-443e-b56f-f24a18ebb5f1", "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8", "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
   "7e0a1802-2a6a-403d-a487-d3a60cb2d037", "4295cb3b-245c-481d-ad3c-60b179b8cc27", "5abd7fb8-61fd-4fcd-bf6b-10da638f5174",
   "eb5adebb-130f-4a56-9a52-e99c455b628d", "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5", "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
-  "d41bfe34-e558-4c52-9797-bdd88fcbc88a", "3ad9da32-51f9-49ad-b94d-34a09182d63d"],
+  "d41bfe34-e558-4c52-9797-bdd88fcbc88a", "3ad9da32-51f9-49ad-b94d-34a09182d63d", "3422a0bf-4edf-44ca-9d79-7c897424e69a",
+  "aa025c0e-8649-4623-a634-ad778ea9c2d1", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "03b6eedd-91f8-430c-80e6-b2ea7cc1a789",
+  "401dc34a-0111-4f25-9c4c-526d77650e21", "087647a0-77e5-40ec-97f9-ee8a4bdd333b", "ef241661-c372-46d6-8583-d96d051223ed",
+  "552587c7-7527-4f93-9646-d9ea615b2537"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -661,6 +664,36 @@
       "name": "Hastur the Unspeakable One",
       "color": "yellow",
       "bio": "Probably not part of a cult!"
+    },{
+      "adopter": "Shoob",
+      "name": "Shoob Jr.",
+      "color": "gray",
+      "bio": "This lil guy has been travelling everywhere in search of ultimate power, and now it has found you! Keep an eye on 'em!"
+    },{
+      "adopter": "FayneProto",
+      "color": "black",
+      "name": "Lil' Fayne",
+      "bio": "Fayne cannot give good names for things so Fayne decided to name his Starbuncle Lil' Fayne. His reasoning? \"Because I don't know what else to name him, and he sort of looks like me\". Other than that this little guy likes staring blankly at people and thats about it.\n"
+    },{
+      "adopter": "WaywardxWanderer",
+      "color": "black",
+      "name": "Sir Bernard the Valiant",
+      "bio": "Sir Bernard is scared of everything and hopes that no one will ever find out that he only earned his title because he was mistaken for another much braver starbuncle."
+    },{
+      "adopter": "Alphapplepie",
+      "color": "pink",
+      "bio": "She is on the hunt for everything pink, such is herself.",
+      "name": "Alpha Noctiluca"
+    },{
+      "adopter": "Fighter_Kitsune",
+      "name": "Hildi",
+      "color": "white",
+      "bio": "May die when woken up."
+    },{
+      "adopter": "Hack The Planet",
+      "name": "Pranks",
+      "color": "gray",
+      "bio": "Starbuncle-Fuzzer injecting malformed packets into reality. May be hacking the planet."
     }
   ]
 }

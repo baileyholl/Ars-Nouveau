@@ -703,7 +703,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.ritual_brazier", "A brazier that may be used as decoration or for performing rituals. To light the brazier for decoration, cast a Light spell on the brazier. The color of the brazier corresponds with the color of the spell. Applying a redstone signal will disable a running ritual. For information on performing rituals, see the dedicated section on rituals.");
         add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
         add("ars_nouveau.page2.basic_spell_turret", "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.");
-        add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, and Redstone for free.");
+        add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, Sensitive and Redstone glyphs for free.");
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
         add("ars_nouveau.page1.bookwyrm_charm", "Bookwyrm Charms can be used on a Storage Lectern to increase the number of accessible inventories. Augment a Ritual of Awakening with Book and Quills in order to obtain charms. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.");
         add("ars_nouveau.page2.bookwyrm_charm", "In the event that they die or are dispelled, they will drop their charm.");
@@ -1784,7 +1784,16 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle.explosion", "Explosion");
         add("ars_nouveau.particle.cloud", "Cloud");
         add("ars_nouveau.particle.breaking_circle", "Breaking Circle");
-
+        add("ars_nouveau.prestidigitation.tooltip", "Prestidigitation");
+        add("ars_nouveau.prestidigitation.prestidigitation_clear", "Prestidigitation Removed");
+        add("ars_nouveau.abjuration_essence.tooltip", "Can be used on the Scribes Table to remove Prestidigitation from items.");
+        add("ars_nouveau.page.prestidigitation", "Illusory Items");
+        add("ars_nouveau.page1.prestidigitation", "Prestidigitation can be applied to Items, causing them to emit particles when held or worn. Particle settings are determined by the Prestidigitation glyph settings for the spell contained within the Spell Parchment when used in the apparatus. To remove Prestidigitation, use an Abjuration Essence on the Scribes Table with the enchanted item inside it.");
+        add("ars_nouveau.connection.range", "Can only connect within %s blocks.");
+        add("block.ars_nouveau.decor_blossom", "Decor Blossom");
+        add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
+        add("ars_nouveau.learn_glyph", "Unlocked %s");
+        add("ars_nouveau.already_learned", "You have already learned this Glyph.");
     }
 
     public void addCategory(String key, String value) {

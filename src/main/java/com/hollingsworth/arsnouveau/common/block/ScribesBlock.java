@@ -73,7 +73,7 @@ public class ScribesBlock extends TableBlock {
                 tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
 
             }
-            BlockState updateState = world.getBlockState(tile.getBlockPos());
+            BlockState updateState = tile.getBlockState();
             world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
         }
         if (player.isShiftKeyDown()) {
@@ -82,11 +82,11 @@ public class ScribesBlock extends TableBlock {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
             if (stack == null || stack.isEmpty())
-                return ItemInteractionResult.SUCCESS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (stack.getItem() instanceof IScribeable scribeable) {
                 scribeable.onScribe(world, pos, player, handIn, stack);
-                BlockState updateState = world.getBlockState(tile.getBlockPos());
+                BlockState updateState = tile.getBlockState();
                 world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
             }
         }
@@ -125,13 +125,13 @@ public class ScribesBlock extends TableBlock {
             return;
         Level world = event.getLevel();
         BlockPos pos = event.getPos();
-
-        if (world.getBlockState(pos).getBlock() instanceof ScribesBlock) {
+        BlockState state = world.getBlockState(pos);
+        if (state.getBlock() instanceof ScribesBlock) {
             ItemStack stack = event.getEntity().getItemInHand(event.getHand());
             if (stack.getItem() instanceof DominionWand) {
                 return;
             }
-            BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, world.getBlockState(pos), world, pos, event.getEntity(), event.getHand(), event.getHitVec());
+            BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, state, world, pos, event.getEntity(), event.getHand(), event.getHitVec());
             event.setCanceled(true);
         }
     }
