@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.light.provider.*;
+import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
@@ -23,10 +24,14 @@ public class LambDynamicLightsInitializer implements DynamicLightsInitializer {
             ArsNouveau.prefix("starbuncle"), StarbuncleEntityLuminance.CODEC
     );
 
+    @Override
+    public void onInitializeDynamicLights(DynamicLightsContext context) {
+        LightManager.dynamicLightsContext = context;
+    }
+
     @SuppressWarnings({"removal", "UnstableApiUsage"})
     @Override
     public void onInitializeDynamicLights(ItemLightSourceManager itemLightSourceManager) {
         // Note: required for backwards compatibility with LDL v3.
-        LightManager.isLambDynamicLightsPresent = true;
     }
 }

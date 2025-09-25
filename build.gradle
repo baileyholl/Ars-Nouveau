@@ -168,6 +168,11 @@ dependencies {
             attribute(mappingsAttribute, "mojmap")
         }
     }
+    jarJar("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
+        attributes {
+            attribute(mappingsAttribute, "mojmap")
+        }
+    }
 
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'

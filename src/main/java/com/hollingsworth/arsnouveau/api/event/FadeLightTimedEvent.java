@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.common.light.DynamLightUtil;
 import com.hollingsworth.arsnouveau.common.light.LambDynamicLight;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
+import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehavior;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -12,14 +13,16 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
-public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
-    protected int lambdynlights$luminance = 0;
-    private int lambdynlights$lastLuminance = 0;
-    private long lambdynlights$lastUpdate = 0;
+public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight, DynamicLightBehavior {
+    protected int luminance = 0;
+    private int lastLuminance = 0;
     private LongOpenHashSet lambdynlights$trackedLitChunkPos = new LongOpenHashSet();
 
-    public Vec3 targetPos;
+    private final BoundingBox box;
+    public final Vec3 targetPos;
     public
     int ticksLeft;
     int starterTicks;
@@ -27,6 +30,10 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     Level level;
 
     public FadeLightTimedEvent(Level level, Vec3 pos, int duration, int startLuminance) {
+        this.box = new BoundingBox(
+                Mth.floor(pos.x),  Mth.floor(pos.y),  Mth.floor(pos.z),
+                Mth.ceil(pos.x),  Mth.ceil(pos.y),  Mth.ceil(pos.z)
+        );
         this.targetPos = pos;
         ticksLeft = duration;
         this.starterTicks = duration;
@@ -36,20 +43,27 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
 
     @Override
     public void tick(boolean serverSide) {
-        // We do not want to update the entity on the server.
-        if (!serverSide && !LightManager.shouldUpdateDynamicLight()) {
-            lambdynlights$luminance = 0;
-        }
-        if (!serverSide && LightManager.shouldUpdateDynamicLight()) {
-            if (this.isExpired()) {
-                this.ars_nouveau$setDynamicLightEnabled(false);
-            } else {
-                this.ars_nouveau$dynamicLightTick();
-                LightManager.updateTracking(this);
+        if (serverSide) return;
+
+        var context = LightManager.dynamicLightsContext;
+        if (context == null) {
+            // We do not want to update the entity on the server.
+            if (!LightManager.shouldUpdateDynamicLight()) {
+                luminance = 0;
+            } else if (LightManager.shouldUpdateDynamicLight()) {
+                if (this.isExpired()) {
+                    this.ars_nouveau$setDynamicLightEnabled(false);
+                } else {
+                    this.ars_nouveau$dynamicLightTick();
+                    LightManager.updateTracking(this);
+                }
             }
+        } else {
+            this.ars_nouveau$dynamicLightTick();
         }
+
         ticksLeft--;
-        if (ticksLeft <= 0) {
+        if (ticksLeft <= 0 && context == null) {
             this.ars_nouveau$setDynamicLightEnabled(false);
         }
     }
@@ -81,17 +95,17 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
 
     @Override
     public void ars_nouveau$resetDynamicLight() {
-        this.lambdynlights$lastLuminance = 0;
+        this.lastLuminance = 0;
     }
 
     @Override
     public int ars_nouveau$getLuminance() {
-        return lambdynlights$luminance;
+        return luminance;
     }
 
     @Override
     public void ars_nouveau$dynamicLightTick() {
-        lambdynlights$luminance = starterTicks == 0 ? 0 : (int) ((double) startLuminance * ((double) ticksLeft / (double) this.starterTicks));
+        luminance = starterTicks == 0 ? 0 : (int) ((double) startLuminance * ((double) ticksLeft / (double) this.starterTicks));
     }
 
     @Override
@@ -103,8 +117,8 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     public boolean ars_nouveau$updateDynamicLight(LevelRenderer renderer) {
         int luminance = this.ars_nouveau$getLuminance();
 
-        if (luminance != this.lambdynlights$lastLuminance) {
-            this.lambdynlights$lastLuminance = luminance;
+        if (luminance != this.lastLuminance) {
+            this.lastLuminance = luminance;
 
             var newPos = new LongOpenHashSet();
 
@@ -150,4 +164,38 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
                 LightManager.scheduleChunkRebuild(renderer, pos);
             }
     }
+
+    //region LambDynamicLights
+    @Override
+    public @Range(from = 0L, to = 15L) double lightAtPos(BlockPos pos, double falloffRatio) {
+        double dx = pos.getX() - this.targetPos.x + 0.5;
+        double dy = pos.getY() - this.targetPos.y + 0.5;
+        double dz = pos.getZ() - this.targetPos.z + 0.5;
+
+        double distanceSquared = dx * dx + dy * dy + dz * dz;
+
+        // Ensure 1:1 with the base mod.
+        return LightManager.maxDynamicLightLevel(distanceSquared, 0, this.luminance);
+    }
+
+    @Override
+    public @NotNull BoundingBox getBoundingBox() {
+        return this.box;
+    }
+
+    @Override
+    public boolean hasChanged() {
+        if (this.lastLuminance != this.luminance) {
+            this.lastLuminance = this.luminance;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isRemoved() {
+        return this.isExpired();
+    }
+    //endregion
 }
