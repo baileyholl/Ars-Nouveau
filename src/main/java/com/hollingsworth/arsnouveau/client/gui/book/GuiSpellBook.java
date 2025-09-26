@@ -216,7 +216,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public int getNumPages() {
-        return (int) Math.ceil((double) displayedGlyphs.size() / 58);
+        return (int) Math.ceil((double) displayedGlyphs.size() / 58) - 1;
     }
 
     private void layoutAllGlyphs(int page) {
@@ -229,7 +229,15 @@ public class GuiSpellBook extends SpellSlottedScreen {
             default -> p.getTypeIndex();
         }).thenComparing(AbstractSpellPart::getLocaleName));
 
-        sorted = sorted.subList(84 * page, Math.min(sorted.size(), 84 * (page + 1)));
+        int startIndex = 84 * page;
+        int endIndex = Math.min(sorted.size(), 84 * (page + 1));
+
+        if (startIndex > sorted.size()) {
+            startIndex = sorted.size();
+        }
+
+        sorted = sorted.subList(startIndex, endIndex);
+
         int count = 0;
         for (AbstractSpellPart part : sorted) {
             boolean isNextPage = count >= (perRow * maxRows);
