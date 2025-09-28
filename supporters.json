@@ -689,6 +689,11 @@
       "name": "Hildi",
       "color": "white",
       "bio": "May die when woken up."
+    },{
+      "adopter": "Hack The Planet",
+      "name": "Pranks",
+      "color": "gray",
+      "bio": "Starbuncle-Fuzzer injecting malformed packets into reality. May be hacking the planet."
     }
   ]
 }
