@@ -216,7 +216,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public int getNumPages() {
-        return (int) Math.ceil((double) displayedGlyphs.size() / 58);
+        return (int) Math.ceil((double) displayedGlyphs.size() / 84);
     }
 
     private void layoutAllGlyphs(int page) {
@@ -228,8 +228,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
             case AbstractAugment ignored -> 3;
             default -> p.getTypeIndex();
         }).thenComparing(AbstractSpellPart::getLocaleName));
-
-        sorted = sorted.subList(84 * page, Math.min(sorted.size(), 84 * (page + 1)));
+        int fromIndex = 84 * page;
+        if (fromIndex < sorted.size()) {
+            sorted = sorted.subList(fromIndex, Math.min(sorted.size(), 84 * (page + 1)));
+        }
         int count = 0;
         for (AbstractSpellPart part : sorted) {
             boolean isNextPage = count >= (perRow * maxRows);
@@ -288,7 +290,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public void updateNextPageButtons() {
-        if (displayedGlyphs.size() < glyphsPerPage) {
+        if (displayedGlyphs.size() <= 84) {
             nextButton.visible = false;
             nextButton.active = false;
         } else {
