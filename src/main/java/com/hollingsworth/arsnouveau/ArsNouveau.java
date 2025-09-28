@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.block.tile.DimTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
@@ -136,8 +136,8 @@ public class ArsNouveau {
             ArsNouveau.proxy = new ServerProxy();
         }
 
-        NeoForge.EVENT_BUS.addListener(DimTile.DimManager::onBlockBroken);
-        NeoForge.EVENT_BUS.addListener(DimTile.DimManager::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
     }
 
     public void setup(final FMLCommonSetupEvent event) {

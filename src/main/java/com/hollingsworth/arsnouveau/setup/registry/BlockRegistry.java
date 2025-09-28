@@ -371,7 +371,7 @@ public class BlockRegistry {
     public static final BlockEntityTypeRegistryWrapper<SpellSensorTile> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
     public static final BlockEntityTypeRegistryWrapper<RedstoneRelayTile> REDSTONE_RELAY_TILE = registerTile(LibBlockNames.REDSTONE_RELAY, RedstoneRelayTile::new, REDSTONE_RELAY);
     public static final BlockRegistryWrapper<DimBlock> DIM_BLOCK = registerBlockAndItem(LibBlockNames.DIM_BLOCK, DimBlock::new);
-    public static final BlockEntityTypeRegistryWrapper<DimTile> DIM_TILE = registerTile(LibBlockNames.DIM_BLOCK, DimTile::new, DIM_BLOCK);
+    public static final BlockEntityTypeRegistryWrapper<PlanariumTile> DIM_TILE = registerTile(LibBlockNames.DIM_BLOCK, PlanariumTile::new, DIM_BLOCK);
     public static final BlockEntityTypeRegistryWrapper<RepositoryCatalogTile> REPOSITORY_CONTROLLER_TILE = registerTile(LibBlockNames.REPOSITORY_CATALOG, RepositoryCatalogTile::new, REPOSITORY_CONTROLLER);
     public static final BlockEntityTypeRegistryWrapper<DecorBlossomTile> DECOR_BLOSSOM_TILE = registerTile(LibBlockNames.DECOR_BLOSSOM, DecorBlossomTile::new, DECOR_BLOSSOM);
 

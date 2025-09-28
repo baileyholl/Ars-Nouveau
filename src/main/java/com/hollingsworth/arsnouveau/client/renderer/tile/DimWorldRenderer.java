@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
-import com.hollingsworth.arsnouveau.common.block.tile.DimTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.client.rendering.FakeRenderingWorld;
 import com.hollingsworth.nuggets.client.rendering.StatePos;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,7 +13,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -40,6 +38,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,75 +46,83 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
+public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
     StructureRenderData renderData;
 
     public DimWorldRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
+        super(new PlanariumModel());
 
     }
 
     @Override
-    public boolean shouldRender(DimTile blockEntity, Vec3 cameraPos) {
+    public boolean shouldRenderOffScreen(PlanariumTile blockEntity) {
         return true;
     }
 
     @Override
-    public boolean shouldRenderOffScreen(DimTile blockEntity) {
+    public boolean shouldRender(PlanariumTile blockEntity, Vec3 cameraPos) {
         return true;
     }
 
     @Override
     public int getViewDistance() {
-        return BlockEntityRenderer.super.getViewDistance();
+        return 50;
     }
+
 
     @Override
-    public void render(DimTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        BlockState state = BlockRegistry.MOB_JAR.defaultBlockState();
-        poseStack.pushPose();
-        poseStack.scale(16, 16, 16);
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-        poseStack.popPose();
+    public void render(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        super.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+//        BlockState state = BlockRegistry.MOB_JAR.defaultBlockState();
+//        poseStack.pushPose();
+//        poseStack.scale(16, 16, 16);
+//        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+//        poseStack.popPose();
         if (blockEntity.getTemplate() == null)
             return;
-        //        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.pushPose();
-//        poseStack.translate(0, 0.5, 0);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
-//
-//        poseStack.pushPose();
-//        poseStack.translate(0.5, 0, 0);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
-//
-//        poseStack.pushPose();
-//        poseStack.translate(0, 0, 0.5);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
-//
-//        poseStack.pushPose();
-//        poseStack.translate(0.5, 0, 0.5);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
-//
-//        poseStack.pushPose();
-//        poseStack.translate(0, 0.5, 0.5);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
-//
-//        poseStack.pushPose();
-//        poseStack.translate(0.5, 0.5, 0);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
-//
-//        poseStack.pushPose();
-//        poseStack.translate(0.5, 0.5, 0.5);
-//        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.pushPose();
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        float offset = 0.3f;
+        poseStack.translate(0, offset, 0);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, -0.2f, 0);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.translate(0, -0.2f, 0.5);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, -0.2f, 0.5);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.translate(0, offset, 0.5);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, offset, 0);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, offset, 0.5);
+        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+        poseStack.scale(.98f, .98f, .98f);
+        poseStack.popPose();
     }
 
-    public void doRender(DimTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    public void doRender(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         StructureTemplate structureTemplate = blockEntity.getTemplate();
         BlockPos pos = BlockPos.ZERO;
         int dim = 16 * 2;
@@ -162,7 +169,7 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
     }
 
     //Start rendering - this is the most expensive part, so we render it, then cache it, and draw it over and over (much cheaper)
-    public void buildRender(DimTile blockEntity, StructureRenderData data, PoseStack poseStack, Player player) {
+    public void buildRender(PlanariumTile blockEntity, StructureRenderData data, PoseStack poseStack, Player player) {
         BlockPos renderPos = blockEntity.getBlockPos();
         renderPos = renderPos.above();
         //Start drawing the Render and cache it, used for both Building and Copy/Paste
@@ -271,14 +278,14 @@ public class DimWorldRenderer implements BlockEntityRenderer<DimTile> {
     }
 
     //Draw what we've cached
-    public static void drawRender(DimTile dimTile, StructureRenderData data, PoseStack poseStack, Matrix4f projectionMatrix, Matrix4f modelViewMatrix, Player player) {
+    public static void drawRender(PlanariumTile planariumTile, StructureRenderData data, PoseStack poseStack, Matrix4f projectionMatrix, Matrix4f modelViewMatrix, Player player) {
         if (data.vertexBuffers == null) {
             return;
         }
         BlockPos anchorPos = data.anchorPos;
         MultiBufferSource.BufferSource buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        BlockPos renderPos = dimTile.getBlockPos().above();
+        BlockPos renderPos = planariumTile.getBlockPos().above();
         //Sort every <X> Frames to prevent screendoor effect
         if (data.sortCounter > 20) {
             sortAll(data, renderPos);

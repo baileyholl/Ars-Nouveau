@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
@@ -27,6 +27,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,14 +35,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DimTile extends ModdedTile implements ITickable {
+public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEntity {
 
     public static DimManager dimManager = new DimManager();
     public ResourceKey<Level> key;
@@ -50,11 +57,11 @@ public class DimTile extends ModdedTile implements ITickable {
     boolean playersNearby = true;
     public Component name;
 
-    public DimTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public PlanariumTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
-    public DimTile(BlockPos pos, BlockState state) {
+    public PlanariumTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.DIM_TILE.get(), pos, state);
     }
 
@@ -161,10 +168,13 @@ public class DimTile extends ModdedTile implements ITickable {
     }
 
     public IResolveListener onResolve() {
-        return (world, shooter, result, spell, spellContext, resolveEffect, spellStats, spellResolver) -> {
-            if (world instanceof ServerLevel serverLevel && resolveEffect instanceof EffectName && spell.name() != null) {
-                name = Component.literal(spell.name());
-                setDimension(spell.name(), serverLevel);
+        return new IResolveListener() {
+            @Override
+            public void onPostResolve(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
+                if (world instanceof ServerLevel serverLevel && resolveEffect instanceof EffectName && spell.name() != null) {
+                    name = Component.literal(spell.name());
+                    setDimension(spell.name(), serverLevel);
+                }
             }
         };
     }
@@ -188,6 +198,18 @@ public class DimTile extends ModdedTile implements ITickable {
             ServerLevel dimLevel = level.getServer().getLevel(key);
             entity.teleportTo(dimLevel, 7, 2, 7, Set.of(), entity.getYRot(), entity.getXRot());
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     public static class DimManager {
