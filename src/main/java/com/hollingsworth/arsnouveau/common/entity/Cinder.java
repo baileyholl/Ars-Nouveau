@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.util.SoundUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,9 +49,9 @@ public class Cinder extends EnchantedFallingBlock {
 //                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
 //            }
 
-            world.sendParticles(ParticleTypes.SMOKE, position.x, position.y + 0.5, position.z, 10,
+            ParticleUtil.sendParticles(world, ParticleTypes.SMOKE, position.x, position.y + 0.5, position.z, 10,
                     0, ParticleUtil.inRange(-0.1, 0.1), 0, 0.03);
-            world.playSound(null, BlockPos.containing(position), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.05f, 0.8f);
+            SoundUtil.playSound(level, null, BlockPos.containing(position), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.05f, 0.8f);
         }
     }
 
