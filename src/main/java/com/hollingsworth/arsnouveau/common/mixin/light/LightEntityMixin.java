@@ -88,9 +88,9 @@ public abstract class LightEntityMixin implements LambDynamicLight {
         }
         if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight()) {
             if (this.isRemoved()) {
-                this.setDynamicLightEnabled(false);
+                this.ars_nouveau$setDynamicLightEnabled(false);
             } else {
-                this.dynamicLightTick();
+                this.ars_nouveau$dynamicLightTick();
                 LightManager.updateTracking(this);
             }
         }
@@ -99,41 +99,41 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Inject(method = "remove", at = @At("TAIL"))
     public void onRemove(CallbackInfo ci) {
         if (this.level.isClientSide()) {
-            this.setDynamicLightEnabled(false);
+            this.ars_nouveau$setDynamicLightEnabled(false);
         }
     }
 
     @Inject(method = "onClientRemoval", at = @At("TAIL"))
     public void removed(CallbackInfo ci) {
         if (this.level.isClientSide()) {
-            this.setDynamicLightEnabled(false);
+            this.ars_nouveau$setDynamicLightEnabled(false);
             if (ars_nouveau$luminance > 0)
                 EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(this.level(), this.position(), 8, ars_nouveau$luminance));
         }
     }
 
     @Override
-    public double getDynamicLightX() {
+    public double ars_nouveau$getDynamicLightX() {
         return this.getX();
     }
 
     @Override
-    public double getDynamicLightY() {
+    public double ars_nouveau$getDynamicLightY() {
         return this.getEyeY();
     }
 
     @Override
-    public double getDynamicLightZ() {
+    public double ars_nouveau$getDynamicLightZ() {
         return this.getZ();
     }
 
     @Override
-    public Level getDynamicLightWorld() {
+    public Level ars_nouveau$getDynamicLightWorld() {
         return this.level;
     }
 
     @Override
-    public void resetDynamicLight() {
+    public void ars_nouveau$resetDynamicLight() {
         this.ars_nouveau$lastLuminance = 0;
     }
 
@@ -143,7 +143,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     }
 
     @Override
-    public void dynamicLightTick() {
+    public void ars_nouveau$dynamicLightTick() {
         ars_nouveau$luminance = 0;
         int luminance = DynamLightUtil.lightForEntity((Entity) (Object) this);
         if (luminance > this.ars_nouveau$luminance)
@@ -151,7 +151,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     }
 
     @Override
-    public int getLuminance() {
+    public int ars_nouveau$getLuminance() {
         return this.ars_nouveau$luminance;
     }
 
@@ -163,7 +163,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
         double deltaY = this.getY() - this.ars_nouveau$prevY;
         double deltaZ = this.getZ() - this.ars_nouveau$prevZ;
 
-        int luminance = this.getLuminance();
+        int luminance = this.ars_nouveau$getLuminance();
 
         if (Math.abs(deltaX) > 0.1D || Math.abs(deltaY) > 0.1D || Math.abs(deltaZ) > 0.1D || luminance != this.ars_nouveau$lastLuminance) {
             this.ars_nouveau$prevX = this.getX();
