@@ -64,6 +64,7 @@ public class Config {
     public static ModConfigSpec.BooleanValue DISABLE_SKY_SHADER;
     public static ModConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
     public static ModConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
+    public static ModConfigSpec.BooleanValue INVERT_LECTERN_SCROLLING;
     public static ModConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ModConfigSpec.IntValue TOOLTIP_X_OFFSET;
     public static ModConfigSpec.IntValue TOOLTIP_Y_OFFSET;
@@ -119,6 +120,7 @@ public class Config {
         SPELLNAME_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Spell Name").defineInRange("ySpellName", 30, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
+        INVERT_LECTERN_SCROLLING = CLIENT_BUILDER.comment("If scrolling in the Storage Lectern should be inverted").define("invertLecternScrolling", false);
         INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
         TOGGLE_RADIAL_HUD = CLIENT_BUILDER.comment("Whether the Selection HUD is toggled or held").define("toggleSelectionHUD", true);
         CLIENT_BUILDER.pop();

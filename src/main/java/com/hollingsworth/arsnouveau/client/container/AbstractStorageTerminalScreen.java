@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.network.ClientSearchPacket;
 import com.hollingsworth.arsnouveau.common.network.ClientSlotClick;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.JsonOps;
@@ -599,7 +600,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
             return false;
         } else {
             int i = (itemsSorted.size() + 9 - 1) / 9 - 5;
-            this.currentScroll = (float) (this.currentScroll + scrollY / i);
+            this.currentScroll = (float) (this.currentScroll + (Config.INVERT_LECTERN_SCROLLING.getAsBoolean() ? -scrollY : scrollY) / i);
             this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
             this.scrollTo(this.currentScroll);
             return true;
