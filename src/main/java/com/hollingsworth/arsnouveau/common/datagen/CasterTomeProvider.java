@@ -306,6 +306,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         tomes.add(buildTome("worsecookie", "The Yellow Sun", new Spell(MethodTouch.INSTANCE, EffectRune.INSTANCE, EffectHex.INSTANCE).add(AugmentAmplify.INSTANCE, 4).add(EffectWither.INSTANCE).add(AugmentAmplify.INSTANCE, 2), "Along the shore the cloud waves break, The twin suns sink beneath the lake, The shadows lengthen. In Carcosa", new ParticleColor(204, 153, 1)));
 
+        tomes.add(buildTome("pranks", "Pranks", new Spell(MethodProjectile.INSTANCE, EffectLinger.INSTANCE, EffectLaunch.INSTANCE, AugmentAmplify.INSTANCE, EffectDelay.INSTANCE, AugmentDurationDown.INSTANCE, EffectFirework.INSTANCE, AugmentAmplify.INSTANCE, EffectSummonVex.INSTANCE, EffectWindshear.INSTANCE), "Tome-Fuzzer sending chaotic magic streams into existence. May be hacking the planet."));
 
         for (CasterRecipeWrapper g : tomes) {
             Path path = getRecipePath(output, g.id().getPath());
