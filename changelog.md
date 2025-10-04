@@ -1,8 +1,4 @@
 # Changelog
-Tweaks glyph ordering in the spellbook to show one contiguous list
-Decoys will now render player capes
-Fixes bubbles from capturing sleeping players
-Fixes summons not dispellable
-Fixes items scrolls unable to be scribed on the scribes table
-Fixes dupe with spell bows and infinity
-Fixes memory leak when leaving a world and rejoining
+Fixes crash when going to next page in the spellbook while searching
+Fixes magical armor draining mana when there is nothing to repair
+Underfoot can now target entities below the player and any player vehicles
