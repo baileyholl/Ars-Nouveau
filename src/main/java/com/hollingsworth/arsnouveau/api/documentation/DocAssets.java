@@ -122,6 +122,7 @@ public class DocAssets {
     public static final BlitInfo SETTINGS_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/settings_tab.png"), 23, 20);
     public static final BlitInfo DISCORD_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/discord_tab.png"), 23, 20);
 
+
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height) {
             this(location, 0, 0, width, height);
