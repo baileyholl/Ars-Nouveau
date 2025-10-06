@@ -34,7 +34,10 @@ public class AlakarkinosCharm extends AbstractSummonCharm implements AliasProvid
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         Alakarkinos alakarkinos = new Alakarkinos(world, pos, true);
         alakarkinos.fromCharmData(context.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
-        alakarkinos.setPos(pos.getX(), pos.above().getY(), pos.getZ());
+        if (!context.isInside()) {
+            pos = pos.relative(context.getClickedFace());
+        }
+        alakarkinos.setPos(pos.getBottomCenter());
         world.addFreshEntity(alakarkinos);
         return InteractionResult.SUCCESS;
     }
