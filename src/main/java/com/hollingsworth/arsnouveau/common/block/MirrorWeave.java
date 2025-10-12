@@ -180,8 +180,11 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile) {
-            tile.renderInvalid = true;
-            tile.updateBlock();
+            if (tile.lastUpdateTick != level.getGameTime()) {
+                tile.lastUpdateTick = level.getGameTime();
+                tile.renderInvalid = true;
+                tile.updateBlock();
+            }
         }
     }
 
