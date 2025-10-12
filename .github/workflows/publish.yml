@@ -65,5 +65,6 @@ jobs:
           version-type: ${{ inputs.version_type }}
           java: ${{ env.JAVA_VERSION }}
           changelog-file: changelog.md
+          loaders: neoforge
           game-versions: |
             >=${{ env.MC_MIN_VER }} <=${{ env.MC_MAX_VER }}
