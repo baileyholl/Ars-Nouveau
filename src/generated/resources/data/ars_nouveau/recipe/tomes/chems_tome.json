@@ -1,13 +1,13 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
-    "b": 248,
-    "g": 207,
+    "b": 180,
+    "g": 25,
     "id": "ars_nouveau:constant",
-    "r": 61
+    "r": 255
   },
   "flavour_text": "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.",
-  "name": "Chem's Scientific Repulsion Runes",
+  "name": "Repulsion Runes",
   "sound": {},
   "spell": [
     "ars_nouveau:glyph_projectile",
@@ -15,26 +15,634 @@
     "ars_nouveau:glyph_sensitive",
     "ars_nouveau:glyph_rune",
     "ars_nouveau:glyph_launch",
-    "ars_nouveau:glyph_launch",
-    "ars_nouveau:glyph_launch",
     "ars_nouveau:glyph_launch"
   ],
   "spellData": {
     "color": {
-      "b": 248,
-      "g": 207,
+      "b": 180,
+      "g": 25,
       "id": "ars_nouveau:constant",
-      "r": 61
+      "r": 255
     },
-    "name": "Chem's Scientific Repulsion Runes",
-    "particleTimeline": {},
+    "name": "Repulsion Runes",
+    "particleTimeline": {
+      "ars_nouveau:burst": {
+        "type": "ars_nouveau:burst",
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {}
+        }
+      },
+      "ars_nouveau:delay": {
+        "type": "ars_nouveau:delay",
+        "onTickEffect": {
+          "motion": {
+            "type": "ars_nouveau:light",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 20,
+                "radius": 0.1,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              },
+              "ars_nouveau:speed": {
+                "xzMaxSpeed": 0.0,
+                "xzMinSpeed": 0.0,
+                "yMaxSpeed": 0.01,
+                "yMinSpeed": 0.0
+              }
+            }
+          }
+        },
+        "resolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolvingSound": {
+          "sound": {}
+        }
+      },
+      "ars_nouveau:linger": {
+        "type": "ars_nouveau:linger",
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:glow_ink",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 10,
+                "radius": 0.5,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:glow_ink",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 255,
+                      "g": 200,
+                      "id": "ars_nouveau:constant",
+                      "r": 91
+                    },
+                    "tintDisabled": false
+                  },
+                  "ars_nouveau:sound": {
+                    "sound": {
+                      "sound": {
+                        "id": "ars_nouveau:pointed_dripstone_drip_water"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {
+            "sound": {
+              "id": "ars_nouveau:empty"
+            }
+          }
+        },
+        "trailEffect": {
+          "motion": {
+            "type": "ars_nouveau:upward_field",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:dripping_water",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 50,
+                "radius": 1.0,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:dripping_water",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 255,
+                      "g": 200,
+                      "id": "ars_nouveau:constant",
+                      "r": 91
+                    },
+                    "tintDisabled": false
+                  },
+                  "ars_nouveau:sound": {
+                    "sound": {
+                      "sound": {
+                        "id": "ars_nouveau:pointed_dripstone_drip_lava"
+                      }
+                    }
+                  }
+                }
+              },
+              "ars_nouveau:wall": {
+                "chance": 5,
+                "direction": "south",
+                "num_particles": 20,
+                "range": 1
+              }
+            }
+          }
+        }
+      },
+      "ars_nouveau:mageblock": {
+        "type": "ars_nouveau:mageblock",
+        "propMap": {
+          "ars_nouveau:color": {
+            "particleColor": {
+              "b": 180,
+              "g": 25,
+              "id": "ars_nouveau:constant",
+              "r": 255
+            },
+            "tintDisabled": true
+          }
+        }
+      },
+      "ars_nouveau:orbit": {
+        "type": "ars_nouveau:orbit",
+        "castSound": {
+          "sound": {}
+        },
+        "flairEffect": {
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "onSpawnEffect": {
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {}
+        },
+        "trailEffect": {
+          "motion": {
+            "type": "ars_nouveau:trail",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 100,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ars_nouveau:pantomime": {
+        "type": "ars_nouveau:pantomime",
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {}
+        }
+      },
+      "ars_nouveau:prestidigitation": {
+        "type": "ars_nouveau:prestidigitation",
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:light",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 20,
+                "radius": 0.1,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              },
+              "ars_nouveau:speed": {
+                "xzMaxSpeed": 0.0,
+                "xzMinSpeed": 0.0,
+                "yMaxSpeed": 0.01,
+                "yMinSpeed": 0.0
+              }
+            }
+          }
+        },
+        "randomSound": {
+          "sound": {
+            "sound": {
+              "id": "ars_nouveau:empty"
+            }
+          }
+        }
+      },
+      "ars_nouveau:projectile": {
+        "type": "ars_nouveau:projectile",
+        "castSound": {
+          "sound": {
+            "pitch": 1.4,
+            "sound": {
+              "id": "ars_nouveau:wind_charge_burst"
+            }
+          }
+        },
+        "flairEffect": {
+          "motion": {
+            "type": "ars_nouveau:zigzag",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:warped_spore",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 20,
+                "radius": 0.05,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:warped_spore",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 255,
+                      "g": 200,
+                      "id": "ars_nouveau:constant",
+                      "r": 91
+                    },
+                    "tintDisabled": false
+                  },
+                  "ars_nouveau:sound": {
+                    "sound": {
+                      "sound": {
+                        "id": "ars_nouveau:pointed_dripstone_drip_water"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:big_gust",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 10,
+                "radius": 0.05,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:emitter": {
+                "age": 0,
+                "rotation": {
+                  "x": -24.063683,
+                  "y": 1.428963
+                }
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:big_gust",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 255,
+                      "g": 200,
+                      "id": "ars_nouveau:constant",
+                      "r": 91
+                    },
+                    "tintDisabled": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "onSpawnEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 20,
+                "radius": 0.05,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 255,
+                      "g": 200,
+                      "id": "ars_nouveau:constant",
+                      "r": 91
+                    },
+                    "tintDisabled": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {
+            "pitch": 0.7,
+            "sound": {
+              "id": "ars_nouveau:tempestry_family"
+            }
+          }
+        },
+        "trailEffect": {
+          "motion": {
+            "type": "ars_nouveau:zigzag",
+            "propMap": {
+              "ars_nouveau:model": {
+                "resource": "ars_nouveau:empty",
+                "subPropMap": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 248,
+                      "g": 186,
+                      "id": "ars_nouveau:constant",
+                      "r": 63
+                    },
+                    "tintDisabled": false
+                  }
+                }
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:ominous_spawning",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 100,
+                "radius": 0.2,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:ominous_spawning",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 255,
+                      "g": 200,
+                      "id": "ars_nouveau:constant",
+                      "r": 91
+                    },
+                    "tintDisabled": false
+                  },
+                  "ars_nouveau:sound": {
+                    "sound": {
+                      "sound": {
+                        "id": "ars_nouveau:pointed_dripstone_drip_water"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ars_nouveau:rune": {
+        "type": "ars_nouveau:rune",
+        "propMap": {
+          "ars_nouveau:color": {
+            "particleColor": {
+              "b": 255,
+              "g": 200,
+              "id": "ars_nouveau:constant",
+              "r": 91
+            },
+            "tintDisabled": false
+          },
+          "ars_nouveau:rune": {
+            "texture": "rune_water"
+          }
+        }
+      }
+    },
     "recipe": [
       "ars_nouveau:glyph_projectile",
       "ars_nouveau:glyph_linger",
       "ars_nouveau:glyph_sensitive",
       "ars_nouveau:glyph_rune",
-      "ars_nouveau:glyph_launch",
-      "ars_nouveau:glyph_launch",
       "ars_nouveau:glyph_launch",
       "ars_nouveau:glyph_launch"
     ],
