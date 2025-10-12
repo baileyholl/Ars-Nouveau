@@ -26,5 +26,33 @@
     "ars_nouveau:glyph_aoe",
     "ars_nouveau:glyph_aoe"
   ],
+  "spellData": {
+    "color": {
+      "b": 1,
+      "g": 128,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Lufia's Bwomp",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_sensitive",
+      "ars_nouveau:glyph_pierce",
+      "ars_nouveau:glyph_pierce",
+      "ars_nouveau:glyph_pierce",
+      "ars_nouveau:glyph_intangible",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe"
+    ],
+    "sound": {
+      "pitch": 0.5,
+      "sound": {
+        "id": "ars_nouveau:tempestry_family"
+      }
+    }
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

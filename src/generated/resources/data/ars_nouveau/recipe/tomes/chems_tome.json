@@ -19,5 +19,26 @@
     "ars_nouveau:glyph_launch",
     "ars_nouveau:glyph_launch"
   ],
+  "spellData": {
+    "color": {
+      "b": 248,
+      "g": 207,
+      "id": "ars_nouveau:constant",
+      "r": 61
+    },
+    "name": "Chem's Scientific Repulsion Runes",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_linger",
+      "ars_nouveau:glyph_sensitive",
+      "ars_nouveau:glyph_rune",
+      "ars_nouveau:glyph_launch",
+      "ars_nouveau:glyph_launch",
+      "ars_nouveau:glyph_launch",
+      "ars_nouveau:glyph_launch"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

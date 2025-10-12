@@ -28,6 +28,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
 
     public List<CasterRecipeWrapper> tomes = new ArrayList<>();
+    public List<UpdatedRecipeWrapper> updatedTomes = new ArrayList<>();
 
     public CasterTomeProvider(DataGenerator generatorIn) {
         super(generatorIn);
@@ -312,6 +313,13 @@ public class CasterTomeProvider extends SimpleDataProvider {
             Path path = getRecipePath(output, g.id().getPath());
             saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
         }
+
+        updatedTomes.add(fromCode("frantastic", "Simulmantic Storm", "It is unknown whether the original author of this spell survived its first casting, or if she was replaced by one of her simulacra in the ensuing chaos. Don't think too hard about it. ", "H4sIAAAAAAAA/+1X227aQBD9lWqfaWSbQAivaaS+VI1C39rKWq8Hs81erL1AEeLfO2tzD1SJg6VUxS9e7J3LnjMzPiyI1V7lZLhYdogBxksgw++EGpsq7adA/bAQ83KSlkb/Aua4ANI58tp6KbVKc2B6fnSDNhl35zYVXBVgzh1P8GLiFLomPzukpMZxJuAbl4DhEJ3FnkkdBx+OBeXmfjxGkMJPqR3XKqwQufILLWuI3TwAvOdBafS63Eb6WgZLuzYFfAr2MOx6c1o7XGzzPBIAZmkh9AwPa332cNIn00KbXV936wc8P3DJMEFHVQAYNyS9XocU4d4hGRnGgyiclCv3iVuaCUBrZzws8TqOwDrB8J5R60armtwU53bxLJUMhEgzodlTAHGqhZfoP7q6RkS5Y5Ow7i2r6rZaTOEcvsNB9507Q7lown5l2Cr9IDApw1lqcdNTe0WQdKsiiG9vqyroJ8+KYEyFhaoIdt3koCx38xBis0wi9Elz7m1AOEK4MfmZWp1u9PD5/vGenKimg/OGXVo9VuRjTzfhKPPGun+8RZuyA5I7B1UIox1dQ/a74qVD5tU92BShM15AbfwGavcGhVajYHgZuW8euUfe15+1AzpXn1vMrvG4KwydYhmkYw4ifzUFMypEVYlUhXLDkmYTqhguEQblZbr2ZusRknMTNEtILUx5Nzk80bvitBetKK05xfvZJmjyhi7730fnWWnZn35xVF/x9W0Ux/24OU0NxA2oPC21cVSkY0MlYE8Ksatz4lA2G5nTP5HGaigcNtb278JFG7erjf9G/wul6V5EqXOopyw69YY901eydPMtXiv6TqTfvrx9Rwy+pP1b6v/LmG5K02mB+zEZXPVvbrr9QaVz4+hq0O0NutevUbu9tui+aN/WtO/OtyvsUFRW7HDphQxq0/zwUZTc2A8jp43EnFjzxJd/ADOROyaBEwAA"));
+
+        for (UpdatedRecipeWrapper g : updatedTomes) {
+            Path path = getRecipePath(output, g.id().getPath());
+            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
+        }
     }
 
     protected Path getRecipePath(Path pathIn, String str) {
@@ -336,12 +344,31 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 color.serialize(), spell.sound());
     }
 
+    public UpdatedRecipeWrapper fromCode(String id, String name, String flavorText, String code) {
+        Spell spell = Spell.fromBinaryBase64(code);
+        return new UpdatedRecipeWrapper(ArsNouveau.prefix(id + "_tome"),
+                name,
+                flavorText,
+                spell);
+    }
+
     /**
      * Gets a name for this provider, to use in logging.
      */
     @Override
     public String getName() {
         return "Ars Nouveau Caster Tomes Datagen";
+    }
+
+    public record UpdatedRecipeWrapper(ResourceLocation id, String name, String flavorText, Spell spell,
+                                       ResourceLocation type) {
+        public UpdatedRecipeWrapper(ResourceLocation id, String name, String flavorText, Spell spell) {
+            this(id, name, flavorText, spell, ItemsRegistry.CASTER_TOME.registryObject.getId());
+        }
+
+        public CasterTomeData toData() {
+            return new CasterTomeData(flavorText, spell, type);
+        }
     }
 
     public record CasterRecipeWrapper(ResourceLocation id, String name, List<ResourceLocation> spell,

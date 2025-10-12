@@ -21,5 +21,28 @@
     "ars_nouveau:glyph_summon_vex",
     "ars_nouveau:glyph_wind_shear"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Pranks",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_linger",
+      "ars_nouveau:glyph_launch",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_delay",
+      "ars_nouveau:glyph_duration_down",
+      "ars_nouveau:glyph_firework",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_summon_vex",
+      "ars_nouveau:glyph_wind_shear"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

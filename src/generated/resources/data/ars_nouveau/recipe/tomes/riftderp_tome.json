@@ -16,5 +16,23 @@
     "ars_nouveau:glyph_harm",
     "ars_nouveau:glyph_blink"
   ],
+  "spellData": {
+    "color": {
+      "b": 255,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 120
+    },
+    "name": "Rift's Blink Strike",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_accelerate",
+      "ars_nouveau:glyph_accelerate",
+      "ars_nouveau:glyph_harm",
+      "ars_nouveau:glyph_blink"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

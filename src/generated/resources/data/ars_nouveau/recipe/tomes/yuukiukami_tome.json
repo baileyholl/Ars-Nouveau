@@ -16,5 +16,23 @@
     "ars_nouveau:glyph_extract",
     "ars_nouveau:glyph_pickup"
   ],
+  "spellData": {
+    "color": {
+      "b": 105,
+      "g": 1,
+      "id": "ars_nouveau:constant",
+      "r": 48
+    },
+    "name": "Yuuki's Mineral Assimilator",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_break",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_extract",
+      "ars_nouveau:glyph_pickup"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

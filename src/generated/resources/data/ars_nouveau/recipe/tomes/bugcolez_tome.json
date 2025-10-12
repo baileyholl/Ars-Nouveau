@@ -23,5 +23,30 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Pixie Pummel",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_self",
+      "ars_nouveau:glyph_summon_vex",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time"
+    ],
+    "sound": {
+      "pitch": 1.9
+    }
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

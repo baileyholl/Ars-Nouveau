@@ -21,5 +21,28 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_amplify"
   ],
+  "spellData": {
+    "color": {
+      "b": 255,
+      "g": 255,
+      "id": "ars_nouveau:constant",
+      "r": 25
+    },
+    "name": "Xacris's Firework Display",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_wall",
+      "ars_nouveau:glyph_sensitive",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_firework",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_amplify"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }
