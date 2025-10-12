@@ -19,15 +19,21 @@ public class RepairingPerk extends Perk {
     }
 
     public static void attemptRepair(ItemStack stack, LivingEntity entity) {
-        if (entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0)
+        if (entity.level.getGameTime() % 200 != 0 || stack.getDamageValue() <= 0) {
             return;
+        }
+
         double repairLevel = PerkUtil.countForPerk(RepairingPerk.INSTANCE, entity);
+        int damage = stack.getDamageValue();
+        int repairAmount = Math.min(damage, (int) repairLevel + Config.BASE_ARMOR_REPAIR_RATE.get());
+        if (repairAmount <= 0) {
+            return;
+        }
+
         var cap = CapabilityRegistry.getMana(entity);
-        if (cap != null) {
-            if (cap.getCurrentMana() < 20)
-                return;
+        if (cap != null && cap.getCurrentMana() >= 20) {
             cap.removeMana(20);
-            stack.setDamageValue(stack.getDamageValue() - Math.min(stack.getDamageValue(), (int) repairLevel + Config.BASE_ARMOR_REPAIR_RATE.get()));
+            stack.setDamageValue(damage - repairAmount);
         }
     }
 

@@ -20,5 +20,27 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_explosion"
   ],
+  "spellData": {
+    "color": {
+      "b": 1,
+      "g": 255,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Fireworks and Mobs",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_harm",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_launch",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_firework",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_explosion"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

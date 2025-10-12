@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.light;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.config.Config;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -11,7 +14,16 @@ import net.minecraft.world.level.ItemLike;
 
 
 public class DynamLightUtil {
-
+    public static int getJarOfLightLuminance(Player p) {
+        NonNullList<ItemStack> list = p.inventory.items;
+        for (int i = 0; i < 9; i++) {
+            ItemStack jar = list.get(i);
+            if (jar.is(ItemsRegistry.JAR_OF_LIGHT.asItem())) {
+                return 15;
+            }
+        }
+        return p != ArsNouveau.proxy.getPlayer() && LightManager.jarHoldingEntityList.contains(p.getId()) ? 15 : 0;
+    }
 
     public static int getSectionCoord(double coord) {
         return getSectionCoord(Mth.floor(coord));

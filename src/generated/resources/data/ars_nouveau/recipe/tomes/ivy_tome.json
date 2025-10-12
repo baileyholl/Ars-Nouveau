@@ -21,5 +21,28 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_name"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 105,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Ivy",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_touch",
+      "ars_nouveau:glyph_animate_block",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_name"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }
