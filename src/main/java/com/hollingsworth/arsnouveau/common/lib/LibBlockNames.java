@@ -181,6 +181,7 @@ public class LibBlockNames {
     public static final String DECOR_BLOSSOM = "decor_blossom";
 
     public static final String DIM_BLOCK = "dim_block";
+    public static final String DIM_BOUNDARY = "dim_boundary";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,

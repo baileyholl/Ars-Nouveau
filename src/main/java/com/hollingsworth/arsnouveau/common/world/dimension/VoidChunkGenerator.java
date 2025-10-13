@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.world.dimension;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.FixedBiomeSource;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -55,7 +55,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
 
     // hardcoding this for now, may reconsider later
     public int getHeight() {
-        return 15;
+        return 31;
     }
 
     // create chunk generator at runtime when dynamic dimension is created
@@ -83,61 +83,38 @@ public class VoidChunkGenerator extends ChunkGenerator {
 
     @Override
     public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureFeatureManager, RandomState random, ChunkAccess chunk) {
-        // set wall blocks at the floor and ceiling and walls of the chunk
-        // ceiling y = height-1, so if height==16, ceiling==15
-        // we'll generate wall on xz from 0 to 14 rather than from 0 to 15 so sizes of walls are odd numbers
-        ChunkPos chunkPos = chunk.getPos();
-        if (chunkPos.equals(CHUNKPOS)) {
-            BlockState wallState = Blocks.GLASS.defaultBlockState();
-            BlockPos.MutableBlockPos mutaPos = new BlockPos.MutableBlockPos();
-            mutaPos.set(CORNER);
-            int maxHorizontal = 16;
-            int ceilingY = this.getHeight() - 1;
-            for (int xOff = 0; xOff <= maxHorizontal; xOff++) {
-                int worldX = CORNER.getX() + xOff;
-                for (int zOff = 0; zOff <= maxHorizontal; zOff++) {
-                    int worldZ = CORNER.getZ() + zOff;
-                    if (xOff == 0 || xOff == maxHorizontal || zOff == 0 || zOff == maxHorizontal) {
-                        // generate wall
-                        for (int y = 1; y < ceilingY; y++) {
-                            mutaPos.set(worldX, y, worldZ);
-                            chunk.setBlockState(mutaPos, wallState, false);
+        int chunkX = chunk.getPos().x;
+        int chunkZ = chunk.getPos().z;
+        int worldX = chunkX * 16;
+        int worldZ = chunkZ * 16;
+        
+        int minX = -1;
+        int maxX = 32;
+        int minY = 0;
+        int maxY = 32;
+        int minZ = -1;
+        int maxZ = 32;
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int worldPosX = worldX + x;
+                int worldPosZ = worldZ + z;
+
+                if (worldPosX >= minX && worldPosX <= maxX &&
+                        worldPosZ >= minZ && worldPosZ <= maxZ) {
+
+                    for (int y = minY; y <= maxY; y++) {
+                        boolean isEdge = (worldPosX == minX || worldPosX == maxX) ||
+                                (y == minY || y == maxY) ||
+                                (worldPosZ == minZ || worldPosZ == maxZ);
+
+                        if (isEdge) {
+                            BlockPos pos = new BlockPos(x, y, z);
+                            chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
                         }
                     }
-                    // generate floor and ceiling
-                    mutaPos.set(worldX, 0, worldZ);
-                    chunk.setBlockState(mutaPos, wallState, false);
-                    mutaPos.set(worldX, ceilingY, worldZ);
-                    chunk.setBlockState(mutaPos, wallState, false);
                 }
             }
-
-            // set the apertures
-//            BlockState aperture = Blocks.GLASS.defaultBlockState();
-//            Consumer<Direction> apertureSetter = dir -> chunk.setBlockState(mutaPos, aperture, false);
-//            int centerX = CENTER.getX();
-//            int centerY = CENTER.getY();
-//            int centerZ = CENTER.getZ();
-//            int west = centerX - 7;
-//            int east = centerX + 7;
-//            int down = centerY - 7;
-//            int up = centerY + 7;
-//            int north = centerZ - 7;
-//            int south = centerZ + 7;
-//
-//            mutaPos.set(centerX,up,centerZ);
-//            apertureSetter.accept(Direction.DOWN);
-//            mutaPos.set(centerX,down,centerZ);
-//            apertureSetter.accept(Direction.UP);
-//            mutaPos.set(centerX,centerY,south);
-//            apertureSetter.accept(Direction.NORTH);
-//            mutaPos.set(centerX,centerY,north);
-//            apertureSetter.accept(Direction.SOUTH);
-//            mutaPos.set(east,centerY,centerZ);
-//            apertureSetter.accept(Direction.WEST);
-//            mutaPos.set(west,centerY,centerZ);
-//            apertureSetter.accept(Direction.EAST);
-
         }
     }
 
@@ -149,7 +126,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
     @Override
     public int getGenDepth() // total number of available y-levels (between bottom and top)
     {
-        return 16;
+        return 33;
     }
 
     @Override

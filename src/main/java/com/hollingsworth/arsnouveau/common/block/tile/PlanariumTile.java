@@ -89,7 +89,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
                 updateBlock();
             }
         }
-        if (template != null && level.getGameTime() % 200 == 0) {
+        if (template != null && level.getGameTime() % 40 == 0) {
             Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
         }
     }
@@ -282,11 +282,11 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
                 return null;
             }
             SectionPos chunkPos = SectionPos.of(BlockPos.ZERO);
-            int chunkLoadingDistance = 5;
+            int chunkLoadingDistance = 3;
             forceLoad(chunkPos, chunkLoadingDistance, dimLevel, worldPosition, true);
 
-            BlockPos pos = BlockPos.ZERO;
-            Vec3i size = new Vec3i(16, 16, 16);
+            BlockPos pos = new BlockPos(0, 1, 0);
+            Vec3i size = new Vec3i(32, 31, 32);
             StructureTemplate template = new StructureTemplate();
             template.fillFromWorld(dimLevel, pos, size, true, null);
             forceLoad(chunkPos, chunkLoadingDistance, dimLevel, worldPosition, false);

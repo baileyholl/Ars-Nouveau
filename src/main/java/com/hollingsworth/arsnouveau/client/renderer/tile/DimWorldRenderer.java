@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -82,67 +81,32 @@ public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
             return;
 
         poseStack.pushPose();
-        poseStack.pushPose();
         doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        float offset = 0.3f;
-        poseStack.translate(0, offset, 0);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, -0.2f, 0);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-        poseStack.pushPose();
-        poseStack.translate(0, -0.2f, 0.5);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, -0.2f, 0.5);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-        poseStack.pushPose();
-        poseStack.translate(0, offset, 0.5);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, offset, 0);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, offset, 0.5);
-        doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-        poseStack.scale(.98f, .98f, .98f);
+//        poseStack.scale(.98f, .98f, .98f);
         poseStack.popPose();
     }
 
     public void doRender(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         StructureTemplate structureTemplate = blockEntity.getTemplate();
-        BlockPos pos = BlockPos.ZERO;
-        int dim = 16 * 2;
-        Vec3i size = new Vec3i(dim, dim, dim);
-
         List<StatePos> statePosCache = new ArrayList<>();
         for (StructureTemplate.StructureBlockInfo blockInfo : structureTemplate.palettes.getFirst().blocks()) {
             statePosCache.add(new StatePos(blockInfo.state(), blockInfo.pos()));
         }
         poseStack.pushPose();
-        // Shrink the entire structure to render above this cube as a model
-        poseStack.translate(0, 1, 0);
-        poseStack.scale(1.0f / size.getX(), 1.0f / size.getY(), 1.0f / size.getZ());
 
+        float pad = 0.0025f;
+        float scale = (1.0f - 2.0f * pad) / (float) 32;
+        float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
         for (StatePos statePos : statePosCache) {
             poseStack.pushPose();
-            poseStack.translate(statePos.pos.getX(), statePos.pos.getY(), statePos.pos.getZ());
+            poseStack.translate(offset, offset, offset);
+
+            poseStack.scale(scale, scale, scale);
+            poseStack.translate(statePos.pos.getX(), 26 + statePos.pos.getY(), statePos.pos.getZ());
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(statePos.state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
+
         StructureTemplateAccessor accessor = (StructureTemplateAccessor) structureTemplate;
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         for (StructureTemplate.StructureEntityInfo entityInfo : accessor.getEntityInfoList()) {

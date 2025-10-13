@@ -7,6 +7,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -28,7 +29,7 @@ public class PacketUpdateDimTile extends AbstractPacket {
     public PacketUpdateDimTile(RegistryFriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
         this.structureTemplate = new StructureTemplate();
-        this.structureTemplate.load(BuiltInRegistries.BLOCK.asLookup(), buf.readNbt());
+        this.structureTemplate.load(BuiltInRegistries.BLOCK.asLookup(), (CompoundTag) buf.readNbt(NbtAccounter.unlimitedHeap()));
     }
 
     @Override
