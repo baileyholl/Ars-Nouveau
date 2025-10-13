@@ -1,0 +1,32 @@
+{
+  "type": "ars_nouveau:summon_ritual",
+  "augment": [
+    {
+      "item": "minecraft:phantom_membrane"
+    },
+    {
+      "item": "minecraft:totem_of_undying"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ],
+  "count": 5,
+  "mobs": [
+    {
+      "mob": "minecraft:allay",
+      "weight": 1
+    },
+    {
+      "mob": "minecraft:vex",
+      "weight": 5
+    },
+    {
+      "mob": "minecraft:phantom",
+      "weight": 5
+    }
+  ],
+  "source": {
+    "mobSource": "MOB_LIST"
+  }
+}
