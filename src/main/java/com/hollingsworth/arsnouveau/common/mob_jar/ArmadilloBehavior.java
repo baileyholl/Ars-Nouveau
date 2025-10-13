@@ -10,7 +10,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 public class ArmadilloBehavior extends JarBehavior<Armadillo> {
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide) {
+        if (tile.getLevel().isClientSide || isPowered(tile)) {
             return;
         }
 

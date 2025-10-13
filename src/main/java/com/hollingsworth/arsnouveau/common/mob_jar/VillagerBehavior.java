@@ -7,7 +7,7 @@ import net.minecraft.world.entity.npc.Villager;
 public class VillagerBehavior extends JarBehavior<Villager> {
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide)
+        if (tile.getLevel().isClientSide || isPowered(tile))
             return;
         Villager villager = entityFromJar(tile);
         if (!villager.isTrading()) {

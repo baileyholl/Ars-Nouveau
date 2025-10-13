@@ -12,7 +12,7 @@ public class PandaBehavior extends JarBehavior<Panda> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide)
+        if (tile.getLevel().isClientSide || isPowered(tile))
             return;
         Panda panda = entityFromJar(tile);
         if (!panda.isSneezing() && canSneeze(panda)) {
