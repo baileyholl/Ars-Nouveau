@@ -20,7 +20,7 @@ public class PufferfishBehavior extends JarBehavior<Pufferfish> {
         super.tick(tile);
         Level level = tile.getLevel();
         Pufferfish pufferfish = (Pufferfish) tile.getEntity();
-        if (level.isClientSide || pufferfish == null) {
+        if (level.isClientSide || pufferfish == null || isPowered(tile)) {
             return;
         }
         PufferfishAccessor pufferfishAccessor = (PufferfishAccessor) pufferfish;
