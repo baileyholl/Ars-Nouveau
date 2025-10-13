@@ -19,11 +19,11 @@
     },
     {
       "mob": "minecraft:vex",
-      "weight": 5
+      "weight": 2
     },
     {
       "mob": "minecraft:phantom",
-      "weight": 5
+      "weight": 2
     }
   ],
   "source": {

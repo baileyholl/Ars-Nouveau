@@ -42,8 +42,8 @@ public class SummonRitualProvider extends SimpleDataProvider {
         addMobRecipe(ArsNouveau.prefix("bats"), Ingredient.of(Items.AMETHYST_SHARD), EntityType.BAT);
         addMobRecipe(ArsNouveau.prefix("flying"), Ingredient.of(Items.PHANTOM_MEMBRANE, Items.TOTEM_OF_UNDYING, Items.AMETHYST_SHARD), 5,
                 Pair.of(EntityType.ALLAY, 1),
-                Pair.of(EntityType.VEX, 5),
-                Pair.of(EntityType.PHANTOM, 5)
+                Pair.of(EntityType.VEX, 2),
+                Pair.of(EntityType.PHANTOM, 2)
         );
     }
 
