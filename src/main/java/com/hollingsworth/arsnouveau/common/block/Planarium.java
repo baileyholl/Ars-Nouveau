@@ -15,13 +15,13 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class DimBlock extends TickableModBlock {
+public class Planarium extends TickableModBlock {
 
-    public DimBlock(Properties properties) {
+    public Planarium(Properties properties) {
         super(properties);
     }
 
-    public DimBlock() {
+    public Planarium() {
         super(defaultProperties().noOcclusion());
     }
 

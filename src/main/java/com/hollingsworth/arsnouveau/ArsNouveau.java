@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
+import com.hollingsworth.arsnouveau.common.world.dimension.JarDimensionEffects;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
@@ -40,6 +41,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
@@ -98,6 +100,9 @@ public class ArsNouveau {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener((RegisterDimensionSpecialEffectsEvent e) -> {
+            e.register(ArsNouveau.prefix("jar"), new JarDimensionEffects());
+        });
         modEventBus.addListener((RegisterTicketControllersEvent e) -> {
             e.register(ticketController);
         });

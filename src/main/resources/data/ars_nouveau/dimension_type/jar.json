@@ -2,7 +2,7 @@
   "logical_height": 384,
   "min_y": -64,
   "infiniburn": "#minecraft:infiniburn_overworld",
-  "effects": "minecraft:overworld",
+  "effects": "ars_nouveau:jar",
   "ambient_light": 0.0,
   "respawn_anchor_works": false,
   "has_raids": false,
@@ -14,7 +14,7 @@
   "piglin_safe": false,
   "bed_works": true,
   "fixed_time": 18000,
-  "has_skylight": true,
+  "has_skylight": false,
   "height": 384,
   "ultrawarm": false
 }

@@ -180,9 +180,9 @@ public class LibBlockNames {
     public static final String REPOSITORY_CATALOG = "repository_controller";
     public static final String DECOR_BLOSSOM = "decor_blossom";
 
-    public static final String DIM_BLOCK = "dim_block";
+    public static final String PLANARIUM = "dim_block";
     public static final String DIM_BOUNDARY = "dim_boundary";
-
+    public static final String PLANARIUM_PROJECTOR = "planarium_projector";
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,
             SMOOTH_SOURCESTONE_BASKET, SMOOTH_SOURCESTONE_MOSAIC, SMOOTH_SOURCESTONE_ALTERNATING, SMOOTH_SOURCESTONE_LARGE_BRICKS, SMOOTH_SOURCESTONE, SMOOTH_SOURCESTONE_SMALL_BRICKS,

@@ -56,13 +56,14 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
     private long lastUpdated = 0;
     boolean playersNearby = true;
     public Component name;
+    public boolean isDimModel = false;
 
     public PlanariumTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
     public PlanariumTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.DIM_TILE.get(), pos, state);
+        super(BlockRegistry.PLANARIUM_TILE.get(), pos, state);
     }
 
     @Override

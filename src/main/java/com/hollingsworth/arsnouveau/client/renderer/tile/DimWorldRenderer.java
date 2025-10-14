@@ -14,15 +14,11 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Mirror;
@@ -37,6 +33,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.ArrayList;
@@ -48,8 +45,10 @@ import java.util.stream.Collectors;
 public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
     StructureRenderData renderData;
 
+    GeoModel dimModel = new PlanariumModel(true);
+
     public DimWorldRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
-        super(new PlanariumModel());
+        super(new PlanariumModel(false));
 
     }
 
@@ -107,28 +106,28 @@ public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
             poseStack.popPose();
         }
 
-        StructureTemplateAccessor accessor = (StructureTemplateAccessor) structureTemplate;
-        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        for (StructureTemplate.StructureEntityInfo entityInfo : accessor.getEntityInfoList()) {
-            Entity entity = EntityType.loadEntityRecursive(entityInfo.nbt, blockEntity.getLevel(), (entityx) -> entityx);
-            if (entity == null) {
-                continue;
-            }
-            entity.setDeltaMovement(0, 0, 0);
-            entity.xo = entity.getX();
-            entity.yo = entity.getY();
-            entity.zo = entity.getZ();
-            entity.xRotO = entity.xRot;
-            entity.yRotO = entity.yRot;
-            if (entity instanceof LivingEntity livingEntity) {
-                livingEntity.yBodyRotO = livingEntity.yBodyRot;
-                livingEntity.yHeadRotO = livingEntity.yHeadRot;
-            }
-            entityRenderDispatcher.render(entity, entity.getX(), entity.getY(), entity.getZ(), entity.getYRot(), partialTick, poseStack, bufferSource, LightTexture.FULL_BRIGHT);
-            for (Entity entity1 : entity.getPassengers()) {
-                entityRenderDispatcher.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, poseStack, bufferSource, packedLight);
-            }
-        }
+//        StructureTemplateAccessor accessor = (StructureTemplateAccessor) structureTemplate;
+//        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+//        for (StructureTemplate.StructureEntityInfo entityInfo : accessor.getEntityInfoList()) {
+//            Entity entity = EntityType.loadEntityRecursive(entityInfo.nbt, blockEntity.getLevel(), (entityx) -> entityx);
+//            if (entity == null) {
+//                continue;
+//            }
+//            entity.setDeltaMovement(0, 0, 0);
+//            entity.xo = entity.getX();
+//            entity.yo = entity.getY();
+//            entity.zo = entity.getZ();
+//            entity.xRotO = entity.xRot;
+//            entity.yRotO = entity.yRot;
+//            if (entity instanceof LivingEntity livingEntity) {
+//                livingEntity.yBodyRotO = livingEntity.yBodyRot;
+//                livingEntity.yHeadRotO = livingEntity.yHeadRot;
+//            }
+//            entityRenderDispatcher.render(entity, entity.getX(), entity.getY(), entity.getZ(), entity.getYRot(), partialTick, poseStack, bufferSource, LightTexture.FULL_BRIGHT);
+//            for (Entity entity1 : entity.getPassengers()) {
+//                entityRenderDispatcher.render(entity1, 0.0D, 0.0D, 0.0D, 0.0F, partialTick, poseStack, bufferSource, packedLight);
+//            }
+//        }
         poseStack.popPose();
     }
 
@@ -141,6 +140,12 @@ public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
             generateRender(data, player.level(), renderPos);
             data.lastRenderPos = renderPos;
         }
+    }
+
+
+    @Override
+    public GeoModel<PlanariumTile> getGeoModel() {
+        return this.animatable.isDimModel ? dimModel : super.getGeoModel();
     }
 
     public boolean shouldUpdateRender(StructureRenderData data, BlockPos renderPos) {
