@@ -216,82 +216,33 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public int getNumPages() {
-        return (int) Math.ceil((double) displayedGlyphs.size() / 58);
+        return (int) Math.ceil((double) displayedGlyphs.size() / 84);
     }
 
     private void layoutAllGlyphs(int page) {
         clearButtons(glyphButtons);
-        formTextRow = 0;
-        augmentTextRow = 0;
-        effectTextRow = 0;
-
-        if (displayedGlyphs.isEmpty()) {
-            return;
-        }
-
-        final int PER_ROW = 6;
-        final int MAX_ROWS = 6;
-        boolean nextPage = false;
-        int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
-        int adjustedRowsPlaced = 0;
-        boolean foundForms = false;
-        boolean foundAugments = false;
-        boolean foundEffects = false;
-
+        int perRow = 6;
+        int maxRows = 7;
         List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
         sorted.sort(Comparator.comparingInt((AbstractSpellPart p) -> switch (p) {
             case AbstractAugment ignored -> 3;
             default -> p.getTypeIndex();
         }).thenComparing(AbstractSpellPart::getLocaleName));
-
-        sorted = sorted.subList(glyphsPerPage * page, Math.min(sorted.size(), glyphsPerPage * (page + 1)));
-        int adjustedXPlaced = 0;
-        int totalRowsPlaced = 0;
-        int rowOffset = page == 0 ? 2 : 0;
-
-        int yStart = bookTop + 2 + (page != 0 || sorted.getFirst() instanceof AbstractCastMethod ? 18 : 0);
-
+        int fromIndex = 84 * page;
+        if (fromIndex < sorted.size()) {
+            sorted = sorted.subList(fromIndex, Math.min(sorted.size(), 84 * (page + 1)));
+        }
+        int count = 0;
         for (AbstractSpellPart part : sorted) {
-            if (!foundForms && part instanceof AbstractCastMethod) {
-                foundForms = true;
-                adjustedRowsPlaced += 1;
-                totalRowsPlaced += 1;
-                formTextRow = page != 0 ? 0 : totalRowsPlaced;
-                adjustedXPlaced = 0;
-            } else if (!foundAugments && part instanceof AbstractAugment) {
-                foundAugments = true;
-                adjustedRowsPlaced += rowOffset;
-                totalRowsPlaced += rowOffset;
-                augmentTextRow = page != 0 ? 0 : totalRowsPlaced - 1;
-                adjustedXPlaced = 0;
-            } else if (!foundEffects && part instanceof AbstractEffect) {
-                foundEffects = true;
-                adjustedRowsPlaced += rowOffset;
-                totalRowsPlaced += rowOffset;
-                effectTextRow = page != 0 ? 0 : totalRowsPlaced - 1;
-                adjustedXPlaced = 0;
-            } else if (adjustedXPlaced >= PER_ROW) {
-                adjustedRowsPlaced++;
-                totalRowsPlaced++;
-                adjustedXPlaced = 0;
+            boolean isNextPage = count >= (perRow * maxRows);
+            int numRows = count / perRow;
+            if (isNextPage) {
+                numRows = (count - (perRow * maxRows)) / perRow;
             }
-
-            if (adjustedRowsPlaced > MAX_ROWS) {
-                if (nextPage) {
-                    break;
-                }
-                nextPage = true;
-                adjustedXPlaced = 0;
-                adjustedRowsPlaced = (adjustedRowsPlaced - 1) % MAX_ROWS;
-            }
-            int xOffset = 20 * (adjustedXPlaced % PER_ROW) + (nextPage ? 134 : 0);
-
-            int yPlace = adjustedRowsPlaced * 18 + yStart;
-
-            GlyphButton cell = new GlyphButton(xStart + xOffset, yPlace, part, this::onGlyphClick);
+            GlyphButton cell = new GlyphButton(bookLeft + 20 + (isNextPage ? 134 : 0) + (count % perRow) * 20, numRows * 18 + bookTop + 20, part, this::onGlyphClick);
             addRenderableWidget(cell);
             glyphButtons.add(cell);
-            adjustedXPlaced++;
+            count++;
         }
     }
 
@@ -339,7 +290,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public void updateNextPageButtons() {
-        if (displayedGlyphs.size() < glyphsPerPage) {
+        if (displayedGlyphs.size() <= 84) {
             nextButton.visible = false;
             nextButton.active = false;
         } else {

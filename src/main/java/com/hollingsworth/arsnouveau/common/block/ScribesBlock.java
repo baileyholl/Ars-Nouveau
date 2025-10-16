@@ -128,7 +128,7 @@ public class ScribesBlock extends TableBlock {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof ScribesBlock) {
             ItemStack stack = event.getEntity().getItemInHand(event.getHand());
-            if (event.getEntity().isCrouching() || stack.getItem() instanceof DominionWand) {
+            if (stack.getItem() instanceof DominionWand) {
                 return;
             }
             BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, state, world, pos, event.getEntity(), event.getHand(), event.getHitVec());

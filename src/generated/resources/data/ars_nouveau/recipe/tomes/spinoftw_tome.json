@@ -20,5 +20,27 @@
     "ars_nouveau:glyph_aoe",
     "ars_nouveau:glyph_aoe"
   ],
+  "spellData": {
+    "color": {
+      "b": 1,
+      "g": 90,
+      "id": "ars_nouveau:constant",
+      "r": 225
+    },
+    "name": "You were hurt, but you're fine",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_self",
+      "ars_nouveau:glyph_conjure_water",
+      "ars_nouveau:glyph_heal",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_phantom_block",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

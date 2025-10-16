@@ -33,12 +33,18 @@ public class ArcanePedestalTile extends SingleItemTile implements Container, Nam
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.putBoolean("hasSignal", hasSignal);
+        if (this.name != null) {
+            tag.putString("CustomName", Component.Serializer.toJson(this.name, pRegistries));
+        }
     }
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         this.hasSignal = compound.getBoolean("hasSignal");
+        if (compound.contains("CustomName", 8)) {
+            this.name = Component.Serializer.fromJson(compound.getString("CustomName"), pRegistries);
+        }
     }
 
     private Component name;

@@ -16,5 +16,23 @@
     "ars_nouveau:glyph_conjure_water",
     "ars_nouveau:glyph_freeze"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Farfalla's Frosty Flames",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_ignite",
+      "ars_nouveau:glyph_delay",
+      "ars_nouveau:glyph_conjure_water",
+      "ars_nouveau:glyph_freeze"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

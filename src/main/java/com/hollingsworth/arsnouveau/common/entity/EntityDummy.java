@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -18,10 +19,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -32,17 +30,26 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityDummy extends PathfinderMob implements ISummon {
+public class EntityDummy extends PathfinderMob implements ISummon, IDispellable {
     @OnlyIn(Dist.CLIENT)
     private PlayerInfo playerInfo;
 
     public int ticksLeft;
+    public float oBob;
+    public float bob;
+    public double xCloakO;
+    public double yCloakO;
+    public double zCloakO;
+    public double xCloak;
+    public double yCloak;
+    public double zCloak;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityDummy.class, EntityDataSerializers.OPTIONAL_UUID);
 
     public EntityDummy(EntityType<? extends PathfinderMob> p_i48577_1_, Level p_i48577_2_) {
@@ -82,6 +89,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     @Override
     public void tick() {
+        this.moveCloak();
         super.tick();
         if (!level.isClientSide) {
             if (level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerUUID()) == null) {
@@ -98,6 +106,72 @@ public class EntityDummy extends PathfinderMob implements ISummon {
                 onSummonDeath(level, null, true);
             }
         }
+    }
+
+    @Override
+    public void aiStep() {
+        this.oBob = this.bob;
+
+        super.aiStep();
+        float f;
+        if (this.onGround() && !this.isDeadOrDying()) {
+            f = (float) Math.min(0.1, this.getDeltaMovement().horizontalDistance());
+        } else {
+            f = 0.0F;
+        }
+
+        this.bob = this.bob + (f - this.bob) * 0.4F;
+    }
+
+
+    private void moveCloak() {
+        this.xCloakO = this.xCloak;
+        this.yCloakO = this.yCloak;
+        this.zCloakO = this.zCloak;
+        double d0 = this.getX() - this.xCloak;
+        double d1 = this.getY() - this.yCloak;
+        double d2 = this.getZ() - this.zCloak;
+        double d3 = 10.0;
+        if (d0 > 10.0) {
+            this.xCloak = this.getX();
+            this.xCloakO = this.xCloak;
+        }
+
+        if (d2 > 10.0) {
+            this.zCloak = this.getZ();
+            this.zCloakO = this.zCloak;
+        }
+
+        if (d1 > 10.0) {
+            this.yCloak = this.getY();
+            this.yCloakO = this.yCloak;
+        }
+
+        if (d0 < -10.0) {
+            this.xCloak = this.getX();
+            this.xCloakO = this.xCloak;
+        }
+
+        if (d2 < -10.0) {
+            this.zCloak = this.getZ();
+            this.zCloakO = this.zCloak;
+        }
+
+        if (d1 < -10.0) {
+            this.yCloak = this.getY();
+            this.yCloakO = this.yCloak;
+        }
+
+        this.xCloak += d0 * 0.25;
+        this.zCloak += d2 * 0.25;
+        this.yCloak += d1 * 0.25;
+    }
+
+    @Override
+    public void rideTick() {
+        super.rideTick();
+        this.oBob = this.bob;
+        this.bob = 0.0F;
     }
 
     @Override
@@ -130,7 +204,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
 
     @Nullable
     @OnlyIn(Dist.CLIENT)
-    protected PlayerInfo getPlayerInfo() {
+    public PlayerInfo getPlayerInfo() {
         if (this.playerInfo == null) {
             this.playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(getOwnerUUID());
         }
@@ -197,4 +271,9 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         } else return false;
     }
 
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.ticksLeft = 0;
+        return true;
+    }
 }

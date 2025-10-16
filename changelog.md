@@ -1,6 +1,15 @@
 # Changelog
-Vitalic sourcelink baby growth tick range is now 15, matching the other events
-Fixes oculus compatibility with sodium
-Fixes amplify not increasing damage on wind shear
-Fixes filters not preventing runes from casting
-Fixes scribes table and mirrorweave rendering
+Adds config to invert lectern scrolling (qther)
+
+Adds compatibility and fixes crash with LambDynamicLights (LambdAurora)
+
+Adds blacklist for Intangible
+
+
+Fixes intangible applying to blocks it shouldn't when used with AOE
+
+Fixes name not saved on arcane pedestals after world reload
+
+Fix for mirrorweave causing more block updates than needed
+
+Adds particle timeline support to caster tomes

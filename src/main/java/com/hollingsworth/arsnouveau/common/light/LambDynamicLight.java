@@ -17,42 +17,42 @@ public interface LambDynamicLight {
      *
      * @return the X coordinate
      */
-    double getDynamicLightX();
+    double ars_nouveau$getDynamicLightX();
 
     /**
      * Returns the dynamic light source Y coordinate.
      *
      * @return the Y coordinate
      */
-    double getDynamicLightY();
+    double ars_nouveau$getDynamicLightY();
 
     /**
      * Returns the dynamic light source Z coordinate.
      *
      * @return the Z coordinate
      */
-    double getDynamicLightZ();
+    double ars_nouveau$getDynamicLightZ();
 
     /**
      * Returns the dynamic light source world.
      *
      * @return the world instance
      */
-    Level getDynamicLightWorld();
+    Level ars_nouveau$getDynamicLightWorld();
 
     /**
      * Returns whether the dynamic light is enabled or not.
      *
      * @return {@code true} if the dynamic light is enabled, else {@code false}
      */
-    default boolean isDynamicLightEnabled() {
+    default boolean ars_nouveau$isDynamicLightEnabled() {
         return LightManager.containsLightSource(this);
     }
 
-    void resetDynamicLight();
+    void ars_nouveau$resetDynamicLight();
 
-    default void setDynamicLightEnabled(boolean enabled) {
-        this.resetDynamicLight();
+    default void ars_nouveau$setDynamicLightEnabled(boolean enabled) {
+        this.ars_nouveau$resetDynamicLight();
         if (enabled)
             LightManager.addLightSource(this);
         else
@@ -65,12 +65,12 @@ public interface LambDynamicLight {
      *
      * @return the luminance of the light source
      */
-    int getLuminance();
+    int ars_nouveau$getLuminance();
 
     /**
      * Executed at each tick.
      */
-    void dynamicLightTick();
+    void ars_nouveau$dynamicLightTick();
 
     /**
      * Returns whether this dynamic light source should update.

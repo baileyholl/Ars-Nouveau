@@ -1,0 +1,10 @@
+{
+	"match": {
+		"type": "ars_nouveau:familiar_starbuncle"
+	},
+	"luminance": {
+		"type": "ars_nouveau:starbuncle",
+		"trigger": 6,
+		"luminance": 10
+	}
+}

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.Util;
@@ -10,15 +11,17 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonWolf extends Wolf implements ISummon {
+public class SummonWolf extends Wolf implements ISummon, IDispellable {
     public int ticksLeft;
     public boolean isWildenSummon;
 
@@ -51,6 +54,12 @@ public class SummonWolf extends Wolf implements ISummon {
     public void die(DamageSource cause) {
         super.die(cause);
         onSummonDeath(level, cause, false);
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.ticksLeft = 0;
+        return true;
     }
 
     @Override
