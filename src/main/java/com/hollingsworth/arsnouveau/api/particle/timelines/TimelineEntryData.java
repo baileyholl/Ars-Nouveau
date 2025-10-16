@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class TimelineEntryData {
     public static final MapCodec<TimelineEntryData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ParticleMotion.CODEC.fieldOf("motion").forGetter(i -> i.motion),
+            ParticleMotion.CODEC.lenientOptionalFieldOf("motion", new NoneMotion()).forGetter(i -> i.motion),
             ParticleTypes.CODEC.fieldOf("particleOptions").forGetter(i -> i.particleOptions)
     ).apply(instance, TimelineEntryData::new));
 

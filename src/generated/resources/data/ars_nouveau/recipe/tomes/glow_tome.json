@@ -16,5 +16,23 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_light"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Glow Trap",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_touch",
+      "ars_nouveau:glyph_rune",
+      "ars_nouveau:glyph_snare",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_light"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }
