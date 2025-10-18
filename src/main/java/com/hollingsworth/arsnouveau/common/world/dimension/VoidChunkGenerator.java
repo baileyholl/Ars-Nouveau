@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.world.dimension;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumProjectorTile;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.datafixers.util.Pair;
@@ -111,7 +112,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
                         if (worldPosX == 0 && y == 0 && worldPosZ == 0) {
                             BlockPos pos = new BlockPos(x, y, z);
                             chunk.setBlockState(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState(), false);
-                            chunk.markPosForPostprocessing(pos);
+                            chunk.setBlockEntity(new PlanariumProjectorTile(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState()));
                         } else if (isEdge) {
                             BlockPos pos = new BlockPos(x, y, z);
                             if (chunk.getBlockState(pos).isAir()) {
