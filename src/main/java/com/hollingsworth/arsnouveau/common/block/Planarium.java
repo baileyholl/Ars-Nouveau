@@ -30,7 +30,7 @@ public class Planarium extends TickableModBlock {
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof PlanariumTile tile) {
             if (tile.key == null) {
-                tile.setDimension("test6", serverLevel);
+                tile.setDimension("test2", serverLevel);
             }
             if (player.isCrouching()) {
                 tile.sendEntityTo(player);

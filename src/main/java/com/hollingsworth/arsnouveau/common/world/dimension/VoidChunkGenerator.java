@@ -87,7 +87,7 @@ public class VoidChunkGenerator extends ChunkGenerator {
         int chunkZ = chunk.getPos().z;
         int worldX = chunkX * 16;
         int worldZ = chunkZ * 16;
-        
+
         int minX = -1;
         int maxX = 32;
         int minY = 0;
@@ -108,9 +108,15 @@ public class VoidChunkGenerator extends ChunkGenerator {
                                 (y == minY || y == maxY) ||
                                 (worldPosZ == minZ || worldPosZ == maxZ);
 
-                        if (isEdge) {
+                        if (worldPosX == 0 && y == 0 && worldPosZ == 0) {
                             BlockPos pos = new BlockPos(x, y, z);
-                            chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
+                            chunk.setBlockState(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState(), false);
+                            chunk.markPosForPostprocessing(pos);
+                        } else if (isEdge) {
+                            BlockPos pos = new BlockPos(x, y, z);
+                            if (chunk.getBlockState(pos).isAir()) {
+                                chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
+                            }
                         }
                     }
                 }

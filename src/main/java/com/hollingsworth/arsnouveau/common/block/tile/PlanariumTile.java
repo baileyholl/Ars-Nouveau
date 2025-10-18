@@ -7,7 +7,8 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
 import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
-import com.hollingsworth.arsnouveau.common.world.saved_data.DimSavedData;
+import com.hollingsworth.arsnouveau.common.world.saved_data.DimMappingData;
+import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
@@ -182,8 +183,9 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
 
     public ServerLevel setDimension(String dimName, ServerLevel serverLevel) {
         Tuple<ServerLevel, DimManager.Entry> dimension = dimManager.getOrCreateLevel(dimName, serverLevel, worldPosition);
-        DimSavedData.Entry dimData = DimSavedData.from(serverLevel).getOrCreate(dimName);
+        DimMappingData.Entry dimData = DimMappingData.from(serverLevel).getOrCreateByName(dimName);
         this.key = ResourceKey.create(Registries.DIMENSION, dimData.key());
+        this.name = Component.literal(dimName);
         var managerEntry = dimension.getB();
         if (managerEntry != null) {
             this.template = managerEntry.template;
@@ -195,8 +197,13 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
     }
 
     public void sendEntityTo(Entity entity) {
-        if (key != null && level instanceof ServerLevel) {
+        if (key != null && level instanceof ServerLevel serverLevel) {
             ServerLevel dimLevel = level.getServer().getLevel(key);
+            DimMappingData dimMappingData = DimMappingData.from(serverLevel);
+            if (entity instanceof ServerPlayer && dimMappingData.getByKey(level.dimension().location()) == null) {
+                JarDimData jarData = JarDimData.from(dimLevel);
+                jarData.setEnteredFrom(entity.getUUID(), GlobalPos.of(level.dimension(), worldPosition));
+            }
             entity.teleportTo(dimLevel, 7, 2, 7, Set.of(), entity.getYRot(), entity.getXRot());
         }
     }
@@ -229,7 +236,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
         }
 
         public Tuple<ServerLevel, Entry> getOrCreateLevel(String dimName, ServerLevel serverLevel, BlockPos ownerPos) {
-            DimSavedData.Entry dimEntry = DimSavedData.from(serverLevel.getServer().overworld()).getOrCreate(dimName);
+            DimMappingData.Entry dimEntry = DimMappingData.from(serverLevel.getServer().overworld()).getOrCreateByName(dimName);
             var dimKey = ResourceKey.create(Registries.DIMENSION, dimEntry.key());
             return getOrCreateLevel(serverLevel, dimKey, ownerPos);
         }
