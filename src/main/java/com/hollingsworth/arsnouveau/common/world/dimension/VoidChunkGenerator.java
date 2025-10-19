@@ -110,14 +110,13 @@ public class VoidChunkGenerator extends ChunkGenerator {
                                 (worldPosZ == minZ || worldPosZ == maxZ);
 
                         if (worldPosX == 0 && y == 0 && worldPosZ == 0) {
-                            BlockPos pos = new BlockPos(x, y, z);
+                            BlockPos pos = new BlockPos(x, y - 1, z);
                             chunk.setBlockState(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState(), false);
                             chunk.setBlockEntity(new PlanariumProjectorTile(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState()));
+                            chunk.setBlockState(new BlockPos(x, y, z), BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
                         } else if (isEdge) {
                             BlockPos pos = new BlockPos(x, y, z);
-                            if (chunk.getBlockState(pos).isAir()) {
-                                chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
-                            }
+                            chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
                         }
                     }
                 }

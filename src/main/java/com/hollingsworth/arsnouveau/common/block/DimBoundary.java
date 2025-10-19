@@ -21,6 +21,6 @@ public class DimBoundary extends ModBlock {
             JarDimData jarDimData = JarDimData.from(serverLevel);
             System.out.println(jarDimData.getEnteredFrom(player.getUUID()));
         }
-        return true;
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 }

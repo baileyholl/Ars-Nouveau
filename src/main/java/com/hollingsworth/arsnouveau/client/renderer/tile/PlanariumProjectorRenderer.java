@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -34,9 +33,8 @@ public class PlanariumProjectorRenderer implements BlockEntityRenderer<Planarium
             statePos.add(new StatePos(BlockRegistry.PLANARIUM.defaultBlockState(), BlockPos.ZERO));
             fakeRenderingWorld = new FakeRenderingWorld(planariumProjectorTile.getLevel(), statePos, BlockPos.ZERO);
         }
-        BlockState state = BlockRegistry.PLANARIUM.defaultBlockState();
         poseStack.pushPose();
-        poseStack.translate(0, -25, 0);
+        poseStack.translate(0, -24, 0);
         poseStack.scale(32, 32, 32);
 //        Minecraft.getInstance().getBlockEntityRenderDispatcher().en
 //        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, multiBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
