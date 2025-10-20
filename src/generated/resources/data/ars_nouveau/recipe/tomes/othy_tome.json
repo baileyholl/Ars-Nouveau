@@ -17,5 +17,24 @@
     "ars_nouveau:glyph_amplify",
     "ars_nouveau:glyph_amplify"
   ],
+  "spellData": {
+    "color": {
+      "b": 255,
+      "g": 255,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Othy's Misdirection",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_self",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_summon_decoy",
+      "ars_nouveau:glyph_blink",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_amplify"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

@@ -49,6 +49,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> STORAGE_GEMS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/source_gem"));
     public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
     public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(ArsNouveau.prefix("lectern_blacklist"));
+    public static TagKey<Block> INTANGIBLE_BLACKLIST = BlockTags.create(ArsNouveau.prefix("intangible_blacklist"));
 
     public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
     public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
@@ -333,6 +334,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(STORAGE_GEMS).add(BlockRegistry.SOURCE_GEM_BLOCK.get());
         this.tag(STORAGE_MAGEBLOOM).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
+        this.tag(INTANGIBLE_BLACKLIST).add(Blocks.BEDROCK);
 
     }
 

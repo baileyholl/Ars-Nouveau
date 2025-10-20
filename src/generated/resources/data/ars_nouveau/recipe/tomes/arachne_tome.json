@@ -17,5 +17,24 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Arachne's Weaving",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_split",
+      "ars_nouveau:glyph_split",
+      "ars_nouveau:glyph_snare",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }
