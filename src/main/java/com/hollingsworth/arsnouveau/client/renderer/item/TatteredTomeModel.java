@@ -8,8 +8,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.Nullable;
 
 public class TatteredTomeModel extends TransformAnimatedModel<WornNotebook> {
-    public static final ResourceLocation CLOSED = ArsNouveau.prefix( "geo/spellbook_closed.geo.json");
-
+    public static final ResourceLocation CLOSED = ArsNouveau.prefix("geo/spellbook_closed.geo.json");
 
 
     public TatteredTomeModel() {
@@ -27,12 +26,12 @@ public class TatteredTomeModel extends TransformAnimatedModel<WornNotebook> {
 
     @Override
     public ResourceLocation getTextureResource(WornNotebook object) {
-        return ArsNouveau.prefix( "textures/item/tattered_tome.png");
+        return ArsNouveau.prefix("textures/item/tattered_tome.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WornNotebook animatable) {
-        return ArsNouveau.prefix( "animations/empty.json");
+        return ArsNouveau.prefix("animations/empty.json");
     }
 
     @Override

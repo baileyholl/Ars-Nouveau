@@ -40,7 +40,7 @@ public class DocEntryBuilder {
         this(category, name, ArsNouveau.prefix(name));
     }
 
-    public DocEntryBuilder(DocCategory category, String name, ResourceLocation entryId){
+    public DocEntryBuilder(DocCategory category, String name, ResourceLocation entryId) {
         this(ArsNouveau.MODID, category, name, entryId);
     }
 
@@ -53,7 +53,7 @@ public class DocEntryBuilder {
         this(modid, category, name, ResourceLocation.fromNamespaceAndPath(modid, name));
     }
 
-    public DocEntryBuilder(String modid, DocCategory category, String name, ResourceLocation entryId){
+    public DocEntryBuilder(String modid, DocCategory category, String name, ResourceLocation entryId) {
         this.namespace = modid;
         this.titleKey = name.contains(".") ? name : namespace + ".page." + name;
         this.textKey = name;
@@ -81,7 +81,7 @@ public class DocEntryBuilder {
         return this;
     }
 
-    public DocEntryBuilder withTitle(Component title){
+    public DocEntryBuilder withTitle(Component title) {
         this.title = title;
         return this;
     }
@@ -123,11 +123,11 @@ public class DocEntryBuilder {
     public DocEntryBuilder withIntroPage(String id) {
         textCounter++;
         List<NuggetMultilLineLabel> labels = DocClientUtils.splitToFitTitlePage(Component.translatable(namespace + ".page" + textCounter + "." + id));
-        for(int i = 0; i < labels.size(); i++){
+        for (int i = 0; i < labels.size(); i++) {
             NuggetMultilLineLabel label = labels.get(i);
-            if(i == 0) {
+            if (i == 0) {
                 pages.add(TextEntry.create(label, Component.translatable(titleKey), displayItem));
-            }else{
+            } else {
                 pages.add(TextEntry.create(label));
             }
         }
@@ -144,11 +144,11 @@ public class DocEntryBuilder {
 
     public DocEntryBuilder withIntroPageNoIncrement(Component contents, Component titleKey, ItemStack displayItem) {
         List<NuggetMultilLineLabel> labels = DocClientUtils.splitToFitTitlePage(contents);
-        for(int i = 0; i < labels.size(); i++){
+        for (int i = 0; i < labels.size(); i++) {
             NuggetMultilLineLabel label = labels.get(i);
-            if(i == 0) {
+            if (i == 0) {
                 pages.add(TextEntry.create(label, titleKey, displayItem));
-            }else{
+            } else {
                 pages.add(TextEntry.create(label));
             }
         }
@@ -169,18 +169,17 @@ public class DocEntryBuilder {
     }
 
 
-
-    public DocEntryBuilder withHeaderPage(String contents, String titleKey){
+    public DocEntryBuilder withHeaderPage(String contents, String titleKey) {
         return withHeaderPage(Component.translatable(contents), Component.translatable(titleKey));
     }
 
-    public DocEntryBuilder withHeaderPage(Component contents, Component titleKey){
+    public DocEntryBuilder withHeaderPage(Component contents, Component titleKey) {
         List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitTitlePage(contents);
         for (int i = 0; i < multiLines.size(); i++) {
             NuggetMultilLineLabel label = multiLines.get(i);
-            if(i == 0) {
+            if (i == 0) {
                 pages.add(TextEntry.create(label, titleKey));
-            }else{
+            } else {
                 pages.add(TextEntry.create(label));
             }
         }
@@ -198,77 +197,78 @@ public class DocEntryBuilder {
         return withLocalizedText(this.textKey);
     }
 
-    public DocEntryBuilder withLocalizedText(ItemLike itemLike){
+    public DocEntryBuilder withLocalizedText(ItemLike itemLike) {
         textCounter++;
         List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitTitlePage(Component.translatable(namespace + ".page" + textCounter + "." + this.textKey));
 
         for (int i = 0; i < multiLines.size(); i++) {
             NuggetMultilLineLabel label = multiLines.get(i);
-            if(i == 0) {
+            if (i == 0) {
                 pages.add(TextEntry.create(label, itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
-            }else{
+            } else {
                 pages.add(TextEntry.create(label));
             }
         }
         return this;
     }
 
-    public DocEntryBuilder withCraftingPages(String resourceLocation, ItemLike outputStack){
+    public DocEntryBuilder withCraftingPages(String resourceLocation, ItemLike outputStack) {
         return withCraftingPages(ResourceLocation.tryParse(resourceLocation), outputStack);
     }
-    public DocEntryBuilder withCraftingPages(ResourceLocation resourceLocation, @Nullable ItemLike outputStack){
+
+    public DocEntryBuilder withCraftingPages(ResourceLocation resourceLocation, @Nullable ItemLike outputStack) {
         var craftingPages = Documentation.getRecipePages(resourceLocation);
         this.withPage(Documentation.getRecipePages(resourceLocation));
-        if(!craftingPages.isEmpty() && outputStack != null && !this.displayItem.is(outputStack.asItem())){
+        if (!craftingPages.isEmpty() && outputStack != null && !this.displayItem.is(outputStack.asItem())) {
             addConnectedSearch(outputStack.asItem().getDefaultInstance());
         }
         return this;
     }
 
-    public DocEntryBuilder withCraftingPages(ItemLike itemLike){
+    public DocEntryBuilder withCraftingPages(ItemLike itemLike) {
         List<SinglePageCtor> craftingPages = Documentation.getRecipePages(RegistryHelper.getRegistryName(itemLike.asItem()));
         this.withPage(craftingPages);
-        if(!craftingPages.isEmpty() && !this.displayItem.is(itemLike.asItem())){
+        if (!craftingPages.isEmpty() && !this.displayItem.is(itemLike.asItem())) {
             ItemStack stack = itemLike.asItem().getDefaultInstance();
             addConnectedSearch(stack);
         }
         return this;
     }
 
-    public DocEntryBuilder withCraftingPages(ItemLike itemLike, ItemLike itemLike2){
+    public DocEntryBuilder withCraftingPages(ItemLike itemLike, ItemLike itemLike2) {
         List<SinglePageCtor> craftingPages = Documentation.getRecipePages(itemLike, itemLike2);
         this.withPage(craftingPages);
-        if(!craftingPages.isEmpty() && !this.displayItem.is(itemLike.asItem())){
+        if (!craftingPages.isEmpty() && !this.displayItem.is(itemLike.asItem())) {
             ItemStack stack = itemLike.asItem().getDefaultInstance();
             addConnectedSearch(stack);
         }
-        if(!craftingPages.isEmpty() && !this.displayItem.is(itemLike2.asItem())){
+        if (!craftingPages.isEmpty() && !this.displayItem.is(itemLike2.asItem())) {
             ItemStack stack = itemLike2.asItem().getDefaultInstance();
             addConnectedSearch(stack);
         }
         return this;
     }
 
-    public DocEntryBuilder addConnectedSearch(ItemStack connectedItem){
-        if(this.connectedSearches.stream().anyMatch(cs -> cs.icon().is(connectedItem.getItem())))
+    public DocEntryBuilder addConnectedSearch(ItemStack connectedItem) {
+        if (this.connectedSearches.stream().anyMatch(cs -> cs.icon().is(connectedItem.getItem())))
             return this;
         this.connectedSearches.add(new ConnectedSearch(entryId, connectedItem.getHoverName(), connectedItem));
         return this;
     }
 
-    public DocEntryBuilder addConnectedSearch(ItemLike itemLike){
+    public DocEntryBuilder addConnectedSearch(ItemLike itemLike) {
         return addConnectedSearch(itemLike.asItem().getDefaultInstance());
     }
 
-    public DocEntryBuilder withCraftingPages(){
+    public DocEntryBuilder withCraftingPages() {
         List<SinglePageCtor> pages = Documentation.getRecipePages(RegistryHelper.getRegistryName(displayItem.getItem()));
         this.withPage(pages);
         return this;
     }
 
-    public DocEntry build(){
+    public DocEntry build() {
         DocEntry docEntry = new DocEntry(entryId, displayItem, title, sortNum).addPages(pages);
-        for(ConnectedSearch connectedSearch : connectedSearches){
+        for (ConnectedSearch connectedSearch : connectedSearches) {
             Search.addConnectedSearch(connectedSearch);
         }
         return docEntry;

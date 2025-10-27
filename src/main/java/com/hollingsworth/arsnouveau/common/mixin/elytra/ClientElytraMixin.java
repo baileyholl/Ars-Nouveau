@@ -20,6 +20,6 @@ public class ClientElytraMixin {
             )
     )
     public boolean elytraOverride(boolean original) {
-        return original || EffectGlide.canGlide(((LivingEntity) ((Object)this)));
+        return original || EffectGlide.canGlide(((LivingEntity) ((Object) this)));
     }
 }

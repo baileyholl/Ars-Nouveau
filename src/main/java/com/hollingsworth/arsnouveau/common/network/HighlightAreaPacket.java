@@ -12,14 +12,14 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HighlightAreaPacket extends AbstractPacket{
+public class HighlightAreaPacket extends AbstractPacket {
     public static final Type<HighlightAreaPacket> TYPE = new Type<>(ArsNouveau.prefix("highlight_area"));
     public static final StreamCodec<RegistryFriendlyByteBuf, HighlightAreaPacket> CODEC = StreamCodec.ofMember(HighlightAreaPacket::toBytes, HighlightAreaPacket::decode);
 
     public List<ColorPos> colorPos;
     public int ticks;
 
-    public HighlightAreaPacket(List<ColorPos> colorPos, int ticks){
+    public HighlightAreaPacket(List<ColorPos> colorPos, int ticks) {
         this.colorPos = colorPos;
         this.ticks = ticks;
     }
@@ -27,7 +27,7 @@ public class HighlightAreaPacket extends AbstractPacket{
     public static HighlightAreaPacket decode(RegistryFriendlyByteBuf buf) {
         HighlightAreaPacket packet = new HighlightAreaPacket(new ArrayList<>(), 0);
         int size = buf.readInt();
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             packet.colorPos.add(ColorPos.fromTag(buf.readNbt()));
         }
         packet.ticks = buf.readInt();
@@ -37,7 +37,7 @@ public class HighlightAreaPacket extends AbstractPacket{
     @Override
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(colorPos.size());
-        for(ColorPos pos : colorPos){
+        for (ColorPos pos : colorPos) {
             buf.writeNbt(pos.toTag());
         }
         buf.writeInt(ticks);

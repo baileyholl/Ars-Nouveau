@@ -96,6 +96,6 @@ public class RitualDisintegration extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.DISINTEGRATION);
+        return ArsNouveau.prefix(RitualLib.DISINTEGRATION);
     }
 }

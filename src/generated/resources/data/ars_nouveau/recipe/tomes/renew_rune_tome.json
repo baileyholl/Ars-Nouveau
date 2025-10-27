@@ -16,5 +16,23 @@
     "ars_nouveau:glyph_heal",
     "ars_nouveau:glyph_amplify"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Rune of Renewing",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_touch",
+      "ars_nouveau:glyph_rune",
+      "ars_nouveau:glyph_dispel",
+      "ars_nouveau:glyph_heal",
+      "ars_nouveau:glyph_amplify"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

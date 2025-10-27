@@ -81,6 +81,6 @@ public class DepositAmethystGoal extends Goal {
     public boolean canUse() {
         if (golem.getHome() == null || golem.getMainHandItem().isEmpty())
             return false;
-        return canUse.get() &&  golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
+        return canUse.get() && golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
     }
 }

@@ -22,7 +22,7 @@ public class PotionCraftingManager extends CraftingManager {
     private PotionContents potionNeeded;
     public PotionContents potionOut;
 
-    public PotionCraftingManager(){
+    public PotionCraftingManager() {
         super();
     }
 
@@ -41,11 +41,11 @@ public class PotionCraftingManager extends CraftingManager {
         return !needsPotion() && super.canBeCompleted();
     }
 
-    public boolean needsPotion(){
+    public boolean needsPotion() {
         return !(hasObtainedPotion);
     }
 
-    public PotionContents getPotionNeeded(){
+    public PotionContents getPotionNeeded() {
         return potionNeeded;
     }
 
@@ -64,13 +64,13 @@ public class PotionCraftingManager extends CraftingManager {
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
             return;
-        }else if (level instanceof ServerLevel serverLevel && level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
+        } else if (level instanceof ServerLevel serverLevel && level.getBlockEntity(jarPos) instanceof PotionJarTile jar) {
             tile.setNeedsPotionStorage(false);
-            jar.add(potionOut,300);
+            jar.add(potionOut, 300);
             ParticleColor color2 = ParticleColor.fromInt(jar.getColor());
-            EntityFlyingItem.spawn(serverLevel, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
-                    new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
-                    Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+            EntityFlyingItem.spawn(serverLevel, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5),
+                            new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
+                            Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                     .withNoTouch();
         }
         super.completeCraft(tile);
@@ -82,14 +82,14 @@ public class PotionCraftingManager extends CraftingManager {
     }
 
     @Override
-    public void write(HolderLookup.Provider provider,  CompoundTag tag) {
+    public void write(HolderLookup.Provider provider, CompoundTag tag) {
         super.write(provider, tag);
         tag.put("potionout", ANCodecs.encode(provider, PotionContents.CODEC, potionOut));
         tag.put("potionNeeded", ANCodecs.encode(provider, PotionContents.CODEC, getPotionNeeded()));
         tag.putBoolean("gotPotion", hasObtainedPotion);
     }
 
-    public void read(HolderLookup.Provider provider, CompoundTag tag){
+    public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
         potionOut = ANCodecs.decode(provider, PotionContents.CODEC, tag.getCompound("potionout"));
         potionNeeded = ANCodecs.decode(provider, PotionContents.CODEC, tag.getCompound("potionNeeded"));

@@ -36,7 +36,7 @@ public class TagScryer implements IScryer {
         if (tag.contains("blockTag")) {
             var tagKey = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(tag.getString("blockTag")));
             var blocks = BuiltInRegistries.BLOCK.getTag(tagKey);
-            if(blocks.isEmpty()){
+            if (blocks.isEmpty()) {
                 return scryer;
             }
             scryer.blockTag = tagKey;
@@ -54,6 +54,6 @@ public class TagScryer implements IScryer {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( "tag_scryer");
+        return ArsNouveau.prefix("tag_scryer");
     }
 }

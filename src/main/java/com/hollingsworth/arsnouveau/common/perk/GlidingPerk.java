@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GlidingPerk extends Perk {
 
-    public static final GlidingPerk INSTANCE = new GlidingPerk(ArsNouveau.prefix( "thread_gliding"));
+    public static final GlidingPerk INSTANCE = new GlidingPerk(ArsNouveau.prefix("thread_gliding"));
 
     public GlidingPerk(ResourceLocation key) {
         super(key);

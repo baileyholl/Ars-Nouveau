@@ -15,13 +15,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 
-public class PacketSetLauncher extends AbstractPacket{
+public class PacketSetLauncher extends AbstractPacket {
     public static final Type<PacketSetLauncher> TYPE = new Type<>(ArsNouveau.prefix("set_launcher"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetLauncher> CODEC = StreamCodec.ofMember(PacketSetLauncher::toBytes, PacketSetLauncher::new);
 
     public int inventorySlot;
 
-    public PacketSetLauncher(RegistryFriendlyByteBuf  buf) {
+    public PacketSetLauncher(RegistryFriendlyByteBuf buf) {
         inventorySlot = buf.readInt();
     }
 
@@ -36,24 +36,24 @@ public class PacketSetLauncher extends AbstractPacket{
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
-        if(inventorySlot >= player.inventory.getContainerSize())
+        if (inventorySlot >= player.inventory.getContainerSize())
             return;
         ItemStack stack = player.inventory.getItem(inventorySlot);
         ItemStack launcherStack = ItemStack.EMPTY;
-        if(player.getMainHandItem().getItem() instanceof FlaskCannon){
+        if (player.getMainHandItem().getItem() instanceof FlaskCannon) {
             launcherStack = player.getMainHandItem();
-        }else if(player.getOffhandItem().getItem() instanceof FlaskCannon){
+        } else if (player.getOffhandItem().getItem() instanceof FlaskCannon) {
             launcherStack = player.getOffhandItem();
         }
-        if(launcherStack.isEmpty()){
+        if (launcherStack.isEmpty()) {
             return;
         }
         IPotionProvider provider = PotionProviderRegistry.from(stack);
         if (provider != null) {
             launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(stack), inventorySlot));
-        }else {
+        } else {
             PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
-            if(contents == null){
+            if (contents == null) {
                 return;
             }
             stack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, inventorySlot));

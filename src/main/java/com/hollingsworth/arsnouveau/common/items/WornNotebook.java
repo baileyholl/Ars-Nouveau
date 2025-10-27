@@ -30,11 +30,11 @@ public class WornNotebook extends ModItem implements GeoItem, AliasProvider {
         withTooltip(Component.translatable("tooltip.worn_notebook"));
     }
 
-   @NotNull
+    @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if(worldIn.isClientSide){
+        if (worldIn.isClientSide) {
             DocClientUtils.openBook();
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
@@ -45,7 +45,9 @@ public class WornNotebook extends ModItem implements GeoItem, AliasProvider {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
 
     }
+
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
@@ -66,10 +68,10 @@ public class WornNotebook extends ModItem implements GeoItem, AliasProvider {
     @Override
     public Collection<Alias> getAliases() {
         return List.of(
-            new Alias("worn_notebook", "Worn Notebook"),
-            new Alias("guide", "Guide"),
-            new Alias("documentation", "Documentation"),
-            new Alias("book", "Book")
+                new Alias("worn_notebook", "Worn Notebook"),
+                new Alias("guide", "Guide"),
+                new Alias("documentation", "Documentation"),
+                new Alias("book", "Book")
         );
     }
 }

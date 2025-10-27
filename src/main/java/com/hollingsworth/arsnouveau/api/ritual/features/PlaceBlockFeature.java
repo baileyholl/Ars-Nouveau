@@ -22,7 +22,8 @@ public class PlaceBlockFeature implements IPlaceableFeature {
     public double distance;
     public Supplier<BlockState> block;
     public double chance;
-    public PlaceBlockFeature(double distance, double chance, Supplier<BlockState> block){
+
+    public PlaceBlockFeature(double distance, double chance, Supplier<BlockState> block) {
         this.distance = distance;
         this.block = block;
         this.chance = chance;
@@ -36,8 +37,8 @@ public class PlaceBlockFeature implements IPlaceableFeature {
     @Override
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
         BlockState state = block.get();
-        if(level.random.nextFloat() < chance && !level.getBlockState(pos.below()).isAir() && state.canSurvive(level, pos)){
-            if(state.getBlock().asItem() instanceof BlockItem blockItem) {
+        if (level.random.nextFloat() < chance && !level.getBlockState(pos.below()).isAir() && state.canSurvive(level, pos)) {
+            if (state.getBlock().asItem() instanceof BlockItem blockItem) {
                 blockItem.place(new BlockPlaceContext(level, ANFakePlayer.getPlayer((ServerLevel) level), InteractionHand.MAIN_HAND, new ItemStack(blockItem), new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.DOWN, pos, false)));
             }
             return true;

@@ -64,6 +64,7 @@ public class Config {
     public static ModConfigSpec.BooleanValue DISABLE_SKY_SHADER;
     public static ModConfigSpec.BooleanValue DISABLE_TRANSLUCENT_PARTICLES;
     public static ModConfigSpec.BooleanValue SHOW_RECIPE_BOOK;
+    public static ModConfigSpec.BooleanValue INVERT_LECTERN_SCROLLING;
     public static ModConfigSpec.IntValue MAX_LOG_EVENTS;
     public static ModConfigSpec.IntValue TOOLTIP_X_OFFSET;
     public static ModConfigSpec.IntValue TOOLTIP_Y_OFFSET;
@@ -119,6 +120,7 @@ public class Config {
         SPELLNAME_Y_OFFSET = CLIENT_BUILDER.comment("Y offset for the Spell Name").defineInRange("ySpellName", 30, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
         SHOW_RECIPE_BOOK = CLIENT_BUILDER.comment("If the Storage Lectern should show the recipe book icon").define("showRecipeBook", true);
+        INVERT_LECTERN_SCROLLING = CLIENT_BUILDER.comment("If scrolling in the Storage Lectern should be inverted").define("invertLecternScrolling", false);
         INFORM_LIGHTS = CLIENT_BUILDER.comment("Inform the player of Dynamic lights once.").define("informLights", true);
         TOGGLE_RADIAL_HUD = CLIENT_BUILDER.comment("Whether the Selection HUD is toggled or held").define("toggleSelectionHUD", true);
         CLIENT_BUILDER.pop();
@@ -180,33 +182,33 @@ public class Config {
 
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent.Loading configEvent) {
-        if(configEvent.getConfig().getSpec() == CLIENT_CONFIG){
+        if (configEvent.getConfig().getSpec() == CLIENT_CONFIG) {
             resetLightMaps();
         }
     }
 
     @SubscribeEvent
     public static void onReload(final ModConfigEvent.Reloading configEvent) {
-        if(configEvent.getConfig().getSpec() == CLIENT_CONFIG){
-           resetLightMaps();
+        if (configEvent.getConfig().getSpec() == CLIENT_CONFIG) {
+            resetLightMaps();
         }
     }
 
-    public static void resetLightMaps(){
+    public static void resetLightMaps() {
         ENTITY_LIGHT_MAP = new HashMap<>();
         ITEM_LIGHTMAP = new HashMap<>();
         // Copy values from ENTITY_LIGHT_CONFIG to ENTITY_LIGHT_MAP
-        for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()){
+        for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()) {
             ENTITY_LIGHT_MAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
         // Copy values from ITEM_LIGHT_CONFIG to ITEM_LIGHT_MAP
-        for(Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()){
+        for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()) {
             ITEM_LIGHTMAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
         }
     }
 
 
-    public static Map<String, Integer> getDefaultEntityLight(){
+    public static Map<String, Integer> getDefaultEntityLight() {
         Map<String, Integer> map = new HashMap<>();
         map.put(an(LibEntityNames.SPELL_PROJ), 15);
         map.put(an(LibEntityNames.ORBIT_PROJECTILE), 15);
@@ -219,7 +221,7 @@ public class Config {
         return map;
     }
 
-    public static Map<String, Integer> getDefaultItemLight(){
+    public static Map<String, Integer> getDefaultItemLight() {
         Map<String, Integer> map = new HashMap<>();
         map.put("minecraft:glowstone", 15);
         map.put("minecraft:torch", 14);
@@ -240,7 +242,7 @@ public class Config {
         return map;
     }
 
-    public static String an(String s){
-        return ArsNouveau.prefix( s).toString();
+    public static String an(String s) {
+        return ArsNouveau.prefix(s).toString();
     }
 }

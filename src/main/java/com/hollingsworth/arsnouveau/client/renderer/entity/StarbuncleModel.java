@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 public class StarbuncleModel extends GeoModel<Starbuncle> {
 
     public static ResourceLocation ANIMATION = ArsNouveau.prefix("animations/starbuncle_animations.json");
+
     @Override
     public void setCustomAnimations(Starbuncle entity, long uniqueID, @Nullable AnimationState<Starbuncle> customPredicate) {
         super.setCustomAnimations(entity, uniqueID, customPredicate);

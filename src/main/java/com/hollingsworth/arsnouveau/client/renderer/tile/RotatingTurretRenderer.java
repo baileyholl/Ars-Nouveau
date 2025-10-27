@@ -24,19 +24,19 @@ public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTi
         float rotationY = tile.rotationY;
         float neededRotationY = tile.clientNeededY;
         float step = (0.1f + partialTick);
-        if(rotationX != neededRotationX){
+        if (rotationX != neededRotationX) {
             float diff = neededRotationX - rotationX;
-            if(Math.abs(diff) < step){
+            if (Math.abs(diff) < step) {
                 tile.setRotationX(neededRotationX);
-            }else{
+            } else {
                 tile.setRotationX(rotationX + diff * step);
             }
         }
-        if(rotationY != neededRotationY){
+        if (rotationY != neededRotationY) {
             float diff = neededRotationY - rotationY;
-            if(Math.abs(diff) < step){
+            if (Math.abs(diff) < step) {
                 tile.setRotationY(neededRotationY);
-            }else{
+            } else {
                 tile.setRotationY(rotationY + diff * step);
             }
         }

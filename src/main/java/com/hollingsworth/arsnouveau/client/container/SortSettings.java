@@ -30,7 +30,7 @@ public record SortSettings(int controlMode, boolean reverseSort, int sortType, i
             SortSettings::new
     );
 
-    public SortSettings(){
+    public SortSettings() {
         this(0, false, 0, 0, false);
     }
 

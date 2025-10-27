@@ -70,7 +70,7 @@ public interface IPerk {
     /**
      * Return the initial perk data when this Perk is added to an item for the first time.
      */
-    default @Nullable CompoundTag getInitTag(){
+    default @Nullable CompoundTag getInitTag() {
         return null;
     }
 
@@ -80,7 +80,7 @@ public interface IPerk {
         return Component.translatable(getRegistryName().getNamespace() + ".thread_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();
     }
 
-    default Component getPerkName(){
+    default Component getPerkName() {
         return Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath());
     }
 
@@ -96,6 +96,9 @@ public interface IPerk {
         return getRegistryName().getNamespace() + ".perk_desc." + getRegistryName().getPath();
     }
 
-    default void onRemoved(LivingEntity entity) {}
-    default void onAdded(LivingEntity entity) {}
+    default void onRemoved(LivingEntity entity) {
+    }
+
+    default void onAdded(LivingEntity entity) {
+    }
 }

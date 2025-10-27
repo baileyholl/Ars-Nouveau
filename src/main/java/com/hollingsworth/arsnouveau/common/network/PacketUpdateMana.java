@@ -12,7 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketUpdateMana extends AbstractPacket{
+public class PacketUpdateMana extends AbstractPacket {
     CompoundTag tag;
 
     public PacketUpdateMana(CompoundTag tag) {
@@ -35,7 +35,7 @@ public class PacketUpdateMana extends AbstractPacket{
         data.deserializeNBT(player.registryAccess(), this.tag);
         player.setData(AttachmentsRegistry.MANA_ATTACHMENT, data);
         var cap = CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer());
-        if(cap != null){
+        if (cap != null) {
             cap.setManaData(data);
         }
         //sync the client cache of reserved mana

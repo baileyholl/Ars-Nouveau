@@ -18,7 +18,7 @@ public class PotionProviderRegistry {
 
     private static final ConcurrentHashMap<Item, Function<ItemStack, IPotionProvider>> MAP = new ConcurrentHashMap<>();
 
-    private static final IPotionProvider DEFAULT  = new IPotionProvider(){
+    private static final IPotionProvider DEFAULT = new IPotionProvider() {
 
         @Override
         @NotNull
@@ -29,7 +29,7 @@ public class PotionProviderRegistry {
         @Override
         public int usesRemaining(ItemStack stack) {
             PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
-            if(contents == null){
+            if (contents == null) {
                 return 0;
             }
             return contents == PotionContents.EMPTY ? 0 : 1;
@@ -42,8 +42,8 @@ public class PotionProviderRegistry {
 
         @Override
         public void consumeUses(ItemStack stack, int amount, @Nullable LivingEntity entity) {
-            if(stack.getItem() instanceof PotionItem potionItem){
-                if(entity instanceof Player player) {
+            if (stack.getItem() instanceof PotionItem potionItem) {
+                if (entity instanceof Player player) {
                     if (!player.hasInfiniteMaterials()) {
                         stack.shrink(1);
                     }
@@ -56,10 +56,10 @@ public class PotionProviderRegistry {
 
         @Override
         public void addUse(ItemStack stack, int amount, @Nullable LivingEntity entity) {
-            if(stack.getItem() instanceof BottleItem bottleItem){
+            if (stack.getItem() instanceof BottleItem bottleItem) {
                 ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
                 bottle.set(DataComponents.POTION_CONTENTS, stack.get(DataComponents.POTION_CONTENTS));
-                if(entity instanceof Player player){
+                if (entity instanceof Player player) {
                     if (!player.hasInfiniteMaterials()) {
                         stack.shrink(1);
                     }
@@ -74,14 +74,14 @@ public class PotionProviderRegistry {
         }
     };
 
-    static{
+    static {
         MAP.put(ItemsRegistry.POTION_FLASK.asItem(), (stack) -> stack.get(DataComponentRegistry.MULTI_POTION));
         MAP.put(ItemsRegistry.POTION_FLASK_AMPLIFY.asItem(), (stack) -> stack.get(DataComponentRegistry.MULTI_POTION));
         MAP.put(ItemsRegistry.POTION_FLASK_EXTEND_TIME.asItem(), (stack) -> stack.get(DataComponentRegistry.MULTI_POTION));
         MAP.put(Items.POTION, (stack) -> DEFAULT);
     }
 
-    public static @Nullable IPotionProvider from(ItemStack stack){
+    public static @Nullable IPotionProvider from(ItemStack stack) {
         return MAP.getOrDefault(stack.getItem(), (item) -> null).apply(stack);
     }
 }

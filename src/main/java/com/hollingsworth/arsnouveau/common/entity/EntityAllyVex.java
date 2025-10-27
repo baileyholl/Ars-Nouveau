@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
@@ -32,13 +33,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
+public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDispellable {
     public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityAllyVex.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private LivingEntity owner;
@@ -94,7 +96,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
                 (entity) -> (entity instanceof Mob mob && mob.getTarget() != null &&
-                             mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+                        mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
 
@@ -132,6 +134,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     @Override
     public LivingEntity getOwnerAlt() {
         return owner;
+    }
+
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.limitedLifeTicks = 0;
+        return true;
     }
 
     class ChargeAttackGoal extends Goal {

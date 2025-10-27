@@ -22,7 +22,6 @@ import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -37,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 import java.util.UUID;
 
-public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable,  ICapabilityProvider<BasicSpellTurretTile, Void, SpellCaster> {
+public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ICapabilityProvider<BasicSpellTurretTile, Void, SpellCaster> {
 
     boolean playRecoil;
     protected SpellCaster spellCaster = new SpellCaster(0, null, false, null, 1);
@@ -59,11 +58,11 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         this.uuid = uuid;
     }
 
-    public void setSpell(Spell spell){
+    public void setSpell(Spell spell) {
         this.spellCaster = this.spellCaster.setSpell(spell, 0);
     }
 
-    public void shootSpell(){
+    public void shootSpell() {
         BlockPos pos = this.getBlockPos();
 
         if (spellCaster.getSpell().isEmpty() || !(this.level instanceof ServerLevel level))
@@ -81,7 +80,6 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
         if (resolver.castType != null && BasicSpellTurret.TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             BasicSpellTurret.TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, level, pos, fakePlayer, iposition, direction);
-            spellCaster.playSound(pos, level, null, spellCaster.getCurrentSound(), SoundSource.BLOCKS);
         }
     }
 

@@ -10,13 +10,13 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.Objects;
 import java.util.Optional;
 
-public record MobJarData(Optional<CompoundTag> entityTag, Optional<CompoundTag> extraDataTag){
+public record MobJarData(Optional<CompoundTag> entityTag, Optional<CompoundTag> extraDataTag) {
     public static Codec<MobJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             CompoundTag.CODEC.optionalFieldOf("entity_tag").forGetter(MobJarData::entityTag),
             CompoundTag.CODEC.optionalFieldOf("extra_data_tag").forGetter(MobJarData::extraDataTag)
     ).apply(instance, MobJarData::new));
 
-    public MobJarData(CompoundTag tag, CompoundTag extraTag){
+    public MobJarData(CompoundTag tag, CompoundTag extraTag) {
         this(Optional.ofNullable(tag), Optional.ofNullable(extraTag));
     }
 

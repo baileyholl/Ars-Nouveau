@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
@@ -144,13 +145,12 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         if (level.getBlockEntity(pos) instanceof MageBlockTile tile) {
             fallingblockentity = new EnchantedMageblock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
             fallingblockentity.resolver = resolver;
-            fallingblockentity.setColor(tile.color);
         } else if (level.getBlockEntity(pos) instanceof SkullBlockEntity tile) {
             fallingblockentity = new EnchantedSkull(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState);
         } else {
             fallingblockentity = new EnchantedFallingBlock(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, blockState.hasProperty(BlockStateProperties.WATERLOGGED) ? blockState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE) : blockState, resolver);
         }
-        if(level.getBlockEntity(pos) != null){
+        if (level.getBlockEntity(pos) != null) {
             fallingblockentity.blockData = level.getBlockEntity(pos).saveWithoutMetadata(level.registryAccess());
         }
         level.addFreshEntity(fallingblockentity);
@@ -283,7 +283,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     }
                 }
                 if (this.level.getBlockEntity(blockpos) instanceof MageBlockTile mbt) {
-                    mbt.color = getColor();
+                    if (context != null) {
+                        mbt.color = context.getSpell().particleTimeline().get(ParticleTimelineRegistry.MAGEBLOCK_TIMELINE.get()).getColor();
+                    }
                     mbt.setChanged();
                 }
 

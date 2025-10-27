@@ -6,7 +6,7 @@
     "id": "ars_nouveau:constant",
     "r": 145
   },
-  "flavour_text": " It's covered in dirt and moss..",
+  "flavour_text": "It's covered in dirt and moss..",
   "name": "Verdant Aura",
   "sound": {
     "sound": {
@@ -23,5 +23,30 @@
     "ars_nouveau:glyph_aoe",
     "ars_nouveau:glyph_aoe"
   ],
+  "spellData": {
+    "color": {
+      "b": 201,
+      "g": 145,
+      "id": "ars_nouveau:constant",
+      "r": 145
+    },
+    "name": "Verdant Aura",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_orbit",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_sensitive",
+      "ars_nouveau:glyph_split",
+      "ars_nouveau:glyph_grow",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe"
+    ],
+    "sound": {
+      "sound": {
+        "id": "ars_nouveau:gaia_family"
+      }
+    }
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

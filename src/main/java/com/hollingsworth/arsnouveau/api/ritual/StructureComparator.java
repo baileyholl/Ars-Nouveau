@@ -9,7 +9,8 @@ public class StructureComparator implements Comparator<StructureTemplate.Structu
 
     BlockPos targetPos;
     BlockPos offset;
-    public StructureComparator(BlockPos targetPos, BlockPos offset){
+
+    public StructureComparator(BlockPos targetPos, BlockPos offset) {
         this.targetPos = targetPos;
         this.offset = offset;
     }
@@ -21,7 +22,7 @@ public class StructureComparator implements Comparator<StructureTemplate.Structu
         double aDistFromMid = targetPos.distToCenterSqr(pos1.getX(), pos1.getY(), pos1.getZ());
         double bDistFromMid = targetPos.distToCenterSqr(pos2.getX(), pos2.getY(), pos2.getZ());
         int c = Double.compare(o1.pos().getY(), o2.pos().getY());
-        if(c == 0){
+        if (c == 0) {
             c = Double.compare(aDistFromMid, bDistFromMid);
         }
         return c;

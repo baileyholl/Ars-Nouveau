@@ -124,20 +124,20 @@ public class FamiliarEvents {
 
 
     @SubscribeEvent
-    public static void knockbackEvent(LivingKnockBackEvent event){
+    public static void knockbackEvent(LivingKnockBackEvent event) {
         List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
-        if(!golems.isEmpty()) {
+        if (!golems.isEmpty()) {
             event.setStrength(event.getStrength() * 0.5f);
         }
     }
 
     @SubscribeEvent
-    public static void livingHurtEvent(LivingDamageEvent.Post event){
-        if(!event.getSource().is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player player) {
+    public static void livingHurtEvent(LivingDamageEvent.Post event) {
+        if (!event.getSource().is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player player) {
             List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
             if (!golems.isEmpty()) {
                 Entity entity = event.getSource().getEntity();
-                if(entity instanceof LivingEntity livingTarget && BlockUtil.distanceFrom(player.blockPosition(), entity.blockPosition()) < 3){
+                if (entity instanceof LivingEntity livingTarget && BlockUtil.distanceFrom(player.blockPosition(), entity.blockPosition()) < 3) {
                     livingTarget.knockback(0.5f, player.getX() - entity.getX(), player.getZ() - entity.getZ());
                 }
             }

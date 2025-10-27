@@ -14,7 +14,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         MixinExtrasBootstrap.init();
-        try{
+        try {
 
             Class.forName("org.vivecraft.tweaker.VivecraftTransformer");
             viveCraftLoaded = true;

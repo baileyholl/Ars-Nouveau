@@ -21,8 +21,8 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
 
     @Override
     protected void digestSpellPart(Map<ResourceLocation, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
-        if(spellPart instanceof IContextManipulator manipulator){
-            for(AbstractSpellPart resettable : manipulator.bypassOccurrenceLimitsFor()){
+        if (spellPart instanceof IContextManipulator manipulator) {
+            for (AbstractSpellPart resettable : manipulator.bypassOccurrenceLimitsFor()) {
                 partCounts.remove(resettable.getRegistryName());
             }
         }
@@ -35,9 +35,9 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
         // Check if over the limit
         int limit = spellPart.PER_SPELL_LIMIT == null ? Integer.MAX_VALUE : spellPart.PER_SPELL_LIMIT.get();
         if (partCounts.getOrDefault(spellPart.getRegistryName(), 0) > limit) {
-            if(EffectReset.RESET_LIMITS.contains(spellPart)){
+            if (EffectReset.RESET_LIMITS.contains(spellPart)) {
                 validationErrors.add(new ResetableLimitSpellValidationError(position, spellPart, limit));
-            }else {
+            } else {
                 validationErrors.add(new GlyphOccurrencesPolicySpellValidationError(position, spellPart, limit));
             }
         }

@@ -46,9 +46,9 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         if (!canDamage(livingEntity))
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, damage);
-        spawnCinders(shooter, level,rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0),0), spellStats, spellContext, resolver);
+        spawnCinders(shooter, level, rayTraceResult.getLocation().add(0, (rayTraceResult.getEntity().onGround() ? 1 : 0), 0), spellStats, spellContext, resolver);
 
-        if(rayTraceResult.getEntity() instanceof LivingEntity living && living.hasEffect(ModPotions.BLAST_EFFECT)){
+        if (rayTraceResult.getEntity() instanceof LivingEntity living && living.hasEffect(ModPotions.BLAST_EFFECT)) {
             int amplifier = living.getEffect(ModPotions.BLAST_EFFECT).getAmplifier();
             living.removeEffect(ModPotions.BLAST_EFFECT);
             BlastEffect.explode(living, amplifier + 1);
@@ -59,13 +59,13 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
 
-        if(world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.FIRE)){
+        if (world.getBlockState(rayTraceResult.getBlockPos()).is(BlockTags.FIRE)) {
             spawnCinders(shooter, world, rayTraceResult.getLocation(), spellStats, spellContext, resolver);
             return;
         }
 
-        for(Direction d : Direction.values()){
-            if(world.getBlockState(rayTraceResult.getBlockPos().relative(d)).is(BlockTags.FIRE)){
+        for (Direction d : Direction.values()) {
+            if (world.getBlockState(rayTraceResult.getBlockPos().relative(d)).is(BlockTags.FIRE)) {
                 spawnCinders(shooter, world, rayTraceResult.getLocation(), spellStats, spellContext, resolver);
                 return;
             }
@@ -76,17 +76,17 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
         return livingEntity.isOnFire() || livingEntity.hasEffect(ModPotions.BLAST_EFFECT) || livingEntity.level.getBlockState(livingEntity.blockPosition()).is(BlockTags.FIRE);
     }
 
-    public void spawnCinders(LivingEntity shooter, Level level, Vec3 hit, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+    public void spawnCinders(LivingEntity shooter, Level level, Vec3 hit, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         double radiusMultiplier = 1;
         int max = (int) Math.ceil(3 + spellStats.getAoeMultiplier());
         Random random = new Random();
-        for(int i = 0; i < max; i++) {
+        for (int i = 0; i < max; i++) {
             float offset = i * 15;
             Vec3 vec3 = new Vec3(
                     hit.x() - radiusMultiplier * Math.sin(random.nextInt(360)),
                     hit.y(), // Offset if the owner died
                     hit.z() - radiusMultiplier * Math.cos(random.nextInt(360)));
-            Vec3 scaleVec =  new Vec3(ParticleUtil.inRange(0.1, 0.5), 1, ParticleUtil.inRange(0.1, 0.5));
+            Vec3 scaleVec = new Vec3(ParticleUtil.inRange(0.1, 0.5), 1, ParticleUtil.inRange(0.1, 0.5));
 
             Cinder fallingBlock = new Cinder(level, vec3.x(), vec3.y(), vec3.z(), BlockRegistry.MAGIC_FIRE.defaultBlockState(), resolver);
             // Send the falling block the opposite direction of the target
@@ -100,7 +100,6 @@ public class EffectFlare extends AbstractEffect implements IDamageEffect {
             ShapersFocus.tryPropagateEntitySpell(fallingBlock, level, shooter, spellContext, resolver);
         }
     }
-
 
 
     public void damage(Vec3 vec, ServerLevel world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, float damage) {

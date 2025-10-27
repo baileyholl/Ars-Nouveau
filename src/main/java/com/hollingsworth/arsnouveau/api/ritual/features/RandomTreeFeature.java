@@ -15,7 +15,8 @@ public class RandomTreeFeature implements IPlaceableFeature {
     List<BlockState> treeStates;
     double distance;
     double chance;
-    public RandomTreeFeature(List<BlockState> treeStates, double distance, double chance){
+
+    public RandomTreeFeature(List<BlockState> treeStates, double distance, double chance) {
         this.treeStates = treeStates;
         this.distance = distance;
         this.chance = chance;
@@ -29,13 +30,13 @@ public class RandomTreeFeature implements IPlaceableFeature {
     @Override
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
         BlockState treeState = treeStates.get(level.random.nextInt(treeStates.size()));
-        if(level.getBlockState(pos).canBeReplaced() && treeState.canSurvive(level, pos)){
+        if (level.getBlockState(pos).canBeReplaced() && treeState.canSurvive(level, pos)) {
             level.setBlock(pos, treeState, 3);
-            if(level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock){
+            if (level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock) {
                 saplingBlock.advanceTree((ServerLevel) level, pos, level.getBlockState(pos), level.random);
             }
             // Try twice to grow the tree
-            if(level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock){
+            if (level.getBlockState(pos).getBlock() instanceof SaplingBlock saplingBlock) {
                 saplingBlock.advanceTree((ServerLevel) level, pos, level.getBlockState(pos), level.random);
             }
             return true;

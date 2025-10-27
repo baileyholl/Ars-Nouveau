@@ -19,5 +19,26 @@
     "ars_nouveau:glyph_pierce",
     "ars_nouveau:glyph_pierce"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Xacris' Tiny Hut",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_underfoot",
+      "ars_nouveau:glyph_phantom_block",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_pierce",
+      "ars_nouveau:glyph_pierce",
+      "ars_nouveau:glyph_pierce"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

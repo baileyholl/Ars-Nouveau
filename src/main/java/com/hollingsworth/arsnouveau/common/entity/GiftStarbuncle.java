@@ -39,7 +39,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     int tamingTime;
     public static final EntityDataAccessor<Boolean> BEING_TAMED = SynchedEntityData.defineId(GiftStarbuncle.class, EntityDataSerializers.BOOLEAN);
 
-    public GiftStarbuncle(EntityType<GiftStarbuncle> type, Level level){
+    public GiftStarbuncle(EntityType<GiftStarbuncle> type, Level level) {
         super(type, level);
     }
 
@@ -55,7 +55,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
                 }
             }
         }
-        if(!isTaming())
+        if (!isTaming())
             return;
         tamingTime++;
 
@@ -101,19 +101,19 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
 
     @Override
     protected void pickUpItem(ItemEntity itemEntity) {
-        if(!this.getMainHandItem().isEmpty())
+        if (!this.getMainHandItem().isEmpty())
             return;
-        if(!this.isTaming() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)){
+        if (!this.isTaming() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)) {
             setItemInHand(InteractionHand.MAIN_HAND, itemEntity.getItem().split(1));
             setTaming(true);
         }
     }
 
-    public boolean isTaming(){
+    public boolean isTaming() {
         return this.entityData.get(BEING_TAMED);
     }
 
-    public void setTaming(boolean taming){
+    public void setTaming(boolean taming) {
         this.entityData.set(BEING_TAMED, taming);
     }
 

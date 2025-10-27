@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.advancement;
 
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,7 +26,7 @@ public class ANCriteriaTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> CAUGHT_LIGHTNING = register("catch_lightning");
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TIME_IN_BOTTLE = register("time_in_bottle");
 
-    public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
+    public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius) {
         AABB aabb = new AABB(pos).inflate(radius);
         for (ServerPlayer player : level.players()) {
             if (aabb.contains(player.getX(), player.getY(), player.getZ())) {
@@ -44,7 +43,8 @@ public class ANCriteriaTriggers {
         return TRIGGERS.register(pName, () -> pTrigger);
     }
 
-    public static void init() {}
+    public static void init() {
+    }
 
     public static Criterion<?> createCriterion(DeferredHolder<CriterionTrigger<?>, PlayerTrigger> holder) {
         return holder.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));

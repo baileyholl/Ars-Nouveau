@@ -82,7 +82,7 @@ public class SummonBed extends ModBlock {
         Vec3 vec3 = pEntity.getDeltaMovement();
         if (vec3.y < 0.0D) {
             double d0 = pEntity instanceof LivingEntity ? 1.0D : 0.8D;
-            pEntity.setDeltaMovement(vec3.x, -vec3.y * (double)0.66F * d0, vec3.z);
+            pEntity.setDeltaMovement(vec3.x, -vec3.y * (double) 0.66F * d0, vec3.z);
         }
     }
 

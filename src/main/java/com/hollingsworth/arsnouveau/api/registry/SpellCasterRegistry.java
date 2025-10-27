@@ -16,7 +16,7 @@ public class SpellCasterRegistry {
 
     private static final ConcurrentHashMap<ResourceLocation, ItemCasterProvider> MAP = new ConcurrentHashMap<>();
 
-    static{
+    static {
         register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
         register(ItemsRegistry.APPRENTICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
         register(ItemsRegistry.ARCHMAGE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
@@ -26,7 +26,7 @@ public class SpellCasterRegistry {
         register(ItemsRegistry.SPELL_PARCHMENT, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
     }
 
-    public static @Nullable AbstractCaster<?> from(ItemStack stack){
+    public static @Nullable AbstractCaster<?> from(ItemStack stack) {
         return MAP.getOrDefault(stack.getItem().builtInRegistryHolder().key().location(), (s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
     }
 
@@ -34,11 +34,11 @@ public class SpellCasterRegistry {
         return MAP.containsKey(stack.getItem().builtInRegistryHolder().key().location());
     }
 
-    public static void register(ItemLike itemLike, ItemCasterProvider provider){
+    public static void register(ItemLike itemLike, ItemCasterProvider provider) {
         MAP.put(itemLike.asItem().builtInRegistryHolder().key().location(), provider);
     }
 
-    public static void register(ResourceLocation location, ItemCasterProvider provider){
+    public static void register(ResourceLocation location, ItemCasterProvider provider) {
         MAP.put(location, provider);
     }
 }

@@ -18,7 +18,8 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     private ANPlayerData playerData;
     LivingEntity entity;
-    public ANPlayerDataCap(LivingEntity livingEntity){
+
+    public ANPlayerDataCap(LivingEntity livingEntity) {
         playerData = livingEntity.getData(AttachmentsRegistry.PLAYER_DATA);
         entity = livingEntity;
     }
@@ -37,7 +38,7 @@ public class ANPlayerDataCap implements IPlayerCap {
     @Override
     public boolean unlockGlyph(AbstractSpellPart spellPart) {
         var result = playerData.glyphs.add(spellPart);
-        if(result){
+        if (result) {
             entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
         }
         return result;
@@ -51,7 +52,7 @@ public class ANPlayerDataCap implements IPlayerCap {
     @Override
     public boolean unlockFamiliar(AbstractFamiliarHolder holderID) {
         var result = playerData.familiars.add(new FamiliarData(holderID.getRegistryName()));
-        if(result){
+        if (result) {
             entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
         }
         return result;
@@ -93,17 +94,17 @@ public class ANPlayerDataCap implements IPlayerCap {
     @Override
     public boolean removeFamiliar(AbstractFamiliarHolder holderID) {
         var result = playerData.familiars.removeIf(f -> f.familiarHolder.getRegistryName().equals(holderID.getRegistryName()));
-        if(result){
+        if (result) {
             entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
         }
         return result;
     }
 
-    public void setPlayerData(ANPlayerData data){
+    public void setPlayerData(ANPlayerData data) {
         this.playerData = data;
     }
 
-    public void syncToClient(ServerPlayer player){
+    public void syncToClient(ServerPlayer player) {
         CompoundTag tag = this.playerData.serializeNBT(player.registryAccess());
         Networking.sendToPlayerClient(new PacketSyncPlayerCap(tag), player);
     }

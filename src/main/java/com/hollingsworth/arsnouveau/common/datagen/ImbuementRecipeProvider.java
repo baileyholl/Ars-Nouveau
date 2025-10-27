@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class ImbuementRecipeProvider extends SimpleDataProvider{
+public class ImbuementRecipeProvider extends SimpleDataProvider {
 
     public List<ImbuementRecipe> recipes = new ArrayList<>();
 

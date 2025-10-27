@@ -88,7 +88,7 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
 
         this.preRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, packedColor);
         if (this.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight)) {
-            this.preApplyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, (float)packedLight, packedLight, packedOverlay);
+            this.preApplyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, (float) packedLight, packedLight, packedOverlay);
             this.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, packedColor);
             this.applyRenderLayers(poseStack, animatable, model, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
             this.postRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, packedColor);
@@ -100,12 +100,12 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
     }
 
 
-        @Override
+    @Override
     public ResourceLocation getTextureLocation(SpellBook o) {
         String base = "textures/item/spellbook_";
         var dyeColor = currentItemStack.get(DataComponents.BASE_COLOR);
         String color = dyeColor == null ? "purple" : dyeColor.getName();
-        return ArsNouveau.prefix( base + color + ".png");
+        return ArsNouveau.prefix(base + color + ".png");
     }
 
     @Override

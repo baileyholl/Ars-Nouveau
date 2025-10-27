@@ -11,15 +11,15 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 public class PatchouliHandler {
 
     public static void openBookGUI(ServerPlayer player) {
-        PatchouliAPI.get().openBookGUI(player, ArsNouveau.prefix( "worn_notebook"));
+        PatchouliAPI.get().openBookGUI(player, ArsNouveau.prefix("worn_notebook"));
     }
 
-    public static void openBookClient(){
+    public static void openBookClient() {
         PatchouliAPI.get().openBookGUI(BuiltInRegistries.ITEM.getKey(ItemsRegistry.WORN_NOTEBOOK.asItem()));
     }
 
     public static boolean isPatchouliWorld() {
-        if(!ArsNouveau.patchouliLoaded){
+        if (!ArsNouveau.patchouliLoaded) {
             return false;
         }
         return Minecraft.getInstance().screen instanceof GuiBookEntry;

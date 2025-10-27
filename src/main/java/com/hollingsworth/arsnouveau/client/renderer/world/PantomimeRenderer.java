@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.world;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -28,7 +29,7 @@ public class PantomimeRenderer {
         if (!(player.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof ICasterTool)) return;
 
         var caster = SpellCasterRegistry.from(heldItem);
-        if(caster == null)
+        if (caster == null)
             return;
         Spell selectedSpell = caster.getSpell();
 
@@ -37,7 +38,7 @@ public class PantomimeRenderer {
                 .setAugments(selectedSpell.getAugments(0, player))
                 .addItemsFromEntity(player)
                 .build(MethodPantomime.INSTANCE, null, player.level, player, SpellContext.fromEntity(selectedSpell, player, heldItem));
-        if(!stats.isSensitive()){
+        if (!stats.isSensitive()) {
             return;
         }
         BlockPos pos = pantomime.findPosition(player, stats).getBlockPos();
@@ -49,7 +50,7 @@ public class PantomimeRenderer {
         RenderType lineType = RenderType.lines();
         OutlineBufferSource buffer = Minecraft.getInstance().renderBuffers().outlineBufferSource();
         VertexConsumer lines = buffer.getBuffer(lineType);
-        int color = selectedSpell.color().getColor();
+        int color = selectedSpell.particleTimeline().get(ParticleTimelineRegistry.PANTOMIME_TIMELINE.get()).onResolvingEffect.particleOptions().colorProp().color().getColor();
         LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F, FastColor.ARGB32.green(color) / 255F, FastColor.ARGB32.blue(color) / 255F, 1);
 
         poseStack.popPose();

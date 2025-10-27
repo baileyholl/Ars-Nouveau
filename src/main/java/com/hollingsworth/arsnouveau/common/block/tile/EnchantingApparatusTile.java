@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ApparatusRecipeInput;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
@@ -54,7 +55,6 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     public void lightPedestal(Level level) {
         spawnParticlesForPedestal(level, pedestalList());
     }
-
 
 
     @Override
@@ -115,7 +115,9 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     public void clearItems() {
         for (BlockPos blockPos : pedestalList()) {
-            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.getStack() != null) {
+            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile
+                    && tile.getStack() != null
+                    && !tile.getStack().is(ItemTagProvider.APPARATUS_PRESERVES)) {
                 tile.setStack(tile.getStack().getCraftingRemainingItem());
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);
@@ -163,10 +165,10 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         if (isCrafting || stack.isEmpty())
             return false;
         IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
-        if(recipe == null && playerEntity != null){
+        if (recipe == null && playerEntity != null) {
             List<ColorPos> colorPos = new ArrayList<>();
-            for(BlockPos pos : pedestalList()){
-                if(level.getBlockEntity(pos) instanceof ArcanePedestalTile tile){
+            for (BlockPos pos : pedestalList()) {
+                if (level.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
                     colorPos.add(ColorPos.centeredAbove(tile.getBlockPos()));
                 }
             }
@@ -228,15 +230,15 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "controller", 0, event ->{
+        animatableManager.add(new AnimationController<>(this, "controller", 0, event -> {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
             return PlayState.CONTINUE;
         }));
-        animatableManager.add(new AnimationController<>(this, "craft_controller", 0, event ->{
+        animatableManager.add(new AnimationController<>(this, "craft_controller", 0, event -> {
             if (!this.isCrafting) {
                 event.getController().forceAnimationReset();
                 return PlayState.STOP;
-            }else{
+            } else {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("enchanting"));
             }
             return PlayState.CONTINUE;

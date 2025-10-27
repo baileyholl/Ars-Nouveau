@@ -140,7 +140,8 @@ public class GuiColorScreen extends BaseBook {
 
 
     public void onSaveClick(Button button) {
-        Networking.sendToServer(new PacketUpdateSpellColors(slot, new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue()), this.stackHand == InteractionHand.MAIN_HAND));
+        ParticleColor particleColor = new ParticleColor(redW.getValue(), greenW.getValue(), blueW.getValue());
+        Networking.sendToServer(new PacketUpdateSpellColors(slot, particleColor, this.stackHand == InteractionHand.MAIN_HAND));
     }
 
     public void onSaveAllClick(Button button) {
@@ -150,7 +151,7 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(ArsNouveau.prefix( "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
+        graphics.blit(ArsNouveau.prefix("textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104, 112, 104);
         int color = -8355712;
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.title").getString(), 51, 24, color, false);
         graphics.drawString(font, Component.translatable("ars_nouveau.color_gui.presets").getString(), 159, 24, color, false);

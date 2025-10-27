@@ -35,7 +35,7 @@ public class ConvertBlockFeature implements IPlaceableFeature {
     @Override
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
         BlockState state = level.getBlockState(pos);
-        if(level.random.nextFloat() < chance && convertable.apply(state)){
+        if (level.random.nextFloat() < chance && convertable.apply(state)) {
             level.setBlockAndUpdate(pos, convert.apply(state));
             level.playSound(null, pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
             return true;

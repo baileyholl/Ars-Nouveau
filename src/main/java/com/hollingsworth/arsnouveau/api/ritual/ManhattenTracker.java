@@ -23,7 +23,7 @@ public class ManhattenTracker implements IBlockPosProvider {
     public int y;
     public boolean zMirror;
 
-    public ManhattenTracker(BlockPos pPos, int pXSize, int pYSize, int pZSize){
+    public ManhattenTracker(BlockPos pPos, int pXSize, int pYSize, int pZSize) {
         this.i = pXSize + pYSize + pZSize;
         this.j = pPos.getX();
         this.k = pPos.getY();
@@ -33,7 +33,7 @@ public class ManhattenTracker implements IBlockPosProvider {
         this.pZSize = pZSize;
     }
 
-    public CompoundTag serialize(CompoundTag tag){
+    public CompoundTag serialize(CompoundTag tag) {
         tag.putInt("i", i);
         tag.putInt("j", j);
         tag.putInt("k", k);
@@ -54,7 +54,7 @@ public class ManhattenTracker implements IBlockPosProvider {
         return tag;
     }
 
-    public ManhattenTracker(CompoundTag tag){
+    public ManhattenTracker(CompoundTag tag) {
         this.i = tag.getInt("i");
         this.j = tag.getInt("j");
         this.k = tag.getInt("k");
@@ -73,7 +73,7 @@ public class ManhattenTracker implements IBlockPosProvider {
     }
 
     public BlockPos computeNext() {
-        if(done)
+        if (done)
             return null;
         if (this.zMirror) {
             this.zMirror = false;
@@ -81,7 +81,7 @@ public class ManhattenTracker implements IBlockPosProvider {
             return this.cursor;
         } else {
             BlockPos blockpos;
-            for(blockpos = null; blockpos == null; ++this.y) {
+            for (blockpos = null; blockpos == null; ++this.y) {
                 if (this.y > this.maxY) {
                     ++this.x;
                     if (this.x > this.maxX) {

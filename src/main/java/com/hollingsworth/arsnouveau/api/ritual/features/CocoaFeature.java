@@ -23,7 +23,8 @@ import java.util.List;
 public class CocoaFeature implements IPlaceableFeature {
     double distance, chance;
     List<BlockState> cocoaStates = new ArrayList<>();
-    public CocoaFeature(double distance, double chance){
+
+    public CocoaFeature(double distance, double chance) {
         this.distance = distance;
         this.chance = chance;
         BlockState state = Blocks.COCOA.defaultBlockState();
@@ -45,7 +46,7 @@ public class CocoaFeature implements IPlaceableFeature {
     @Override
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
 
-        for(BlockState state : cocoaStates) {
+        for (BlockState state : cocoaStates) {
             if (level.random.nextFloat() < chance && state.canSurvive(level, pos)) {
                 if (state.getBlock().asItem() instanceof BlockItem blockItem) {
                     blockItem.place(new BlockPlaceContext(level, ANFakePlayer.getPlayer((ServerLevel) level), InteractionHand.MAIN_HAND, new ItemStack(blockItem), new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), Direction.DOWN, pos, false)));

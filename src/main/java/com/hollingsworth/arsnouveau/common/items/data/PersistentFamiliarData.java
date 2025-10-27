@@ -23,12 +23,12 @@ import java.util.function.Consumer;
 public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarData>, TooltipProvider {
 
     public static MapCodec<PersistentFamiliarData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        ComponentSerialization.CODEC.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(data -> data.name),
-        Codec.STRING.optionalFieldOf("color", "").forGetter(data -> data.color),
-        ItemStack.CODEC.optionalFieldOf("cosmetic", ItemStack.EMPTY).forGetter(data -> data.cosmetic)
+            ComponentSerialization.CODEC.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(data -> data.name),
+            Codec.STRING.optionalFieldOf("color", "").forGetter(data -> data.color),
+            ItemStack.CODEC.optionalFieldOf("cosmetic", ItemStack.EMPTY).forGetter(data -> data.cosmetic)
     ).apply(instance, PersistentFamiliarData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData>  STREAM_CODEC = StreamCodec.composite(ComponentSerialization.STREAM_CODEC, s -> s.name,
+    public static StreamCodec<RegistryFriendlyByteBuf, PersistentFamiliarData> STREAM_CODEC = StreamCodec.composite(ComponentSerialization.STREAM_CODEC, s -> s.name,
             ByteBufCodecs.STRING_UTF8, s -> s.color, ItemStack.OPTIONAL_STREAM_CODEC, s -> s.cosmetic, PersistentFamiliarData::new);
 
     private final Component name;
@@ -41,23 +41,23 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
         this.cosmetic = cosmetic == null ? ItemStack.EMPTY : cosmetic;
     }
 
-    public PersistentFamiliarData(){
+    public PersistentFamiliarData() {
         this(null, null, null);
     }
 
-    public PersistentFamiliarData setName(Component name){
+    public PersistentFamiliarData setName(Component name) {
         return new PersistentFamiliarData(name, color, cosmetic);
     }
 
-    public PersistentFamiliarData setColor(String color){
+    public PersistentFamiliarData setColor(String color) {
         return new PersistentFamiliarData(name, color, cosmetic);
     }
 
-    public PersistentFamiliarData setCosmetic(ItemStack cosmetic){
+    public PersistentFamiliarData setCosmetic(ItemStack cosmetic) {
         return new PersistentFamiliarData(name, color, cosmetic);
     }
 
-    public static PersistentFamiliarData fromTag(Tag tag){
+    public static PersistentFamiliarData fromTag(Tag tag) {
         return CODEC.codec().parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
 
@@ -68,12 +68,12 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
 
     @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
-        if(name != null){
+        if (name != null) {
             pTooltipAdder.accept(name);
         }
     }
 
-    public Mutable mutable(){
+    public Mutable mutable() {
         return new Mutable(name, color, cosmetic);
     }
 
@@ -102,7 +102,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
         return cosmetic;
     }
 
-    public static class Mutable{
+    public static class Mutable {
         public Component name;
         public String color;
         public ItemStack cosmetic;
@@ -113,7 +113,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
             this.cosmetic = cosmetic;
         }
 
-        public PersistentFamiliarData toImmutable(){
+        public PersistentFamiliarData toImmutable() {
             return new PersistentFamiliarData(name, color, cosmetic);
         }
     }

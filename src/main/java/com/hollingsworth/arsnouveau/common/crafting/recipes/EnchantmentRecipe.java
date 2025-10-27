@@ -59,7 +59,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
         return doPedestalsMatch(input) && doesReagentMatch(input, level, player);
     }
 
-    public Holder<Enchantment> holderFor(Level level){
+    public Holder<Enchantment> holderFor(Level level) {
         return level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(enchantmentKey);
     }
 
@@ -74,21 +74,21 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
         Collection<Holder<Enchantment>> enchantList = enchantments.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
         enchantList.remove(enchantment);
         if (stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.value().canEnchant(stack)) {
-            if(player != null) {
+            if (player != null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.enchanting.incompatible"));
             }
             return false;
         }
 
         if (!EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)) {
-            if(player != null) {
+            if (player != null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.enchanting.incompatible"));
             }
             return false;
         }
 
         if (!(this.enchantLevel - level == 1)) {
-            if(player != null) {
+            if (player != null) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.enchanting.bad_level"));
             }
             return false;
@@ -146,7 +146,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
                 ByteBufCodecs.INT,
                 EnchantmentRecipe::sourceCost,
                 EnchantmentRecipe::new
-                );
+        );
 
         @Override
         public @NotNull MapCodec<EnchantmentRecipe> codec() {

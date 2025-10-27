@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public interface IWrappedCaster{
+public interface IWrappedCaster {
 
     SpellContext.CasterType getCasterType();
 
-    default InventoryManager getInvManager(){
+    default InventoryManager getInvManager() {
         return new InventoryManager(getInventory());
     }
 
@@ -29,18 +29,18 @@ public interface IWrappedCaster{
     /**
      * Returns the horizontal facing direction of the caster.
      */
-    default Direction getFacingDirection(){
+    default Direction getFacingDirection() {
         return Direction.NORTH;
     }
 
     /**
      * Returns the first block entity that matches the predicate.
      */
-    default @Nullable BlockEntity getNearbyBlockEntity(Predicate<BlockEntity> predicate){
+    default @Nullable BlockEntity getNearbyBlockEntity(Predicate<BlockEntity> predicate) {
         return null;
     }
 
-    default Vec3 getPosition(){
+    default Vec3 getPosition() {
         return Vec3.ZERO;
     }
 

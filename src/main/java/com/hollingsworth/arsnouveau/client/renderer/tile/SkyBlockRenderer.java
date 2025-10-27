@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import org.joml.Matrix4f;
 
-public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile>{
+public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile> {
     private BlockRenderDispatcher blockRenderer;
 
     public SkyBlockRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
@@ -23,13 +23,13 @@ public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile>{
     }
 
     public void render(SkyBlockTile tileEntityIn, float partialTicks, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if(tileEntityIn.showFacade() || Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)){
+        if (tileEntityIn.showFacade() || Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
             super.render((MirrorWeaveTile) tileEntityIn, partialTicks, pPoseStack, bufferIn, combinedLightIn, combinedOverlayIn);
-        }else {
-            if(tileEntityIn.renderInvalid){
+        } else {
+            if (tileEntityIn.renderInvalid) {
                 updateCulling(tileEntityIn, tileEntityIn.getStateForCulling());
             }
-            if(tileEntityIn.disableRender){
+            if (tileEntityIn.disableRender) {
                 return;
             }
             renderCube(tileEntityIn, pPoseStack.last().pose(), bufferIn.getBuffer(ShaderRegistry.SKY_RENDER_TYPE));

@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DocumentationRegistry {
     public static final Comparator<DocEntry> GLYPH_PAGE_COMPARATOR = (o1, o2) -> {
-        if(o1.renderStack().getItem() instanceof Glyph glyph1 && o2.renderStack().getItem() instanceof Glyph glyph2){
+        if (o1.renderStack().getItem() instanceof Glyph glyph1 && o2.renderStack().getItem() instanceof Glyph glyph2) {
             return CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME.compare(glyph1.spellPart, glyph2.spellPart);
         }
         return o1.compareTo(o2);
@@ -59,7 +59,6 @@ public class DocumentationRegistry {
     public static final DocCategory FAMILIARS = new DocCategory(ArsNouveau.prefix("familiars"), FamiliarRegistry.getFamiliarScriptMap().get(ArsNouveau.prefix(LibEntityNames.FAMILIAR_STARBUNCLE)).asItem().getDefaultInstance(), 800);
 
 
-
     private static final Map<ResourceLocation, DocCategory> mainCategoryMap = new ConcurrentHashMap<>();
 
     private static final Map<ResourceLocation, DocEntry> entryMap = new ConcurrentHashMap<>();
@@ -88,7 +87,7 @@ public class DocumentationRegistry {
         registerMainCategory(ENCHANTING);
     }
 
-    public static void registerMainCategory(DocCategory section){
+    public static void registerMainCategory(DocCategory section) {
         mainCategoryMap.put(section.id(), section);
     }
 
@@ -96,8 +95,8 @@ public class DocumentationRegistry {
      * Entries are backed by a map, evaluated by the ID of the entry. You may call this
      * as many times as you like to overwrite the entry.
      */
-    public static DocEntry registerEntry(DocCategory category, DocEntry entry){
-        if(!category.subCategories().isEmpty()){
+    public static DocEntry registerEntry(DocCategory category, DocEntry entry) {
+        if (!category.subCategories().isEmpty()) {
             Log.getLogger().error("Cannot register an entry to a category with subcategories");
             return entry;
         }
@@ -111,29 +110,29 @@ public class DocumentationRegistry {
         return entry;
     }
 
-    public static Set<DocEntry> getEntries(){
+    public static Set<DocEntry> getEntries() {
         return allEntries;
     }
 
-    public static Set<DocEntry> getEntries(DocCategory category){
+    public static Set<DocEntry> getEntries(DocCategory category) {
         Set<DocEntry> entries = categoryToEntriesMap.get(category);
         return entries == null ? ConcurrentHashMap.newKeySet() : entries;
     }
 
     @Nullable
-    public static DocEntry getEntry(ResourceLocation id){
+    public static DocEntry getEntry(ResourceLocation id) {
         return entryMap.get(id);
     }
 
-    public static DocCategory getCategory(ResourceLocation id){
+    public static DocCategory getCategory(ResourceLocation id) {
         return mainCategoryMap.get(id);
     }
 
-    public static DocCategory getCategoryForEntry(DocEntry entry){
+    public static DocCategory getCategoryForEntry(DocEntry entry) {
         return entryToCategoryMap.get(entry);
     }
 
-    public static Map<ResourceLocation, DocCategory> getMainCategoryMap(){
+    public static Map<ResourceLocation, DocCategory> getMainCategoryMap() {
         return mainCategoryMap;
     }
 }

@@ -29,7 +29,7 @@ public class SkyTextureHandler {
     @SubscribeEvent
     public static void renderSky(RenderLevelStageEvent event) {
         if (event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY)) {
-            if(ArsNouveau.optifineLoaded || Config.DISABLE_SKY_SHADER.get()){
+            if (ArsNouveau.optifineLoaded || Config.DISABLE_SKY_SHADER.get()) {
                 return;
             }
             Minecraft minecraft = Minecraft.getInstance();
@@ -83,7 +83,7 @@ public class SkyTextureHandler {
     }
 
     public static void setupRenderTarget(int width, int height) {
-        if(skyRenderTarget != null){
+        if (skyRenderTarget != null) {
             skyRenderTarget.destroyBuffers();
         }
         skyRenderTarget = new TextureTarget(width, height, true, Minecraft.ON_OSX);

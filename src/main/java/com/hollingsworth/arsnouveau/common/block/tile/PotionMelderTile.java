@@ -58,15 +58,15 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
     @Override
     public void tick() {
-        if(level.isClientSide){
+        if (level.isClientSide) {
             BlockPos pos = getBlockPos();
-            if(level.random.nextInt(6) == 0){
+            if (level.random.nextInt(6) == 0) {
                 level.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + ParticleUtil.inRange(-0.25, 0.25) + 0.5, pos.getY() + 1, pos.getZ() + 0.5 + ParticleUtil.inRange(-0.25, 0.25), 0, 0, 0);
 
             }
         }
         int maxMergeTicks = 160;
-        if(isOff) {
+        if (isOff) {
             isMixing = false;
             timeMixing = 0;
             return;
@@ -79,7 +79,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
         }
 
-        if (!hasSource || toPos == null || !level.isLoaded(toPos) ||  !takeJarsValid() || !(level.getBlockEntity(toPos) instanceof PotionJarTile combJar)) {
+        if (!hasSource || toPos == null || !level.isLoaded(toPos) || !takeJarsValid() || !(level.getBlockEntity(toPos) instanceof PotionJarTile combJar)) {
             isMixing = false;
             timeMixing = 0;
             return;
@@ -88,7 +88,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         PotionJarTile tile1 = (PotionJarTile) level.getBlockEntity(fromJars.get(0));
         PotionJarTile tile2 = (PotionJarTile) level.getBlockEntity(fromJars.get(1));
         PotionContents data = getCombinedResult(tile1, tile2);
-        if(!isOutputUnique(data, tile1, tile2) || outputHasDuplicateEffect(data)){
+        if (!isOutputUnique(data, tile1, tile2) || outputHasDuplicateEffect(data)) {
             return;
         }
         if (!combJar.canAccept(data, Config.MELDER_OUTPUT.get())) {
@@ -123,7 +123,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             return;
         }
 
-        if(level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel) {
             if (timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60) {
                 EntityFlyingItem.spawn(serverLevel, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
                         .withNoTouch().setDistanceAdjust(2f);
@@ -137,27 +137,27 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         }
     }
 
-    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionContents data){
+    public void mergePotions(PotionJarTile combJar, PotionJarTile take1, PotionJarTile take2, PotionContents data) {
         combJar.add(
                 data, Config.MELDER_OUTPUT.get());
         take1.remove(Config.MELDER_INPUT_COST.get());
         take2.remove(Config.MELDER_INPUT_COST.get());
         hasSource = false;
         ParticleColor color2 = ParticleColor.fromInt(combJar.getColor());
-        EntityFlyingItem.spawn((ServerLevel) level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ()+ 0.5),
-                new Vec3(combJar.getX() + 0.5, combJar.getY(), combJar.getZ() + 0.5),
-                Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
+        EntityFlyingItem.spawn((ServerLevel) level, new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5),
+                        new Vec3(combJar.getX() + 0.5, combJar.getY(), combJar.getZ() + 0.5),
+                        Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                 .withNoTouch()
                 .setDistanceAdjust(2f);
         updateBlock();
     }
 
-    public boolean takeJarsValid(){
-        if(fromJars.size() < 2)
+    public boolean takeJarsValid() {
+        if (fromJars.size() < 2)
             return false;
-        for(BlockPos p : fromJars){
+        for (BlockPos p : fromJars) {
             BlockEntity te = level.getBlockEntity(p);
-            if(!level.isLoaded(p) || !(te instanceof PotionJarTile jar) || jar.getAmount() < Config.MELDER_INPUT_COST.get()){
+            if (!level.isLoaded(p) || !(te instanceof PotionJarTile jar) || jar.getAmount() < Config.MELDER_INPUT_COST.get()) {
                 return false;
             }
         }
@@ -168,15 +168,15 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         return PotionUtil.merge(jar1.getData(), jar2.getData());
     }
 
-    public boolean isOutputUnique(PotionContents mix, PotionJarTile take1, PotionJarTile take2){
+    public boolean isOutputUnique(PotionContents mix, PotionJarTile take1, PotionJarTile take2) {
         return !PotionUtil.arePotionContentsEqual(mix, take1.getData()) && !PotionUtil.arePotionContentsEqual(mix, take2.getData());
     }
 
-    public boolean outputHasDuplicateEffect(PotionContents mix){
+    public boolean outputHasDuplicateEffect(PotionContents mix) {
         var effects = mix.getAllEffects();
         var effectSet = new HashSet<MobEffect>();
-        for(var effect : effects){
-            if(!effectSet.add(effect.getEffect().value())){
+        for (var effect : effects) {
+            if (!effectSet.add(effect.getEffect().value())) {
                 return true;
             }
         }
@@ -193,8 +193,8 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos != null) {
-            if(!closeEnough(storedPos, worldPosition)){
+        if (storedPos != null) {
+            if (!closeEnough(storedPos, worldPosition)) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.melder.too_far"));
                 return;
             }
@@ -206,13 +206,13 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos != null) {
-            if(!closeEnough(storedPos, worldPosition)){
+        if (storedPos != null) {
+            if (!closeEnough(storedPos, worldPosition)) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.melder.too_far"));
                 return;
             }
 
-            if(this.fromJars.size() >= 2){
+            if (this.fromJars.size() >= 2) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.melder.from_capped"));
                 return;
             }
@@ -224,15 +224,15 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
     @Override
     public List<ColorPos> getWandHighlight(List<ColorPos> list) {
-        if(toPos != null)
+        if (toPos != null)
             list.add(ColorPos.centered(toPos, ParticleColor.TO_HIGHLIGHT));
-        for(BlockPos p : fromJars){
+        for (BlockPos p : fromJars) {
             list.add(ColorPos.centered(p, ParticleColor.FROM_HIGHLIGHT));
         }
         return list;
     }
 
-    public boolean closeEnough(BlockPos pos1, BlockPos pos2){
+    public boolean closeEnough(BlockPos pos1, BlockPos pos2) {
         return BlockUtil.distanceFrom(Vec3.atCenterOf(pos1), Vec3.atCenterOf(pos2)) <= 3.5;
     }
 
@@ -290,35 +290,35 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(!hasSource){
+        if (!hasSource) {
             tooltip.add(Component.translatable("ars_nouveau.apparatus.nomana").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
-        if(fromJars.size() < 2)
+        if (fromJars.size() < 2)
             tooltip.add(Component.translatable("ars_nouveau.melder.from_set", fromJars.size()).setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-        if(toPos == null || !level.isLoaded(toPos) || !(level.getBlockEntity(toPos) instanceof PotionJarTile)){
+        if (toPos == null || !level.isLoaded(toPos) || !(level.getBlockEntity(toPos) instanceof PotionJarTile)) {
             tooltip.add(Component.translatable("ars_nouveau.melder.no_to_pos").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
-        if(toPos != null && fromJars.size() == 2 && hasSource && !isMixing && !takeJarsValid()){
+        if (toPos != null && fromJars.size() == 2 && hasSource && !isMixing && !takeJarsValid()) {
             tooltip.add(Component.translatable("ars_nouveau.melder.needs_potion").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
         }
-        if(fromJars.size() >= 2 && toPos != null && level.getBlockEntity(toPos) instanceof PotionJarTile combJar){
+        if (fromJars.size() >= 2 && toPos != null && level.getBlockEntity(toPos) instanceof PotionJarTile combJar) {
             BlockEntity tile1 = level.getBlockEntity(fromJars.get(0));
-            BlockEntity tile2 =  level.getBlockEntity(fromJars.get(1));
+            BlockEntity tile2 = level.getBlockEntity(fromJars.get(1));
             int inputCost = Config.MELDER_INPUT_COST.get();
-            if(!(tile1 instanceof PotionJarTile jar1) || !(tile2 instanceof PotionJarTile jar2) || jar1.getAmount() < inputCost || jar2.getAmount() < inputCost) {
+            if (!(tile1 instanceof PotionJarTile jar1) || !(tile2 instanceof PotionJarTile jar2) || jar1.getAmount() < inputCost || jar2.getAmount() < inputCost) {
                 return;
             }
             PotionContents data = getCombinedResult(jar1, jar2);
 
-            if(!isOutputUnique(data, jar1, jar2)){
+            if (!isOutputUnique(data, jar1, jar2)) {
                 tooltip.add(Component.translatable("ars_nouveau.melder.output_not_unique").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
                 return;
             }
-            if(outputHasDuplicateEffect(data)){
+            if (outputHasDuplicateEffect(data)) {
                 tooltip.add(Component.translatable("ars_nouveau.melder.output_duplicate_effect").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
                 return;
             }
-            if(!combJar.canAccept(data, Config.MELDER_OUTPUT.get())){
+            if (!combJar.canAccept(data, Config.MELDER_OUTPUT.get())) {
                 tooltip.add(Component.translatable("ars_nouveau.melder.destination_invalid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             }
         }

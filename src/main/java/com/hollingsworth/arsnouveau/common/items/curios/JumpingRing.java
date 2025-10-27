@@ -21,18 +21,18 @@ public class JumpingRing extends ArsNouveauCurio {
         super.curioTick(slotContext, stack);
     }
 
-    public static void doJump(Player player){
-        if(CuriosUtil.hasItem(player, ItemsRegistry.JUMP_RING.get())){
+    public static void doJump(Player player) {
+        if (CuriosUtil.hasItem(player, ItemsRegistry.JUMP_RING.get())) {
             IManaCap manaCap = CapabilityRegistry.getMana(player);
-            if(manaCap == null || (manaCap.getCurrentMana() < Config.JUMP_RING_COST.get() && !player.isCreative())){
+            if (manaCap == null || (manaCap.getCurrentMana() < Config.JUMP_RING_COST.get() && !player.isCreative())) {
                 return;
             }
-            if(player.isSpectator() || player.abilities.flying || player.isSwimming()){
+            if (player.isSpectator() || player.abilities.flying || player.isSwimming()) {
                 return;
             }
             manaCap.removeMana(Config.JUMP_RING_COST.get());
             LivingAccessor accessor = (LivingAccessor) player;
-            double d0 = (double)accessor.callGetJumpPower() + player.getJumpBoostPower() + 0.1f;
+            double d0 = (double) accessor.callGetJumpPower() + player.getJumpBoostPower() + 0.1f;
             Vec3 lookVec = player.getLookAngle();
             double lookScale = 0.7;
             player.setDeltaMovement(lookVec.x * lookScale, d0, lookVec.z * lookScale);

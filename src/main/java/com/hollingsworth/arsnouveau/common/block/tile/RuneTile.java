@@ -3,6 +3,11 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.RuneTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -80,6 +85,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
             }
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(entity.level, spell, playerEntity, new RuneCaster(this, SpellContext.CasterType.RUNE)));
             resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
+
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
                 return;
@@ -157,7 +163,8 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
@@ -175,12 +182,15 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
     @Override
     public void setColor(ParticleColor color) {
-        this.spell = spell.withColor(color);
+        TimelineMap.MutableTimelineMap timelineMap = spell.particleTimeline().mutable();
+        RuneTimeline runeTimeline1 = timelineMap.getOrCreate(ParticleTimelineRegistry.RUNE_TIMELINE.get());
+        runeTimeline1.propMap.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(color, false));
+        this.spell = spell.withTimeline(timelineMap.immutable());
         updateBlock();
     }
 
     @Override
     public ParticleColor getColor() {
-        return spell.color();
+        return spell.particleTimeline().get(ParticleTimelineRegistry.RUNE_TIMELINE).getColor();
     }
 }

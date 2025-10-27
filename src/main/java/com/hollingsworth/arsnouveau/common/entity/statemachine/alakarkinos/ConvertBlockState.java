@@ -21,6 +21,7 @@ public class ConvertBlockState extends CrabState {
 
     boolean spawnedFlyingItem;
     AlakarkinosRecipe recipe;
+
     public ConvertBlockState(Alakarkinos alakarkinos, BlockPos target) {
         super(alakarkinos);
         this.target = target;
@@ -55,13 +56,13 @@ public class ConvertBlockState extends CrabState {
             return null;
         }
         var hatPos = alakarkinos.hatPos;
-        if(hatPos == null){
+        if (hatPos == null) {
             return new DecideCrabActionState(alakarkinos);
         }
         if (!spawnedFlyingItem) {
             Block lootBlock = alakarkinos.level.getBlockState(target).getBlock();
             var res = AlakarkinosConversionRegistry.getConversionResult(lootBlock, alakarkinos.level.random);
-            if(res == null){
+            if (res == null) {
                 return new DecideCrabActionState(alakarkinos);
             }
             this.recipe = res;

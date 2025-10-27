@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+
 // A copy of TransientCraftingContainer with some tweaks to support grid manipulation without update
 public class TransientCustomContainer implements CraftingContainer {
     private final NonNullList<ItemStack> items;
@@ -35,7 +36,7 @@ public class TransientCustomContainer implements CraftingContainer {
     }
 
     public boolean isEmpty() {
-        for(ItemStack itemstack : this.items) {
+        for (ItemStack itemstack : this.items) {
             if (!itemstack.isEmpty()) {
                 return false;
             }
@@ -125,7 +126,7 @@ public class TransientCustomContainer implements CraftingContainer {
     }
 
     public void fillStackedContents(StackedContents pContents) {
-        for(ItemStack itemstack : this.items) {
+        for (ItemStack itemstack : this.items) {
             pContents.accountSimpleStack(itemstack);
         }
 

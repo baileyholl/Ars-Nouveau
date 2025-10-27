@@ -152,10 +152,10 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     }
 
     private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {
-        if(this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())){
+        if (this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())) {
             return PlayState.STOP;
         }
-        if(tAnimationState.isMoving()){
+        if (tAnimationState.isMoving()) {
             tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
@@ -163,15 +163,16 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     }
 
     private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
-        if(this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())){
+        if (this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())) {
             return PlayState.STOP;
         }
-        if(tAnimationState.isMoving()){
+        if (tAnimationState.isMoving()) {
             return PlayState.STOP;
         }
         tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return manager;

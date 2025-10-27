@@ -54,6 +54,11 @@ public class GuiRadialMenu<T> extends Screen {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
 
+    public GuiRadialMenu<T> setHoldToOpenGUI(boolean ignore) {
+        this.holdToOpenGUI = ignore;
+        return this;
+    }
+
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
@@ -79,14 +84,14 @@ public class GuiRadialMenu<T> extends Screen {
 
     @Override
     public void tick() {
-        if (totalTime != OPEN_ANIMATION_LENGTH){
+        if (totalTime != OPEN_ANIMATION_LENGTH) {
             extraTick++;
         }
 
-        if(holdToOpenGUI){
+        if (holdToOpenGUI) {
             int openRadialKey = ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
             boolean radialKeyIsDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), openRadialKey);
-            if(!radialKeyIsDown){
+            if (!radialKeyIsDown) {
                 if (this.selectedItem != -1) {
                     radialMenu.setCurrentSlot(selectedItem);
                 }
@@ -102,7 +107,7 @@ public class GuiRadialMenu<T> extends Screen {
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
 
         float currTick = ClientInfo.partialTicks;
-        totalTime += (currTick + extraTick - prevTick)/20f;
+        totalTime += (currTick + extraTick - prevTick) / 20f;
         extraTick = 0;
         prevTick = currTick;
 
@@ -178,14 +183,13 @@ public class GuiRadialMenu<T> extends Screen {
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
             RenderSystem.disableDepthTest();
 
-//            graphics.renderItem(new ItemStack(Items.DIAMOND_PICKAXE), (int) posX, (int) posY);
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
                 radialMenu.drawIcon(primarySlotIcon, graphics, (int) posX, (int) posY, 16);
-                if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
-                    drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
-                }
+            }
+            if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
+                drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
             }
             ms.pushPose();
             ms.translate(0, 0, 9999);

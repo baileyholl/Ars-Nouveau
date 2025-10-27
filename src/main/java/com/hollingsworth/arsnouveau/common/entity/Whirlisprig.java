@@ -243,7 +243,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         super.tick();
         SummonUtil.healOverTime(this);
         if (!this.level.isClientSide) {
-            if(!this.isRemoved() && !this.isTamed()) {
+            if (!this.isRemoved() && !this.isTamed()) {
                 Whirlisprig.WHIRLI_MAP.addEntity(level, this.getUUID());
             }
             if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
@@ -421,7 +421,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         tag.putInt("bonemeal", timeSinceBonemeal);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("score", this.entityData.get(Whirlisprig.MOOD_SCORE));
-        if(this.entityData.get(COLOR) != null) {
+        if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
         }
         tag.putInt("genTime", timeSinceGen);
@@ -455,10 +455,10 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     public ResourceLocation getTexture() {
         var color = getColor();
-        if(color.isEmpty()){
+        if (color.isEmpty()) {
             color = "summer";
         }
         String finalColor = color;
-        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix( "textures/entity/whirlisprig_" + finalColor + ".png"));
+        return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix("textures/entity/whirlisprig_" + finalColor + ".png"));
     }
 }

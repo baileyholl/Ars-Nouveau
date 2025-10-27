@@ -9,7 +9,7 @@ public class GhostweaveVisibilityEvent implements ITimedEvent {
     GhostWeaveTile ghostWeaveTile;
     boolean visible;
 
-    public GhostweaveVisibilityEvent(GhostWeaveTile ghostWeaveTile, int ticks, boolean visible){
+    public GhostweaveVisibilityEvent(GhostWeaveTile ghostWeaveTile, int ticks, boolean visible) {
         this.ticks = ticks;
         this.ghostWeaveTile = ghostWeaveTile;
         this.visible = visible;
@@ -18,8 +18,8 @@ public class GhostweaveVisibilityEvent implements ITimedEvent {
     @Override
     public void tick(boolean serverSide) {
         ticks--;
-        if(ticks <= 0){
-            if(ghostWeaveTile != null && !ghostWeaveTile.isRemoved()){
+        if (ticks <= 0) {
+            if (ghostWeaveTile != null && !ghostWeaveTile.isRemoved()) {
                 ghostWeaveTile.setVisibility(visible);
             }
         }

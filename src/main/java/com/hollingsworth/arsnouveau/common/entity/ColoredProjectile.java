@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
+@Deprecated(forRemoval = true)
 public abstract class ColoredProjectile extends Projectile {
     public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
@@ -40,7 +41,7 @@ public abstract class ColoredProjectile extends Projectile {
         setOwner(shooter);
     }
 
-    public ParticleColor getColor(){
+    public ParticleColor getColor() {
         if (this.color == null) {
             this.color = ParticleColorRegistry.from(entityData.get(PARTICLE_TAG));
         }
@@ -48,7 +49,7 @@ public abstract class ColoredProjectile extends Projectile {
     }
 
     public ParticleColor getParticleColor() {
-        return getColor().transition(tickCount*50);
+        return getColor().transition(tickCount * 50);
     }
 
     @Deprecated(forRemoval = true)
@@ -101,5 +102,4 @@ public abstract class ColoredProjectile extends Projectile {
     protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
         return ProjectileUtil.getEntityHitResult(this.level, this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
-
 }

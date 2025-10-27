@@ -17,7 +17,7 @@ public abstract class AbstractFamiliarHolder {
     private ResourceLocation id;
 
     public AbstractFamiliarHolder(String id, Predicate<Entity> isConversionEntity) {
-        this(ArsNouveau.prefix( id), isConversionEntity);
+        this(ArsNouveau.prefix(id), isConversionEntity);
     }
 
     public AbstractFamiliarHolder(ResourceLocation id, Predicate<Entity> isConversionEntity) {

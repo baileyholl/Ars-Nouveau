@@ -27,7 +27,7 @@ public class AnimSkullRenderer extends AnimBlockRenderer<AnimHeadSummon> {
             poseStack.pushPose();
             RenderUtil.translateToPivotPoint(poseStack, bone);
             poseStack.mulPose(Axis.YP.rotationDegrees(180));
-            poseStack.translate(0,0.2,0);
+            poseStack.translate(0, 0.2, 0);
             poseStack.scale(1.4F, 1.4F, 1.4F);
             EnchantedSkullRenderer.renderSkull(animatable.level, animBlock.getStack(), poseStack, bufferSource, packedLight);
             poseStack.popPose();

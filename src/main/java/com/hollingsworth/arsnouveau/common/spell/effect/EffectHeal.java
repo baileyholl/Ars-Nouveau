@@ -34,7 +34,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof LivingEntity entity && world instanceof ServerLevel serverLevel) {
             if (entity.isRemoved() || entity.getHealth() <= 0)
                 return;
@@ -43,7 +43,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
             if (entity.isInvertedHealAndHarm()) {
                 attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter), healVal);
             } else {
-                if(entity instanceof Player player){
+                if (entity instanceof Player player) {
                     player.causeFoodExhaustion(2.5f);
                 }
                 //apply random here to not apply twice in attemptDamage
@@ -84,7 +84,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
@@ -98,7 +98,7 @@ public class EffectHeal extends AbstractEffect implements IDamageEffect {
         return "Heals a small amount of health and consumes hunger from the caster. When used on Undead, the spell will deal an equal amount of magic damage.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);

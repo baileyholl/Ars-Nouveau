@@ -21,18 +21,19 @@ import net.minecraft.world.level.Level;
 
 import java.util.stream.Stream;
 
-public class EnchantmentEntry extends PedestalRecipeEntry{
+public class EnchantmentEntry extends PedestalRecipeEntry {
     RecipeHolder<? extends EnchantmentRecipe> enchantmentRecipe;
+
     public EnchantmentEntry(RecipeHolder<? extends EnchantmentRecipe> enchantmentRecipe, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.title = Component.translatable("block.ars_nouveau.enchanting_apparatus");
         this.enchantmentRecipe = enchantmentRecipe;
-        if(enchantmentRecipe != null) {
+        if (enchantmentRecipe != null) {
             this.ingredients = enchantmentRecipe.value().pedestalItems();
         }
         Level level = parent.getMinecraft().level;
         EnchantmentRecipe recipe = enchantmentRecipe.value();
-        if(recipe != null) {
+        if (recipe != null) {
             ItemStack outputBook = new ItemStack(Items.ENCHANTED_BOOK);
 
             Holder<Enchantment> enchantment = level.registryAccess().holderOrThrow(recipe.enchantmentKey);
@@ -40,9 +41,9 @@ public class EnchantmentEntry extends PedestalRecipeEntry{
             outputEnchants.set(enchantment, recipe.enchantLevel);
             outputBook.set(DataComponents.ENCHANTMENTS, outputEnchants.toImmutable());
 
-            if(recipe.enchantLevel == 1){
+            if (recipe.enchantLevel == 1) {
                 this.reagentStack = Ingredient.of(Items.BOOK);
-            }else{
+            } else {
                 ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
                 ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(enchantedBook.get(DataComponents.ENCHANTMENTS));
                 enchantments.set(enchantment, recipe.enchantLevel - 1);
@@ -53,11 +54,11 @@ public class EnchantmentEntry extends PedestalRecipeEntry{
         }
     }
 
-    public static SinglePageCtor create(RecipeHolder<? extends EnchantmentRecipe> enchantmentRecipe){
+    public static SinglePageCtor create(RecipeHolder<? extends EnchantmentRecipe> enchantmentRecipe) {
         return (parent, x, y, width, height) -> new EnchantmentEntry(enchantmentRecipe, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(ResourceLocation enchantmentRecipe){
+    public static SinglePageCtor create(ResourceLocation enchantmentRecipe) {
         return (parent, x, y, width, height) -> new EnchantmentEntry(parent.recipeManager().byKeyTyped(RecipeRegistry.ENCHANTMENT_TYPE.get(), enchantmentRecipe), parent, x, y, width, height);
     }
 
@@ -65,7 +66,7 @@ public class EnchantmentEntry extends PedestalRecipeEntry{
     @Override
     public void addExportProperties(JsonObject object) {
         super.addExportProperties(object);
-        if(enchantmentRecipe != null) {
+        if (enchantmentRecipe != null) {
             object.addProperty(DocExporter.RECIPE_PROPERTY, enchantmentRecipe.id().toString());
         }
     }

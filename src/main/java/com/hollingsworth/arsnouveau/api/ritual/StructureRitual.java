@@ -32,7 +32,7 @@ public abstract class StructureRitual extends AbstractRitual {
     public ResourceKey<Biome> biome;
     public boolean hasDoneSetup;
 
-    public StructureRitual(ResourceLocation structure, BlockPos offset, int sourceRequired, ResourceKey<Biome> biome){
+    public StructureRitual(ResourceLocation structure, BlockPos offset, int sourceRequired, ResourceKey<Biome> biome) {
         this.structure = structure;
         this.offset = offset;
         this.sourceRequired = sourceRequired;
@@ -43,13 +43,13 @@ public abstract class StructureRitual extends AbstractRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if(getWorld().isClientSide)
+        if (getWorld().isClientSide)
             return;
         setup();
     }
 
-    public void setup(){
-        if(getWorld().isClientSide || hasDoneSetup)
+    public void setup() {
+        if (getWorld().isClientSide || hasDoneSetup)
             return;
         StructureTemplateManager manager = getWorld().getServer().getStructureManager();
         StructureTemplate structureTemplate = manager.getOrCreate(structure);
@@ -62,29 +62,29 @@ public abstract class StructureRitual extends AbstractRitual {
 
     @Override
     protected void tick() {
-        if(getWorld().isClientSide)
+        if (getWorld().isClientSide)
             return;
-        if(!hasDoneSetup){
+        if (!hasDoneSetup) {
             setup();
         }
-        if(!hasConsumed){
+        if (!hasConsumed) {
             setNeedsSource(true);
             return;
         }
         int placeCount = 0;
-        while(placeCount < 5){
+        while (placeCount < 5) {
             if (index >= blocks.size()) {
-                for(StructureTemplate.StructureEntityInfo entityInfo : entityInfoList){
+                for (StructureTemplate.StructureEntityInfo entityInfo : entityInfoList) {
                     BlockPos translatedPos = getPos().offset(entityInfo.blockPos.getX(), entityInfo.blockPos.getY(), entityInfo.blockPos.getZ()).offset(offset);
                     Optional<Entity> entity;
-                    try{
+                    try {
                         CompoundTag entityTag = entityInfo.nbt;
                         entityTag.remove("UUID");
                         entity = EntityType.create(entityTag, getWorld());
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         continue;
                     }
-                    if(entity.isPresent()){
+                    if (entity.isPresent()) {
                         entity.get().moveTo(translatedPos.getX(), translatedPos.getY(), translatedPos.getZ());
                         getWorld().addFreshEntity(entity.get());
                     }
@@ -102,13 +102,13 @@ public abstract class StructureRitual extends AbstractRitual {
                         blockInfo.nbt().putLong("LootTableSeed", getWorld().random.nextLong());
                     }
 
-                    if(blockInfo.nbt() != null) {
+                    if (blockInfo.nbt() != null) {
                         blockentity1.loadWithComponents(blockInfo.nbt(), getWorld().registryAccess());
                     }
                 }
                 getWorld().playSound(null, translatedPos, blockInfo.state().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 placeCount++;
-                if(biome != null){
+                if (biome != null) {
                     RitualUtil.changeBiome(getWorld(), translatedPos, biome);
                 }
             }
@@ -119,7 +119,7 @@ public abstract class StructureRitual extends AbstractRitual {
     @Override
     public void setNeedsSource(boolean needMana) {
         super.setNeedsSource(needMana);
-        if(!needMana){
+        if (!needMana) {
             hasConsumed = true;
         }
     }

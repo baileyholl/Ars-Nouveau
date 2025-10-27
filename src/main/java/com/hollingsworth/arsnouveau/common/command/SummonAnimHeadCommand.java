@@ -31,17 +31,17 @@ public class SummonAnimHeadCommand {
                 .then(Commands.argument("player_name", StringArgumentType.word())
                         .then(Commands.argument("duration", IntegerArgumentType.integer())
                                 .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
-                                        .then(Commands.argument("dropBlock", BoolArgumentType.bool()).executes(context ->{
-                        return summonSkull(context.getSource(), String.valueOf(StringArgumentType.getString(context, "player_name")),
-                                IntegerArgumentType.getInteger(context, "duration"),
-                                CompoundTagArgument.getCompoundTag(context, "nbt"),
-                                BoolArgumentType.getBool(context, "dropBlock"));
-                }))))));
+                                        .then(Commands.argument("dropBlock", BoolArgumentType.bool()).executes(context -> {
+                                            return summonSkull(context.getSource(), String.valueOf(StringArgumentType.getString(context, "player_name")),
+                                                    IntegerArgumentType.getInteger(context, "duration"),
+                                                    CompoundTagArgument.getCompoundTag(context, "nbt"),
+                                                    BoolArgumentType.getBool(context, "dropBlock"));
+                                        }))))));
     }
 
     private static int summonSkull(CommandSourceStack source, String player_name, int duration, CompoundTag compoundTag, boolean dropSkull) {
         try {
-            compoundTag.putString("id",ArsNouveau.prefix( "animated_head").toString());
+            compoundTag.putString("id", ArsNouveau.prefix("animated_head").toString());
             Entity entity = EntityType.loadEntityRecursive(compoundTag, source.getLevel(), (p_138828_) -> {
                 p_138828_.moveTo(source.getPosition().x, source.getPosition().y, source.getPosition().z, p_138828_.getYRot(), p_138828_.getXRot());
                 return p_138828_;
@@ -50,7 +50,7 @@ public class SummonAnimHeadCommand {
             animHeadSummon.blockState = Blocks.PLAYER_HEAD.defaultBlockState();
             CompoundTag compoundtag = new CompoundTag();
             ResolvableProfile resolvableProfile = new ResolvableProfile(Optional.of(player_name), Optional.empty(), new PropertyMap());
-            resolvableProfile.resolve().thenApply((profile) ->{
+            resolvableProfile.resolve().thenApply((profile) -> {
                 compoundtag.put("profile", ANCodecs.encode(ResolvableProfile.CODEC, profile));
                 animHeadSummon.head_data = compoundtag;
                 animHeadSummon.setPos(source.getPosition());
@@ -62,7 +62,7 @@ public class SummonAnimHeadCommand {
                 source.getLevel().addFreshEntity(animHeadSummon);
                 return resolvableProfile;
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 1;

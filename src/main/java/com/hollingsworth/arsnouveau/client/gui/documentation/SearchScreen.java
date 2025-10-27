@@ -9,10 +9,11 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchScreen extends BaseDocScreen{
+public class SearchScreen extends BaseDocScreen {
     List<DocEntryButton> searchResults = new ArrayList<>();
     List<Search.Result> resultDocs = new ArrayList<>();
-    public SearchScreen(String searchString){
+
+    public SearchScreen(String searchString) {
         super();
         previousString = searchString;
     }
@@ -38,7 +39,7 @@ public class SearchScreen extends BaseDocScreen{
     public void onArrowIndexChange() {
         maxArrowIndex = (resultDocs.size() - 1) / 9;
         super.onArrowIndexChange();
-        for(DocEntryButton button : searchResults){
+        for (DocEntryButton button : searchResults) {
             removeWidget(button);
         }
         searchResults.clear();
@@ -46,14 +47,14 @@ public class SearchScreen extends BaseDocScreen{
     }
 
 
-    public void getRightPageButtons(List<Search.Result> docs, int from, int to){
-        if(from > docs.size()){
+    public void getRightPageButtons(List<Search.Result> docs, int from, int to) {
+        if (from > docs.size()) {
             return;
         }
         var slicedDocs = docs.subList(from, Math.min(to, docs.size()));
-        for(int i = 0; i < Math.min(slicedDocs.size(), to); i++){
+        for (int i = 0; i < Math.min(slicedDocs.size(), to); i++) {
             var entry = slicedDocs.get(i);
-            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET  +  (16 * i), entry.entry(), entry.icon(), entry.displayTitle(), (b) -> {
+            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + (16 * i), entry.entry(), (b) -> {
                 previousScreen.transition(new PageHolderScreen(entry.entry()));
             });
             addRenderableWidget(button);
@@ -67,10 +68,10 @@ public class SearchScreen extends BaseDocScreen{
             return;
         previousString = str;
 
-        if(str.isEmpty()){
+        if (str.isEmpty()) {
             previousScreen.previousString = "";
             goBack();
-        }else {
+        } else {
             resultDocs = Search.search(previousString);
             onArrowIndexChange();
         }

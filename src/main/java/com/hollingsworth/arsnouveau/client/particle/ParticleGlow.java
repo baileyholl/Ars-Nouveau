@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -53,6 +55,11 @@ public class ParticleGlow extends TextureSheetParticle {
         return 255;
     }
 
+
+    @Override
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
+        super.render(buffer, renderInfo, partialTicks);
+    }
 
     @Override
     public void tick() {

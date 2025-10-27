@@ -65,7 +65,7 @@ public class ChimeraSpikeGoal extends Goal {
         }
     }
 
-    public static void spawnAOESpikes(WildenChimera boss){
+    public static void spawnAOESpikes(WildenChimera boss) {
         for (int i = 0; i < 100; i++) {
             EntityChimeraProjectile entity = new EntityChimeraProjectile(boss.level);
             entity.shootFromRotation(boss, boss.level.random.nextInt(360), boss.level.random.nextInt(360), 0.0f, (float) (1.0F + ParticleUtil.inRange(0.0, 0.5)), 1.0F);
@@ -74,7 +74,7 @@ public class ChimeraSpikeGoal extends Goal {
         }
     }
 
-    public void tearDownGoal(){
+    public void tearDownGoal() {
         boss.setDefensiveMode(false);
     }
 

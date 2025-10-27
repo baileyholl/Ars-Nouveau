@@ -28,7 +28,7 @@
     "7dc1de80-c04c-4c0f-8f00-6326d770626b", "8bf034ac-313f-435a-bd2b-200a7857021b", "1dafa767-ce2f-47c4-8142-67b0b4854586",
     "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e","aac7171c-9bac-42a8-b094-2363599dae59",
     "47f9c9d2-89b2-4987-af6b-31e7b1f74da2", "ec77d204-6e8b-4dac-8b66-71b2a03c5e65", "98e72ae4-10c9-4696-970b-804eb9b176ae",
-    "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
+    "0421ad40-0881-47d4-b086-38c90c1ab62f", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
   "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5", "8ced638c-eac7-433e-b794-54c0f23807a4",
   "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268", "831086b8-d566-4f25-aa09-ecb505e54885",
   "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9", "a29ffabb-ac40-4754-8df8-94b9f394045c",
@@ -40,7 +40,11 @@
   "066f67d4-51dc-4767-b48f-d03dd7359f4a", "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9", "6d60f894-2a95-4dfd-8afb-64980e0a6d17",
   "9529428c-25ea-443e-b56f-f24a18ebb5f1", "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8", "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
   "7e0a1802-2a6a-403d-a487-d3a60cb2d037", "4295cb3b-245c-481d-ad3c-60b179b8cc27", "5abd7fb8-61fd-4fcd-bf6b-10da638f5174",
-  "eb5adebb-130f-4a56-9a52-e99c455b628d", "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5"],
+  "eb5adebb-130f-4a56-9a52-e99c455b628d", "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5", "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
+  "d41bfe34-e558-4c52-9797-bdd88fcbc88a", "3ad9da32-51f9-49ad-b94d-34a09182d63d", "3422a0bf-4edf-44ca-9d79-7c897424e69a",
+  "aa025c0e-8649-4623-a634-ad778ea9c2d1", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "03b6eedd-91f8-430c-80e6-b2ea7cc1a789",
+  "401dc34a-0111-4f25-9c4c-526d77650e21", "087647a0-77e5-40ec-97f9-ee8a4bdd333b", "ef241661-c372-46d6-8583-d96d051223ed",
+  "552587c7-7527-4f93-9646-d9ea615b2537", "92aa3ea9-830b-448c-a29f-ec23323d7aa3"],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -645,6 +649,56 @@
       "name": "Jacob",
       "bio": "He loves to calculate plane geometry in Cartesian coordinates.",
       "color": "purple"
+    },{
+      "adopter": "Dadamalda",
+      "color": "red",
+      "bio": "He throws the clock out of the window every morning.",
+      "name": "Sleepy Bill"
+    },{
+      "adopter": "Breadcrumb",
+      "bio": "Came looking for balance, promptly got lost",
+      "color": "purple",
+      "name": "Loaf"
+    },{
+      "adopter": "WorseCookie",
+      "name": "Hastur the Unspeakable One",
+      "color": "yellow",
+      "bio": "Probably not part of a cult!"
+    },{
+      "adopter": "Shoob",
+      "name": "Shoob Jr.",
+      "color": "gray",
+      "bio": "This lil guy has been travelling everywhere in search of ultimate power, and now it has found you! Keep an eye on 'em!"
+    },{
+      "adopter": "FayneProto",
+      "color": "black",
+      "name": "Lil' Fayne",
+      "bio": "Fayne cannot give good names for things so Fayne decided to name his Starbuncle Lil' Fayne. His reasoning? \"Because I don't know what else to name him, and he sort of looks like me\". Other than that this little guy likes staring blankly at people and thats about it.\n"
+    },{
+      "adopter": "WaywardxWanderer",
+      "color": "black",
+      "name": "Sir Bernard the Valiant",
+      "bio": "Sir Bernard is scared of everything and hopes that no one will ever find out that he only earned his title because he was mistaken for another much braver starbuncle."
+    },{
+      "adopter": "Alphapplepie",
+      "color": "pink",
+      "bio": "She is on the hunt for everything pink, such is herself.",
+      "name": "Alpha Noctiluca"
+    },{
+      "adopter": "Fighter_Kitsune",
+      "name": "Hildi",
+      "color": "white",
+      "bio": "May die when woken up."
+    },{
+      "adopter": "Hack The Planet",
+      "name": "Pranks",
+      "color": "gray",
+      "bio": "Starbuncle-Fuzzer injecting malformed packets into reality. May be hacking the planet."
+    },{
+      "adopter": "Coldcolor",
+      "name": "BURD",
+      "color": "black",
+      "bio": "A crow transformed into a starbuncle. Has a habit of stealing shiny and/or sharp objects. He is comically spiteful."
     }
   ]
 }

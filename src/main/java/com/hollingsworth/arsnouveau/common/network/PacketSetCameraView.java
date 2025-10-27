@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
 // https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/network/client/SetCameraView.java
-public class PacketSetCameraView extends AbstractPacket{
+public class PacketSetCameraView extends AbstractPacket {
     public static final Type<PacketSetCameraView> TYPE = new Type<>(ArsNouveau.prefix("set_camera_view"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSetCameraView> CODEC = StreamCodec.ofMember(PacketSetCameraView::toBytes, PacketSetCameraView::new);
     private int id;

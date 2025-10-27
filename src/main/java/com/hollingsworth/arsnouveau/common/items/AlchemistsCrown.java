@@ -34,7 +34,7 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.tooltip.alchemists_crown",  KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()));
+        tooltip2.add(Component.translatable("ars_nouveau.tooltip.alchemists_crown", KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()));
     }
 
     @Override
@@ -46,16 +46,16 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
     @Override
     public void onRadialKeyPressed(ItemStack stack, Player player) {
         List<RadialMenuSlot<SlotData>> slots = new ArrayList<>();
-        for(int i = 0; i < player.inventory.getContainerSize(); i++) {
-            if(slots.size() >= 9)
+        for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+            if (slots.size() >= 9)
                 break;
             ItemStack item = player.inventory.getItem(i);
             PotionContents contents = PotionUtil.getContents(item);
-            if(contents == PotionContents.EMPTY || item.getItem() instanceof ArrowItem)
+            if (contents == PotionContents.EMPTY || item.getItem() instanceof ArrowItem)
                 continue;
             slots.add(new RadialMenuSlot<>(item.getHoverName().getString(), new AlchemistsCrown.SlotData(i, item)));
         }
-        if(slots.isEmpty()) {
+        if (slots.isEmpty()) {
             PortUtil.sendMessage(Minecraft.getInstance().player, Component.translatable("ars_nouveau.alchemists_crown.no_flasks"));
             return;
         }
@@ -64,10 +64,11 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.stack, posestack, positionx, posy, size, transparent), 3)));
     }
 
-    public record SlotData(int slot, ItemStack stack){
+    public record SlotData(int slot, ItemStack stack) {
         public int getSlot() {
             return slot;
         }
+
         public ItemStack getStack() {
             return stack;
         }

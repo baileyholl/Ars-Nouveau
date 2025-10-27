@@ -17,7 +17,7 @@ public class BlockToEntityRewind implements IRewindCallback {
     @Override
     public void onRewind(RewindEvent event) {
         var entity = event.entity;
-        if(entity instanceof EnchantedFallingBlock enchantedFallingBlock && !entity.isRemoved() && state == enchantedFallingBlock.getBlockState()){
+        if (entity instanceof EnchantedFallingBlock enchantedFallingBlock && !entity.isRemoved() && state == enchantedFallingBlock.getBlockState()) {
             enchantedFallingBlock.groundBlock(true);
         }
     }

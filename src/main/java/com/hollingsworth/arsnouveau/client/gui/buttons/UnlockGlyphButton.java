@@ -39,13 +39,13 @@ public class UnlockGlyphButton extends ANButton {
         if (this.spellPart != null) {
             RenderUtils.drawSpellPart(this.spellPart, pGuiGraphics, x, y, width, !playerKnows, 0);
             if (selected)
-                pGuiGraphics.blit(ArsNouveau.prefix( "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
+                pGuiGraphics.blit(ArsNouveau.prefix("textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
         }
     }
 
     @Override
     public void getTooltip(List<Component> tip) {
-        if(this.spellPart == null)
+        if (this.spellPart == null)
             return;
         AbstractSpellPart spellPart = this.spellPart;
         tip.add(Component.translatable(spellPart.getLocalizationKey()));

@@ -25,7 +25,7 @@ public class ParticleColorRegistry {
         }
     };
 
-    static{
+    static {
         MAP.put(ParticleColor.ID, DEFAULT);
         MAP.put(RainbowParticleColor.ID, new IParticleProvider() {
             @Override
@@ -40,18 +40,18 @@ public class ParticleColorRegistry {
         });
     }
 
-    public static void register(ResourceLocation id, IParticleProvider factory){
+    public static void register(ResourceLocation id, IParticleProvider factory) {
         MAP.put(id, factory);
     }
 
-    public static ParticleColor from(@Nullable CompoundTag compoundTag){
-        if(compoundTag == null){
-            return new ParticleColor(0,0,0);
+    public static ParticleColor from(@Nullable CompoundTag compoundTag) {
+        if (compoundTag == null) {
+            return new ParticleColor(0, 0, 0);
         }
         return MAP.getOrDefault(ResourceLocation.tryParse(compoundTag.getString("type")), DEFAULT).create(compoundTag);
     }
 
-    public static ParticleColor from(ResourceLocation location, int r, int g, int b){
+    public static ParticleColor from(ResourceLocation location, int r, int g, int b) {
         return MAP.getOrDefault(location, DEFAULT).create(r, g, b);
     }
 }

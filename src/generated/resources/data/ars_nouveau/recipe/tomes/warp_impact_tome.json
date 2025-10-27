@@ -15,5 +15,22 @@
     "ars_nouveau:glyph_explosion",
     "ars_nouveau:glyph_aoe"
   ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "Warp Impact",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_projectile",
+      "ars_nouveau:glyph_blink",
+      "ars_nouveau:glyph_explosion",
+      "ars_nouveau:glyph_aoe"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

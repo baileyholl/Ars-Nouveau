@@ -29,26 +29,26 @@ public interface IPedestalMachine {
 
     void lightPedestal(Level level);
 
-    default void spawnParticlesForPedestal(Level level, List<BlockPos> pedestalList){
+    default void spawnParticlesForPedestal(Level level, List<BlockPos> pedestalList) {
         for (BlockPos pos : pedestalList) {
             spawnParticlesForPedestal(level, pos);
         }
     }
 
-    default void spawnParticlesForPedestal(Level level, BlockPos pos){
+    default void spawnParticlesForPedestal(Level level, BlockPos pos) {
         BlockState pedestalState = level.getBlockState(pos);
-        if(!(pedestalState.getBlock() instanceof ArcanePedestal arcanePedestal)){
+        if (!(pedestalState.getBlock() instanceof ArcanePedestal arcanePedestal)) {
             return;
         }
         Vector3f offsetVec = arcanePedestal.getItemOffset(pedestalState, pos);
         double x = offsetVec.x + ParticleUtil.inRange(-0.3, 0.3);
-        double y = offsetVec.y  + ParticleUtil.inRange(-0.2, 0.2);
+        double y = offsetVec.y + ParticleUtil.inRange(-0.2, 0.2);
         double z = offsetVec.z + ParticleUtil.inRange(-0.3, 0.3);
 
-        if(level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel) {
             ParticleOptions type = GlowParticleData.createData(ParticleColor.makeRandomColor(255, 255, 255, level.random), 0.4f, 0.5f, 300);
             serverLevel.sendParticles(type, x, y, z, 1, 0d, 0d, 0, 0);
-        }else{
+        } else {
             ParticleOptions type = GlowParticleData.createData(ParticleColor.makeRandomColor(255, 255, 255, level.random));
             level.addParticle(type, x, y, z, 0d, 0d, 0);
         }

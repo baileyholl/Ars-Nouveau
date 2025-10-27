@@ -126,6 +126,6 @@ public class RitualAnimalSummoning extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.ANIMAL_SUMMON);
+        return ArsNouveau.prefix(RitualLib.ANIMAL_SUMMON);
     }
 }

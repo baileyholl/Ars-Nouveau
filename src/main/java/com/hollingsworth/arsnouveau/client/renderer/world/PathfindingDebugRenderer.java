@@ -9,8 +9,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PathfindingDebugRenderer
-{
+public class PathfindingDebugRenderer {
     /**
      * Set of visited nodes.
      */
@@ -19,7 +18,7 @@ public class PathfindingDebugRenderer
     /**
      * Set of not visited nodes.
      */
-    public static Set<ModNode> lastDebugNodesNotVisited  = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesNotVisited = new HashSet<>();
 
     /**
      * Set of nodes that belong to the chosen path.
@@ -31,40 +30,29 @@ public class PathfindingDebugRenderer
      *
      * @param ctx rendering context
      */
-    public static void render(final WorldEventContext ctx)
-    {
-        try
-        {
-            for (final ModNode n : lastDebugNodesVisited)
-            {
+    public static void render(final WorldEventContext ctx) {
+        try {
+            for (final ModNode n : lastDebugNodesVisited) {
                 debugDrawNode(n, 0xffff0000, ctx);
             }
 
-            for (final ModNode n : lastDebugNodesNotVisited)
-            {
+            for (final ModNode n : lastDebugNodesNotVisited) {
                 debugDrawNode(n, 0xff0000ff, ctx);
             }
 
-            for (final ModNode n : lastDebugNodesPath)
-            {
-                if (n.isReachedByWorker())
-                {
+            for (final ModNode n : lastDebugNodesPath) {
+                if (n.isReachedByWorker()) {
                     debugDrawNode(n, 0xffff6600, ctx);
-                }
-                else
-                {
+                } else {
                     debugDrawNode(n, 0xff00ff00, ctx);
                 }
             }
-        }
-        catch (final ConcurrentModificationException exc)
-        {
+        } catch (final ConcurrentModificationException exc) {
             Log.getLogger().catching(exc);
         }
     }
 
-    private static void debugDrawNode(final ModNode n, final int argbColor, final WorldEventContext ctx)
-    {
+    private static void debugDrawNode(final ModNode n, final int argbColor, final WorldEventContext ctx) {
 //        ctx.poseStack.pushPose();
 ////        ctx.poseStack.translate(n.pos.getX() + 0.375d, n.pos.getY() + 0.375d, n.pos.getZ() + 0.375d);
 //
@@ -95,8 +83,7 @@ public class PathfindingDebugRenderer
 //        ctx.poseStack.popPose();
     }
 
-    private static void renderDebugText(@NotNull final ModNode n, final WorldEventContext ctx)
-    {
+    private static void renderDebugText(@NotNull final ModNode n, final WorldEventContext ctx) {
 //        final Font fontrenderer = Minecraft.getInstance().font;
 //
 //        final String s1 = String.format("F: %.3f [%d]", n.getCost(), n.getCounterAdded());

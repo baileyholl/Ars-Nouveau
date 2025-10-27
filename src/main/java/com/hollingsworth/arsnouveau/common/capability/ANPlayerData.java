@@ -38,7 +38,7 @@ public class ANPlayerData implements INBTSerializable<CompoundTag> {
         }
         familiarsTag.putInt("size", familiarsList.size());
         tag.put("familiars", familiarsTag);
-        if(lastSummonedFamiliar != null){
+        if (lastSummonedFamiliar != null) {
             tag.putString("lastSummonedFamiliar", lastSummonedFamiliar.toString());
         }
         return tag;
@@ -61,7 +61,7 @@ public class ANPlayerData implements INBTSerializable<CompoundTag> {
         for (int i = 0; i < familiarsTag.getInt("size"); i++) {
             familiars.add(new FamiliarData(familiarsTag.getCompound("familiar" + i)));
         }
-        if(nbt.contains("lastSummonedFamiliar")){
+        if (nbt.contains("lastSummonedFamiliar")) {
             lastSummonedFamiliar = ResourceLocation.parse(nbt.getString("lastSummonedFamiliar"));
         }
     }

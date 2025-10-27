@@ -118,6 +118,9 @@ public class ClientEvents {
                 event.getTooltipElements().add(Either.right(new SpellTooltip(caster)));
             }
         }
+        if (event.getItemStack().has(DataComponentRegistry.PRESTIDIGITATION)) {
+            event.getTooltipElements().add(Either.left(Component.translatable("ars_nouveau.prestidigitation.tooltip")));
+        }
     }
 
     @SubscribeEvent
@@ -146,7 +149,7 @@ public class ClientEvents {
     public static void onTooltip(final ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         DynamicTooltipRegistry.appendTooltips(stack, event.getContext(), event.getToolTip()::add, event.getFlags());
-        for (var tooltip: ClientInfo.storageTooltip) {
+        for (var tooltip : ClientInfo.storageTooltip) {
             event.getToolTip().add(tooltip);
         }
     }

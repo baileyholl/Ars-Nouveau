@@ -22,14 +22,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class StarbyPotionBehavior extends StarbyListBehavior {
-    public static final ResourceLocation POTION_ID = ArsNouveau.prefix( "starby_potion");
+    public static final ResourceLocation POTION_ID = ArsNouveau.prefix("starby_potion");
 
     private @Nullable PotionContents heldPotion = PotionContents.EMPTY;
     private int amount;
 
     public StarbyPotionBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if(tag.contains("potionData")) {
+        if (tag.contains("potionData")) {
             heldPotion = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
         }
         amount = tag.getInt("amount");

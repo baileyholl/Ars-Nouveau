@@ -49,7 +49,7 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
             for (int i1 = 0; i1 < i; ++i1) {
                 int j1 = pMouseX + i1 * SLOT_SIZE_X + BORDER_WIDTH;
                 int k1 = pMouseY + l * SLOT_SIZE_Y + BORDER_WIDTH;
-                this.renderSlot(j1, k1, k++, overWEight, pFont,graphics);
+                this.renderSlot(j1, k1, k++, overWEight, pFont, graphics);
             }
         }
 

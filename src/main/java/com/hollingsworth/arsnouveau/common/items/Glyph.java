@@ -45,14 +45,14 @@ public class Glyph extends ModItem {
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
-                playerIn.sendSystemMessage(Component.literal("You already know this spell!"));
+                playerIn.sendSystemMessage(Component.translatable("ars_nouveau.already_learned"));
                 return super.use(worldIn, playerIn, handIn);
             } else if (playerDataCap.unlockGlyph(spellPart)) {
                 CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
                 if (!playerIn.hasInfiniteMaterials()) {
                     playerIn.getItemInHand(handIn).shrink(1);
                 }
-                playerIn.sendSystemMessage(Component.literal("Unlocked " + this.spellPart.getName()));
+                playerIn.sendSystemMessage(Component.translatable("ars_nouveau.learn_glyph", Component.translatable(spellPart.getLocalizationKey()).getString()));
             }
         }
         return super.use(worldIn, playerIn, handIn);
@@ -61,6 +61,10 @@ public class Glyph extends ModItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack pStack) {
         return Component.translatable("ars_nouveau.glyph_of", this.spellPart.getLocaleName());
+    }
+
+    public @NotNull Component getName() {
+        return getName(ItemStack.EMPTY);
     }
 
     @Override
@@ -80,7 +84,7 @@ public class Glyph extends ModItem {
             }
         }
         var player = ArsNouveau.proxy.getPlayer();
-        if (player == null )
+        if (player == null)
             return;
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(player);
         if (playerDataCap != null) {

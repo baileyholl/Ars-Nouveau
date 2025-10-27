@@ -14,15 +14,16 @@ import net.minecraft.world.item.component.TooltipProvider;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public record VoidJarData(ItemScrollData scrollData, boolean active) implements NBTComponent<VoidJarData>, TooltipProvider {
+public record VoidJarData(ItemScrollData scrollData,
+                          boolean active) implements NBTComponent<VoidJarData>, TooltipProvider {
 
-    public VoidJarData(){
+    public VoidJarData() {
         this(new ItemScrollData(), false);
     }
 
     public static final Codec<VoidJarData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        ItemScrollData.CODEC.fieldOf("scrollData").forGetter(VoidJarData::scrollData),
-        Codec.BOOL.fieldOf("active").forGetter(VoidJarData::active)
+            ItemScrollData.CODEC.fieldOf("scrollData").forGetter(VoidJarData::scrollData),
+            Codec.BOOL.fieldOf("active").forGetter(VoidJarData::active)
     ).apply(instance, VoidJarData::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, VoidJarData> STREAM_CODEC = StreamCodec.composite(ItemScrollData.STREAM_CODEC, VoidJarData::scrollData, ByteBufCodecs.BOOL, VoidJarData::active, VoidJarData::new);

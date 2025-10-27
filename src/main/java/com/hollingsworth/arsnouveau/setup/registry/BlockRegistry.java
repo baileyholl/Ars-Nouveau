@@ -69,6 +69,9 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<AgronomicSourcelinkBlock> AGRONOMIC_SOURCELINK = registerBlockAndItem(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkBlock::new);
     public static BlockEntityTypeRegistryWrapper<AgronomicSourcelinkTile> AGRONOMIC_SOURCELINK_TILE = registerTile(LibBlockNames.AGRONOMIC_SOURCELINK, AgronomicSourcelinkTile::new, AGRONOMIC_SOURCELINK);
 
+    public static BlockRegistryWrapper<PrestidigitationBlock> PARTICLE_BLOCK = registerBlock(LibBlockNames.PARTICLE_BLOCK, PrestidigitationBlock::new);
+    public static BlockEntityTypeRegistryWrapper<ParticleTile> PARTICLE_TILE = registerTile(LibBlockNames.PARTICLE_BLOCK, ParticleTile::new, PARTICLE_BLOCK);
+
 
     public static BlockRegistryWrapper<EnchantingApparatusBlock> ENCHANTING_APP_BLOCK = registerBlockAndItem(LibBlockNames.ENCHANTING_APPARATUS, EnchantingApparatusBlock::new, (reg) -> new RendererBlockItem(reg.get(), defaultItemProperties()) {
         @Override
@@ -351,6 +354,14 @@ public class BlockRegistry {
     public static final BlockRegistryWrapper<WallSignBlock> ARCHWOOD_WALL_SIGN = registerBlock(LibBlockNames.ARCHWOOD_WALL_SIGN, () -> new WallSignBlock(ARCHWOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_SIGN)));
     public static final BlockRegistryWrapper<WallHangingSignBlock> ARCHWOOD_HANGING_WALL_SIGN = registerBlock(LibBlockNames.ARCHWOOD_HANGING_WALL_SIGN, () -> new WallHangingSignBlock(ARCHWOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WALL_HANGING_SIGN)));
 
+    public static final BlockRegistryWrapper<DecorBlossom> DECOR_BLOSSOM = registerBlockAndItem(LibBlockNames.DECOR_BLOSSOM, DecorBlossom::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericTileRenderer.getISTER(new GenericModel(LibBlockNames.DECOR_BLOSSOM));
+        }
+    });
+
+
     public static final BlockEntityTypeRegistryWrapper<RitualBrazierTile> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
     public static final BlockEntityTypeRegistryWrapper<BrazierRelayTile> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
     public static final BlockEntityTypeRegistryWrapper<SkyBlockTile> SKYWEAVE_TILE = registerTile(LibBlockNames.SKY_WEAVE, SkyBlockTile::new, SKY_WEAVE);
@@ -360,6 +371,7 @@ public class BlockRegistry {
     public static final BlockEntityTypeRegistryWrapper<SpellSensorTile> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
     public static final BlockEntityTypeRegistryWrapper<RedstoneRelayTile> REDSTONE_RELAY_TILE = registerTile(LibBlockNames.REDSTONE_RELAY, RedstoneRelayTile::new, REDSTONE_RELAY);
     public static final BlockEntityTypeRegistryWrapper<RepositoryCatalogTile> REPOSITORY_CONTROLLER_TILE = registerTile(LibBlockNames.REPOSITORY_CATALOG, RepositoryCatalogTile::new, REPOSITORY_CONTROLLER);
+    public static final BlockEntityTypeRegistryWrapper<DecorBlossomTile> DECOR_BLOSSOM_TILE = registerTile(LibBlockNames.DECOR_BLOSSOM, DecorBlossomTile::new, DECOR_BLOSSOM);
 
     public static void onBlocksRegistry() {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {

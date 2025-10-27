@@ -66,6 +66,6 @@ public class RitualPillagerRaid extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return ArsNouveau.prefix( RitualLib.CHALLENGE);
+        return ArsNouveau.prefix(RitualLib.CHALLENGE);
     }
 }

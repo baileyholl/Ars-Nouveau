@@ -42,7 +42,7 @@ public class ManaCapEvents {
             sync = true;
         }
 
-        if(sync){
+        if (sync) {
             mana.syncToClient(serverPlayer);
         }
     }
@@ -90,7 +90,9 @@ public class ManaCapEvents {
             }
         }
     }
-    private static final long[] UNLOADED = new long[] { 0 };
+
+    private static final long[] UNLOADED = new long[]{0};
+
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Post e) {
         var player = e.getEntity();

@@ -12,7 +12,7 @@ public class ExportDocsCommand {
         dispatcher.register(Commands.literal("ars-doc-export").
                 requires(sender -> sender.hasPermission(2))
                 .then(Commands.argument("modid", ModIdArgument.modIdArgument())
-                        .executes(context ->{
+                        .executes(context -> {
                             Networking.sendToPlayerClient(new PacketExportDocs(context.getArgument("modid", String.class)), context.getSource().getPlayerOrException());
                             return 1;
                         })));

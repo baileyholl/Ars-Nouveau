@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuddingConversionProvider extends SimpleDataProvider{
+public class BuddingConversionProvider extends SimpleDataProvider {
 
     public List<Wrapper> recipes = new ArrayList<>();
 
@@ -31,10 +31,10 @@ public class BuddingConversionProvider extends SimpleDataProvider{
     }
 
     protected void addEntries() {
-        recipes.add(new Wrapper(ArsNouveau.prefix( "budding_amethyst"), new BuddingConversionRecipe(Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST)));
+        recipes.add(new Wrapper(ArsNouveau.prefix("budding_amethyst"), new BuddingConversionRecipe(Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST)));
     }
 
-    public record Wrapper(ResourceLocation location, BuddingConversionRecipe recipe){
+    public record Wrapper(ResourceLocation location, BuddingConversionRecipe recipe) {
 
     }
 

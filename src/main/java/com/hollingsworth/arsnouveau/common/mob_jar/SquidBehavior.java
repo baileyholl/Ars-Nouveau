@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 public class SquidBehavior extends JarBehavior<Squid> {
     public static Vec3 TRANSLATE = new Vec3(0.0D, 0.42D, 0.0D);
     public static Vec3 SCALE = new Vec3(-.4f, -.4f, -.4f);
+
     @Override
     public Vec3 scaleOffset(MobJarTile pBlockEntity) {
         return SCALE;

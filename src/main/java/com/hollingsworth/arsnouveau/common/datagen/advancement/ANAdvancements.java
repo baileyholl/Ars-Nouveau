@@ -83,15 +83,15 @@ public class ANAdvancements implements AdvancementProvider.AdvancementGenerator 
         builder("ritual_gravity").display(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.GRAVITY)), AdvancementType.GOAL).addCriterion("gravity_effect", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.Builder.effects().and(ModPotions.GRAVITY_EFFECT))).parent(rituals).save(con);
     }
 
-    public ANAdvancementBuilder buildBasicItem(ItemLike item, AdvancementHolder parent){
+    public ANAdvancementBuilder buildBasicItem(ItemLike item, AdvancementHolder parent) {
         return builder(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath()).normalItemRequirement(item).parent(parent);
     }
 
-    public AdvancementHolder saveBasicItem(ItemLike item, AdvancementHolder parent){
+    public AdvancementHolder saveBasicItem(ItemLike item, AdvancementHolder parent) {
         return buildBasicItem(item, parent).save(advCon);
     }
 
-    public ANAdvancementBuilder builder(String key){
+    public ANAdvancementBuilder builder(String key) {
         return ANAdvancementBuilder.builder(ArsNouveau.MODID, key);
     }
 

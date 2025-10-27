@@ -104,8 +104,8 @@ public class ImbuementBlock extends TickableModBlock {
             var recipe = tile.getRecipeNow();
             if (recipe == null) {
                 List<ColorPos> colorPos = new ArrayList<>();
-                for(BlockPos pedPos : tile.getNearbyPedestals()){
-                    if(worldIn.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile){
+                for (BlockPos pedPos : tile.getNearbyPedestals()) {
+                    if (worldIn.getBlockEntity(pedPos) instanceof ArcanePedestalTile pedestalTile) {
                         colorPos.add(ColorPos.centeredAbove(pedPos));
                     }
                 }

@@ -31,6 +31,24 @@ configurations {
     implementation.extendsFrom shade
 }
 
+// Credits to TwilightForest for the idea of using a secrets file to customize the in-dev uuid and username
+def secrets = new Properties()
+def secretsFile = file('secrets.properties')
+if (secretsFile.exists()) {
+    secretsFile.withInputStream {
+        stream -> secrets.load(stream)
+    }
+
+    fileTree("secrets").matching {
+        include "**/*.properties"
+    }.each {
+        File file ->
+            file.withInputStream {
+                stream -> secrets.load(stream)
+            }
+    }
+}
+
 neoForge {
     version = project.neo_version
     validateAccessTransformers = true
@@ -51,13 +69,13 @@ neoForge {
         clientAlt {
             client()
             gameDirectory = project.file('runs/client')
-            programArguments.addAll('--username', 'Dev2')
+            getProgramArguments().addAll '--username', secrets.getProperty("username") ?: 'Dev2', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
         }
 
         data {
             data()
             gameDirectory = project.file('runs/data')
-            programArguments.addAll('--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
+            programArguments.addAll('--mod', mod_id as String, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
         }
 
         server {
@@ -151,9 +169,24 @@ repositories {
             includeGroup 'dev.emi'
         }
     }
+    maven {
+        name = "Gegy"
+        url = uri("https://maven.gegy.dev/releases/")
+        content {
+            includeGroup "io.github.queerbric"
+            includeGroup "dev.lambdaurora"
+            includeGroup "dev.lambdaurora.lambdynamiclights"
+        }
+    }
 }
 
+def mappingsAttribute = Attribute.of("net.minecraft.mappings", String.class)
+
 dependencies {
+    attributesSchema {
+        attribute(mappingsAttribute)
+    }
+
     compileOnly('org.jetbrains:annotations:26.0.2')
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
@@ -168,17 +201,32 @@ dependencies {
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21.1"
+    compileOnly("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
+        attributes {
+            attribute(mappingsAttribute, "mojmap")
+        }
+    }
+    jarJar("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
+        attributes {
+            attribute(mappingsAttribute, "mojmap")
+        }
+    }
 
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
     localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
     localRuntime 'curse.maven:architectury-api-419699:5553800'
+    localRuntime("dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:${lambdynamiclights_version}") {
+        attributes {
+            attribute(mappingsAttribute, "mojmap")
+        }
+    }
 //    localRuntime 'curse.maven:productivebees-377897:6154395'
 
     jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21') {
         version {
-            strictly '[1.0.7,)'
+            strictly '[1.0.10,)'
             prefer '1.0.7.38'
         }
     })
@@ -204,7 +252,8 @@ jar {
                     "Implementation-Version"  : mod_version,
                     "Implementation-Vendor"   : "baileyh",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "MixinConfigs"            : "ars_nouveau.mixins.json"])
+                    "MixinConfigs"            : "ars_nouveau.mixins.json"]
+        )
     }
 }
 

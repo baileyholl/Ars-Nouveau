@@ -14,5 +14,6 @@ public interface BlockItemAccessor {
     BlockState invokeUpdateBlockStateFromTag(BlockPos pos, Level level, ItemStack stack, BlockState state);
 
     @Invoker
-    static void invokeUpdateBlockEntityComponents(Level level, BlockPos poa, ItemStack stack) {}
+    static void invokeUpdateBlockEntityComponents(Level level, BlockPos poa, ItemStack stack) {
+    }
 }

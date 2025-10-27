@@ -1,0 +1,8 @@
+{
+	"match": {
+		"type": "ars_nouveau:animated_block"
+	},
+	"luminance": {
+		"type": "ars_nouveau:animated_block"
+	}
+}

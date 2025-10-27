@@ -34,22 +34,20 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
         ItemStack result = super.assemble(input, lookup);
         ItemStack parchment = getParchment(input.pedestals());
         AbstractCaster<?> parchmentCaster = SpellCasterRegistry.from(parchment);
-        result.set(DataComponentRegistry.REACTIVE_CASTER, new ReactiveCasterData(0, "", false, "", 1)
-                .setColor(parchmentCaster.getColor())
-                .setSpell(parchmentCaster.getSpell()));
+        result.set(DataComponentRegistry.REACTIVE_CASTER, new ReactiveCasterData(0, "", false, "", 1).setSpell(parchmentCaster.getSpell()));
         return result;
     }
 
     @Override
     public boolean matches(ApparatusRecipeInput input, Level level, @org.jetbrains.annotations.Nullable Player player) {
         ItemStack parchment = getParchment(input.pedestals());
-        if(parchment.isEmpty() || SpellCasterRegistry.from(parchment).getSpell().isEmpty()){
+        if (parchment.isEmpty() || SpellCasterRegistry.from(parchment).getSpell().isEmpty()) {
             return false;
         }
         return super.matches(input, level, player);
     }
 
-    public static@NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {
+    public static @NotNull ItemStack getParchment(List<ItemStack> pedestalItems) {
         for (ItemStack stack : pedestalItems) {
             if (stack.getItem() instanceof SpellParchment) {
                 return stack;

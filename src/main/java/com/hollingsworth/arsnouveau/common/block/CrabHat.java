@@ -21,7 +21,7 @@ public class CrabHat extends ModBlock {
     public static VoxelShape shape = Stream.of(
             Block.box(0, 13, 0, 16, 17, 16),
             Block.box(2, 0, 2, 14, 13, 14)
-            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override
     protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {

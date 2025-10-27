@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 public class EntityTagProvider extends EntityTypeTagsProvider {
 
 
-    public EntityTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider,  @Nullable ExistingFileHelper existingFileHelper) {
+    public EntityTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(pOutput, pProvider, ArsNouveau.MODID, existingFileHelper);
     }
 

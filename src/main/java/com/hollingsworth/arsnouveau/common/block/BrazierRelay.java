@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock.LIT;
 
-public class BrazierRelay extends TickableModBlock{
+public class BrazierRelay extends TickableModBlock {
     public static VoxelShape shape = Stream.of(
             Block.box(3, 0, 3, 13, 3, 13),
             Block.box(2, 2, 2, 11, 4, 5),

@@ -38,16 +38,16 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
 
     @Override
     public ResourceLocation getModelResource(WealdWalker walker) {
-        return walker.isBaby() ? ArsNouveau.prefix( "geo/" + type + "_waddler.geo.json") : ArsNouveau.prefix( "geo/" + type + "_walker.geo.json");
+        return walker.isBaby() ? ArsNouveau.prefix("geo/" + type + "_waddler.geo.json") : ArsNouveau.prefix("geo/" + type + "_walker.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WealdWalker walker) {
-        return walker.isBaby() ? ArsNouveau.prefix( "textures/entity/" + type + "_waddler.png") : ArsNouveau.prefix( "textures/entity/" + type + "_walker.png");
+        return walker.isBaby() ? ArsNouveau.prefix("textures/entity/" + type + "_waddler.png") : ArsNouveau.prefix("textures/entity/" + type + "_walker.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WealdWalker walker) {
-        return walker.isBaby() ? ArsNouveau.prefix( "animations/weald_waddler_animations.json") : ArsNouveau.prefix( "animations/weald_walker_animations.json");
+        return walker.isBaby() ? ArsNouveau.prefix("animations/weald_waddler_animations.json") : ArsNouveau.prefix("animations/weald_walker_animations.json");
     }
 }

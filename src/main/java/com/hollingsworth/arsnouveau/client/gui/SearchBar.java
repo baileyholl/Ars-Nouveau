@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 public class SearchBar extends NoShadowTextField {
 
     public SearchBar(Font font, int x, int y) {
-        super(font, x, y,  DocAssets.SEARCH_PAPER.width(),  DocAssets.SEARCH_PAPER.height(), null, Component.empty());
+        super(font, x, y, DocAssets.SEARCH_PAPER.width(), DocAssets.SEARCH_PAPER.height(), null, Component.empty());
         setTextColor(12694931);
         setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
     }

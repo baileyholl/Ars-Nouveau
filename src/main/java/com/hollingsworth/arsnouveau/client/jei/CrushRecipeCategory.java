@@ -60,9 +60,9 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);
-            matrixStack.drawString(renderer, Math.round(100 * output.chance() - 0.5f) + "%", 98, 11 + 17 * i, 10,false);
-            if(output.maxRange() > 1) {
-                matrixStack.drawString(renderer, "1-" + output.maxRange(), 75, 11 + 17 * i, 10,false);
+            matrixStack.drawString(renderer, Math.round(100 * output.chance() - 0.5f) + "%", 98, 11 + 17 * i, 10, false);
+            if (output.maxRange() > 1) {
+                matrixStack.drawString(renderer, "1-" + output.maxRange(), 75, 11 + 17 * i, 10, false);
             }
         }
     }

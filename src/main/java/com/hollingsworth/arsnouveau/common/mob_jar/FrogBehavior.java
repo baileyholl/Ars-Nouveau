@@ -19,16 +19,16 @@ public class FrogBehavior extends JarBehavior<Frog> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if(tile.getLevel().isClientSide){
+        if (tile.getLevel().isClientSide) {
             return;
         }
         ExtraData data = new ExtraData(tile.getExtraDataTag());
-        if(data.isEating){
+        if (data.isEating) {
             if (data.tickCounter >= 8) {
                 Entity target = tile.getLevel().getEntity(data.entityId);
-                if(target instanceof LivingEntity livingEntity) {
+                if (target instanceof LivingEntity livingEntity) {
                     Frog frog = entityFromJar(tile);
-                    livingEntity.playSound(SoundEvents.FROG_EAT,2.0F, 1.0f);
+                    livingEntity.playSound(SoundEvents.FROG_EAT, 2.0F, 1.0f);
                     if (livingEntity.isAlive()) {
                         frog.doHurtTarget(livingEntity);
                         if (!livingEntity.isAlive()) {
@@ -42,10 +42,10 @@ public class FrogBehavior extends JarBehavior<Frog> {
             writeData(tile, data);
             return;
         }
-        if(tile.getLevel().getRandom().nextInt(60) == 0){
+        if (tile.getLevel().getRandom().nextInt(60) == 0) {
             Frog frog = entityFromJar(tile);
             List<LivingEntity> livingEntities = frog.level.getEntitiesOfClass(LivingEntity.class, new AABB(tile.getBlockPos()).inflate(2), Frog::canEat);
-            if(livingEntities.isEmpty())
+            if (livingEntities.isEmpty())
                 return;
             LivingEntity entity = livingEntities.get(tile.getLevel().getRandom().nextInt(livingEntities.size()));
             entity.level.playSound(null, entity, SoundEvents.FROG_TONGUE, SoundSource.NEUTRAL, 2.0F, 1.0F);
@@ -59,13 +59,13 @@ public class FrogBehavior extends JarBehavior<Frog> {
         }
     }
 
-    public void writeData(MobJarTile tile, ExtraData data){
+    public void writeData(MobJarTile tile, ExtraData data) {
         CompoundTag tag = new CompoundTag();
         data.writeToNBT(tag);
         tile.setExtraDataTag(tag);
     }
 
-    public static class ExtraData extends AbstractData{
+    public static class ExtraData extends AbstractData {
         public Vec3 position;
         public int tickCounter;
         public boolean isEating;

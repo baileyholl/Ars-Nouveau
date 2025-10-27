@@ -11,8 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.ReloadableServerRegistries;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandomList;
@@ -35,16 +34,11 @@ public class AlakarkinosConversionRegistry {
     private static Set<Block> CONVERTABLE_BLOCKS = Set.of();
     private static Map<Block, WeightedRandomList<WeightedEntry.Wrapper<AlakarkinosRecipe>>> CONVERTABLE_BLOCKS_MAP = new HashMap<>();
 
-    public static List<AlakarkinosRecipe> getRecipes(){
+    public static List<AlakarkinosRecipe> getRecipes() {
         return Collections.unmodifiableList(RECIPES);
     }
 
-    public static LootParams LOOT_PARAMS = null;
-
-    public static void reloadAlakarkinosRecipes(RecipeManager recipeManager, ReloadableServerRegistries.Holder registries) {
-        if (LOOT_PARAMS == null) {
-            return;
-        }
+    public static void reloadAlakarkinosRecipes(RecipeManager recipeManager, MinecraftServer server) {
 
         RECIPES = new ArrayList<>();
         List<AlakarkinosRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.ALAKARKINOS_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
@@ -64,17 +58,8 @@ public class AlakarkinosConversionRegistry {
 
         LootDrop.DROPS.clear();
         for (AlakarkinosRecipe recipe : RECIPES) {
-            LootDrop.computeLootDrops(registries, recipe);
+            LootDrop.computeLootDrops(server, recipe);
         }
-    }
-
-    public static void initLootParams(ServerLevel level) {
-        ANFakePlayer player = ANFakePlayer.getPlayer(level);
-        LOOT_PARAMS = new LootParams.Builder(level)
-                .withParameter(LootContextParams.ORIGIN, BlockPos.ZERO.getCenter())
-                .withLuck(1.0f)
-                .withParameter(LootContextParams.THIS_ENTITY, player)
-                .create(LootContextParamSets.CHEST);
     }
 
     public static boolean isConvertable(Block block) {
@@ -97,7 +82,9 @@ public class AlakarkinosConversionRegistry {
                         Codec.INT.fieldOf("weight").forGetter(LootDrops::weight)
                 ).apply(instance, LootDrops::new)
         );
-    };
+    }
+
+    ;
 
     public record LootDrop(ItemStack item, float chance) {
         private static HashMap<ResourceKey<LootTable>, LootDrops> DROPS = new HashMap<>();
@@ -115,12 +102,13 @@ public class AlakarkinosConversionRegistry {
 
         @Deprecated
         public static LootDrops computeLootDrops(AlakarkinosRecipe recipe) {
-            return computeLootDrops(ServerLifecycleHooks.getCurrentServer().reloadableRegistries(), recipe);
+            return computeLootDrops(ServerLifecycleHooks.getCurrentServer(), recipe);
         }
 
-        public static LootDrops computeLootDrops(ReloadableServerRegistries.Holder registries, AlakarkinosRecipe recipe) {
+        public static LootDrops computeLootDrops(MinecraftServer server, AlakarkinosRecipe recipe) {
             return DROPS.computeIfAbsent(recipe.table(), key -> {
-                LootTable lootTable = registries.getLootTable(key);
+
+                LootTable lootTable = server.reloadableRegistries().getLootTable(key);
 
                 if (lootTable.equals(LootTable.EMPTY)) {
                     return null;
@@ -138,8 +126,14 @@ public class AlakarkinosConversionRegistry {
                     }
                 });
 
+                ANFakePlayer player = ANFakePlayer.getPlayer(server.overworld());
+                LootParams lootParams = new LootParams.Builder(server.overworld())
+                        .withParameter(LootContextParams.ORIGIN, BlockPos.ZERO.getCenter())
+                        .withLuck(1.0f)
+                        .withParameter(LootContextParams.THIS_ENTITY, player)
+                        .create(LootContextParamSets.CHEST);
                 for (int i = 0; i < 600; i++) {
-                    for (ItemStack random : lootTable.getRandomItems(LOOT_PARAMS)) {
+                    for (ItemStack random : lootTable.getRandomItems(lootParams)) {
                         drops.put(random, drops.getInt(random) + random.getCount());
                     }
                 }

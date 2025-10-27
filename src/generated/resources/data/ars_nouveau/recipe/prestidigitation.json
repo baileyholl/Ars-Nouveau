@@ -1,0 +1,12 @@
+{
+  "type": "ars_nouveau:prestidigitation",
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:spell_parchment"
+    },
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    }
+  ],
+  "sourceCost": 0
+}

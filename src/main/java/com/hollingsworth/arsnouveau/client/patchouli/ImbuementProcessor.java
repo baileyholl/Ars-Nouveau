@@ -24,7 +24,7 @@ public class ImbuementProcessor implements IComponentProcessor {
     }
 
     @Override
-    public IVariable process(Level level,  String key) {
+    public IVariable process(Level level, String key) {
         if (holder == null)
             return null;
         var recipe = holder.value();

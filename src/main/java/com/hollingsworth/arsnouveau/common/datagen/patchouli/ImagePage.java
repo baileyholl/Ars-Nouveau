@@ -7,10 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImagePage extends AbstractPage{
+public class ImagePage extends AbstractPage {
     List<String> images = new ArrayList<>();
 
-    public ImagePage(){}
+    public ImagePage() {
+    }
 
     public ImagePage withEntry(ResourceLocation file) {
         images.add(file.toString());
@@ -27,7 +28,7 @@ public class ImagePage extends AbstractPage{
         return this;
     }
 
-    public ImagePage withBorder(){
+    public ImagePage withBorder() {
         object.addProperty("border", true);
         return this;
     }

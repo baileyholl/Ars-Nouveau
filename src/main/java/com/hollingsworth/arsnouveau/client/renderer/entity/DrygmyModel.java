@@ -14,9 +14,9 @@ import javax.annotation.Nullable;
 
 public class DrygmyModel<T extends LivingEntity & GeoAnimatable> extends GeoModel<T> {
 
-    private static final ResourceLocation WILD_TEXTURE = ArsNouveau.prefix( "textures/entity/drygmy.png");
-    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix( "geo/drygmy.geo.json");
-    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix( "animations/drygmy_animations.json");
+    private static final ResourceLocation WILD_TEXTURE = ArsNouveau.prefix("textures/entity/drygmy.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix("geo/drygmy.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix("animations/drygmy_animations.json");
 
     @Override
     public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {

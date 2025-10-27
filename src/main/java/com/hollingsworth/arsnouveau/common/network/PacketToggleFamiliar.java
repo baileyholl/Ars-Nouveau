@@ -15,10 +15,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
 
-public class PacketToggleFamiliar extends AbstractPacket{
+public class PacketToggleFamiliar extends AbstractPacket {
 
 
-    public PacketToggleFamiliar() {}
+    public PacketToggleFamiliar() {
+    }
 
     //Decoder
     public PacketToggleFamiliar(RegistryFriendlyByteBuf buf) {
@@ -34,12 +35,12 @@ public class PacketToggleFamiliar extends AbstractPacket{
         if (cap == null)
             return;
 
-        if(PacketDispelFamiliars.dispelForPlayer(owner)){
+        if (PacketDispelFamiliars.dispelForPlayer(owner)) {
             return;
         }
 
         FamiliarData lastSummoned = cap.getLastSummonedFamiliar();
-        if(lastSummoned == null)
+        if (lastSummoned == null)
             return;
         IFamiliar familiarEntity = lastSummoned.getEntity(owner.level);
         familiarEntity.setOwnerID(owner.getUUID());

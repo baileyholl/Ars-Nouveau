@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerCaster extends LivingCaster{
+public class PlayerCaster extends LivingCaster {
     public Player player;
 
     public PlayerCaster(Player livingEntity) {

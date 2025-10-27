@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.NeoForge;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +183,7 @@ public class SpellStats {
             if (entity == null)
                 return this;
             var handler = CuriosUtil.getAllWornItems(entity);
-            if(handler != null){
+            if (handler != null) {
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack item = handler.getStackInSlot(i);
                     spellStats.modifierItems.add(item);

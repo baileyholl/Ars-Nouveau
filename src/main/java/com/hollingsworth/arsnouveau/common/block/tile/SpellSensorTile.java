@@ -54,22 +54,22 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         super(BlockRegistry.SPELL_SENSOR_TILE.get(), pos, state);
     }
 
-    public static void onSpellCast(SpellCastEvent event){
+    public static void onSpellCast(SpellCastEvent event) {
         Vec3 vec3 = event.context.getCaster().getPosition();
-        SENSOR_MAP.applyForRange(event.getWorld(), BlockPos.containing(vec3.x, vec3.y, vec3.z), 8, (pos) ->{
-            if(event.getWorld().getBlockEntity(pos) instanceof SpellSensorTile tile && !tile.isOnResolve){
+        SENSOR_MAP.applyForRange(event.getWorld(), BlockPos.containing(vec3.x, vec3.y, vec3.z), 8, (pos) -> {
+            if (event.getWorld().getBlockEntity(pos) instanceof SpellSensorTile tile && !tile.isOnResolve) {
                 tile.onSignal(event.context.getCaster().getPosition(), event.spell);
             }
             return false;
         });
     }
 
-    public static void onSpellResolve(SpellResolveEvent.Post event){
+    public static void onSpellResolve(SpellResolveEvent.Post event) {
         HitResult resolveSource = event.resolver.hitResult;
-        if(resolveSource == null)
+        if (resolveSource == null)
             return;
-        SENSOR_MAP.applyForRange(event.world, resolveSource.getLocation(), 8, (pos) ->{
-            if(event.world.getBlockEntity(pos) instanceof SpellSensorTile tile && tile.isOnResolve){
+        SENSOR_MAP.applyForRange(event.world, resolveSource.getLocation(), 8, (pos) -> {
+            if (event.world.getBlockEntity(pos) instanceof SpellSensorTile tile && tile.isOnResolve) {
                 tile.onSignal(resolveSource.getLocation(), event.spell);
             }
             return false;
@@ -82,27 +82,27 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         this.updateBlock();
     }
 
-    public void onSignal(Vec3 pos, Spell spell){
-        if(this.onCooldown || outputDuration > 0){
+    public void onSignal(Vec3 pos, Spell spell) {
+        if (this.onCooldown || outputDuration > 0) {
             return;
         }
         Vec3 thisPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
-        if(BlockUtil.distanceFrom(pos, thisPos) > listenRange || isOccluded(level, thisPos, pos)){
+        if (BlockUtil.distanceFrom(pos, thisPos) > listenRange || isOccluded(level, thisPos, pos)) {
             return;
         }
         var str = 0;
-        if(!this.parchment.isEmpty()){
+        if (!this.parchment.isEmpty()) {
             // Compare spell to parchment
-            if(this.parchment.getItem() instanceof SpellParchment spellParchment){
+            if (this.parchment.getItem() instanceof SpellParchment spellParchment) {
                 Spell listeningSpell = SpellCasterRegistry.from(parchment).getSpell();
                 List<AbstractSpellPart> spellParts = listeningSpell.unsafeList().stream().filter(Objects::nonNull).toList();
                 List<AbstractSpellPart> spellParts1 = spell.unsafeList().stream().filter(Objects::nonNull).toList();
-                if(!spellParts.equals(spellParts1)){
+                if (!spellParts.equals(spellParts1)) {
                     return;
                 }
             }
             str = 15;
-        }else{
+        } else {
             str = spell.size();
         }
         outputDuration = 40;
@@ -113,11 +113,11 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
     }
 
     private static boolean isOccluded(Level pLevel, Vec3 pFrom, Vec3 pTo) {
-        Vec3 vec3 = new Vec3((double) Mth.floor(pFrom.x) + 0.5D, (double)Mth.floor(pFrom.y) + 0.5D, (double)Mth.floor(pFrom.z) + 0.5D);
-        Vec3 vec31 = new Vec3((double)Mth.floor(pTo.x) + 0.5D, (double)Mth.floor(pTo.y) + 0.5D, (double)Mth.floor(pTo.z) + 0.5D);
+        Vec3 vec3 = new Vec3((double) Mth.floor(pFrom.x) + 0.5D, (double) Mth.floor(pFrom.y) + 0.5D, (double) Mth.floor(pFrom.z) + 0.5D);
+        Vec3 vec31 = new Vec3((double) Mth.floor(pTo.x) + 0.5D, (double) Mth.floor(pTo.y) + 0.5D, (double) Mth.floor(pTo.z) + 0.5D);
 
-        for(Direction direction : Direction.values()) {
-            Vec3 vec32 = vec3.relative(direction, (double)1.0E-5F);
+        for (Direction direction : Direction.values()) {
+            Vec3 vec32 = vec3.relative(direction, (double) 1.0E-5F);
             if (pLevel.isBlockInLine(new ClipBlockStateContext(vec32, vec31, (p_223780_) -> {
                 return p_223780_.is(BlockTagProvider.OCCLUDES_SPELL_SENSOR);
             })).getType() != HitResult.Type.BLOCK) {
@@ -130,12 +130,12 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
 
     @Override
     public void tick() {
-        if(level.isClientSide){
+        if (level.isClientSide) {
             return;
         }
-        if(outputDuration > 0){
+        if (outputDuration > 0) {
             outputDuration--;
-            if(outputDuration <= 0){
+            if (outputDuration <= 0) {
                 outputStrength = 0;
                 onCooldown = true;
                 // 1 tick cooldown
@@ -145,7 +145,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
                 level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
             }
         }
-        if(level.getGameTime() % 20 == 0){
+        if (level.getGameTime() % 20 == 0) {
             SENSOR_MAP.addPosition(level, worldPosition);
         }
     }
@@ -156,7 +156,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
         tag.putInt("outputDuration", outputDuration);
         tag.putInt("outputStrength", outputStrength);
         tag.putBoolean("isOnResolve", isOnResolve);
-        if(!this.parchment.isEmpty()) {
+        if (!this.parchment.isEmpty()) {
             tag.put("parchment", parchment.save(pRegistries));
         }
     }
@@ -172,12 +172,12 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(isOnResolve) {
+        if (isOnResolve) {
             tooltip.add(Component.translatable("ars_nouveau.sensor.on_resolve"));
-        }else{
+        } else {
             tooltip.add(Component.translatable("ars_nouveau.sensor.on_cast"));
         }
-        if(!this.parchment.isEmpty() && parchment.getItem() instanceof SpellParchment spellParchment){
+        if (!this.parchment.isEmpty() && parchment.getItem() instanceof SpellParchment spellParchment) {
             spellParchment.getInformation(parchment, Item.TooltipContext.of(level), tooltip, TooltipFlag.Default.NORMAL);
         }
     }

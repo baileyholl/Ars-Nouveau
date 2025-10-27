@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
@@ -33,12 +34,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummon {
+public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummon, IDispellable {
     public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(SummonSkeleton.class, EntityDataSerializers.OPTIONAL_UUID);
 
     private final RangedBowAttackGoal<SummonSkeleton> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
@@ -107,7 +109,9 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected boolean shouldDropLoot() {return false;}
+    protected boolean shouldDropLoot() {
+        return false;
+    }
 
     @Override
     protected void dropCustomDeathLoot(ServerLevel p_348477_, DamageSource p_33574_, boolean p_33576_) {
@@ -115,7 +119,8 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected void dropEquipment() {}
+    protected void dropEquipment() {
+    }
 
     @Override
     protected void registerGoals() {
@@ -124,10 +129,10 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class){
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class) {
             @Override
             protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, TargetingConditions pTargetPredicate) {
-                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID()) ;
+                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID());
             }
         });
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
@@ -164,7 +169,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource.is(DamageTypes.MOB_ATTACK) && pSource.getEntity() instanceof ISummon summon){
+        if (pSource.is(DamageTypes.MOB_ATTACK) && pSource.getEntity() instanceof ISummon summon) {
             if (summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return false;
         }
         return super.hurt(pSource, pAmount);
@@ -194,7 +199,8 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         LivingEntity summoner = this.getSummoner();
 
         if (summoner != null) {
-            if (pEntity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return true;
+            if (pEntity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID()))
+                return true;
             return pEntity == summoner || summoner.isAlliedTo(pEntity);
         }
         return super.isAlliedTo(pEntity);
@@ -331,4 +337,9 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
     }
 
+    @Override
+    public boolean onDispel(@NotNull LivingEntity caster) {
+        this.limitedLifeTicks = 0;
+        return true;
+    }
 }

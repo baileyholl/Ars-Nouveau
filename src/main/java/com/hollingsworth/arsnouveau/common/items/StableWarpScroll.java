@@ -43,7 +43,7 @@ public class StableWarpScroll extends ModItem implements AliasProvider {
         // A hack to fix the crossDim flag on existing warp scrolls
         // TODO: 1.22 - remove this tick and set the flag or check the stack elsewhere
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
-        if(data != null && !data.crossDim()){
+        if (data != null && !data.crossDim()) {
             stack.set(DataComponentRegistry.WARP_SCROLL, data.withCrossDim(true));
         }
     }
@@ -52,7 +52,7 @@ public class StableWarpScroll extends ModItem implements AliasProvider {
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if (!context.getLevel().isClientSide) {
             WarpScrollData scrollData = context.getItemInHand().get(DataComponentRegistry.WARP_SCROLL);
-            if(!scrollData.isValid())
+            if (!scrollData.isValid())
                 return InteractionResult.FAIL;
             EventQueue.getServerInstance().addEvent(new BuildPortalEvent(context.getLevel(), context.getClickedPos(), context.getPlayer().getDirection().getClockWise(), scrollData));
             context.getLevel().playSound(null, context.getClickedPos(), SoundEvents.ILLUSIONER_CAST_SPELL, context.getPlayer().getSoundSource(), 1.0F, 1.0F);
@@ -62,7 +62,7 @@ public class StableWarpScroll extends ModItem implements AliasProvider {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player player, @NotNull InteractionHand pUsedHand) {
-        if(pUsedHand != InteractionHand.MAIN_HAND)
+        if (pUsedHand != InteractionHand.MAIN_HAND)
             return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
@@ -72,7 +72,7 @@ public class StableWarpScroll extends ModItem implements AliasProvider {
         if (player.isShiftKeyDown() && !data.isValid()) {
             stack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(Optional.of(player.blockPosition()), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), true));
             player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
-        }else if(player.isShiftKeyDown() && data.isValid()){
+        } else if (player.isShiftKeyDown() && data.isValid()) {
             player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.already_recorded"));
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

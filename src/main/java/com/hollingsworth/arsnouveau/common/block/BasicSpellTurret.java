@@ -76,7 +76,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
             public void onCast(SpellResolver resolver, ServerLevel world, BlockPos pos, Player fakePlayer, Position iposition, Direction direction) {
                 EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
-                spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                spell.setPos(iposition.x(), iposition.y() - 0.25, iposition.z());
                 SpellStats stats = resolver.getCastStats();
                 float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
                 if (world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {

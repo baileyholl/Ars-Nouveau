@@ -49,18 +49,18 @@ public class IndexScreen extends BaseDocScreen {
         DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.documentation.intro2"), graphics, screenLeft + LEFT_PAGE_OFFSET + 6, screenTop + PAGE_TOP_OFFSET + 85, 106, mouseX, mouseY, partialTicks);
     }
 
-    public void initSections(){
-        for(DocSectionButton section : sections){
+    public void initSections() {
+        for (DocSectionButton section : sections) {
             removeWidget(section);
         }
         sections.clear();
         List<DocCategory> sliced = categoryList.subList(arrowIndex * 5, Math.min((arrowIndex + 1) * 5, categoryList.size()));
-        for(int i = 0; i < sliced.size(); i++){
+        for (int i = 0; i < sliced.size(); i++) {
             DocCategory category = sliced.get(i);
             var button = new DocSectionButton(screenLeft + 18 + 135, screenTop + 34 + 28 * (i), category.getTitle(), category.renderIcon(), (b) -> {
-                if(!category.subCategories().isEmpty()){
+                if (!category.subCategories().isEmpty()) {
                     transition(new IndexScreen(category.subCategories()));
-                }else{
+                } else {
                     transition(new EntriesScreen(category));
                 }
             });

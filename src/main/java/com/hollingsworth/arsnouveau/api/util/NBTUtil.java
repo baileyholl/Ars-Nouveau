@@ -27,7 +27,7 @@ public class NBTUtil {
         return tag;
     }
 
-    public static CompoundTag storeVec(CompoundTag tag, String prefix, Vec3 vec){
+    public static CompoundTag storeVec(CompoundTag tag, String prefix, Vec3 vec) {
         writePositional(tag, prefix, vec.x, vec.y, vec.z);
         return tag;
     }
@@ -39,7 +39,7 @@ public class NBTUtil {
         return tag;
     }
 
-    public static CompoundTag writePositional(CompoundTag tag, String prefix, double x, double y, double z){
+    public static CompoundTag writePositional(CompoundTag tag, String prefix, double x, double y, double z) {
         tag.putDouble(prefix + "_x", x);
         tag.putDouble(prefix + "_y", y);
         tag.putDouble(prefix + "_z", z);
@@ -51,19 +51,19 @@ public class NBTUtil {
         return BlockPos.containing(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
 
-    public static BlockPos getPos(int[] arr){
+    public static BlockPos getPos(int[] arr) {
         return new BlockPos(arr[0], arr[1], arr[2]);
     }
 
-    public static Vec3 getVec(CompoundTag tag, String prefix){
-        if(tag == null){
+    public static Vec3 getVec(CompoundTag tag, String prefix) {
+        if (tag == null) {
             return null;
         }
         return new Vec3(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }
 
     public static @Nullable BlockPos getNullablePos(CompoundTag tag, String prefix) {
-        if(!tag.contains(prefix + "_x"))
+        if (!tag.contains(prefix + "_x"))
             return null;
         return BlockPos.containing(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
     }

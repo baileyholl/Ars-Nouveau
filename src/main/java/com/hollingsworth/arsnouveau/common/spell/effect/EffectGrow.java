@@ -59,7 +59,7 @@ public class EffectGrow extends AbstractEffect {
         return SpellTier.TWO;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
@@ -76,7 +76,7 @@ public class EffectGrow extends AbstractEffect {
         return "Causes plants to accelerate in growth as if they were bonemealed.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ELEMENTAL_EARTH);

@@ -65,7 +65,7 @@ public class EffectPickup extends AbstractEffect {
         }
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE);
@@ -87,7 +87,7 @@ public class EffectPickup extends AbstractEffect {
         return 10;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);

@@ -45,9 +45,12 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EntityProjectileSpell>> SPELL_PROJ = registerEntity(
             LibEntityNames.SPELL_PROJ,
             EntityType.Builder.<EntityProjectileSpell>of(EntityProjectileSpell::new, MobCategory.MISC)
-                    .sized(0.5f, 0.5f).noSave()
-                    .setTrackingRange(20).fireImmune()
-                    .setShouldReceiveVelocityUpdates(true));
+                    .noSave()
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20)
+                    .fireImmune());
     public static final DeferredHolder<EntityType<?>, EntityType<EntityProjectileSpell>> SPELL_PROJ_ARC = registerEntity(
             LibEntityNames.SPELL_PROJ_ARC,
             EntityType.Builder.<EntityProjectileSpell>of((entityType, world) -> new EntityProjectileSpell(entityType, world) {
@@ -127,7 +130,10 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EntitySpellArrow>> ENTITY_SPELL_ARROW = registerEntity(
             LibEntityNames.SPELL_ARROW,
             EntityType.Builder.<EntitySpellArrow>of(EntitySpellArrow::new, MobCategory.MISC)
-                    .clientTrackingRange(20).setShouldReceiveVelocityUpdates(true));
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20));
     public static final DeferredHolder<EntityType<?>, EntityType<Cinder>> CINDER = registerEntity(
             LibEntityNames.CINDER,
             EntityType.Builder.<Cinder>of(Cinder::new, MobCategory.MISC)
@@ -179,11 +185,15 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EntityOrbitProjectile>> ORBIT_SPELL = registerEntity(
             LibEntityNames.ORBIT_PROJECTILE,
             EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, MobCategory.MISC).sized(0.5f, 0.5f).fireImmune()
+                    .noSave()
                     .clientTrackingRange(20).setShouldReceiveVelocityUpdates(true));
     public static final DeferredHolder<EntityType<?>, EntityType<EntityChimeraProjectile>> ENTITY_CHIMERA_SPIKE = registerEntity(
             LibEntityNames.CHIMERA_SPIKE,
             EntityType.Builder.<EntityChimeraProjectile>of(EntityChimeraProjectile::new, MobCategory.MISC)
-                    .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true));
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20));
     public static final DeferredHolder<EntityType<?>, EntityType<FamiliarStarbuncle>> ENTITY_FAMILIAR_STARBUNCLE = registerEntity(LibEntityNames.FAMILIAR_STARBUNCLE, EntityType.Builder.of(FamiliarStarbuncle::new, MobCategory.CREATURE)
             .sized(0.5f, 0.5f).setTrackingRange(10));
 
@@ -206,7 +216,7 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    );
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<EntityWallSpell>> WALL_SPELL = registerEntity(
             LibEntityNames.WALL,
             EntityType.Builder.<EntityWallSpell>of(EntityWallSpell::new, MobCategory.MISC)
@@ -214,7 +224,7 @@ public class ModEntities {
                     .setTrackingRange(20)
                     .setShouldReceiveVelocityUpdates(true)
                     .noSave()
-                    );
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<WealdWalker>> ENTITY_CASCADING_WEALD = registerEntity(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                 WealdWalker walker = new WealdWalker(type, world);
                 walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);
@@ -327,7 +337,7 @@ public class ModEntities {
 
     public static boolean wildenSpawnRules(EntityType<? extends Monster> type, ServerLevelAccessor worldIn, MobSpawnType reason, BlockPos pos, RandomSource randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && Monster.checkMonsterSpawnRules(type, worldIn, reason, pos, randomIn)
-               && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
+                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)

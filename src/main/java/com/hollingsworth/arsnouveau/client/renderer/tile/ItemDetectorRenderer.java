@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 
 public class ItemDetectorRenderer implements BlockEntityRenderer<ItemDetectorTile> {
     private final EntityRenderDispatcher entityRenderer;
+
     public ItemDetectorRenderer(BlockEntityRendererProvider.Context pContext) {
         entityRenderer = pContext.getEntityRenderer();
     }
@@ -29,7 +30,7 @@ public class ItemDetectorRenderer implements BlockEntityRenderer<ItemDetectorTil
         matrixStack.pushPose();
         matrixStack.translate(xOffset, yOffset, zOffset);
         matrixStack.scale(0.5f, 0.5f, 0.5f);
-        matrixStack.mulPose( Axis.YP.rotationDegrees(ticks * 2f));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(ticks * 2f));
         Minecraft.getInstance().getItemRenderer().renderStatic(tileEntityIn.filterStack, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, matrixStack, pBufferSource, tileEntityIn.getLevel(), (int) tileEntityIn.getBlockPos().asLong());
 
         matrixStack.popPose();

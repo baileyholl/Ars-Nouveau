@@ -21,7 +21,7 @@ public class Networking {
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sets the current network version
         final PayloadRegistrar reg = event.registrar("1");
-        reg.playToClient(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC,  Networking::handle);
+        reg.playToClient(PacketOpenSpellBook.TYPE, PacketOpenSpellBook.CODEC, Networking::handle);
         reg.playToClient(ChangeBiomePacket.TYPE, ChangeBiomePacket.CODEC, Networking::handle);
         reg.playToServer(PacketSetLauncher.TYPE, PacketSetLauncher.CODEC, Networking::handle);
         reg.playToServer(ClientSearchPacket.TYPE, ClientSearchPacket.CODEC, Networking::handle);
@@ -58,7 +58,7 @@ public class Networking {
         reg.playToServer(PacketSummonDog.TYPE, PacketSummonDog.CODEC, Networking::handle);
         reg.playToClient(PacketSyncLitEntities.TYPE, PacketSyncLitEntities.CODEC, Networking::handle);
         reg.playToClient(PacketSyncPlayerCap.TYPE, PacketSyncPlayerCap.CODEC, Networking::handle);
-        reg.playToClient(PacketSyncTag.TYPE , PacketSyncTag.CODEC, Networking::handle);
+        reg.playToClient(PacketSyncTag.TYPE, PacketSyncTag.CODEC, Networking::handle);
         reg.playToClient(PacketTimedEvent.TYPE, PacketTimedEvent.CODEC, Networking::handle);
         reg.playToServer(PacketToggleFamiliar.TYPE, PacketToggleFamiliar.CODEC, Networking::handle);
         reg.playToClient(PacketToggleLight.TYPE, PacketToggleLight.CODEC, Networking::handle);
@@ -77,8 +77,11 @@ public class Networking {
         reg.playToClient(PacketUpdateGlowColor.TYPE, PacketUpdateGlowColor.CODEC, Networking::handle);
         reg.playToServer(PacketUpdateDominionWand.TYPE, PacketUpdateDominionWand.CODEC, Networking::handle);
         reg.playBidirectional(PacketSetAllies.TYPE, PacketSetAllies.CODEC, Networking::handle);
+        reg.playToServer(PacketUpdateParticleTimeline.TYPE, PacketUpdateParticleTimeline.CODEC, Networking::handle);
         reg.playToServer(PacketCastSpell.TYPE, PacketCastSpell.CODEC, Networking::handle);
         reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
+        reg.playToClient(TickEmitterPacket.TYPE, TickEmitterPacket.CODEC, Networking::handle);
+        reg.playToClient(PacketPrestidigitation.TYPE, PacketPrestidigitation.CODEC, Networking::handle);
     }
 
     public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {

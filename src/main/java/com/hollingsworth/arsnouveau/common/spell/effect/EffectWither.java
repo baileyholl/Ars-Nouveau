@@ -52,7 +52,7 @@ public class EffectWither extends AbstractEffect implements IPotionEffect {
         return SpellTier.THREE;
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return getPotionAugments();
@@ -63,7 +63,7 @@ public class EffectWither extends AbstractEffect implements IPotionEffect {
         return "Applies the Wither debuff.";
     }
 
-   @NotNull
+    @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.ABJURATION);

@@ -32,7 +32,7 @@ public class SourceLamp extends CopperBulbBlock implements ILightable {
 
     @Override
     public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockHitResult blockHitResult){
+        if (rayTraceResult instanceof BlockHitResult blockHitResult) {
             var state = world.getBlockState(blockHitResult.getBlockPos()).setValue(LIGHT_LEVEL, Math.min(Math.max(0, 15 - augments.getBuffCount(AugmentDampen.INSTANCE)), 15));
             world.setBlock(blockHitResult.getBlockPos(), state, 3);
         }

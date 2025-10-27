@@ -11,7 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
-public class PacketSyncPlayerCap extends AbstractPacket{
+public class PacketSyncPlayerCap extends AbstractPacket {
     CompoundTag tag;
 
     //Decoder
@@ -34,7 +34,7 @@ public class PacketSyncPlayerCap extends AbstractPacket{
         data.deserializeNBT(playerEntity.registryAccess(), this.tag);
         playerEntity.setData(AttachmentsRegistry.PLAYER_DATA, data);
         var cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
-        if(cap != null){
+        if (cap != null) {
             cap.setPlayerData(data);
         }
     }

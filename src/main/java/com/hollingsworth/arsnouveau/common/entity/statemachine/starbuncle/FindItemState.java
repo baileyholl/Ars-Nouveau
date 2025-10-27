@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FindItemState extends StarbyState{
+public class FindItemState extends StarbyState {
 
     boolean itemStuck;
     List<ItemEntity> destList = new ArrayList<>();
@@ -62,7 +62,7 @@ public class FindItemState extends StarbyState{
 
     @Override
     public @Nullable StarbyState tick() {
-        if(dest == null){
+        if (dest == null) {
             behavior.findItemBackoff = 30 + starbuncle.level.random.nextInt(30);
             starbuncle.addGoalDebug(this, new DebugEvent("NotReachable", "No pathable items nearby"));
             return new DecideStarbyActionState(starbuncle, behavior);
@@ -76,16 +76,16 @@ public class FindItemState extends StarbyState{
             starbuncle.getNavigation().stop();
             Starbuncle nextAvailableStarby = starbuncle.getStarbuncleWithSpace();
             List<ItemEntity> nearbyItems = FindItemState.nearbyItems(starbuncle, behavior);
-            if(nextAvailableStarby != null && !nearbyItems.isEmpty()){
+            if (nextAvailableStarby != null && !nearbyItems.isEmpty()) {
                 return new FindItemState(starbuncle, behavior, nearbyItems);
             }
             return new DecideStarbyActionState(starbuncle, behavior);
         }
-        if(ticksRunning > 20 * 15){
+        if (ticksRunning > 20 * 15) {
             starbuncle.addGoalDebug(this, new DebugEvent("TooLong", "Stopped finding item, time finding expired"));
             return new DecideStarbyActionState(starbuncle, behavior);
         }
-        if(itemStuck || this.starbyWithSpace == null){
+        if (itemStuck || this.starbyWithSpace == null) {
             return new DecideStarbyActionState(starbuncle, behavior);
         }
         if (dest == null || dest.getItem().isEmpty() || dest.isRemoved()) {

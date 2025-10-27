@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
 
+import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.PantomimeTimeline;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -44,8 +47,11 @@ public class MethodPantomime extends AbstractCastMethod {
         BlockHitResult res = findPosition(shooter, stats);
 
         if (res == null) return CastResolveType.FAILURE;
-
+        PantomimeTimeline pantomimeTimeline = resolver.spellContext.getParticleTimeline(ParticleTimelineRegistry.PANTOMIME_TIMELINE.get());
+        ParticleEmitter emitter = createStaticEmitter(pantomimeTimeline.onResolvingEffect, res.getLocation());
         resolver.onResolveEffect(world, res);
+        emitter.tick(world);
+        pantomimeTimeline.resolveSound.sound.playSound(world, res.getLocation().x, res.getLocation().y, res.getLocation().z);
         return CastResolveType.SUCCESS;
     }
 

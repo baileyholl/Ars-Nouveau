@@ -30,6 +30,7 @@ import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
+import com.hollingsworth.arsnouveau.common.world.saved_data.AlliesSavedData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
@@ -80,6 +81,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.village.VillageSiegeEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +98,7 @@ public class EventHandler {
 
             @SuppressWarnings({"NullableProblems", "DataFlowIssue", "DataFlowIssue"})
             @Override
-            protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+            protected @NotNull Object prepare(@NotNull ResourceManager pResourceManager, @NotNull ProfilerFiller pProfiler) {
                 return null;
             }
 
@@ -118,9 +120,9 @@ public class EventHandler {
                         GenericRecipeRegistry.reloadAll(recipeManager);
                         CasterTomeRegistry.reloadTomeData(recipeManager, access);
                         BuddingConversionRegistry.reloadBuddingConversionRecipes(recipeManager);
-                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server.reloadableRegistries());
+                        AlakarkinosConversionRegistry.reloadAlakarkinosRecipes(recipeManager, server);
                         ScryRitualRegistry.reloadScryRitualRecipes(recipeManager);
-                        for(ServerPlayer player : server.getPlayerList().getPlayers()) {
+                        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                             Networking.sendToPlayerClient(new PacketInitDocs(), player);
                         }
                         expired = true;

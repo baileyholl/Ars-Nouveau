@@ -10,7 +10,7 @@ public class EntityPage extends AbstractPage {
         object.addProperty("entity", entity);
     }
 
-    public EntityPage(EntityType type){
+    public EntityPage(EntityType type) {
         this(RegistryHelper.getRegistryName(type).toString());
     }
 
@@ -39,7 +39,7 @@ public class EntityPage extends AbstractPage {
         return this;
     }
 
-    public EntityPage withName(String name){
+    public EntityPage withName(String name) {
         object.addProperty("name", name);
         return this;
     }

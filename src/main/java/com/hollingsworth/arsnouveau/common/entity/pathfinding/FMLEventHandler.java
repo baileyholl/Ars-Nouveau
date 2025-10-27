@@ -12,11 +12,9 @@ public class FMLEventHandler {
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
         EventQueue.getServerInstance().clear();
-        EventQueue.getClientQueue().clear();
     }
 
-    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut){
-        EventQueue.getServerInstance().clear();
+    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
         EventQueue.getClientQueue().clear();
     }
 }

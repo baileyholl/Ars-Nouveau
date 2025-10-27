@@ -16,7 +16,7 @@ public class SimpleStateMachine<State extends IState, Event extends IStateEvent>
     }
 
     protected void changeState(@Nonnull State nextState) {
-        if(ArsNouveau.isDebug){
+        if (ArsNouveau.isDebug) {
             Log.getLogger().debug("Changing state from " + currentState + " to " + nextState);
         }
         currentState.onEnd();
@@ -25,11 +25,11 @@ public class SimpleStateMachine<State extends IState, Event extends IStateEvent>
     }
 
     public void tick() {
-        if(currentState == null)
+        if (currentState == null)
             return;
         IState nextState = currentState.tick();
         if (nextState != null) {
-            changeState((State)nextState);
+            changeState((State) nextState);
         }
     }
 
@@ -40,7 +40,7 @@ public class SimpleStateMachine<State extends IState, Event extends IStateEvent>
         }
     }
 
-    public State getCurrentState(){
+    public State getCurrentState() {
         return currentState;
     }
 }

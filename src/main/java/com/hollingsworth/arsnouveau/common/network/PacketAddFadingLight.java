@@ -13,7 +13,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
-public class PacketAddFadingLight extends AbstractPacket{
+public class PacketAddFadingLight extends AbstractPacket {
     public static final Type<PacketAddFadingLight> TYPE = new Type(ArsNouveau.prefix("add_fading_light"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketAddFadingLight> CODEC = StreamCodec.ofMember(PacketAddFadingLight::toBytes, PacketAddFadingLight::new);
     final double x;
@@ -55,10 +55,16 @@ public class PacketAddFadingLight extends AbstractPacket{
         Handle.handle(this, minecraft, player);
     }
 
-    private static class Handle{
-        public static void handle(PacketAddFadingLight packet, Minecraft minecraft, Player player){
-            if (LightManager.shouldUpdateDynamicLight())
-                EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(minecraft.level, new Vec3(packet.x, packet.y, packet.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
+    private static class Handle {
+        public static void handle(PacketAddFadingLight packet, Minecraft minecraft, Player player) {
+            if (LightManager.shouldUpdateDynamicLight() || LightManager.dynamicLightsContext != null) {
+                var event = new FadeLightTimedEvent(minecraft.level, new Vec3(packet.x, packet.y, packet.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get());
+                EventQueue.getClientQueue().addEvent(event);
+
+                if (LightManager.dynamicLightsContext != null) {
+                    LightManager.dynamicLightsContext.dynamicLightBehaviorManager().add(event);
+                }
+            }
         }
     }
 }

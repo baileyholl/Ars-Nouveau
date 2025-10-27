@@ -23,10 +23,10 @@ public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior> {
     @Override
     public boolean canUse() {
         boolean superCan = super.canUse();
-        if(!superCan){
+        if (!superCan) {
             return false;
         }
-        if(behavior.isBedPowered()){
+        if (behavior.isBedPowered()) {
             starbuncle.setBackOff(20);
             starbuncle.addDebugEvent(new DebugEvent("BED_POWERED", "Cannot take potion, bed is powered"));
             return false;
@@ -47,13 +47,13 @@ public class PotionTakeGoal extends GoToPosGoal<StarbyPotionBehavior> {
 
     @Override
     public boolean onDestinationReached() {
-        if(starbuncle.level.getBlockEntity(targetPos) instanceof PotionJarTile jarTile){
+        if (starbuncle.level.getBlockEntity(targetPos) instanceof PotionJarTile jarTile) {
             BlockPos pos = behavior.getJarForStorage(jarTile.getData());
-            if(pos == null)
+            if (pos == null)
                 return true;
-            if(starbuncle.level.getBlockEntity(pos) instanceof PotionJarTile destJar){
+            if (starbuncle.level.getBlockEntity(pos) instanceof PotionJarTile destJar) {
                 int maxRoom = destJar.getMaxFill() - destJar.getAmount();
-                if(maxRoom <= 0)
+                if (maxRoom <= 0)
                     return true;
                 behavior.setHeldPotion(jarTile.getData());
                 int takeAmount = Math.min(jarTile.getAmount(), Math.min(maxRoom, 300));
