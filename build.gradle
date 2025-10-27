@@ -31,6 +31,24 @@ configurations {
     implementation.extendsFrom shade
 }
 
+// Credits to TwilightForest for the idea of using a secrets file to customize the in-dev uuid and username
+def secrets = new Properties()
+def secretsFile = file('secrets.properties')
+if (secretsFile.exists()) {
+    secretsFile.withInputStream {
+        stream -> secrets.load(stream)
+    }
+
+    fileTree("secrets").matching {
+        include "**/*.properties"
+    }.each {
+        File file ->
+            file.withInputStream {
+                stream -> secrets.load(stream)
+            }
+    }
+}
+
 neoForge {
     version = project.neo_version
     validateAccessTransformers = true
@@ -49,13 +67,13 @@ neoForge {
         clientAlt {
             client()
             gameDirectory = project.file('runs/client')
-            programArguments.addAll('--username', 'Dev2')
+            getProgramArguments().addAll '--username', secrets.getProperty("username") ?: 'Dev2', secrets.getProperty("uuid") ? '--uuid' : '', secrets.getProperty("uuid") ?: ''
         }
 
         data {
             data()
             gameDirectory = project.file('runs/data')
-            programArguments.addAll('--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
+            programArguments.addAll('--mod', mod_id as String, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
         }
 
         server {
@@ -214,7 +232,8 @@ jar {
                     "Implementation-Version"  : mod_version,
                     "Implementation-Vendor"   : "baileyh",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "MixinConfigs"            : "ars_nouveau.mixins.json"])
+                    "MixinConfigs"            : "ars_nouveau.mixins.json"]
+        )
     }
 }
 

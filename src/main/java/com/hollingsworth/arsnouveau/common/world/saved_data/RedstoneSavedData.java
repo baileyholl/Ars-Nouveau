@@ -10,6 +10,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class RedstoneSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag pCompoundTag, HolderLookup.Provider pRegistries) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag pCompoundTag, HolderLookup.@NotNull Provider pRegistries) {
         ListTag signalList = new ListTag();
         for (var signal : SIGNAL_MAP.values()) {
             signalList.add(signal.save(new CompoundTag()));
