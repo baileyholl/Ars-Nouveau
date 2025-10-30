@@ -202,7 +202,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
             DimMappingData dimMappingData = DimMappingData.from(serverLevel);
             if (entity instanceof ServerPlayer && dimMappingData.getByKey(level.dimension().location()) == null) {
                 JarDimData jarData = JarDimData.from(dimLevel);
-                jarData.setEnteredFrom(entity.getUUID(), GlobalPos.of(level.dimension(), worldPosition));
+                jarData.setEnteredFrom(entity.getUUID(), GlobalPos.of(level.dimension(), entity.blockPosition()), entity.getRotationVector());
             }
             entity.teleportTo(dimLevel, 7, 2, 7, Set.of(), entity.getYRot(), entity.getXRot());
         }

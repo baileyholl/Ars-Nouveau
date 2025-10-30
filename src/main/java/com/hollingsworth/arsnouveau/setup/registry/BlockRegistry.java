@@ -361,7 +361,7 @@ public class BlockRegistry {
         }
     });
 
-    public static final BlockRegistryWrapper<DimBoundary> DIM_BOUNDARY = registerBlock(LibBlockNames.DIM_BOUNDARY, () -> new DimBoundary(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK)));
+    public static final BlockRegistryWrapper<DimBoundary> DIM_BOUNDARY = registerBlock(LibBlockNames.DIM_BOUNDARY, DimBoundary::new);
 
     public static final BlockEntityTypeRegistryWrapper<RitualBrazierTile> RITUAL_TILE = registerTile(LibBlockNames.RITUAL_BRAZIER, RitualBrazierTile::new, RITUAL_BLOCK);
     public static final BlockEntityTypeRegistryWrapper<BrazierRelayTile> BRAZIER_RELAY_TILE = registerTile(LibBlockNames.BRAZIER_RELAY, BrazierRelayTile::new, BRAZIER_RELAY);
