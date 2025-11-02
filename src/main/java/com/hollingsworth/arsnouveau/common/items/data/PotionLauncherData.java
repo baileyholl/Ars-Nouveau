@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -57,7 +58,13 @@ public record PotionLauncherData(PotionContents renderData, int lastSlot) {
         if (provider.usesRemaining(item) <= 0) {
             return PotionContents.EMPTY;
         }
+
         PotionContents contents = provider.getPotionData(item);
+        if (item.getItem() instanceof PotionFlask) {
+            PotionFlask potionFlask = (PotionFlask) item.getItem();
+            contents = potionFlask.getModifiedPotionContents(contents);
+        }
+
         provider.consumeUses(item, 1, player);
         launcherStack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(provider.getPotionData(item), lastSlot));
         return contents;
