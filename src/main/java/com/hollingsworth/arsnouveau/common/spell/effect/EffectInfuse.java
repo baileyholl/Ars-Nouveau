@@ -84,8 +84,7 @@ public class EffectInfuse extends AbstractEffect {
             IPotionProvider provider = PotionProviderRegistry.from(extractedFlask.stack);
             potionData = provider.getPotionData(extractedFlask.stack);
 
-            if (extractedFlask.stack.getItem() instanceof PotionFlask) {
-                PotionFlask potionFlask = (PotionFlask) extractedFlask.stack.getItem();
+            if (extractedFlask.stack.getItem() instanceof PotionFlask potionFlask) {
                 potionData = potionFlask.getModifiedPotionContents(potionData);
             }
 

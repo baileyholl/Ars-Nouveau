@@ -60,8 +60,7 @@ public record PotionLauncherData(PotionContents renderData, int lastSlot) {
         }
 
         PotionContents contents = provider.getPotionData(item);
-        if (item.getItem() instanceof PotionFlask) {
-            PotionFlask potionFlask = (PotionFlask) item.getItem();
+        if (item.getItem() instanceof PotionFlask potionFlask) {
             contents = potionFlask.getModifiedPotionContents(contents);
         }
 
