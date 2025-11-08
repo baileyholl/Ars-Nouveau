@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import com.hollingsworth.nuggets.client.rendering.FakeRenderingWorld;
@@ -42,12 +43,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
+public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
     StructureRenderData renderData;
 
     GeoModel dimModel = new PlanariumModel(true);
 
-    public DimWorldRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
+    public PlanariumRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
         super(new PlanariumModel(false));
 
     }
@@ -146,6 +147,11 @@ public class DimWorldRenderer extends GeoBlockRenderer<PlanariumTile> {
     @Override
     public GeoModel<PlanariumTile> getGeoModel() {
         return this.animatable.isDimModel ? dimModel : super.getGeoModel();
+    }
+
+
+    public static GenericItemBlockRenderer getISTER() {
+        return new GenericItemBlockRenderer(new PlanariumModel(false));
     }
 
     public boolean shouldUpdateRender(StructureRenderData data, BlockPos renderPos) {

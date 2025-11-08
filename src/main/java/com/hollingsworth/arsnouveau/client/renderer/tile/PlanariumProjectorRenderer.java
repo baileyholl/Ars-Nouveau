@@ -67,4 +67,5 @@ public class PlanariumProjectorRenderer implements BlockEntityRenderer<Planarium
         return AABB.INFINITE;
     }
 
+
 }

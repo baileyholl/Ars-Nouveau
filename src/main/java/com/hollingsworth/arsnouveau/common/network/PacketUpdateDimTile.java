@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class PacketUpdateDimTile extends AbstractPacket {
-    public static final Type<PacketUpdateDimTile> TYPE = new Type<>(ArsNouveau.prefix("update_dim_block"));
+    public static final Type<PacketUpdateDimTile> TYPE = new Type<>(ArsNouveau.prefix("update_planarium"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateDimTile> CODEC = StreamCodec.ofMember(PacketUpdateDimTile::toBytes, PacketUpdateDimTile::new);
 
     public BlockPos pos;

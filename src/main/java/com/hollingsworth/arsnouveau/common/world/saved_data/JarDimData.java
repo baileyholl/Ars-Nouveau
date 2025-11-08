@@ -40,7 +40,7 @@ public class JarDimData extends SavedData {
 
     public static JarDimData load(CompoundTag compoundTag, HolderLookup.Provider provider) {
         JarDimData data = new JarDimData();
-        data.enteredFrom = ANCodecs.decode(ENTERED_FROM_CODEC, compoundTag.getCompound("enteredFrom"));
+        data.enteredFrom = new HashMap<>(ANCodecs.decode(ENTERED_FROM_CODEC, compoundTag.getCompound("enteredFrom")));
         return data;
     }
 

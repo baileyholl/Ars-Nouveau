@@ -14,7 +14,6 @@ import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
 import net.commoble.infiniverse.internal.DimensionManager;
 import net.minecraft.core.*;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -27,6 +26,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -49,7 +49,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEntity {
+public class PlanariumTile extends ModdedTile implements ITickable, Nameable, GeoBlockEntity {
 
     public static DimManager dimManager = new DimManager();
     public ResourceKey<Level> key;
@@ -115,7 +115,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
             tag.putString("key", key.location().toString());
         }
         if (name != null) {
-            tag.putString("name", Component.Serializer.toJson(this.name, registries));
+            tag.putString("name", name.getString());
         }
     }
 
@@ -125,7 +125,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
         if (tag.contains("key"))
             key = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("key")));
         if (tag.contains("name")) {
-            this.name = parseCustomNameSafe(tag.getString("name"), registries);
+            this.name = Component.literal(tag.getString("name"));
         }
     }
 
@@ -163,11 +163,15 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
         this.name = componentInput.get(DataComponents.CUSTOM_NAME);
     }
 
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-        components.set(DataComponents.CUSTOM_NAME, this.name);
+    public void setName(Component name) {
+        this.name = name;
     }
+
+    @Override
+    public @Nullable Component getCustomName() {
+        return name;
+    }
+
 
     public IResolveListener onResolve() {
         return new IResolveListener() {
@@ -218,6 +222,11 @@ public class PlanariumTile extends ModdedTile implements ITickable, GeoBlockEnti
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    public Component getName() {
+        return name;
     }
 
     public static class DimManager {

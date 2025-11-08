@@ -1794,6 +1794,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
         add("ars_nouveau.learn_glyph", "Unlocked %s");
         add("ars_nouveau.already_learned", "You have already learned this Glyph.");
+        add("block.ars_nouveau.planarium", "Planarium");
     }
 
     public void addCategory(String key, String value) {

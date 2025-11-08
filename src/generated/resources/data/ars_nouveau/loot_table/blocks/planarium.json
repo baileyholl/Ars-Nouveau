@@ -12,11 +12,11 @@
               "source": "block_entity"
             }
           ],
-          "name": "ars_nouveau:dim_block"
+          "name": "ars_nouveau:planarium"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ars_nouveau:blocks/dim_block"
+  "random_sequence": "ars_nouveau:blocks/planarium"
 }

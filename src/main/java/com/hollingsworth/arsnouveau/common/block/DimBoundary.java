@@ -18,7 +18,7 @@ import java.util.HashSet;
 public class DimBoundary extends ModBlock {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(2, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK));
+        super(BlockBehaviour.Properties.of().strength(0.7f, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK));
     }
 
     @Override

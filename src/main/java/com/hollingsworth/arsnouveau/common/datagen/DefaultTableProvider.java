@@ -282,11 +282,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SOURCESTONE_GRATE);
             registerDropSelf(BlockRegistry.SOURCE_LAMP);
             registerDropSelf(BlockRegistry.REPOSITORY_CONTROLLER);
-            LootPool.Builder dimBlockBuilder = LootPool.lootPool()
-                    .setRolls(ConstantValue.exactly(1))
-                    .add(LootItem.lootTableItem(BlockRegistry.PLANARIUM)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                    );
+            LootPool.Builder dimBlockBuilder = LootPool.lootPool().add(LootItem.lootTableItem(BlockRegistry.PLANARIUM).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
             add(BlockRegistry.PLANARIUM.get(), LootTable.lootTable().withPool(dimBlockBuilder));
             registerDropSelf(BlockRegistry.DECOR_BLOSSOM);
         }

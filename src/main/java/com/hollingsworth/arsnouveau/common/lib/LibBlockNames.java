@@ -180,7 +180,7 @@ public class LibBlockNames {
     public static final String REPOSITORY_CATALOG = "repository_controller";
     public static final String DECOR_BLOSSOM = "decor_blossom";
 
-    public static final String PLANARIUM = "dim_block";
+    public static final String PLANARIUM = "planarium";
     public static final String DIM_BOUNDARY = "dim_boundary";
     public static final String PLANARIUM_PROJECTOR = "planarium_projector";
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
