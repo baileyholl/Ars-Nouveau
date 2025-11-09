@@ -70,6 +70,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
         if (!state.canBeReplaced() && !(tile instanceof ILightable || state.getBlock() instanceof ILightable || tile instanceof SignBlockEntity)) {
             Direction direction = rayTraceResult.getDirection();
             pos = pos.relative(direction);
+            state = world.getBlockState(pos);
             rayTraceResult = new BlockHitResult(rayTraceResult.getLocation().relative(direction, 1), direction, pos, rayTraceResult.isInside());
         }
 

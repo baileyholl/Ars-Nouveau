@@ -15,7 +15,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -61,15 +60,17 @@ public class EffectPrestidigitation extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
-        if (!world.getBlockState(pos).canBeReplaced()) {
+        var state = world.getBlockState(pos);
+        if (!state.canBeReplaced()) {
             pos = pos.relative(rayTraceResult.getDirection());
-            Direction direction = rayTraceResult.getDirection();
-            pos = pos.relative(direction);
+            state = world.getBlockState(pos);
+            if (!state.canBeReplaced()) {
+                return;
+            }
         }
 
         Player player = getPlayer(shooter, (ServerLevel) world);
-        if (world.getBlockState(pos).canBeReplaced()
-                && world.isUnobstructed(BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(player))
+        if (world.isUnobstructed(BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(player))
                 && world.isInWorldBounds(pos)) {
 
             BlockState lightBlockState = BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);
