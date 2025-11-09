@@ -138,6 +138,7 @@
     "92aa3ea9-830b-448c-a29f-ec23323d7aa3",
     "706e34e9-e166-4de1-9a0e-528bee0703b3",
     "2f415897-3318-46fb-bf97-1070201d7386",
+    "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a",
     "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a"
   ],
   "starbuncleAdoptions": [
@@ -920,6 +921,12 @@
       "adopter": "Jarva",
       "color": "brown",
       "bio": "This Starbuncle is a glitch in the matrix."
+    },
+    {
+      "name": "Badbuncle",
+      "adopter": "Starbuncle.java",
+      "color": "green",
+      "bio": "Don't merge this buncle"
     }
   ]
 }
