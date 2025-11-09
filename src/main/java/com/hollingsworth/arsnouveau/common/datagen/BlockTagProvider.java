@@ -144,7 +144,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.ALTERATION_TABLE.get(),
                 BlockRegistry.ITEM_DETECTOR.get(),
                 BlockRegistry.REPOSITORY.get(),
-                BlockRegistry.REPOSITORY_CONTROLLER.get()
+                BlockRegistry.REPOSITORY_CONTROLLER.get(),
+                BlockRegistry.PLANARIUM.get()
         );
         this.tag(BlockTags.MINEABLE_WITH_HOE).add(
                 BlockRegistry.CASCADING_LEAVE.get(),
@@ -287,7 +288,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.LIGHT_BLOCK.get(),
                 BlockRegistry.T_LIGHT_BLOCK.get(),
                 BlockRegistry.GHOST_WEAVE.get(),
-                BlockRegistry.SKY_WEAVE.get()
+                BlockRegistry.SKY_WEAVE.get(),
+                BlockRegistry.PLANARIUM.get()
         );
 
         this.tag(SUMMON_BED).add(
