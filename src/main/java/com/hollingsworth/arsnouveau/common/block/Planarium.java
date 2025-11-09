@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -35,9 +36,9 @@ public class Planarium extends TickableModBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof PlanariumTile tile) {
+        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof PlanariumTile tile && hand == InteractionHand.MAIN_HAND) {
             if (tile.key == null) {
-                tile.setDimension("test12", serverLevel);
+                player.sendSystemMessage(Component.translatable("ars_nouveau.planarium.set_name"));
             }
             if (player.isCrouching()) {
                 tile.sendEntityTo(player);

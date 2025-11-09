@@ -288,7 +288,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.LIGHT_BLOCK.get(),
                 BlockRegistry.T_LIGHT_BLOCK.get(),
                 BlockRegistry.GHOST_WEAVE.get(),
-                BlockRegistry.SKY_WEAVE.get()
+                BlockRegistry.SKY_WEAVE.get(),
+                BlockRegistry.PLANARIUM.get()
         );
 
         this.tag(SUMMON_BED).add(

@@ -1179,6 +1179,7 @@
   "ars_nouveau.perk_desc.thread_whirlisprig": "Increases the saturation of consumed food by 30%% each level.",
   "ars_nouveau.perk_desc.thread_wixie": "Increases the duration of potions by 15%% each level.",
   "ars_nouveau.perks.duplicated": "You have equipped armor that contains a perk you already have. You will only receive the effect of the perk once.",
+  "ars_nouveau.planarium.set_name": "Cast Name or set a name in an Anvil to create a dimension.",
   "ars_nouveau.position": "X: %1$d Y: %2$d Z: %3$d",
   "ars_nouveau.potion_crafting": "Potion Crafting",
   "ars_nouveau.potion_diffuser.bind_to_jar": "You must bind the diffuser to a Potion Jar to use it.",
