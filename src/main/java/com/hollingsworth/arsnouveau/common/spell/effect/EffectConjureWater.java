@@ -76,8 +76,16 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), direction, pos1, false
             ), world, shooter, spellContext, resolver);
-        } else if (world.getBlockState(pos1.relative(direction)).canBeReplaced(Fluids.WATER)) {
-            pos1 = pos1.relative(direction);
+        } else {
+            var state = world.getBlockState(pos1);
+            if (!state.canBeReplaced(Fluids.WATER)) {
+                pos1 = pos1.relative(direction);
+                state = world.getBlockState(pos1);
+                if (!state.canBeReplaced(Fluids.WATER)) {
+                    return;
+                }
+            }
+
             world.setBlockAndUpdate(pos1, Blocks.WATER.defaultBlockState());
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), direction, pos1, false

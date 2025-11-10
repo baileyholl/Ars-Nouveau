@@ -18,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -41,14 +40,22 @@ public class EffectPhantomBlock extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
-            pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
             if (!world.isInWorldBounds(pos))
                 continue;
+
+            var state = world.getBlockState(pos);
+            if (!state.canBeReplaced()) {
+                pos = pos.relative(rayTraceResult.getDirection());
+                state = world.getBlockState(pos);
+                if (!state.canBeReplaced()) {
+                    continue;
+                }
+            }
+
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
                 continue;
-            BlockState state = world.getBlockState(pos);
-            if (state.canBeReplaced() && world.isUnobstructed(BlockRegistry.MAGE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(fakePlayer))) {
 
+            if (world.isUnobstructed(BlockRegistry.MAGE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(fakePlayer))) {
                 world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.get().defaultBlockState().setValue(MageBlock.TEMPORARY, !spellStats.hasBuff(AugmentAmplify.INSTANCE)));
                 if (world.getBlockEntity(pos) instanceof MageBlockTile tile) {
                     tile.setColor(spellContext.getParticleTimeline(ParticleTimelineRegistry.MAGEBLOCK_TIMELINE.get()).getColor());
