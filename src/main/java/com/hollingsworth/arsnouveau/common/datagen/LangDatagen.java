@@ -861,6 +861,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.sounds.test", "Test");
         add("ars_nouveau.gui.settings", "Settings and Rewards");
         add("ars_nouveau.settings.title", "Settings");
+        add("ars_nouveau.settings.allies", "Allies");
+        add("ars_nouveau.settings.add_ally", "Add Ally");
         add("ars_nouveau.dynamic_lights.button_on", "Dynamic lights are turned on.  This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine.");
         add("ars_nouveau.dynamic_lights.button_off", "Dynamic lights are turned off.");
         add("block.ars_nouveau.orange_sbed", "Orange Magebloom Bed");
