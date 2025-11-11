@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -32,6 +33,14 @@ public class FamOwnerHurtTargetGoal extends TargetGoal {
             int i = livingentity.getLastHurtMobTimestamp();
             return i != this.timestamp && this.canAttack(this.ownerLastHurt, TargetingConditions.DEFAULT) && this.familiar.wantsToAttack(this.ownerLastHurt, livingentity);
         }
+    }
+
+    @Override
+    protected boolean canAttack(@Nullable LivingEntity potentialTarget, TargetingConditions targetPredicate) {
+        if (potentialTarget == null) {
+            return false;
+        }
+        return !potentialTarget.getUUID().equals(familiar.getOwnerID()) && super.canAttack(potentialTarget, targetPredicate);
     }
 
     @Override
