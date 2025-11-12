@@ -9,7 +9,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -22,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -36,9 +41,7 @@ public class MagicFire extends BaseFireBlock {
     public static final BooleanProperty SOUTH = PipeBlock.SOUTH;
     public static final BooleanProperty WEST = PipeBlock.WEST;
     public static final BooleanProperty UP = PipeBlock.UP;
-    private static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((p_53467_) -> {
-        return p_53467_.getKey() != Direction.DOWN;
-    }).collect(Util.toMap());
+    private static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((p_53467_) -> p_53467_.getKey() != Direction.DOWN).collect(Util.toMap());
     private static final VoxelShape UP_AABB = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape WEST_AABB = Block.box(0.0D, 0.0D, 0.0D, 1.0D, 16.0D, 16.0D);
     private static final VoxelShape EAST_AABB = Block.box(15.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -53,13 +56,11 @@ public class MagicFire extends BaseFireBlock {
     public MagicFire(Properties pProperties, float pFireDamage) {
         super(pProperties, pFireDamage);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(NORTH, Boolean.FALSE).setValue(EAST, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(UP, Boolean.FALSE));
-        this.shapesCache = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().filter((p_53497_) -> {
-            return p_53497_.getValue(AGE) == 0;
-        }).collect(Collectors.toMap(Function.identity(), MagicFire::calculateShape)));
+        this.shapesCache = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().filter((p_53497_) -> p_53497_.getValue(AGE) == 0).collect(Collectors.toMap(Function.identity(), MagicFire::calculateShape)));
     }
 
     @Override
-    protected MapCodec<? extends BaseFireBlock> codec() {
+    protected @NotNull MapCodec<? extends BaseFireBlock> codec() {
         return CODEC;
     }
 
@@ -94,20 +95,20 @@ public class MagicFire extends BaseFireBlock {
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific direction passed in.
      */
-    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState pState, @NotNull Direction pFacing, @NotNull BlockState pFacingState, @NotNull LevelAccessor pLevel, @NotNull BlockPos pCurrentPos, @NotNull BlockPos pFacingPos) {
         return this.canSurvive(pState, pLevel, pCurrentPos) ? this.getStateWithAge(pLevel, pCurrentPos, pState.getValue(AGE)) : Blocks.AIR.defaultBlockState();
     }
 
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public @NotNull VoxelShape getShape(BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return this.shapesCache.get(pState.setValue(AGE, 0));
     }
 
     @Override
-    protected boolean canBurn(BlockState pState) {
+    protected boolean canBurn(@NotNull BlockState pState) {
         return false;
     }
 
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @NotNull BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.getStateForPlacement(pContext.getLevel(), pContext.getClickedPos());
     }
 
@@ -120,7 +121,7 @@ public class MagicFire extends BaseFireBlock {
             for (Direction direction : Direction.values()) {
                 BooleanProperty booleanproperty = PROPERTY_BY_DIRECTION.get(direction);
                 if (booleanproperty != null) {
-                    blockstate1 = blockstate1.setValue(booleanproperty, Boolean.valueOf(this.canCatchFire(pLevel, pPos.relative(direction), direction.getOpposite())));
+                    blockstate1 = blockstate1.setValue(booleanproperty, this.canCatchFire(pLevel, pPos.relative(direction), direction.getOpposite()));
                 }
             }
 
@@ -130,24 +131,23 @@ public class MagicFire extends BaseFireBlock {
         }
     }
 
-    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+    public boolean canSurvive(@NotNull BlockState pState, LevelReader pLevel, BlockPos pPos) {
         BlockPos blockpos = pPos.below();
         return pLevel.getBlockState(blockpos).isFaceSturdy(pLevel, blockpos, Direction.UP) || this.isValidFireLocation(pLevel, pPos);
     }
 
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+    public void tick(@NotNull BlockState pState, ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
         pLevel.scheduleTick(pPos, this, getFireTickDelay(pLevel.random));
         if (pLevel.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             BlockState blockstate = pLevel.getBlockState(pPos.below());
             boolean fireSourceBelow = blockstate.isFireSource(pLevel, pPos, Direction.UP);
             int age = pState.getValue(AGE);
-            if (!fireSourceBelow && pLevel.isRaining() && this.isNearRain(pLevel, pPos) && pRandom.nextFloat() < 0.2F + (float) age * 0.03F) {
-                pLevel.removeBlock(pPos, false);
+            if (!fireSourceBelow && pLevel.isRaining() && this.isNearRain(pLevel, pPos) && pRandom.nextFloat() < 0.2F + (float) age * 0.064F) {
                 pLevel.removeBlock(pPos, false);
             } else {
                 int j = Math.min(MAX_AGE, age + pRandom.nextInt(3) / 2);
                 if (age != j) {
-                    pState = pState.setValue(AGE, Integer.valueOf(j));
+                    pState = pState.setValue(AGE, j);
                     pLevel.setBlock(pPos, pState, 4);
                 }
 
@@ -161,7 +161,7 @@ public class MagicFire extends BaseFireBlock {
                         return;
                     }
 
-                    if (age == MAX_AGE && pRandom.nextInt(4) == 0 && !this.canCatchFire(pLevel, pPos.below(), Direction.UP)) {
+                    if (age == MAX_AGE && pRandom.nextInt(2) == 0 && !this.canCatchFire(pLevel, pPos.below(), Direction.UP)) {
                         pLevel.removeBlock(pPos, false);
                         return;
                     }
@@ -180,7 +180,7 @@ public class MagicFire extends BaseFireBlock {
         return blockstate.setValue(AGE, pAge);
     }
 
-    public static BlockState getState(BlockGetter pReader, BlockPos pPos) {
+    public static @NotNull BlockState getState(BlockGetter pReader, BlockPos pPos) {
         return (BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(pReader, pPos));
     }
 
@@ -195,7 +195,7 @@ public class MagicFire extends BaseFireBlock {
         return false;
     }
 
-    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+    public void onPlace(@NotNull BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pOldState, boolean pIsMoving) {
         super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
         pLevel.scheduleTick(pPos, this, getFireTickDelay(pLevel.random));
     }
@@ -204,7 +204,7 @@ public class MagicFire extends BaseFireBlock {
      * Gets the delay before this block ticks again (without counting random ticks)
      */
     private static int getFireTickDelay(RandomSource pRandom) {
-        return 30 + pRandom.nextInt(10);
+        return 15 + pRandom.nextInt(10);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
