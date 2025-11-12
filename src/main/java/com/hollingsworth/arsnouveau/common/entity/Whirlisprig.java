@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.LevelEntityMap;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
@@ -26,6 +27,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -60,13 +62,21 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
-public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
+public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable, IDecoratable {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
     public static LevelEntityMap WHIRLI_MAP = new LevelEntityMap();
@@ -78,6 +88,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     public boolean droppingShards; // Strictly used by non-tamed spawns for giving shards
     public static final EntityDataAccessor<Integer> MOOD_SCORE = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<ItemStack> COSMETIC = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.ITEM_STACK);
+
     public int diversityScore;
     public BlockPos flowerPos;
     public int timeSinceGen;
@@ -108,7 +120,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (player.getCommandSenderWorld().isClientSide)
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
@@ -124,6 +136,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     public void fromCharmData(PersistentFamiliarData data) {
         this.setCustomName(data.name());
         this.entityData.set(COLOR, data.color());
+        this.entityData.set(COSMETIC, data.cosmetic());
     }
 
     @Override
@@ -147,7 +160,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
+    public @NotNull InteractionResult interactAt(@NotNull Player player, @NotNull Vec3 vec, @NotNull InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !this.entityData.get(TAMED))
             return InteractionResult.PASS;
 
@@ -233,7 +246,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public void setRemoved(RemovalReason pRemovalReason) {
+    public void setRemoved(@NotNull RemovalReason pRemovalReason) {
         super.setRemoved(pRemovalReason);
         Whirlisprig.WHIRLI_MAP.removeEntity(level, this.getUUID());
     }
@@ -304,12 +317,12 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
@@ -380,7 +393,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    protected @NotNull PathNavigation createNavigation(Level world) {
+    protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
@@ -389,7 +402,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("summoner_x"))
             flowerPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
@@ -402,6 +415,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         }
         this.entityData.set(COLOR, tag.getString("color"));
         this.timeSinceGen = tag.getInt("genTime");
+        this.entityData.set(COSMETIC, ItemStack.parseOptional(this.level.registryAccess(), tag.getCompound("cosmetic")));
     }
 
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
@@ -411,7 +425,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (flowerPos != null) {
             tag.putInt("summoner_x", flowerPos.getX());
@@ -425,15 +439,19 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             tag.putString("color", this.entityData.get(COLOR));
         }
         tag.putInt("genTime", timeSinceGen);
-
+        if (!this.entityData.get(COSMETIC).isEmpty()) {
+            Tag cosmeticTag = this.entityData.get(COSMETIC).save(level.registryAccess());
+            tag.put("cosmetic", cosmeticTag);
+        }
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(MOOD_SCORE, 0);
         pBuilder.define(TAMED, false);
         pBuilder.define(COLOR, "summer");
+        pBuilder.define(COSMETIC, ItemStack.EMPTY);
     }
 
     @Override
@@ -460,5 +478,15 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         }
         String finalColor = color;
         return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix("textures/entity/whirlisprig_" + finalColor + ".png"));
+    }
+
+    @Override
+    public @NotNull ItemStack getCosmeticItem() {
+        return this.entityData.get(COSMETIC);
+    }
+
+    @Override
+    public void setCosmeticItem(ItemStack cosmeticItem) {
+        this.entityData.set(COSMETIC, cosmeticItem);
     }
 }

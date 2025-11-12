@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -17,6 +18,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -40,10 +42,15 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -51,9 +58,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IAnimationListener, IDispellable, ICharmSerializable {
+public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IAnimationListener, IDispellable, ICharmSerializable, IDecoratable {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<ItemStack> COSMETIC = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.ITEM_STACK);
 
     public BlockPos cauldronPos;
     public int inventoryBackoff;
@@ -79,7 +87,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
@@ -113,7 +121,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     public static String[] COLORS = {"white", "green", "blue", "black", "red"};
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
@@ -150,9 +158,10 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(COLOR, "blue");
+        pBuilder.define(COSMETIC, ItemStack.EMPTY);
     }
 
     @Override
@@ -161,7 +170,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    protected PathNavigation createNavigation(Level world) {
+    protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
@@ -176,17 +185,17 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("summoner_x"))
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
         if (tag.contains("color"))
             this.entityData.set(COLOR, tag.getString("color"));
-
+        this.entityData.set(COSMETIC, ItemStack.parseOptional(this.level.registryAccess(), tag.getCompound("cosmetic")));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (cauldronPos != null) {
             tag.putInt("summoner_x", cauldronPos.getX());
@@ -195,6 +204,10 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         }
         if (this.entityData.get(COLOR) != null) {
             tag.putString("color", this.entityData.get(COLOR));
+        }
+        if (!this.entityData.get(COSMETIC).isEmpty()) {
+            Tag cosmeticTag = this.entityData.get(COSMETIC).save(level.registryAccess());
+            tag.put("cosmetic", cosmeticTag);
         }
     }
 
@@ -210,7 +223,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
@@ -236,6 +249,16 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
 
     public static Map<String, ResourceLocation> TEXTURES = new HashMap<>();
 
+    @Override
+    public @NotNull ItemStack getCosmeticItem() {
+        return this.entityData.get(COSMETIC);
+    }
+
+    @Override
+    public void setCosmeticItem(ItemStack cosmeticItem) {
+        this.entityData.set(COSMETIC, cosmeticItem);
+    }
+
     public ResourceLocation getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
@@ -247,6 +270,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
     @Override
     public void fromCharmData(PersistentFamiliarData data) {
         this.entityData.set(COLOR, data.color());
+        this.entityData.set(COSMETIC, data.cosmetic());
         setCustomName(data.name());
     }
 
