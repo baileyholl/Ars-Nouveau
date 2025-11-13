@@ -12,22 +12,24 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
 
-public class BookwyrmRenderer extends GeoEntityRenderer<EntityBookwyrm> {
+public class BookwyrmRenderer extends DecoratableEntityRenderer<EntityBookwyrm> {
 
     public static ResourceLocation BLUE = ArsNouveau.prefix("textures/entity/book_wyrm_blue.png");
 
     public BookwyrmRenderer(EntityRendererProvider.Context manager) {
         super(manager, new BookwyrmModel<>());
+        scaleWidth = 0.6f;
+        scaleHeight = 0.6f;
     }
-
 
     @Override
     public void renderRecursively(PoseStack stack, EntityBookwyrm animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferIn, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+        super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         if (bone.getName().equals("item")) {
             stack.pushPose();
             RenderUtil.translateToPivotPoint(stack, bone);
@@ -37,19 +39,10 @@ public class BookwyrmRenderer extends GeoEntityRenderer<EntityBookwyrm> {
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, bufferIn, animatable.level, (int) animatable.getOnPos().asLong());
             stack.popPose();
         }
-        super.renderRecursively(stack, animatable, bone, renderType, bufferIn, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     @Override
-    public void render(EntityBookwyrm entity, float entityYaw, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
-        stack.pushPose();
-        stack.scale(0.6f, 0.6f, 0.6f);
-        super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
-        stack.popPose();
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(EntityBookwyrm animatable) {
+    public @NotNull ResourceLocation getTextureLocation(EntityBookwyrm animatable) {
         return animatable.getTexture();
     }
 }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -30,7 +31,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -55,12 +60,17 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, ICharmSerializable {
+public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, ICharmSerializable, IDecoratable {
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<ItemStack> COSMETIC = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
 
     public BlockPos lecternPos;
     public int backoffTicks;
@@ -81,7 +91,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide)
             return InteractionResult.SUCCESS;
 
@@ -132,7 +142,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public boolean canCollideWith(Entity pEntity) {
+    public boolean canCollideWith(@NotNull Entity pEntity) {
         if (pEntity instanceof Player)
             return false;
         return super.canCollideWith(pEntity);
@@ -155,7 +165,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    protected PathNavigation createNavigation(Level world) {
+    protected @NotNull PathNavigation createNavigation(@NotNull Level world) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
@@ -208,7 +218,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public void remove(RemovalReason pReason) {
+    public void remove(@NotNull RemovalReason pReason) {
         super.remove(pReason);
         StorageLecternTile tile = getTile();
         if (tile != null) {
@@ -217,12 +227,12 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_BOOKWYRM_TYPE.get();
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (lecternPos != null) {
             tag.putLong("lectern", lecternPos.asLong());
@@ -234,10 +244,14 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         }
         tag.putInt("backoff", backoffTicks);
         tag.putString("color", this.entityData.get(COLOR));
+        if (!this.entityData.get(COSMETIC).isEmpty()) {
+            Tag cosmeticTag = this.entityData.get(COSMETIC).save(level.registryAccess());
+            tag.put("cosmetic", cosmeticTag);
+        }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("lectern")) {
             lecternPos = BlockPos.of(tag.getLong("lectern"));
@@ -247,7 +261,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         this.backoffTicks = tag.getInt("backoff");
         if (tag.contains("color"))
             this.entityData.set(COLOR, tag.getString("color"));
-
+        this.entityData.set(COSMETIC, ItemStack.parseOptional(this.level.registryAccess(), tag.getCompound("cosmetic")));
     }
 
 
@@ -289,7 +303,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
@@ -305,10 +319,12 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(HELD_ITEM, ItemStack.EMPTY);
         pBuilder.define(COLOR, "blue");
+        pBuilder.define(COSMETIC, ItemStack.EMPTY);
+
     }
 
     public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
@@ -341,5 +357,15 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public boolean canUsePortal(boolean allowPassengers) {
         return false;
+    }
+
+    @Override
+    public @NotNull ItemStack getCosmeticItem() {
+        return this.entityData.get(COSMETIC);
+    }
+
+    @Override
+    public void setCosmeticItem(ItemStack cosmeticItem) {
+        this.entityData.set(COSMETIC, cosmeticItem);
     }
 }
