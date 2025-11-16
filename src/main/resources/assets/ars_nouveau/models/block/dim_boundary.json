@@ -1,6 +1,5 @@
 {
-  "parent": "block/cube_all",
   "textures": {
-    "particle": "minecraft:block/air"
+    "particle": "ars_nouveau:block/archwood_planks"
   }
 }
