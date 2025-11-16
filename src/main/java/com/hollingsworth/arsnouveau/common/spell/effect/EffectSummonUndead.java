@@ -58,14 +58,14 @@ public class EffectSummonUndead extends AbstractEffect {
                     weapon = Items.DIAMOND_SWORD.getDefaultInstance();
                 }
             }
-            SummonSkeleton undeadentity = new SummonSkeleton(world, shooter, weapon);
-            undeadentity.moveTo(blockpos, 0.0F, 0.0F);
-            undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
-            undeadentity.setOwner(shooter);
-            undeadentity.setLimitedLife(ticks);
-            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadentity);
+            SummonSkeleton undeadEntity = new SummonSkeleton(world, shooter, weapon);
+            undeadEntity.moveTo(blockpos, 0.0F, 0.0F);
+            undeadEntity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
+            undeadEntity.setOwner(shooter);
+            undeadEntity.setLimitedLife(ticks);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadEntity);
         }
-        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, ticks));
+        applySummoningSickness(shooter, ticks);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,7 +41,7 @@ public class EffectSummonSteed extends AbstractEffect {
         if (ticks <= 0)
             ticks = 20; //leave at least one second of life, since summon sick doesn't depend on it and short life horses can be useful (?)
         Vec3 hit = rayTraceResult.getLocation();
-        for (int i = 0; i < 1 + Math.round(spellStats.getAoeMultiplier()); i++) {
+        for (int i = 0; i < 1 + spellStats.getBuffCount(AugmentSplit.INSTANCE); i++) {
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE.get(), world);
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;
@@ -74,21 +75,18 @@ public class EffectSummonSteed extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(
-                AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentAOE.INSTANCE
-        );
+        return getSummonAugments();
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
-        map.put(AugmentAOE.INSTANCE, "Increases the number of horses summoned.");
     }
 
     @Override
     public String getBookDescription() {
-        return "Summons a saddled horse that will vanish after a few minutes. AOE will increase the amount summoned, while Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
+        return "Summons a saddled horse that will vanish after a few minutes. Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
     }
 
     @NotNull

@@ -3,10 +3,20 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.WolfVariants;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -25,19 +35,27 @@ public class EffectSummonWolves extends AbstractEffect {
 
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (!canSummon(shooter))
+        if (!canSummon(shooter) || shooter == null)
             return;
         Vec3 hit = rayTraceResult.getLocation();
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         if (ticks <= 0) return;
-        for (int i = 0; i < 2; i++) {
+        Holder<Biome> holder = world.getBiome(BlockPos.containing(rayTraceResult.getLocation()));
+        var wolfVariant = WolfVariants.getSpawnVariant(world.registryAccess(), holder);
+
+        for (int i = 0; i < 2 + spellStats.getBuffCount(AugmentSplit.INSTANCE); i++) {
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF.get(), world);
             wolf.ticksLeft = ticks;
+            wolf.setVariant(wolfVariant);
             wolf.setPos(hit.x(), hit.y(), hit.z());
-            wolf.setTarget(shooter.getLastHurtMob());
+            wolf.setTarget(shooter.getLastHurtMob() == null ? shooter.getLastHurtByMob() : shooter.getLastHurtMob());
             wolf.setAggressive(true);
             wolf.setTame(true, false);
             wolf.tame((Player) shooter);
+            if (spellStats.getAmpMultiplier() > 0) {
+                wolf.setBodyArmorItem(Items.WOLF_ARMOR.getDefaultInstance());
+                wolf.setDropChance(EquipmentSlot.BODY, 0.0F);
+            }
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, wolf);
         }
         applySummoningSickness(shooter, ticks);
@@ -59,7 +77,7 @@ public class EffectSummonWolves extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // SummonEvent captures augments, but no uses of that field were found
-        return getSummonAugments();
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE);
     }
 
     @Override

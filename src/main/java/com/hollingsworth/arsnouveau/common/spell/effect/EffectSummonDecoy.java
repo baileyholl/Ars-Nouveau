@@ -30,6 +30,8 @@ public class EffectSummonDecoy extends AbstractEffect {
             dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));
             dummy.setPos(pos.x, pos.y + 1, pos.z);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, dummy);
+            // If the dummy failed to summon, don't try to aggro mobs to it
+            if (!dummy.isAddedToLevel()) return;
             world.getEntitiesOfClass(Mob.class, dummy.getBoundingBox().inflate(20, 10, 20)).forEach(l -> l.setTarget(dummy));
             applySummoningSickness(shooter, 1);
         }

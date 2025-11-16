@@ -63,13 +63,13 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ALLY_VEX.get();
     }
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType pSpawnType, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType pSpawnType, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnGroupData) {
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
         this.populateDefaultEquipmentEnchantments(worldIn, getRandom(), difficultyIn);
         return super.finalizeSpawn(worldIn, difficultyIn, pSpawnType, pSpawnGroupData);
@@ -79,7 +79,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
      * Gives armor or weapon for entity based on given DifficultyInstance
      */
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource source, DifficultyInstance difficulty) {
+    protected void populateDefaultEquipmentSlots(@NotNull RandomSource source, @NotNull DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
         this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
     }
@@ -100,7 +100,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
         ));
     }
 
-    protected PathNavigation createNavigation(Level worldIn) {
+    protected @NotNull PathNavigation createNavigation(@NotNull Level worldIn) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
@@ -210,7 +210,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("BoundX")) {
             this.boundOrigin = new BlockPos(compound.getInt("BoundX"), compound.getInt("BoundY"), compound.getInt("BoundZ"));
@@ -260,7 +260,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
     }
 
     @Override
-    public boolean isAlliedTo(Entity pEntity) {
+    public boolean isAlliedTo(@NotNull Entity pEntity) {
         if (this.getOwnerAlt() != null) {
             LivingEntity livingentity = this.getOwnerAlt();
             return pEntity == livingentity || livingentity.isAlliedTo(pEntity);
@@ -270,13 +270,13 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
 
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UNIQUE_ID, Optional.empty());
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {
             compound.putInt("BoundX", this.boundOrigin.getX());
@@ -297,7 +297,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
 
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         onSummonDeath(level, cause, false);
     }
@@ -324,12 +324,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
 
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
 
     }
 
     @Override
-    protected void dropAllDeathLoot(ServerLevel p_level, DamageSource damageSource) {
+    protected void dropAllDeathLoot(@NotNull ServerLevel p_level, @NotNull DamageSource damageSource) {
 
     }
 
@@ -344,7 +344,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
     }
 
     @Override
-    protected void dropFromLootTable(DamageSource damageSource, boolean attackedRecently) {
+    protected void dropFromLootTable(@NotNull DamageSource damageSource, boolean attackedRecently) {
 
     }
 

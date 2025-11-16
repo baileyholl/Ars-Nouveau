@@ -40,12 +40,12 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player p_230254_1_, @NotNull InteractionHand p_230254_2_) {
         return super.mobInteract(p_230254_1_, p_230254_2_);
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
@@ -76,18 +76,18 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    public Level level() {
+    public @NotNull Level level() {
         return super.level();
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         onSummonDeath(level, cause, false);
     }
 
     @Override
-    public boolean canTakeItem(ItemStack itemstackIn) {
+    public boolean canTakeItem(@NotNull ItemStack itemstackIn) {
         return false;
     }
 
@@ -105,11 +105,11 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    public void openCustomInventoryScreen(Player playerEntity) {
+    public void openCustomInventoryScreen(@NotNull Player playerEntity) {
     }
 
     @Override
-    public boolean canMate(Animal otherAnimal) {
+    public boolean canMate(@NotNull Animal otherAnimal) {
         return false;
     }
 
@@ -119,19 +119,19 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    public boolean isFood(ItemStack stack) {
+    public boolean isFood(@NotNull ItemStack stack) {
         return false;
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.ticksLeft = compound.getInt("left");
 
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
         writeOwner(compound);

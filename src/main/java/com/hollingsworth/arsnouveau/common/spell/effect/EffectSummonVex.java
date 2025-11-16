@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityAllyVex;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -35,7 +36,7 @@ public class EffectSummonVex extends AbstractEffect {
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         BlockPos pos = BlockPos.containing(vector3d);
         if (ticks <= 0) return;
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3 + spellStats.getBuffCount(AugmentSplit.INSTANCE); ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
             vexentity.moveTo(blockpos, 0.0F, 0.0F);
@@ -45,7 +46,7 @@ public class EffectSummonVex extends AbstractEffect {
             vexentity.setLimitedLife(ticks);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, vexentity);
         }
-        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, ticks));
+        applySummoningSickness(shooter, ticks);
     }
 
 

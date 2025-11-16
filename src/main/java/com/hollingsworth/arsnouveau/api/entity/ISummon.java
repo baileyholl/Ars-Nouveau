@@ -48,4 +48,8 @@ public interface ISummon extends OwnableEntity {
     default LivingEntity getOwnerAlt() {
         return getOwner();
     }
+
+    default float getManaReserve(){
+        return 50f;
+    };
 }

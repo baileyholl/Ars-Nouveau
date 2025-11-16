@@ -17,6 +17,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -45,13 +46,13 @@ public class SummonWolf extends Wolf implements ISummon, IDispellable {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonWolf.class, EntityDataSerializers.OPTIONAL_UUID);
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         onSummonDeath(level, cause, false);
     }
@@ -68,24 +69,24 @@ public class SummonWolf extends Wolf implements ISummon, IDispellable {
     }
 
     @Override
-    public boolean canMate(Animal pOtherAnimal) {
+    public boolean canMate(@NotNull Animal pOtherAnimal) {
         return false;
     }
 
     @Override
-    public boolean isFood(ItemStack stack) {
+    public boolean isFood(@NotNull ItemStack stack) {
         return false;
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.ticksLeft = compound.getInt("left");
         this.isWildenSummon = compound.getBoolean("wildenSummon");
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
         compound.putBoolean("wildenSummon", isWildenSummon);
@@ -107,7 +108,7 @@ public class SummonWolf extends Wolf implements ISummon, IDispellable {
     }
 
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     @Override
     public UUID getOwnerUUID() {
         return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
@@ -116,5 +117,10 @@ public class SummonWolf extends Wolf implements ISummon, IDispellable {
     @Override
     public void setOwnerID(UUID uuid) {
         this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
+    }
+
+    @Override
+    public float getManaReserve() {
+        return hasArmor() ? 100f : 50f;
     }
 }
