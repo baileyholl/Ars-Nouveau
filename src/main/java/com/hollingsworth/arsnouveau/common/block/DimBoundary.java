@@ -1,10 +1,16 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.common.util.WorldUtil;
 import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
@@ -12,10 +18,12 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 
-public class DimBoundary extends ModBlock {
+public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
         super(BlockBehaviour.Properties.of().strength(0.7f, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK));
@@ -51,7 +59,30 @@ public class DimBoundary extends ModBlock {
             spawnlevel = serverLevel.getServer().overworld();
             respawnPos = serverLevel.getSharedSpawnPos();
         }
-
         player.teleportTo(spawnlevel, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), new HashSet<>(), player.getYRot(), player.getXRot());
+    }
+
+    @Override
+    public Result onFirstConnection(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        Level level = playerEntity.level;
+        if (storedPos == null
+                || !(level instanceof ServerLevel serverLevel)
+                || !level.dimension().equals(storedPos.dimension())
+                || !WorldUtil.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+            return Result.FAIL;
+        }
+        JarDimData dimData = JarDimData.from(serverLevel);
+        if (dimData == null) {
+            return Result.FAIL;
+        }
+        AABB innerBox = new AABB(0, 0, 0, 31, 30, 31);
+        BlockPos pos = storedPos.pos();
+        if (!innerBox.contains(pos.getX(), pos.getY(), pos.getZ())) {
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.jar_spawn_out_of_bounds"));
+        } else {
+            dimData.setSpawnPos(storedPos.pos());
+            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.set_jar_spawn"));
+        }
+        return Result.SUCCESS;
     }
 }

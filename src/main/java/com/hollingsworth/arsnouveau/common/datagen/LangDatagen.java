@@ -1796,6 +1796,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.already_learned", "You have already learned this Glyph.");
         add("block.ars_nouveau.planarium", "Planarium");
         add("ars_nouveau.planarium.set_name", "Cast Name or set a name in an Anvil to create a dimension.");
+        add("ars_nouveau.set_jar_spawn", "Jar spawn point set.");
+        add("block.ars_nouveau.dim_boundary", "Dimension Boundary");
+        add("biome.ars_nouveau.jar", "Jar");
+        add("ars_nouveau.jar_spawn_out_of_bounds", "Cannot set jar spawn point out of bounds.");
     }
 
     public void addCategory(String key, String value) {

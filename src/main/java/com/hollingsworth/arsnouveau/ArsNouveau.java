@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
@@ -7,12 +8,11 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
-import com.hollingsworth.arsnouveau.common.world.dimension.JarDimensionEffects;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
@@ -40,13 +40,14 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +78,8 @@ public class ArsNouveau {
     public static boolean isDebug = false && !FMLEnvironment.production;
 
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
-        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
-        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onPlayerLoggedOut);
+        NeoForge.EVENT_BUS.addListener(ArsNouveau::onServerStopped);
+        NeoForge.EVENT_BUS.addListener(ArsNouveau::onPlayerLoggedOut);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
@@ -100,9 +101,6 @@ public class ArsNouveau {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::postModLoadEvent);
         modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener((RegisterDimensionSpecialEffectsEvent e) -> {
-            e.register(ArsNouveau.prefix("jar"), new JarDimensionEffects());
-        });
         modEventBus.addListener((RegisterTicketControllersEvent e) -> {
             e.register(ticketController);
         });
@@ -192,13 +190,24 @@ public class ArsNouveau {
     }
 
     public void clientSetup(final FMLClientSetupEvent event) {
-        ModLoadingContext.get().getActiveContainer().getEventBus().addListener(ClientHandler::init);
+        var modEventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
+        modEventBus.addListener(ClientHandler::init);
         try {
             Class.forName("net.optifine.Config");
             optifineLoaded = true;
         } catch (Exception e) {
             optifineLoaded = false;
         }
+    }
+
+    public static void onServerStopped(final ServerStoppingEvent event) {
+        Pathfinding.shutdown();
+        EventQueue.getServerInstance().clear();
+    }
+
+    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
+        EventQueue.getClientQueue().clear();
+        PlanariumTile.dimManager.entries.clear();
     }
 
     public static ResourceLocation prefix(String str) {

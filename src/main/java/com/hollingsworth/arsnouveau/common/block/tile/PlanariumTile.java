@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketClientRequestDim;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
 import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
@@ -50,13 +51,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlanariumTile extends ModdedTile implements ITickable, Nameable, GeoBlockEntity {
 
     public static DimManager dimManager = new DimManager();
-    public static Map<ResourceKey<Level>, StructureTemplate> clientTemplates = new ConcurrentHashMap<>();
+    public static Map<ResourceKey<Level>, ClientDimEntry> clientTemplates = new ConcurrentHashMap<>();
 
     public ResourceKey<Level> key;
     private long lastUpdated = 0;
     boolean playersNearby = true;
     public Component name;
     public boolean isDimModel = false;
+
 
     public PlanariumTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -68,36 +70,39 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
 
     @Override
     public void tick() {
-        if (key == null || !(level instanceof ServerLevel serverLevel))
+        if (key == null)
             return;
-        if (level.getGameTime() % 200 == 0) {
-            playersNearby = false;
-            for (ServerPlayer serverPlayer : serverLevel.players()) {
-                if (BlockPosHelpers.distanceBetween(worldPosition, serverPlayer.blockPosition()) < 64) {
-                    playersNearby = true;
-                    break;
+        if (level instanceof ServerLevel serverLevel) {
+            if (level.getGameTime() % 200 == 0) {
+                playersNearby = false;
+                for (ServerPlayer serverPlayer : serverLevel.players()) {
+                    if (BlockPosHelpers.distanceBetween(worldPosition, serverPlayer.blockPosition()) < 64) {
+                        playersNearby = true;
+                        break;
+                    }
                 }
             }
-        }
-        if (!playersNearby) {
-            return;
-        }
-        DimManager.Entry entry1 = dimManager.getOrCreateTemplate(serverLevel, worldPosition, key);
-        if (entry1 != null) {
-            if (entry1.lastUpdated > lastUpdated) {
-                lastUpdated = entry1.lastUpdated;
-                updateBlock();
+            if (!playersNearby) {
+                return;
             }
-        }
-        StructureTemplate template = dimManager.getTemplate(key);
-        if (template != null && level.getGameTime() % 40 == 0) {
-            Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
+            DimManager.Entry entry1 = dimManager.getOrCreateTemplate(serverLevel, worldPosition, key);
+            if (entry1 != null) {
+                // Eagerly sends a packet any time this dimension gets marked dirty.
+                // Consider adding a backoff period for batching template changes
+                if (entry1.lastUpdated > lastUpdated) {
+                    lastUpdated = entry1.lastUpdated;
+                    StructureTemplate template = dimManager.getTemplate(key);
+                    if (template != null) {
+                        Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
+                    }
+                }
+            }
         }
     }
 
     public void setTemplateClientSide(StructureTemplate template) {
         if (level.isClientSide && key != null) {
-            PlanariumTile.clientTemplates.put(key, template);
+            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, level.getGameTime()));
         }
     }
 
@@ -105,6 +110,16 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     public void onLoad() {
         super.onLoad();
         updateBlock();
+    }
+
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.handleUpdateTag(tag, lookupProvider);
+        // Checks if the client is up to date with this template compared to
+        if (key != null && (!clientTemplates.containsKey(key) || clientTemplates.get(key).lastUpdated < lastUpdated)) {
+            Networking.sendToServer(new PacketClientRequestDim(worldPosition));
+        }
     }
 
     @Override
@@ -116,6 +131,8 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
         if (name != null) {
             tag.putString("name", name.getString());
         }
+
+        tag.putLong("lastUpdated", lastUpdated);
     }
 
     @Override
@@ -126,38 +143,16 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
         if (tag.contains("name")) {
             this.name = Component.literal(tag.getString("name"));
         }
+        lastUpdated = tag.getLong("lastUpdated");
     }
-
-//    @Override
-//    public @Nullable ClientboundBlockEntityDataPacket getUpdatePacket() {
-//        return ClientboundBlockEntityDataPacket.create(this, (tile, registryAccess) -> {
-//            CompoundTag tag = new CompoundTag();
-//            if (template != null) {
-//                CompoundTag templateTag = new CompoundTag();
-//                template.save(templateTag);
-//                tag.put("template", templateTag);
-//            }
-//            return tag;
-//        });
-//    }
-//
-//    @Override
-//    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-//        super.handleUpdateTag(tag, lookupProvider);
-//        if (tag.contains("template")) {
-//            template = new StructureTemplate();
-//            template.load(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("template"));
-//        } else {
-//            template = null;
-//        }
-//    }
 
     public @Nullable StructureTemplate getTemplate() {
         if (key == null) {
             return null;
         }
         if (level.isClientSide) {
-            return PlanariumTile.clientTemplates.get(key);
+            var entry = PlanariumTile.clientTemplates.get(key);
+            return entry == null ? null : entry.template();
         } else {
             return PlanariumTile.dimManager.getTemplate(key);
         }
@@ -214,12 +209,14 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
             if (dimLevel == null) {
                 return;
             }
+            // Ensure we are not already in another jar dimension, preventing players from getting trapped between two jars
             DimMappingData dimMappingData = DimMappingData.from(serverLevel);
+            JarDimData jarData = JarDimData.from(dimLevel);
             if (entity instanceof ServerPlayer && dimMappingData.getByKey(level.dimension().location()) == null) {
-                JarDimData jarData = JarDimData.from(dimLevel);
                 jarData.setEnteredFrom(entity.getUUID(), GlobalPos.of(level.dimension(), entity.blockPosition()), entity.getRotationVector());
             }
-            entity.teleportTo(dimLevel, 7, 2, 7, Set.of(), entity.getYRot(), entity.getXRot());
+            BlockPos spawnPos = jarData.getSpawnPos();
+            entity.teleportTo(dimLevel, spawnPos.getX() + 0.5, spawnPos.getY() + 1, spawnPos.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot());
         }
     }
 
@@ -240,6 +237,10 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
         return name;
     }
 
+
+    public record ClientDimEntry(StructureTemplate template, long lastUpdated) {
+
+    }
 
     public static class DimManager {
         public Map<ResourceKey<Level>, Entry> entries = new ConcurrentHashMap<>();
@@ -300,9 +301,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
                 return entries.get(key);
             }
 
-            long timeSinceLastUpdate = serverLevel.getGameTime() - entry.lastUpdated;
-
-            if (!entry.dirty && entry.template != null && timeSinceLastUpdate < 200) {
+            if (!entry.dirty && entry.template != null) {
                 return entry;
             }
             StructureTemplate template = loadTemplate(serverLevel, worldPosition, key);

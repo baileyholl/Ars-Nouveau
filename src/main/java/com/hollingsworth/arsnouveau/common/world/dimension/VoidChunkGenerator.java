@@ -14,7 +14,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.FixedBiomeSource;
@@ -32,14 +35,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class VoidChunkGenerator extends ChunkGenerator {
-    public static final ChunkPos CHUNKPOS = new ChunkPos(0, 0);
-    public static final long CHUNKID = CHUNKPOS.toLong();
-    public static final BlockPos CORNER = CHUNKPOS.getWorldPosition();
-    public static final BlockPos CENTER = CORNER.offset(7, 7, 7);
-    public static final BlockPos MIN_SPAWN_CORNER = CORNER.offset(1, 1, 1);
-    // don't want to spawn with head in the ceiling
-    public static final BlockPos MAX_SPAWN_CORNER = CORNER.offset(13, 12, 13);
-
     private final Holder<Biome> biome;
 
     public Holder<Biome> biome() {

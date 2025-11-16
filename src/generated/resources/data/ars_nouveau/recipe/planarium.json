@@ -1,0 +1,17 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:stable_warp_scroll"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:mob_jar"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:planarium"
+  },
+  "sourceCost": 0
+}

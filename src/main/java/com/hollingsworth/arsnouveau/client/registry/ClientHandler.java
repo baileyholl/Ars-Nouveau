@@ -23,6 +23,7 @@ import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
+import com.hollingsworth.arsnouveau.common.world.dimension.JarDimensionEffects;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -50,10 +51,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -231,6 +229,13 @@ public class ClientHandler {
         event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("spell_hud"), GuiSpellHUD.OVERLAY);
 
     }
+
+
+    @SubscribeEvent
+    public static void registerDimSpecialEffects(final RegisterDimensionSpecialEffectsEvent evt) {
+        evt.register(ArsNouveau.prefix("jar"), new JarDimensionEffects());
+    }
+
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
