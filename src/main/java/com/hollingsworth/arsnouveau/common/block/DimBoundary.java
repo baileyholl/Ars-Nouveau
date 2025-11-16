@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -26,12 +27,15 @@ import java.util.HashSet;
 public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(0.7f, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK));
+        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK));
     }
 
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            if (serverPlayer instanceof FakePlayer) {
+                return false;
+            }
             JarDimData jarDimData = JarDimData.from(serverLevel);
             var enteredFrom = jarDimData.getEnteredFrom(player.getUUID());
             if (enteredFrom == null) {

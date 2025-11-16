@@ -72,6 +72,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     public void tick() {
         if (key == null)
             return;
+        
         if (level instanceof ServerLevel serverLevel) {
             if (level.getGameTime() % 200 == 0) {
                 playersNearby = false;
@@ -117,8 +118,10 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.handleUpdateTag(tag, lookupProvider);
         // Checks if the client is up to date with this template compared to
-        if (key != null && (!clientTemplates.containsKey(key) || clientTemplates.get(key).lastUpdated < lastUpdated)) {
-            Networking.sendToServer(new PacketClientRequestDim(worldPosition));
+        if (level.isClientSide) {
+            if (key != null && (!clientTemplates.containsKey(key) || clientTemplates.get(key).lastUpdated < lastUpdated)) {
+                Networking.sendToServer(new PacketClientRequestDim(worldPosition));
+            }
         }
     }
 
@@ -162,12 +165,19 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         this.name = componentInput.get(DataComponents.CUSTOM_NAME);
+        if (name != null && level instanceof ServerLevel serverLevel) {
+            this.setDimension(name.getString(), serverLevel);
+        }
     }
 
     public void setName(Component name) {
         this.name = name;
         if (level instanceof ServerLevel serverLevel) {
-            this.setDimension(name.getString(), serverLevel);
+            if (name == null) {
+                this.key = null;
+            } else {
+                this.setDimension(name.getString(), serverLevel);
+            }
         }
     }
 

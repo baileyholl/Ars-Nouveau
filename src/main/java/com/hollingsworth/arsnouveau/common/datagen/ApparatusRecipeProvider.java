@@ -1117,7 +1117,9 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .build());
 
         addRecipe(builder().withResult(BlockRegistry.PLANARIUM).withReagent(BlockRegistry.MOB_JAR)
-                .withPedestalItem(ItemsRegistry.STABLE_WARP_SCROLL.asItem()).build());
+                .withPedestalItem(ItemsRegistry.STABLE_WARP_SCROLL.asItem())
+                .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE.asItem())
+                .withPedestalItem(Items.DIAMOND).build());
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {

@@ -45,15 +45,21 @@ public class JarDimData extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        compoundTag.put("enteredFrom", ANCodecs.encode(ENTERED_FROM_CODEC, enteredFrom));
+        if (!enteredFrom.isEmpty()) {
+            compoundTag.put("enteredFrom", ANCodecs.encode(ENTERED_FROM_CODEC, enteredFrom));
+        }
         compoundTag.put("spawnPos", ANCodecs.encode(BlockPos.CODEC, spawnPos));
         return compoundTag;
     }
 
     public static JarDimData load(CompoundTag compoundTag, HolderLookup.Provider provider) {
         JarDimData data = new JarDimData();
-        data.enteredFrom = new HashMap<>(ANCodecs.decode(ENTERED_FROM_CODEC, compoundTag.getCompound("enteredFrom")));
-        data.spawnPos = ANCodecs.decode(BlockPos.CODEC, compoundTag.getCompound("spawnPos"));
+        if (compoundTag.contains("enteredFrom")) {
+            data.enteredFrom = new HashMap<>(ANCodecs.decode(ENTERED_FROM_CODEC, compoundTag.getCompound("enteredFrom")));
+        }
+        if (compoundTag.contains("spawnPos")) {
+            data.spawnPos = ANCodecs.decode(BlockPos.CODEC, compoundTag.get("spawnPos"));
+        }
         return data;
     }
 

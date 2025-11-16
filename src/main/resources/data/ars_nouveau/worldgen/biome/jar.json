@@ -5,12 +5,6 @@
     "sky_color": 0,
     "water_color": 4159204,
     "water_fog_color": 329011,
-    "mood_sound": {
-      "sound": "minecraft:ambient.cave",
-      "tick_delay": 200,
-      "block_search_extent": 4,
-      "offset": 2
-    },
     "music": {
       "max_delay": 24000,
       "min_delay": 12000,

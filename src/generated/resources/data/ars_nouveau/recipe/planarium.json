@@ -4,6 +4,12 @@
   "pedestalItems": [
     {
       "item": "ars_nouveau:stable_warp_scroll"
+    },
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    },
+    {
+      "item": "minecraft:diamond"
     }
   ],
   "reagent": {
