@@ -42,7 +42,7 @@ public class TemporaryTile extends MirrorWeaveTile implements ITickable {
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
-        tag.putLong("gameTime", gameTime);
+        if (gameTime != null) tag.putLong("gameTime", gameTime);
         tag.putInt("tickDuration", tickDuration);
     }
 
