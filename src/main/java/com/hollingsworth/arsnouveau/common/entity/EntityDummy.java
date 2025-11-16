@@ -19,7 +19,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -60,6 +65,10 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         super(ModEntities.ENTITY_DUMMY.get(), world);
     }
 
+    @Override
+    public float getManaReserve() {
+        return 200;
+    }
 
     @Override
     protected void registerGoals() {
@@ -71,13 +80,13 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
-    public Iterable<ItemStack> getArmorSlots() {
+    public @NotNull Iterable<ItemStack> getArmorSlots() {
         return new ArrayList<>();
     }
 
@@ -92,6 +101,12 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         this.moveCloak();
         super.tick();
         if (!level.isClientSide) {
+
+            // Aggro mobs to the dummy every 4 seconds
+            if (level.getGameTime() % (4 * 20) == 0) {
+                level.getEntitiesOfClass(Mob.class, getBoundingBox().inflate(5, 4, 5)).forEach(l -> l.setTarget(this));
+            }
+
             if (level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerUUID()) == null) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 this.remove(RemovalReason.DISCARDED);
@@ -175,13 +190,13 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         onSummonDeath(level, cause, false);
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot p_184582_1_) {
+    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot p_184582_1_) {
         if (!level.isClientSide)
             return ItemStack.EMPTY;
 
@@ -194,7 +209,7 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot p_184201_1_, ItemStack p_184201_2_) {
+    public void setItemSlot(@NotNull EquipmentSlot p_184201_1_, @NotNull ItemStack p_184201_2_) {
     }
 
     public ResourceLocation getSkinTextureLocation() {
@@ -211,11 +226,11 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         return this.playerInfo;
     }
 
-    public Component getName() {
+    public @NotNull Component getName() {
         return this.level.getPlayerByUUID(getOwnerUUID()) == null ? Component.literal("") : this.level.getPlayerByUUID(getOwnerUUID()).getName();
     }
 
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         MutableComponent iformattabletextcomponent = Component.literal("");
         iformattabletextcomponent = iformattabletextcomponent.append(PlayerTeam.formatNameForTeam(this.getTeam(), this.getName()));
         return iformattabletextcomponent;
@@ -223,20 +238,20 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
 
 
     @Override
-    public HumanoidArm getMainArm() {
+    public @NotNull HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;
     }
 
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("left", ticksLeft);
         writeOwner(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksLeft = tag.getInt("left");
         if (getOwnerUUID() != null)

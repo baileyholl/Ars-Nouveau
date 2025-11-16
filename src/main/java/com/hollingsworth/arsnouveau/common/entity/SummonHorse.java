@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +16,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +34,11 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
 
     public SummonHorse(EntityType<? extends Horse> type, Level worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    public float getManaReserve() {
+        return 100;
     }
 
     @Override
@@ -87,7 +94,7 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    public boolean canTakeItem(@NotNull ItemStack itemstackIn) {
+    public boolean canTakeItem(@NotNull ItemStack itemStack) {
         return false;
     }
 
@@ -127,7 +134,6 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.ticksLeft = compound.getInt("left");
-
     }
 
     @Override
@@ -158,4 +164,12 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     public void setOwnerID(UUID uuid) {
         this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
     }
+
+    public void setHorseStatModifiers(SpellStats spellStats) {
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(generateMaxHealth(this.random::nextInt) + spellStats.getAmpMultiplier() * 4);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(generateSpeed(() -> Math.min(1, 0.35   + spellStats.getAmpMultiplier() / 10.0)));
+        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(generateJumpStrength(() -> Math.min(1, 0.35 + spellStats.getAmpMultiplier() / 10.0)));
+        this.getAttribute(Attributes.SCALE).setBaseValue(1.0 + spellStats.getAoeMultiplier() * 0.1);
+    }
+
 }

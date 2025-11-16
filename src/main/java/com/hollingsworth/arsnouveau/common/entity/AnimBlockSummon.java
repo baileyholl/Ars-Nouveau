@@ -22,11 +22,20 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
@@ -97,7 +106,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ANIMATED_BLOCK.get();
     }
 
@@ -115,7 +124,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public boolean doHurtTarget(Entity pEntity) {
+    public boolean doHurtTarget(@NotNull Entity pEntity) {
         if (getOwner() != null && pEntity.isAlliedTo(getOwner())) return false;
         boolean result = super.doHurtTarget(pEntity);
         if (result) ticksLeft -= 20 * 20;
@@ -127,7 +136,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public boolean canAttack(LivingEntity pTarget) {
+    public boolean canAttack(@NotNull LivingEntity pTarget) {
         if (getOwnerUUID() != null) {
             if (pTarget.getUUID().equals(getOwnerUUID()))
                 return false;
@@ -176,12 +185,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
 
     @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
         return null;
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
         pBuilder.define(COLOR, ParticleColor.defaultParticleColor().getColor());
@@ -190,7 +199,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         returnToFallingBlock(getBlockState());
         onSummonDeath(level, damageSource, false);
@@ -208,12 +217,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public boolean canMate(Animal pOtherAnimal) {
+    public boolean canMate(@NotNull Animal pOtherAnimal) {
         return false;
     }
 
     @Override
-    public boolean isFood(ItemStack stack) {
+    public boolean isFood(@NotNull ItemStack stack) {
         return false;
     }
 
@@ -277,12 +286,12 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity p_352287_) {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket(@NotNull ServerEntity p_352287_) {
         return new ClientboundAddEntityPacket(this, p_352287_, Block.getId(this.getBlockState()));
     }
 
     @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         this.blockState = Block.stateById(pPacket.getData());
         double d0 = pPacket.getX();
@@ -303,13 +312,13 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public void load(CompoundTag pCompound) {
+    public void load(@NotNull CompoundTag pCompound) {
         super.load(pCompound);
         this.getEntityData().set(COLOR, pCompound.getInt("color"));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.ticksLeft = pCompound.getInt("left");
         this.color = pCompound.getInt("color");
@@ -321,7 +330,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("head_data", head_data);
         pCompound.putInt("left", ticksLeft);

@@ -45,7 +45,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     private final RangedBowAttackGoal<SummonSkeleton> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
 
-    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 2.2D, true) {
+    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.5D, true) {
         /**
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
@@ -83,13 +83,18 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    public EntityType<?> getType() {
+    public float getManaReserve() {
+        return 200;
+    }
+
+    @Override
+    public @NotNull EntityType<?> getType() {
         return ModEntities.SUMMON_SKELETON.get();
     }
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
         this.populateDefaultEquipmentSlots(getRandom(), pDifficulty);
         this.populateDefaultEquipmentEnchantments(pLevel, getRandom(), pDifficulty);
         return super.finalizeSpawn(pLevel, pDifficulty, pSpawnType, pSpawnGroupData);
@@ -99,12 +104,12 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
      * Gives armor or weapon for entity based on given DifficultyInstance
      */
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance pDifficulty) {
+    protected void populateDefaultEquipmentSlots(@NotNull RandomSource randomSource, @NotNull DifficultyInstance pDifficulty) {
 
     }
 
     @Override
-    protected void dropAllDeathLoot(ServerLevel p_348524_, DamageSource p_21192_) {
+    protected void dropAllDeathLoot(@NotNull ServerLevel p_348524_, @NotNull DamageSource p_21192_) {
 
     }
 
@@ -114,7 +119,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel p_348477_, DamageSource p_33574_, boolean p_33576_) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel p_348477_, @NotNull DamageSource p_33574_, boolean p_33576_) {
 
     }
 
@@ -127,11 +132,11 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-        this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
+        this.goalSelector.addGoal(4, new FollowSummonerGoal(this, this.owner, 1.20, 6.0f, 12.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class) {
             @Override
-            protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, TargetingConditions pTargetPredicate) {
+            protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, @NotNull TargetingConditions pTargetPredicate) {
                 return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID());
             }
         });
@@ -195,7 +200,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
 
     @Override
-    public boolean isAlliedTo(Entity pEntity) {
+    public boolean isAlliedTo(@NotNull Entity pEntity) {
         LivingEntity summoner = this.getSummoner();
 
         if (summoner != null) {
@@ -238,7 +243,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("BoundX")) {
             this.boundOrigin = new BlockPos(compound.getInt("BoundX"), compound.getInt("BoundY"), compound.getInt("BoundZ"));
@@ -280,13 +285,13 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_UNIQUE_ID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {
             compound.putInt("BoundX", this.boundOrigin.getX());
@@ -311,7 +316,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         onSummonDeath(level, cause, false);
     }

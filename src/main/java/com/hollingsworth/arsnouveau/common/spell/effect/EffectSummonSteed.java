@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
@@ -49,6 +50,7 @@ public class EffectSummonSteed extends AbstractEffect {
             horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
             horse.setOwnerID(shooter.getUUID());
             horse.setDropChance(EquipmentSlot.CHEST, 0.0F);
+            horse.setHorseStatModifiers(spellStats);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, horse);
         }
         applySummoningSickness(shooter, 30 * 20);
@@ -75,18 +77,19 @@ public class EffectSummonSteed extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return getSummonAugments();
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE);
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
+        map.put(AugmentAOE.INSTANCE, "Increases the size of the steeds summoned.");
     }
 
     @Override
     public String getBookDescription() {
-        return "Summons a saddled horse that will vanish after a few minutes. Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
+        return "Summons a saddled horse that will vanish after a few minutes. Extend Time will increase the duration of the summon, Amplify will increase its stat, AoE its size. Reserves a chunk of mana while the summon is alive.";
     }
 
     @NotNull
