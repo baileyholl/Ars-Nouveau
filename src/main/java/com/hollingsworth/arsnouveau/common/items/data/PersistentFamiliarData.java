@@ -34,7 +34,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
 
     private final Component name;
     private final String color;
-    private final ItemStack cosmetic;
+    private final @NotNull ItemStack cosmetic;
 
     public PersistentFamiliarData(Component name, String color, ItemStack cosmetic) {
         this.name = name == null ? CommonComponents.EMPTY : name;

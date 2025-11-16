@@ -5,12 +5,14 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 public interface ICosmeticItem {
 
     Vec3 defaultScaling = new Vec3(1.0, 1.0, 1.0);
 
     //bone model where the item is renderer, all animations that include the bone will be synced with the item
+    @NotNull
     default String getBone(LivingEntity entity) {
         return "head";
     }

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -14,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLookAtMob;
 import com.hollingsworth.arsnouveau.common.entity.goal.LookAtTarget;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.IStateEvent;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.SimpleStateMachine;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.alakarkinos.DecideCrabActionState;
 import com.hollingsworth.arsnouveau.common.items.data.ICharmSerializable;
@@ -24,6 +26,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -62,13 +65,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, IAnimationListener, ICharmSerializable {
+public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, IAnimationListener, ICharmSerializable, IDecoratable {
 
     public boolean tamed;
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Boolean> HAS_HAT = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> BLOWING_BUBBLES = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Optional<BlockPos>> BLOWING_AT = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
+    public static final EntityDataAccessor<ItemStack> COSMETIC = SynchedEntityData.defineId(Alakarkinos.class, EntityDataSerializers.ITEM_STACK);
     public int findBlockCooldown;
 
     public boolean partyCrab = false;
@@ -79,7 +83,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     boolean beingTamed = false;
 
-    public SimpleStateMachine stateMachine = new SimpleStateMachine(new DecideCrabActionState(this));
+    public SimpleStateMachine<DecideCrabActionState, IStateEvent> stateMachine = new SimpleStateMachine<>(new DecideCrabActionState(this));
     int ticksBlowingAnim;
     int tamedTicks;
 
@@ -96,7 +100,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     }
 
     @Override
-    public void setRecordPlayingNearby(BlockPos pos, boolean hasSound) {
+    public void setRecordPlayingNearby(@NotNull BlockPos pos, boolean hasSound) {
         super.setRecordPlayingNearby(pos, hasSound);
         this.partyCrab = hasSound;
         this.jukeboxPos = pos;
@@ -167,7 +171,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     }
 
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    protected void pickUpItem(@NotNull ItemEntity itemEntity) {
         if (!tamed && !beingTamed && itemEntity.getItem().is(ItemTags.DECORATED_POT_SHERDS)) {
             beingTamed = true;
             ItemStack stack = itemEntity.getItem().copy();
@@ -179,7 +183,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel level, @NotNull DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide && tamed) {
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
@@ -191,6 +195,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     @Override
     public void fromCharmData(PersistentFamiliarData data) {
         setCustomName(data.name());
+        setCosmeticItem(data.cosmetic());
     }
 
     public String getColor() {
@@ -225,12 +230,12 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ALAKARKINOS_TYPE.get();
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(HOME, Optional.empty());
         pBuilder.define(HAS_HAT, true);
@@ -301,7 +306,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         return null;
     }
 
-    AnimationController placeHat;
+    AnimationController<Alakarkinos> placeHat;
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -358,8 +363,11 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         return manager;
     }
 
+    boolean setBehaviors = false;
+
     @Override
-    public boolean save(CompoundTag pCompound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
         if (this.entityData.get(HOME).isPresent()) {
             pCompound.putLong("home", this.entityData.get(HOME).get().asLong());
         }
@@ -371,13 +379,14 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         pCompound.putBoolean("tamed", this.tamed);
         pCompound.putBoolean("beingTamed", this.beingTamed);
         pCompound.putBoolean("hasHat", this.hasHat());
-        return super.save(pCompound);
+        if (!this.entityData.get(COSMETIC).isEmpty()) {
+            Tag cosmeticTag = this.entityData.get(COSMETIC).save(level.registryAccess());
+            pCompound.put("cosmetic", cosmeticTag);
+        }
     }
 
-    boolean setBehaviors = false;
-
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("home")) {
             this.entityData.set(HOME, Optional.of(BlockPos.of(pCompound.getLong("home"))));
@@ -397,6 +406,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         if (pCompound.contains("hasHat")) {
             this.setHat(pCompound.getBoolean("hasHat"));
         }
+        this.entityData.set(COSMETIC, ItemStack.parseOptional(this.level.registryAccess(), pCompound.getCompound("cosmetic")));
     }
 
     public enum Animations {
@@ -436,5 +446,15 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     @Override
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    }
+
+    @Override
+    public @NotNull ItemStack getCosmeticItem() {
+        return this.entityData.get(COSMETIC);
+    }
+
+    @Override
+    public void setCosmeticItem(ItemStack cosmeticItem) {
+        entityData.set(COSMETIC, cosmeticItem);
     }
 }

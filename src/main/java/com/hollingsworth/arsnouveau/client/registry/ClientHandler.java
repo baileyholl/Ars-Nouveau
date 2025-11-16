@@ -154,6 +154,8 @@ public class ClientHandler {
                 return animatable.getTexture();
             }
         });
+        event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new DecoratableEntityRenderer<>(v, new AlakarkinosModel()));
+
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), rendermanager -> new GeoEntityRenderer<>(rendermanager, new WildenChimeraModel()));
@@ -192,7 +194,6 @@ public class ClientHandler {
 
         event.registerEntityRenderer(ModEntities.LILY.get(), (v) -> new GeoEntityRenderer<>(v, new LilyModel()));
         event.registerEntityRenderer(ModEntities.NOOK.get(), (v) -> new GeoEntityRenderer<>(v, new NookModel()));
-        event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new GeoEntityRenderer<>(v, new AlakarkinosModel()));
         event.registerEntityRenderer(ModEntities.BUBBLE.get(), BubbleRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_HOOK.get(), FishingHookRenderer::new);
 
