@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
+import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public interface ICharmSerializable {
 
@@ -20,7 +22,11 @@ public interface ICharmSerializable {
         return "";
     }
 
+    @NotNull
     default ItemStack getCosmetic() {
+        if (this instanceof IDecoratable decoratable) {
+            return decoratable.getCosmeticItem();
+        }
         return ItemStack.EMPTY;
     }
 }

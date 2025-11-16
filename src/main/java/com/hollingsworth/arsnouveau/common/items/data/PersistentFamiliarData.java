@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -33,7 +34,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
 
     private final Component name;
     private final String color;
-    private final ItemStack cosmetic;
+    private final @NotNull ItemStack cosmetic;
 
     public PersistentFamiliarData(Component name, String color, ItemStack cosmetic) {
         this.name = name == null ? CommonComponents.EMPTY : name;
@@ -67,7 +68,7 @@ public class PersistentFamiliarData implements NBTComponent<PersistentFamiliarDa
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.@NotNull TooltipContext pContext, @NotNull Consumer<Component> pTooltipAdder, @NotNull TooltipFlag pTooltipFlag) {
         if (name != null) {
             pTooltipAdder.accept(name);
         }
