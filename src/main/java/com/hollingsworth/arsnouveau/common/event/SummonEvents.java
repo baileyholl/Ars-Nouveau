@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.EntityPreRemovalEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
+import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,15 +46,20 @@ public class SummonEvents {
     public static void registerSummon(SummonEvent.Pre event) {
         LivingEntity owner = event.summon.getOwnerAlt();
         ISummon summon = event.summon;
-        if (owner == null) return;
+        if (!(owner instanceof Player)) return;
         var manaCap = CapabilityRegistry.getMana(owner);
         if (manaCap == null) return;
 
         List<ISummon> list = summonedEntities.getOrDefault(owner.getUUID(), new ArrayList<>());
-        if (list.size() > 20) {
-            //Ars Nouveau hard cap on number of summons per caster
-            event.setCanceled(true);
-            return;
+        // Check if the summon limit is active and enforce it
+        if (ServerConfig.SUMMON_COUNT_LIMIT_MAX.get() >= 0 && ServerConfig.SUMMON_COUNT_LIMIT_BASE.get() >= 0) {
+            int limit = ServerConfig.SUMMON_COUNT_LIMIT_BASE.get() + (int) owner.getAttributeValue(PerkAttributes.SUMMON_CAPACITY);
+            //Hard cap on number of summons per caster
+            limit = Math.min(limit, ServerConfig.SUMMON_COUNT_LIMIT_MAX.get());
+            if (list.size() >= limit) {
+                event.setCanceled(true);
+                return;
+            }
         }
         float partialReserve = 0;
         for (ISummon s : list) {

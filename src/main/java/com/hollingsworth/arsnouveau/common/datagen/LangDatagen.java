@@ -1102,6 +1102,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.feather.desc", "Reduces the amount of fall damage taken.");
         add("ars_nouveau.perk.weight", "Weight");
         add("ars_nouveau.perk.weight.desc", "Affects how much gravity is applied.");
+        add("ars_nouveau.perk.summon_capacity", "Extra Summon Capacity");
+        add("ars_nouveau.perk.summon_capacity.desc", "Increases the number of summons you can have at once.");
         add("ars_nouveau.page.threads", "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.");
         add("ars_nouveau.threads", "Thread Slots");
         add("ars_nouveau.thread_layout", "Thread Tiers");

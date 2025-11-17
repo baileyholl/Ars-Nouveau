@@ -1160,6 +1160,8 @@
   "ars_nouveau.perk.set_armor": "Place armor onto the table.",
   "ars_nouveau.perk.spell_damage": "Spell Power",
   "ars_nouveau.perk.spell_damage.desc": "Increases the damage of your ars spells",
+  "ars_nouveau.perk.summon_capacity": "Extra Summon Capacity",
+  "ars_nouveau.perk.summon_capacity.desc": "Increases the number of summons you can have at once.",
   "ars_nouveau.perk.warding": "Warding",
   "ars_nouveau.perk.warding.desc": "Reduces the amount of magic damage taken.",
   "ars_nouveau.perk.weight": "Weight",
