@@ -1,0 +1,32 @@
+name: Run Datagen
+
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: 21
+
+permissions:
+  contents: write
+
+jobs:
+  datagen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: "temurin"
+          cache: gradle
+      - name: Run Datagen
+        run: ./gradlew runData
+      - name: Commit and push changes
+        uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          commit_message: "ci: run datagen"
