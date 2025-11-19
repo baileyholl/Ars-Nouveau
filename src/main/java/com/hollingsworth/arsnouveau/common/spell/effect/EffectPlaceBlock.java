@@ -59,11 +59,17 @@ public class EffectPlaceBlock extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             if (!world.isInWorldBounds(pos1))
                 continue;
-            pos1 = rayTraceResult.isInside() ? pos1 : pos1.relative(rayTraceResult.getDirection());
-            boolean notReplaceable = !world.getBlockState(pos1).canBeReplaced();
-            if (notReplaceable)
-                continue;
-            var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
+
+            var state = world.getBlockState(pos1);
+            if (!state.canBeReplaced()) {
+                pos1 = pos1.relative(rayTraceResult.getDirection());
+                state = world.getBlockState(pos1);
+                if (!state.canBeReplaced()) {
+                    continue;
+                }
+            }
+
+            var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), state, fakePlayer));
             if (event.isCanceled())
                 continue;
             place(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false), world, shooter, spellStats, spellContext, resolver, fakePlayer);
