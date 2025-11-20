@@ -69,7 +69,7 @@ public class ArsNouveau {
 
     public static List<String> postLoadWarnings = new ArrayList<>();
 
-    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"), (level, ticketHelper) -> {
+    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("chunk_controller"), (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
             if (level.getEntity(uuid) == null)
                 ticketHelper.removeAllTickets(uuid);

@@ -72,7 +72,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     public void tick() {
         if (key == null)
             return;
-        
+
         if (level instanceof ServerLevel serverLevel) {
             if (level.getGameTime() % 200 == 0) {
                 playersNearby = false;
@@ -342,7 +342,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
         private void forceLoad(SectionPos chunkPos, int chunkLoadingDistance, ServerLevel dimLevel, BlockPos worldPosition, boolean load) {
             for (int x = chunkPos.getX() - chunkLoadingDistance; x <= chunkPos.getX() + chunkLoadingDistance; x++) {
                 for (int z = chunkPos.getZ() - chunkLoadingDistance; z <= chunkPos.getZ() + chunkLoadingDistance; z++) {
-                    ArsNouveau.ticketController.forceChunk(dimLevel, worldPosition, x, z, load, load);
+                    ArsNouveau.ticketController.forceChunk(dimLevel, worldPosition, x, z, load, false);
                 }
             }
         }
