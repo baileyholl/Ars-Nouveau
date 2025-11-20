@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +28,12 @@ import java.util.HashSet;
 public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F).noLootTable().sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.BLOCK));
+        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F)
+                .noLootTable()
+                .sound(SoundType.GLASS)
+                .noOcclusion()
+                .isValidSpawn(Blocks::never)
+                .pushReaction(PushReaction.BLOCK));
     }
 
     @Override
