@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -62,7 +63,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(INTERACT_BLACKLIST);
         this.tag(LECTERN_BLACKLIST);
         this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
@@ -337,10 +338,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(STORAGE_GEMS).add(BlockRegistry.SOURCE_GEM_BLOCK.get());
         this.tag(STORAGE_MAGEBLOOM).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(INTANGIBLE_BLACKLIST).add(Blocks.BEDROCK);
-
+        this.tag(BlockTags.WITHER_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return "AN tags";
     }
 }
