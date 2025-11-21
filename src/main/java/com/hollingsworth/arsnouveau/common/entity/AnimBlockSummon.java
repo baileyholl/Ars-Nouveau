@@ -37,9 +37,11 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -110,6 +112,27 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         return ModEntities.ANIMATED_BLOCK.get();
     }
 
+    public @Nullable SummonBehavior behavior;
+
+    @Override
+    public SummonBehavior getCurrentBehavior() {
+        return behavior != null ? behavior : ISummon.super.getCurrentBehavior();
+    }
+
+    @Override
+    public void setCurrentBehavior(SummonBehavior behavior) {
+        this.behavior = behavior;
+        reloadGoals();
+    }
+
+    protected void reloadGoals() {
+        if (this.level.isClientSide())
+            return;
+        this.goalSelector.availableGoals.clear();
+        this.targetSelector.availableGoals.clear();
+        registerGoals();
+    }
+
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(4, new ConditionalLeapGoal(this, 0.4F, () -> entityData.get(CAN_WALK)));
@@ -118,9 +141,16 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, AnimBlockSummon.class)).setAlertOthers(AnimBlockSummon.class));
+
+        if (getCurrentBehavior() != SummonBehavior.PASSIVE) {
+            this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+            this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+            this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, AnimBlockSummon.class)).setAlertOthers(AnimBlockSummon.class));
+            if (getCurrentBehavior() == SummonBehavior.AGGRESSIVE) {
+                // Additional aggressive behaviors can be added here
+                this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Monster.class, 10, true, true, e -> !this.isAlliedTo(e)));
+            }
+        }
     }
 
     @Override
@@ -327,6 +357,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.getEntityData().set(CAN_WALK, pCompound.getBoolean("canWalk"));
         this.dropItem = !pCompound.contains("dropItem") || pCompound.getBoolean("dropItem");
         head_data = pCompound.getCompound("head_data");
+        setCurrentBehavior(SummonBehavior.fromId(pCompound.getInt("summonBehavior")));
     }
 
     @Override
@@ -339,6 +370,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         pCompound.putInt("ticksAlive", this.getEntityData().get(AGE));
         pCompound.putBoolean("canWalk", this.getEntityData().get(CAN_WALK));
         pCompound.putBoolean("dropItem", this.dropItem);
+        pCompound.putInt("summonBehavior", this.getCurrentBehavior().ordinal());
     }
 
     public int getColor() {

@@ -108,7 +108,7 @@ public class FollowSummonerGoal extends Goal {
 
             if (!this.navigator.moveTo(this.summon.getSummoner(), this.followSpeed)) {
 
-                if (!(this.summon.getSelfEntity().distanceToSqr(this.summon.getSummoner()) < 240.0D)) {
+                if (!(this.summon.getSelfEntity().distanceToSqr(this.summon.getSummoner()) < 144.0D)) {
                     int i = Mth.floor(this.summon.getSummoner().getX()) - 2;
                     int j = Mth.floor(this.summon.getSummoner().getZ()) - 2;
                     int k = Mth.floor(this.summon.getSummoner().getBoundingBox().minY);

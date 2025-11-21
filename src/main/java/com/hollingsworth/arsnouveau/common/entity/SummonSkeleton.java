@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.Util;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -66,7 +68,6 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     private LivingEntity owner;
     @Nullable
     private BlockPos boundOrigin;
-    private boolean limitedLifespan;
     private int limitedLifeTicks;
 
     public SummonSkeleton(EntityType<? extends Skeleton> entityType, Level level) {
@@ -77,9 +78,20 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         super(ModEntities.SUMMON_SKELETON.get(), level);
         this.setWeapon(item);
         this.owner = owner;
-        this.limitedLifespan = true;
         setOwnerID(owner.getUUID());
+    }
 
+    public @Nullable SummonBehavior behavior;
+
+    @Override
+    public SummonBehavior getCurrentBehavior() {
+        return behavior != null ? behavior : ISummon.super.getCurrentBehavior();
+    }
+
+    @Override
+    public void setCurrentBehavior(SummonBehavior behavior) {
+        this.behavior = behavior;
+        reloadGoals();
     }
 
     @Override
@@ -127,25 +139,39 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     protected void dropEquipment() {
     }
 
+    protected void reloadGoals() {
+        if (this.level.isClientSide())
+            return;
+        reloadGoalsAndTargeting(this.goalSelector, this.targetSelector);
+        registerGoals();
+        reassessWeaponGoal();
+    }
+
     @Override
     protected void registerGoals() {
 
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-        this.goalSelector.addGoal(4, new FollowSummonerGoal(this, this.owner, 1.20, 6.0f, 12.0f));
+        this.goalSelector.addGoal(4, new FollowSummonerGoal(this, this.owner, 1.40, 4.0f - getCurrentBehavior().ordinal(), 12.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class) {
-            @Override
-            protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, @NotNull TargetingConditions pTargetPredicate) {
-                return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID());
-            }
-        });
-        this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
-                (LivingEntity entity) ->
-                        (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner))
-                                || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
-        ));
+
+        if (getCurrentBehavior() != SummonBehavior.PASSIVE) {
+
+            this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class) {
+                @Override
+                protected boolean canAttack(@Nullable LivingEntity pPotentialTarget, @NotNull TargetingConditions pTargetPredicate) {
+                    return pPotentialTarget != null && super.canAttack(pPotentialTarget, pTargetPredicate) && !pPotentialTarget.getUUID().equals(getOwnerUUID());
+                }
+            });
+            this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
+                    (LivingEntity entity) ->
+                            !this.isAlliedTo(entity) && (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner) || entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+            ));
+
+            if (getCurrentBehavior() == SummonBehavior.AGGRESSIVE)
+                this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Monster.class, false, e -> !this.isAlliedTo(e)));
+        }
     }
 
     public void setOwner(LivingEntity owner) {
@@ -186,9 +212,13 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     @Override
     public void tick() {
         super.tick();
-        if (--this.limitedLifeTicks <= 0) {
-            this.limitedLifeTicks = 20;
-            this.hurt(level.damageSources().starve(), 20.0F);
+        if (!level.isClientSide && limitedLifeTicks > -1) {
+            limitedLifeTicks--;
+            if (limitedLifeTicks <= 0) {
+                ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+                this.remove(RemovalReason.DISCARDED);
+                onSummonDeath(level, null, true);
+            }
         }
     }
 
@@ -268,6 +298,8 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
             }
         }
 
+        setCurrentBehavior(SummonBehavior.fromId(compound.getInt("summonBehavior")));
+
     }
 
     public void setLimitedLife(int lifeTicks) {
@@ -299,14 +331,15 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
             compound.putInt("BoundZ", this.boundOrigin.getZ());
         }
 
-        if (this.limitedLifespan) {
-            compound.putInt("LifeTicks", this.limitedLifeTicks);
-        }
+        compound.putInt("LifeTicks", this.limitedLifeTicks);
+
         if (this.getOwnerUUID() == null) {
             compound.putUUID("OwnerUUID", Util.NIL_UUID);
         } else {
             compound.putUUID("OwnerUUID", this.getOwnerUUID());
         }
+
+        compound.putInt("summonBehavior", this.getCurrentBehavior().ordinal());
 
     }
 

@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -21,6 +21,7 @@ import net.minecraft.world.entity.animal.WolfVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.HitResult;
@@ -48,8 +49,8 @@ public class EffectSummonWolves extends AbstractEffect {
         if (!canSummon(shooter) || shooter == null)
             return;
         Vec3 hit = rayTraceResult.getLocation();
-        int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
-        if (ticks <= 0) return;
+        int ticks = (int) (20 * (GENERIC_INT.get() * (1 + spellStats.getDurationMultiplier())));
+        if (spellStats.hasBuff(AugmentExtendTime.INSTANCE)) ticks = -1; // Infinite duration
         Holder<Biome> holder = world.getBiome(BlockPos.containing(rayTraceResult.getLocation()));
         var wolfVariant = WolfVariants.getSpawnVariant(world.registryAccess(), holder);
 
@@ -63,6 +64,10 @@ public class EffectSummonWolves extends AbstractEffect {
             wolf.setTame(true, false);
             wolf.tame((Player) shooter);
             if (spellStats.getAmpMultiplier() > 0) {
+                var armor = Items.WOLF_ARMOR.getDefaultInstance();
+                if (spellStats.getAmpMultiplier() >= 2) {
+                    armor.enchant(HolderHelper.unwrap(world, Enchantments.UNBREAKING), (int) (spellStats.getAmpMultiplier() - 1));
+                }
                 wolf.setBodyArmorItem(Items.WOLF_ARMOR.getDefaultInstance());
                 wolf.setDropChance(EquipmentSlot.BODY, 0.0F);
             }
@@ -74,14 +79,13 @@ public class EffectSummonWolves extends AbstractEffect {
             }
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, wolf);
         }
-        applySummoningSickness(shooter, ticks);
+        //applySummoningSickness(shooter, ticks);
     }
 
     @Override
     public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
         addGenericInt(builder, 60, "Base duration in seconds", "duration");
-        addExtendTimeConfig(builder, 60);
     }
 
     @Override
@@ -97,7 +101,7 @@ public class EffectSummonWolves extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE);
     }
 
     @Override

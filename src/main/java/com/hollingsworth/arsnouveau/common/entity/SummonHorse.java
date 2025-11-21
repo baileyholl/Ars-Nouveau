@@ -140,7 +140,7 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
-        writeOwner(compound);
+        // writeOwner(compound); already handled in AbstractHorse#addAdditionalSaveData
     }
 
     @Override

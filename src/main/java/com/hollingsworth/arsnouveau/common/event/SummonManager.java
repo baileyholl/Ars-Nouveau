@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventBusSubscriber
-public class SummonEvents {
+public class SummonManager {
 
     // Does it need to be concurrent? Probably not...
     public static Map<UUID, List<ISummon>> summonedEntities = new ConcurrentHashMap<>();
@@ -29,7 +29,7 @@ public class SummonEvents {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void summonManaReserve(MaxManaCalcEvent event) {
         if (event.getMax() <= 0 || event.getReserve() >= 1) return;
-        if (summonedEntities.getOrDefault(event.getEntity().getUUID(), List.of()).isEmpty()) return;
+        if (getSummonedEntitiesOrDefault(event.getEntity()).isEmpty()) return;
         float reserve = 0;
         for (ISummon summon : summonedEntities.get(event.getEntity().getUUID())) {
             if (summon instanceof LivingEntity living && !living.isAlive()) continue;
@@ -50,7 +50,7 @@ public class SummonEvents {
         var manaCap = CapabilityRegistry.getMana(owner);
         if (manaCap == null) return;
 
-        List<ISummon> list = summonedEntities.getOrDefault(owner.getUUID(), new ArrayList<>());
+        List<ISummon> list = getSummonedEntitiesOrDefault(owner);
         // Check if the summon limit is active and enforce it
         if (ServerConfig.SUMMON_COUNT_LIMIT_MAX.get() >= 0 && ServerConfig.SUMMON_COUNT_LIMIT_BASE.get() >= 0) {
             int limit = ServerConfig.SUMMON_COUNT_LIMIT_BASE.get() + (int) owner.getAttributeValue(PerkAttributes.SUMMON_CAPACITY);
@@ -77,6 +77,10 @@ public class SummonEvents {
         summonedEntities.put(owner.getUUID(), list);
     }
 
+    public static List<ISummon> getSummonedEntitiesOrDefault(LivingEntity owner) {
+        return summonedEntities.getOrDefault(owner.getUUID(), new ArrayList<>());
+    }
+
     @SubscribeEvent
     public static void unregisterSummonDeath(SummonEvent.Death event) {
         unregisterSummon(event.summon, event.summon.getOwnerAlt());
@@ -90,7 +94,7 @@ public class SummonEvents {
 
     public static void unregisterSummon(ISummon summon, LivingEntity owner) {
         if (owner == null) return;
-        List<ISummon> list = summonedEntities.getOrDefault(owner.getUUID(), new ArrayList<>());
+        List<ISummon> list = getSummonedEntitiesOrDefault(owner);
         if (list.isEmpty()) return;
         list.remove(summon);
         summonedEntities.put(owner.getUUID(), list);
@@ -103,7 +107,7 @@ public class SummonEvents {
     }
 
     public static void teleportSummons(LivingEntity owner, EntityTeleportEvent event) {
-        List<ISummon> list = summonedEntities.getOrDefault(owner.getUUID(), new ArrayList<>());
+        List<ISummon> list = getSummonedEntitiesOrDefault(owner);
         if (list.isEmpty()) return;
         for (ISummon summon : list) {
             if (summon instanceof LivingEntity living && living.isAlive()) {

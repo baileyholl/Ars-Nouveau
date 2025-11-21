@@ -71,7 +71,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void applySummoningSickness(LivingEntity playerEntity, int time) {
-        //playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, time));
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, time));
     }
 
     public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, @Nullable SpellResolver resolver, ISummon summon) {
@@ -223,7 +223,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         map.put(AugmentAmplify.INSTANCE, "Increases the level of the effect.");
     }
 
-    protected Set<AbstractAugment> getSummonAugments() {
+    protected Set<AbstractAugment> getTimedSummonAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE);
     }
 
@@ -232,8 +232,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map) {
-        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
-        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
+        map.put(AugmentExtendTime.INSTANCE, "Makes the summon permanent.");
         map.put(AugmentSplit.INSTANCE, "Increases the number of the summoned creatures.");
     }
 

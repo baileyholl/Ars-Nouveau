@@ -33,7 +33,8 @@ public interface IFollowingSummon {
             if (summoner == null) return false;
             var target = summon.getSummoner().getLastHurtMob();
             if (target == null) target = summon.getSummoner().getLastHurtByMob();
-            mob.setTarget(target);
+            if (target != null)
+                mob.setTarget(target);
             return target != null && summoner != target && !(target instanceof ISummon summon2 && summon2.getOwnerAlt() == summoner);
         }
 

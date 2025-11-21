@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
@@ -61,7 +60,7 @@ public class EffectSummonSteed extends AbstractEffect {
             }
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, horse);
         }
-        applySummoningSickness(shooter, 30 * 20);
+        //applySummoningSickness(shooter, 30 * 20);
     }
 
 
@@ -85,13 +84,14 @@ public class EffectSummonSteed extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE);
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
+        map.put(AugmentAmplify.INSTANCE, "Increases the stats of the steeds summoned.");
         map.put(AugmentAOE.INSTANCE, "Increases the size of the steeds summoned.");
         map.put(AugmentRandomize.INSTANCE, "Summons steeds of random variants instead of the white one.");
     }
