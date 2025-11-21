@@ -4,8 +4,9 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.EmitterProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.TickEmitterPacket;
+import com.hollingsworth.arsnouveau.common.network.PacketBatchedTickEmitter;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,15 +14,26 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
+@EventBusSubscriber
 public class ParticleEmitter {
+    private static final Object2ObjectOpenHashMap<UUID, List<ParticleEmitter>> QUEUE = new Object2ObjectOpenHashMap<>();
 
     public static StreamCodec<RegistryFriendlyByteBuf, ParticleEmitter> STREAM = StreamCodec.ofMember((val, buf) -> {
         Vec3 pos = val.getAdjustedPosition();
@@ -143,7 +155,13 @@ public class ParticleEmitter {
         Vec2 adjustedRotation = getAdjustedRotation();
         particleOptions.map.set(ParticlePropertyRegistry.EMITTER_PROPERTY.get(), new EmitterProperty(new Vec2(adjustedRotation.x, adjustedRotation.y), age));
         if (level instanceof ServerLevel serverLevel) {
-            Networking.sendToNearbyClient(serverLevel, BlockPos.containing(pos), new TickEmitterPacket(this));
+            for (ServerPlayer player : serverLevel.getChunkSource().chunkMap.getPlayers(new ChunkPos(BlockPos.containing(pos)), false)) {
+                QUEUE.compute(player.getUUID(), (a, b) -> {
+                    List<ParticleEmitter> list = b == null ? new ArrayList<>() : b;
+                    list.add(this);
+                    return list;
+                });
+            }
         } else {
             particleConfig.tick(particleOptions, level, pos.x, pos.y, pos.z, previousPosition.x, previousPosition.y, previousPosition.z);
         }
@@ -151,5 +169,26 @@ public class ParticleEmitter {
         this.age++;
     }
 
+    @SubscribeEvent
+    public static void processQueue(ServerTickEvent.Post event) {
+        processQueue(event.getServer().getPlayerList());
+    }
 
+    public static void processQueue(PlayerList players) {
+        if (QUEUE.isEmpty()) {
+            return;
+        }
+
+        var iter = Object2ObjectMaps.fastIterator(QUEUE);
+        while (iter.hasNext()) {
+            var entry = iter.next();
+            var player = players.getPlayer(entry.getKey());
+            var particles = entry.getValue();
+            if (player != null && !particles.isEmpty()) {
+                player.connection.send(new PacketBatchedTickEmitter(particles));
+            }
+
+            iter.remove();
+        }
+    }
 }
