@@ -85,11 +85,16 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     }
 
     public ColorProperty getColor() {
-        return subProperties.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty());
+        return subProperties.getOrCreate(ParticlePropertyRegistry.COLOR_PROPERTY.get(), ColorProperty::new);
+    }
+
+    public ParticleColor getParticleColor() {
+        var prop = subProperties.get(ParticlePropertyRegistry.COLOR_PROPERTY.get());
+        return prop != null ? prop.particleColor : ParticleColor.defaultParticleColor();
     }
 
     public SoundProperty getSound() {
-        return subProperties.getOrDefault(ParticlePropertyRegistry.SOUND_PROPERTY.get(), new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER)));
+        return subProperties.getOrCreate(ParticlePropertyRegistry.SOUND_PROPERTY.get(), () -> new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER)));
     }
 
     @Override
