@@ -7,10 +7,13 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.horse.Variant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,8 +28,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class EffectSummonSteed extends AbstractEffect {
-    public static EffectSummonSteed INSTANCE = new EffectSummonSteed();
 
+    public static EffectSummonSteed INSTANCE = new EffectSummonSteed();
 
     private EffectSummonSteed() {
         super(GlyphLib.EffectSummonSteedID, "Summon Steed");
@@ -44,6 +47,8 @@ public class EffectSummonSteed extends AbstractEffect {
         Vec3 hit = rayTraceResult.getLocation();
         for (int i = 0; i < 1 + spellStats.getBuffCount(AugmentSplit.INSTANCE); i++) {
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE.get(), world);
+            if (spellStats.isRandomized())
+                horse.setVariant(Variant.byId(horse.getRandom().nextInt(Variant.values().length)));
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;
             horse.tameWithName((Player) shooter);
@@ -51,6 +56,9 @@ public class EffectSummonSteed extends AbstractEffect {
             horse.setOwnerID(shooter.getUUID());
             horse.setDropChance(EquipmentSlot.CHEST, 0.0F);
             horse.setHorseStatModifiers(spellStats);
+            if (resolver.hasFocus(ItemsRegistry.SUMMONING_FOCUS.get())){
+                horse.setBodyArmorItem(Items.GOLDEN_HORSE_ARMOR.getDefaultInstance());
+            }
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, horse);
         }
         applySummoningSickness(shooter, 30 * 20);
@@ -77,7 +85,7 @@ public class EffectSummonSteed extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE, AugmentAmplify.INSTANCE, AugmentAOE.INSTANCE, AugmentRandomize.INSTANCE);
     }
 
     @Override
@@ -85,6 +93,7 @@ public class EffectSummonSteed extends AbstractEffect {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
         map.put(AugmentAOE.INSTANCE, "Increases the size of the steeds summoned.");
+        map.put(AugmentRandomize.INSTANCE, "Summons steeds of random variants instead of the white one.");
     }
 
     @Override

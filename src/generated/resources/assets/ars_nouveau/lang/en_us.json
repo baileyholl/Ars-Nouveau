@@ -415,6 +415,7 @@
   "ars_nouveau.augment_desc.glyph_summon_steed_glyph_aoe": "Increases the size of the steeds summoned.",
   "ars_nouveau.augment_desc.glyph_summon_steed_glyph_duration_down": "Reduces the duration of the summon.",
   "ars_nouveau.augment_desc.glyph_summon_steed_glyph_extend_time": "Extends the duration of the summon.",
+  "ars_nouveau.augment_desc.glyph_summon_steed_glyph_randomize": "Summons steeds of random variants instead of the white one.",
   "ars_nouveau.augment_desc.glyph_summon_steed_glyph_split": "Increases the number of the summoned creatures.",
   "ars_nouveau.augment_desc.glyph_summon_undead_glyph_amplify": "Increases the summoned skeletons' weapon quality.",
   "ars_nouveau.augment_desc.glyph_summon_undead_glyph_duration_down": "Reduces the duration of the summon.",
