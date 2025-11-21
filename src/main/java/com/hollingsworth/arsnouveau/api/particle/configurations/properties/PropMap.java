@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class PropMap {
-    public static final Codec<Map<IPropertyType<?>, Object>> VALUE_MAP_CODEC = Codec.dispatchedMap(ParticlePropertyRegistry.CODEC, IPropertyType::normalCodec);
+    public static final Codec<Map<IPropertyType<?>, BaseProperty>> VALUE_MAP_CODEC = Codec.dispatchedMap(ParticlePropertyRegistry.CODEC, IPropertyType::normalCodec);
 
 
     public static Codec<PropMap> CODEC = makeCodecFromMap(VALUE_MAP_CODEC);
@@ -22,12 +22,14 @@ public class PropMap {
     public static StreamCodec<RegistryFriendlyByteBuf, PropMap> STREAM_CODEC = new StreamCodec<>() {
         public PropMap decode(RegistryFriendlyByteBuf buffer) {
             int i = buffer.readVarInt();
-            Reference2ObjectMap<IPropertyType<?>, Object> reference2objectmap = new Reference2ObjectArrayMap<>(Math.min(i, 65536));
+            Reference2ObjectMap<IPropertyType<?>, BaseProperty> reference2objectmap = new Reference2ObjectArrayMap<>(Math.min(i, 65536));
 
             for (int l = 0; l < i; l++) {
-                IPropertyType<?> datacomponenttype = IPropertyType.STREAM_CODEC.decode(buffer);
-                Object object = datacomponenttype.streamCodec().decode(buffer);
-                reference2objectmap.put(datacomponenttype, object);
+                if (buffer.readBoolean()) {
+                    IPropertyType<?> datacomponenttype = IPropertyType.STREAM_CODEC.decode(buffer);
+                    BaseProperty object = datacomponenttype.streamCodec().decode(buffer);
+                    reference2objectmap.put(datacomponenttype, object);
+                }
             }
             return new PropMap(reference2objectmap);
         }
@@ -37,10 +39,14 @@ public class PropMap {
             buffer.writeVarInt(i);
 
             for (var entry1 : Reference2ObjectMaps.fastIterable(value.properties)) {
-                Object optional = entry1.getValue();
-                IPropertyType<?> datacomponenttype = entry1.getKey();
-                IPropertyType.STREAM_CODEC.encode(buffer, datacomponenttype);
-                encodeComponent(buffer, datacomponenttype, optional);
+                BaseProperty optional = entry1.getValue();
+                boolean shouldSerialize = optional != null && !optional.shouldSkipSerialization();
+                buffer.writeBoolean(shouldSerialize);
+                if (shouldSerialize) {
+                    IPropertyType<?> datacomponenttype = entry1.getKey();
+                    IPropertyType.STREAM_CODEC.encode(buffer, datacomponenttype);
+                    encodeComponent(buffer, datacomponenttype, optional);
+                }
             }
         }
 
@@ -49,10 +55,10 @@ public class PropMap {
         }
     };
 
-    private static Codec<PropMap> makeCodecFromMap(Codec<Map<IPropertyType<?>, Object>> codec) {
+    private static Codec<PropMap> makeCodecFromMap(Codec<Map<IPropertyType<?>, BaseProperty>> codec) {
         return codec.flatComapMap(PropMap::new, p_337448_ -> {
             int i = p_337448_.properties.size();
-            Reference2ObjectMap<IPropertyType<?>, Object> reference2objectmap = new Reference2ObjectArrayMap<>(i);
+            Reference2ObjectMap<IPropertyType<?>, BaseProperty> reference2objectmap = new Reference2ObjectArrayMap<>(i);
 
             reference2objectmap.putAll(p_337448_.properties);
 
@@ -61,13 +67,13 @@ public class PropMap {
         });
     }
 
-    private Reference2ObjectOpenHashMap<IPropertyType<?>, Object> properties;
+    private Reference2ObjectOpenHashMap<IPropertyType<?>, BaseProperty> properties;
 
     public PropMap() {
         this.properties = new Reference2ObjectOpenHashMap<>();
     }
 
-    public PropMap(Map<IPropertyType<?>, Object> map) {
+    public PropMap(Map<IPropertyType<?>, BaseProperty> map) {
         this.properties = new Reference2ObjectOpenHashMap<>(map);
     }
 
@@ -119,6 +125,9 @@ public class PropMap {
         });
     }
 
+    public int size() {
+        return this.properties.size();
+    }
 
     @Override
     public boolean equals(Object o) {
