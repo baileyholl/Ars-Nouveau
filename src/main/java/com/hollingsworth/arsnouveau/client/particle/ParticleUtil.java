@@ -1,25 +1,121 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.network.PacketBatchedParticles;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-
+@EventBusSubscriber
 public class ParticleUtil {
     public static Random r = new Random();
+
+    private static final Object2ObjectOpenHashMap<UUID, List<ClientboundLevelParticlesPacket>> QUEUE = new Object2ObjectOpenHashMap<>();
+
+    @SubscribeEvent
+    public static void processQueue(ServerTickEvent.Post event) {
+        processQueue(event.getServer().getPlayerList());
+    }
+
+    public static void processQueue(PlayerList players) {
+        if (QUEUE.isEmpty()) {
+            return;
+        }
+
+        var iter = Object2ObjectMaps.fastIterator(QUEUE);
+        while (iter.hasNext()) {
+            var entry = iter.next();
+            var player = players.getPlayer(entry.getKey());
+            var particles = entry.getValue();
+            if (player != null && !particles.isEmpty()) {
+                player.connection.send(new PacketBatchedParticles(particles));
+            }
+
+            iter.remove();
+        }
+    }
+
+    public static <T extends ParticleOptions> int sendParticles(
+            ServerLevel level, T type, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed
+    ) {
+        var packet = new ClientboundLevelParticlesPacket(
+                type, false, posX, posY, posZ, (float) xOffset, (float) yOffset, (float) zOffset, (float) speed, particleCount
+        );
+
+        int sent = 0;
+        var players = level.players();
+        for (ServerPlayer player : players) {
+            if (sendParticles(level, player, false, posX, posY, posZ, packet)) {
+                sent++;
+            }
+        }
+
+        return sent;
+    }
+
+    public static <T extends ParticleOptions> boolean sendParticles(
+            ServerPlayer player,
+            T type,
+            boolean longDistance,
+            double posX,
+            double posY,
+            double posZ,
+            int particleCount,
+            double xOffset,
+            double yOffset,
+            double zOffset,
+            double speed
+    ) {
+        var packet = new ClientboundLevelParticlesPacket(
+                type, longDistance, posX, posY, posZ, (float)xOffset, (float)yOffset, (float)zOffset, (float)speed, particleCount
+        );
+
+        return sendParticles(player.serverLevel(), player, longDistance, posX, posY, posZ, packet);
+    }
+
+    private static boolean sendParticles(ServerLevel level, ServerPlayer player, boolean longDistance, double posX, double posY, double posZ, ClientboundLevelParticlesPacket packet) {
+        if (player.level != level) {
+            return false;
+        } else {
+            BlockPos blockpos = player.blockPosition();
+            if (blockpos.closerToCenterThan(new Vec3(posX, posY, posZ), longDistance ? 512.0 : 32.0)) {
+                QUEUE.compute(player.getUUID(), (a, b) -> {
+                    List<ClientboundLevelParticlesPacket> list = b == null ? new ArrayList<>() : b;
+                    list.add(packet);
+                    return list;
+                });
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
     public static double inRange(double min, double max) {
         if (min == max) {
@@ -89,8 +185,8 @@ public class ParticleUtil {
             d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
             if (world.isClientSide)
                 world.addAlwaysVisibleParticle(ParticleTypes.ENCHANT, true, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
-            if (world instanceof ServerLevel) {
-                ((ServerLevel) world).sendParticles(ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, r.nextInt(4), 0, 0.0, 0, 0.0);
+            if (world instanceof ServerLevel serverLevel) {
+                sendParticles(serverLevel, ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, r.nextInt(4), 0, 0.0, 0, 0.0);
             }
         }
     }
@@ -100,7 +196,7 @@ public class ParticleUtil {
             double d0 = pos.getX() + 0.5;
             double d1 = pos.getY() + 1.2;
             double d2 = pos.getZ() + .5;
-            (world).sendParticles(ParticleTypes.END_ROD, d0, d1, d2, 2, (world.random.nextFloat() * 1 - 0.5) / 3, (world.random.nextFloat() * 1 - 0.5) / 3, (world.random.nextFloat() * 1 - 0.5) / 3, 0.1f);
+            sendParticles(world, ParticleTypes.END_ROD, d0, d1, d2, 2, (world.random.nextFloat() * 1 - 0.5) / 3, (world.random.nextFloat() * 1 - 0.5) / 3, (world.random.nextFloat() * 1 - 0.5) / 3, 0.1f);
         }
     }
 
@@ -220,7 +316,8 @@ public class ParticleUtil {
     public static void spawnOrb(Level level, ParticleColor color, BlockPos pos, int lifetime) {
         if (level instanceof ServerLevel server) {
             for (int i = 0; i <= 10; i++)
-                server.sendParticles(
+                sendParticles(
+                        server,
                         GlowParticleData.createData(color, 0.4f, 0.5f, lifetime),
                         pos.getX() + ParticleUtil.inRange(0.3, 0.7), pos.getY() + ParticleUtil.inRange(-0.2, 0.2), pos.getZ() + ParticleUtil.inRange(0.3, 0.7), 1,
                         0d, 0d, 0, 0);

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.EntityPreRemovalEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.util.SoundUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -121,7 +122,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             return;
         }
         this.entityData.set(HAS_POPPED, true);
-        level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, this.getSoundSource(), 3.0F, 1.0F);
+        SoundUtil.playSound(level, null, this.getX(), this.getY(), this.getZ(), SoundEvents.BUBBLE_COLUMN_BUBBLE_POP, this.getSoundSource(), 3.0F, 1.0F);
     }
 
     // The only purpose of this is to prevent the default attack noise that occurs.

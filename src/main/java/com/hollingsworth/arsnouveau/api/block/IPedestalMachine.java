@@ -47,7 +47,7 @@ public interface IPedestalMachine {
 
         if (level instanceof ServerLevel serverLevel) {
             ParticleOptions type = GlowParticleData.createData(ParticleColor.makeRandomColor(255, 255, 255, level.random), 0.4f, 0.5f, 300);
-            serverLevel.sendParticles(type, x, y, z, 1, 0d, 0d, 0, 0);
+            ParticleUtil.sendParticles(serverLevel, type, x, y, z, 1, 0d, 0d, 0, 0);
         } else {
             ParticleOptions type = GlowParticleData.createData(ParticleColor.makeRandomColor(255, 255, 255, level.random));
             level.addParticle(type, x, y, z, 0d, 0d, 0);

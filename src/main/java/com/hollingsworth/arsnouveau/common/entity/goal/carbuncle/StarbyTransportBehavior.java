@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.entity.statemachine.starbuncle.Starby
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.common.util.SoundUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -103,7 +104,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         Starbuncle starbuncleWithRoom = starbuncle.getStarbuncleWithSpace();
         starbuncleWithRoom.setHeldStack(itemEntity.getItem());
         itemEntity.remove(Entity.RemovalReason.DISCARDED);
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
+        SoundUtil.playSound(this.level, null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, starbuncle.getSoundSource(), 1.0F, 1.0F);
         for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, starbuncle.getBoundingBox().inflate(3))) {
             if (itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                 break;
