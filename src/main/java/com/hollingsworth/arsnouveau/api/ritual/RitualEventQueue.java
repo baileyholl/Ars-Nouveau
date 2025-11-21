@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
+import com.hollingsworth.arsnouveau.api.util.BlockPosSet;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -16,7 +17,7 @@ public class RitualEventQueue {
     public static void addPosition(Level world, BlockPos pos) {
         String key = world.dimension().location().toString();
         if (!posMap.containsKey(key))
-            posMap.put(key, new HashSet<>());
+            posMap.put(key, BlockPosSet.newHashSet());
 
         posMap.get(key).add(pos);
     }
@@ -31,7 +32,7 @@ public class RitualEventQueue {
 
     public static <T extends RangeRitual> List<T> getRituals(Level level, Class<T> type) {
         List<T> rituals = new ArrayList<>();
-        Set<BlockPos> worldList = posMap.getOrDefault(level.dimension().location().toString(), new HashSet<>());
+        Set<BlockPos> worldList = posMap.getOrDefault(level.dimension().location().toString(), BlockPosSet.newHashSet());
         List<BlockPos> stalePos = new ArrayList<>();
         for (BlockPos p : worldList) {
             if (!level.isLoaded(p))
@@ -54,7 +55,7 @@ public class RitualEventQueue {
      * Returns the first ritual of the given type that matches the predicate.
      */
     public static @Nullable <T extends RangeRitual> T getRitual(Level level, Class<T> type, Predicate<T> isMatch) {
-        Set<BlockPos> worldList = posMap.getOrDefault(level.dimension().location().toString(), new HashSet<>());
+        Set<BlockPos> worldList = posMap.getOrDefault(level.dimension().location().toString(), BlockPosSet.newHashSet());
         List<BlockPos> stalePos = new ArrayList<>();
         for (BlockPos p : worldList) {
             if (!level.isLoaded(p))
