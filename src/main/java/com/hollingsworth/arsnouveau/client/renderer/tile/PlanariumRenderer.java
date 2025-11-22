@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.renderer.LiquidBlockVertexConsumer;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
@@ -8,6 +9,7 @@ import com.hollingsworth.nuggets.client.rendering.StatePos;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,6 +21,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -44,8 +48,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
-    StructureRenderData renderData;
 
+    public static Map<ResourceKey<Level>, StructureRenderData> renderDataMap = new HashMap<>();
     GeoModel dimModel = new PlanariumModel(true);
 
     public PlanariumRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
@@ -72,38 +76,39 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
     @Override
     public void render(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         super.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        BlockState state = BlockRegistry.MOB_JAR.defaultBlockState();
-//        poseStack.pushPose();
-//        poseStack.scale(16, 16, 16);
-//        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-//        poseStack.popPose();
         if (blockEntity.getTemplate() == null)
             return;
 
         poseStack.pushPose();
         doRender(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-//        poseStack.scale(.98f, .98f, .98f);
         poseStack.popPose();
     }
 
     public void doRender(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        StructureTemplate structureTemplate = blockEntity.getTemplate();
-        List<StatePos> statePosCache = new ArrayList<>();
-        for (StructureTemplate.StructureBlockInfo blockInfo : structureTemplate.palettes.getFirst().blocks()) {
-            statePosCache.add(new StatePos(blockInfo.state(), blockInfo.pos()));
-        }
         poseStack.pushPose();
-
+        PlanariumTile.ClientDimEntry clientDim = PlanariumTile.clientTemplates.get(blockEntity.key);
+        FakeRenderingWorld fakeRenderingWorld = clientDim.fakeRenderingWorld();
+        List<StatePos> statePosCache = clientDim.statePosList();
         float pad = 0.0025f;
         float scale = (1.0f - 2.0f * pad) / (float) 32;
         float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
         for (StatePos statePos : statePosCache) {
+            if (statePos.state.isEmpty()) {
+                continue;
+            }
             poseStack.pushPose();
             poseStack.translate(offset, offset, offset);
 
             poseStack.scale(scale, scale, scale);
             poseStack.translate(statePos.pos.getX(), 26 + statePos.pos.getY(), statePos.pos.getZ());
+            FluidState fluidState = statePos.state.getFluidState();
+            if (!fluidState.isEmpty()) {
+                final RenderType layer = ItemBlockRenderTypes.getRenderLayer(fluidState);
+                final VertexConsumer buffer = bufferSource.getBuffer(layer);
+                Minecraft.getInstance().getBlockRenderer().renderLiquid(statePos.pos, fakeRenderingWorld, new LiquidBlockVertexConsumer(buffer, poseStack, statePos.pos), statePos.state, fluidState);
+            }
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(statePos.state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+
             poseStack.popPose();
         }
 
@@ -368,7 +373,7 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         public StructurePlaceSettings structurePlaceSettings;
         public double distanceFromCameraCast = 25;
 
-        public StructureRenderData(StructureTemplate structureTemplate, String name, String blockprintsId) {
+        public StructureRenderData(StructureTemplate structureTemplate) {
             var accessor = (StructureTemplateAccessor) structureTemplate;
             var palettes = accessor.getPalettes();
             if (palettes.isEmpty()) {
@@ -382,8 +387,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
             }
             structurePlaceSettings = new StructurePlaceSettings();
             boundingBox = structureTemplate.getBoundingBox(structurePlaceSettings, new BlockPos(0, 0, 0));
-            this.name = name;
-            this.blockprintsId = blockprintsId;
             rotation = Rotation.NONE;
             mirror = Mirror.NONE;
         }

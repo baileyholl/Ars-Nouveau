@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.client.renderer.ExtendedRenderingWorld;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientRequestDim;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
@@ -11,6 +13,8 @@ import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.saved_data.DimMappingData;
 import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.nuggets.client.rendering.FakeRenderingWorld;
+import com.hollingsworth.nuggets.client.rendering.StatePos;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
 import net.commoble.infiniverse.internal.DimensionManager;
@@ -29,6 +33,7 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,6 +49,8 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,7 +110,12 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
 
     public void setTemplateClientSide(StructureTemplate template) {
         if (level.isClientSide && key != null) {
-            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, level.getGameTime()));
+            ArrayList<StatePos> statePos = new ArrayList<>();
+            var palette = ((StructureTemplateAccessor) template).getPalettes().get(0);
+            for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
+                statePos.add(new StatePos(blockInfo.state(), blockInfo.pos()));
+            }
+            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, statePos, level.getGameTime(), new ExtendedRenderingWorld(this.level, statePos, BlockPos.ZERO)));
         }
     }
 
@@ -248,7 +260,8 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     }
 
 
-    public record ClientDimEntry(StructureTemplate template, long lastUpdated) {
+    public record ClientDimEntry(StructureTemplate template, List<StatePos> statePosList, long lastUpdated,
+                                 FakeRenderingWorld fakeRenderingWorld) {
 
     }
 
@@ -334,7 +347,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
             BlockPos pos = new BlockPos(0, 1, 0);
             Vec3i size = new Vec3i(32, 31, 32);
             StructureTemplate template = new StructureTemplate();
-            template.fillFromWorld(dimLevel, pos, size, true, null);
+            template.fillFromWorld(dimLevel, pos, size, true, Blocks.AIR);
             forceLoad(chunkPos, chunkLoadingDistance, dimLevel, worldPosition, false);
             return template;
         }
