@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.documentation.DocDataLoader;
-import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.world.InteractionHand;
@@ -11,8 +10,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-
-import java.util.HashMap;
 
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -33,7 +30,6 @@ public class ClientPlayerEvent {
         if (e.getConnection() != null) {
             DocDataLoader.writeBookmarks();
         }
-        PlanariumRenderer.renderDataMap = new HashMap<>();
     }
 
 }

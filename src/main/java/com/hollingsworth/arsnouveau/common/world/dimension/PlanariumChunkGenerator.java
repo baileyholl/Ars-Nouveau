@@ -29,12 +29,14 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class VoidChunkGenerator extends ChunkGenerator {
+public class PlanariumChunkGenerator extends ChunkGenerator {
+    public static AABB innerBox = new AABB(0, 0, 0, 31, 30, 31);
     private final Holder<Biome> biome;
 
     public Holder<Biome> biome() {
@@ -44,9 +46,9 @@ public class VoidChunkGenerator extends ChunkGenerator {
     /**
      * get from Hyperbox.INSTANCE.hyperboxChunkGeneratorCodec.get();
      **/
-    public static MapCodec<VoidChunkGenerator> makeCodec() {
+    public static MapCodec<PlanariumChunkGenerator> makeCodec() {
         return Biome.CODEC.fieldOf("biome")
-                .xmap(VoidChunkGenerator::new, VoidChunkGenerator::biome);
+                .xmap(PlanariumChunkGenerator::new, PlanariumChunkGenerator::biome);
     }
 
     // hardcoding this for now, may reconsider later
@@ -55,12 +57,12 @@ public class VoidChunkGenerator extends ChunkGenerator {
     }
 
     // create chunk generator at runtime when dynamic dimension is created
-    public VoidChunkGenerator(MinecraftServer server) {
+    public PlanariumChunkGenerator(MinecraftServer server) {
         this(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(ArsNouveau.BIOME_KEY));
     }
 
     // create chunk generator when dimension is loaded from the dimension registry on server init
-    public VoidChunkGenerator(Holder<Biome> biome) {
+    public PlanariumChunkGenerator(Holder<Biome> biome) {
         super(new FixedBiomeSource(biome));
         this.biome = biome;
     }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.util.WorldUtil;
+import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,9 +85,8 @@ public class DimBoundary extends ModBlock implements IWandable {
         if (dimData == null) {
             return Result.FAIL;
         }
-        AABB innerBox = new AABB(0, 0, 0, 31, 30, 31);
         BlockPos pos = storedPos.pos();
-        if (!innerBox.contains(pos.getX(), pos.getY(), pos.getZ())) {
+        if (!PlanariumChunkGenerator.innerBox.contains(pos.getX(), pos.getY(), pos.getZ())) {
             playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.jar_spawn_out_of_bounds"));
         } else {
             dimData.setSpawnPos(storedPos.pos());

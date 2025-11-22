@@ -2,19 +2,18 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.client.renderer.ExtendedRenderingWorld;
+import com.hollingsworth.arsnouveau.client.renderer.PlanariumRenderingWorld;
+import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientRequestDim;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDimTile;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
-import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
+import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.saved_data.DimMappingData;
 import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.nuggets.client.rendering.FakeRenderingWorld;
-import com.hollingsworth.nuggets.client.rendering.StatePos;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
 import net.commoble.infiniverse.internal.DimensionManager;
@@ -110,12 +109,12 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
 
     public void setTemplateClientSide(StructureTemplate template) {
         if (level.isClientSide && key != null) {
-            ArrayList<StatePos> statePos = new ArrayList<>();
+            ArrayList<CulledStatePos> statePos = new ArrayList<>();
             var palette = ((StructureTemplateAccessor) template).getPalettes().get(0);
             for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
-                statePos.add(new StatePos(blockInfo.state(), blockInfo.pos()));
+                statePos.add(new CulledStatePos(blockInfo.state(), blockInfo.pos()));
             }
-            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, statePos, level.getGameTime(), new ExtendedRenderingWorld(this.level, statePos, BlockPos.ZERO)));
+            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, statePos, level.getGameTime(), new PlanariumRenderingWorld(this.level, statePos, BlockPos.ZERO)));
         }
     }
 
@@ -260,9 +259,46 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     }
 
 
-    public record ClientDimEntry(StructureTemplate template, List<StatePos> statePosList, long lastUpdated,
-                                 FakeRenderingWorld fakeRenderingWorld) {
+    public static class ClientDimEntry {
+        private final StructureTemplate template;
+        private List<CulledStatePos> statePosList;
+        private final long lastUpdated;
+        private final PlanariumRenderingWorld fakeRenderingWorld;
+        private boolean needsCulled;
 
+        public ClientDimEntry(StructureTemplate template, List<CulledStatePos> statePosList, long lastUpdated, PlanariumRenderingWorld fakeRenderingWorld) {
+            this.template = template;
+            this.statePosList = statePosList == null ? null : List.copyOf(statePosList);
+            this.lastUpdated = lastUpdated;
+            this.fakeRenderingWorld = fakeRenderingWorld;
+            needsCulled = true;
+        }
+
+        // Record-like accessors for compatibility
+        public StructureTemplate template() {
+            return template;
+        }
+
+        public List<CulledStatePos> statePosList() {
+            return statePosList;
+        }
+
+        public long lastUpdated() {
+            return lastUpdated;
+        }
+
+        public PlanariumRenderingWorld fakeRenderingWorld() {
+            return fakeRenderingWorld;
+        }
+
+        public boolean needsCulled() {
+            return needsCulled;
+        }
+
+        public void setCulledStates(List<CulledStatePos> culledStates) {
+            needsCulled = false;
+            this.statePosList = culledStates;
+        }
     }
 
     public static class DimManager {
@@ -296,7 +332,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
         }
 
         public static LevelStem createDimension(MinecraftServer server) {
-            return new LevelStem(getDimensionTypeHolder(server), new VoidChunkGenerator(server));
+            return new LevelStem(getDimensionTypeHolder(server), new PlanariumChunkGenerator(server));
         }
 
         public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server) {

@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.world.dimension.VoidChunkGenerator;
+import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.mojang.serialization.MapCodec;
@@ -30,7 +30,7 @@ public class ModSetup {
     public static DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<MagicTrunkPlacer>> MAGIC_TRUNK_PLACER = TRUNK_PLACER_TYPE_DEFERRED_REGISTER.register("magic_trunk_placer", () -> new TrunkPlacerType<>(MagicTrunkPlacer.CODEC));
 
     public static DeferredRegister<MapCodec<? extends ChunkGenerator>> chunkGeneratorCodecs = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
-    public static DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<VoidChunkGenerator>> VOID_CHUNK_GENERATOR_CODEC = chunkGeneratorCodecs.register("void_chunk_generator", VoidChunkGenerator::makeCodec);
+    public static DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<PlanariumChunkGenerator>> VOID_CHUNK_GENERATOR_CODEC = chunkGeneratorCodecs.register("void_chunk_generator", PlanariumChunkGenerator::makeCodec);
 
     public static void registers(IEventBus modEventBus) {
         modEventBus.addListener(ModSetup::registerRegistries);
