@@ -20,6 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Planarium extends TickableModBlock {
@@ -29,13 +30,13 @@ public class Planarium extends TickableModBlock {
     }
 
     public Planarium() {
-        super(defaultProperties().noOcclusion());
+        super(defaultProperties().noOcclusion().lightLevel((state) -> 1));
     }
 
-    public static VoxelShape shape = Shapes.box(0, 0, 0, 1, 2, 1);
+    public static VoxelShape shape = Shapes.box(0, 0, 0, 1, 1.8, 1);
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
         if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof PlanariumTile tile && hand == InteractionHand.MAIN_HAND) {
             if (tile.key == null) {
                 player.sendSystemMessage(Component.translatable("ars_nouveau.planarium.set_name"));
@@ -48,33 +49,33 @@ public class Planarium extends TickableModBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return shape;
     }
 
     @Override
-    public boolean collisionExtendsVertically(BlockState state, BlockGetter level, BlockPos pos, Entity collidingEntity) {
+    public boolean collisionExtendsVertically(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull Entity collidingEntity) {
         return true;
     }
 
     @Override
-    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+    protected boolean canSurvive(@NotNull BlockState state, LevelReader level, BlockPos pos) {
         return level.getBlockState(pos.above()).isEmpty() && super.canSurvive(state, level, pos);
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new PlanariumTile(pos, state);
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+    protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, PathComputationType pType) {
+    public boolean isPathfindable(@NotNull BlockState pState, @NotNull PathComputationType pType) {
         return false;
     }
 }
