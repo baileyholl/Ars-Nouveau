@@ -16,16 +16,19 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
@@ -33,6 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
@@ -108,7 +112,14 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
                 Minecraft.getInstance().getBlockRenderer().renderLiquid(statePos.pos, fakeRenderingWorld, new LiquidBlockVertexConsumer(buffer, poseStack, statePos.pos), statePos.state, fluidState);
             }
             renderBlock(statePos, poseStack, bufferSource, fakeRenderingWorld, OverlayTexture.NO_OVERLAY);
-            if (fakeRenderingWorld.getBlockEntity(statePos.pos) != null) {
+            BlockEntity blockEntity = fakeRenderingWorld.getBlockEntity(statePos.pos);
+            if (blockEntity != null) {
+                BlockEntityRenderDispatcher blockEntityRenderer = Minecraft.getInstance().getBlockEntityRenderDispatcher();
+                ItemStack stack = new ItemStack(statePos.state.getBlock());
+                BlockEntityWithoutLevelRenderer geckoRenderer = GeoRenderProvider.of(stack).getGeoItemRenderer();
+                if (geckoRenderer != null) {
+                    poseStack.translate(0, -0.5, 0);
+                }
                 Minecraft.getInstance().getBlockRenderer().renderSingleBlock(statePos.state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             }
             poseStack.popPose();

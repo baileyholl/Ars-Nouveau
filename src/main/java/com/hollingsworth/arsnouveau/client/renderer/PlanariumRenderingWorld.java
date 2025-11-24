@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
 import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleOptions;
@@ -57,6 +58,7 @@ import java.util.function.Predicate;
 
 public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
+    ClientChunkCache clientChunkCache;
 
     public PlanariumRenderingWorld(Level rWorld, List<CulledStatePos> coordinates, BlockPos lookingAt) {
         this(rWorld);
@@ -78,6 +80,7 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
         super((WritableLevelData) world.getLevelData(), world.dimension(), world.registryAccess(), world.dimensionTypeRegistration(),
                 world::getProfiler, world.isClientSide, world.isDebug(), 0, 0);
         this.realWorld = world;
+        this.clientChunkCache = new ClientChunkCache(Minecraft.getInstance().level, 0);
     }
 
     @Override
@@ -143,7 +146,7 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public int getHeight() {
-        return realWorld.getHeight();
+        return 31;
     }
 
     @Override
@@ -260,12 +263,12 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public ChunkSource getChunkSource() {
-        return null;
+        return this.clientChunkCache;
     }
 
     @Override
     public RandomSource getRandom() {
-        return null;
+        return Minecraft.getInstance().level.random;
     }
 
     @Override
@@ -334,7 +337,7 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public List<? extends Player> players() {
-        return null;
+        return List.of();
     }
 
     @Override
