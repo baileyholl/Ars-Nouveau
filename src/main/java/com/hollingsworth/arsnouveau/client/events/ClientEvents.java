@@ -8,9 +8,11 @@ import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -39,6 +41,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -87,6 +90,23 @@ public class ClientEvents {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
             PantomimeRenderer.renderOutline(event.getPoseStack());
         }
+        // Build then render so sorted transparency works correctly
+        for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
+
+            PlanariumTile tile = renderer.get();
+            if (tile != null) {
+                PlanariumRenderer.buildRender(tile, event.getPoseStack(), Minecraft.getInstance().player);
+            }
+        }
+
+        for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
+
+            PlanariumTile tile = renderer.get();
+            if (tile != null) {
+                PlanariumRenderer.drawRender(tile, event.getPoseStack(), event.getProjectionMatrix(), event.getModelViewMatrix(), Minecraft.getInstance().player);
+            }
+        }
+        PlanariumRenderer.deferredRenders = new ArrayList<>(8);
     }
 
     @SubscribeEvent
