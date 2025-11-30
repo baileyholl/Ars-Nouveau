@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -72,7 +73,11 @@ public class EffectExchange extends AbstractEffect {
         BlockState origState = world.getBlockState(result.getBlockPos());
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         Block firstBlock = null;
-        InventoryManager manager = spellContext.getCaster().getInvManager();
+        IWrappedCaster caster = spellContext.getCaster();
+        if (caster == null) {
+            return;
+        }
+        InventoryManager manager = caster.getInvManager();
         for (BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
 

@@ -192,7 +192,7 @@ public class SpellContext implements Cloneable {
         return shooter;
     }
 
-    public @NotNull IWrappedCaster getCaster() {
+    public @Nullable IWrappedCaster getCaster() {
         return wrappedCaster;
     }
 
