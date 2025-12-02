@@ -45,7 +45,7 @@ public abstract class PropParticle extends TextureSheetParticle {
         if (property != null && property.getColor().isTintDisabled()) {
             return getDefaultColor();
         } else {
-            return property != null ? property.getColor().particleColor : getDefaultColor();
+            return property != null ? property.getParticleColor() : getDefaultColor();
         }
     }
 

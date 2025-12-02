@@ -254,7 +254,7 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksLeft = tag.getInt("left");
-        if (getOwnerUUID() != null)
+        if (tag.contains("owner"))
             setOwnerID(tag.getUUID("owner"));
     }
 
