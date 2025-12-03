@@ -138,7 +138,9 @@
     "92aa3ea9-830b-448c-a29f-ec23323d7aa3",
     "706e34e9-e166-4de1-9a0e-528bee0703b3",
     "2f415897-3318-46fb-bf97-1070201d7386",
-    "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a"
+    "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a",
+    "5ca15a2e-b217-436e-8c3b-97a45243baed",
+    "71a716b3-63c6-4c67-a7b1-282b19d83d2f"
   ],
   "starbuncleAdoptions": [
     {
@@ -920,6 +922,17 @@
       "adopter": "Jarva",
       "color": "brown",
       "bio": "This Starbuncle is a glitch in the matrix."
+    },
+    {
+      "name": "Quite Nice White Rice",
+      "color": "green",
+      "adopter": "Treeleafs",
+      "bio": "A little buddy to transport rice."
+    },{
+      "name": "Kanwo",
+      "color": "orange",
+      "adopter": "DarkStrifeYT",
+      "bio": "The best friend you can ever ask for"
     }
   ]
 }
