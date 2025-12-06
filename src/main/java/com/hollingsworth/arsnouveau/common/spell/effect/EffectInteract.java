@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -57,7 +58,11 @@ public class EffectInteract extends AbstractEffect {
         Pose previousPose = player.getPose();
         boolean shouldShift = spellStats.hasBuff(AugmentDampen.INSTANCE);
         if (!isRealPlayer(shooter)) {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
+            IWrappedCaster caster = spellContext.getCaster();
+            if (caster == null) {
+                return;
+            }
+            InventoryManager manager = caster.getInvManager();
             player = setupFakeInventory(spellContext, world);
             if (shouldShift) {
                 player.setShiftKeyDown(true);
@@ -204,7 +209,11 @@ public class EffectInteract extends AbstractEffect {
             }
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
         } else {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
+            IWrappedCaster caster = spellContext.getCaster();
+            if (caster == null) {
+                return;
+            }
+            InventoryManager manager = caster.getInvManager();
             player = setupFakeInventory(spellContext, world);
             if (shouldShift) {
                 wasShiftDown = player.isShiftKeyDown();
@@ -228,14 +237,18 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public FakePlayer setupFakeInventory(SpellContext context, Level level) {
-        InventoryManager manager = context.getCaster().getInvManager();
+        IWrappedCaster caster = context.getCaster();
+
         ANFakePlayer player = ANFakePlayer.getPlayer((ServerLevel) level);
         player.inventory.clearContent();
         player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-        ExtractedStack stack = manager.extractItem(i -> !i.isEmpty(), 1);
-        if (!stack.isEmpty()) {
-            player.setItemSlot(EquipmentSlot.MAINHAND, stack.getStack().copy());
+        if (caster != null) {
+            InventoryManager manager = caster.getInvManager();
+            ExtractedStack stack = manager.extractItem(i -> !i.isEmpty(), 1);
+            if (!stack.isEmpty()) {
+                player.setItemSlot(EquipmentSlot.MAINHAND, stack.getStack().copy());
+            }
         }
         return player;
     }

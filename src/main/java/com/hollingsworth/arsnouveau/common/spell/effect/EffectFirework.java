@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -59,7 +60,12 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
     }
 
     public ItemStack fireworkFromInv(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter) {
-        InventoryManager manager = spellContext.getCaster().getInvManager();
+        IWrappedCaster caster = spellContext.getCaster();
+        if (caster == null) {
+            // IDK if ItemStack.EMPTY would make more sense?
+            return getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier());
+        }
+        InventoryManager manager = caster.getInvManager();
         SlotReference slotReference = manager.findItem(i -> i.getItem() == Items.FIREWORK_ROCKET, InteractType.EXTRACT);
         if (slotReference.getHandler() != null) {
             ItemStack firework = slotReference.getHandler().getStackInSlot(slotReference.getSlot());
@@ -72,6 +78,7 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context) {
         FireworkRocketEntity fireworkrocketentity;
+        if (context.getCaster() == null) return;
         if (context.getCaster().getCasterType() == SpellContext.CasterType.TURRET) {
             BlockPos pos = rayTraceResult.getBlockPos();
             Direction direction = rayTraceResult.getDirection();

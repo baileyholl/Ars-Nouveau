@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InteractType;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
@@ -51,8 +52,8 @@ public class EffectBlink extends AbstractEffect {
         }
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
-        if (spellContext.getCaster() instanceof TileCaster) {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
+        if (spellContext.getCaster() instanceof TileCaster caster) {
+            InventoryManager manager = caster.getInvManager();
             SlotReference reference = manager.findItem(i -> (i.getItem() == ItemsRegistry.WARP_SCROLL.asItem() || i.getItem() == ItemsRegistry.STABLE_WARP_SCROLL.asItem()), InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 ItemStack stack = reference.getHandler().getStackInSlot(reference.getSlot());
@@ -76,7 +77,7 @@ public class EffectBlink extends AbstractEffect {
             } else if (spellContext.level instanceof ServerLevel serverLevel) {
                 shooter.teleportTo(serverLevel, vec.x(), vec.y(), vec.z(), Set.of(), shooter.getYRot(), shooter.getXRot());
             }
-        } else if (spellContext.getCaster().getCasterType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
+        } else if (spellContext.getCaster() != null && spellContext.getCaster().getCasterType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
             blinkForward(spellContext.level, living, distance);
         }
     }

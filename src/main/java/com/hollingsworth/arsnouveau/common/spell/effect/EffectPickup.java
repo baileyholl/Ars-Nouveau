@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.core.BlockPos;
@@ -41,7 +42,11 @@ public class EffectPickup extends AbstractEffect {
         Level world = spellContext.level;
         List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(
                 posVec.add(expansion, expansion, expansion), posVec.subtract(expansion, expansion, expansion)));
-        InventoryManager manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+        IWrappedCaster caster = spellContext.getCaster();
+        if (caster == null) {
+            return;
+        }
+        InventoryManager manager = caster.getInvManager().extractSlotMax(-1);
         for (ItemEntity i : entityList) {
             i.setPickUpDelay(0); // Fixes backpack mods respecting pickup delay
             var pickupPre = NeoForge.EVENT_BUS.post(new ItemEntityPickupEvent.Pre(getPlayer(shooter, (ServerLevel) world), i));

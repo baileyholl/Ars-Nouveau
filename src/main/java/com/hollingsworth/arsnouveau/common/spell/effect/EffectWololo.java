@@ -109,8 +109,8 @@ public class EffectWololo extends AbstractEffect {
     @NotNull
     private ItemStack getDye(@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
 
-        if (spellContext.getCaster() instanceof TileCaster) {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
+        if (spellContext.getCaster() instanceof TileCaster caster) {
+            InventoryManager manager = caster.getInvManager();
             SlotReference reference = manager.findItem(i -> i.getItem() instanceof DyeItem, InteractType.EXTRACT);
             if (!reference.isEmpty()) {
                 return reference.getHandler().getStackInSlot(reference.getSlot());

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotReference;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.mojang.authlib.properties.PropertyMap;
@@ -58,17 +59,22 @@ public class EffectName extends AbstractEffect {
 
     public Component getName(Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component newName = null;
-        InventoryManager manager = spellContext.getCaster().getInvManager();
-        SlotReference slotRef = manager.findItem(i -> i.getItem() == Items.NAME_TAG, InteractType.EXTRACT);
-        if (slotRef.getHandler() != null) {
-            ItemStack stack = slotRef.getHandler().getStackInSlot(slotRef.getSlot());
-            newName = stack.getDisplayName().plainCopy();
+        IWrappedCaster caster = spellContext.getCaster();
+
+        if (caster != null) {
+            InventoryManager manager = caster.getInvManager();
+            SlotReference slotRef = manager.findItem(i -> i.getItem() == Items.NAME_TAG, InteractType.EXTRACT);
+            if (slotRef.getHandler() != null) {
+                ItemStack stack = slotRef.getHandler().getStackInSlot(slotRef.getSlot());
+                newName = stack.getDisplayName().plainCopy();
+            }
         }
+
         if (newName == null) {
             ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(shooter);
             if (stack != ItemStack.EMPTY) {
-                AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
-                newName = Component.literal(caster.getSpellName());
+                AbstractCaster<?> abstractCaster = SpellCasterRegistry.from(stack);
+                newName = Component.literal(abstractCaster.getSpellName());
             }
         }
         return newName;
