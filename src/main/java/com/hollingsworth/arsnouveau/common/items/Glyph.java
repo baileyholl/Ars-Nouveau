@@ -76,7 +76,7 @@ public class Glyph extends ModItem {
         return ModList.get()
                 .getModContainerById(spellPart.getRegistryName().getNamespace())
                 .map(ModContainer::getModInfo)
-                .map(IModInfo::getDisplayName).orElse(super.getCreatorModId(itemStack));
+                .map(IModInfo::getDisplayName).orElse(null);
     }
 
     @Override
