@@ -140,6 +140,9 @@ repositories {
             includeGroup "dev.lambdaurora.lambdynamiclights"
         }
     }
+    maven {
+        url='https://maven.uuid.gg/releases'
+    }
 }
 
 def mappingsAttribute = Attribute.of("net.minecraft.mappings", String.class)
@@ -165,6 +168,12 @@ dependencies {
     jarJar(implementation "curse.maven:infiniverse-568341:5486311"){
 
     }
+    implementation 'dev.compactmods.gander:levels:0.2.31'
+    implementation 'dev.compactmods.gander:core:0.2.31'
+    implementation 'dev.compactmods.gander:ui:0.2.31'
+    implementation 'dev.compactmods.gander:rendering:0.2.31'
+    implementation 'dev.compactmods.gander:world:0.2.31'
+
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21.1"
     compileOnly("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
         attributes {
@@ -176,7 +185,7 @@ dependencies {
             attribute(mappingsAttribute, "mojmap")
         }
     }
-
+    localRuntime "curse.maven:create-328085:7178775"
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
@@ -206,7 +215,7 @@ dependencies {
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
 //    implementation "curse.maven:immersive-engineering-231951:6506639"
-    implementation "curse.maven:ars-additions-974408:6928685"
+//    implementation "curse.maven:ars-additions-974408:6928685"
 }
 
 jar {

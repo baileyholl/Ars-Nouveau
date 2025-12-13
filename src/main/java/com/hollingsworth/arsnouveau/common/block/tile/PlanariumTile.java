@@ -60,7 +60,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     public static Map<ResourceKey<Level>, ClientDimEntry> clientTemplates = new ConcurrentHashMap<>();
 
     public ResourceKey<Level> key;
-    private long lastUpdated = 0;
+    public long lastUpdated = 0;
     boolean playersNearby = true;
     public Component name;
     public boolean isDimModel = false;
@@ -112,9 +112,10 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
             ArrayList<CulledStatePos> statePos = new ArrayList<>();
             var palette = ((StructureTemplateAccessor) template).getPalettes().get(0);
             for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
-                statePos.add(new CulledStatePos(blockInfo.state(), blockInfo.pos()));
+                statePos.add(new CulledStatePos(blockInfo.state(), blockInfo.pos(), blockInfo.nbt()));
             }
-            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, statePos, level.getGameTime(), new PlanariumRenderingWorld(this.level, statePos, BlockPos.ZERO)));
+            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, statePos, level.getGameTime(), new PlanariumRenderingWorld(this.level, statePos)));
+            this.lastUpdated = level.getGameTime();
         }
     }
 

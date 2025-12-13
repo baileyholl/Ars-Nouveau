@@ -8,15 +8,16 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CulledStatePos {
     public BlockState state;
     public BlockPos pos;
-    private CompoundTag tag;
+    public CompoundTag tag;
     private boolean[] renderDirections = new boolean[6];
     private boolean skipRender = false;
     private boolean needsUpdate;
 
 
-    public CulledStatePos(BlockState state, BlockPos pos) {
+    public CulledStatePos(BlockState state, BlockPos pos, CompoundTag tag) {
         this.state = state;
         this.pos = pos;
+        this.tag = tag;
         needsUpdate = true;
     }
 

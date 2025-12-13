@@ -7,6 +7,7 @@ import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -54,15 +55,16 @@ import net.minecraft.world.ticks.LevelTickAccess;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     ClientChunkCache clientChunkCache;
+    public Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
 
-    public PlanariumRenderingWorld(Level rWorld, List<CulledStatePos> coordinates, BlockPos lookingAt) {
+    public PlanariumRenderingWorld(Level rWorld, List<CulledStatePos> coordinates) {
         this(rWorld);
-        this.lookingAt = lookingAt;
         for (CulledStatePos statePos : coordinates) {
             this.setBlock(statePos.pos, statePos.state, 0);
         }
@@ -70,6 +72,9 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
             try {
                 BlockState adjustedState = Block.updateFromNeighbourShapes(statePos.state, this, statePos.pos);
                 this.setBlock(statePos.pos, adjustedState, 0);
+                if (adjustedState.hasBlockEntity()) {
+                    this.cacheBlockEntity(statePos.pos, adjustedState, statePos.tag);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,22 +95,25 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     public final HashMap<BlockPos, BlockState> positions = new HashMap<>();
     private Level realWorld;
-    private BlockPos lookingAt;
 
+    private void cacheBlockEntity(BlockPos pos, BlockState state, CompoundTag tag) {
+        BlockState blockState = getBlockState(pos);
+        if (blockState.hasBlockEntity()) {
+            BlockEntity blockEntity = ((EntityBlock) blockState.getBlock()).newBlockEntity(pos, blockState);
+            if (blockEntity == null) {
+                return;
+            }
+            blockEntity.setLevel(this.realWorld);
+            blockEntity.onLoad();
+            blockEntity.loadWithComponents(tag, this.registryAccess());
+            blockEntityMap.put(pos, blockEntity);
+        }
+    }
 
     @Nullable
     @Override
     public BlockEntity getBlockEntity(BlockPos pos) {
-        BlockState blockState = getBlockState(pos);
-        if (blockState.hasBlockEntity()) {
-            BlockEntity blockEntity = ((EntityBlock) blockState.getBlock()).newBlockEntity(pos.offset(lookingAt), blockState);
-            if (blockEntity == null) {
-                return null;
-            }
-            blockEntity.setLevel(this.realWorld);
-            return blockEntity;
-        }
-        return null;
+        return blockEntityMap.get(pos);
     }
 
     @Override
@@ -151,17 +159,17 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public RegistryAccess registryAccess() {
-        return null;
+        return this.realWorld.registryAccess();
     }
 
     @Override
     public PotionBrewing potionBrewing() {
-        return null;
+        return this.realWorld.potionBrewing();
     }
 
     @Override
     public FeatureFlagSet enabledFeatures() {
-        return null;
+        return this.realWorld.enabledFeatures();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -217,12 +225,12 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public int getRawBrightness(BlockPos blockPos, int amount) {
-        return realWorld.getRawBrightness(blockPos.offset(lookingAt), amount);
+        return realWorld.getRawBrightness(blockPos, amount);
     }
 
     @Override
     public boolean canSeeSky(BlockPos blockPos) {
-        return realWorld.canSeeSky(blockPos.offset(lookingAt));
+        return realWorld.canSeeSky(blockPos);
     }
 
     @Override
