@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.world.LevelInLevelRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
@@ -108,17 +107,17 @@ public class ClientEvents {
             }
         }
         PlanariumRenderer.deferredRenders = new ArrayList<>(8);
-        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
-            renderer.onRenderStage(event);
-        }
+//        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
+//            renderer.onRenderStage(event);
+//        }
     }
 
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
-        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
-            renderer.onClientTick(event);
-        }
-    }
+//    @SubscribeEvent
+//    public static void onClientTick(ClientTickEvent.Post event) {
+//        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
+//            renderer.onClientTick(event);
+//        }
+//    }
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
