@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -40,7 +39,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -79,7 +77,6 @@ public class ArsNouveau {
 
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.addListener(ArsNouveau::onServerStopped);
-        NeoForge.EVENT_BUS.addListener(ArsNouveau::onPlayerLoggedOut);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
@@ -90,9 +87,6 @@ public class ArsNouveau {
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
         modContainer.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-        if (FMLEnvironment.dist.isClient()) {
-            NeoForge.EVENT_BUS.register(ClientEventHandler.class);
-        }
         modEventBus.addListener(Networking::register);
         modEventBus.addListener(ModSetup::registerEvents);
         modEventBus.addListener(CapabilityRegistry::registerCapabilities);
@@ -203,11 +197,6 @@ public class ArsNouveau {
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
         EventQueue.getServerInstance().clear();
-    }
-
-    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
-        EventQueue.getClientQueue().clear();
-        PlanariumTile.dimManager.entries.clear();
     }
 
     public static ResourceLocation prefix(String str) {

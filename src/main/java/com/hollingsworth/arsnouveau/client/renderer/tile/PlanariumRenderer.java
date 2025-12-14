@@ -10,7 +10,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -26,7 +25,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -39,7 +37,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
@@ -50,7 +47,6 @@ import java.util.stream.Collectors;
 public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
 
     GeoModel dimModel = new PlanariumModel(true);
-    static final Direction[] DIRECTIONS = Direction.values();
 
     public static List<WeakReference<PlanariumTile>> deferredRenders = new ArrayList<>();
     public static Map<ResourceKey<Level>, StructureRenderData> structureRenderData = new WeakHashMap<>();
@@ -86,7 +82,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
 //            LevelInLevelRenderer.createAndAddRenderer(blockEntity.key, blockEntity.getTemplate(), new Vector3f(pos.getX(), pos.getY() + 1, pos.getZ()));
 //        }
 
-
         structureRenderData.computeIfAbsent(blockEntity.key, (be) -> {
 
             var data = new StructureRenderData(blockEntity.getTemplate(), blockEntity.lastUpdated);
@@ -95,39 +90,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         });
 
         deferredRenders.add(new WeakReference<>(blockEntity));
-        float pad = 0.0025f;
-        float scale = (1.0f - 2.0f * pad) / (float) 32;
-        float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
-//        poseStack.pushPose();
-//        poseStack.translate(offset, offset, offset);
-//
-//        poseStack.scale(scale, scale, scale);
-//        poseStack.translate(0, 26, 0);
-
-
-        StructureRenderData data = structureRenderData.get(blockEntity.key);
-        for (CulledStatePos pos : data.statePosCache) {
-            if (pos.state.isAir() || isModelRender(pos.state))
-                continue;
-            poseStack.pushPose();
-            poseStack.translate(offset, offset, offset);
-
-            poseStack.scale(scale, scale, scale);
-            poseStack.translate(pos.pos.getX(), 26 + pos.pos.getY(), pos.pos.getZ());
-
-            BlockEntity entity = data.fakeRenderingWorld.getBlockEntity(pos.pos);
-            if (entity != null) {
-                ItemStack stack = new ItemStack(pos.state.getBlock());
-                BlockEntityWithoutLevelRenderer geckoRenderer = GeoRenderProvider.of(stack).getGeoItemRenderer();
-                if (geckoRenderer != null) {
-                    poseStack.translate(0, -0.5, 0);
-                }
-                Minecraft.getInstance().getBlockRenderer().renderSingleBlock(pos.state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-            }
-            poseStack.popPose();
-        }
-//        poseStack.popPose();
-
         // old culled code
 //        PlanariumTile.ClientDimEntry clientDim = PlanariumTile.clientTemplates.get(blockEntity.key);
 //        PlanariumRenderingWorld fakeRenderingWorld = clientDim.fakeRenderingWorld();
@@ -455,7 +417,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         StructureRenderData data = PlanariumRenderer.structureRenderData.get(tile.key);
         //Start drawing the Render and cache it, used for both Building and Copy/Paste
         if (shouldUpdateRender(data, tile)) {
-            System.out.println("updating");
             clearByteBuffers(data);
             data = new StructureRenderData(tile.getTemplate(), tile.lastUpdated);
             PlanariumRenderer.structureRenderData.put(tile.key, data);
@@ -530,7 +491,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
                         modelBlockRenderer.tesselateBlock(data.fakeRenderingWorld, ibakedmodel, renderState, pos.pos.offset(renderPos), matrix, builder, true, random, renderState.getSeed(pos.pos.offset(renderPos)), OverlayTexture.NO_OVERLAY);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //System.out.println(e);
                     }
                 }
             }
@@ -615,7 +575,7 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
                 RenderType drawRenderType = renderType;
                 VertexBuffer vertexBuffer = data.vertexBuffers.get(renderType);
                 if (vertexBuffer.getFormat() == null)
-                    continue; //IDE says this is never null, but if we remove this check we crash because its null so....
+                    continue;
                 drawRenderType.setupRenderState();
                 vertexBuffer.bind();
                 vertexBuffer.drawWithShader(poseStack.last().pose(), new Matrix4f(projectionMatrix), RenderSystem.getShader());
@@ -627,16 +587,12 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         }
         poseStack.popPose();
 
-        //If any of the blocks in the render didn't have a model (like chests) we draw them here. This renders AND draws them, so more expensive than caching, but I don't think we have a choice
-
-//        data.fakeRenderingWorld = new PlanariumRenderingWorld(player.level(), data.statePosCache);
         BlockEntityRenderDispatcher dispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
         Level originalLevel = dispatcher.level;
         dispatcher.prepare(originalLevel, Minecraft.getInstance().getBlockEntityRenderDispatcher().camera, Minecraft.getInstance().hitResult);
 
         for (BlockEntity blockEntity : data.fakeRenderingWorld.blockEntityMap.values()) {
             BlockPos pos = blockEntity.getBlockPos();
-            BlockState state = blockEntity.getBlockState();
             poseStack.pushPose();
 
             poseStack.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
@@ -645,18 +601,10 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
 
             poseStack.scale(scale, scale, scale);
             poseStack.translate(pos.getX(), 26 + pos.getY(), pos.getZ());
-
-//            ItemStack stack = new ItemStack(state.getBlock());
-//            BlockEntityWithoutLevelRenderer geckoRenderer = GeoRenderProvider.of(stack).getGeoItemRenderer();
-//            if (geckoRenderer != null) {
-//                poseStack.translate(0, -0.5, 0);
-//            }
-//            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, data.bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             BlockEntityRenderer renderer = dispatcher.getRenderer(blockEntity);
             if (renderer != null) {
                 renderer.render(blockEntity, 1.0f, poseStack, data.bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             }
-//            blockEntity.getBlockPos()
             poseStack.popPose();
         }
     }
