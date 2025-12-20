@@ -34,6 +34,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -602,8 +603,17 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
             poseStack.scale(scale, scale, scale);
             poseStack.translate(pos.getX(), 26 + pos.getY(), pos.getZ());
             BlockEntityRenderer renderer = dispatcher.getRenderer(blockEntity);
+            if (blockEntity instanceof PlanariumTile planariumTile) {
+                planariumTile.key = null;
+            }
             if (renderer != null) {
-                renderer.render(blockEntity, 1.0f, poseStack, data.bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                try {
+                    renderer.render(blockEntity, 1.0f, poseStack, data.bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                } catch (Exception e) {
+                    if (tile.getLevel().getGameTime() % 100 == 0 || !FMLEnvironment.production) {
+                        e.printStackTrace();
+                    }
+                }
             }
             poseStack.popPose();
         }
