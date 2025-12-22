@@ -16,13 +16,14 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.Optional;
 
-public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRecipe> {
+public class AlakarkinosRecipeCategory implements IRecipeCategory<RecipeHolder<AlakarkinosRecipe>> {
     public static float ITEMS_PER_ROW = 7f;
 
     public IDrawable background;
@@ -34,8 +35,8 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRec
     }
 
     @Override
-    public RecipeType<AlakarkinosRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.ALAKARKINOS_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<AlakarkinosRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.ALAKARKINOS_RECIPE_TYPE.get();
     }
 
     @Override
@@ -54,7 +55,8 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRec
     }
 
     @Override
-    public void draw(AlakarkinosRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlakarkinosRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        AlakarkinosRecipe recipe = recipeHolder.value();
         Minecraft minecraft = Minecraft.getInstance();
         String prepared = recipe.table().location().getPath().replace("archaeology/", "").replaceAll("_[0-9]", "").replaceAll("_", " ").toLowerCase(Locale.ROOT);
         String name = WordUtils.capitalizeFully(prepared);
@@ -62,7 +64,8 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<AlakarkinosRec
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AlakarkinosRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlakarkinosRecipe> recipeHolder, IFocusGroup focuses) {
+        AlakarkinosRecipe recipe = recipeHolder.value();
         DecimalFormat df = new DecimalFormat("##.##%");
         Optional<LootDrops> lootDrops = recipe.drops();
         if (lootDrops.isEmpty()) return;
