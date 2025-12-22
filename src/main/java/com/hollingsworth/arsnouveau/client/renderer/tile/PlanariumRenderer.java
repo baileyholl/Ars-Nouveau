@@ -61,28 +61,15 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
     public static List<WeakReference<PlanariumTile>> deferredRenders = new ArrayList<>();
     public static Map<ResourceKey<Level>, StructureRenderData> structureRenderData = new WeakHashMap<>();
     public static Direction[] DIRECTIONS = Direction.values();
+    public static float pad = 0.0025f;
+    public static float scale = (1.0f - 2.0f * pad) / (float) 32;
+    public static float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
 
     public PlanariumRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
         super(new PlanariumModel(false));
 
     }
-
-    @Override
-    public boolean shouldRenderOffScreen(PlanariumTile blockEntity) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldRender(PlanariumTile blockEntity, Vec3 cameraPos) {
-        return true;
-    }
-
-    @Override
-    public int getViewDistance() {
-        return 50;
-    }
-
-
+    
     @Override
     public void render(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         super.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
@@ -97,9 +84,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
 
         deferredRenders.add(new WeakReference<>(blockEntity));
 
-        float pad = 0.0025f;
-        float scale = (1.0f - 2.0f * pad) / (float) 32;
-        float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
         StructureRenderData renderData = structureRenderData.get(blockEntity.key);
         if (renderData != null) {
             BlockEntityRenderDispatcher dispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
@@ -517,9 +501,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
 
     //Draw what we've cached
     public static void drawRender(PlanariumTile tile, PoseStack poseStack, Matrix4f projectionMatrix, Matrix4f modelViewMatrix, Player player) {
-        float pad = 0.0025f;
-        float scale = (1.0f - 2.0f * pad) / (float) 32;
-        float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
 
 
         if (tile == null) {
