@@ -214,6 +214,10 @@ dependencies {
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
 //    implementation "curse.maven:immersive-engineering-231951:6506639"
 //    implementation "curse.maven:ars-additions-974408:6928685"
+    implementation "curse.maven:supplementaries-412082:7326712"
+    implementation "curse.maven:selene-499980:7325079"
+    implementation "curse.maven:bibliocraft-legacy-1122260:7055118"
+    implementation "curse.maven:sodium-394468:6382651"
 }
 
 jar {

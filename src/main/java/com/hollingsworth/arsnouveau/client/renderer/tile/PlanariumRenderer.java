@@ -78,11 +78,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         super.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
         if (blockEntity.getTemplate() == null)
             return;
-//        if (!LevelInLevelRenderer.renderers.containsKey(blockEntity.key)) {
-//            BlockPos pos = blockEntity.getBlockPos();
-//            LevelInLevelRenderer.createAndAddRenderer(blockEntity.key, blockEntity.getTemplate(), new Vector3f(pos.getX(), pos.getY() + 1, pos.getZ()));
-//        }
-
         structureRenderData.computeIfAbsent(blockEntity.key, (be) -> {
 
             var data = new StructureRenderData(blockEntity.getTemplate(), blockEntity.lastUpdated);
@@ -91,6 +86,40 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         });
 
         deferredRenders.add(new WeakReference<>(blockEntity));
+
+        float pad = 0.0025f;
+        float scale = (1.0f - 2.0f * pad) / (float) 32;
+        float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
+        StructureRenderData renderData = structureRenderData.get(blockEntity.key);
+        if (renderData != null) {
+            BlockEntityRenderDispatcher dispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
+            Level originalLevel = dispatcher.level;
+            dispatcher.prepare(originalLevel, Minecraft.getInstance().getBlockEntityRenderDispatcher().camera, Minecraft.getInstance().hitResult);
+
+
+            for (BlockEntity fakeTile : renderData.fakeRenderingWorld.blockEntityMap.values()) {
+                BlockPos pos = fakeTile.getBlockPos();
+                poseStack.pushPose();
+                poseStack.translate(offset, offset, offset);
+
+                poseStack.scale(scale, scale, scale);
+                poseStack.translate(pos.getX(), 26 + pos.getY(), pos.getZ());
+                BlockEntityRenderer renderer = dispatcher.getRenderer(fakeTile);
+                if (fakeTile instanceof PlanariumTile planariumTile) {
+                    planariumTile.key = null;
+                }
+                if (renderer != null) {
+                    try {
+                        renderer.render(fakeTile, partialTick, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                    } catch (Exception e) {
+                        if (fakeTile.getLevel().getGameTime() % 100 == 0 || !FMLEnvironment.production) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                poseStack.popPose();
+            }
+        }
         // old culled code
 //        PlanariumTile.ClientDimEntry clientDim = PlanariumTile.clientTemplates.get(blockEntity.key);
 //        PlanariumRenderingWorld fakeRenderingWorld = clientDim.fakeRenderingWorld();
@@ -591,32 +620,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
         BlockEntityRenderDispatcher dispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
         Level originalLevel = dispatcher.level;
         dispatcher.prepare(originalLevel, Minecraft.getInstance().getBlockEntityRenderDispatcher().camera, Minecraft.getInstance().hitResult);
-
-        for (BlockEntity blockEntity : data.fakeRenderingWorld.blockEntityMap.values()) {
-            BlockPos pos = blockEntity.getBlockPos();
-            poseStack.pushPose();
-
-            poseStack.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
-            poseStack.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
-            poseStack.translate(offset, offset, offset);
-
-            poseStack.scale(scale, scale, scale);
-            poseStack.translate(pos.getX(), 26 + pos.getY(), pos.getZ());
-            BlockEntityRenderer renderer = dispatcher.getRenderer(blockEntity);
-            if (blockEntity instanceof PlanariumTile planariumTile) {
-                planariumTile.key = null;
-            }
-            if (renderer != null) {
-                try {
-                    renderer.render(blockEntity, 1.0f, poseStack, data.bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                } catch (Exception e) {
-                    if (tile.getLevel().getGameTime() % 100 == 0 || !FMLEnvironment.production) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            poseStack.popPose();
-        }
     }
 
     //Sort all the RenderTypes
