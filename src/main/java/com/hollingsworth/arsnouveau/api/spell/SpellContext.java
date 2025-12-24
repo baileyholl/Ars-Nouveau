@@ -348,6 +348,11 @@ public class SpellContext implements Cloneable {
         return ASSOCIATIONS.remove(o);
     }
 
+    @Nullable
+    public static void clearAssociations() {
+        ASSOCIATIONS.clear();
+    }
+
     /**
      * The type of caster that created the spell. Used for removing or changing behaviors of effects that would otherwise cause problems, like GUI opening effects.
      */
