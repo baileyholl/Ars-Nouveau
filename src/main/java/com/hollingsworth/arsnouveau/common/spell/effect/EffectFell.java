@@ -68,7 +68,9 @@ public class EffectFell extends AbstractEffect {
                     }
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false, shooter);
                 } else {
+                    spellContext.associate(shooter);
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true, shooter);
+                    SpellContext.removeAssociation(shooter);
                 }
             }
         }
