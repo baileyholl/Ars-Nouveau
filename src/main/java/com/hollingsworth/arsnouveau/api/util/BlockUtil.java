@@ -315,7 +315,7 @@ public class BlockUtil {
      * Attempts to harvest a block as if the player with the given uuid
      * harvested it while holding the passed item.
      *
-     * @param world    The world the block is in.
+     * @param level    The world the block is in.
      * @param pos      The position of the block.
      * @param mainhand The main hand item that the player is supposibly holding.
      * @param source   The UUID of the breaking player.
@@ -381,6 +381,16 @@ public class BlockUtil {
 
     }
 
+    /**
+     * A copy of {@link BlockUtil#breakExtraBlock(ServerLevel, BlockPos, ItemStack, UUID, boolean)} that associates the breaker to a SpellContext.
+     *
+     * @param spellContext SpellContext to associate the breaker with.
+     * @param level    The world the block is in.
+     * @param pos      The position of the block.
+     * @param mainhand The main hand item that the player is supposibly holding.
+     * @param source   The UUID of the breaking player.
+     * @return If the block was successfully broken.
+     */
     public static boolean breakExtraBlock(SpellContext spellContext, ServerLevel level, BlockPos pos, ItemStack mainhand, @Nullable UUID source, boolean bypassTool) {
         BlockState state = level.getBlockState(pos);
         FakePlayer player = ANFakePlayer.getPlayer(level);
