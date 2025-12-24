@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -34,15 +35,12 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static java.lang.Math.abs;
 
 public class BlockUtil {
-
     public static BlockPos toPos(Vec3 vec) {
         return BlockPos.containing(vec.x, vec.y, vec.z);
     }
@@ -363,7 +361,12 @@ public class BlockUtil {
                     return true;
                 } else {
                     ItemStack tool = player.getMainHandItem();
+                    var assocSpelLContext = SpellContext.getAsssociated(tool);
                     ItemStack toolCopy = tool.copy();
+                    if (assocSpelLContext != null) {
+                        assocSpelLContext.associate(toolCopy);
+                    }
+
                     boolean canHarvest = bypassTool || newState.canHarvestBlock(level, pos, player);
                     tool.mineBlock(level, newState, pos, player);
                     boolean removed = removeBlock(level, player, pos, newState, canHarvest);

@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpellContext implements Cloneable {
+    private static final Object2ObjectOpenHashMap<Object, SpellContext> ASSOCIATIONS = new Object2ObjectOpenHashMap<>();
 
     private boolean isCanceled;
     @Nullable
@@ -329,6 +331,21 @@ public class SpellContext implements Cloneable {
     @Nullable
     public CancelReason getCancelReason() {
         return cancelReason;
+    }
+
+    @Nullable
+    public SpellContext associate(Object o) {
+        return ASSOCIATIONS.put(o, this);
+    }
+
+    @Nullable
+    public static SpellContext getAsssociated(Object o) {
+        return ASSOCIATIONS.get(o);
+    }
+
+    @Nullable
+    public static SpellContext removeAssociation(Object o) {
+        return ASSOCIATIONS.remove(o);
     }
 
     /**
