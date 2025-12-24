@@ -361,12 +361,7 @@ public class BlockUtil {
                     return true;
                 } else {
                     ItemStack tool = player.getMainHandItem();
-                    var assocSpelLContext = SpellContext.getAsssociated(tool);
                     ItemStack toolCopy = tool.copy();
-                    if (assocSpelLContext != null) {
-                        assocSpelLContext.associate(toolCopy);
-                    }
-
                     boolean canHarvest = bypassTool || newState.canHarvestBlock(level, pos, player);
                     tool.mineBlock(level, newState, pos, player);
                     boolean removed = removeBlock(level, player, pos, newState, canHarvest);
@@ -380,6 +375,71 @@ public class BlockUtil {
                     }
 
                     return true;
+                }
+            }
+        }
+
+    }
+
+    public static boolean breakExtraBlock(SpellContext spellContext, ServerLevel level, BlockPos pos, ItemStack mainhand, @Nullable UUID source, boolean bypassTool) {
+        BlockState state = level.getBlockState(pos);
+        FakePlayer player = ANFakePlayer.getPlayer(level);
+        if (source != null) {
+            var username = UsernameCache.getLastKnownUsername(source);
+            if (username != null) {
+                player = FakePlayerFactory.get(level, new GameProfile(source, username));
+                Player realPlayer = level.getPlayerByUUID(source);
+                if (realPlayer != null) {
+                    // Move the fakeplayer to the position of the real player, if one is known
+                    player.setPos(realPlayer.position());
+                }
+            }
+        }
+
+        player.getInventory().items.set(player.getInventory().selected, mainhand);
+
+        if (!bypassTool && (state.getDestroySpeed(level, pos) < 0 || !state.canHarvestBlock(level, pos, player))) {
+            return false;
+        }
+
+        GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
+        BlockEvent.BreakEvent exp = CommonHooks.fireBlockBreak(level, type, player, pos, state);
+        if (exp.isCanceled()) {
+            return false;
+        } else {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            Block block = state.getBlock();
+            if (block instanceof GameMasterBlock && !player.canUseGameMasterBlocks()) {
+                level.sendBlockUpdated(pos, state, state, 3);
+                return false;
+            } else if (player.blockActionRestricted(level, pos, type)) {
+                return false;
+            } else {
+                try {
+                    spellContext.associate(player);
+                    BlockState newState = block.playerWillDestroy(level, pos, state, player);
+                    if (player.getAbilities().instabuild) {
+                        removeBlock(level, player, pos, newState, false);
+                        return true;
+                    } else {
+                        ItemStack tool = player.getMainHandItem();
+                        ItemStack toolCopy = tool.copy();
+                        boolean canHarvest = bypassTool || newState.canHarvestBlock(level, pos, player);
+                        tool.mineBlock(level, newState, pos, player);
+                        boolean removed = removeBlock(level, player, pos, newState, canHarvest);
+
+                        if (canHarvest && removed) {
+                            block.playerDestroy(level, player, pos, newState, blockEntity, toolCopy);
+                        }
+
+                        if (tool.isEmpty() && !toolCopy.isEmpty()) {
+                            EventHooks.onPlayerDestroyItem(player, toolCopy, InteractionHand.MAIN_HAND);
+                        }
+
+                        return true;
+                    }
+                } finally {
+                    SpellContext.removeAssociation(player);
                 }
             }
         }

@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.ritual.RitualEventQueue;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
@@ -486,36 +485,22 @@ public class EventHandler {
             return;
         }
 
-        var tool = event.getTool();
-        var spellContext = SpellContext.getAsssociated(tool);
+        var spellContext = SpellContext.getAsssociated(event.getBreaker());
         if (spellContext == null) {
             return;
         }
 
-        var nextIsPickup = false;
-        var spell = spellContext.getSpell().unsafeList();
-        for (int i = spellContext.getCurrentIndex(); i < spell.size(); i++) {
-            if (spell.get(i) instanceof AbstractEffect effect) {
-                if (effect instanceof EffectPickup) {
-                    nextIsPickup = true;
-                }
-                break;
-            }
-        }
+        if (spellContext.getNextEffect() instanceof EffectPickup) {
+            var manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+            var unwrapped = spellContext.getUnwrappedCaster();
 
-        if (!nextIsPickup) {
-            return;
-        }
-
-        var manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
-        var unwrapped = spellContext.getUnwrappedCaster();
-
-        var drops = event.getDrops().listIterator();
-        while (drops.hasNext()) {
-            var drop = drops.next();
-            if (EffectPickup.tryPickup(drop, unwrapped, event.getLevel(), manager)) {
-                if (drop.getItem().isEmpty()) {
-                    drops.remove();
+            var drops = event.getDrops().listIterator();
+            while (drops.hasNext()) {
+                var drop = drops.next();
+                if (EffectPickup.tryPickup(drop, unwrapped, event.getLevel(), manager)) {
+                    if (drop.getItem().isEmpty()) {
+                        drops.remove();
+                    }
                 }
             }
         }

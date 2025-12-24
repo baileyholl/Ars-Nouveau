@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class SpellContext implements Cloneable {
     private static final Object2ObjectOpenHashMap<Object, SpellContext> ASSOCIATIONS = new Object2ObjectOpenHashMap<>();
@@ -331,6 +332,24 @@ public class SpellContext implements Cloneable {
     @Nullable
     public CancelReason getCancelReason() {
         return cancelReason;
+    }
+
+    @Nullable
+    public AbstractSpellPart getNextMatchingPart(Predicate<AbstractSpellPart> test) {
+        var spell = this.spell.unsafeList();
+        for (int i = this.getCurrentIndex(); i < spell.size(); i++) {
+            var part = spell.get(i);
+            if (test.test(part)) {
+                return part;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public AbstractEffect getNextEffect() {
+        return this.getNextMatchingPart(p -> p instanceof AbstractEffect) instanceof AbstractEffect effect ? effect : null;
     }
 
     @Nullable

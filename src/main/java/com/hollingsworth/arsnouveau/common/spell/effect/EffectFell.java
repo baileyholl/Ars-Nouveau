@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,24 +35,42 @@ public class EffectFell extends AbstractEffect {
     public void onResolveBlock(BlockHitResult ray, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
+        InventoryManager manager = null;
+        if (spellContext.getNextEffect() instanceof EffectPickup) {
+            manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+        }
+
         if (isTree(state)) {
             Set<BlockPos> list = getTree(world, blockPos, (int) (GENERIC_INT.get() + Math.round(AOE_BONUS.get() * spellStats.getAoeMultiplier())));
             world.levelEvent(2001, blockPos, Block.getId(state));
-            list.forEach(listPos -> {
+            for (BlockPos listPos : list) {
                 if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos) || !BlockUtil.canBlockBeHarvested(spellStats, world, listPos))
-                    return;
+                    continue;
                 if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
-                    world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerLevel) world, listPos, shooter)).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
+                    for (ItemStack i : world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerLevel) world, listPos, shooter))) {
+                        if (manager != null) {
+                            i = manager.insertStack(i);
+                        }
+                        if (!i.isEmpty()) {
+                            world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i));
+                        }
+                    }
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false, shooter);
                 } else if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
-                    world.getBlockState(listPos)
-                            .getDrops(LootUtil.getFortuneContext((ServerLevel) world, listPos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)))
-                            .forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
+                    for (ItemStack i : world.getBlockState(listPos)
+                            .getDrops(LootUtil.getFortuneContext((ServerLevel) world, listPos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)))) {
+                        if (manager != null) {
+                            i = manager.insertStack(i);
+                        }
+                        if (!i.isEmpty()) {
+                            world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i));
+                        }
+                    }
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false, shooter);
                 } else {
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true, shooter);
                 }
-            });
+            }
         }
     }
 
