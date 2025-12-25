@@ -231,6 +231,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.connections.cleared", "Connections cleared.");
         add("ars_nouveau.connections.take", "Relay set to take from %s");
         add("ars_nouveau.connections.send", "Relay set to send to %s");
+        add("ars_nouveau.connections.turret.take_from", "Turret set to take from %s");
         add("item.minecraft.splash_potion.effect.mana_regen_potion_strong", "Splash Potion of Mana Regeneration");
         add("item.minecraft.splash_potion.effect.mana_regen_potion", "Splash Potion of Mana Regeneration");
         add("item.minecraft.splash_potion.effect.mana_regen_potion_long", "Splash Potion of Mana Regeneration");
@@ -284,6 +285,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.purple_archwood_wood", "Vexing Archwood Wood");
         add("block.ars_nouveau.blue_archwood_wood", "Cascading Archwood Wood");
         add("ars_nouveau.connections.fail", "Too far away.");
+        add("ars_nouveau.connections.dimension_mismatch", "Can't connect to a different dimension.");
         add("block.ars_nouveau.archwood_slab", "Archwood Slab");
         add("block.ars_nouveau.archwood_fence", "Archwood Fence");
         add("block.ars_nouveau.archwood_fence_gate", "Archwood Fence Gate");
@@ -414,6 +416,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.whirlisprig.tooltip_mood", "Mood: ");
         add("ars_nouveau.source_jar.fullness", "%d%% full");
         add("ars_nouveau.spell_turret.casting", "Casting: ");
+        add("ars_nouveau.spell_turret.linked_source_provider", "Taking source from %s.");
         add("ars_nouveau.wixie.crafting", "Crafting: ");
         add("ars_nouveau.wixie.need_mana", "Source needed.");
         add("ars_nouveau.wixie.needs", "Needs: ");
@@ -701,7 +704,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.warp_portal", "Warp Portal");
         add("ars_nouveau.page4.warp_portal", "A magical portal that can send players, mobs, spells, and items to any location in the same dimension.");
         add("ars_nouveau.page.ritual_brazier", "A brazier that may be used as decoration or for performing rituals. To light the brazier for decoration, cast a Light spell on the brazier. The color of the brazier corresponds with the color of the spell. Applying a redstone signal will disable a running ritual. For information on performing rituals, see the dedicated section on rituals.");
-        add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
+        add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. To cast spells, turrets will draw source from linked or nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
         add("ars_nouveau.page2.basic_spell_turret", "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.");
         add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, Sensitive and Redstone glyphs for free.");
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");

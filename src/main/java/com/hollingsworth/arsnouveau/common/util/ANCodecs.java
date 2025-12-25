@@ -7,6 +7,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -36,6 +39,17 @@ public class ANCodecs {
             ByteBufCodecs.FLOAT,
             i -> i.y,
             Vec2::new
+    );
+
+    public static final Codec<it.unimi.dsi.fastutil.Pair<BlockPos, Optional<Direction>>> BLOCKPOS_DIRECTION_PAIR_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BlockPos.CODEC.fieldOf("pos").forGetter(it.unimi.dsi.fastutil.Pair::first),
+            Direction.CODEC.optionalFieldOf("face").forGetter(it.unimi.dsi.fastutil.Pair::second)
+    ).apply(instance, it.unimi.dsi.fastutil.Pair::of));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, it.unimi.dsi.fastutil.Pair<BlockPos, Optional<Direction>>> BLOCKPOS_DIRECTION_PAIR_STREAM_CDOEC = StreamCodec.<RegistryFriendlyByteBuf, it.unimi.dsi.fastutil.Pair<BlockPos, Optional<Direction>>, BlockPos, Optional<Direction>>composite(
+            BlockPos.STREAM_CODEC, it.unimi.dsi.fastutil.Pair::first,
+            ByteBufCodecs.optional(Direction.STREAM_CODEC), it.unimi.dsi.fastutil.Pair::second,
+            Pair::of
     );
 
     public static <T extends Enum<T>> Codec<T> createEnumCodec(Class<T> enumClass) {
