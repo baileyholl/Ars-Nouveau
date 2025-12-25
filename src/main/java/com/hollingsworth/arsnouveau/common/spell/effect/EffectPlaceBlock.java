@@ -115,9 +115,9 @@ public class EffectPlaceBlock extends AbstractEffect {
 
             boolean placeFailure = false;
             if (blockSnapshots.size() > 1) {
-                placeFailure = EventHooks.onMultiBlockPlace(fakePlayer, blockSnapshots, nearestDirection);
+                placeFailure = EventHooks.onMultiBlockPlace(fakePlayer, blockSnapshots, result.getDirection());
             } else if (blockSnapshots.size() == 1) {
-                placeFailure = EventHooks.onBlockPlace(fakePlayer, blockSnapshots.getFirst(), nearestDirection);
+                placeFailure = EventHooks.onBlockPlace(fakePlayer, blockSnapshots.getFirst(), result.getDirection());
             }
 
             if (placeFailure) {
