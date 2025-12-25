@@ -310,22 +310,16 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                             return;
                         }
 
-                        var pushed = false;
+                        BundleItem.getId()
                         ArrayList<ItemStack> newItems = new ArrayList<>();
                         for (var item : bundleContents.items()) {
-                            if (!pushed && !item.isEmpty()) {
-                                te.pushStack(item.split(1), selectedTab);
-                                if (!item.isEmpty()) {
-                                    newItems.add(item);
-                                }
-                                player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
-                                pushed = true;
-                                continue;
+                            item = te.pushStack(item, selectedTab);
+                            if (!item.isEmpty()) {
+                                newItems.add(item);
                             }
-
-                            newItems.add(item);
                         }
 
+                        player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
                         stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                     }
 
@@ -405,15 +399,22 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                                 return;
                             }
 
+                            var pushed = false;
                             ArrayList<ItemStack> newItems = new ArrayList<>();
                             for (var item : bundleContents.items()) {
-                                item = te.pushStack(item, selectedTab);
-                                if (!item.isEmpty()) {
-                                    newItems.add(item);
+                                if (!pushed && !item.isEmpty()) {
+                                    item = te.pushStack(item, selectedTab);
+                                    if (!item.isEmpty()) {
+                                        newItems.add(item);
+                                    }
+                                    player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                                    pushed = true;
+                                    continue;
                                 }
+
+                                newItems.add(item);
                             }
 
-                            player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
                             stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                         }
 
