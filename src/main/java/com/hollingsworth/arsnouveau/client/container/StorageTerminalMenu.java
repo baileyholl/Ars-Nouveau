@@ -310,7 +310,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                             return;
                         }
 
-                        BundleItem.getId()
                         ArrayList<ItemStack> newItems = new ArrayList<>();
                         for (var item : bundleContents.items()) {
                             item = te.pushStack(item, selectedTab);
