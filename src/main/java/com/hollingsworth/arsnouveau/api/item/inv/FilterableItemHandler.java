@@ -98,7 +98,9 @@ public class FilterableItemHandler {
         // Iterate all slots until our stack is empty, caching along the way
         for (int i = 0; i < sizeInventory; i++) {
             ItemStack slot = inventory.getStackInSlot(i);
-            if (ItemStack.isSameItemSameComponents(slot, stack)) {
+            if (slot.isEmpty()) {
+                emptySlots.add(i);
+            } else {
                 int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
                 if (stack.getCount() != count) {
@@ -107,8 +109,6 @@ public class FilterableItemHandler {
                 if (stack.isEmpty()) {
                     return stack;
                 }
-            } else if (slot.isEmpty()) {
-                emptySlots.add(i);
             }
         }
 
@@ -188,6 +188,7 @@ public class FilterableItemHandler {
             return stack;
         }
 
+        boolean stackIsStackable = stack.isStackable();
         List<Integer> invalidSlots = new ArrayList<>();
         int maxSlots = dest.getSlots();
         for (int slot : slots) {
@@ -201,10 +202,11 @@ public class FilterableItemHandler {
             // If this stack wants to stack and our cached slot is air but the slot is not, this means our item has moved locations.
             // If we blindly insert here, we can create partial stacks instead of combining.
             // If this is a non-stackable, ignore this and insert anywhere because our slot list is air.
-            if (stack.isStackable() && targetStack.isEmpty()) {
+            if (stackIsStackable && targetStack.isEmpty()) {
                 invalidSlots.add(slot);
                 continue;
             }
+
             stack = dest.insertItem(slot, stack, simulate);
             if (stack.getCount() == count) {
                 if (!ItemStack.isSameItemSameComponents(targetStack, stack)) {
