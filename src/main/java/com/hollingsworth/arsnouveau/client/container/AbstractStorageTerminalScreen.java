@@ -493,10 +493,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         if (slotIDUnderMouse > -1) {
             SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
             if (isPullOne(mouseButton)) {
-                if (slot.stack() != null && slot.stack().getQuantity() > 0) {
-                    storageSlotClick(slot.stack(), PULL_ONE, isTransferOne(mouseButton));
-                    return true;
-                }
+                storageSlotClick(slot.stack(), PULL_ONE, isTransferOne(mouseButton));
                 return true;
             } else if (pullHalf(mouseButton)) {
                 if (!menu.getCarried().isEmpty()) {

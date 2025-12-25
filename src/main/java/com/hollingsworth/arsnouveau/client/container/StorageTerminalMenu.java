@@ -269,7 +269,73 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                 }
             } else if (act == SlotAction.PULL_ONE) {
                 ItemStack stack = getCarried();
-                if (clicked == null) return;
+                if (stack.getItem() instanceof BundleItem) {
+                    if (clicked != null) {
+                        if (!clicked.getStack().canFitInsideContainerItems()) {
+                            return;
+                        }
+
+                        var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+                        if (bundleContents != null && Fraction.ONE.subtract(bundleContents.weight()).compareTo(BundleContents.getWeight(clicked.getStack().copyWithCount(1))) < 0) {
+                            return;
+                        }
+
+                        StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
+                        if (pulled != null) {
+                            var actual = pulled.getActualStack();
+                            ArrayList<ItemStack> newItems = new ArrayList<>();
+                            if (bundleContents != null) {
+                                newItems.ensureCapacity(bundleContents.size() + 1);
+                                for (var item : bundleContents.items()) {
+                                    if (!item.isEmpty()) {
+                                        if (!actual.isEmpty() && ItemStack.isSameItemSameComponents(item, actual)) {
+                                            var amount = Math.min(actual.getCount(), item.getMaxStackSize() - item.getCount());
+                                            item.setCount(item.getCount() + amount);
+                                            actual.setCount(actual.getCount() - amount);
+                                        }
+                                        newItems.add(item);
+                                    }
+                                }
+                            }
+                            if (!actual.isEmpty()) {
+                                newItems.add(pulled.getActualStack());
+                            }
+
+                            player.level.playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                            stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
+                        }
+                    } else {
+                        var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+                        if (bundleContents == null) {
+                            return;
+                        }
+
+                        var pushed = false;
+                        ArrayList<ItemStack> newItems = new ArrayList<>();
+                        for (var item : bundleContents.items()) {
+                            if (!pushed && !item.isEmpty()) {
+                                te.pushStack(item.split(1), selectedTab);
+                                if (!item.isEmpty()) {
+                                    newItems.add(item);
+                                }
+                                player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                                pushed = true;
+                                continue;
+                            }
+
+                            newItems.add(item);
+                        }
+
+                        stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
+                    }
+
+                    return;
+                }
+
+                if (clicked == null || clicked.getStack() == null || clicked.getQuantity() <= 0) {
+                    return;
+                }
+
                 if (pullOne) {
                     StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
                     if (pulled != null) {
@@ -304,11 +370,12 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                             }
 
                             var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
-                            if (bundleContents != null && Fraction.ONE.subtract(bundleContents.weight()).compareTo(BundleContents.getWeight(clicked.getStack().copyWithCount(1))) < 0) {
-                                return;
+                            int canFit = clicked.getStack().getMaxStackSize();
+                            if (bundleContents != null) {
+                                canFit = Fraction.ONE.subtract(bundleContents.weight()).divideBy(BundleContents.getWeight(clicked.getStack().copyWithCount(1))).intValue();
                             }
 
-                            StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
+                            StoredItemStack pulled = te.pullStack(clicked, canFit, selectedTab);
                             if (pulled != null) {
                                 var actual = pulled.getActualStack();
                                 ArrayList<ItemStack> newItems = new ArrayList<>();
