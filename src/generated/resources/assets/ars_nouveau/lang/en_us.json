@@ -388,7 +388,7 @@
   "ars_nouveau.augment_desc.glyph_rotate_glyph_extract": "Applies silk touch when breaking a block.",
   "ars_nouveau.augment_desc.glyph_rotate_glyph_fortune": "Applies fortune when breaking a block.",
   "ars_nouveau.augment_desc.glyph_rotate_glyph_pierce": "Increases the depth of targeted blocks.",
-  "ars_nouveau.augment_desc.glyph_rotate_glyph_randomize": "Adds a chance to not target a block.",
+  "ars_nouveau.augment_desc.glyph_rotate_glyph_randomize": "Applies a random rotation, ignoring axis.",
   "ars_nouveau.augment_desc.glyph_rotate_glyph_sensitive": "Rotates the block on a different axis or forces an entity to rotate their head.",
   "ars_nouveau.augment_desc.glyph_rune_glyph_sensitive": "The rune will use the owner's inventory for pickup and usage.",
   "ars_nouveau.augment_desc.glyph_sense_magic_glyph_amplify": "Increases the level of the effect.",
