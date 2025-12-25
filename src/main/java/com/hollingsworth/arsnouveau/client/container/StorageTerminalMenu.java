@@ -10,6 +10,8 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -327,6 +329,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                                     newItems.add(pulled.getActualStack());
                                 }
 
+                                player.level.playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
                                 stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                             }
                         } else {
@@ -343,6 +346,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                                 }
                             }
 
+                            player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
                             stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                         }
 
