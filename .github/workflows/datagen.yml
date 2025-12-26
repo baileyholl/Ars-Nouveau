@@ -1,0 +1,80 @@
+name: Run Datagen
+
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+concurrency:
+  group: datagen-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  JAVA_VERSION: 21
+
+jobs:
+  datagen:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.maintainer_can_modify
+    permissions:
+      contents: read
+    outputs:
+      has_changes: ${{ steps.check.outputs.has_changes }}
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: "temurin"
+          cache: gradle
+      - name: Run Datagen
+        run: ./gradlew runData
+      - name: Check for changes
+        id: check
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Create patch
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          git add -A
+          git diff --cached --binary --full-index -- . ':!**/*.cache*' > datagen.patch
+      - name: Upload patch
+        if: steps.check.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: datagen-patch
+          path: datagen.patch
+
+  commit:
+    needs: datagen
+    if: needs.datagen.result == 'success' && needs.datagen.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Download patch
+        uses: actions/download-artifact@v4
+        with:
+          name: datagen-patch
+      - name: Apply patch
+        run: |
+          git pull --rebase
+          git apply --index --whitespace=nowarn datagen.patch
+          rm datagen.patch
+      - name: Commit and push changes
+        uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          commit_message: "ci: run datagen"

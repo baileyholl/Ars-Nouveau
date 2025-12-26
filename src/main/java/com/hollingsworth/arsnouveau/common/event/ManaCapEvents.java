@@ -70,7 +70,7 @@ public class ManaCapEvents {
 //    }
 
     @SubscribeEvent
-    public static void playerLoggedIn(PlayerEvent.StartTracking e) {
+    public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         syncPlayerEvent(e.getEntity());
     }
 

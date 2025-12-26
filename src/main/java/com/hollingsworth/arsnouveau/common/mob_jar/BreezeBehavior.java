@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 public class BreezeBehavior extends JarBehavior<Breeze> {
     @Override
     public void onRedstonePower(MobJarTile tile) {
-        if (!(tile.getLevel() instanceof ServerLevel level) || tile.getExtraDataTag().getLong("lastActive") == level.getGameTime()) {
+        if (!(tile.getLevel() instanceof ServerLevel level) || isPowered(tile) || tile.getExtraDataTag().getLong("lastActive") == level.getGameTime()) {
             return;
         }
 

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
+import com.google.common.base.Suppliers;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
@@ -36,16 +37,20 @@ import static com.hollingsworth.arsnouveau.client.jei.ScryRitualRecipeCategory.S
 
 @JeiPlugin
 public class JEIArsNouveauPlugin implements IModPlugin {
-    public static final RecipeType<GlyphRecipe> GLYPH_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "glyph_recipe", GlyphRecipe.class);
-    public static final RecipeType<EnchantingApparatusRecipe> ENCHANTING_APP_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "enchanting_apparatus", EnchantingApparatusRecipe.class);
-    public static final RecipeType<EnchantmentRecipe> ENCHANTING_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "enchantment_apparatus", EnchantmentRecipe.class);
-    public static final RecipeType<ArmorUpgradeRecipe> ARMOR_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "armor_upgrade", ArmorUpgradeRecipe.class);
+    public static final Supplier<RecipeType<RecipeHolder<GlyphRecipe>>> GLYPH_RECIPE_TYPE =createFromDeferredVanilla(RecipeRegistry.GLYPH_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<EnchantingApparatusRecipe>>> ENCHANTING_APP_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.APPARATUS_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<EnchantmentRecipe>>> ENCHANTING_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.ENCHANTMENT_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<ArmorUpgradeRecipe>>> ARMOR_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.ARMOR_UPGRADE_TYPE);
 
-    public static final RecipeType<ImbuementRecipe> IMBUEMENT_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "imbuement", ImbuementRecipe.class);
-    public static final RecipeType<CrushRecipe> CRUSH_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "crush", CrushRecipe.class);
-    public static final RecipeType<BuddingConversionRecipe> BUDDING_CONVERSION_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "budding_conversion", BuddingConversionRecipe.class);
-    public static final RecipeType<ScryRitualRecipe> SCRY_RITUAL_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "scry_ritual", ScryRitualRecipe.class);
-    public static final RecipeType<AlakarkinosRecipe> ALAKARKINOS_RECIPE_TYPE = RecipeType.create(ArsNouveau.MODID, "alakarkinos", AlakarkinosRecipe.class);
+    public static final Supplier<RecipeType<RecipeHolder<ImbuementRecipe>>> IMBUEMENT_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.IMBUEMENT_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<CrushRecipe>>> CRUSH_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.CRUSH_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<BuddingConversionRecipe>>> BUDDING_CONVERSION_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.BUDDING_CONVERSION_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<ScryRitualRecipe>>> SCRY_RITUAL_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.SCRY_RITUAL_TYPE);
+    public static final Supplier<RecipeType<RecipeHolder<AlakarkinosRecipe>>> ALAKARKINOS_RECIPE_TYPE = createFromDeferredVanilla(RecipeRegistry.ALAKARKINOS_RECIPE_TYPE);
+
+    private static <R extends Recipe<?>> Supplier<RecipeType<RecipeHolder<R>>> createFromDeferredVanilla(Supplier<? extends net.minecraft.world.item.crafting.RecipeType<R>> deferredVanillaRecipeType) {
+        return Suppliers.memoize(() -> RecipeType.createFromVanilla(deferredVanillaRecipeType.get()));
+    }
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -67,68 +72,70 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         );
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registry) {
-        List<GlyphRecipe> recipeList = new ArrayList<>();
-        List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
-        List<EnchantmentRecipe> enchantments = new ArrayList<>();
-        List<CrushRecipe> crushRecipes = new ArrayList<>();
-        List<ArmorUpgradeRecipe> armorUpgrades = new ArrayList<>();
+        List<RecipeHolder<GlyphRecipe>> recipeList = new ArrayList<>();
+        List<RecipeHolder<EnchantingApparatusRecipe>> apparatus = new ArrayList<>();
+        List<RecipeHolder<EnchantmentRecipe>> enchantments = new ArrayList<>();
+        List<RecipeHolder<CrushRecipe>> crushRecipes = new ArrayList<>();
+        List<RecipeHolder<ArmorUpgradeRecipe>> armorUpgrades = new ArrayList<>();
 
-        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        List<RecipeHolder<ImbuementRecipe>> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().toList();
 
-        List<BuddingConversionRecipe> buddingConversionRecipes = new ArrayList<>();
-        List<ScryRitualRecipe> scryRitualRecipes = new ArrayList<>();
-        List<AlakarkinosRecipe> alakarkinosRecipes = new ArrayList<>();
+        List<RecipeHolder<BuddingConversionRecipe>> buddingConversionRecipes = new ArrayList<>();
+        List<RecipeHolder<ScryRitualRecipe>> scryRitualRecipes = new ArrayList<>();
+        List<RecipeHolder<AlakarkinosRecipe>> alakarkinosRecipes = new ArrayList<>();
 
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (Recipe<?> i : manager.getRecipes().stream().map(RecipeHolder::value).toList()) {
-            if (i instanceof GlyphRecipe glyphRecipe) {
-                recipeList.add(glyphRecipe);
+        for (RecipeHolder<?> h : manager.getRecipes().stream().toList()) {
+            Recipe<?> i = h.value();
+            if (i instanceof GlyphRecipe) {
+                recipeList.add((RecipeHolder<GlyphRecipe>) h);
             }
-            if (i instanceof EnchantmentRecipe enchantmentRecipe) {
-                enchantments.add(enchantmentRecipe);
-            } else if (i instanceof ArmorUpgradeRecipe upgradeRecipe) {
-                armorUpgrades.add(upgradeRecipe);
+            if (i instanceof EnchantmentRecipe) {
+                enchantments.add((RecipeHolder<EnchantmentRecipe>) h);
+            } else if (i instanceof ArmorUpgradeRecipe) {
+                armorUpgrades.add((RecipeHolder<ArmorUpgradeRecipe>) h);
             } else if (i instanceof EnchantingApparatusRecipe enchantingApparatusRecipe && !enchantingApparatusRecipe.excludeJei()) {
-                apparatus.add(enchantingApparatusRecipe);
+                apparatus.add((RecipeHolder<EnchantingApparatusRecipe>) h);
             }
-            if (i instanceof CrushRecipe crushRecipe) {
-                crushRecipes.add(crushRecipe);
+            if (i instanceof CrushRecipe) {
+                crushRecipes.add((RecipeHolder<CrushRecipe>) h);
             }
-            if (i instanceof BuddingConversionRecipe buddingConversionRecipe) {
-                buddingConversionRecipes.add(buddingConversionRecipe);
+            if (i instanceof BuddingConversionRecipe) {
+                buddingConversionRecipes.add((RecipeHolder<BuddingConversionRecipe>) h);
             }
-            if (i instanceof ScryRitualRecipe scryRitualRecipe) {
-                scryRitualRecipes.add(scryRitualRecipe);
+            if (i instanceof ScryRitualRecipe) {
+                scryRitualRecipes.add((RecipeHolder<ScryRitualRecipe>) h);
             }
-            if (i instanceof AlakarkinosRecipe alakarkinosRecipe) {
-                alakarkinosRecipes.add(alakarkinosRecipe);
+            if (i instanceof AlakarkinosRecipe) {
+                alakarkinosRecipes.add((RecipeHolder<AlakarkinosRecipe>) h);
             }
         }
-        registry.addRecipes(GLYPH_RECIPE_TYPE, recipeList);
-        registry.addRecipes(CRUSH_RECIPE_TYPE, crushRecipes);
-        registry.addRecipes(ENCHANTING_APP_RECIPE_TYPE, apparatus);
-        registry.addRecipes(ENCHANTING_RECIPE_TYPE, enchantments);
-        registry.addRecipes(IMBUEMENT_RECIPE_TYPE, imbuementRecipes);
-        registry.addRecipes(ARMOR_RECIPE_TYPE, armorUpgrades);
-        registry.addRecipes(BUDDING_CONVERSION_RECIPE_TYPE, buddingConversionRecipes);
-        registry.addRecipes(SCRY_RITUAL_RECIPE_TYPE, scryRitualRecipes);
+        registry.addRecipes(GLYPH_RECIPE_TYPE.get(), recipeList);
+        registry.addRecipes(CRUSH_RECIPE_TYPE.get(), crushRecipes);
+        registry.addRecipes(ENCHANTING_APP_RECIPE_TYPE.get(), apparatus);
+        registry.addRecipes(ENCHANTING_RECIPE_TYPE.get(), enchantments);
+        registry.addRecipes(IMBUEMENT_RECIPE_TYPE.get(), imbuementRecipes);
+        registry.addRecipes(ARMOR_RECIPE_TYPE.get(), armorUpgrades);
+        registry.addRecipes(BUDDING_CONVERSION_RECIPE_TYPE.get(), buddingConversionRecipes);
+        registry.addRecipes(SCRY_RITUAL_RECIPE_TYPE.get(), scryRitualRecipes);
         registry.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, List.of(BlockRegistry.PORTAL_BLOCK.asItem().getDefaultInstance()));
-        registry.addRecipes(ALAKARKINOS_RECIPE_TYPE, alakarkinosRecipes);
+        registry.addRecipes(ALAKARKINOS_RECIPE_TYPE.get(), alakarkinosRecipes);
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.SCRIBES_BLOCK), GLYPH_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(EffectCrush.INSTANCE.glyphItem), CRUSH_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), IMBUEMENT_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_APP_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM), BUDDING_CONVERSION_RECIPE_TYPE);
-        registry.addRecipeCatalyst(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance(), SCRY_RITUAL_RECIPE_TYPE);
-        registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM), ALAKARKINOS_RECIPE_TYPE);
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.SCRIBES_BLOCK), GLYPH_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(EffectCrush.INSTANCE.glyphItem), CRUSH_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), IMBUEMENT_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_APP_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ENCHANTING_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), ARMOR_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM), BUDDING_CONVERSION_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(RitualRegistry.getRitualItemMap().get(SCRY_RITUAL).asItem().getDefaultInstance(), SCRY_RITUAL_RECIPE_TYPE.get());
+        registry.addRecipeCatalyst(new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM), ALAKARKINOS_RECIPE_TYPE.get());
     }
 
     @Override

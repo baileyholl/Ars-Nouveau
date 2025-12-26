@@ -20,7 +20,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforgespi.language.IModInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +69,14 @@ public class Glyph extends ModItem {
 
     public @NotNull Component getName() {
         return getName(ItemStack.EMPTY);
+    }
+
+    @Override
+    public @Nullable String getCreatorModId(@NotNull ItemStack itemStack) {
+        return ModList.get()
+                .getModContainerById(spellPart.getRegistryName().getNamespace())
+                .map(ModContainer::getModInfo)
+                .map(IModInfo::getDisplayName).orElse(null);
     }
 
     @Override

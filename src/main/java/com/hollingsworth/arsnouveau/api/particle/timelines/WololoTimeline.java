@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api.particle.timelines;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
@@ -35,7 +34,7 @@ public class WololoTimeline extends BaseTimeline<WololoTimeline> {
     }
 
     public ParticleColor getColor() {
-        return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor;
+        return propMap.getParticleColor();
     }
 
     @Override
