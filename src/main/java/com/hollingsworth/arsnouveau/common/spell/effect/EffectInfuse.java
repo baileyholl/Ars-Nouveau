@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -74,7 +75,12 @@ public class EffectInfuse extends AbstractEffect {
 
     public @Nullable PotionContents getPotionData(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
         PotionContents potionData = null;
-        InventoryManager manager = spellContext.getCaster().getInvManager();
+        IWrappedCaster caster = spellContext.getCaster();
+        if (caster == null) {
+            return null;
+        }
+        InventoryManager manager = caster.getInvManager();
+
         ExtractedStack extractedFlask = manager.extractItem(i -> {
             IPotionProvider provider = PotionProviderRegistry.from(i);
             return provider != null && !provider.isEmpty(i);
