@@ -554,8 +554,8 @@ public class GuiSpellBook extends SpellSlottedScreen {
                 CraftingButton cell = craftingCells.get(i);
                 if (cell.slotNum == craftingCell.slotNum) {
                     while (cell.getAbstractSpellPart() == null && i < craftingCells.size()) {
-                        i++;
                         cell = craftingCells.get(i);
+                        i++;
                     }
                     idx = i;
                     continue;

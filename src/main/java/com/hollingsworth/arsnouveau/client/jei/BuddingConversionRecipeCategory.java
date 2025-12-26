@@ -14,9 +14,10 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
-public class BuddingConversionRecipeCategory implements IRecipeCategory<BuddingConversionRecipe> {
+public class BuddingConversionRecipeCategory implements IRecipeCategory<RecipeHolder<BuddingConversionRecipe>> {
     private final IDrawableAnimated arrow;
     public IDrawable background;
     public IDrawable icon;
@@ -28,8 +29,8 @@ public class BuddingConversionRecipeCategory implements IRecipeCategory<BuddingC
     }
 
     @Override
-    public RecipeType<BuddingConversionRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.BUDDING_CONVERSION_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<BuddingConversionRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.BUDDING_CONVERSION_RECIPE_TYPE.get();
     }
 
     @Override
@@ -48,12 +49,13 @@ public class BuddingConversionRecipeCategory implements IRecipeCategory<BuddingC
     }
 
     @Override
-    public void draw(BuddingConversionRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<BuddingConversionRecipe> recipeHolder, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
         arrow.draw(matrixStack, 48, 5);
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, BuddingConversionRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BuddingConversionRecipe> recipeHolder, IFocusGroup focuses) {
+        BuddingConversionRecipe recipe = recipeHolder.value();
         builder.addSlot(RecipeIngredientRole.OUTPUT, 120 - 16 - 6, 4).addIngredient(VanillaTypes.ITEM_STACK, recipe.result().asItem().getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 4).addIngredient(VanillaTypes.ITEM_STACK, recipe.input().asItem().getDefaultInstance());
     }

@@ -15,9 +15,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
-public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
+public class CrushRecipeCategory implements IRecipeCategory<RecipeHolder<CrushRecipe>> {
 
     public IDrawable background;
     public IDrawable icon;
@@ -30,8 +31,8 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public RecipeType<CrushRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.CRUSH_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<CrushRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.CRUSH_RECIPE_TYPE.get();
     }
 
     @Override
@@ -55,7 +56,8 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void draw(CrushRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<CrushRecipe> recipeHolder, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
+        CrushRecipe recipe = recipeHolder.value();
         cachedArrows.draw(matrixStack, 22, 6);
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs().size(); i++) {
@@ -68,7 +70,8 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, CrushRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<CrushRecipe> recipeHolder, IFocusGroup focuses) {
+        CrushRecipe recipe = recipeHolder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input());
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);

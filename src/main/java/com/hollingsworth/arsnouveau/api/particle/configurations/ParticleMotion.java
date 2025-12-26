@@ -120,11 +120,11 @@ public abstract class ParticleMotion {
     }
 
     protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions, int defaultDensity, float defaultRadius) {
-        return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty(defaultDensity, defaultRadius, SpawnType.SPHERE));
+        return particleOptions.map.getOrCreate(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), () -> new ParticleDensityProperty(defaultDensity, defaultRadius, SpawnType.SPHERE));
     }
 
     protected SpeedProperty getSpeed(PropertyParticleOptions particleOptions) {
-        return particleOptions.map.getOrDefault(ParticlePropertyRegistry.SPEED_PROPERTY.get(), new SpeedProperty());
+        return particleOptions.map.getOrCreate(ParticlePropertyRegistry.SPEED_PROPERTY.get(), SpeedProperty::new);
     }
 
     protected Vec3 randomSpeed(PropertyParticleOptions particleOptions) {
@@ -155,7 +155,7 @@ public abstract class ParticleMotion {
 
 
     protected ParticleDensityProperty getDensity(PropertyParticleOptions particleOptions) {
-        return particleOptions.map.getOrDefault(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), new ParticleDensityProperty());
+        return particleOptions.map.getOrCreate(ParticlePropertyRegistry.DENSITY_PROPERTY.get(), ParticleDensityProperty::new);
     }
 
     public enum SpawnType {
