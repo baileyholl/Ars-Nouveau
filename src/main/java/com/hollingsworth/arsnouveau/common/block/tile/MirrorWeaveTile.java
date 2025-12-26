@@ -82,7 +82,9 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
         }
     }
 
-    public boolean shouldRenderFace(BlockState state, BlockState blockstate, Level level, BlockPos offset, Direction face, BlockPos pos) {
+    // Copy of Block.shouldRenderFace with getStateForCulling replacing the first state param
+    public boolean shouldRenderFace(BlockState blockstate, Level level, BlockPos offset, Direction face, BlockPos pos) {
+        BlockState state = getStateForCulling();
         if (state.skipRendering(blockstate, face)) {
             return false;
         } else if (blockstate.hidesNeighborFace(level, pos, state, face.getOpposite()) && state.supportsExternalFaceHiding()) {

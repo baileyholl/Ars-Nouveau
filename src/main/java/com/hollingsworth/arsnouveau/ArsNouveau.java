@@ -1,12 +1,13 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
@@ -20,10 +21,14 @@ import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -40,6 +45,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +53,8 @@ import java.util.function.Supplier;
 
 @Mod(ArsNouveau.MODID)
 public class ArsNouveau {
+    public static final ResourceKey<DimensionType> DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("jar"));
+    public static final ResourceKey<Biome> BIOME_KEY = ResourceKey.create(Registries.BIOME, ArsNouveau.prefix("jar"));
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
     public static IProxy proxy;
@@ -59,7 +67,7 @@ public class ArsNouveau {
 
     public static List<String> postLoadWarnings = new ArrayList<>();
 
-    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("ticket_controller"), (level, ticketHelper) -> {
+    public static TicketController ticketController = new TicketController(ArsNouveau.prefix("chunk_controller"), (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
             if (level.getEntity(uuid) == null)
                 ticketHelper.removeAllTickets(uuid);
@@ -68,8 +76,7 @@ public class ArsNouveau {
     public static boolean isDebug = false && !FMLEnvironment.production;
 
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
-        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onServerStopped);
-        NeoForge.EVENT_BUS.addListener(FMLEventHandler::onPlayerLoggedOut);
+        NeoForge.EVENT_BUS.addListener(ArsNouveau::onServerStopped);
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
@@ -80,9 +87,6 @@ public class ArsNouveau {
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
         modContainer.registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
-        if (FMLEnvironment.dist.isClient()) {
-            NeoForge.EVENT_BUS.register(ClientEventHandler.class);
-        }
         modEventBus.addListener(Networking::register);
         modEventBus.addListener(ModSetup::registerEvents);
         modEventBus.addListener(CapabilityRegistry::registerCapabilities);
@@ -128,6 +132,9 @@ public class ArsNouveau {
         } else {
             ArsNouveau.proxy = new ServerProxy();
         }
+
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
     }
 
     public void setup(final FMLCommonSetupEvent event) {
@@ -177,13 +184,19 @@ public class ArsNouveau {
     }
 
     public void clientSetup(final FMLClientSetupEvent event) {
-        ModLoadingContext.get().getActiveContainer().getEventBus().addListener(ClientHandler::init);
+        var modEventBus = ModLoadingContext.get().getActiveContainer().getEventBus();
+        modEventBus.addListener(ClientHandler::init);
         try {
             Class.forName("net.optifine.Config");
             optifineLoaded = true;
         } catch (Exception e) {
             optifineLoaded = false;
         }
+    }
+
+    public static void onServerStopped(final ServerStoppingEvent event) {
+        Pathfinding.shutdown();
+        EventQueue.getServerInstance().clear();
     }
 
     public static ResourceLocation prefix(String str) {

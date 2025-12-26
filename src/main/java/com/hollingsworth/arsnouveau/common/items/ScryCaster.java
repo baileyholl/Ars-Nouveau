@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -43,7 +44,7 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
         ItemStack stack = pContext.getItemInHand();
         if (pContext.getLevel().getBlockState(pos).getBlock() instanceof ScryerCrystal) {
             if (!pContext.getLevel().isClientSide) {
-                stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(pos));
+                stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(new GlobalPos(pContext.getLevel().dimension(), pos)));
                 PortUtil.sendMessage(pContext.getPlayer(), Component.translatable("ars_nouveau.dominion_wand.position_set"));
             }
             return InteractionResult.SUCCESS;
@@ -71,11 +72,12 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         getInformation(stack, context, tooltip2, flagIn);
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
-        var pos = data.pos().orElse(null);
+        var globalPos = data.pos().orElse(null);
 
-        if (pos == null) {
+        if (globalPos == null) {
             tooltip2.add(Component.translatable("ars_nouveau.scry_caster.no_pos"));
         } else {
+            BlockPos pos = globalPos.pos();
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
         }
         super.appendHoverText(stack, context, tooltip2, flagIn);

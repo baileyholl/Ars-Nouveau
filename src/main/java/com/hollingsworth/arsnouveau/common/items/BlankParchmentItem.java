@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -32,7 +33,7 @@ public class BlankParchmentItem extends ModItem implements IScribeable {
             return super.useOn(pContext);
         if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
             ItemStack stack = new ItemStack(ItemsRegistry.SCRYER_SCROLL.get());
-            stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(pContext.getClickedPos()));
+            stack.set(DataComponentRegistry.SCRY_DATA, new ScryPosData(new GlobalPos(pContext.getLevel().dimension(), pContext.getClickedPos())));
             if (!pContext.getPlayer().addItem(stack)) {
                 pContext.getLevel().addFreshEntity(new ItemEntity(pContext.getLevel(), pContext.getPlayer().getX(), pContext.getPlayer().getY(), pContext.getPlayer().getZ(), stack));
             }

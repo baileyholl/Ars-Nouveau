@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +28,7 @@ public class ScryerScroll extends ModItem {
         if (pContext.getLevel().isClientSide)
             return super.useOn(pContext);
         if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
-            ScryPosData data = new ScryPosData(pContext.getClickedPos());
+            ScryPosData data = new ScryPosData(new GlobalPos(pContext.getLevel().dimension(), pContext.getClickedPos()));
             pContext.getItemInHand().set(DataComponentRegistry.SCRY_DATA, data);
             PortUtil.sendMessage(pContext.getPlayer(), Component.translatable("ars_nouveau.scryer_scroll.bound", pContext.getClickedPos().getX() + ", " + pContext.getClickedPos().getY() + ", " + pContext.getClickedPos().getZ()));
         }
@@ -37,8 +39,9 @@ public class ScryerScroll extends ModItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
-        var pos = data.pos().orElse(null);
-        if (pos != null) {
+        var globalPos = data.pos().orElse(null);
+        if (globalPos != null) {
+            BlockPos pos = globalPos.pos();
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
         } else {
             tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.craft"));
