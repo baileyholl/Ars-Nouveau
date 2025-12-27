@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.MagicFire;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -11,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -22,6 +24,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,30 +43,52 @@ public class EffectIgnite extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (spellStats.isSensitive()) {
-            BlockPos target = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-            if (world.getBlockState(target).canBeReplaced()) {
-                world.setBlock(target, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, target), 3);
-            }
-            return;
-        }
-        BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
-        if (hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState) || hitState.getBlock() instanceof CampfireBlock && CampfireBlock.canLight(hitState)) {
-            AbstractCandleBlock.setLit(world, hitState, rayTraceResult.getBlockPos(), true);
+        BlockPos target = rayTraceResult.getBlockPos();
+
+        var player = getPlayer(shooter, (ServerLevel) world);
+        if (igniteBlocks(player, world, SpellUtil.calcAOEBlocks(shooter, target, rayTraceResult, spellStats), spellStats)) {
             return;
         }
 
-        if (world.getBlockState((rayTraceResult).getBlockPos().above()).canBeReplaced()) {
-            Direction face = (rayTraceResult).getDirection();
-            for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
-                BlockPos blockpos1 = pos.relative(face);
-                if (BaseFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockpos1)) {
-                    BlockState blockstate1 = BaseFireBlock.getState(world, blockpos1);
-                    world.setBlock(blockpos1, blockstate1, 3);
-                    world.updateNeighborsAt(blockpos1, blockstate1.getBlock());
+        Direction direction = rayTraceResult.getDirection();
+        target = target.relative(direction);
+        rayTraceResult = new BlockHitResult(rayTraceResult.getLocation().relative(direction, 1), direction, target, rayTraceResult.isInside());
+
+        igniteBlocks(player, world, SpellUtil.calcAOEBlocks(shooter, target, rayTraceResult, spellStats), spellStats);
+    }
+
+    public boolean igniteBlocks(Player player, Level world, List<BlockPos> positions, SpellStats spellStats) {
+        boolean didWork = false;
+
+        for (BlockPos pos : positions) {
+            if (!BlockUtil.destroyRespectsClaim(player, world, pos)) {
+                continue;
+            }
+
+            BlockState state = world.getBlockState(pos);
+            if (CandleBlock.canLight(state) || CampfireBlock.canLight(state)) {
+                AbstractCandleBlock.setLit(world, state, pos, true);
+                didWork = true;
+                continue;
+            }
+
+            if (spellStats.isSensitive()) {
+                if (MagicFire.canBePlacedAt(world, pos, Direction.UP)) {
+                    world.setBlock(pos, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, pos), 3);
+                    world.updateNeighborsAt(pos, state.getBlock());
                 }
+                didWork = true;
+                continue;
+            }
+
+            if (BaseFireBlock.canBePlacedAt(world, pos, Direction.UP)) {
+                world.setBlock(pos, BaseFireBlock.getState(world, pos), 3);
+                world.updateNeighborsAt(pos, state.getBlock());
+                didWork = true;
             }
         }
+
+        return didWork;
     }
 
     @Override
