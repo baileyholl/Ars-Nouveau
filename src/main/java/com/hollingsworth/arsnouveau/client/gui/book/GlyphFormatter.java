@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
@@ -11,11 +12,11 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class GlyphFormatter {
     int perRow = 7;
@@ -30,6 +31,15 @@ public class GlyphFormatter {
     Consumer<List<? extends AbstractWidget>> clearButtons;
     Consumer<AbstractWidget> addRenderableWidget;
     List<ANButton> sortedWidgets = new ArrayList<>();
+    public static List<Category> CATEGORIES = new ArrayList<>();
+
+    Set<ResourceLocation> addedCategories = new HashSet<>();
+
+    static {
+        CATEGORIES.add(new Category(ArsNouveau.prefix("form"), p -> p instanceof AbstractCastMethod, Component.translatable("ars_nouveau.form_icon_tooltip"), DocAssets.FORM_ICON_CRAFTING));
+        CATEGORIES.add(new Category(ArsNouveau.prefix("effect"), p -> p instanceof AbstractEffect, Component.translatable("ars_nouveau.effect_icon_tooltip"), DocAssets.EFFECT_ICON_CRAFTING));
+        CATEGORIES.add(new Category(ArsNouveau.prefix("augment"), p -> p instanceof AbstractAugment, Component.translatable("ars_nouveau.augment_icon_tooltip"), DocAssets.AUGMENT_ICON_CRAFTING));
+    }
 
     public GlyphFormatter(int bookLeft, int bookTop, Button.OnPress onGlyphClick, Consumer<List<? extends AbstractWidget>> clearButtons, Consumer<AbstractWidget> addRenderableWidget) {
         this.bookLeft = bookLeft;
@@ -47,26 +57,18 @@ public class GlyphFormatter {
             default -> p.getTypeIndex();
         }).thenComparing(AbstractSpellPart::getLocaleName));
         List<ANButton> buttons = new ArrayList<>();
-        boolean addedForms = false;
-        boolean addedAugments = false;
-        boolean addedEffects = false;
+        addedCategories = new HashSet<>();
 
-        for (int i = 0; i < sorted.size(); i++) {
-            if (!addedForms && sorted.get(i) instanceof AbstractCastMethod) {
-                addedForms = true;
-                buttons.add(new GuiImageButton(0, 0, DocAssets.FORM_ICON_CRAFTING, (b) -> {
-                }).withTooltip(Component.translatable("ars_nouveau.form_icon_tooltip")));
-            } else if (!addedEffects && sorted.get(i) instanceof AbstractEffect) {
-                addedEffects = true;
-                buttons.add(new GuiImageButton(0, 0, DocAssets.EFFECT_ICON_CRAFTING, (b) -> {
-                }).withTooltip(Component.translatable("ars_nouveau.effect_icon_tooltip")));
-            } else if (!addedAugments && sorted.get(i) instanceof AbstractAugment) {
-                addedAugments = true;
-                buttons.add(new GuiImageButton(0, 0, DocAssets.AUGMENT_ICON_CRAFTING, (b) -> {
-                }).withTooltip(Component.translatable("ars_nouveau.augment_icon_tooltip")));
+        for (AbstractSpellPart abstractSpellPart : sorted) {
+            for (Category category : CATEGORIES) {
+                if (!addedCategories.contains(category.id) && category.filter.test(abstractSpellPart)) {
+                    addedCategories.add(category.id);
+                    buttons.add(new GuiImageButton(0, 0, category.blitInfo(), (b) -> {
+                    }).withTooltip(category.tooltip));
+                }
             }
 
-            buttons.add(new GlyphButton(0, 0, sorted.get(i), this.onGlyphClick));
+            buttons.add(new GlyphButton(0, 0, abstractSpellPart, this.onGlyphClick));
         }
         sortedWidgets = new ArrayList<>(buttons);
     }
@@ -107,6 +109,23 @@ public class GlyphFormatter {
             }
             addedWidgets.add(part);
             count++;
+        }
+    }
+
+    public record Category(ResourceLocation id, Predicate<AbstractSpellPart> filter, Component tooltip,
+                           DocAssets.BlitInfo blitInfo) {
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Category category = (Category) o;
+            return Objects.equals(id, category.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(id);
         }
     }
 }
