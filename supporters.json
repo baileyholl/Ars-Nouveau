@@ -1,50 +1,148 @@
 {
-  "uuids": ["facee59d-9953-4466-b8cb-eebe7297651d", "9df6acb3-6618-474a-a2b0-e2e74748ae05", "066cfcbc-3db0-4a97-aa02-650f3f3a71ea",
-    "9d7278bc-8d30-4241-aa7e-08ac8398cf2e", "fefb153f-4ffc-4f5c-acd2-3291e73bdd4d", "7cc40d87-69a4-45e6-9fda-29fed94de4b3",
-    "a31d8405-b45d-40de-9c89-6b8489cce509", "b1e428b5-bdad-44e5-b2eb-7f02dc08b57c", "2fd766b7-17d0-400e-bec5-8e760185e1e3",
-    "380df991-f603-344c-a090-369bad2a924a", "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7", "de4e108a-ed87-4e57-8033-8a7f7940ea27",
-    "1c60df38-1f15-4427-a51f-8ed1a568956b", "0e918660-22bf-4bed-8426-ece3b4bbd01d", "3a438b67-2fe1-46df-8fc0-e144ca78d820",
-    "a5ddb356-8048-4a4c-a5ab-121f8b613bac","2ae39938-5c8d-4f07-af0c-4243be46c8ff", "a337102a-eeb3-4967-9deb-a5263b5b6231",
-    "838dd85f-95b9-4a9d-a785-7694e8c7c8b1", "99a814a0-bff4-4526-bee6-4af5c74a6824", "966ebb69-a63d-4bb2-ac90-ed39d8c64b80",
-    "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d", "490b090b-ee3f-4a2b-a135-5b4b98f87f0a", "1a9776a0-be9b-4155-a99b-9931d0f7325f",
-    "27aee4ea-a286-433b-879b-7c4c2ab3fd4b", "cf1f2cfc-1a85-40a6-aaf4-a17355ac6579", "bfc0f715-54f5-45bb-b4cd-16dfb3dd1f10",
-    "98105ad8-080a-4d70-a5da-0cc27a833309", "3bf32666-f9ba-4060-af02-53bdb0df38fc", "d183e5a2-a087-462a-963e-c3d7295f9ec5",
-    "7135da42-d327-47bb-bb04-5ba4e212fb32", "c4c21dde-7f38-461c-8da8-32346996209c", "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
-    "14212b1b-ba12-4164-947c-c208a6b07ac9", "dfb079d8-a5ce-4d70-907f-b852a44f8de8", "5ebee73e-faec-4810-ae7a-4baf73f026e4",
-    "b9694497-80b7-4412-b00e-2c9bc2705fd1", "02320102-6fc4-408b-8873-afe54b2dcae6", "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
-    "8f86b83a-e35f-4fca-8b0f-a8181cc1741d", "c657941e-8ac5-46ac-bf65-8983f776ff33", "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
-    "0753a4e3-f71d-4b86-b338-3983f36d2b8a", "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63", "b71554c5-ea50-441a-bed0-384416402575",
-    "5a0d2794-50a3-400f-b014-b1234d198eca", "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0", "755d49f3-c7e7-4ae2-95c0-25b50954d416",
-    "d600e728-1c5e-4ee8-8df7-2899465c9129", "d155b322-ff09-4c0f-9438-21ba7c572490", "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
-    "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b", "d600e728-1c5e-4ee8-8df7-2899465c9129", "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
-    "5a4971f3-6fb0-446e-8512-cca380ec7e85", "6859954f-e3b0-45a8-84d7-5f9e9782651f", "f24ec99c-5d9b-4815-8938-5401f5d62877",
-    "2980a99e-8582-4f63-9b82-f7117bc8be2c", "674b6c55-c4f3-4ef6-9a57-b4a7455f1296","0f4c174e-26f1-43c3-81d0-88507dba6e52",
-    "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8", "eb0da540-8487-4ca0-8a5f-ed4acaa0268d", "8bacc3d4-a301-429b-859d-042d47f61e4d",
-    "3d8f61f1-7333-4c4f-b9e8-d76a3b453420", "888d2798-4fdf-4e70-89ed-1bb2ff47c6c1", "8b93ffcd-e3e8-41c7-aee9-458b03bd0b34",
-    "1d1b87f0-5243-4b39-926f-f7490d28954a", "45e4cde5-5c3f-4997-8564-3ae5be9407e1", "d8a9a09f-d6da-495b-8bb8-7d56f9c5b949",
-    "277d0321-7fe7-4ab0-b1bc-4b00ac627231", "8bbf2330-78d1-4ea7-945f-89b7a99298c2", "b4feb5db-e845-4bc1-b72e-b4de8b646288",
-    "0c6a5082-d327-41ec-8722-42d942f30f5a", "728ac916-4aac-439d-af1c-d68e6a51139b", "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
-    "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5", "bfde5990-f846-4dae-90d1-0372ce45f522", "c6ad89fd-6625-4290-83b2-2665e9e39225",
-    "7dc1de80-c04c-4c0f-8f00-6326d770626b", "8bf034ac-313f-435a-bd2b-200a7857021b", "1dafa767-ce2f-47c4-8142-67b0b4854586",
-    "9eff9013-f8a6-4a1a-9142-32d94d60d8c1", "671ffc64-8b5b-4ac2-87b1-138951be701e","aac7171c-9bac-42a8-b094-2363599dae59",
-    "47f9c9d2-89b2-4987-af6b-31e7b1f74da2", "ec77d204-6e8b-4dac-8b66-71b2a03c5e65", "98e72ae4-10c9-4696-970b-804eb9b176ae",
-    "0421ad40-0881-47d4-b086-38c90c1ab62f", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
-  "e7976ce2-3344-4499-8b15-91adddc5ed0f", "d29025d7-cf5d-4976-8a65-fc3bdcc991b5", "8ced638c-eac7-433e-b794-54c0f23807a4",
-  "db489a87-6509-4d75-917d-9c426b519c64", "eb079f27-e266-4b3c-beba-b34d34bef268", "831086b8-d566-4f25-aa09-ecb505e54885",
-  "e3298bd7-61bf-427f-af89-4e418a20bf57", "01b53c7e-c7f4-4465-88df-f8b6c645b6b9", "a29ffabb-ac40-4754-8df8-94b9f394045c",
-  "aef9c054-e96e-4332-944b-9393105b6ac6", "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f", "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
-  "758ca96e-100a-4611-a849-5d76229b6c83", "1cf6b68a-a396-4ac1-8146-21fc314f6455", "f476db17-6995-44ab-b002-0a326959f01a",
-  "4a405d17-9e7b-4007-b4e3-a1adcd41c489", "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4", "ee6d035a-600d-40a3-b444-b987766121ee",
-  "26170985-ac0e-4e3c-b171-141e2193ce32", "d153d78a-99bd-48c1-8c00-ea6ae02c0395", "860802dc-6314-46a6-b991-4ba8e7d061dc",
-  "5f6a9e19-7021-4fd3-9873-6beee620f5fa", "9431623c-476c-4417-a51a-d4993a04e5b2", "465e651c-9928-4c32-aa41-7fc09f102f01",
-  "066f67d4-51dc-4767-b48f-d03dd7359f4a", "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9", "6d60f894-2a95-4dfd-8afb-64980e0a6d17",
-  "9529428c-25ea-443e-b56f-f24a18ebb5f1", "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8", "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
-  "7e0a1802-2a6a-403d-a487-d3a60cb2d037", "4295cb3b-245c-481d-ad3c-60b179b8cc27", "5abd7fb8-61fd-4fcd-bf6b-10da638f5174",
-  "eb5adebb-130f-4a56-9a52-e99c455b628d", "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5", "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
-  "d41bfe34-e558-4c52-9797-bdd88fcbc88a", "3ad9da32-51f9-49ad-b94d-34a09182d63d", "3422a0bf-4edf-44ca-9d79-7c897424e69a",
-  "aa025c0e-8649-4623-a634-ad778ea9c2d1", "a8875ecb-6e84-4c6d-ac68-3251b945d963", "03b6eedd-91f8-430c-80e6-b2ea7cc1a789",
-  "401dc34a-0111-4f25-9c4c-526d77650e21", "087647a0-77e5-40ec-97f9-ee8a4bdd333b", "ef241661-c372-46d6-8583-d96d051223ed",
-  "552587c7-7527-4f93-9646-d9ea615b2537"],
+  "uuids": [
+    "facee59d-9953-4466-b8cb-eebe7297651d",
+    "9df6acb3-6618-474a-a2b0-e2e74748ae05",
+    "066cfcbc-3db0-4a97-aa02-650f3f3a71ea",
+    "9d7278bc-8d30-4241-aa7e-08ac8398cf2e",
+    "fefb153f-4ffc-4f5c-acd2-3291e73bdd4d",
+    "7cc40d87-69a4-45e6-9fda-29fed94de4b3",
+    "a31d8405-b45d-40de-9c89-6b8489cce509",
+    "b1e428b5-bdad-44e5-b2eb-7f02dc08b57c",
+    "2fd766b7-17d0-400e-bec5-8e760185e1e3",
+    "380df991-f603-344c-a090-369bad2a924a",
+    "9ded9e0a-bc2b-45da-a4e5-ecffdebffcf7",
+    "de4e108a-ed87-4e57-8033-8a7f7940ea27",
+    "1c60df38-1f15-4427-a51f-8ed1a568956b",
+    "0e918660-22bf-4bed-8426-ece3b4bbd01d",
+    "3a438b67-2fe1-46df-8fc0-e144ca78d820",
+    "a5ddb356-8048-4a4c-a5ab-121f8b613bac",
+    "2ae39938-5c8d-4f07-af0c-4243be46c8ff",
+    "a337102a-eeb3-4967-9deb-a5263b5b6231",
+    "838dd85f-95b9-4a9d-a785-7694e8c7c8b1",
+    "99a814a0-bff4-4526-bee6-4af5c74a6824",
+    "966ebb69-a63d-4bb2-ac90-ed39d8c64b80",
+    "bbb87dbe-690f-4205-bdc5-72ffb8ebc29d",
+    "490b090b-ee3f-4a2b-a135-5b4b98f87f0a",
+    "1a9776a0-be9b-4155-a99b-9931d0f7325f",
+    "27aee4ea-a286-433b-879b-7c4c2ab3fd4b",
+    "cf1f2cfc-1a85-40a6-aaf4-a17355ac6579",
+    "bfc0f715-54f5-45bb-b4cd-16dfb3dd1f10",
+    "98105ad8-080a-4d70-a5da-0cc27a833309",
+    "3bf32666-f9ba-4060-af02-53bdb0df38fc",
+    "d183e5a2-a087-462a-963e-c3d7295f9ec5",
+    "7135da42-d327-47bb-bb04-5ba4e212fb32",
+    "c4c21dde-7f38-461c-8da8-32346996209c",
+    "b0d69c83-18cb-4fa4-ac6f-5609674398a2",
+    "14212b1b-ba12-4164-947c-c208a6b07ac9",
+    "dfb079d8-a5ce-4d70-907f-b852a44f8de8",
+    "5ebee73e-faec-4810-ae7a-4baf73f026e4",
+    "b9694497-80b7-4412-b00e-2c9bc2705fd1",
+    "02320102-6fc4-408b-8873-afe54b2dcae6",
+    "ac076a44-c1e3-4752-a3ac-2a366deaefb1",
+    "8f86b83a-e35f-4fca-8b0f-a8181cc1741d",
+    "c657941e-8ac5-46ac-bf65-8983f776ff33",
+    "47b128a4-9043-4ec6-ba69-0edffdddfd8a",
+    "0753a4e3-f71d-4b86-b338-3983f36d2b8a",
+    "df2c8cdf-fbaf-4a22-9fdf-16770ee19c63",
+    "b71554c5-ea50-441a-bed0-384416402575",
+    "5a0d2794-50a3-400f-b014-b1234d198eca",
+    "1a45aa67-e39d-48f5-a5aa-4467b9a0c0c0",
+    "755d49f3-c7e7-4ae2-95c0-25b50954d416",
+    "d600e728-1c5e-4ee8-8df7-2899465c9129",
+    "d155b322-ff09-4c0f-9438-21ba7c572490",
+    "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
+    "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b",
+    "d600e728-1c5e-4ee8-8df7-2899465c9129",
+    "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
+    "5a4971f3-6fb0-446e-8512-cca380ec7e85",
+    "6859954f-e3b0-45a8-84d7-5f9e9782651f",
+    "f24ec99c-5d9b-4815-8938-5401f5d62877",
+    "2980a99e-8582-4f63-9b82-f7117bc8be2c",
+    "674b6c55-c4f3-4ef6-9a57-b4a7455f1296",
+    "0f4c174e-26f1-43c3-81d0-88507dba6e52",
+    "5b1c9f9b-edd0-4632-9ba3-79b6dcc9bfa8",
+    "eb0da540-8487-4ca0-8a5f-ed4acaa0268d",
+    "8bacc3d4-a301-429b-859d-042d47f61e4d",
+    "3d8f61f1-7333-4c4f-b9e8-d76a3b453420",
+    "888d2798-4fdf-4e70-89ed-1bb2ff47c6c1",
+    "8b93ffcd-e3e8-41c7-aee9-458b03bd0b34",
+    "1d1b87f0-5243-4b39-926f-f7490d28954a",
+    "45e4cde5-5c3f-4997-8564-3ae5be9407e1",
+    "d8a9a09f-d6da-495b-8bb8-7d56f9c5b949",
+    "277d0321-7fe7-4ab0-b1bc-4b00ac627231",
+    "8bbf2330-78d1-4ea7-945f-89b7a99298c2",
+    "b4feb5db-e845-4bc1-b72e-b4de8b646288",
+    "0c6a5082-d327-41ec-8722-42d942f30f5a",
+    "728ac916-4aac-439d-af1c-d68e6a51139b",
+    "9c5e5766-0a1c-4563-a8c4-8184994a15a6",
+    "92d6215b-0730-44ce-a8b2-1baf4c2cd0d5",
+    "bfde5990-f846-4dae-90d1-0372ce45f522",
+    "c6ad89fd-6625-4290-83b2-2665e9e39225",
+    "7dc1de80-c04c-4c0f-8f00-6326d770626b",
+    "8bf034ac-313f-435a-bd2b-200a7857021b",
+    "1dafa767-ce2f-47c4-8142-67b0b4854586",
+    "9eff9013-f8a6-4a1a-9142-32d94d60d8c1",
+    "671ffc64-8b5b-4ac2-87b1-138951be701e",
+    "aac7171c-9bac-42a8-b094-2363599dae59",
+    "47f9c9d2-89b2-4987-af6b-31e7b1f74da2",
+    "ec77d204-6e8b-4dac-8b66-71b2a03c5e65",
+    "98e72ae4-10c9-4696-970b-804eb9b176ae",
+    "0421ad40-0881-47d4-b086-38c90c1ab62f",
+    "cf1f7109-266d-4e5a-8a8a-d93684cf60b9",
+    "e7976ce2-3344-4499-8b15-91adddc5ed0f",
+    "d29025d7-cf5d-4976-8a65-fc3bdcc991b5",
+    "8ced638c-eac7-433e-b794-54c0f23807a4",
+    "db489a87-6509-4d75-917d-9c426b519c64",
+    "eb079f27-e266-4b3c-beba-b34d34bef268",
+    "831086b8-d566-4f25-aa09-ecb505e54885",
+    "e3298bd7-61bf-427f-af89-4e418a20bf57",
+    "01b53c7e-c7f4-4465-88df-f8b6c645b6b9",
+    "a29ffabb-ac40-4754-8df8-94b9f394045c",
+    "aef9c054-e96e-4332-944b-9393105b6ac6",
+    "1f62ed4b-91f9-42fa-b331-b7e3e3c0637f",
+    "eb14192a-c53f-44c0-bb13-7f7ff1a0e662",
+    "758ca96e-100a-4611-a849-5d76229b6c83",
+    "1cf6b68a-a396-4ac1-8146-21fc314f6455",
+    "f476db17-6995-44ab-b002-0a326959f01a",
+    "4a405d17-9e7b-4007-b4e3-a1adcd41c489",
+    "f64bd7f1-ae18-4e9e-834e-eb0caf7f37d4",
+    "ee6d035a-600d-40a3-b444-b987766121ee",
+    "26170985-ac0e-4e3c-b171-141e2193ce32",
+    "d153d78a-99bd-48c1-8c00-ea6ae02c0395",
+    "860802dc-6314-46a6-b991-4ba8e7d061dc",
+    "5f6a9e19-7021-4fd3-9873-6beee620f5fa",
+    "9431623c-476c-4417-a51a-d4993a04e5b2",
+    "465e651c-9928-4c32-aa41-7fc09f102f01",
+    "066f67d4-51dc-4767-b48f-d03dd7359f4a",
+    "5a6e40e5-10f3-4c40-a2ba-f2a1c638ded9",
+    "6d60f894-2a95-4dfd-8afb-64980e0a6d17",
+    "9529428c-25ea-443e-b56f-f24a18ebb5f1",
+    "7cfc08a6-65c3-49fa-ae4d-8ebf80484dd8",
+    "60aca7d2-9026-495e-bdfe-de5bf0ccfe12",
+    "7e0a1802-2a6a-403d-a487-d3a60cb2d037",
+    "4295cb3b-245c-481d-ad3c-60b179b8cc27",
+    "5abd7fb8-61fd-4fcd-bf6b-10da638f5174",
+    "eb5adebb-130f-4a56-9a52-e99c455b628d",
+    "fd97f1c5-b957-4e1f-bbe2-0dac7c3802b5",
+    "8cc2e1f3-2ac4-4542-ac7f-6dc2e0d30bc4",
+    "d41bfe34-e558-4c52-9797-bdd88fcbc88a",
+    "3ad9da32-51f9-49ad-b94d-34a09182d63d",
+    "3422a0bf-4edf-44ca-9d79-7c897424e69a",
+    "aa025c0e-8649-4623-a634-ad778ea9c2d1",
+    "a8875ecb-6e84-4c6d-ac68-3251b945d963",
+    "03b6eedd-91f8-430c-80e6-b2ea7cc1a789",
+    "401dc34a-0111-4f25-9c4c-526d77650e21",
+    "087647a0-77e5-40ec-97f9-ee8a4bdd333b",
+    "ef241661-c372-46d6-8583-d96d051223ed",
+    "552587c7-7527-4f93-9646-d9ea615b2537",
+    "92aa3ea9-830b-448c-a29f-ec23323d7aa3",
+    "706e34e9-e166-4de1-9a0e-528bee0703b3",
+    "2f415897-3318-46fb-bf97-1070201d7386",
+    "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a",
+    "5ca15a2e-b217-436e-8c3b-97a45243baed",
+    "71a716b3-63c6-4c67-a7b1-282b19d83d2f",
+    "aad99d4d-1503-4c50-970c-f0fa742902c9"
+  ],
   "starbuncleAdoptions": [
     {
       "name": "Stekkie",
@@ -111,7 +209,8 @@
       "adopter": "Gootastic",
       "color": "brown",
       "bio": "Most confuse Chestnut for a squirrel rather than a magical hopper. She prefers it that way."
-    },{
+    },
+    {
       "name": "Solstice",
       "color": "lime",
       "adopter": "Darkfira",
@@ -134,7 +233,8 @@
       "color": "red",
       "adopter": "Nathan",
       "bio": "Carter is a weird mix between loving and hating strangers, he is happy to jump at your legs and walk with you but is a ninja at dogdging hands, he enjoys Cuddles with his human."
-    },{
+    },
+    {
       "name": "Peregrimm",
       "color": "light_gray",
       "adopter": "Dragon Verdantyr",
@@ -145,37 +245,44 @@
       "color": "cyan",
       "adopter": "Relax",
       "bio": "He's just a little, vibey guy!"
-    },{
+    },
+    {
       "name": "Luna",
       "color": "purple",
       "adopter": "The Boo",
       "bio": "Just let me sleep."
-    },{
+    },
+    {
       "name": "Archimedes",
       "color": "red",
       "adopter": "Abandoned_Cat87",
       "bio": "Failed at becoming a mage because he wasn't able to hold the spell book so he went on a quest to find a smaller one."
-    },{
+    },
+    {
       "name": "Fisher",
       "color": "black",
       "adopter": "PaprikaSu",
       "bio": "A friendly, swishy lil' guy who likes to zip around at 100 kilometers an hour."
-    },{
+    },
+    {
       "name": "Atmos",
       "color": "cyan",
       "adopter": "Firel",
       "bio": "Spends their time gazing at the open sky, and loves taking rides with Elytra-fliers."
-    },{
+    },
+    {
       "name": "Dusty",
       "color": "brown",
       "adopter": "Coda Vanistok",
       "bio": "This peculular hoarder was found huddled up between a few thrown pillows and a fireplace settled in Coda's study, relishing in the ambient heat before being discovered trying to store away every bit of gold found around the room over a period of a few days undiscovered. A feisty little critter that ducks away from offered affection, they're most appropriately described as an adorable troublemaker."
-    },{
+    },
+    {
       "name": "Shade",
       "color": "black",
       "adopter": "VampyKillerClown",
       "bio": "Once a necromancer's Familiar now a wondering soul looking for its next master, waiting for the return of his first."
-    },{
+    },
+    {
       "name": "Squirrel",
       "color": "brown",
       "adopter": "The Emperor",
@@ -186,402 +293,482 @@
       "adopter": "Jaredlll08",
       "color": "cyan",
       "bio": "Splonk may seem a bit wobbly at times, but they seem to be perfectly fine otherwise!"
-    },{
+    },
+    {
       "name": "Bailey",
       "adopter": "Ars Nouveau Team",
       "color": "red",
       "bio": "Ars Nouveau is a passion project brought to life by hundreds of contributions from the community. We hope you enjoy this Rainbow-buncle as much as we enjoy making this mod! Thanks for playing!"
-    },{
+    },
+    {
       "name": "Wolfram",
       "adopter": "Chemoeum",
       "color": "blue",
       "bio": "Wolfram used to work for a chemist with 117 other starbuncles. While Wolfram was the only one able to distinguish materials from every element of the Periodic Table, all of his sisters and brothers struggled with basically any element except for gold."
-    },{
+    },
+    {
       "name": "Nemo",
       "adopter": "Tunatuesday",
       "bio": "Please help me find my family uwu",
       "color": "pink"
-    },{
+    },
+    {
       "name": "Nuna",
       "color": "brown",
       "adopter": "Mochipurin",
       "bio": "Stop staring, gimmie treats now"
-    },{
+    },
+    {
       "name": "Aki",
       "color": "white",
       "adopter": "Weiss",
       "bio": "Found on the shore near a chest, Aki seems to have been forgotten by a prior mage, She hates loud noises, and Skeletons. A note on her neck reads \"please give her a better life on the land then I could on the sea\""
-    },{
+    },
+    {
       "name": "Snowflake",
       "color": "light_blue",
       "adopter": "DerringerCubed",
       "bio": "On the far-flung plane of Alfheim, in the eternally frozen retreat of the fae of the Winter Court, amid a patch of preternaturally-tall, luminous crocus, DerringerCubed met this warm, soft fluffball curled up for a moment's rest. She is deterred by neither the long nights and relentless snows of deep winter nor the lingering traces of unnatural magic that always seem to surround her new friend."
-    },{
+    },
+    {
       "name": "Rhaast",
       "color": "black",
       "adopter": "NUK3 redemption",
       "bio": "A misguided spirit who is searching for her wizard companion"
-    },{
+    },
+    {
       "name": "WaveClaw",
       "color": "purple",
       "adopter": "waveclaw",
       "bio": "Found enjoying shiny metal that reminds one of cheese and sunrises."
-    },{
+    },
+    {
       "name": "Ivory",
       "adopter": "Lifeline",
       "color": "red",
       "bio": "A very small little friend eager to be loved. She is very curious but seems to be very smart, eager to try and help however she can. She tends to be anxious around new people, but will melt with joy if you give her pets. She has a small mushroom and a goat sticker always on her back."
-    },{
+    },
+    {
       "name": "Elis",
       "color": "orange",
       "adopter": "Thunder",
       "bio": "It is staring at you with confusion."
-    },{
+    },
+    {
       "name": "Berry",
       "adopter": "Jaysungmr",
       "color": "pink",
       "bio": "Found in an abandoned mage tower. Seems to enjoy source berries and live jazz"
-    },{
+    },
+    {
       "name": "Cookie",
       "adopter": "Sarrdonous",
       "color": "light_gray",
       "bio": "Cookie has a knack for finding the juiciest and most delicious Sourceberries, and sometimes sneaks into Sourceberry farms to satisfy his sweet tooth. Don’t be surprised if you see him with a berry-stained mouth and a guilty grin."
-    },{
+    },
+    {
       "name": "Skytail",
       "adopter": "HolidayWither",
       "color": "light_blue",
       "bio": "Skytail thrives on companionship, supports magic users with a positive and upbeat attitude, and spreads happiness wherever it goes."
-    },{
+    },
+    {
       "name": "Sarrion",
       "adopter": "Mr_Etan",
       "color": "orange",
       "bio": "A once powerful mage accidentally turned himself into a starbuncle! He hasn't really bothered to turn himself back. Perhaps he enjoys the simple life?"
-    },{
+    },
+    {
       "name": "Trixie",
       "color": "magenta",
       "adopter": "Gulmok",
       "bio": "It's staring at you with confusion."
-    },{
+    },
+    {
       "name": "Jayden",
       "color": "red",
       "adopter": "EpicGamezTV",
       "bio": "Because Race Car!"
-    },{
+    },
+    {
       "name": "Jade",
       "color": "green",
       "adopter": "Arclight",
       "bio": "Enjoys snoozing in the grass or hanging out on the front porch"
-    },{
+    },
+    {
       "name": "Sleeping Rose",
       "color": "pink",
       "adopter": "RoxieOnyx",
       "bio": "A sleepy lil guy! Smells like roses and has quite an... odd air about them. Stare into their eyes and the void might stare back… Still cute though and loves snuggles"
-    },{
+    },
+    {
       "name": "Shimmer",
       "color": "white",
       "adopter": "heiko776",
       "bio": "Playful and curious little fella who loves to explore the world and make new friends."
-    },{
+    },
+    {
       "name": "Glitero",
       "color": "lime",
       "adopter": "the_bob756",
       "bio": "A funny little guy who loves glitter"
-    },{
+    },
+    {
       "name": "Avie",
       "color": "cyan",
       "adopter": "SaaltySenpai",
       "bio": "This starbuncle has large tusks that protrude from the mouth. She smiles happily as she eats your shoes and spellbook. She loves fetch and picking sourceberries but she might eat a few."
-    },{
+    },
+    {
       "name": "Durin",
       "color": "light_gray",
       "adopter": "Nates698",
       "bio": "Found hiding from a snowstorm in a mountain cave. Durin is a wanderer attracted to all things shiny beneath the mountains."
-    },{
+    },
+    {
       "name": "Elson the Timid",
       "color": "lime",
       "adopter": "CJ_squared",
       "bio": "Despite his name, Elson is so brave and definitely not trembling in his tiny squirrel boots (sidenote, he is very proud of his custom made boots). He loves being in safe dark spaces (not because he's scared, it's just comfy)."
-    },{
+    },
+    {
       "name": "Stardust",
       "color": "light_blue",
       "adopter": "shiranno",
       "bio": "Found a certain place in the End. He loves flying like an elytra and enjoys doing it. He can seem to give glide effect by himself."
-    },{
+    },
+    {
       "name": "Mega Volta",
       "color": "cyan",
       "adopter": "B9B",
       "bio": "The sworn enemy of mega mindy wandering around looking for revenge. Sterre hagedoorn is her ally."
-    },{
+    },
+    {
       "name": "Gold Loving Starbuncle",
       "color": "purple",
       "adopter": "Clement446",
       "bio": "A greedy thief who wanted to learn all spells at a low cost got turned into a starbuncle! It seems that even in his starbuncle state, he still loves gold and riches as much as when he was a human."
-    },{
+    },
+    {
       "name": "Squiggle",
       "color": "purple",
       "adopter": "GreyTalyn",
       "bio": "Winner of the Squiggle Olympics, lover of fine cheese. Thinks they're a werewolf."
-    },{
+    },
+    {
       "name": "Sunsun",
       "color": "orange",
       "adopter": "RessFaure",
       "bio": "Love to hang out when it's sunny and run after light. He's a bit warm like a little flame."
-    },{
+    },
+    {
       "name": "Engenix, the curious",
       "color": "cyan",
       "adopter": "Suelvys",
       "bio": "A little Starbuncle who lived in the forests near the house of an intelligent and friendly engineer, where he learned to create various things and lives making gadgets around, gears occasionally fall out of his magic tail (it's not clear how he keeps so many things in it, it must be magic), he loves copper nuggets and driving trains and machines, always curious and willing to help anyone who calls him."
-    },{
+    },
+    {
       "name": "Spino",
       "color": "orange",
       "adopter": "SpinoFTW",
       "bio": "An orange starbuncle that likes to sprint around people. Likes source berries and pies. Thinks it is the fastest starbuncle in the world."
-    },{
+    },
+    {
       "name": "Vic",
       "adopter": "Amajami",
       "color": "lime",
       "bio": "She seems to really want to help you"
-    },{
+    },
+    {
       "name": "Kira, The Sleepy",
       "color": "magenta",
       "adopter": "QueenOfWorms",
       "bio": "A lonely little starbuncle, that loves to quietly slumber under trees and in caves."
-    },{
+    },
+    {
       "name": "Kaori, The Almighty",
       "adopter": "TheSeaMoon",
       "color": "white",
       "bio": "Kaori was once one of the most powerful summoner in the world, until a mishap made a witch angry at them, Kaori will have her revenge once she undo the transformation, AND THE WITCH WILL BOW BEF- Oh! Shiny Nugget!"
-    },{
+    },
+    {
       "name": "Bengie",
       "adopter": "Dean",
       "color": "green",
       "bio": "This Starbuncle loves plants and can often be spotted in trees or bushes."
-    },{
+    },
+    {
       "name": "Magenty",
       "adopter": "Lyrellion",
       "color": "magenta",
       "bio": "This brightly colored starbuncle seems to have an endless supply of energy…almost like a 6 year old child..."
-    },{
+    },
+    {
       "name": "Ophelia",
       "color": "purple",
       "adopter": "Rythian",
       "bio": "A friendly little helper, always on the lookout for a treat."
-    }, {
+    },
+    {
       "name": "Hank",
       "color": "black",
       "adopter": "LeUnknownNugget",
       "bio": "From the void and abyss, Nuggets cute little companion Hank"
-    }, {
+    },
+    {
       "name": "Hanabi",
       "color": "white",
       "adopter": "angelixen",
       "bio": "From high atop the snowy peaks, this starbuncle descended onto the land in an explosion of color."
-    },{
+    },
+    {
       "name": "Rozeta",
       "adopter": "WayOfTime",
       "color": "pink",
       "bio": "A curious Starbuncle that likes to build and experiment with magic."
-    },{
+    },
+    {
       "name": "Oreo",
       "adopter": "AdamTheZenith",
       "color": "black",
       "bio": "The lost pet of Adam the Archmagi. Their eyes speak of countless war crimes committed in pursuit of spell perfection."
-    },{
+    },
+    {
       "name": "Vivian",
       "color": "purple",
       "adopter": "Floofi",
       "bio": "After having been bullied by her brothers and sisters for so long, she seeks a quiet life of peace. She only asks that you treat her well as she helps you with your adventure."
-    },{
+    },
+    {
       "name": "Sprigly",
       "adopter": "Parsley",
       "bio": "Always loved to help in the mouse garden",
       "color": "lime"
-    },{
+    },
+    {
       "name": "Inven",
       "color": "yellow",
       "adopter": "Uni",
       "bio": "Curious and mischievous, this little starbuncle loves experimenting and discovering new things."
-    },{
+    },
+    {
       "name": "Nugget",
       "adopter": "Hubnester",
       "color": "cyan",
       "bio": "A cute lil guy who does cute lil things."
-    },{
+    },
+    {
       "name": "OmegaYun",
       "color": "pink",
       "adopter": "Milinen",
       "bio": "Is angry at a big dummy named Adashi."
-    },{
+    },
+    {
       "name": "Honeybun",
       "adopter": "LunarisDraconis",
       "bio": "sweet, soft, shy, and loving loves cuddles and snacks",
       "color": "pink"
-    },{
+    },
+    {
       "name": "Socks",
       "adopter": "GrumpyGhost",
       "bio": "Sent by a powerful archmage to help you. At least thats what it said on the note she carried...",
       "color": "red"
-    },{
+    },
+    {
       "name": "Stella",
       "adopter": "Feet Wellden",
       "bio": "It seems they were sent by a certain alchemist and witch. to help you. ",
       "color": "orange"
-    },{
+    },
+    {
       "color": "cyan",
       "adopter": "alissabear01",
       "name": "Yuto",
       "bio": "Full of RAGE!!...or maybe he just needs a snack"
-    },{
+    },
+    {
       "color": "orange",
       "name": "Patches",
       "adopter": "Mick0604",
       "bio": "Friendly and carefree, this Starbuncle loves to harvest pumpkins for some reason"
-    },{
+    },
+    {
       "color": "pink",
       "name": "Alo'ra",
       "adopter": "Nep",
       "bio": "This starbuncle is very well loved. She carries a note that reads \"Please take care of her like she took care of me. She'd love to stargaze with you.\" "
-    },{
+    },
+    {
       "name": "Gootastic",
       "color": "red",
       "adopter": "Gootastic",
       "bio": " It's unclear why it exists, but here we are. This Goobuncle's slimy demeanor is off-putting, but that's not so bad when you realize how unbelievably squishy its cheeks are."
-    },{
+    },
+    {
       "name": "Tav",
       "color": "white",
       "adopter": "Ruka_21",
       "bio": "I wouldn't try to hit it. It might just be a poor starbuncle... or it might be a wildshaped druid.."
-    },{
+    },
+    {
       "name": "Buttercup",
       "color": "orange",
       "adopter": "Kazyo",
       "bio": "This tidy starbuncle loves collecting flowers and decorating its tail with them. Yet it has never seen the flower that it is named after..."
-    },{
+    },
+    {
       "name": "Cloud",
       "color": "cyan",
       "adopter": "cloud8ine",
       "bio": "This starbuncle is just here for the rest of the ride"
-    },{
+    },
+    {
       "name": "Fen",
       "color": "black",
       "adopter": "Hayesx369",
       "bio": "Introducing Fen, your adorable friend who thrives among berry bushes! With a warm personality, Fen is always eager to meet new friends, whether they are human or furry."
-    },{
+    },
+    {
       "name": "Cookie",
       "adopter": "zeroregard",
       "bio": "A timid yet playful starbuncle, soft as clouds to the touch, with a lingering, soothing fragrance of old books and vanilla. Though shy at first, its eyes eventually widen as it bursts to life in play, darting about with boundless energy and joy.",
       "color": "yellow"
-    },{
+    },
+    {
       "name": "Brandy",
       "adopter": "mluosed",
       "color": "brown",
       "bio": "This Starbuncle likes to walk in the cool forest in the fall,staying at home in the winter and watching others stew meat"
-    },{
+    },
+    {
       "name": "Smokey Sugar",
       "color": "black",
       "adopter": "Vicorus",
       "bio": "A hard working fellow. Very sweet and happy all around. They are eager to work for you."
-    },{
+    },
+    {
       "name": "Corone",
       "color": "black",
       "adopter": "CrowDrone",
       "bio": "A vain little creature, known for her beautiful voice. Aesop warned her about foxes and flattery. "
-    },{
+    },
+    {
       "name": "Astrael",
       "color": "black",
       "adopter": "Keintcy",
       "bio": "A mysterious but curious starbuncle, once loved by an archmage who got lost in time. Rumor says she was born among the stars, therefore her name."
-    },{
+    },
+    {
       "name": "Xollus",
       "adopter": "Jarva",
       "color": "orange",
       "bio": "This poor Starbuncle was originally a Bookwyrm, polymorphed into a Starbuncle as part of an experiment gone wrong."
-    },{
+    },
+    {
       "name": "Archi",
       "adopter": "ChosenArchitect",
       "color": "blue",
       "bio": "Archi was found tinkering with magical gadgets in an enchanted forest. It's a curious creature, always trying to automate everything around it. With a love for shiny items and complex machinery, it enjoys watching builds come to life and adds a touch of creativity wherever it goes."
-    },{
+    },
+    {
       "name": "Floki",
       "color": "red",
       "adopter": "Tevaino",
       "bio": "The mage's favorite little creature."
-    },{
+    },
+    {
       "name": "Jaime",
       "color": "purple",
       "adopter": "Frantastic",
       "bio": "His staggering, wobbly gait does nothing to dampen his infectiously rambunctious and carefree spirit. Smells strongly of grapes."
-    },{
+    },
+    {
       "name": "Eru",
       "color": "gray",
       "adopter": "ImPaw",
       "bio": "Not to be left unsupervised."
-    },{
+    },
+    {
       "name": "Boo",
       "adopter": "Lufia",
       "color": "black",
       "bio": "Eternal Companion to the Spellblade Lufia, reincarnated in this life to help you on your journey. She may eat your snacks when you aren't looking. Real cat-like behavior right there. "
-    },{
+    },
+    {
       "name": "Mothball",
       "adopter": "Mira",
       "color": "light_gray",
       "bio": "There has never been a fluffier Starbuncle, nor will there be. While not particularly bright or strong, Mothball is always happy to be your friend!"
-    },{
+    },
+    {
       "name": "Will the Starbuncle",
       "adopter": "Mystifi",
       "color": "orange",
       "bio": "Will The Stabuncle do what? What Will he do? Will Will Willfully a thing?"
-    },{
+    },
+    {
       "name": "Nooch",
       "adopter": "Plagued757",
       "bio": "What an odd name for a mystical creature? Oh well, at least it stands out amongst the rest of its kind, even if its a little.. weird.",
       "color": "purple"
-    },{
+    },
+    {
       "name": "Eclipse",
       "adopter": "Sophie",
       "color": "pink",
       "bio": "A little engineer turned into a curious creature, she's sure to help in any way she can."
-    },{
+    },
+    {
       "name": "Lerya",
       "color": "magenta",
       "adopter": "Keyla the Witch",
       "bio": "Lerya is a curious little Starbuncle, and with the token of friendship she gave to you she shows her appreciation for your kindness. After her human parent ended her game with a deadly growth spell on lots of Sourceberries, Lerya feels very sad and lonely nowadays."
-    },{
+    },
+    {
       "name": "Muffin",
       "color": "green",
       "adopter": "allypandaa",
       "bio": "A rogue little monster that somehow escaped. Contain him! Who knows what he'll do now he's free! Last time he blew up! It was a miracle he lived that..."
-    },{
+    },
+    {
       "name": "Lilia",
       "color": "purple",
       "adopter": "TheFayeWitch",
       "bio": "Lilia thrives in the moonlit night. Known to give powerful visions of the future to those who gaze at the moon while holding her."
-    },{
+    },
+    {
       "name": "Ladislaw",
       "bio": " If you ever see him falling, it probably wasn't him, you better check again.",
       "color": "cyan",
       "adopter": "The_Sebuss"
-    },{
+    },
+    {
       "adopter": "Bugcolez",
       "name": "Puff Ball",
       "color": "magenta",
       "bio": "A energetic and curious little Starbuncle that grows a bond to strengthen its heart. Many of worlds and friends have been made over the years and will continue to be made through its lifetime."
-    },{
+    },
+    {
       "adopter": "Arin",
       "color": "black",
       "name": "Shadow",
       "bio": "This little guy has been everywhere! Whether that be in your back yard, or the future, he's been there!"
-    },{
+    },
+    {
       "adopter": "Delmeir",
       "color": "brown",
       "name": "Fuzz, the timid",
       "bio": "The qualities which a person must possess to put Fuzz at ease are an enigma, known only to Fuzz. Just know that if he has chosen you, you must be quite special... and he's probably gonna be stuck to you like glue for a while."
-    },{
+    },
+    {
       "adopter": "ardinosaur_",
       "color": "gray",
       "name": "Chiaroscuro",
       "bio": "Initially shy and skittish, Chiaroscuro becomes a deeply loyal and affectionate companion once she bonds with you. With an uncanny ability to sense your moods, she's always there to cuddle, comfort, and add a touch of playful mischief to your day!"
-    },{
+    },
+    {
       "adopter": "SloppyBox",
       "color": "purple",
       "name": "Orion",
@@ -598,22 +785,26 @@
       "color": "black",
       "name": "Void",
       "bio": "Void, the loyal familiar of Yuuki, was altered by their prolonged time in the Beyond. The dimension’s strange magic granted Void the ability to open wormholes, allowing him to collect and store items from across vast distances, forever tied to the mysteries of the void."
-    },{
+    },
+    {
       "adopter": "Riftderp",
       "color": "red",
       "name": "Strawbee",
       "bio": "This little starbuncle searches for strawberries. So far, she has not been successful."
-    },{
+    },
+    {
       "adopter": "Andrey",
       "color": "pink",
       "bio": "oiiaiioiiiaii",
       "name": "Nikkkkkkk"
-    },{
+    },
+    {
       "adopter": "CocoaEyebrows",
       "color": "purple",
       "name": "Violet",
       "bio": "This Starbuncle figured out how to ferment sourceberries into a strange beverage. If it moves erratically, that's the reason."
-    },{
+    },
+    {
       "adopter": "ConeOfTraffic",
       "name": "Connor",
       "color": "orange",
@@ -624,77 +815,130 @@
       "color": "brown",
       "name": "Pansy",
       "bio": "A lost looking critter that loves cinnamon."
-    },{
+    },
+    {
       "adopter": "Rayne Drogoth",
       "color": "red",
       "name": "Gerald Viripotens",
       "bio": "A big pyromaniac in a little package. Gerald's only goal in life is to someday cast fireball."
-    },{
+    },
+    {
       "adopter": "Emmulah",
       "color": "yellow",
       "bio": "Camembert, once a simple pet ferret, attained eternal life when his owner sealed his soul safely in this Starbuncle. He still likes butt scratches and cheese.",
       "name": "Camembert"
-    },{
+    },
+    {
       "adopter": "Imperial Mage",
       "bio": "He stared into the Abyss and the Abyss gave scritches back",
       "color": "black",
       "name": "Sir Wiggles the Dour"
-    },{
+    },
+    {
       "adopter": "kuzhcola",
       "color": "purple",
       "name": "The Doctor",
       "bio": "The Doctor utilizes a strange power over their own timeline to rewrite its own history to include more naps. They still seems to always be tired..."
-    },{
+    },
+    {
       "adopter": "Axalotl",
       "name": "Jacob",
       "bio": "He loves to calculate plane geometry in Cartesian coordinates.",
       "color": "purple"
-    },{
+    },
+    {
       "adopter": "Dadamalda",
       "color": "red",
       "bio": "He throws the clock out of the window every morning.",
       "name": "Sleepy Bill"
-    },{
+    },
+    {
       "adopter": "Breadcrumb",
       "bio": "Came looking for balance, promptly got lost",
       "color": "purple",
       "name": "Loaf"
-    },{
+    },
+    {
       "adopter": "WorseCookie",
       "name": "Hastur the Unspeakable One",
       "color": "yellow",
       "bio": "Probably not part of a cult!"
-    },{
+    },
+    {
       "adopter": "Shoob",
       "name": "Shoob Jr.",
       "color": "gray",
       "bio": "This lil guy has been travelling everywhere in search of ultimate power, and now it has found you! Keep an eye on 'em!"
-    },{
+    },
+    {
       "adopter": "FayneProto",
       "color": "black",
       "name": "Lil' Fayne",
       "bio": "Fayne cannot give good names for things so Fayne decided to name his Starbuncle Lil' Fayne. His reasoning? \"Because I don't know what else to name him, and he sort of looks like me\". Other than that this little guy likes staring blankly at people and thats about it.\n"
-    },{
+    },
+    {
       "adopter": "WaywardxWanderer",
       "color": "black",
       "name": "Sir Bernard the Valiant",
       "bio": "Sir Bernard is scared of everything and hopes that no one will ever find out that he only earned his title because he was mistaken for another much braver starbuncle."
-    },{
+    },
+    {
       "adopter": "Alphapplepie",
       "color": "pink",
       "bio": "She is on the hunt for everything pink, such is herself.",
       "name": "Alpha Noctiluca"
-    },{
+    },
+    {
       "adopter": "Fighter_Kitsune",
       "name": "Hildi",
       "color": "white",
       "bio": "May die when woken up."
-    },{
+    },
+    {
       "adopter": "Hack The Planet",
       "name": "Pranks",
       "color": "gray",
       "bio": "Starbuncle-Fuzzer injecting malformed packets into reality. May be hacking the planet."
+    },
+    {
+      "adopter": "Coldcolor",
+      "name": "BURD",
+      "color": "black",
+      "bio": "A crow transformed into a starbuncle. Has a habit of stealing shiny and/or sharp objects. He is comically spiteful."
+    },
+    {
+      "adopter": "Darhken",
+      "color": "black",
+      "name": "Arrack, biter of ankles",
+      "bio": "Must rip, tear, kill. Rip, tear, kill. Rip, tear... Ooh, shiny!"
+    },
+    {
+      "adopter": "64batsalex",
+      "bio": "Maiden, Mother, Crone...",
+      "color": "purple",
+      "name": "Hecate"
+    },
+    {
+      "name": "Starbuncle.java",
+      "adopter": "Jarva",
+      "color": "brown",
+      "bio": "This Starbuncle is a glitch in the matrix."
+    },
+    {
+      "name": "Quite Nice White Rice",
+      "color": "green",
+      "adopter": "Treeleafs",
+      "bio": "A little buddy to transport rice."
+    },{
+      "name": "Kanwo",
+      "color": "orange",
+      "adopter": "DarkStrifeYT",
+      "bio": "The best friend you can ever ask for"
+    },{
+      "name": "Valkyrie",
+      "color": "white",
+      "adopter": "Alban",
+      "bio": "Heavenly Harbinger"
     }
   ]
 }
-

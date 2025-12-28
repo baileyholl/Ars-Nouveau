@@ -140,7 +140,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             registerDropDoor(BlockRegistry.ARCHWOOD_DOOR.get());
             registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
+            registerDropSelf(BlockRegistry.ARCHWOOD_WALL_SIGN);
             registerDropSelf(BlockRegistry.ARCHWOOD_HANGING_SIGN);
+            registerDropSelf(BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN);
             registerDropSelf(BlockRegistry.SOURCE_GEM_BLOCK);
 
             registerDropSelf(BlockRegistry.POTION_MELDER);

@@ -40,6 +40,7 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     public BlockState mimicState;
     public BlockState nextState = BlockRegistry.MIRROR_WEAVE.defaultBlockState();
     public boolean renderInvalid = true;
+    public long lastUpdateTick = 0;
     protected boolean[] renderDirections = new boolean[6];
     public boolean disableRender = false;
 

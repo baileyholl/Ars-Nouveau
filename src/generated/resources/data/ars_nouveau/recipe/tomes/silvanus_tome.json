@@ -16,5 +16,23 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time"
   ],
+  "spellData": {
+    "color": {
+      "b": 1,
+      "g": 255,
+      "id": "ars_nouveau:constant",
+      "r": 1
+    },
+    "name": "Emergency Flair",
+    "particleTimeline": {},
+    "recipe": [
+      "ars_nouveau:glyph_touch",
+      "ars_nouveau:glyph_light",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time",
+      "ars_nouveau:glyph_extend_time"
+    ],
+    "sound": {}
+  },
   "tome_type": "ars_nouveau:caster_tome"
 }

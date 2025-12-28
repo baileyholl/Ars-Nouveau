@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -32,12 +31,24 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.Optional;
 
-public record CasterTomeData(String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText,
-                             ParticleColor particleColor,
-                             ConfiguredSpellSound sound) implements SpecialSingleInputRecipe {
+public record CasterTomeData(String flavorText, Spell spell,
+                             ResourceLocation tomeType) implements SpecialSingleInputRecipe {
 
 
+    @Deprecated(forRemoval = true)
+    public CasterTomeData(String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText,
+                          ParticleColor particleColor,
+                          ConfiguredSpellSound sound) {
+        this(flavorText, new Spell()
+                .withName(name)
+                .withColor(particleColor)
+                .withSound(sound)
+                .setRecipe(spell.stream().map(GlyphRegistry.getSpellpartMap()::get).toList()), tomeType);
+    }
+
+    @Deprecated(forRemoval = true)
     public CasterTomeData(String name,
                           List<ResourceLocation> spell,
                           ResourceLocation type,
@@ -46,10 +57,26 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
         this(name, spell, type, flavorText, ParticleColorRegistry.from(particleColor), sound);
     }
 
+    public static CasterTomeData deserialize(String name,
+                                             List<ResourceLocation> spellParts,
+                                             ResourceLocation type,
+                                             String flavorText,
+                                             ParticleColor particleColor, ConfiguredSpellSound sound, Optional<Spell> spell) {
+        if (spell.isPresent()) {
+            return new CasterTomeData(flavorText, spell.get(), type);
+        } else {
+            return new CasterTomeData(name, spellParts, type, flavorText, particleColor, sound);
+        }
+    }
+
     public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
+        return makeTome(tome, spell.withName(name), flavorText);
+    }
+
+    public static ItemStack makeTome(Item tome, Spell spell, String flavorText) {
         ItemStack stack = tome.getDefaultInstance();
         AbstractCaster<?> spellCaster = SpellCasterRegistry.from(stack);
-        stack.set(DataComponents.CUSTOM_NAME, Component.literal(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
+        stack.set(DataComponents.CUSTOM_NAME, Component.literal(spell.name()).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
         spellCaster.setSpell(spell).setFlavorText(flavorText).saveToStack(stack);
         return stack;
     }
@@ -64,17 +91,7 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
         Item tomeType = BuiltInRegistries.ITEM.get(this.tomeType);
         if (tomeType == Items.AIR)
             tomeType = ItemsRegistry.CASTER_TOME.asItem();
-        var spell = new Spell().mutable();
-        spell.name = this.name;
-        if (this.particleColor != null)
-            spell.color = this.particleColor;
-        for (ResourceLocation rl : this.spell) {
-            AbstractSpellPart part = GlyphRegistry.getSpellpartMap().get(rl);
-            if (part != null)
-                spell.recipe.add(part);
-        }
-        spell.sound = sound;
-        return makeTome(tomeType, name, spell.immutable(), flavorText);
+        return makeTome(tomeType, spell, flavorText);
     }
 
     @Override
@@ -89,13 +106,14 @@ public record CasterTomeData(String name, List<ResourceLocation> spell, Resource
 
     public static class Serializer implements RecipeSerializer<CasterTomeData> {
         public static MapCodec<CasterTomeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.STRING.fieldOf("name").forGetter(CasterTomeData::name),
-                Codec.list(ResourceLocation.CODEC).fieldOf("spell").forGetter(CasterTomeData::spell),
+                Codec.STRING.fieldOf("name").forGetter(tomeData -> tomeData.spell.name()),
+                Codec.list(ResourceLocation.CODEC).fieldOf("spell").forGetter(tomeData -> tomeData.spell.serializeRecipe()),
                 ResourceLocation.CODEC.fieldOf("tome_type").forGetter(CasterTomeData::tomeType),
                 Codec.STRING.fieldOf("flavour_text").forGetter(CasterTomeData::flavorText),
-                ParticleColor.CODEC.fieldOf("color").forGetter(CasterTomeData::particleColor),
-                ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(CasterTomeData::sound)
-        ).apply(instance, CasterTomeData::new));
+                ParticleColor.CODEC.fieldOf("color").forGetter(tomeData -> tomeData.spell.color()),
+                ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(tomeData -> tomeData.spell.sound()),
+                Spell.CODEC.codec().optionalFieldOf("spellData").forGetter(tomeData -> Optional.ofNullable(tomeData.spell))
+        ).apply(instance, CasterTomeData::deserialize));
 
         public static StreamCodec<RegistryFriendlyByteBuf, CasterTomeData> STREAM = CheatSerializer.create(CODEC);
 

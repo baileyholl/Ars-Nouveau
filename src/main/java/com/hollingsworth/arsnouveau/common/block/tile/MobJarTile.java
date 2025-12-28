@@ -140,6 +140,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     public void setRemoved() {
         super.setRemoved();
         this.entityTag = this.saveEntityToTag(this.getEntity());
+        if (this.getEntity() instanceof Entity e) {
+            e.remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
+        }
     }
 
     public void writeSimple(Entity e) {
@@ -201,6 +204,9 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     public void removeEntity() {
+        if (this.getEntity() instanceof Entity e) {
+            e.remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
+        }
         this.entityTag = null;
         this.cachedEntity = null;
         this.extraDataTag = null;
@@ -310,7 +316,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     @Override
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        if (this.entityTag != null || this.extraDataTag != null) {
+        if ((this.entityTag != null && !this.entityTag.isEmpty()) || (this.extraDataTag != null && !this.extraDataTag.isEmpty())) {
             pComponents.set(DataComponentRegistry.MOB_JAR, new MobJarData(this.entityTag, this.extraDataTag));
         }
     }

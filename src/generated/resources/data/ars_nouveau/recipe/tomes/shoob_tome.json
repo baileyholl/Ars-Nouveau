@@ -1,0 +1,236 @@
+{
+  "type": "ars_nouveau:caster_tome",
+  "color": {
+    "b": 180,
+    "g": 25,
+    "id": "ars_nouveau:constant",
+    "r": 255
+  },
+  "flavour_text": "Need a quick getaway? Using Shoob's patented \"Tactical retreat\" technique, you can escape AND do it gracefully! (Shibe Inc is not liable for misuse or failure in the escape)",
+  "name": "",
+  "sound": {},
+  "spell": [
+    "ars_nouveau:glyph_self",
+    "ars_nouveau:glyph_explosion",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_aoe",
+    "ars_nouveau:glyph_summon_decoy",
+    "ars_nouveau:glyph_blink",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_amplify",
+    "ars_nouveau:glyph_invisibility",
+    "ars_nouveau:glyph_extend_time"
+  ],
+  "spellData": {
+    "color": {
+      "b": 180,
+      "g": 25,
+      "id": "ars_nouveau:constant",
+      "r": 255
+    },
+    "name": "",
+    "particleTimeline": {
+      "ars_nouveau:orbit": {
+        "type": "ars_nouveau:orbit",
+        "castSound": {
+          "sound": {}
+        },
+        "flairEffect": {
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "onSpawnEffect": {
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {}
+        },
+        "trailEffect": {
+          "motion": {
+            "type": "ars_nouveau:trail",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 100,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ars_nouveau:self": {
+        "type": "ars_nouveau:self",
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:warped_spore",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:warped_spore",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 1,
+                      "g": 255,
+                      "id": "ars_nouveau:constant",
+                      "r": 67
+                    },
+                    "tintDisabled": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {
+            "sound": {
+              "id": "ars_nouveau:totem_use"
+            }
+          }
+        }
+      },
+      "ars_nouveau:touch": {
+        "type": "ars_nouveau:touch",
+        "onResolvingEffect": {
+          "motion": {
+            "type": "ars_nouveau:burst",
+            "propMap": {}
+          },
+          "particleOptions": {
+            "type": "ars_nouveau:new_glow",
+            "properties": {
+              "ars_nouveau:density": {
+                "density": 5,
+                "radius": 0.10000000149011612,
+                "spawnType": "SPHERE"
+              },
+              "ars_nouveau:particle_type": {
+                "particleType": "ars_nouveau:new_glow",
+                "subProperties": {
+                  "ars_nouveau:color": {
+                    "particleColor": {
+                      "b": 180,
+                      "g": 25,
+                      "id": "ars_nouveau:constant",
+                      "r": 255
+                    },
+                    "tintDisabled": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resolveSound": {
+          "sound": {}
+        }
+      }
+    },
+    "recipe": [
+      "ars_nouveau:glyph_self",
+      "ars_nouveau:glyph_explosion",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_aoe",
+      "ars_nouveau:glyph_summon_decoy",
+      "ars_nouveau:glyph_blink",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_amplify",
+      "ars_nouveau:glyph_invisibility",
+      "ars_nouveau:glyph_extend_time"
+    ],
+    "sound": {}
+  },
+  "tome_type": "ars_nouveau:caster_tome"
+}

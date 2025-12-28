@@ -50,3 +50,6 @@ license="GNU GENERAL PUBLIC LICENSE"
 #    versionRange="[1.19-5.0.7.1,)"
 #    ordering="AFTER"
 #    side="BOTH"
+
+[modproperties.ars_nouveau]
+"yumi:entrypoints"."lambdynlights:initializer" = "com.hollingsworth.arsnouveau.common.light.LambDynamicLightsInitializer"
