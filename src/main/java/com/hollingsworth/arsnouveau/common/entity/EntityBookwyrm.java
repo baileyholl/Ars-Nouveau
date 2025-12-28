@@ -342,4 +342,12 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     public boolean canUsePortal(boolean allowPassengers) {
         return false;
     }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
+        stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+        return stack;
+    }
 }
