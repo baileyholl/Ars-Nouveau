@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GlyphFormatter {
-    int perRow = 6;
+    int perRow = 7;
     int maxRows = 7;
 
     int bookLeft;
@@ -53,16 +54,16 @@ public class GlyphFormatter {
         for (int i = 0; i < sorted.size(); i++) {
             if (!addedForms && sorted.get(i) instanceof AbstractCastMethod) {
                 addedForms = true;
-                buttons.add(new GuiImageButton(0, 0, DocAssets.FORM_ICON, (b) -> {
-                }));
+                buttons.add(new GuiImageButton(0, 0, DocAssets.FORM_ICON_CRAFTING, (b) -> {
+                }).withTooltip(Component.translatable("ars_nouveau.form_icon_tooltip")));
             } else if (!addedEffects && sorted.get(i) instanceof AbstractEffect) {
                 addedEffects = true;
-                buttons.add(new GuiImageButton(0, 0, DocAssets.EFFECT_ICON, (b) -> {
-                }));
+                buttons.add(new GuiImageButton(0, 0, DocAssets.EFFECT_ICON_CRAFTING, (b) -> {
+                }).withTooltip(Component.translatable("ars_nouveau.effect_icon_tooltip")));
             } else if (!addedAugments && sorted.get(i) instanceof AbstractAugment) {
                 addedAugments = true;
-                buttons.add(new GuiImageButton(0, 0, DocAssets.AUGMENT_ICON, (b) -> {
-                }));
+                buttons.add(new GuiImageButton(0, 0, DocAssets.AUGMENT_ICON_CRAFTING, (b) -> {
+                }).withTooltip(Component.translatable("ars_nouveau.augment_icon_tooltip")));
             }
 
             buttons.add(new GlyphButton(0, 0, sorted.get(i), this.onGlyphClick));
@@ -98,8 +99,8 @@ public class GlyphFormatter {
             if (isNextPage) {
                 numRows = (count - (perRow * maxRows)) / perRow;
             }
-            part.x = bookLeft + 20 + (isNextPage ? 134 : 0) + (count % perRow) * 20;
-            part.y = numRows * 18 + bookTop + 20;
+            part.x = bookLeft + 16 + (isNextPage ? 134 : 0) + (count % perRow) * 18;
+            part.y = numRows * 18 + bookTop + 18;
             addRenderableWidget.accept(part);
             if (part instanceof GlyphButton glyphButton) {
                 glyphButtons.add(glyphButton);
