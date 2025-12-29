@@ -218,33 +218,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public int getNumPages() {
         return (int) Math.ceil((double) displayedGlyphs.size() / 84);
     }
-//
-//    private void layoutAllGlyphs(int page) {
-//        clearButtons(glyphButtons);
-//        int perRow = 6;
-//        int maxRows = 7;
-//        List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
-//        sorted.sort(Comparator.comparingInt((AbstractSpellPart p) -> switch (p) {
-//            case AbstractAugment ignored -> 3;
-//            default -> p.getTypeIndex();
-//        }).thenComparing(AbstractSpellPart::getLocaleName));
-//        int fromIndex = 84 * page;
-//        if (fromIndex < sorted.size()) {
-//            sorted = sorted.subList(fromIndex, Math.min(sorted.size(), 84 * (page + 1)));
-//        }
-//        int count = 0;
-//        for (AbstractSpellPart part : sorted) {
-//            boolean isNextPage = count >= (perRow * maxRows);
-//            int numRows = count / perRow;
-//            if (isNextPage) {
-//                numRows = (count - (perRow * maxRows)) / perRow;
-//            }
-//            GlyphButton cell = new GlyphButton(bookLeft + 20 + (isNextPage ? 134 : 0) + (count % perRow) * 20, numRows * 18 + bookTop + 20, part, this::onGlyphClick);
-//            addRenderableWidget(cell);
-//            glyphButtons.add(cell);
-//            count++;
-//        }
-//    }
 
     public void onSearchChanged(String str) {
         if (str.equals(previousString))
