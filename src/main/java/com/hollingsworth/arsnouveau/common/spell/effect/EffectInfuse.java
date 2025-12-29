@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.common.items.PotionFlask;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -82,6 +83,11 @@ public class EffectInfuse extends AbstractEffect {
         if (!extractedFlask.isEmpty()) {
             IPotionProvider provider = PotionProviderRegistry.from(extractedFlask.stack);
             potionData = provider.getPotionData(extractedFlask.stack);
+
+            if (extractedFlask.stack.getItem() instanceof PotionFlask potionFlask) {
+                potionData = potionFlask.getModifiedPotionContents(potionData);
+            }
+
             provider.consumeUses(extractedFlask.stack, 1, shooter);
             extractedFlask.returnOrDrop(world, shooter.getOnPos());
         } else {
