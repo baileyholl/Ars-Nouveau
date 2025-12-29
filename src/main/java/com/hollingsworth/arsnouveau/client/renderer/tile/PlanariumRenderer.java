@@ -47,16 +47,12 @@ import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
-
-    GeoModel dimModel = new PlanariumModel(true);
+public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
 
     public static List<WeakReference<PlanariumTile>> deferredRenders = new ArrayList<>();
     public static Map<ResourceKey<Level>, StructureRenderData> structureRenderData = new WeakHashMap<>();
@@ -66,13 +62,11 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
     public static float offset = pad + ((1.0f - 2.0f * pad) - 32 * scale) * 0.5f;
 
     public PlanariumRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
-        super(new PlanariumModel(false));
 
     }
-    
+
     @Override
     public void render(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        super.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
         if (blockEntity.getTemplate() == null)
             return;
         structureRenderData.computeIfAbsent(blockEntity.key, (be) -> {
@@ -359,12 +353,6 @@ public class PlanariumRenderer extends GeoBlockRenderer<PlanariumTile> {
             );
         }
     }
-
-    @Override
-    public GeoModel<PlanariumTile> getGeoModel() {
-        return this.animatable.isDimModel ? dimModel : super.getGeoModel();
-    }
-
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(new PlanariumModel(false));

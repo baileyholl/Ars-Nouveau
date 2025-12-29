@@ -43,10 +43,6 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PlanariumTile extends ModdedTile implements ITickable, Nameable, GeoBlockEntity {
+public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
 
     public static DimManager dimManager = new DimManager();
     public static Map<ResourceKey<Level>, ClientDimEntry> clientTemplates = new ConcurrentHashMap<>();
@@ -243,22 +239,9 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable, Ge
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
-
-    AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-
-    @Override
     public Component getName() {
         return name;
     }
-
 
     public static class ClientDimEntry {
         private final StructureTemplate template;

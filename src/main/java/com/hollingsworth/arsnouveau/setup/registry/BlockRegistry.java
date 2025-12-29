@@ -371,12 +371,7 @@ public class BlockRegistry {
     public static final BlockEntityTypeRegistryWrapper<ItemDetectorTile> ITEM_DETECTOR_TILE = registerTile(LibBlockNames.ITEM_DETECTOR, ItemDetectorTile::new, ITEM_DETECTOR);
     public static final BlockEntityTypeRegistryWrapper<SpellSensorTile> SPELL_SENSOR_TILE = registerTile(LibBlockNames.SPELL_SENSOR, SpellSensorTile::new, SPELL_SENSOR);
     public static final BlockEntityTypeRegistryWrapper<RedstoneRelayTile> REDSTONE_RELAY_TILE = registerTile(LibBlockNames.REDSTONE_RELAY, RedstoneRelayTile::new, REDSTONE_RELAY);
-    public static final BlockRegistryWrapper<Planarium> PLANARIUM = registerBlockAndItem(LibBlockNames.PLANARIUM, Planarium::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
-        @Override
-        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-            return PlanariumRenderer::getISTER;
-        }
-    });
+    public static final BlockRegistryWrapper<Planarium> PLANARIUM = registerBlockAndItem(LibBlockNames.PLANARIUM, Planarium::new);
     public static final BlockEntityTypeRegistryWrapper<PlanariumTile> PLANARIUM_TILE = registerTile(LibBlockNames.PLANARIUM, PlanariumTile::new, PLANARIUM);
     public static final BlockEntityTypeRegistryWrapper<RepositoryCatalogTile> REPOSITORY_CONTROLLER_TILE = registerTile(LibBlockNames.REPOSITORY_CATALOG, RepositoryCatalogTile::new, REPOSITORY_CONTROLLER);
     public static final BlockEntityTypeRegistryWrapper<DecorBlossomTile> DECOR_BLOSSOM_TILE = registerTile(LibBlockNames.DECOR_BLOSSOM, DecorBlossomTile::new, DECOR_BLOSSOM);
