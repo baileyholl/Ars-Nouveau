@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.common.block.Planarium;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumProjectorTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -23,7 +24,7 @@ public class PlanariumProjectorRenderer implements BlockEntityRenderer<Planarium
         poseStack.pushPose();
         poseStack.translate(0, -24, 0);
         poseStack.scale(32, 32, 32);
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(BlockRegistry.PLANARIUM.defaultBlockState(), poseStack, multiBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(BlockRegistry.PLANARIUM.defaultBlockState().setValue(Planarium.INVERTED, true), poseStack, multiBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
     }
 

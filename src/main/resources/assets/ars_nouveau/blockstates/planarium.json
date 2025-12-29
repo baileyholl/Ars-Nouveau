@@ -1,5 +1,6 @@
 {
   "variants": {
-      "": { "model": "ars_nouveau:block/planarium_block" }
+      "inverted=false": { "model": "ars_nouveau:block/planarium_block" },
+    "inverted=true": { "model": "ars_nouveau:block/planarium_dimension" }
   }
 }
