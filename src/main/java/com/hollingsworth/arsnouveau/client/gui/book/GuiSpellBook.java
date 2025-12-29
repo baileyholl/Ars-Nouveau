@@ -60,8 +60,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public List<CraftingButton> craftingCells = new ArrayList<>();
     public List<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> displayedGlyphs;
-
-    public List<GlyphButton> glyphButtons = new ArrayList<>();
     public int page = 0;
     public PageButton nextButton;
     public PageButton previousButton;
@@ -89,6 +87,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public String spellname = "";
 
     public long timeOpened;
+    GlyphFormatter glyphFormatter;
 
 
     public GuiSpellBook(InteractionHand hand) {
@@ -141,11 +140,12 @@ public class GuiSpellBook extends SpellSlottedScreen {
     @Override
     public void init() {
         super.init();
+        glyphFormatter = new GlyphFormatter(bookLeft, bookTop, this::onGlyphClick, this::clearButtons, this::addRenderableWidget);
         timeOpened = System.currentTimeMillis();
         craftingCells = new ArrayList<>();
         resetCraftingCells();
 
-        layoutAllGlyphs(page);
+        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
         addRenderableWidget(new CreateSpellButton(bookRight - 74, bookBottom - 13, (b) -> this.saveSpell(), () -> this.validationErrors));
         addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::clear));
 
@@ -219,33 +219,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         return (int) Math.ceil((double) displayedGlyphs.size() / 84);
     }
 
-    private void layoutAllGlyphs(int page) {
-        clearButtons(glyphButtons);
-        int perRow = 6;
-        int maxRows = 7;
-        List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
-        sorted.sort(Comparator.comparingInt((AbstractSpellPart p) -> switch (p) {
-            case AbstractAugment ignored -> 3;
-            default -> p.getTypeIndex();
-        }).thenComparing(AbstractSpellPart::getLocaleName));
-        int fromIndex = 84 * page;
-        if (fromIndex < sorted.size()) {
-            sorted = sorted.subList(fromIndex, Math.min(sorted.size(), 84 * (page + 1)));
-        }
-        int count = 0;
-        for (AbstractSpellPart part : sorted) {
-            boolean isNextPage = count >= (perRow * maxRows);
-            int numRows = count / perRow;
-            if (isNextPage) {
-                numRows = (count - (perRow * maxRows)) / perRow;
-            }
-            GlyphButton cell = new GlyphButton(bookLeft + 20 + (isNextPage ? 134 : 0) + (count % perRow) * 20, numRows * 18 + bookTop + 20, part, this::onGlyphClick);
-            addRenderableWidget(cell);
-            glyphButtons.add(cell);
-            count++;
-        }
-    }
-
     public void onSearchChanged(String str) {
         if (str.equals(previousString))
             return;
@@ -285,7 +258,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         this.page = 0;
         previousButton.active = false;
         previousButton.visible = false;
-        layoutAllGlyphs(page);
+        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
         validate();
     }
 
@@ -309,7 +282,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
         }
         previousButton.active = true;
         previousButton.visible = true;
-        layoutAllGlyphs(page);
+        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
         validate();
     }
 
@@ -328,7 +301,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             nextButton.visible = true;
             nextButton.active = true;
         }
-        layoutAllGlyphs(page);
+        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
         validate();
     }
 
@@ -788,7 +761,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
         List<AbstractSpellPart> slicedSpell = spell.subList(0, spell.isEmpty() ? 0 : lastGlyphNoGap + 1);
         // Set validation errors on all the glyph buttons
-        for (GlyphButton glyphButton : glyphButtons) {
+        for (GlyphButton glyphButton : this.glyphFormatter.glyphButtons) {
             glyphButton.validationErrors.clear();
             glyphButton.augmentingParent = lastEffect;
             // Simulate adding the glyph to the current spell

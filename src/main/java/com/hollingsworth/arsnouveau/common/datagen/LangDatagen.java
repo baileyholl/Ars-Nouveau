@@ -1801,6 +1801,9 @@ public class LangDatagen extends LanguageProvider {
         add("biome.ars_nouveau.jar", "Jar");
         add("ars_nouveau.jar_spawn_out_of_bounds", "Cannot set jar spawn point out of bounds.");
         add("ars_nouveau.page1.planarium", "The Planarium allows for the creation of custom pocket dimensions. Blocks placed within the jar will be rendered inside the Planarium. To create a new dimension, name a Planarium with the Name glyph or an anvil. Interact with the planarium while sneaking to enter the jar.\nThe spawn point of the Planarium can be set by using the Dominion Wand on a boundary of the jar, and then using the wand again on your desired spawn point. To exit the jar, simply break any wall of the dimension.");
+        add("ars_nouveau.form_icon_tooltip", "Forms: Appear at the start of the spell and determine how it is cast.");
+        add("ars_nouveau.augment_icon_tooltip", "Augments: Appear after Forms and Effects and modifies how they behave.");
+        add("ars_nouveau.effect_icon_tooltip", "Effects: Determines what the spell does after hitting a target.");
     }
 
     public void addCategory(String key, String value) {
