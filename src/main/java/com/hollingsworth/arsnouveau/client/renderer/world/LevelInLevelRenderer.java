@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.world;
 
-//
+// TODO: reenable when gander supports scaled renders
 //public record LevelInLevelRenderer(UUID id, PipelineState state) {
 //    public static Map<ResourceKey<Level>, LevelInLevelRenderer> renderers = new HashMap<>();
 //
