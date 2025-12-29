@@ -2,10 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
@@ -37,8 +34,9 @@ public class GlyphFormatter {
 
     static {
         CATEGORIES.add(new Category(ArsNouveau.prefix("form"), p -> p instanceof AbstractCastMethod, Component.translatable("ars_nouveau.form_icon_tooltip"), DocAssets.FORM_ICON_CRAFTING));
-        CATEGORIES.add(new Category(ArsNouveau.prefix("effect"), p -> p instanceof AbstractEffect, Component.translatable("ars_nouveau.effect_icon_tooltip"), DocAssets.EFFECT_ICON_CRAFTING));
+        CATEGORIES.add(new Category(ArsNouveau.prefix("effect"), p -> p instanceof AbstractEffect && !(p instanceof AbstractFilter), Component.translatable("ars_nouveau.effect_icon_tooltip"), DocAssets.EFFECT_ICON_CRAFTING));
         CATEGORIES.add(new Category(ArsNouveau.prefix("augment"), p -> p instanceof AbstractAugment, Component.translatable("ars_nouveau.augment_icon_tooltip"), DocAssets.AUGMENT_ICON_CRAFTING));
+        CATEGORIES.add(new Category(ArsNouveau.prefix("filter"), p -> p instanceof IFilter, Component.translatable("ars_nouveau.augment_icon_tooltip"), DocAssets.FILTER_ICON_CRAFTING));
     }
 
     public GlyphFormatter(int bookLeft, int bookTop, Button.OnPress onGlyphClick, Consumer<List<? extends AbstractWidget>> clearButtons, Consumer<AbstractWidget> addRenderableWidget) {

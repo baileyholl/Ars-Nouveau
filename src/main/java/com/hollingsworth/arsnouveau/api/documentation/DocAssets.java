@@ -45,6 +45,7 @@ public class DocAssets {
     public static final BlitInfo FORM_ICON_CRAFTING = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellcrafting_icon_form.png"), 18, 16);
     public static final BlitInfo EFFECT_ICON_CRAFTING = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellcrafting_icon_effect.png"), 18, 16);
     public static final BlitInfo AUGMENT_ICON_CRAFTING = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellcrafting_icon_augment.png"), 18, 16);
+    public static final BlitInfo FILTER_ICON_CRAFTING = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellcrafting_icon_filter.png"), 18, 16);
     public static final BlitInfo AUGMENT_UNAVAILABLE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_augment_unavailable.png"), 8, 10);
     public static final BlitInfo NA_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_icon_not_applicable.png"), 10, 10);
 
