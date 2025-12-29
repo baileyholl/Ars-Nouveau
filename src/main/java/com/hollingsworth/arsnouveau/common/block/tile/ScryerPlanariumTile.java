@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockEntityTypeRegistryWrapper;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -26,10 +25,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class ScryerPlanariumTile extends ModdedTile implements GeoBlockEntity, ITickable {
     GlobalPos scryerPos;
     StructureTemplate template;
-
-    public ScryerPlanariumTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.SCRYER_PLANARIUM_TILE, pos, state);
-    }
+//
+//    public ScryerPlanariumTile(BlockPos pos, BlockState state) {
+//        super(BlockRegistry.SCRYER_PLANARIUM_TILE, pos, state);
+//    }
 
     public ScryerPlanariumTile(BlockEntityTypeRegistryWrapper<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);

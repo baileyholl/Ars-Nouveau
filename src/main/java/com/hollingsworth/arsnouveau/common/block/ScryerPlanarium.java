@@ -33,7 +33,7 @@ public class ScryerPlanarium extends TickableModBlock implements IWandable {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ScryerPlanariumTile(blockPos, blockState);
+        return null;//new ScryerPlanariumTile(blockPos, blockState);
     }
 
     @Override

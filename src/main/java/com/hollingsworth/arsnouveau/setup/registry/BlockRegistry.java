@@ -378,8 +378,8 @@ public class BlockRegistry {
 
     public static final BlockRegistryWrapper<PlanariumProjector> PLANARIUM_PROJECTOR = registerBlockAndItem(LibBlockNames.PLANARIUM_PROJECTOR, PlanariumProjector::new);
     public static final BlockEntityTypeRegistryWrapper<PlanariumProjectorTile> PLANARIUM_PROJECTOR_TILE = registerTile(LibBlockNames.PLANARIUM_PROJECTOR, PlanariumProjectorTile::new, PLANARIUM_PROJECTOR);
-    public static final BlockRegistryWrapper<ScryerPlanarium> SCRYER_PLANARIUM = registerBlockAndItem(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanarium::new);
-    public static final BlockEntityTypeRegistryWrapper<ScryerPlanariumTile> SCRYER_PLANARIUM_TILE = registerTile(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanariumTile::new, SCRYER_PLANARIUM);
+//    public static final BlockRegistryWrapper<ScryerPlanarium> SCRYER_PLANARIUM = registerBlockAndItem(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanarium::new);
+//    public static final BlockEntityTypeRegistryWrapper<ScryerPlanariumTile> SCRYER_PLANARIUM_TILE = registerTile(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanariumTile::new, SCRYER_PLANARIUM);
 
 
     public static void onBlocksRegistry() {
