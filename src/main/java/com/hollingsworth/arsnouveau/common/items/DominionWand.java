@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateDominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,14 +149,26 @@ public class DominionWand extends ModItem implements IRadialProvider {
 
         GlobalPos storedPos = data.storedPos().orElse(null);
         Direction storedDirection = data.face().orElse(null);
-        if (storedPos != null && world.getBlockEntity(storedPos.pos()) instanceof IWandable wandable) {
-            var result = wandable.onFirstConnection(new GlobalPos(world.dimension(), pos), storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
+
+        // TODO: Make interface accept Entity
+        Entity storedEntity = world.getEntity(data.storedEntityId());
+        if (storedPos != null) {
+            IWandable wandableStoredBlock = getWandableBlock(context, storedPos.pos(), storedDirection);
+
+            if (wandableStoredBlock != null) {
+                var result = wandableStoredBlock.onFirstConnection(new GlobalPos(world.dimension(), pos), storedDirection, storedEntity instanceof LivingEntity livingEntity ? livingEntity : null, playerEntity);
+                playSoundFromResult(world, pos, result);
+            }
+        }
+
+        IWandable wandableAtClickedPos = getWandableBlock(context, pos, face);
+
+        if (wandableAtClickedPos != null) {
+            var result = wandableAtClickedPos.onLastConnection(storedPos, storedDirection, storedEntity instanceof LivingEntity livingEntity ? livingEntity : null, playerEntity);
             playSoundFromResult(world, pos, result);
         }
-        if (world.getBlockEntity(pos) instanceof IWandable wandable) {
-            var result = wandable.onLastConnection(storedPos, storedDirection, (LivingEntity) world.getEntity(data.storedEntityId()), playerEntity);
-            playSoundFromResult(world, pos, result);
-        }
+
+
         if (data.storedEntityId() != DominionWandData.NULL_ENTITY && world.getEntity(data.storedEntityId()) instanceof IWandable wandable) {
             var result = wandable.onFirstConnection(new GlobalPos(world.dimension(), pos), data.strict() ? face : null, null, playerEntity);
             playSoundFromResult(world, pos, result);
@@ -162,6 +176,22 @@ public class DominionWand extends ModItem implements IRadialProvider {
 
         clear(stack, playerEntity);
         return super.useOn(context);
+    }
+
+    public @Nullable IWandable getWandableBlock(UseOnContext context, BlockPos atPos, Direction direction) {
+        Player playerEntity = context.getPlayer();
+        ItemStack stack = context.getItemInHand();
+        DominionWandData data = stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
+        Level world = data.storedPos().isPresent() ? playerEntity.getServer().getLevel(data.storedPos().get().dimension()) : context.getLevel();
+
+        if (world.getBlockEntity(atPos) instanceof IWandable wandable) {
+            return wandable;
+        }
+
+        if (world.getCapability(CapabilityRegistry.WANDABLE_BLOCK_CAPABILITY, atPos, direction) instanceof IWandable wandable) {
+            return wandable;
+        }
+        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IFiltersetProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
@@ -35,6 +36,8 @@ public class CapabilityRegistry {
     public static final BlockCapability<IFiltersetProvider, Direction> FILTERSET_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("filterset"), IFiltersetProvider.class);
     public static final BlockCapability<IResolveListener, Void> BLOCK_SPELL_RESOLVE_CAP = BlockCapability.createVoid(ArsNouveau.prefix("spell_listener"), IResolveListener.class);
     public static final EntityCapability<IResolveListener, Void> ENTITY_SPELL_RESOLVE_CAP = EntityCapability.createVoid(ArsNouveau.prefix("spell_listener"), IResolveListener.class);
+
+    public static final BlockCapability<IWandable, Direction> WANDABLE_BLOCK_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("wandable"), IWandable.class);
 
     /**
      * Get the {@link IManaCap} from the specified entity.
@@ -90,8 +93,9 @@ public class CapabilityRegistry {
 
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.MOB_JAR_TILE.get(), (c, side) -> MobJarTile.SavingItemHandler.of(c, c.getEntityCapability(Capabilities.ItemHandler.ENTITY_AUTOMATION, null)));
         event.registerBlockEntity(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, none) -> c.getSpellListener());
-
+        event.registerBlockEntity(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, BlockRegistry.PLANARIUM_TILE.get(), (c, none) -> c.onResolve());
         event.registerBlockEntity(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, BlockRegistry.DECOR_BLOSSOM_TILE.get(), (c, none) -> c);
+        event.registerBlock(CapabilityRegistry.WANDABLE_BLOCK_CAPABILITY, (level, pos, state, be, side) -> BlockRegistry.DIM_BOUNDARY.get(), BlockRegistry.DIM_BOUNDARY.get());
     }
 
 

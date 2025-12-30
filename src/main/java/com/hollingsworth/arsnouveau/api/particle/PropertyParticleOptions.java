@@ -69,7 +69,7 @@ public class PropertyParticleOptions implements ParticleOptions {
 
     @Override
     public ParticleType<?> getType() {
-        return map.getOptional(ParticlePropertyRegistry.TYPE_PROPERTY.get()).orElse(new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap())).type();
+        return map.getOrCreate(ParticlePropertyRegistry.TYPE_PROPERTY.get(), () -> new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), new PropMap())).type();
     }
 
     @Override

@@ -29,7 +29,10 @@ public abstract class RangeEffectRitual extends RangeRitual {
     }
 
     public boolean applyEffect(ServerPlayer player) {
-        player.addEffect(new MobEffectInstance(getEffect(), getDuration()));
-        return true;
+        return applyEffect(player, true);
+    }
+
+    public boolean applyEffect(ServerPlayer player, boolean visible) {
+        return player.addEffect(new MobEffectInstance(getEffect(), getDuration(), 0, false, visible));
     }
 }

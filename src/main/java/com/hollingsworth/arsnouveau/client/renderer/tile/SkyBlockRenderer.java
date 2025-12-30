@@ -27,7 +27,7 @@ public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile> {
             super.render((MirrorWeaveTile) tileEntityIn, partialTicks, pPoseStack, bufferIn, combinedLightIn, combinedOverlayIn);
         } else {
             if (tileEntityIn.renderInvalid) {
-                updateCulling(tileEntityIn, tileEntityIn.getStateForCulling());
+                updateCulling(tileEntityIn);
             }
             if (tileEntityIn.disableRender) {
                 return;
