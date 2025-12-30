@@ -144,7 +144,7 @@ public class EffectWololo extends AbstractEffect {
         BlockPos blockPos = rayTraceResult.getBlockPos();
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
         if (blockEntity instanceof IWololoable tileToDye) {
-            ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().color();
+            ParticleColor color = spellStats.isRandomized() ? ParticleColor.makeRandomColor(255, 255, 255, shooter.getRandom()) : spellContext.getSpell().particleTimeline().get(ParticleTimelineRegistry.WOLOLO_TIMELINE).getColor();;
             tileToDye.setColor(color);
         } else {
             ItemStack dyeStack = getDye(shooter, spellStats, spellContext);

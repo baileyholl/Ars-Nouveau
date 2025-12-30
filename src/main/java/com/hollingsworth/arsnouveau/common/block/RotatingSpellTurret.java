@@ -49,23 +49,24 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         Direction orientation = placer == null ? Direction.WEST : Direction.orderedByNearest(placer)[0].getOpposite();
 
         if (!(world.getBlockEntity(pos) instanceof RotatingTurretTile turretTile)) return;
+        // Makes the turret rotate to the right direction right after being placed, otherwise it starts right and rotate to facing west.
         switch (orientation) {
             case DOWN:
-                turretTile.rotationY = -90F;
+                turretTile.neededRotationY = -90F;
                 break;
             case UP:
-                turretTile.rotationY = 90F;
+                turretTile.neededRotationY = 90F;
                 break;
             case NORTH:
-                turretTile.rotationX = 270F;
+                turretTile.neededRotationX = 270F;
                 break;
             case SOUTH:
-                turretTile.rotationX = 90F;
+                turretTile.neededRotationX = 90F;
                 break;
             case WEST:
                 break;
             case EAST:
-                turretTile.rotationX = 180F;
+                turretTile.neededRotationX = 180F;
                 break;
         }
     }

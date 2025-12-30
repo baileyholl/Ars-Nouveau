@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe> {
 
@@ -26,8 +27,8 @@ public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe>
     }
 
     @Override
-    public RecipeType<ImbuementRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.IMBUEMENT_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<ImbuementRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.IMBUEMENT_RECIPE_TYPE.get();
     }
 
     @Override
@@ -46,7 +47,8 @@ public class ImbuementRecipeCategory extends MultiInputCategory<ImbuementRecipe>
     }
 
     @Override
-    public void draw(ImbuementRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<ImbuementRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        ImbuementRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
         guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.source), 0, 100, 10, false);
     }
