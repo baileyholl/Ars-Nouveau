@@ -140,7 +140,8 @@
     "2f415897-3318-46fb-bf97-1070201d7386",
     "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a",
     "5ca15a2e-b217-436e-8c3b-97a45243baed",
-    "71a716b3-63c6-4c67-a7b1-282b19d83d2f"
+    "71a716b3-63c6-4c67-a7b1-282b19d83d2f",
+    "aad99d4d-1503-4c50-970c-f0fa742902c9"
   ],
   "starbuncleAdoptions": [
     {
@@ -933,6 +934,11 @@
       "color": "orange",
       "adopter": "DarkStrifeYT",
       "bio": "The best friend you can ever ask for"
+    },{
+      "name": "Valkyrie",
+      "color": "white",
+      "adopter": "Alban",
+      "bio": "Heavenly Harbinger"
     }
   ]
 }

@@ -60,8 +60,8 @@ public class PacketConsumePotion extends AbstractPacket {
             IPotionProvider data = PotionProviderRegistry.from(stack);
             if (data == null || data.getPotionData(stack) == PotionContents.EMPTY || data.usesRemaining(stack) <= 0)
                 return;
-            data.applyEffects(stack, player, player, player);
-            data.consumeUses(stack, 1, player);
+
+            stack.getItem().finishUsingItem(stack, minecraftServer.getLevel(player.level().dimension()), player);
             player.level.playSound(null, player.blockPosition(), SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 0.5f, player.level.random.nextFloat() * 0.1F + 0.9F);
         }
     }

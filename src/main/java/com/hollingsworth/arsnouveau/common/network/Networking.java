@@ -82,6 +82,8 @@ public class Networking {
         reg.playToClient(PacketToggleDebug.TYPE, PacketToggleDebug.CODEC, Networking::handle);
         reg.playToClient(TickEmitterPacket.TYPE, TickEmitterPacket.CODEC, Networking::handle);
         reg.playToClient(PacketPrestidigitation.TYPE, PacketPrestidigitation.CODEC, Networking::handle);
+        reg.playToClient(PacketUpdateDimTile.TYPE, PacketUpdateDimTile.CODEC, Networking::handle);
+        reg.playToServer(PacketClientRequestDim.TYPE, PacketClientRequestDim.CODEC, Networking::handle);
     }
 
     public static <T extends AbstractPacket> void handle(T message, IPayloadContext ctx) {
