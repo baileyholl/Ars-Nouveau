@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.waila;
 
+import com.hollingsworth.arsnouveau.common.block.DimBoundary;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
@@ -27,6 +28,10 @@ public class WailaArsNouveauPlugin implements IWailaPlugin {
                     return null;
                 }
                 if (target.getBlockEntity() instanceof SkyBlockTile skyWeave && !skyWeave.showFacade()) {
+                    return null;
+                }
+
+                if (target.getBlock() instanceof DimBoundary) {
                     return null;
                 }
 

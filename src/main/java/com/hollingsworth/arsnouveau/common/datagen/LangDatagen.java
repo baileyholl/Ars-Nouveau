@@ -1794,6 +1794,13 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
         add("ars_nouveau.learn_glyph", "Unlocked %s");
         add("ars_nouveau.already_learned", "You have already learned this Glyph.");
+        add("block.ars_nouveau.planarium", "Planarium");
+        add("ars_nouveau.planarium.set_name", "Cast Name or set a name in an Anvil to create a dimension.");
+        add("ars_nouveau.set_jar_spawn", "Jar spawn point set.");
+        add("block.ars_nouveau.dim_boundary", "Dimension Boundary");
+        add("biome.ars_nouveau.jar", "Jar");
+        add("ars_nouveau.jar_spawn_out_of_bounds", "Cannot set jar spawn point out of bounds.");
+        add("ars_nouveau.page1.planarium", "The Planarium allows for the creation of custom pocket dimensions. Blocks placed within the jar will be rendered inside the Planarium. To create a new dimension, name a Planarium with the Name glyph or an anvil. Interact with the planarium while sneaking to enter the jar.\nThe spawn point of the Planarium can be set by using the Dominion Wand on a boundary of the jar, and then using the wand again on your desired spawn point. To exit the jar, simply break any wall of the dimension.");
         add("ars_nouveau.form_icon_tooltip", "Forms: Appear at the start of the spell and determine how it is cast.");
         add("ars_nouveau.augment_icon_tooltip", "Augments: Appear after Forms and Effects and modifies how they behave.");
         add("ars_nouveau.effect_icon_tooltip", "Effects: Determines what the spell does after hitting a target.");
