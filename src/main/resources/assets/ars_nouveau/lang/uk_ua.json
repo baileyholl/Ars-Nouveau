@@ -1,6 +1,5 @@
 {
   "translator": "@tenwoc, for https://github.com/Tenwoc/Mods-Ukrainian-Translate-Pack",
-
   "alert.core": "Таємниче ядро повинне бути розміщене як підстава для зачарувального апарату.",
   "alert.core.wrong_axis": "Таємниче ядро повинно бути вирівняне з основою зачарувального апарату.",
   "ars_nouveau.abjuration_essence.tooltip": "Можна застосувати на столі перепису, щоб прибрати феєричний ефект з предметів.",
@@ -390,7 +389,7 @@
   "ars_nouveau.augment_desc.glyph_rotate_glyph_extract": "Застосовує шовковий дотик при добуванні блока.",
   "ars_nouveau.augment_desc.glyph_rotate_glyph_fortune": "Застосовує вдачу при добуванні блока.",
   "ars_nouveau.augment_desc.glyph_rotate_glyph_pierce": "Збільшує глибину заподіяних блоків.",
-  "ars_nouveau.augment_desc.glyph_rotate_glyph_randomize": "Додає ймовірність не вплинути на блок.",
+  "ars_nouveau.augment_desc.glyph_rotate_glyph_randomize": "Спрямовує у випадковий бік, ігноруючи осі.",
   "ars_nouveau.augment_desc.glyph_rotate_glyph_sensitive": "Обертає блок по іншій осі та змушує сутність повертати свою голову.",
   "ars_nouveau.augment_desc.glyph_rune_glyph_sensitive": "Руна використовуватиме інвентар власника для підбору і взаємодій.",
   "ars_nouveau.augment_desc.glyph_sense_magic_glyph_amplify": "Збільшує рівень ефекту.",
@@ -1186,7 +1185,7 @@
   "ars_nouveau.perk_desc.thread_whirlisprig": "Збільшує насичення їжі на 30%% за кожен рівень.",
   "ars_nouveau.perk_desc.thread_wixie": "Збільшує тривалість дії зіллів на 15%% за кожен рівень.",
   "ars_nouveau.perks.duplicated": "Ви одягли броню, що містить пряжу, яку ви вже маєте. Здібності однакових пряж не складаються.",
-  "ars_nouveau.planarium.set_name": "Начаклуйте гліфом або встановіть на ковадлі ім'я, щоб створити вимір.",
+  "ars_nouveau.planarium.set_name": "Начаклуйте гліфом ім'я, або встановіть його на ковадлі, щоб створити вимір.",
   "ars_nouveau.position": "X: %1$d Y: %2$d Z: %3$d",
   "ars_nouveau.potion_crafting": "Зіллєваріння",
   "ars_nouveau.potion_diffuser.bind_to_jar": "Потрібно прив'язати Розпилювач до банки для зіллів, щоб він працював.",
