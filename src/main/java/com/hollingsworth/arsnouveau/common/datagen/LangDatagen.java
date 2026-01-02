@@ -1804,6 +1804,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.form_icon_tooltip", "Forms: Appear at the start of the spell and determine how it is cast.");
         add("ars_nouveau.augment_icon_tooltip", "Augments: Appear after Forms and Effects and modifies how they behave.");
         add("ars_nouveau.effect_icon_tooltip", "Effects: Determines what the spell does after hitting a target.");
+        add("ars_nouveau.filter_icon_tooltip", "Filters: Prevents the spell from resolving if the target does not match the filter.");
     }
 
     public void addCategory(String key, String value) {
