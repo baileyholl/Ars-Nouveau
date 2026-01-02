@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
@@ -10,18 +11,24 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Position;
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -34,10 +41,10 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ICapabilityProvider<BasicSpellTurretTile, Void, SpellCaster> {
-
+public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider, GeoBlockEntity, IAnimationListener, ITickable, ICapabilityProvider<BasicSpellTurretTile, Void, SpellCaster>, IWandable {
     boolean playRecoil;
     protected SpellCaster spellCaster = new SpellCaster(0, null, false, null, 1);
     @Nullable UUID uuid = null;
@@ -68,8 +75,26 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
         if (spellCaster.getSpell().isEmpty() || !(this.level instanceof ServerLevel level))
             return;
         int manaCost = getManaCost();
-        if (manaCost > 0 && SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null)
-            return;
+        if (manaCost > 0) {
+            var sp = this.getLinkedSourceProvider();
+            if (this.level instanceof ServerLevel serverLevel && sp != null) {
+                var cap = this.level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, sp.first(), sp.second().orElse(null));
+                if (cap == null) {
+                    this.setLinkedSourceProvider(null);
+                    return;
+                }
+
+                if (cap.extractSource(manaCost, true) < manaCost) {
+                    return;
+                }
+
+                cap.extractSource(manaCost, false);
+                EntityFollowProjectile.spawn(serverLevel, sp.first(), this.worldPosition);
+            } else if (SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null) {
+                return;
+            }
+        }
+
         Networking.sendToNearbyClient(level, pos, new PacketOneShotAnimation(pos));
         Position iposition = BasicSpellTurret.getDispensePosition(pos, level.getBlockState(pos).getValue(BasicSpellTurret.FACING));
         Direction direction = level.getBlockState(pos).getValue(BasicSpellTurret.FACING);
@@ -87,21 +112,31 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
     protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);
         pTag.put("spell_caster", ANCodecs.encode(SpellCaster.CODEC.codec(), spellCaster));
-        if (uuid != null) pTag.putUUID("uuid", uuid);
+        if (uuid != null) {
+            pTag.putUUID("uuid", uuid);
+        }
     }
 
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         this.spellCaster = ANCodecs.decode(SpellCaster.CODEC.codec(), pTag.get("spell_caster"));
-        if (pTag.contains("uuid")) uuid = pTag.getUUID("uuid");
+        if (pTag.contains("uuid")) {
+            uuid = pTag.getUUID("uuid");
+        }
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("ars_nouveau.spell_turret.casting"));
-        if (!spellCaster.getSpellName().isEmpty()) tooltip.add(Component.literal(spellCaster.getSpellName()));
+        if (!spellCaster.getSpellName().isEmpty()) {
+            tooltip.add(Component.literal(spellCaster.getSpellName()));
+        }
         tooltip.add(Component.literal(spellCaster.getSpell().getDisplayString()));
+        var sp = this.getLinkedSourceProvider();
+        if (sp != null) {
+            tooltip.add(Component.translatable("ars_nouveau.spell_turret.linked_source_provider", sp.first().toShortString()));
+        }
     }
 
     public PlayState walkPredicate(AnimationState<?> event) {
@@ -136,5 +171,59 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
     @Override
     public @Nullable SpellCaster getCapability(BasicSpellTurretTile object, Void context) {
         return spellCaster;
+    }
+
+    @Override
+    public Result onLastConnection(@Nullable GlobalPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        if (this.level == null || storedPos == null) {
+            return Result.FAIL;
+        }
+
+        ResourceKey<Level> dim = storedPos.dimension();
+        if (!this.level.dimension().equals(dim)) {
+            PortUtil.sendMessageNoSpam(playerEntity, Component.translatable("ars_nouveau.connections.dimension_mismatch"));
+            return Result.FAIL;
+        }
+
+        var diff = this.worldPosition.subtract(storedPos.pos());
+        if (Math.abs(diff.getX()) > 10 || Math.abs(diff.getY()) > 10 || Math.abs(diff.getZ()) > 10) {
+            PortUtil.sendMessageNoSpam(playerEntity, Component.translatable("ars_nouveau.connection.range", 10));
+            return Result.FAIL;
+        }
+
+        var cap = this.level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos.pos(), face);
+        if (cap == null || cap.getMaxExtract() <= 0) {
+            return Result.FAIL;
+        }
+
+        var sp = this.getLinkedSourceProvider();
+        if (sp != null && sp.first().equals(storedPos.pos()) && sp.second().equals(Optional.ofNullable(face))) {
+            PortUtil.sendMessageNoSpam(playerEntity, Component.translatable("ars_nouveau.connections.remove"));
+            this.setLinkedSourceProvider(null);
+            return Result.SUCCESS;
+        }
+
+        this.setData(AttachmentsRegistry.LINKED_SOURCE_PROVIDER, Pair.of(storedPos.pos(), Optional.ofNullable(face)));
+        PortUtil.sendMessageNoSpam(playerEntity, Component.translatable("ars_nouveau.connections.turret.take_from", storedPos.pos().toShortString()));
+
+        return Result.SUCCESS;
+    }
+
+    @Nullable
+    public Pair<BlockPos, Optional<Direction>> getLinkedSourceProvider() {
+        return this.getExistingDataOrNull(AttachmentsRegistry.LINKED_SOURCE_PROVIDER);
+    }
+
+    public void setLinkedSourceProvider(@Nullable Pair<BlockPos, Optional<Direction>> sourceProvider) {
+        if (sourceProvider == null) {
+            this.removeData(AttachmentsRegistry.LINKED_SOURCE_PROVIDER);
+            return;
+        }
+
+        this.setData(AttachmentsRegistry.LINKED_SOURCE_PROVIDER, sourceProvider);
+    }
+
+    public void setLinkedSourceProvider(BlockPos pos, @Nullable Direction face) {
+        this.setLinkedSourceProvider(Pair.of(pos, Optional.ofNullable(face)));
     }
 }
