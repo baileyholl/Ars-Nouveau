@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -71,7 +72,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public int formTextRow = 0;
     public int augmentTextRow = 0;
     public int effectTextRow = 0;
-    public int glyphsPerPage = 58;
 
     public int maxManaCache = 0;
     int currentCostCache = 0;
@@ -84,7 +84,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
     public PageButton prevGlyphButton;
     public int spellWindowOffset = 0;
     public int bonusSlots = 0;
-    public String spellname = "";
 
     public long timeOpened;
     GlyphFormatter glyphFormatter;
@@ -140,12 +139,12 @@ public class GuiSpellBook extends SpellSlottedScreen {
     @Override
     public void init() {
         super.init();
-        glyphFormatter = new GlyphFormatter(bookLeft, bookTop, this::onGlyphClick, this::clearButtons, this::addRenderableWidget);
+        glyphFormatter = new GlyphFormatter(bookLeft, bookTop, this::onGlyphClick, displayedGlyphs, this::clearButtons, this::addRenderableWidget);
         timeOpened = System.currentTimeMillis();
         craftingCells = new ArrayList<>();
         resetCraftingCells();
 
-        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
+        glyphFormatter.layoutAllGlyphs(page);
         addRenderableWidget(new CreateSpellButton(bookRight - 74, bookBottom - 13, (b) -> this.saveSpell(), () -> this.validationErrors));
         addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::clear));
 
@@ -177,7 +176,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             rebuildWidgets();
         });
 
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, DocAssets.DOCUMENTATION_TAB, this::onDocumentationClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, DocAssets.DOCUMENTATION_TAB, (b) -> DocClientUtils.openBook())
                 .withTooltip(Component.translatable("ars_nouveau.gui.notebook")));
 
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 44, DocAssets.SPELL_STYLE_TAB, (b) -> {
@@ -202,9 +201,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 6, false, this::onPageDec, true));
 
         updateNextPageButtons();
-        previousButton.active = false;
-        previousButton.visible = false;
-
+        if (page == 0) {
+            previousButton.active = false;
+            previousButton.visible = false;
+        }
         //infinite spells
         if (getExtraGlyphSlots() > 0) {
             this.nextGlyphButton = addRenderableWidget(new PageButton(bookRight - 25, bookBottom - 26, true, i -> updateWindowOffset(spellWindowOffset + 1), true));
@@ -216,7 +216,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public int getNumPages() {
-        return (int) Math.ceil((double) displayedGlyphs.size() / 84);
+        return glyphFormatter.pages.size();
     }
 
     public void onSearchChanged(String str) {
@@ -254,21 +254,22 @@ public class GuiSpellBook extends SpellSlottedScreen {
                 }
             }
         }
-        updateNextPageButtons();
         this.page = 0;
         previousButton.active = false;
         previousButton.visible = false;
-        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
+        glyphFormatter.buildPages(displayedGlyphs);
+        glyphFormatter.layoutAllGlyphs(page);
+        updateNextPageButtons();
         validate();
     }
 
     public void updateNextPageButtons() {
-        if (displayedGlyphs.size() <= 84) {
-            nextButton.visible = false;
-            nextButton.active = false;
-        } else {
+        if (page + 1 < glyphFormatter.pages.size()) {
             nextButton.visible = true;
             nextButton.active = true;
+        } else {
+            nextButton.visible = false;
+            nextButton.active = false;
         }
     }
 
@@ -276,13 +277,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (page + 1 >= getNumPages())
             return;
         page++;
-        if (displayedGlyphs.size() < glyphsPerPage * (page + 1)) {
-            nextButton.visible = false;
-            nextButton.active = false;
-        }
+        updateNextPageButtons();
         previousButton.active = true;
         previousButton.visible = true;
-        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
+        glyphFormatter.layoutAllGlyphs(page);
         validate();
     }
 
@@ -296,12 +294,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
             previousButton.active = false;
             previousButton.visible = false;
         }
+        nextButton.visible = true;
+        nextButton.active = true;
 
-        if (displayedGlyphs.size() > glyphsPerPage * (page + 1)) {
-            nextButton.visible = true;
-            nextButton.active = true;
-        }
-        glyphFormatter.layoutAllGlyphs(page, displayedGlyphs);
+        glyphFormatter.layoutAllGlyphs(page);
         validate();
     }
 
@@ -330,10 +326,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         }
 
         return true;
-    }
-
-    public void onDocumentationClick(Button button) {
-        GuiUtils.openWiki(ArsNouveau.proxy.getPlayer());
     }
 
     public void onFamiliarClick(Button button) {
