@@ -223,6 +223,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         map.put(AugmentAmplify.INSTANCE, "Increases the level of the effect.");
     }
 
+    @Deprecated(forRemoval = true)
+    protected Set<AbstractAugment> getSummonAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE);
+    }
+
     protected Set<AbstractAugment> getTimedSummonAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE);
     }
