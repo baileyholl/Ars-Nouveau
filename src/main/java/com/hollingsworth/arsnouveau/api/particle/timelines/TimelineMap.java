@@ -109,6 +109,10 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
             return timelines.put(type, value);
         }
 
+        public void remove(IParticleTimelineType<?> type) {
+            timelines.remove(type);
+        }
+
         public TimelineMap immutable() {
             TimelineMap createdMap = new TimelineMap(timelines);
             Object copyMap = TimelineMap.CODEC.encodeStart(JavaOps.INSTANCE, createdMap).getOrThrow();

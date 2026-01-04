@@ -196,7 +196,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
         addRenderableWidget(new GuiImageButton(bookLeft + 113, bookTop - 3, DocAssets.INFO_ICON, (b) -> {
-        }).withTooltip(Component.translatable("ars_nouveau.spell_book_info_tooltip")));
+        }).withTooltip(Component.translatable("ars_nouveau.spell_book_info_tooltip")).disableSound());
 
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));
