@@ -1805,6 +1805,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.augment_icon_tooltip", "Augments: Appear after Forms and Effects and modifies how they behave.");
         add("ars_nouveau.effect_icon_tooltip", "Effects: Determines what the spell does after hitting a target.");
         add("ars_nouveau.filter_icon_tooltip", "Filters: Prevents the spell from resolving if the target does not match the filter.");
+        add("ars_nouveau.spell_book_info_tooltip", "Tips and Tricks: \n• Middle-Click a glyph in the spell to add an empty space to the left of it.\n• Press 0-9 when hovering your mouse over a glyph to add it to that spell slot.\n• Ctrl + C to copy the spell and its particles.\n• Ctrl + V to paste a spell.");
     }
 
     public void addCategory(String key, String value) {
