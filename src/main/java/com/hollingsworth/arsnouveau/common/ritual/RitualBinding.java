@@ -47,7 +47,8 @@ public class RitualBinding extends AbstractRitual {
                         if (familiarHolder.isEntity.test(entity)) {
                             entity.remove(Entity.RemovalReason.DISCARDED);
                             ParticleUtil.spawnPoof((ServerLevel) world, entity.blockPosition());
-                            world.addFreshEntity(new ItemEntity(world, entity.blockPosition().getX(), entity.blockPosition().getY(), entity.blockPosition().getZ(), familiarHolder.getOutputItem()));
+                            var pos = entity.blockPosition().getBottomCenter();
+                            world.addFreshEntity(new ItemEntity(world, pos.x, pos.y, pos.z, familiarHolder.getOutputItem()));
                             world.playSound(null, entity.blockPosition(), SoundEvents.BOOK_PUT, SoundSource.NEUTRAL, 1.0f, 1.0f);
                             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.FAMILIAR.get(), (ServerLevel) world, entity.blockPosition(), 8);
                         }
