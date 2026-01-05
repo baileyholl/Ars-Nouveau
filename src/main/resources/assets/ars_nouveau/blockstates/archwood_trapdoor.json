@@ -1,14 +1,16 @@
 {
   "variants": {
     "facing=east,half=bottom,open=false": {
-      "model": "ars_nouveau:block/archwood_trapdoor_bottom"
+      "model": "ars_nouveau:block/archwood_trapdoor_bottom",
+      "y": 90
     },
     "facing=east,half=bottom,open=true": {
       "model": "ars_nouveau:block/archwood_trapdoor_open",
       "y": 90
     },
     "facing=east,half=top,open=false": {
-      "model": "ars_nouveau:block/archwood_trapdoor_top"
+      "model": "ars_nouveau:block/archwood_trapdoor_top",
+      "y": 90
     },
     "facing=east,half=top,open=true": {
       "model": "ars_nouveau:block/archwood_trapdoor_open",
@@ -27,28 +29,32 @@
       "model": "ars_nouveau:block/archwood_trapdoor_open"
     },
     "facing=south,half=bottom,open=false": {
-      "model": "ars_nouveau:block/archwood_trapdoor_bottom"
+      "model": "ars_nouveau:block/archwood_trapdoor_bottom",
+      "y": 180
     },
     "facing=south,half=bottom,open=true": {
       "model": "ars_nouveau:block/archwood_trapdoor_open",
       "y": 180
     },
     "facing=south,half=top,open=false": {
-      "model": "ars_nouveau:block/archwood_trapdoor_top"
+      "model": "ars_nouveau:block/archwood_trapdoor_top",
+      "y": 180
     },
     "facing=south,half=top,open=true": {
       "model": "ars_nouveau:block/archwood_trapdoor_open",
       "y": 180
     },
     "facing=west,half=bottom,open=false": {
-      "model": "ars_nouveau:block/archwood_trapdoor_bottom"
+      "model": "ars_nouveau:block/archwood_trapdoor_bottom",
+      "y": 270
     },
     "facing=west,half=bottom,open=true": {
       "model": "ars_nouveau:block/archwood_trapdoor_open",
       "y": 270
     },
     "facing=west,half=top,open=false": {
-      "model": "ars_nouveau:block/archwood_trapdoor_top"
+      "model": "ars_nouveau:block/archwood_trapdoor_top",
+      "y": 270
     },
     "facing=west,half=top,open=true": {
       "model": "ars_nouveau:block/archwood_trapdoor_open",
