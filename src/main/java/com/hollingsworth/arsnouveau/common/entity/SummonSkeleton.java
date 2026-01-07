@@ -45,7 +45,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     private final RangedBowAttackGoal<SummonSkeleton> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
 
-    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 2.2D, true) {
+    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.5D, true) {
         /**
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
@@ -127,7 +127,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-        this.goalSelector.addGoal(2, new FollowSummonerGoal(this, this.owner, 1.0, 9.0f, 3.0f));
+        this.goalSelector.addGoal(4, new FollowSummonerGoal(this, this.owner, 1.20, 6.0f, 12.0f));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this, SummonSkeleton.class) {
             @Override

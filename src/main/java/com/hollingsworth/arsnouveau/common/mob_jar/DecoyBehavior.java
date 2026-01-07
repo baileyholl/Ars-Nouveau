@@ -15,7 +15,7 @@ public class DecoyBehavior extends JarBehavior<EntityDummy> {
     public void tick(MobJarTile tile) {
         super.tick(tile);
 
-        if (!tile.getBlockState().getValue(BlockStateProperties.POWERED)) return;
+        if (!isPowered(tile)) return;
 
         Level level = tile.getLevel();
         if (level == null) return;

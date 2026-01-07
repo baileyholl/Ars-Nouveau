@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
@@ -101,6 +102,11 @@ public class PropMap {
 
     public <T extends BaseProperty> T createIfMissing(T defaultValue) {
         return (T) properties.computeIfAbsent(defaultValue.getType(), k -> defaultValue);
+    }
+
+    public ParticleColor getParticleColor() {
+        var prop = this.get(ParticlePropertyRegistry.COLOR_PROPERTY.get());
+        return prop != null ? prop.particleColor : ParticleColor.defaultParticleColor();
     }
 
     public void removePropsOnMotionChange() {

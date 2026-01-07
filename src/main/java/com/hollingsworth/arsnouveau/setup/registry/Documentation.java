@@ -699,6 +699,10 @@ public class Documentation {
         storageLectern.withRelation(repoCatalog);
         repository.withRelation(repoCatalog);
 
+        addPage(new DocEntryBuilder(MACHINES, BlockRegistry.PLANARIUM)
+                .withIntroPage()
+                .withCraftingPages(BlockRegistry.PLANARIUM));
+
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withSortNum(1)

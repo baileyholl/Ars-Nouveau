@@ -31,17 +31,21 @@ public interface IFollowingSummon {
             if (!(this.mob instanceof IFollowingSummon summon)) return false;
             LivingEntity summoner = summon.getSummoner();
             if (summoner == null) return false;
-            var lastHurtMob = summoner.getLastHurtMob();
-
-            return lastHurtMob != null && summoner != lastHurtMob && !(lastHurtMob instanceof ISummon summon2 && summon2.getOwnerAlt() == summoner);
+            var target = summon.getSummoner().getLastHurtMob();
+            if (target == null) target = summon.getSummoner().getLastHurtByMob();
+            mob.setTarget(target);
+            return target != null && summoner != target && !(target instanceof ISummon summon2 && summon2.getOwnerAlt() == summoner);
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
         public void start() {
-            if (mob instanceof IFollowingSummon summon && summon.getSummoner() != null)
-                mob.setTarget(summon.getSummoner().getLastHurtMob());
+            if (mob instanceof IFollowingSummon summon && summon.getSummoner() != null) {
+                var target = summon.getSummoner().getLastHurtMob();
+                if (target == null) target = summon.getSummoner().getLastHurtByMob();
+                mob.setTarget(target);
+            }
             super.start();
         }
     }

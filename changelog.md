@@ -1,15 +1,12 @@
 # Changelog
-Adds config to invert lectern scrolling (qther)
+Adds Info icon to spell crafting UI for information on importing/exporting spells and special keybinds for moving glyphs between slots
 
-Adds compatibility and fixes crash with LambDynamicLights (LambdAurora)
+Adds Clear button to particle effects UI to reset the particle timeline back to its default values
 
-Adds blacklist for Intangible
+Fixes Prestidigitation Items not rendering particles for other players
+
+Fixes glyphs missing between pages when spell crafting
+
+Fixes Filter category displaying the wrong tooltip
 
 
-Fixes intangible applying to blocks it shouldn't when used with AOE
-
-Fixes name not saved on arcane pedestals after world reload
-
-Fix for mirrorweave causing more block updates than needed
-
-Adds particle timeline support to caster tomes

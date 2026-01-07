@@ -316,7 +316,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     @Override
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        if (this.entityTag != null || this.extraDataTag != null) {
+        if ((this.entityTag != null && !this.entityTag.isEmpty()) || (this.extraDataTag != null && !this.extraDataTag.isEmpty())) {
             pComponents.set(DataComponentRegistry.MOB_JAR, new MobJarData(this.entityTag, this.extraDataTag));
         }
     }
