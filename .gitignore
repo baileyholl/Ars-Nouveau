@@ -31,3 +31,4 @@ run
 
 # Datagen cache
 /src/generated/resources/.cache/
+secrets.properties
