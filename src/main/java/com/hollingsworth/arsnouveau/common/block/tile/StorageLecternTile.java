@@ -527,7 +527,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (level.isClientSide)
             return null;
         EntityBookwyrm bookwyrm = new EntityBookwyrm(level, this.getBlockPos());
-        bookwyrm.setPos(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 1, this.getBlockPos().getZ() + 0.5);
+        bookwyrm.setPos(this.getBlockPos().above().getBottomCenter());
         level.addFreshEntity(bookwyrm);
         bookwyrmUUIDs.add(bookwyrm.getUUID());
         updateBlock();
