@@ -1561,6 +1561,7 @@
   "ars_nouveau.spell_book_gui.search": "Search",
   "ars_nouveau.spell_book_gui.select": "Select",
   "ars_nouveau.spell_book_gui.spell_name": "Spell Name",
+  "ars_nouveau.spell_book_info_tooltip": "Tips and Tricks: \n• Middle-Click a glyph in the spell to add an empty space to the left of it.\n• Press 0-9 when hovering your mouse over a glyph to add it to that spell slot.\n• Ctrl + C to copy the spell and its particles.\n• Ctrl + V to paste a spell.",
   "ars_nouveau.spell_hidden": "Spell is now hidden.",
   "ars_nouveau.spell_hud.crafting_mode": "Crafting Mode",
   "ars_nouveau.spell_parchment.inscribed": "Spell inscribed.",
