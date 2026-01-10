@@ -27,8 +27,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
     public void onResolveEntity(EntityHitResult rayTraceResult, Level level, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof ItemEntity)) {
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
-            int time = (int) spellStats.getDurationMultiplier();
-            if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
+            if (spellStats.hasBuff(AugmentExtendTime.INSTANCE) && rayTraceResult.getEntity() instanceof LivingEntity entity) {
                 this.applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
                 attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, getPlayer(shooter, (ServerLevel) level)), (float) damage);
