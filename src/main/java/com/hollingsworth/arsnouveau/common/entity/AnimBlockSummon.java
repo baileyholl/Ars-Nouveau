@@ -89,8 +89,8 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    public double getAttributeValue(Holder<Attribute> pAttribute) {
-        if (pAttribute.is(Attributes.ATTACK_DAMAGE)) {
+    public double getAttributeValue(@NotNull Holder<Attribute> pAttribute) {
+        if (pAttribute == Attributes.ATTACK_DAMAGE) {
             return super.getAttributeValue(pAttribute) + getStateDamageBonus();
         }
         return super.getAttributeValue(pAttribute);
@@ -181,6 +181,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     public void tick() {
         super.tick();
         if (!level.isClientSide) {
+            if (getOwnerUUID() != null && level.getPlayerByUUID(getOwnerUUID()) == null) ticksLeft = 0;
             ticksLeft--;
             this.entityData.set(AGE, this.entityData.get(AGE) + 1);
             if (this.entityData.get(AGE) > 20) {
