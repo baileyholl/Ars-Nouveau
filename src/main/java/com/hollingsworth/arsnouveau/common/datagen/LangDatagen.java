@@ -135,6 +135,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.ars_stencil.desc", "Nouveau");
         add("item.ars_nouveau.archwood_sign", "Archwood Sign");
         add("item.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
+        add("item.ars_nouveau.archwood_boat", "Archwood Boat");
         add("block.ars_nouveau.archwood_sign", "Archwood Sign");
         add("block.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
         add("block.ars_nouveau.archwood_wall_sign", "Archwood Sign");
