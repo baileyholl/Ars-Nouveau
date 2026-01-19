@@ -8,10 +8,12 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.RotatingSpellTurret;
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -154,8 +156,27 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         if (spellCaster.getSpell().isEmpty() || !(level instanceof ServerLevel level))
             return;
         int manaCost = getManaCost();
-        if (manaCost > 0 && SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null)
-            return;
+        if (manaCost > 0) {
+            var sp = this.getLinkedSourceProvider();
+
+            if (this.level instanceof ServerLevel serverLevel && sp != null) {
+                var cap = this.level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, sp.first(), sp.second().orElse(null));
+                if (cap == null) {
+                    this.setLinkedSourceProvider(null);
+                    return;
+                }
+
+                if (cap.extractSource(manaCost, true) < manaCost) {
+                    return;
+                }
+
+                cap.extractSource(manaCost, false);
+                EntityFollowProjectile.spawn(serverLevel, sp.first(), this.worldPosition);
+            } else if (SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null) {
+                return;
+            }
+        }
+
         Networking.sendToNearbyClient(level, pos, new PacketOneShotAnimation(pos));
         Position iposition = RotatingSpellTurret.getDispensePosition(pos, this);
         FakePlayer fakePlayer = uuid != null
