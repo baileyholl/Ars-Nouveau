@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.timelines.PrestidigitationTimeline;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
@@ -60,10 +59,18 @@ public class EffectPrestidigitation extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+        BlockPos pos = rayTraceResult.getBlockPos();
+        var state = world.getBlockState(pos);
+        if (!state.canBeReplaced()) {
+            pos = pos.relative(rayTraceResult.getDirection());
+            state = world.getBlockState(pos);
+            if (!state.canBeReplaced()) {
+                return;
+            }
+        }
+
         Player player = getPlayer(shooter, (ServerLevel) world);
-        if (world.getBlockState(pos).canBeReplaced()
-                && world.isUnobstructed(BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))
+        if (world.isUnobstructed(BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(player))
                 && world.isInWorldBounds(pos)) {
 
             BlockState lightBlockState = BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState().setValue(WATERLOGGED, world.getFluidState(pos).getType() == Fluids.WATER);

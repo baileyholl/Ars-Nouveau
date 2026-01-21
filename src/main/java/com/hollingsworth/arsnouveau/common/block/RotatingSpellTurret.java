@@ -6,6 +6,9 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.BlockPos;
@@ -97,22 +100,38 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         ROT_TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
             @Override
             public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
-                BlockPos touchPos = pos.relative(facingDir);
-
-                if (!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
+                if(!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
                     return;
                 }
-                Vec3 aimVec = rotatingTurretTile.getShootAngle().add(rotatingTurretTile.getX() + 0.5, rotatingTurretTile.getY() + 0.5, rotatingTurretTile.getZ() + 0.5);
+
+                Vec3 aimVec = rotatingTurretTile.getShootAngle().add(rotatingTurretTile.getBlockPos().getCenter());
+                BlockPos touchPos = BlockPos.containing(aimVec);
                 List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(touchPos));
                 if (!entityList.isEmpty()) {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, BlockPos.containing(aimVec.x(), aimVec.y(), aimVec.z()), true));
+                    resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir.getOpposite(), touchPos, true));
                 }
             }
         });
 
+        ROT_TURRET_BEHAVIOR_MAP.put(MethodPantomime.INSTANCE, new ITurretBehavior() {
+            @Override
+            public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
+                SpellStats stats = resolver.getCastStats();
+                int distance = stats.getBuffCount(AugmentDampen.INSTANCE) > 0 ? 0 : 1 + stats.getBuffCount(AugmentAmplify.INSTANCE);
+
+                if(!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
+                    return;
+                }
+
+                Vec3 aimVec = rotatingTurretTile.getShootAngle().scale(distance).add(rotatingTurretTile.getX() + 0.5, rotatingTurretTile.getY() + 0.5, rotatingTurretTile.getZ() + 0.5);
+                BlockPos touchPos = BlockPos.containing(aimVec);
+                resolver.hitResult = new BlockHitResult(touchPos.getCenter(), facingDir.getOpposite(), touchPos, true);
+                resolver.resume(serverLevel);
+            }
+        });
     }
 
 }
