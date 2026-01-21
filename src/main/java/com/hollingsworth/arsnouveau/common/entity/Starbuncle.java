@@ -74,17 +74,14 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
-
+public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratable, IDispellable, ITooltipProvider, IWandable, IDebuggerProvider, ITagSyncable {
 
     @Deprecated
     public enum StarbuncleGoalState {
@@ -110,7 +107,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     private int bedBackoff;
 
-    public int tamingTime;
     private int lastAABBCalc;
     private AABB cachedAAB;
 
@@ -121,7 +117,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public ChangeableBehavior dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
     public boolean canSleep;
     public boolean sleeping;
-    AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
+
 
     public Starbuncle(EntityType<? extends Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
@@ -212,16 +208,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             this.setHeldStack(starbuncle.getHeldStack().copyAndClear());
             starbuncle.getNextItemFromPassengers();
         }
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return manager;
-    }
-
-    @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
 
     public boolean isTamed() {
@@ -469,9 +455,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
+        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !isTamed())
+            return super.mobInteract(player, hand);
+
 
         ItemStack stack = player.getItemInHand(hand);
 
@@ -519,8 +505,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             setPathBlockDesc(Component.translatable(data.pathBlock.getDescriptionId()).getString());
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.path"));
         }
-
-        return dynamicBehavior.mobInteract(player, hand);
+        InteractionResult ir = dynamicBehavior.mobInteract(player, hand);
+        //if nothing that consume the action happens on dynamicBehavior, pass to super
+        return ir == InteractionResult.PASS ? super.mobInteract(player, hand) : ir;
     }
 
     @Override

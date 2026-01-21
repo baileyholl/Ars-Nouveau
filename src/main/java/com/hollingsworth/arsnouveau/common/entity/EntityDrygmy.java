@@ -52,15 +52,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
-public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
+public class EntityDrygmy extends MagicalBuddyMob implements GeoEntity, ITooltipProvider, IDispellable, ICharmSerializable {
 
     public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
@@ -72,7 +80,6 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public int channelCooldown;
     private boolean setBehaviors;
     public BlockPos homePos;
-    public int tamingTime;
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
@@ -98,13 +105,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
-    }
-
-    @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
-        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
+    public void die(@NotNull DamageSource source) {
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
@@ -113,7 +114,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
@@ -216,7 +217,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(CHANNELING, false);
         pBuilder.define(TAMED, false);
@@ -290,7 +291,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    protected void pickUpItem(@NotNull ItemEntity itemEntity) {
         if (!isTamed() && !entityData.get(BEING_TAMED) && itemEntity.getItem().is(ItemTagProvider.WILDEN_DROP_TAG)) {
             entityData.set(BEING_TAMED, true);
             itemEntity.getItem().shrink(1);
@@ -317,15 +318,8 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         return PlayState.CONTINUE;
     }
 
-    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return factory;
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         NBTUtil.storeBlockPos(tag, "home", homePos);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
@@ -338,7 +332,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (NBTUtil.hasBlockPos(tag, "home"))
             this.homePos = NBTUtil.getBlockPos(tag, "home");
