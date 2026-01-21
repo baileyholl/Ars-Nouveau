@@ -55,7 +55,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
         }
         caster.castOnServer(handIn, Component.empty());
 
-        return InteractionResultHolder.pass(stack);
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
