@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.api.util.BlockPosSet;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -84,7 +85,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     @Deprecated
     public int expireTime = 60 * 20;
 
-    public Set<BlockPos> hitList = new HashSet<>();
+    public Set<BlockPos> hitList = BlockPosSet.newHashSet();
 
     public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world) {
         super(entityType, world);

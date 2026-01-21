@@ -166,8 +166,8 @@ public class SpellUtil {
 
     private static Set<BlockPos> DFSBlockstates(Level world, Collection<BlockPos> start, int maxBlocks, Predicate<BlockState> isMatch) {
         LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
-        HashSet<BlockPos> searched = new HashSet<>(start);
-        HashSet<BlockPos> found = new HashSet<>();
+        Set<BlockPos> searched = new BlockPosSet(start);
+        Set<BlockPos> found = BlockPosSet.newHashSet();
 
         while (!searchQueue.isEmpty() && found.size() < maxBlocks) {
             BlockPos current = searchQueue.removeFirst();

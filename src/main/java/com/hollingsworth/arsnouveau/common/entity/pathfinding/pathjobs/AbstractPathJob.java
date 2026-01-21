@@ -1337,7 +1337,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @param reached the reached blocks.
      * @param mob     the tracked mob.
      */
-    public static void synchToClient(final HashSet<BlockPos> reached, final Mob mob) {
+    public static void synchToClient(final Set<BlockPos> reached, final Mob mob) {
 //        if (reached.isEmpty()) {
 //            return;
 //        }
