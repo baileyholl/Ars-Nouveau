@@ -159,24 +159,19 @@ public class EffectInteract extends AbstractEffect {
     public void useOnBlock(Player player, SpellStats spellStats, BlockPos blockpos, BlockState blockstate, Level pLevel, BlockHitResult pHitResult) {
         var pPlayer = (ServerPlayer) player;
         InteractionHand pHand = spellStats.isSensitive() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
             blockstate.attack(pLevel, blockpos, pPlayer);
             return;
         }
 
         ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
-
-        if (itemstack.getItem() instanceof BucketItem bucket) {
-            handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, getHand(player));
-            return;
-        }
+        ItemStack itemstack = pPlayer.getItemInHand(pHand);
 
         if (iteminteractionresult.consumesAction()) {
             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(pPlayer, blockpos, itemstack);
-        }
-
-        if (iteminteractionresult == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION && pHand == InteractionHand.MAIN_HAND) {
+        } else if (itemstack.getItem() instanceof BucketItem bucket) {
+            handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, pHand);
+        } else if (iteminteractionresult == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION && pHand == InteractionHand.MAIN_HAND) {
             InteractionResult interactionresult = blockstate.useWithoutItem(pLevel, pPlayer, pHitResult);
             if (interactionresult.consumesAction()) {
                 CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
