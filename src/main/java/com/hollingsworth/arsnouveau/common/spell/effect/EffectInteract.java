@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.mixin.menus.IAbstractContainerMenuExtension;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -141,6 +142,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     public void useOnEntity(Player player, SpellStats spellStats, Entity target) {
+        var menuBefore = player.containerMenu.containerId;
         if (spellStats.isSensitive()) {
             ItemStack item = player.getItemInHand(getHand(player));
             if (target instanceof LivingEntity livingEntity) {
@@ -154,6 +156,8 @@ public class EffectInteract extends AbstractEffect {
         } else {
             player.interactOn(target, InteractionHand.MAIN_HAND);
         }
+
+        IAbstractContainerMenuExtension.setOpenedWithInteract(player.containerMenu, true);
     }
 
     public void useOnBlock(Player player, SpellStats spellStats, BlockPos blockpos, BlockState blockstate, Level pLevel, BlockHitResult pHitResult) {
@@ -165,6 +169,7 @@ public class EffectInteract extends AbstractEffect {
             return;
         }
 
+        var menuBefore = player.containerMenu.containerId;
         ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
         if (itemstack.getItem() instanceof BucketItem bucket) {
@@ -182,6 +187,8 @@ public class EffectInteract extends AbstractEffect {
                 CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
             }
         }
+
+        IAbstractContainerMenuExtension.setOpenedWithInteract(player.containerMenu, true);
     }
 
     @Override
