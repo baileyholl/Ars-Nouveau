@@ -57,6 +57,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -302,12 +303,17 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
-        if (!event.getEntity().level.isClientSide && event.getItem().getItem().getFoodProperties(event.getItem(), event.getEntity()) != null) {
-            if (event.getEntity() instanceof Player player) {
-                FoodData stats = player.getFoodData();
-                stats.saturationLevel = (float) (stats.saturationLevel * PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG));
-            }
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
         }
+
+        FoodProperties props = event.getItem().getFoodProperties(player);
+        if (props == null) {
+            return;
+        }
+
+        FoodData stats = player.getFoodData();
+        stats.saturationLevel = Math.min(stats.getFoodLevel(), stats.saturationLevel + Math.max(0, (float) (props.saturation() * PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG)) - props.saturation()));
     }
 
     private static void replaceEntityWithItems(ServerLevel level, Entity entity, ItemStack... items) {
