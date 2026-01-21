@@ -17,6 +17,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.CrashReportCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -25,6 +26,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -337,7 +339,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         super.onHitEntity(pResult);
         Entity entity = pResult.getEntity();
         float f = (float) this.getDeltaMovement().length();
-        int i = Mth.ceil(Mth.clamp((Math.min(f, 2.5) * this.baseDamage) + getStateDamageBonus(), 0.0D, 2.147483647E9D));
+        f = 0.5f + 0.1f * f * f;
+
+        int i = Mth.ceil(Mth.clamp(Math.min(10f, f) * (this.baseDamage + getStateDamageBonus()), 0.0D, 2147483647D));
+        Minecraft.getInstance().gui.getChat().addMessage(Component.literal(f + " " + i));
         this.piercingIgnoreEntityIds.add(entity.getId());
 
         Entity owner = this.getOwner();
