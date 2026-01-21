@@ -31,6 +31,8 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     private PotionContents data = PotionContents.EMPTY;
     int currentFill;
 
+    public static int MAX_FILL = 10000;
+
     public PotionJarTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
@@ -149,7 +151,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     public int getMaxFill() {
-        return 10000;
+        return MAX_FILL;
     }
 
     public int getAmount() {
