@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDecelerate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -73,8 +71,7 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
-        float acceleration = (spell.resolver().spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE) - spell.resolver().spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE) * 0.5F);
-        float velocity = Math.max(0.1f, 0.5f + 0.1f * Math.min(2, acceleration));
+        float velocity = (float) spell.getDeltaMovement().length();
 
         spell.shoot(direction.getStepX(), (direction.getStepY()), direction.getStepZ(), velocity, 0);
         BlockUtil.updateObservers(world, pos);
