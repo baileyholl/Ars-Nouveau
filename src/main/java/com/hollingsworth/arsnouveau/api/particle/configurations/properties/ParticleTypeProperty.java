@@ -98,6 +98,11 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     }
 
     @Override
+    public boolean shouldSkipSerialization() {
+        return this.type == ModParticles.NEW_GLOW_TYPE.get() && this.propertyHolder.size() == 0;
+    }
+
+    @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<DocEntryButton> buttons = new ArrayList<>();
         var particleEntries = new ArrayList<>(PARTICLE_TYPES.entrySet());
