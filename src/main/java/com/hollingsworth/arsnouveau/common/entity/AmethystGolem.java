@@ -360,4 +360,11 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
                 .add(Attributes.MOVEMENT_SPEED, 0.2d);
     }
 
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM);
+        stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+        return stack;
+    }
 }
