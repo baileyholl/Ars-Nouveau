@@ -142,7 +142,8 @@
     "71a716b3-63c6-4c67-a7b1-282b19d83d2f",
     "aad99d4d-1503-4c50-970c-f0fa742902c9",
     "78fc05e9-dae8-450d-ae0f-eb63ae623dd0",
-    "f48914c8-da80-4570-a398-8b2220b061c1"
+    "f48914c8-da80-4570-a398-8b2220b061c1",
+    "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471"
   ],
   "starbuncleAdoptions": [
     {
@@ -954,6 +955,12 @@
       "adopter": "Icicle",
       "color": "pink",
       "bio": "Full of crime and malice"
+    },
+    {
+      "name": "Fawn",
+      "adopter": "shadowskyz",
+      "color": "purple",
+      "bio": "This starbuncle needs a little bit of love."
     }
   ]
 }
