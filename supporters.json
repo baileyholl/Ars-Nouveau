@@ -143,7 +143,8 @@
     "aad99d4d-1503-4c50-970c-f0fa742902c9",
     "78fc05e9-dae8-450d-ae0f-eb63ae623dd0",
     "f48914c8-da80-4570-a398-8b2220b061c1",
-    "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471"
+    "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471",
+    "2ab10392-33aa-476d-aaf2-c32cd3c7b360"
   ],
   "starbuncleAdoptions": [
     {
@@ -961,6 +962,12 @@
       "adopter": "shadowskyz",
       "color": "purple",
       "bio": "This starbuncle needs a little bit of love."
+    },
+    {
+      "name": "Kalcifer",
+      "adopter": "BlackRiptide",
+      "color": "black",
+      "bio": "A good boy / occasional menace (very soft)"
     }
   ]
 }
