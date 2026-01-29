@@ -52,7 +52,6 @@
     "d155b322-ff09-4c0f-9438-21ba7c572490",
     "bb21a5a9-4a9a-49f9-84f9-1ff375bca6bf",
     "1f470f2a-a05b-4b6b-9d84-4b62f8686e5b",
-    "d600e728-1c5e-4ee8-8df7-2899465c9129",
     "43ec37c2-8b0d-4bda-9f6a-5f78c3b572d0",
     "5a4971f3-6fb0-446e-8512-cca380ec7e85",
     "6859954f-e3b0-45a8-84d7-5f9e9782651f",
@@ -141,7 +140,10 @@
     "f9183f8b-6d7d-4d83-8c5b-b18632c8f52a",
     "5ca15a2e-b217-436e-8c3b-97a45243baed",
     "71a716b3-63c6-4c67-a7b1-282b19d83d2f",
-    "aad99d4d-1503-4c50-970c-f0fa742902c9"
+    "aad99d4d-1503-4c50-970c-f0fa742902c9",
+    "78fc05e9-dae8-450d-ae0f-eb63ae623dd0",
+    "f48914c8-da80-4570-a398-8b2220b061c1",
+    "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471"
   ],
   "starbuncleAdoptions": [
     {
@@ -929,16 +931,36 @@
       "color": "green",
       "adopter": "Treeleafs",
       "bio": "A little buddy to transport rice."
-    },{
+    },
+    {
       "name": "Kanwo",
       "color": "orange",
       "adopter": "DarkStrifeYT",
       "bio": "The best friend you can ever ask for"
-    },{
+    },
+    {
       "name": "Valkyrie",
       "color": "white",
       "adopter": "Alban",
       "bio": "Heavenly Harbinger"
+    },
+    {
+      "name": "Gatotkaca",
+      "adopter": "MeowJacky",
+      "color": "magenta",
+      "bio": "Muscles of Iron, Bones of Steel\n(May attempt to taunt mobs)"
+    },
+    {
+      "name": "Mads",
+      "adopter": "Icicle",
+      "color": "pink",
+      "bio": "Full of crime and malice"
+    },
+    {
+      "name": "Fawn",
+      "adopter": "shadowskyz",
+      "color": "purple",
+      "bio": "This starbuncle needs a little bit of love."
     }
   ]
 }

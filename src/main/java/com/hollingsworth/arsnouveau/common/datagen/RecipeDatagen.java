@@ -167,6 +167,7 @@ public class RecipeDatagen extends RecipeProvider {
             shapedWoodenFenceGate(consumer, BlockRegistry.ARCHWOOD_FENCE_GATE, BlockRegistry.ARCHWOOD_PLANK);
             shapedWoodenPressurePlate(consumer, BlockRegistry.ARCHWOOD_PPlate, BlockRegistry.ARCHWOOD_PLANK);
             shapedWoodenSlab(consumer, BlockRegistry.ARCHWOOD_SLABS, BlockRegistry.ARCHWOOD_PLANK);
+            shapedWoodenBoat(consumer, ItemsRegistry.ARCHWOOD_BOAT, BlockRegistry.ARCHWOOD_PLANK);
 
             strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_BLUE, BlockRegistry.STRIPPED_AWWOOD_BLUE);
             strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_GREEN, BlockRegistry.STRIPPED_AWWOOD_GREEN);
@@ -915,5 +916,14 @@ public class RecipeDatagen extends RecipeProvider {
     public static void makeStonecutter(RecipeOutput consumer, ItemLike input, ItemLike output, String reg) {
         SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), RecipeCategory.DECORATIONS, output).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(consumer, ArsNouveau.prefix(reg + "_" + STONECUTTER_COUNTER));
         STONECUTTER_COUNTER++;
+    }
+
+    public static void shapedWoodenBoat(RecipeOutput recipeConsumer, ItemLike boat, ItemLike input) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, boat)
+                .define('#', input)
+                .pattern("# #")
+                .pattern("###")
+                .unlockedBy("has_planks", InventoryChangeTrigger.TriggerInstance.hasItems(input))
+                .save(recipeConsumer);
     }
 }

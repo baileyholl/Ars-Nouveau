@@ -321,6 +321,12 @@ public class ModEntities {
             EntityType.Builder.<EnchantedHook>of(EnchantedHook::new, MobCategory.MISC).noSave().noSummon().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5)
     );
 
+    public static final DeferredHolder<EntityType<?>, EntityType<ArchwoodBoat>> ARCHWOOD_BOAT = registerEntity(
+            LibEntityNames.ARCHWOOD_BOAT,
+            EntityType.Builder.<ArchwoodBoat>of(ArchwoodBoat::new, MobCategory.MISC)
+                    .sized(1.375F, 0.5625F)
+                    .clientTrackingRange(10)
+    );
 
     @SubscribeEvent
     public static void registerPlacements(RegisterSpawnPlacementsEvent event) {
