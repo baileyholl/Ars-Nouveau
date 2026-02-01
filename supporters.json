@@ -144,7 +144,8 @@
     "78fc05e9-dae8-450d-ae0f-eb63ae623dd0",
     "f48914c8-da80-4570-a398-8b2220b061c1",
     "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471",
-    "d6417972-585b-4091-862c-adc6e5e229d6"
+    "d6417972-585b-4091-862c-adc6e5e229d6",
+    "b40962ea-0577-4198-a9bf-02ad4da12339"
   ],
   "starbuncleAdoptions": [
     {
@@ -968,6 +969,18 @@
       "adopter": "Doughnut",
       "color": "light_gray",
       "bio": "A good girl / likes kisses (very cute)"
+    },
+    {
+      "name": "Lynn",
+      "adopter": "Josiursa",
+      "color": "magenta",
+      "bio": "She's actually orange, but too many source berry pies mysteriously disappeared from window sills."
+    },
+    {
+      "name": "Fawn",
+      "adopter": "shadowskyz",
+      "color": "purple",
+      "bio": "This scruffy starbuncle needs a little bit of tender loving care."
     }
   ]
 }
