@@ -143,7 +143,8 @@
     "aad99d4d-1503-4c50-970c-f0fa742902c9",
     "78fc05e9-dae8-450d-ae0f-eb63ae623dd0",
     "f48914c8-da80-4570-a398-8b2220b061c1",
-    "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471"
+    "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471",
+    "b40962ea-0577-4198-a9bf-02ad4da12339"
   ],
   "starbuncleAdoptions": [
     {
@@ -961,6 +962,12 @@
       "adopter": "shadowskyz",
       "color": "purple",
       "bio": "This starbuncle needs a little bit of love."
+    },
+    {
+      "name": "Lynn",
+      "adopter": "Josiursa",
+      "color": "magenta",
+      "bio": "She's actually orange, but too many source berry pies mysteriously disappeared from window sills."
     },
     {
       "name": "Fawn",
