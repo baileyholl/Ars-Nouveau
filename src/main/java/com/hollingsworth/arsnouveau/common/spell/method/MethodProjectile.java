@@ -140,7 +140,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public String getBookDescription() {
-        return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectiles to break plants or other materials that do not block motion.";
+        return "Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectiles to break plants or other materials that do not block motion.";
     }
 
     @Override
