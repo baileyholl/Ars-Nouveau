@@ -57,8 +57,8 @@ public class ServerConfig {
         ENABLE_WARP_PORTALS = SERVER_BUILDER.comment("Enable warp portals?").define("enableWarpPortals", true);
 
         SERVER_BUILDER.pop().push("summon_configs");
-        SUMMON_COUNT_LIMIT_BASE = SERVER_BUILDER.comment("Base max number of summons a player can have active at once, bonus effect may increase this limit. Set to -1 for unlimited, at your server own risk.").defineInRange("summonCountLimit", 20, -1, 1000);
-        SUMMON_COUNT_LIMIT_MAX = SERVER_BUILDER.comment("Maximum number of summons a player can have active at once, including bonus. Set to -1 for unlimited, at your server own risk.").defineInRange("summonCountLimit", 100, -1, 1000);
+        SUMMON_COUNT_LIMIT_BASE = SERVER_BUILDER.comment("Base max number of summons a player can have active at once, bonus effect may increase this limit. Set to -1 for unlimited, at your server own risk.").defineInRange("summonCountLimitBase", 20, -1, 1000);
+        SUMMON_COUNT_LIMIT_MAX = SERVER_BUILDER.comment("Maximum number of summons a player can have active at once, including bonus. Set to -1 for unlimited, at your server own risk.").defineInRange("summonCountLimitMax", 100, -1, 1000);
 
         SERVER_BUILDER.pop().comment("Infinite Spells Mode").push("spell_length");
         INFINITE_SPELLS = SERVER_BUILDER.comment("If Enabled, the value below will be added to the base glyph limit for spellbooks.").define("infiniteSpells", false);
