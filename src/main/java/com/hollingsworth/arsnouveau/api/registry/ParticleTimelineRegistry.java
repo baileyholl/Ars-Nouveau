@@ -40,6 +40,8 @@ public class ParticleTimelineRegistry {
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PantomimeTimeline>> PANTOMIME_TIMELINE = TIMELINE_DF.register("pantomime", () -> new SimpleParticleTimelineType<>(MethodPantomime.INSTANCE, PantomimeTimeline.CODEC, PantomimeTimeline.STREAM_CODEC, PantomimeTimeline::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<WololoTimeline>> WOLOLO_TIMELINE = TIMELINE_DF.register("wololo", () -> new SimpleParticleTimelineType<>(EffectWololo.INSTANCE, WololoTimeline.CODEC, WololoTimeline.STREAM_CODEC, WololoTimeline::new));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<AnimateTimeline>> ANIMATE_TIMELINE = TIMELINE_DF.register("animate", () -> new SimpleParticleTimelineType<>(EffectAnimate.INSTANCE, AnimateTimeline.CODEC, AnimateTimeline.STREAM_CODEC, AnimateTimeline::new));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<WolvesTimeline>> WOLVES_TIMELINE = TIMELINE_DF.register("wolves", () -> new SimpleParticleTimelineType<>(EffectSummonWolves.INSTANCE, WolvesTimeline.CODEC, WolvesTimeline.STREAM_CODEC, WolvesTimeline::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<MageBlockTimeline>> MAGEBLOCK_TIMELINE = TIMELINE_DF.register("mageblock", () -> new SimpleParticleTimelineType<>(EffectPhantomBlock.INSTANCE, MageBlockTimeline.CODEC, MageBlockTimeline.STREAM_CODEC, MageBlockTimeline::new));
 

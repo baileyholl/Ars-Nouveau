@@ -34,6 +34,7 @@ public class PerkAttributes {
     //public static final DeferredHolder<Attribute, Attribute> TOUGHNESS = registerAttribute("ars_nouveau.perk.toughness", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "eb1ccdaf-38e3-4a1a-a5fb-b0dc698157ff");
 
     public static final DeferredHolder<Attribute, Attribute> WEIGHT = registerAttribute("ars_nouveau.perk.weight", (id) -> new RangedAttribute(id, 1.0D, 0.0D, 100.0D).setSyncable(true), "24d1ae35-a7c7-4c85-9b56-c94de36faf91");
+    public static final DeferredHolder<Attribute, Attribute> SUMMON_CAPACITY = registerAttribute("ars_nouveau.perk.summon_capacity", (id) -> new RangedAttribute(id, 0.0D, 0.0D, 1024.0D).setSyncable(true), "ee3a4090-1e6f-4f6a-8f3a-2e3b8f8c5d6e");
 
     public static DeferredHolder<Attribute, Attribute> registerAttribute(String name, Function<String, Attribute> attribute, String uuid) {
         return registerAttribute(name, attribute, UUID.fromString(uuid));

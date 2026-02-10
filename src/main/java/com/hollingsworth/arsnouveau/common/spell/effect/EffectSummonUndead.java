@@ -3,11 +3,12 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.SummonSkeleton;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
-import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
@@ -37,9 +38,9 @@ public class EffectSummonUndead extends AbstractEffect {
             return;
 
         Vec3 vector3d = safelyGetHitPos(rayTraceResult);
-        int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
+        int ticks = (int) (20 * (GENERIC_INT.get() + (1 + spellStats.getDurationMultiplier())));
         BlockPos pos = BlockPos.containing(vector3d);
-        if (ticks <= 0) return;
+        if (spellStats.hasBuff(AugmentExtendTime.INSTANCE)) ticks = -1; // Infinite duration
         int count = 3 + spellStats.getBuffCount(AugmentSplit.INSTANCE);
         for (int i = 0; i < count; ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
@@ -58,14 +59,14 @@ public class EffectSummonUndead extends AbstractEffect {
                     weapon = Items.DIAMOND_SWORD.getDefaultInstance();
                 }
             }
-            SummonSkeleton undeadentity = new SummonSkeleton(world, shooter, weapon);
-            undeadentity.moveTo(blockpos, 0.0F, 0.0F);
-            undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
-            undeadentity.setOwner(shooter);
-            undeadentity.setLimitedLife(ticks);
-            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadentity);
+            SummonSkeleton undeadEntity = new SummonSkeleton(world, shooter, weapon);
+            undeadEntity.moveTo(blockpos, 0.0F, 0.0F);
+            undeadEntity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
+            undeadEntity.setOwner(shooter);
+            undeadEntity.setLimitedLife(ticks);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadEntity);
         }
-        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS_EFFECT, ticks));
+        //applySummoningSickness(shooter, ticks);
     }
 
     @Override
@@ -88,14 +89,13 @@ public class EffectSummonUndead extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentAmplify.INSTANCE, AugmentSplit.INSTANCE, AugmentPierce.INSTANCE);
+        return setOf(AugmentExtendTime.INSTANCE, AugmentAmplify.INSTANCE, AugmentSplit.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
-        map.put(AugmentSplit.INSTANCE, "Increases the number of summoned skeletons.");
         map.put(AugmentPierce.INSTANCE, "Changes the summoned skeletons to archers.");
         map.put(AugmentAmplify.INSTANCE, "Increases the summoned skeletons' weapon quality.");
     }

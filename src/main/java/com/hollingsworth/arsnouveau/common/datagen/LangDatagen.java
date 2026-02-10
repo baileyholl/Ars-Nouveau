@@ -1103,6 +1103,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.feather.desc", "Reduces the amount of fall damage taken.");
         add("ars_nouveau.perk.weight", "Weight");
         add("ars_nouveau.perk.weight.desc", "Affects how much gravity is applied.");
+        add("ars_nouveau.perk.summon_capacity", "Extra Summon Capacity");
+        add("ars_nouveau.perk.summon_capacity.desc", "Increases the number of summons you can have at once.");
         add("ars_nouveau.page.threads", "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.");
         add("ars_nouveau.threads", "Thread Slots");
         add("ars_nouveau.thread_layout", "Thread Tiers");
@@ -1795,6 +1797,12 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
         add("ars_nouveau.learn_glyph", "Unlocked %s");
         add("ars_nouveau.already_learned", "You have already learned this Glyph.");
+        add("tooltip.ars_nouveau.summon_behavior", "Current Summon Behavior: %s");
+        add("ars_nouveau.summon_bell.select", "Press %s to select summon behavior.");
+        add("item.ars_nouveau.summoners_bell", "Summoner's Bell");
+        add("ars_nouveau.summon.aggressive", "Aggressive");
+        add("ars_nouveau.summon.defensive", "Defensive");
+        add("ars_nouveau.summon.passive", "Passive");
         add("block.ars_nouveau.planarium", "Planarium");
         add("ars_nouveau.planarium.set_name", "Cast Name or set a name in an Anvil to create a dimension.");
         add("ars_nouveau.set_jar_spawn", "Jar spawn point set.");

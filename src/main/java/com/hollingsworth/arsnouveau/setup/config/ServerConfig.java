@@ -18,6 +18,8 @@ public class ServerConfig {
     public static ModConfigSpec.BooleanValue ENFORCE_GLYPH_LIMIT_ON_CAST;
     public static ModConfigSpec.IntValue CODEX_COST_PER_GLYPH;
     public static ModConfigSpec.BooleanValue ENABLE_WARP_PORTALS;
+    public static ModConfigSpec.IntValue SUMMON_COUNT_LIMIT_BASE;
+    public static ModConfigSpec.IntValue SUMMON_COUNT_LIMIT_MAX;
 
     public static ModConfigSpec.BooleanValue INFINITE_SPELLS;
     public static ModConfigSpec.IntValue INF_SPELLS_LENGHT_MODIFIER;
@@ -53,6 +55,10 @@ public class ServerConfig {
 
         SERVER_BUILDER.pop().push("warp_portals");
         ENABLE_WARP_PORTALS = SERVER_BUILDER.comment("Enable warp portals?").define("enableWarpPortals", true);
+
+        SERVER_BUILDER.pop().push("summon_configs");
+        SUMMON_COUNT_LIMIT_BASE = SERVER_BUILDER.comment("Base max number of summons a player can have active at once, bonus effect may increase this limit. Set to -1 for unlimited, at your server own risk.").defineInRange("summonCountLimitBase", 20, -1, 1000);
+        SUMMON_COUNT_LIMIT_MAX = SERVER_BUILDER.comment("Maximum number of summons a player can have active at once, including bonus. Set to -1 for unlimited, at your server own risk.").defineInRange("summonCountLimitMax", 100, -1, 1000);
 
         SERVER_BUILDER.pop().comment("Infinite Spells Mode").push("spell_length");
         INFINITE_SPELLS = SERVER_BUILDER.comment("If Enabled, the value below will be added to the base glyph limit for spellbooks.").define("infiniteSpells", false);
