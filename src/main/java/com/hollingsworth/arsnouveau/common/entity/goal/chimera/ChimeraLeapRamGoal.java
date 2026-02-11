@@ -43,6 +43,14 @@ public class ChimeraLeapRamGoal extends Goal {
     }
 
     @Override
+    public void stop() {
+        super.stop();
+        boss.isRamGoal = false;
+        boss.setRamming(false);
+        boss.setRamPrep(false);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (this.boss.getTarget() == null) {

@@ -10,7 +10,12 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraDiveGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraLeapRamGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraRageGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraRamGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSpikeGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
 import com.hollingsworth.arsnouveau.common.potions.SnareEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
@@ -45,10 +50,17 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
@@ -64,6 +76,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -75,7 +88,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 
 public class WildenChimera extends Monster implements GeoEntity {
-    private final ServerBossEvent bossEvent = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
+    private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setCreateWorldFog(true);
     public static final EntityDataAccessor<Boolean> HAS_SPIKES = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_HORNS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HAS_WINGS = SynchedEntityData.defineId(WildenChimera.class, EntityDataSerializers.BOOLEAN);
@@ -127,9 +140,38 @@ public class WildenChimera extends Monster implements GeoEntity {
     protected void registerGoals() {
         super.registerGoals();
 
+        // Targets players and mobs hurting it, avoid wilden friendly fire
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, WildenGuardian.class, WildenStalker.class, WildenHunter.class));
+
+        // Some low priority movement to give it life
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 1.2f) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !isInWater() && getTarget() == null;
+            }
+
+            @Override
+            public @NotNull String toString() {
+                return "Chimera Random Stroll";
+            }
+        });
+
+        this.goalSelector.addGoal(8, new RandomSwimmingGoal(this, 1.2f, 20) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && isInWater() && getTarget() == null;
+            }
+
+            @Override
+            public @NotNull String toString() {
+                return "Chimera Random Swim";
+            }
+        });
+
         this.goalSelector.addGoal(5, new ConditionalMeleeGoal(this, 1.2d, true, () -> !this.isHowling() && !this.isFlying() && !this.isDefensive() && !this.isDiving() && !this.getPhaseSwapping() && !isRamming() && !isRamPrep()));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
+
         this.goalSelector.addGoal(1, new ChimeraRageGoal(this));
         this.goalSelector.addGoal(3, new ChimeraLeapRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
@@ -145,7 +187,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    public boolean isPushedByFluid(FluidType type) {
+    public boolean isPushedByFluid(@NotNull FluidType type) {
         return !this.isSwimming();
     }
 
@@ -168,21 +210,21 @@ public class WildenChimera extends Monster implements GeoEntity {
         });
 
         animatableManager.add(crouchController);
-        animatableManager.add(new AnimationController<>(this, "idleController", 1, (event -> {
+        animatableManager.add(new AnimationController<>(this, "idleController", 1, event -> {
             if (!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
-        })));
-        animatableManager.add(new AnimationController<>(this, "flyController", 1, (event) -> {
+        }));
+        animatableManager.add(new AnimationController<>(this, "flyController", 1, event -> {
             if (isFlying() && !isDiving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("fly_rising"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "diveController", 1, (event) -> {
+        animatableManager.add(new AnimationController<>(this, "diveController", 1, event -> {
             if (isDiving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dive"));
                 return PlayState.CONTINUE;
@@ -205,7 +247,7 @@ public class WildenChimera extends Monster implements GeoEntity {
 
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "ramController", 1, (event -> {
+        animatableManager.add(new AnimationController<>(this, "ramController", 1, event -> {
             if (isRamming() && !isRamPrep()) {
                 if (!this.hasWings()) {
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("charge"));
@@ -213,8 +255,8 @@ public class WildenChimera extends Monster implements GeoEntity {
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
-        })));
-        animatableManager.add(new AnimationController<>(this, "ramPrep", 1, (event -> {
+        }));
+        animatableManager.add(new AnimationController<>(this, "ramPrep", 1, event -> {
             if (isRamPrep() && !isRamming()) {
                 if (this.hasWings()) {
                     event.getController().setAnimation(RawAnimation.begin().thenPlay("wing_charge_prep"));
@@ -225,12 +267,13 @@ public class WildenChimera extends Monster implements GeoEntity {
             }
             event.getController().forceAnimationReset();
             return PlayState.STOP;
-        })));
+        }));
     }
 
     public void updateSwimming() {
         if (!this.level.isClientSide) {
-            if (this.isEffectiveAi() && this.isInWater() && this.wantsToSwim()) {
+            if (this.isEffectiveAi() && this.isInWater() && this.wantsToSwim() && (isUnderWater() || getBlockStateOn().isAir())) {
+                // if completely underwater it can swim fine, but it would stop moving in shallow water so we make sure it's in deeper water
                 this.navigation = this.waterNavigation;
                 this.setSwimming(true);
             } else {
@@ -249,7 +292,13 @@ public class WildenChimera extends Monster implements GeoEntity {
             ((Runnable) () -> ChimeraMusic.play(WildenChimera.this)).run();
         }
 
-        //   this.goalSelector.getRunningGoals().forEach(g -> System.out.println(g.getGoal().toString()));
+        /*
+        this.goalSelector.getAvailableGoals().forEach(g -> {
+            if (g.isRunning())
+                System.out.println(g.getGoal());
+        });
+        */
+
         if (!level.isClientSide && isDefensive()) {
             this.getNavigation().stop();
         }
@@ -276,19 +325,16 @@ public class WildenChimera extends Monster implements GeoEntity {
         }
 
         if (!level.isClientSide) {
-            if (summonCooldown > 0)
-                summonCooldown--;
+            // Reduce skill cooldown
             if (diveCooldown > 0) {
                 diveCooldown--;
                 if (this.isInLava() || this.isInWater())
-                    spikeCooldown -= 2;
+                    diveCooldown -= 2;
             }
-            if (spikeCooldown > 0) {
-                spikeCooldown--;
-
-            }
-            if (ramCooldown > 0)
-                ramCooldown--;
+            if (summonCooldown > 0) summonCooldown--;
+            if (spikeCooldown > 0) spikeCooldown--;
+            if (ramCooldown > 0) ramCooldown--;
+            if (rageTimer > 0) rageTimer--;
         }
 
         if (!level.isClientSide && getPhaseSwapping() && !this.dead) {
@@ -326,7 +372,7 @@ public class WildenChimera extends Monster implements GeoEntity {
             return;
         int baseAge = 40;
         float scaleAge = (float) ParticleUtil.inRange(0.1, 0.2);
-        for (int i = 0; i < 10 * (Math.min(1, multiplier)); i++) {
+        for (int i = 0; i < 10 * Math.min(1, multiplier); i++) {
             Vec3 particlePos = new Vec3(pos.getX(), pos.getY() + 1, pos.getZ()).add(0.5, 0.5, 0.5);
             particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(3.0, 3.0, 3.0));
             level.addParticle(ParticleLineData.createData(ParticleColor.makeRandomColor(255, 255, 255, level.random), scaleAge, baseAge + level.random.nextInt(20)),
@@ -336,7 +382,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel p_348683_, DamageSource p_21385_, boolean p_21387_) {
+    protected void dropCustomDeathLoot(@NotNull ServerLevel p_348683_, @NotNull DamageSource p_21385_, boolean p_21387_) {
         super.dropCustomDeathLoot(p_348683_, p_21385_, p_21387_);
         ItemEntity itementity = this.spawnAtLocation(ItemsRegistry.WILDEN_TRIBUTE.get());
         if (itementity != null) {
@@ -344,12 +390,12 @@ public class WildenChimera extends Monster implements GeoEntity {
         }
     }
 
-    protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
-        this.playSound(SoundEvents.POLAR_BEAR_STEP, 0.15F + (random.nextFloat() * 0.3f), 0.8F + random.nextFloat() * 0.1f);
+    protected void playStepSound(@NotNull BlockPos p_180429_1_, @NotNull BlockState p_180429_2_) {
+        this.playSound(SoundEvents.POLAR_BEAR_STEP, 0.15F + random.nextFloat() * 0.3f, 0.8F + random.nextFloat() * 0.1f);
     }
 
     @Override
-    protected SoundEvent getSwimSound() {
+    protected @NotNull SoundEvent getSwimSound() {
         return SoundEvents.HOSTILE_SWIM;
     }
 
@@ -359,12 +405,12 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+    protected @NotNull SoundEvent getHurtSound(@NotNull DamageSource p_184601_1_) {
         return SoundEvents.POLAR_BEAR_HURT;
     }
 
     @Override
-    protected SoundEvent getDeathSound() {
+    protected @NotNull SoundEvent getDeathSound() {
         return SoundEvents.POLAR_BEAR_DEATH;
     }
 
@@ -381,18 +427,18 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public boolean canDive() {
-        return !isRamGoal && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround() && !isDefensive();
+        return !isRamGoal && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && (this.onGround() || this.isInWater()) && !isDefensive();
     }
 
     public boolean canSpike() {
-        return !isRamGoal && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround() && this.getTarget() != null;
+        return !isRamGoal && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && (this.onGround() || this.isInWater()) && this.getTarget() != null;
     }
 
     public boolean canRam(boolean withWings) {
         if (withWings != hasWings()) {
             return false;
         }
-        return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && getTarget().onGround() && this.onGround();
+        return !isRamGoal && ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive() && getTarget() != null && (getTarget().onGround() && this.onGround() || getTarget().isInWater() && this.isInWater() && this.hasSpikes());
     }
 
     public boolean canSummon() {
@@ -425,7 +471,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         }
     }
 
-    public void travel(Vec3 pTravelVector) {
+    public void travel(@NotNull Vec3 pTravelVector) {
         if (this.isEffectiveAi() && this.isInWater() && this.wantsToSwim()) {
             this.moveRelative(0.01F, pTravelVector);
             this.move(MoverType.SELF, this.getDeltaMovement());
@@ -455,8 +501,8 @@ public class WildenChimera extends Monster implements GeoEntity {
 
             // Omit our summoned sources that might aggro or accidentally hurt us
             if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
-                    || (entity instanceof ISummon && ((ISummon) entity).getOwnerUUID() != null && ((ISummon) entity).getOwnerUUID().equals(this.getUUID()))
-                    || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
+                    || entity instanceof ISummon && ((ISummon) entity).getOwnerUUID() != null && ((ISummon) entity).getOwnerUUID().equals(this.getUUID())
+                    || entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon)
                 return false;
         }
 
@@ -489,7 +535,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
-    protected boolean canRide(Entity p_184228_1_) {
+    protected boolean canRide(@NotNull Entity p_184228_1_) {
         return false;
     }
 
@@ -503,12 +549,12 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
 
-    public void startSeenByPlayer(ServerPlayer p_184178_1_) {
+    public void startSeenByPlayer(@NotNull ServerPlayer p_184178_1_) {
         super.startSeenByPlayer(p_184178_1_);
         this.bossEvent.addPlayer(p_184178_1_);
     }
 
-    public void stopSeenByPlayer(ServerPlayer p_184203_1_) {
+    public void stopSeenByPlayer(@NotNull ServerPlayer p_184203_1_) {
         super.stopSeenByPlayer(p_184203_1_);
         this.bossEvent.removePlayer(p_184203_1_);
     }
@@ -542,7 +588,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(HAS_HORNS, false);
         pBuilder.define(HAS_SPIKES, false);
@@ -646,7 +692,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         setHorns(tag.getBoolean("horns"));
         setSpikes(tag.getBoolean("spikes"));
@@ -680,7 +726,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void checkFallDamage(double p_184231_1_, boolean p_184231_3_, BlockState p_184231_4_, BlockPos p_184231_5_) {
+    protected void checkFallDamage(double p_184231_1_, boolean p_184231_3_, @NotNull BlockState p_184231_4_, @NotNull BlockPos p_184231_5_) {
         super.checkFallDamage(p_184231_1_, p_184231_3_, p_184231_4_, p_184231_5_);
         if (hasWings())
             this.fallDistance = 0;
@@ -701,7 +747,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    public PathNavigation getNavigation() {
+    public @NotNull PathNavigation getNavigation() {
         return this.isFlying() ? flyingNavigator : super.getNavigation();
     }
 
@@ -727,7 +773,7 @@ public class WildenChimera extends Monster implements GeoEntity {
                 } else {
                     flyTick();
                 }
-            } else if (this.chimera.wantsToSwim() && this.chimera.isInWater()) {
+            } else if (this.chimera.isInWater()) {
                 swimTick();
             } else {
                 super.tick();
@@ -737,9 +783,18 @@ public class WildenChimera extends Monster implements GeoEntity {
         // Drowned movement
         public void swimTick() {
             LivingEntity livingentity = this.chimera.getTarget();
-            if (livingentity != null && livingentity.getY() > this.chimera.getY()) {
+            // Simple vertical adjustment toward target
+            if (livingentity != null) {
+                double yDiff = livingentity.getY() - this.chimera.getY();
+                if (yDiff > 1.0D) {
+                    this.chimera.setDeltaMovement(this.chimera.getDeltaMovement().add(0.0D, 0.03D, 0.0D));
+                } else if (yDiff < -1.0D) {
+                    this.chimera.setDeltaMovement(this.chimera.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
+                }
+            } else {
                 this.chimera.setDeltaMovement(this.chimera.getDeltaMovement().add(0.0D, 0.02D, 0.0D));
             }
+
 
             if (this.operation != MoveControl.Operation.MOVE_TO || this.chimera.getNavigation().isDone()) {
                 this.chimera.setSpeed(0.0F);
@@ -831,7 +886,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         final double zDifference = block.getZ() - citizen.blockPosition().getZ();
         final double yDifference = block.getY() - (citizen.blockPosition().getY() + citizen.getEyeHeight());
         final double squareDifference = Math.sqrt(xDifference * xDifference + zDifference * zDifference);
-        final double intendedRotationYaw = (Math.atan2(zDifference, xDifference) * 180.0D / Math.PI) - 90.0;
+        final double intendedRotationYaw = Math.atan2(zDifference, xDifference) * 180.0D / Math.PI - 90.0;
         final double intendedRotationPitch = -(Math.atan2(yDifference, squareDifference) * 180.0D / Math.PI);
         citizen.yRot = (float) (updateRotation(citizen.getYRot(), intendedRotationYaw, 360.0) % 360.0F);
         citizen.xRot = (float) (updateRotation(citizen.getXRot(), intendedRotationPitch, 360.0) % 360.0F);
@@ -873,7 +928,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    public boolean isWithinMeleeAttackRange(LivingEntity pEntity) {
+    public boolean isWithinMeleeAttackRange(@NotNull LivingEntity pEntity) {
         return super.isWithinMeleeAttackRange(pEntity);
     }
 
