@@ -143,6 +143,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         // Targets players and mobs hurting it, avoid wilden friendly fire
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this, WildenGuardian.class, WildenStalker.class, WildenHunter.class));
+        //this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Animal.class, true));
 
         // Some low priority movement to give it life
         this.goalSelector.addGoal(6, new RandomStrollGoal(this, 1.2f) {
@@ -292,12 +293,9 @@ public class WildenChimera extends Monster implements GeoEntity {
             ((Runnable) () -> ChimeraMusic.play(WildenChimera.this)).run();
         }
 
-        /*
-        this.goalSelector.getAvailableGoals().forEach(g -> {
-            if (g.isRunning())
-                System.out.println(g.getGoal());
-        });
-        */
+        // written like this allows for hotswap
+        // this.goalSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).map(WrappedGoal::getGoal).forEach(System.out::println);
+
 
         if (!level.isClientSide && isDefensive()) {
             this.getNavigation().stop();
@@ -334,7 +332,14 @@ public class WildenChimera extends Monster implements GeoEntity {
             if (summonCooldown > 0) summonCooldown--;
             if (spikeCooldown > 0) spikeCooldown--;
             if (ramCooldown > 0) ramCooldown--;
-            if (rageTimer > 0) rageTimer--;
+
+            if (getTarget() != null && this.invulnerableTime == 0 && !this.isDefensive() && !this.isFlying() && (this.onGround() || isInWater())) {
+                var path = getNavigation().createPath(getTarget(), 1);
+                if (path == null || !path.canReach() || getTarget().getY() - (this.getY() + 2) >= 3) {
+                    rageTimer--;
+                }
+            }
+
         }
 
         if (!level.isClientSide && getPhaseSwapping() && !this.dead) {
@@ -427,7 +432,14 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public boolean canDive() {
-        return !isRamGoal && diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && (this.onGround() || this.isInWater()) && !isDefensive();
+        boolean targetUnderwater = this.getTarget() != null
+                && this.getTarget().isInWater()
+                && this.getTarget().getY() < this.getY() - 5;
+
+        return !isRamGoal && diveCooldown <= 0 && hasWings()
+                && !getPhaseSwapping() && !isFlying()
+                && (this.onGround() || targetUnderwater)
+                && !isDefensive();
     }
 
     public boolean canSpike() {
@@ -486,14 +498,14 @@ public class WildenChimera extends Monster implements GeoEntity {
     public boolean hurt(DamageSource source, float amount) {
         if (source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN))
             return false;
-        if (source.type().msgId().equals("cold"))
+        if (source.is(DamageTypes.FREEZE))
             amount = amount / 2;
         if (this.getPhaseSwapping())
             return false;
 
         Entity entity = source.getEntity();
         if (entity instanceof LivingEntity entity1 && !entity.equals(this)) {
-            if (isDefensive() && !source.type().msgId().equals("thorns")) {
+            if (isDefensive() && !source.is(DamageTypes.THORNS)) {
                 if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && BlockUtil.distanceFrom(entity.position, position) <= 3) {
                     entity.hurt(level.damageSources().thorns(this), 6.0f);
                 }
@@ -796,7 +808,7 @@ public class WildenChimera extends Monster implements GeoEntity {
             }
 
 
-            if (this.operation != MoveControl.Operation.MOVE_TO || this.chimera.getNavigation().isDone()) {
+            if (this.operation != MoveControl.Operation.MOVE_TO || this.chimera.getNavigation().isDone() || this.chimera.swinging) {
                 this.chimera.setSpeed(0.0F);
                 return;
             }

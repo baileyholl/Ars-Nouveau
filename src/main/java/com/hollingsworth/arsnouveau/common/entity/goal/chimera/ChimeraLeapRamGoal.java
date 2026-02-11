@@ -86,7 +86,7 @@ public class ChimeraLeapRamGoal extends Goal {
                 return;
             }
             breakBlocks();
-            if (boss.onGround()) {
+            if (boss.onGround() || boss.wantsToSwim()) {
                 Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(), 1);
                 if (path == null) {
                     return;
@@ -96,8 +96,13 @@ public class ChimeraLeapRamGoal extends Goal {
             attack();
         }
 
+
         if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 3f) {
             endRam();
+        }
+
+        if (timeCharging >= 200) {  // Add reasonable timeout
+            finished = true;
         }
     }
 
