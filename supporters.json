@@ -146,7 +146,8 @@
     "d4fb7e5f-f70e-48da-b1f5-5fd333ed8471",
     "2ab10392-33aa-476d-aaf2-c32cd3c7b360",
     "d6417972-585b-4091-862c-adc6e5e229d6",
-    "b40962ea-0577-4198-a9bf-02ad4da12339"
+    "b40962ea-0577-4198-a9bf-02ad4da12339",
+    "52737d1a-8a53-4179-ac2d-1726c9913876"
   ],
   "starbuncleAdoptions": [
     {
@@ -988,6 +989,12 @@
       "adopter": "shadowskyz",
       "color": "purple",
       "bio": "This scruffy starbuncle needs a little bit of tender loving care."
+    },
+    {
+      "name": "Rabbit",
+      "adopter": "Gamingregory",
+      "color": "blue",
+      "bio": "I like carrot!"
     }
   ]
 }
