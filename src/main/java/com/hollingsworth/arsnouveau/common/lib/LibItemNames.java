@@ -134,4 +134,5 @@ public class LibItemNames {
     public static final String ALAKARKINOS_SHARD = "alakarkinos_token";
     public static final String ENCHANTERS_GAUNTLET = "enchanters_gauntlet";
     public static final String ENCHANTERS_ROD = "enchanters_fishing_rod";
+    public static final String ARCHWOOD_BOAT = "archwood_boat";
 }

@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -81,7 +82,8 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
 
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
         boolean playerHoldingScroll = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof ScryerScroll;
-        BlockPos scryPos = playerHoldingScroll ? player.getItemInHand(InteractionHand.OFF_HAND).getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty())).pos().orElse(null) : data.pos().orElse(null);
+        GlobalPos globalPos = playerHoldingScroll ? player.getItemInHand(InteractionHand.OFF_HAND).getOrDefault(DataComponentRegistry.SCRY_DATA, new ScryPosData(Optional.empty())).pos().orElse(null) : data.pos().orElse(null);
+        BlockPos scryPos = globalPos == null ? null : globalPos.pos();
         if (scryPos == null) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.no_pos"));
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);

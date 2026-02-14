@@ -66,8 +66,28 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         if (fromList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
-
-        int ratePer = getTransferRate() / fromList.size();
+        int size = fromList.size();
+        for (BlockPos fromPos : fromList) {
+            if (!level.isLoaded(fromPos)) {
+                size--;
+                continue;
+            }
+            boolean canReceive;
+            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
+                canReceive = sourceHandler.canExtract();
+            } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
+                canReceive = getTransferRate(fromTile, this) > 0;
+            } else {
+                size--;
+                continue;
+            }
+            if (!canReceive) {
+                size--;
+            }
+        }
+        if (size == 0)
+            return;
+        int ratePer = getTransferRate() / size;
         if (ratePer == 0) {
             return;
         }
@@ -104,7 +124,28 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
         if (toList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
-        int ratePer = getSource() / toList.size();
+        int size = toList.size();
+        for (BlockPos toPos : toList) {
+            if (!level.isLoaded(toPos)){
+                size--;
+                continue;
+            }
+            boolean canReceive;
+            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
+                canReceive = sourceHandler.canReceive();
+            } else if (level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile) {
+                canReceive = getTransferRate(this, toTile) > 0;
+            } else {
+                size--;
+                continue;
+            }
+            if (!canReceive) {
+                size--;
+            }
+        }
+        if (size == 0)
+            return;
+        int ratePer = getSource() / size;
         if (ratePer == 0) {
             return;
         }

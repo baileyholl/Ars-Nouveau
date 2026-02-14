@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -8,14 +9,20 @@ import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.light.LightManager;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -23,6 +30,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +47,9 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -84,10 +94,42 @@ public class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
+
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+            LightManager.updateAll(event.getLevelRenderer());
+        }
+
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
             PantomimeRenderer.renderOutline(event.getPoseStack());
         }
+        // Build then render so sorted transparency works correctly
+        for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
+
+            PlanariumTile tile = renderer.get();
+            if (tile != null) {
+                PlanariumRenderer.buildRender(tile, event.getPoseStack(), Minecraft.getInstance().player);
+            }
+        }
+
+        for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
+
+            PlanariumTile tile = renderer.get();
+            if (tile != null) {
+                PlanariumRenderer.drawRender(tile, event.getPoseStack(), event.getProjectionMatrix(), event.getModelViewMatrix(), Minecraft.getInstance().player);
+            }
+        }
+        PlanariumRenderer.deferredRenders = new ArrayList<>(8);
+//        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
+//            renderer.onRenderStage(event);
+//        }
     }
+
+//    @SubscribeEvent
+//    public static void onClientTick(ClientTickEvent.Post event) {
+//        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
+//            renderer.onClientTick(event);
+//        }
+//    }
 
     @SubscribeEvent
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
@@ -168,5 +210,25 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientResourcesReload(RecipesUpdatedEvent event) {
         recipeChangeListeners.removeIf(p -> !p.test(event));
+    }
+
+    @SubscribeEvent
+    public static void clientPlayerLogin(ClientPlayerNetworkEvent.LoggingIn e) {
+        if (e.getPlayer() != null) {
+            if (Config.INFORM_LIGHTS.get()) {
+                Player entity = e.getPlayer();
+                PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.light_message").withStyle(ChatFormatting.GOLD));
+                Config.INFORM_LIGHTS.set(false);
+                Config.INFORM_LIGHTS.save();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
+        EventQueue.getClientQueue().clear();
+        PlanariumTile.dimManager.entries.clear();
+        PlanariumRenderer.structureRenderData = new HashMap<>();
+        PlanariumRenderer.deferredRenders = new ArrayList<>();
     }
 }

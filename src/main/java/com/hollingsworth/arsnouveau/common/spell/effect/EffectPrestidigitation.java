@@ -81,7 +81,7 @@ public class EffectPrestidigitation extends AbstractEffect {
     }
 
     public static void onInventoryTick(ItemStack stack, Level level, Entity entity, int inventorySlot, boolean isCurrentItem) {
-        if (!level.isClientSide || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
+        if (level.isClientSide || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
             return;
         }
         PrestidigitationData prestidigitationData = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());

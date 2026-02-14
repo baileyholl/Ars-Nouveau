@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.BookSlider;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
-import com.hollingsworth.arsnouveau.client.gui.buttons.ANButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SaveButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.ITooltipRenderer;
@@ -92,8 +91,8 @@ public class BaseBook extends BaseScreen {
         matrixStack.popPose();
     }
 
-    public <T extends ANButton> void clearButtons(List<T> buttons) {
-        for (ANButton b : buttons) {
+    public void clearButtons(List<? extends AbstractWidget> buttons) {
+        for (AbstractWidget b : buttons) {
             renderables.remove(b);
             children().remove(b);
         }
