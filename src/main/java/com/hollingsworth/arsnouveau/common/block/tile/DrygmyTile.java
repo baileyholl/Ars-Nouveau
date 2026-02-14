@@ -134,9 +134,8 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
         Set<ResourceLocation> uniqueEntities;
         this.nearbyEntities = new ArrayList<>();
         if (this.includeEntities) {
-            this.nearbyEntities.addAll(level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter())));
+            this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter()));
         }
-        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter()));
         for (BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)) {
             if (level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity) {
                 nearbyEntities.add(livingEntity);
