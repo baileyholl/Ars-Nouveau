@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -33,6 +34,11 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
+    protected float getWaterInertia() {
+        return 0.9F;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (!level.isClientSide && this.inGroundTime >= 1) {
@@ -41,17 +47,17 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return new ItemStack(Items.ARROW);
     }
 
     @Override
-    protected ItemStack getDefaultPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return new ItemStack(Items.ARROW);
     }
 
     @Override
-    protected boolean tryPickup(Player pPlayer) {
+    protected boolean tryPickup(@NotNull Player pPlayer) {
         return false;
     }
 
@@ -106,7 +112,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
-    protected void doPostHurtEffects(LivingEntity entity) {
+    protected void doPostHurtEffects(@NotNull LivingEntity entity) {
         super.doPostHurtEffects(entity);
         if (!level.isClientSide) {
 
@@ -122,7 +128,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(@NotNull Entity entity) {
         if (entity instanceof EntityChimeraProjectile) {
             return false;
         }
@@ -145,7 +151,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ENTITY_CHIMERA_SPIKE.get();
     }
 }
