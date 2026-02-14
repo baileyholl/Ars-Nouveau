@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -46,13 +47,25 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
+        InventoryManager manager = null;
+        if (spellContext.getNextEffect() instanceof EffectPickup) {
+            manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+        }
+
         if (entity instanceof IShearable shearable) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(world, spellStats, shears);
             if (shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition())) {
                 // TODO: restore fortune bonus on augment
                 List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition());
-                items.forEach(i -> world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
+                for (ItemStack i : items) {
+                    if (manager != null) {
+                        i = manager.insertStack(i);
+                    }
+                    if (!i.isEmpty()) {
+                        world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i));
+                    }
+                }
             }
         } else {
             float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
@@ -93,8 +106,20 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         applyEnchantments(world, spellStats, shears);
         if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, p)) {
             // TODO: restore fortune bonus on augment
+            InventoryManager manager = null;
+            if (spellContext.getNextEffect() instanceof EffectPickup) {
+                manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+            }
+
             List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p);
-            items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
+            for (ItemStack i : items) {
+                if (manager != null) {
+                    i = manager.insertStack(i);
+                }
+                if (!i.isEmpty()) {
+                    world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i));
+                }
+            }
         }
         Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
         entity.setItemInHand(InteractionHand.MAIN_HAND, shears);

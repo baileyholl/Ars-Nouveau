@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -26,8 +27,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class SpellContext implements Cloneable {
+    private static final Object2ObjectOpenHashMap<Object, SpellContext> ASSOCIATIONS = new Object2ObjectOpenHashMap<>();
 
     private boolean isCanceled;
     @Nullable
@@ -329,6 +332,44 @@ public class SpellContext implements Cloneable {
     @Nullable
     public CancelReason getCancelReason() {
         return cancelReason;
+    }
+
+    @Nullable
+    public AbstractSpellPart getNextMatchingPart(Predicate<AbstractSpellPart> test) {
+        var spell = this.spell.unsafeList();
+        for (int i = this.getCurrentIndex(); i < spell.size(); i++) {
+            var part = spell.get(i);
+            if (test.test(part)) {
+                return part;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public AbstractEffect getNextEffect() {
+        return this.getNextMatchingPart(p -> p instanceof AbstractEffect) instanceof AbstractEffect effect ? effect : null;
+    }
+
+    @Nullable
+    public SpellContext associate(Object o) {
+        return ASSOCIATIONS.put(o, this);
+    }
+
+    @Nullable
+    public static SpellContext getAsssociated(Object o) {
+        return ASSOCIATIONS.get(o);
+    }
+
+    @Nullable
+    public static SpellContext removeAssociation(Object o) {
+        return ASSOCIATIONS.remove(o);
+    }
+
+    @Nullable
+    public static void clearAssociations() {
+        ASSOCIATIONS.clear();
     }
 
     /**

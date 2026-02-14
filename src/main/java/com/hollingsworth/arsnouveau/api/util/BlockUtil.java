@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -34,15 +35,12 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static java.lang.Math.abs;
 
 public class BlockUtil {
-
     public static BlockPos toPos(Vec3 vec) {
         return BlockPos.containing(vec.x, vec.y, vec.z);
     }
@@ -317,7 +315,7 @@ public class BlockUtil {
      * Attempts to harvest a block as if the player with the given uuid
      * harvested it while holding the passed item.
      *
-     * @param world    The world the block is in.
+     * @param level    The world the block is in.
      * @param pos      The position of the block.
      * @param mainhand The main hand item that the player is supposibly holding.
      * @param source   The UUID of the breaking player.
@@ -377,6 +375,81 @@ public class BlockUtil {
                     }
 
                     return true;
+                }
+            }
+        }
+
+    }
+
+    /**
+     * A copy of {@link BlockUtil#breakExtraBlock(ServerLevel, BlockPos, ItemStack, UUID, boolean)} that associates the breaker to a SpellContext.
+     *
+     * @param spellContext SpellContext to associate the breaker with.
+     * @param level    The world the block is in.
+     * @param pos      The position of the block.
+     * @param mainhand The main hand item that the player is supposibly holding.
+     * @param source   The UUID of the breaking player.
+     * @return If the block was successfully broken.
+     */
+    public static boolean breakExtraBlock(SpellContext spellContext, ServerLevel level, BlockPos pos, ItemStack mainhand, @Nullable UUID source, boolean bypassTool) {
+        BlockState state = level.getBlockState(pos);
+        FakePlayer player = ANFakePlayer.getPlayer(level);
+        if (source != null) {
+            var username = UsernameCache.getLastKnownUsername(source);
+            if (username != null) {
+                player = FakePlayerFactory.get(level, new GameProfile(source, username));
+                Player realPlayer = level.getPlayerByUUID(source);
+                if (realPlayer != null) {
+                    // Move the fakeplayer to the position of the real player, if one is known
+                    player.setPos(realPlayer.position());
+                }
+            }
+        }
+
+        player.getInventory().items.set(player.getInventory().selected, mainhand);
+
+        if (!bypassTool && (state.getDestroySpeed(level, pos) < 0 || !state.canHarvestBlock(level, pos, player))) {
+            return false;
+        }
+
+        GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
+        BlockEvent.BreakEvent exp = CommonHooks.fireBlockBreak(level, type, player, pos, state);
+        if (exp.isCanceled()) {
+            return false;
+        } else {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            Block block = state.getBlock();
+            if (block instanceof GameMasterBlock && !player.canUseGameMasterBlocks()) {
+                level.sendBlockUpdated(pos, state, state, 3);
+                return false;
+            } else if (player.blockActionRestricted(level, pos, type)) {
+                return false;
+            } else {
+                try {
+                    spellContext.associate(player);
+                    BlockState newState = block.playerWillDestroy(level, pos, state, player);
+                    if (player.getAbilities().instabuild) {
+                        removeBlock(level, player, pos, newState, false);
+                        return true;
+                    } else {
+                        ItemStack tool = player.getMainHandItem();
+                        ItemStack toolCopy = tool.copy();
+                        boolean canHarvest = bypassTool || newState.canHarvestBlock(level, pos, player);
+                        tool.mineBlock(level, newState, pos, player);
+                        boolean removed = removeBlock(level, player, pos, newState, canHarvest);
+
+                        if (canHarvest && removed) {
+                            block.playerDestroy(level, player, pos, newState, blockEntity, toolCopy);
+                        }
+
+                        if (tool.isEmpty() && !toolCopy.isEmpty()) {
+                            EventHooks.onPlayerDestroyItem(player, toolCopy, InteractionHand.MAIN_HAND);
+                        }
+
+                        return true;
+                    }
+                } finally {
+                    SpellContext.removeAssociation(player);
                 }
             }
         }
