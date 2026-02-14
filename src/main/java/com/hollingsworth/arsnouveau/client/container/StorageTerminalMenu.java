@@ -8,7 +8,10 @@ import com.hollingsworth.arsnouveau.common.network.UpdateStorageItemsPacket;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -16,10 +19,13 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.apache.commons.lang3.math.Fraction;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -93,7 +99,12 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
     }
 
     public enum SlotAction {
-        PULL_OR_PUSH_STACK, PULL_ONE, SPACE_CLICK, SHIFT_PULL, GET_HALF, GET_QUARTER //CRAFT
+        PULL_OR_PUSH_STACK,
+        PULL_ONE,
+        SPACE_CLICK,
+        SHIFT_PULL,
+        GET_HALF,
+        GET_QUARTER
     }
 
     private Object2LongMap<StoredItemStack> itemLongMap = new Object2LongOpenHashMap<>();
@@ -258,7 +269,66 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                 }
             } else if (act == SlotAction.PULL_ONE) {
                 ItemStack stack = getCarried();
-                if (clicked == null) return;
+                if (stack.getItem() instanceof BundleItem) {
+                    if (clicked != null) {
+                        if (!clicked.getStack().canFitInsideContainerItems()) {
+                            return;
+                        }
+
+                        var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+                        if (bundleContents != null && Fraction.ONE.subtract(bundleContents.weight()).compareTo(BundleContents.getWeight(clicked.getStack().copyWithCount(1))) < 0) {
+                            return;
+                        }
+
+                        StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
+                        if (pulled != null) {
+                            var actual = pulled.getActualStack();
+                            ArrayList<ItemStack> newItems = new ArrayList<>();
+                            if (bundleContents != null) {
+                                newItems.ensureCapacity(bundleContents.size() + 1);
+                                for (var item : bundleContents.items()) {
+                                    if (!item.isEmpty()) {
+                                        if (!actual.isEmpty() && ItemStack.isSameItemSameComponents(item, actual)) {
+                                            var amount = Math.min(actual.getCount(), item.getMaxStackSize() - item.getCount());
+                                            item.setCount(item.getCount() + amount);
+                                            actual.setCount(actual.getCount() - amount);
+                                        }
+                                        newItems.add(item);
+                                    }
+                                }
+                            }
+                            if (!actual.isEmpty()) {
+                                newItems.add(pulled.getActualStack());
+                            }
+
+                            player.level.playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                            stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
+                        }
+                    } else {
+                        var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+                        if (bundleContents == null) {
+                            return;
+                        }
+
+                        ArrayList<ItemStack> newItems = new ArrayList<>();
+                        for (var item : bundleContents.items()) {
+                            item = te.pushStack(item, selectedTab);
+                            if (!item.isEmpty()) {
+                                newItems.add(item);
+                            }
+                        }
+
+                        player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                        stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
+                    }
+
+                    return;
+                }
+
+                if (clicked == null || clicked.getStack() == null || clicked.getQuantity() <= 0) {
+                    return;
+                }
+
                 if (pullOne) {
                     StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
                     if (pulled != null) {
@@ -286,6 +356,69 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
             } else if (act == SlotAction.GET_HALF) {
                 ItemStack stack = getCarried();
                 if (!stack.isEmpty()) {
+                    if (stack.getItem() instanceof BundleItem) {
+                        if (clicked != null) {
+                            if (!clicked.getStack().canFitInsideContainerItems()) {
+                                return;
+                            }
+
+                            var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+                            int canFit = clicked.getStack().getMaxStackSize();
+                            if (bundleContents != null) {
+                                canFit = Fraction.ONE.subtract(bundleContents.weight()).divideBy(BundleContents.getWeight(clicked.getStack().copyWithCount(1))).intValue();
+                            }
+
+                            StoredItemStack pulled = te.pullStack(clicked, canFit, selectedTab);
+                            if (pulled != null) {
+                                var actual = pulled.getActualStack();
+                                ArrayList<ItemStack> newItems = new ArrayList<>();
+                                if (bundleContents != null) {
+                                    newItems.ensureCapacity(bundleContents.size() + 1);
+                                    for (var item : bundleContents.items()) {
+                                        if (!item.isEmpty()) {
+                                            if (!actual.isEmpty() && ItemStack.isSameItemSameComponents(item, actual)) {
+                                                var amount = Math.min(actual.getCount(), item.getMaxStackSize() - item.getCount());
+                                                item.setCount(item.getCount() + amount);
+                                                actual.setCount(actual.getCount() - amount);
+                                            }
+                                            newItems.add(item);
+                                        }
+                                    }
+                                }
+                                if (!actual.isEmpty()) {
+                                    newItems.add(pulled.getActualStack());
+                                }
+
+                                player.level.playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                                stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
+                            }
+                        } else {
+                            var bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
+                            if (bundleContents == null) {
+                                return;
+                            }
+
+                            var pushed = false;
+                            ArrayList<ItemStack> newItems = new ArrayList<>();
+                            for (var item : bundleContents.items()) {
+                                if (!pushed && !item.isEmpty()) {
+                                    item = te.pushStack(item, selectedTab);
+                                    if (!item.isEmpty()) {
+                                        newItems.add(item);
+                                    }
+                                    player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                                    pushed = true;
+                                    continue;
+                                }
+
+                                newItems.add(item);
+                            }
+
+                            stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
+                        }
+
+                        return;
+                    }
                     ItemStack stack1 = stack.split(Math.max(Math.min(stack.getCount(), stack.getMaxStackSize()) / 2, 1));
                     ItemStack itemstack = te.pushStack(stack1, selectedTab);
                     stack.grow(!itemstack.isEmpty() ? itemstack.getCount() : 0);
