@@ -1,12 +1,15 @@
 # Changelog
-Adds Info icon to spell crafting UI for information on importing/exporting spells and special keybinds for moving glyphs between slots
+Adds Bundle interactions within the Bookwyrm Lectern UI (Qther)
 
-Adds Clear button to particle effects UI to reset the particle timeline back to its default values
+Adds Archwood Boat (Liam Broome)
 
-Fixes Prestidigitation Items not rendering particles for other players
+Fixes archwood trapdoor rotations (Liam Broome)
 
-Fixes glyphs missing between pages when spell crafting
+Source jars can now be linked to Turrets to direct source consumption (Qther)
 
-Fixes Filter category displaying the wrong tooltip
+Fixes spell descriptions having hardcoded 'starter spell' descriptions even if the config was changed (Will Parker)
 
+Various fixes to Chimera AI and swimming (Alexthw)
+
+Fixes spell damage calculations involving hex, fall damage, and bastion effects (Alexthw)
 
