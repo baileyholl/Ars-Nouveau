@@ -57,18 +57,23 @@ public class ChimeraRageGoal extends Goal {
         chimera.resetCooldowns();
         chimera.removeAllEffects();
         chimera.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100 + 100 * chimera.getPhase(), 3));
-        chimera.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300 + 300 * chimera.getPhase(), chimera.getPhase()));
+        chimera.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300 + 300 * chimera.getPhase(), chimera.getPhase() / 2));
         LivingEntity target = chimera.getTarget();
         if (target != null && !target.onGround()) {
             target.removeEffect(MobEffects.SLOW_FALLING);
         }
         if (target != null) {
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(chimera.level, new Spell().add(MethodTouch.INSTANCE).add(EffectLaunch.INSTANCE)
+            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(chimera.level, new Spell().add(MethodTouch.INSTANCE)
+                    .add(EffectLaunch.INSTANCE)
+                    .add(EffectLaunch.INSTANCE)
                     .add(EffectDelay.INSTANCE)
                     .add(EffectPull.INSTANCE)
                     .add(AugmentAmplify.INSTANCE, 2)
                     .add(EffectGravity.INSTANCE)
-                    .add(AugmentExtendTime.INSTANCE), chimera, new LivingCaster(chimera)));
+                    .add(AugmentExtendTime.INSTANCE),
+                    chimera,
+                    new LivingCaster(chimera))
+            );
             resolver.onCastOnEntity(target);
             PortUtil.sendMessage(target, Component.translatable("ars_nouveau.chimera.rage"));
         }
