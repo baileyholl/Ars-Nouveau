@@ -196,12 +196,13 @@ dependencies {
         }
     }
 
-    jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21') {
+    jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21.1') {
         version {
-            strictly '[1.0.10,)'
-            prefer '1.0.7.38'
+            strictly "[${nuggets_version},)"
+            prefer "${nuggets_version}"
         }
     })
+
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
 
     // Apotheosis
