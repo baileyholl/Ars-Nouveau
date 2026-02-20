@@ -205,7 +205,14 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     public Component getBookDescLang() {
-        return Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath());
+        var localization = Component.empty();
+        if (STARTER_SPELL != null && STARTER_SPELL.get()) {
+            localization.append(Component.translatable(getRegistryName().getNamespace() + ".glyph_desc.dynamic.starter_spell"));
+            localization.append(" ");
+        }
+
+        localization.append(Component.translatable(getRegistryName().getNamespace() + ".glyph_desc." + getRegistryName().getPath()));
+        return localization;
     }
 
     public @Nullable ModConfigSpec CONFIG;

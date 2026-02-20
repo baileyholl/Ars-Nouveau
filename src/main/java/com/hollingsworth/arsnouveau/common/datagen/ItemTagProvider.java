@@ -257,5 +257,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(ItemTags.MINING_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_GAUNTLET.get());
         this.tag(ItemTags.MINING_LOOT_ENCHANTABLE).add(ItemsRegistry.ENCHANTERS_GAUNTLET.get());
         this.tag(APPARATUS_PRESERVES).add(ItemsRegistry.SPELL_PARCHMENT.get());
+
+        this.tag(ItemTags.BOATS).add(ItemsRegistry.ARCHWOOD_BOAT.get());
     }
 }
