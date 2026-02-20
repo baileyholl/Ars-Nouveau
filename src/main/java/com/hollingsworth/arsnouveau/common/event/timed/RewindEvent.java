@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nullable;
@@ -53,6 +54,7 @@ public class RewindEvent implements ITimedEvent {
             if (entity instanceof ServerPlayer) {
                 NeoForge.EVENT_BUS.addListener(this::onEntityRemoved);
             }
+            NeoForge.EVENT_BUS.addListener(this::onChangeDimension);
             this.registeredEvents = true;
         }
         long eventGameTime = startGameTime - this.rewindTicks;
@@ -104,6 +106,17 @@ public class RewindEvent implements ITimedEvent {
         if (entity == event.getEntity()) {
             this.removeWeightlessness();
             NeoForge.EVENT_BUS.unregister(this);
+        }
+    }
+
+    public void onChangeDimension(EntityTravelToDimensionEvent event) {
+        if (entity == null) {
+            NeoForge.EVENT_BUS.unregister(this);
+            return;
+        }
+
+        if (!event.isCanceled() && entity == event.getEntity() && event.getEntity() instanceof IRewindable rewindable) {
+            rewindable.getMotions().clear();
         }
     }
 

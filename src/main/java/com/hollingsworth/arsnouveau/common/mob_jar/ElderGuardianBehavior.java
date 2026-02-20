@@ -17,7 +17,7 @@ import java.util.List;
 public class ElderGuardianBehavior extends JarBehavior<ElderGuardian> {
     @Override
     public void tick(MobJarTile tile) {
-        if (!tile.getBlockState().getValue(BlockStateProperties.POWERED)) return;
+        if (!isPowered(tile)) return;
         if (tile.getLevel().getGameTime() % 1200 == 0) {
             applyMiningFatigue(tile);
         }

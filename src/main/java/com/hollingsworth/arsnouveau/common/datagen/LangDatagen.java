@@ -135,6 +135,7 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.ars_stencil.desc", "Nouveau");
         add("item.ars_nouveau.archwood_sign", "Archwood Sign");
         add("item.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
+        add("item.ars_nouveau.archwood_boat", "Archwood Boat");
         add("block.ars_nouveau.archwood_sign", "Archwood Sign");
         add("block.ars_nouveau.archwood_hanging_sign", "Archwood Hanging Sign");
         add("block.ars_nouveau.archwood_wall_sign", "Archwood Sign");
@@ -231,6 +232,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.connections.cleared", "Connections cleared.");
         add("ars_nouveau.connections.take", "Relay set to take from %s");
         add("ars_nouveau.connections.send", "Relay set to send to %s");
+        add("ars_nouveau.connections.turret.take_from", "Turret set to take from %s");
         add("item.minecraft.splash_potion.effect.mana_regen_potion_strong", "Splash Potion of Mana Regeneration");
         add("item.minecraft.splash_potion.effect.mana_regen_potion", "Splash Potion of Mana Regeneration");
         add("item.minecraft.splash_potion.effect.mana_regen_potion_long", "Splash Potion of Mana Regeneration");
@@ -284,6 +286,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.purple_archwood_wood", "Vexing Archwood Wood");
         add("block.ars_nouveau.blue_archwood_wood", "Cascading Archwood Wood");
         add("ars_nouveau.connections.fail", "Too far away.");
+        add("ars_nouveau.connections.dimension_mismatch", "Can't connect to a different dimension.");
         add("block.ars_nouveau.archwood_slab", "Archwood Slab");
         add("block.ars_nouveau.archwood_fence", "Archwood Fence");
         add("block.ars_nouveau.archwood_fence_gate", "Archwood Fence Gate");
@@ -414,6 +417,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.whirlisprig.tooltip_mood", "Mood: ");
         add("ars_nouveau.source_jar.fullness", "%d%% full");
         add("ars_nouveau.spell_turret.casting", "Casting: ");
+        add("ars_nouveau.spell_turret.linked_source_provider", "Taking source from %s.");
         add("ars_nouveau.wixie.crafting", "Crafting: ");
         add("ars_nouveau.wixie.need_mana", "Source needed.");
         add("ars_nouveau.wixie.needs", "Needs: ");
@@ -635,6 +639,8 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.enchanting_apparatus", "Enchanting Apparatus");
         add("ars_nouveau.armor_upgrade", "Magic Armor Upgrade");
 
+        add("ars_nouveau.glyph_desc.dynamic.starter_spell", "A spell you start with.");
+
         add("ars_nouveau.page.archwood", "Archwood Trees");
         add("ars_nouveau.page1.archwood", "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands. Archwood Trees also have a chance to spawn magical fruits that can be consumed or brewed into potions.");
 
@@ -701,7 +707,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.warp_portal", "Warp Portal");
         add("ars_nouveau.page4.warp_portal", "A magical portal that can send players, mobs, spells, and items to any location in the same dimension.");
         add("ars_nouveau.page.ritual_brazier", "A brazier that may be used as decoration or for performing rituals. To light the brazier for decoration, cast a Light spell on the brazier. The color of the brazier corresponds with the color of the spell. Applying a redstone signal will disable a running ritual. For information on performing rituals, see the dedicated section on rituals.");
-        add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
+        add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. To cast spells, turrets will draw source from linked or nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
         add("ars_nouveau.page2.basic_spell_turret", "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.");
         add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, Sensitive and Redstone glyphs for free.");
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");
@@ -1794,6 +1800,18 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page.decor_blossom", "Decor Blossoms will create Prestidigitation particles at a wireless location. To set the particles, cast Prestidigitation on the block. Then use the Dominion Wand to set the desired location. Casting Dispel will remove the particles, while using the dominion wand while sneaking will remove the location and particles.");
         add("ars_nouveau.learn_glyph", "Unlocked %s");
         add("ars_nouveau.already_learned", "You have already learned this Glyph.");
+        add("block.ars_nouveau.planarium", "Planarium");
+        add("ars_nouveau.planarium.set_name", "Cast Name or set a name in an Anvil to create a dimension.");
+        add("ars_nouveau.set_jar_spawn", "Jar spawn point set.");
+        add("block.ars_nouveau.dim_boundary", "Dimension Boundary");
+        add("biome.ars_nouveau.jar", "Jar");
+        add("ars_nouveau.jar_spawn_out_of_bounds", "Cannot set jar spawn point out of bounds.");
+        add("ars_nouveau.page1.planarium", "The Planarium allows for the creation of custom pocket dimensions. Blocks placed within the jar will be rendered inside the Planarium. To create a new dimension, name a Planarium with the Name glyph or an anvil. Interact with the planarium while sneaking to enter the jar.\nThe spawn point of the Planarium can be set by using the Dominion Wand on a boundary of the jar, and then using the wand again on your desired spawn point. To exit the jar, simply break any wall of the dimension.");
+        add("ars_nouveau.form_icon_tooltip", "Forms: Appear at the start of the spell and determine how it is cast.");
+        add("ars_nouveau.augment_icon_tooltip", "Augments: Appear after Forms and Effects and modifies how they behave.");
+        add("ars_nouveau.effect_icon_tooltip", "Effects: Determines what the spell does after hitting a target.");
+        add("ars_nouveau.filter_icon_tooltip", "Filters: Prevents the spell from resolving if the target does not match the filter.");
+        add("ars_nouveau.spell_book_info_tooltip", "Tips and Tricks: \n• Middle-Click a glyph in the spell to add an empty space to the left of it.\n• Press 0-9 when hovering your mouse over a glyph to add it to that spell slot.\n• Ctrl + C to copy the spell and its particles.\n• Ctrl + V to paste a spell.");
     }
 
     public void addCategory(String key, String value) {

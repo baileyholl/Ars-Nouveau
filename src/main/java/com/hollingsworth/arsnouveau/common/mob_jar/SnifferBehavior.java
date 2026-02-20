@@ -22,7 +22,7 @@ public class SnifferBehavior extends JarBehavior<Sniffer> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if (!(tile.getLevel() instanceof ServerLevel level)) {
+        if (!(tile.getLevel() instanceof ServerLevel level) || isPowered(tile)) {
             return;
         }
 

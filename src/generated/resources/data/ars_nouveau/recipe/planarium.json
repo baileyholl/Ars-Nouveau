@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:stable_warp_scroll"
+    },
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:mob_jar"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:planarium"
+  },
+  "sourceCost": 0
+}

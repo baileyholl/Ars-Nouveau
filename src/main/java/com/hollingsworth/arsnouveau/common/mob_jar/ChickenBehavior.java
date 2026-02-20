@@ -10,7 +10,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 public class ChickenBehavior extends JarBehavior<Chicken> {
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide)
+        if (tile.getLevel().isClientSide || isPowered(tile))
             return;
         Chicken chicken = this.entityFromJar(tile);
         if (isEntityBaby(chicken)) {

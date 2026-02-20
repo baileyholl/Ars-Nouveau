@@ -23,6 +23,7 @@ import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
+import com.hollingsworth.arsnouveau.common.world.dimension.JarDimensionEffects;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -50,10 +51,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -99,8 +97,11 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ITEM_DETECTOR_TILE.get(), ItemDetectorRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_TILE.get(), RepositoryRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REDSTONE_RELAY_TILE.get(), RedstoneRelayRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.PLANARIUM_TILE.get(), PlanariumRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (t) -> new GenericTileRenderer<>(t, new RepoControllerModel()));
         event.registerBlockEntityRenderer(BlockRegistry.DECOR_BLOSSOM_TILE.get(), BlossomRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.PLANARIUM_PROJECTOR_TILE.get(), PlanariumProjectorRenderer::new);
+//        event.registerBlockEntityRenderer(BlockRegistry.SCRYER_PLANARIUM_TILE.get(), ScryerPlanariumRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(), StyledSpellRender::new);
         event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(),
@@ -194,6 +195,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.BUBBLE.get(), BubbleRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_HOOK.get(), FishingHookRenderer::new);
 
+        event.registerEntityRenderer(ModEntities.ARCHWOOD_BOAT.get(), context -> new ArchwoodBoatRenderer(context, false));
     }
 
     public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {
@@ -229,6 +231,13 @@ public class ClientHandler {
         event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("spell_hud"), GuiSpellHUD.OVERLAY);
 
     }
+
+
+    @SubscribeEvent
+    public static void registerDimSpecialEffects(final RegisterDimensionSpecialEffectsEvent evt) {
+        evt.register(ArsNouveau.prefix("jar"), new JarDimensionEffects());
+    }
+
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {

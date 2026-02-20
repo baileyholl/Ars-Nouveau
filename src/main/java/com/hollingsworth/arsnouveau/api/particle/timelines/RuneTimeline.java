@@ -36,7 +36,7 @@ public class RuneTimeline extends BaseTimeline<RuneTimeline> {
     }
 
     public ParticleColor getColor() {
-        return propMap.getOrDefault(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty()).particleColor;
+        return propMap.getParticleColor();
     }
 
     public String getTexture() {

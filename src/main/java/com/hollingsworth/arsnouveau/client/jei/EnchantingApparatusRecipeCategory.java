@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusRecipe> extends MultiInputCategory<T> {
@@ -26,9 +27,9 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
     }
 
     @Override
-    public RecipeType<T> getRecipeType() {
+    public RecipeType<RecipeHolder<T>> getRecipeType() {
         //noinspection unchecked
-        return (RecipeType<T>) JEIArsNouveauPlugin.ENCHANTING_APP_RECIPE_TYPE;
+        return (RecipeType<RecipeHolder<T>>) (RecipeType<?>) JEIArsNouveauPlugin.ENCHANTING_APP_RECIPE_TYPE.get();
     }
 
     @Override
@@ -47,7 +48,8 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
     }
 
     @Override
-    public void draw(EnchantingApparatusRecipe recipe, @NotNull IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<T> recipeHolder, @NotNull IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        EnchantingApparatusRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
         if (recipe.consumesSource())
             guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 10, false);

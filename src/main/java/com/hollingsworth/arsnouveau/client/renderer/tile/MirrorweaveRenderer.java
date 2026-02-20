@@ -48,7 +48,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
             return;
 
         if (tileEntityIn.renderInvalid) {
-            updateCulling(tileEntityIn, tileEntityIn.getStateForCulling());
+            updateCulling(tileEntityIn);
         }
         if (tileEntityIn.disableRender) {
             return;
@@ -60,7 +60,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
         ModelBlockRenderer.clearCache();
     }
 
-    public void updateCulling(MirrorWeaveTile tileEntityIn, BlockState renderState) {
+    public void updateCulling(MirrorWeaveTile tileEntityIn) {
         boolean disableEntireRender = true;
         tileEntityIn.renderInvalid = false;
         for (Direction direction : DIRECTIONS) {
@@ -71,7 +71,7 @@ public class MirrorweaveRenderer<T extends MirrorWeaveTile> implements BlockEnti
                 blockingState = neighborTile.getStateForCulling();
             }
             var blockingShape = blockingState.getOcclusionShape(tileEntityIn.getLevel(), blockingPos);
-            if (!tileEntityIn.shouldRenderFace(renderState, blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)) {
+            if (!tileEntityIn.shouldRenderFace(blockingState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), direction, blockingPos)) {
                 continue;
             }
             if (!blockingState.canOcclude()) {

@@ -21,13 +21,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.crafting.RecipeHolder;import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecipe> {
+public class ScryRitualRecipeCategory implements IRecipeCategory<RecipeHolder<ScryRitualRecipe>> {
     public static final ResourceLocation SCRY_RITUAL = ArsNouveau.prefix(RitualLib.SCRYING);
     private final IDrawableAnimated arrow;
     public IDrawable background;
@@ -40,8 +40,8 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
     }
 
     @Override
-    public RecipeType<ScryRitualRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.SCRY_RITUAL_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<ScryRitualRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.SCRY_RITUAL_RECIPE_TYPE.get();
     }
 
     @Override
@@ -60,13 +60,14 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<ScryRitualRecip
     }
 
     @Override
-    public void draw(ScryRitualRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<ScryRitualRecipe> recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
         background.draw(matrixStack, 0, 0);
         arrow.draw(matrixStack, 48, 5);
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ScryRitualRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ScryRitualRecipe> recipeHolder, IFocusGroup focuses) {
+        ScryRitualRecipe recipe = recipeHolder.value();
         List<ItemStack> items = new ArrayList<>();
         for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(recipe.highlight())) {
             items.add(blockHolder.value().asItem().getDefaultInstance());

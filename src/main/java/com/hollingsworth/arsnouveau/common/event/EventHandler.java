@@ -249,40 +249,48 @@ public class EventHandler {
         var container = e.getContainer();
         var source = container.getSource();
         var amount = container.getNewDamage();
-        if (e.getEntity().hasEffect(ModPotions.DEFENCE_EFFECT) && (source.is(DamageTypes.MAGIC) || source.is(DamageTypes.GENERIC) || source.is(DamageTypes.MOB_ATTACK))) {
-            if (amount > 0.5) {
-                container.setNewDamage((float) Math.max(0.5, amount - 1.0f - e.getEntity().getEffect(ModPotions.DEFENCE_EFFECT).getAmplifier()));
-            }
+        LivingEntity entity = e.getEntity();
+
+        // Damage Buffs first
+        if (source.is(DamageTypes.LIGHTNING_BOLT) && entity.hasEffect(ModPotions.SHOCKED_EFFECT)) {
+            amount += 3.0f + 3.0f * entity.getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
         }
 
-        if (source.is(DamageTypes.LIGHTNING_BOLT) && e.getEntity().hasEffect(ModPotions.SHOCKED_EFFECT)) {
-            float damage = amount + 3.0f + 3.0f * e.getEntity().getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
-            container.setNewDamage(Math.max(0, damage));
-        }
-        LivingEntity entity = e.getEntity();
         if (entity.hasEffect(ModPotions.HEX_EFFECT)
                 && (entity.hasEffect(MobEffects.POISON)
                 || entity.hasEffect(MobEffects.WITHER)
                 || entity.isOnFire()
                 || entity.hasEffect(ModPotions.SHOCKED_EFFECT)
                 || entity.getTicksFrozen() >= entity.getTicksRequiredToFreeze())) {
-            container.setNewDamage(amount + 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
+            amount += 0.5f + 0.33f * entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier();
         }
+
         double warding = PerkUtil.valueOrZero(entity, PerkAttributes.WARDING);
         double feather = PerkUtil.valueOrZero(entity, PerkAttributes.FEATHER);
+
+        // Now Damage Reduction
+        if (entity.hasEffect(ModPotions.DEFENCE_EFFECT) && (source.is(DamageTypes.MAGIC) || source.is(DamageTypes.GENERIC) || source.is(DamageTypes.MOB_ATTACK))) {
+            if (amount > 0.5) {
+                amount = (float) Math.max(0.5, amount - 1.0f - entity.getEffect(ModPotions.DEFENCE_EFFECT).getAmplifier());
+            }
+        }
+
         if (source.is(Tags.DamageTypes.IS_MAGIC)) {
-            container.setNewDamage((float) (amount - warding));
+            amount -= (float) warding;
         }
 
         if (source.is(DamageTypes.FALL)) {
-            container.setNewDamage((float) (amount - (amount * feather)));
+            amount -= (float) (amount * feather);
         }
+
+        // Update the damage amount with all modifications applied
+        container.setNewDamage(Math.max(0, amount));
     }
 
     @SubscribeEvent
     public static void fallEvent(LivingFallEvent fallEvent) {
         double jumpBonus = PerkUtil.countForPerk(JumpHeightPerk.INSTANCE, fallEvent.getEntity());
-        fallEvent.setDistance((float) (fallEvent.getDistance() - (jumpBonus / 0.1)));
+        fallEvent.setDistance((float) (fallEvent.getDistance() - jumpBonus / 0.1));
         if (CuriosUtil.hasItem(fallEvent.getEntity(), ItemsRegistry.BELT_OF_LEVITATION.asItem())) {
             fallEvent.setDistance(Math.max(0, fallEvent.getDistance() - 6));
         }

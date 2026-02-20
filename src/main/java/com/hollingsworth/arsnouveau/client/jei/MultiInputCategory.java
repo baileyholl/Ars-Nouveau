@@ -8,13 +8,15 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class MultiInputCategory<T> implements IRecipeCategory<T> {
+public abstract class MultiInputCategory<T extends Recipe<?>> implements IRecipeCategory<RecipeHolder<T>> {
     protected Function<T, MultiProvider> multiProvider;
     protected Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
@@ -23,8 +25,8 @@ public abstract class MultiInputCategory<T> implements IRecipeCategory<T> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {
-        MultiProvider provider = multiProvider.apply(recipe);
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipeHolder, IFocusGroup focuses) {
+        MultiProvider provider = multiProvider.apply(recipeHolder.value());
         List<Ingredient> inputs = provider.input;
         double angleBetweenEach = 360.0 / inputs.size();
         if (provider.optionalCenter != null)

@@ -1,0 +1,22 @@
+{
+  "effects":
+  {
+    "fog_color": 0,
+    "sky_color": 0,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "music": {
+      "max_delay": 24000,
+      "min_delay": 12000,
+      "replace_current_music": false,
+      "sound": "minecraft:music.overworld.forest"
+    }
+  },
+  "has_precipitation": false,
+  "temperature": 0.8,
+  "downfall": 0.4,
+  "carvers": {},
+  "features": [],
+  "spawners": {},
+  "spawn_costs": {}
+}

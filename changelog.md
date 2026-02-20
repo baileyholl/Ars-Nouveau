@@ -1,15 +1,15 @@
 # Changelog
-Adds config to invert lectern scrolling (qther)
+Adds Bundle interactions within the Bookwyrm Lectern UI (Qther)
 
-Adds compatibility and fixes crash with LambDynamicLights (LambdAurora)
+Adds Archwood Boat (Liam Broome)
 
-Adds blacklist for Intangible
+Fixes archwood trapdoor rotations (Liam Broome)
 
+Source jars can now be linked to Turrets to direct source consumption (Qther)
 
-Fixes intangible applying to blocks it shouldn't when used with AOE
+Fixes spell descriptions having hardcoded 'starter spell' descriptions even if the config was changed (Will Parker)
 
-Fixes name not saved on arcane pedestals after world reload
+Various fixes to Chimera AI and swimming (Alexthw)
 
-Fix for mirrorweave causing more block updates than needed
+Fixes spell damage calculations involving hex, fall damage, and bastion effects (Alexthw)
 
-Adds particle timeline support to caster tomes

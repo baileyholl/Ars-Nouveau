@@ -2,17 +2,17 @@ package com.hollingsworth.arsnouveau.common.items.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public record ScryPosData(Optional<BlockPos> pos) {
+public record ScryPosData(Optional<GlobalPos> pos) {
     public static Codec<ScryPosData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BlockPos.CODEC.optionalFieldOf("pos").forGetter(ScryPosData::pos)
+            GlobalPos.CODEC.optionalFieldOf("global_pos").forGetter(ScryPosData::pos)
     ).apply(instance, ScryPosData::new));
 
-    public ScryPosData(BlockPos pos) {
+    public ScryPosData(GlobalPos pos) {
         this(Optional.ofNullable(pos));
     }
 

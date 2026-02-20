@@ -48,10 +48,17 @@ public class EffectRotate extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         boolean sensitive = spellStats.isSensitive();
+        boolean randomize = spellStats.isRandomized();
         int ampMod = (int) spellStats.getAmpMultiplier();
         boolean counterClockwise = ampMod < 0;
         for (int i = 0; i < 1 + Math.abs(ampMod); i++) {
-            float angle = entity.rotate(counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
+            float angle;
+            if (randomize) {
+                angle = world.random.nextFloat() * 360;
+            } else {
+                angle = entity.rotate(counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
+            }
+
             if (sensitive) {
                 entity.lookAt(EntityAnchorArgument.Anchor.FEET, entity.position.add(entity.getLookAngle().yRot(angle)));
             } else {
@@ -59,7 +66,7 @@ public class EffectRotate extends AbstractEffect {
             }
             if (entity instanceof Projectile projectile) {
                 Vec3 vec3d = projectile.getDeltaMovement();
-                projectile.setDeltaMovement(rotateVec(vec3d, counterClockwise ? -90 : 90));
+                projectile.setDeltaMovement(rotateVec(vec3d, randomize ? angle : counterClockwise ? -90 : 90));
             }
             entity.hurtMarked = true;
         }
@@ -76,31 +83,45 @@ public class EffectRotate extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         boolean swapAxis = spellStats.isSensitive();
+        boolean randomize = spellStats.isRandomized();
         for (BlockPos pos : posList) {
             BlockState state = world.getBlockState(pos);
-            int ampMod = (int) spellStats.getAmpMultiplier();
-            boolean counterClockwise = ampMod < 0;
-            for (int i = 0; i < (counterClockwise ? 0 : 1) + Math.abs(ampMod); i++) {
-                if (swapAxis) {
-                    if (state.hasProperty(BlockStateProperties.AXIS)) {
-                        state = state.setValue(BlockStateProperties.AXIS, switch (state.getValue(BlockStateProperties.AXIS)) {
-                            case X -> counterClockwise ? Axis.Z : Axis.Y;
-                            case Y -> counterClockwise ? Axis.X : Axis.Z;
-                            case Z -> counterClockwise ? Axis.Y : Axis.X;
-                        });
-                    } else if (state.hasProperty(BlockStateProperties.FACING)) {
-                        Direction curr = state.getValue(BlockStateProperties.FACING);
-                        state = state.setValue(BlockStateProperties.FACING, switch (curr) {
-                            case DOWN -> counterClockwise ? Direction.SOUTH : Direction.NORTH;
-                            case UP -> counterClockwise ? Direction.NORTH : Direction.SOUTH;
-                            case NORTH, EAST -> counterClockwise ? Direction.DOWN : Direction.UP;
-                            case SOUTH, WEST -> counterClockwise ? Direction.UP : Direction.DOWN;
-                        });
+
+            if (randomize) {
+                if (state.hasProperty(BlockStateProperties.AXIS)) {
+                    state = state.setValue(BlockStateProperties.AXIS, Axis.getRandom(world.random));
+                } else if (state.hasProperty(BlockStateProperties.FACING)) {
+                    state = state.setValue(BlockStateProperties.FACING, Direction.getRandom(world.random));
+                }
+
+                state = state.rotate(world, pos, Rotation.getRandom(world.random));
+            } else {
+                int ampMod = (int) spellStats.getAmpMultiplier();
+                boolean counterClockwise = ampMod < 0;
+
+                for (int i = 0; i < (counterClockwise ? 0 : 1) + Math.abs(ampMod); i++) {
+                    if (swapAxis) {
+                        if (state.hasProperty(BlockStateProperties.AXIS)) {
+                            state = state.setValue(BlockStateProperties.AXIS, switch (state.getValue(BlockStateProperties.AXIS)) {
+                                case X -> counterClockwise ? Axis.Z : Axis.Y;
+                                case Y -> counterClockwise ? Axis.X : Axis.Z;
+                                case Z -> counterClockwise ? Axis.Y : Axis.X;
+                            });
+                        } else if (state.hasProperty(BlockStateProperties.FACING)) {
+                            Direction curr = state.getValue(BlockStateProperties.FACING);
+                            state = state.setValue(BlockStateProperties.FACING, switch (curr) {
+                                case DOWN -> counterClockwise ? Direction.SOUTH : Direction.NORTH;
+                                case UP -> counterClockwise ? Direction.NORTH : Direction.SOUTH;
+                                case NORTH, EAST -> counterClockwise ? Direction.DOWN : Direction.UP;
+                                case SOUTH, WEST -> counterClockwise ? Direction.UP : Direction.DOWN;
+                            });
+                        }
+                    } else {
+                        state = state.rotate(world, pos, counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
                     }
-                } else {
-                    state = state.rotate(world, pos, counterClockwise ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
                 }
             }
+
             world.setBlockAndUpdate(pos, state);
             ShapersFocus.tryPropagateBlockSpell(rayTraceResult, world, shooter, spellContext, resolver);
         }
@@ -110,6 +131,7 @@ public class EffectRotate extends AbstractEffect {
     protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
+        defaults.put(AugmentRandomize.INSTANCE.getRegistryName(), 1);
     }
 
     @Override
@@ -125,7 +147,7 @@ public class EffectRotate extends AbstractEffect {
 
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDampen.INSTANCE);
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDampen.INSTANCE, AugmentRandomize.INSTANCE);
     }
 
     @Override
@@ -135,5 +157,6 @@ public class EffectRotate extends AbstractEffect {
         map.put(AugmentSensitive.INSTANCE, "Rotates the block on a different axis or forces an entity to rotate their head.");
         map.put(AugmentDampen.INSTANCE, "Increases rotations counter-clockwise.");
         map.put(AugmentAmplify.INSTANCE, "Increases rotations clockwise.");
+        map.put(AugmentRandomize.INSTANCE, "Applies a random rotation, ignoring axis.");
     }
 }

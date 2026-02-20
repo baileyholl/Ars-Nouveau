@@ -13,6 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
 
@@ -26,8 +27,8 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
     }
 
     @Override
-    public RecipeType<GlyphRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.GLYPH_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<GlyphRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.GLYPH_RECIPE_TYPE.get();
     }
 
     @Override
@@ -46,7 +47,8 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
     }
 
     @Override
-    public void draw(GlyphRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<GlyphRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        GlyphRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
         guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 10, false);
     }

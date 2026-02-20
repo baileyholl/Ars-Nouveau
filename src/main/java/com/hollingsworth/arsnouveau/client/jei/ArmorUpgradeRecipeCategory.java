@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ArmorUpgradeRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<ArmorUpgradeRecipe> recipeHolder, IFocusGroup focuses) {
+        ArmorUpgradeRecipe recipe = recipeHolder.value();
         MultiProvider provider = multiProvider.apply(recipe);
         List<Ingredient> inputs = provider.input();
         double angleBetweenEach = 360.0 / inputs.size();
@@ -76,12 +78,13 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
     }
 
     @Override
-    public RecipeType<ArmorUpgradeRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.ARMOR_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<ArmorUpgradeRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.ARMOR_RECIPE_TYPE.get();
     }
 
     @Override
-    public void draw(ArmorUpgradeRecipe recipe, @NotNull IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<ArmorUpgradeRecipe> recipeHolder, @NotNull IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        ArmorUpgradeRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
         graphics.drawString(renderer, Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10, false);
 

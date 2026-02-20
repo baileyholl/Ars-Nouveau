@@ -1,6 +1,9 @@
 #!/usr/bin/env groovy
 
 pipeline {
+    options {
+        buildDiscarder(logRotator(artifactNumToKeepStr: '10'))
+    }
     agent any
     tools {
         jdk "jdk-21"
@@ -24,11 +27,6 @@ pipeline {
                 echo 'Deploying to Maven'
                 sh './gradlew publish'
             }
-        }
-    }
-    post {
-        always {
-            archive 'build/libs/**.jar'
         }
     }
 }

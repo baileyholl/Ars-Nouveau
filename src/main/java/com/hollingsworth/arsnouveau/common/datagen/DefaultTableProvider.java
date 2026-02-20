@@ -140,7 +140,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             registerDropDoor(BlockRegistry.ARCHWOOD_DOOR.get());
             registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
+            registerDropSelf(BlockRegistry.ARCHWOOD_WALL_SIGN);
             registerDropSelf(BlockRegistry.ARCHWOOD_HANGING_SIGN);
+            registerDropSelf(BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN);
             registerDropSelf(BlockRegistry.SOURCE_GEM_BLOCK);
 
             registerDropSelf(BlockRegistry.POTION_MELDER);
@@ -282,6 +284,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SOURCESTONE_GRATE);
             registerDropSelf(BlockRegistry.SOURCE_LAMP);
             registerDropSelf(BlockRegistry.REPOSITORY_CONTROLLER);
+            LootPool.Builder dimBlockBuilder = LootPool.lootPool().add(LootItem.lootTableItem(BlockRegistry.PLANARIUM).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+            add(BlockRegistry.PLANARIUM.get(), LootTable.lootTable().withPool(dimBlockBuilder));
             registerDropSelf(BlockRegistry.DECOR_BLOSSOM);
         }
 

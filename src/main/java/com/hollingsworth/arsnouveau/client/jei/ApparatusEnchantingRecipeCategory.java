@@ -14,6 +14,7 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 
@@ -26,7 +27,8 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, EnchantmentRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<EnchantmentRecipe> recipeHolder, IFocusGroup focuses) {
+        EnchantmentRecipe recipe = recipeHolder.value();
         List<Ingredient> inputs = multiProvider.apply(recipe).input();
         double angleBetweenEach = 360.0 / inputs.size();
 
@@ -53,8 +55,8 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
     }
 
     @Override
-    public RecipeType<EnchantmentRecipe> getRecipeType() {
-        return JEIArsNouveauPlugin.ENCHANTING_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<EnchantmentRecipe>> getRecipeType() {
+        return JEIArsNouveauPlugin.ENCHANTING_RECIPE_TYPE.get();
     }
 
 }

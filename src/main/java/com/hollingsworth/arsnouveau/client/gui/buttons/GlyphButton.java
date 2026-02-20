@@ -12,9 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforgespi.language.IModInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -59,10 +57,10 @@ public class GlyphButton extends ANButton {
             tip.add(spellPart.getBookDescLang());
         } else {
             tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
-            var modName = ModList.get()
-                    .getModContainerById(spellPart.getRegistryName().getNamespace())
-                    .map(ModContainer::getModInfo)
-                    .map(IModInfo::getDisplayName).orElse(spellPart.getRegistryName().getNamespace());
+            var modName = spellPart.getGlyph().getCreatorModId(spellPart.getGlyph().getDefaultInstance());
+            if (modName == null) {
+                modName = StringUtils.capitalize(spellPart.getRegistryName().getNamespace());
+            }
             tip.add(Component.literal(modName).withStyle(ChatFormatting.BLUE));
         }
         if (this.abstractSpellPart instanceof AbstractAugment augment && this.augmentingParent != null) {

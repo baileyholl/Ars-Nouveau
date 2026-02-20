@@ -3,6 +3,6 @@
   "description": {
     "translate": "jukebox_song.ars_nouveau.aria_biblio"
   },
-  "length_in_seconds": 4800.0,
+  "length_in_seconds": 240.0,
   "sound_event": "ars_nouveau:aria_biblio"
 }

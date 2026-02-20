@@ -78,7 +78,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             recipe = null; // Used on client to remove recipe since for some forsaken reason world is missing during load.
         }
 
-        if (recipeID != null && !recipeID.toString().isEmpty() && (recipe == null || !recipe.id().equals(recipeID))) {
+        if (recipeID != null && !recipeID.toString().isEmpty() && (recipe == null || !recipe.id().equals(recipeID)) && level.getRecipeManager() != null) {
             recipe = level.getRecipeManager().byKeyTyped(RecipeRegistry.GLYPH_TYPE.get(), recipeID);
             setChanged();
         }

@@ -26,9 +26,9 @@ public class MusicProvider extends DatapackBuiltinEntriesProvider {
 
 
     public static void bootstrap(BootstrapContext<JukeboxSong> ctx) {
-        register(ctx, JukeboxRegistry.ARIA_BIBLIO, SoundRegistry.ARIA_BIBLIO, 20 * 240, 1);
-        register(ctx, JukeboxRegistry.WILD_HUNT, SoundRegistry.WILD_HUNT, 20 * 121, 2);
-        register(ctx, JukeboxRegistry.SOUND_OF_GLASS, SoundRegistry.SOUND_OF_GLASS, 20 * 182, 3);
+        register(ctx, JukeboxRegistry.ARIA_BIBLIO, SoundRegistry.ARIA_BIBLIO, 240, 1);
+        register(ctx, JukeboxRegistry.WILD_HUNT, SoundRegistry.WILD_HUNT, 121, 2);
+        register(ctx, JukeboxRegistry.SOUND_OF_GLASS, SoundRegistry.SOUND_OF_GLASS, 182, 3);
     }
 
     public static void register(

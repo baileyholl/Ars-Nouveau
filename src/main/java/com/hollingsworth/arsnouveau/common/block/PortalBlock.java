@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -36,7 +37,7 @@ import javax.annotation.Nullable;
 
 import static com.hollingsworth.arsnouveau.setup.config.ServerConfig.ENABLE_WARP_PORTALS;
 
-public class PortalBlock extends TickableModBlock {
+public class PortalBlock extends TickableModBlock implements LiquidBlockContainer {
 
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
     public static final BooleanProperty ALTERNATE = BooleanProperty.create("alternate");
@@ -174,17 +175,25 @@ public class PortalBlock extends TickableModBlock {
         Direction.Axis direction$axis = facing.getAxis();
         Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
         boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
+
         if (worldIn.getBlockEntity(currentPos) instanceof PortalTile portal && portal.isHorizontal) {
             FlatPortalAreaHelper frameTester = new FlatPortalAreaHelper();
             frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
             if (!frameTester.isValidFrame()) {
                 return Blocks.AIR.defaultBlockState();
-            } else if (flag && facingState.getBlock() != this) {
-                return Blocks.AIR.defaultBlockState();
             }
             return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         }
-        return !flag && facingState.getBlock() != this && !(new Size(worldIn, currentPos, direction$axis1)).isComplete() ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+
+        Size portalSize = new Size(worldIn, currentPos, direction$axis1);
+        boolean isComplete = portalSize.isComplete();
+        boolean shouldDestroy = !flag && facingState.getBlock() != this && !isComplete;
+
+        if (shouldDestroy) {
+            return Blocks.AIR.defaultBlockState();
+        }
+
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
@@ -205,6 +214,21 @@ public class PortalBlock extends TickableModBlock {
 
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+        return false;
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, net.minecraft.world.level.material.Fluid fluid) {
+        return false;
+    }
+
+    @Override
+    public boolean canPlaceLiquid(@Nullable net.minecraft.world.entity.player.Player pPlayer, net.minecraft.world.level.BlockGetter pLevel, BlockPos pPos, BlockState pState, net.minecraft.world.level.material.Fluid pFluid) {
+        return false;
+    }
+
+    @Override
+    public boolean placeLiquid(net.minecraft.world.level.LevelAccessor pLevel, BlockPos pPos, BlockState pState, net.minecraft.world.level.material.FluidState pFluidState) {
         return false;
     }
 
@@ -328,7 +352,7 @@ public class PortalBlock extends TickableModBlock {
 
         protected boolean canReplace(BlockState pos) {
             Block block = pos.getBlock();
-            return pos.isAir() || block == Blocks.FIRE || block instanceof PortalBlock;
+            return pos.isAir() || block == Blocks.FIRE || block instanceof PortalBlock || !pos.getFluidState().isEmpty();
         }
 
         public boolean isValid() {

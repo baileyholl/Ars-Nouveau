@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ScryersOculus extends TickableModBlock {
 
@@ -79,7 +81,8 @@ public class ScryersOculus extends TickableModBlock {
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_oculus.no_pos"));
                 return;
             }
-            Networking.sendToServer(new PacketMountCamera(data.pos().orElse(null)));
+            Optional<GlobalPos> pos = data.pos();
+            pos.ifPresent(globalPos -> Networking.sendToServer(new PacketMountCamera(globalPos.pos())));
         }, slots, (slotData, posestack, positionx, posy, size, transparent) -> RenderUtils.drawItemAsIcon(slotData.getDefaultInstance(), posestack, positionx, posy, size, transparent), 3)).setHoldToOpenGUI(false));
     }
 
