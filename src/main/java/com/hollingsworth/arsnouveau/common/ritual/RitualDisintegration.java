@@ -60,8 +60,13 @@ public class RitualDisintegration extends AbstractRitual {
                             int numLesser = exp / 3;
                             if ((exp - numLesser * 3) > 0)
                                 numLesser++;
-                            world.addFreshEntity(new ItemEntity(world, m.blockPosition().getX(), m.blockPosition().getY(), m.blockPosition().getZ(), new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM, numGreater)));
-                            world.addFreshEntity(new ItemEntity(world, m.blockPosition().getX(), m.blockPosition().getY(), m.blockPosition().getZ(), new ItemStack(ItemsRegistry.EXPERIENCE_GEM, numLesser)));
+                            var pos = m.blockPosition().getBottomCenter();
+                            if (numGreater > 0) {
+                                world.addFreshEntity(new ItemEntity(world, pos.x, pos.y, pos.z, new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM, numGreater)));
+                            }
+                            if (numLesser > 0) {
+                                world.addFreshEntity(new ItemEntity(world, pos.x, pos.y, pos.z, new ItemStack(ItemsRegistry.EXPERIENCE_GEM, numLesser)));
+                            }
                             didWorkOnce = true;
                         }
 

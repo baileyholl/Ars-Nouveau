@@ -11,10 +11,7 @@ import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.HeaderWidget;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.PropertyButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
@@ -23,6 +20,7 @@ import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -107,6 +105,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             rowOffset = rowOffset + 1;
             layoutLeftPage();
         }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER);
+        addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::reset));
 
         addRenderableWidget(upButton);
         addRenderableWidget(downButton);
@@ -150,6 +149,14 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         } else {
             addTimelineSelectionWidgets();
         }
+    }
+
+    public void reset(Button button) {
+        if (selectedTimeline == null)
+            return;
+        timelineMap.remove(selectedTimeline);
+        onTimelineSelectorHit();
+        initLeftSideButtons();
     }
 
     public void onDependenciesChanged(PropertyButton propButton) {

@@ -208,16 +208,16 @@ dependencies {
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
     localRuntime "curse.maven:placebo-283644:6446766"
     //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-//    implementation "curse.maven:ars-elemental-561470:6419081"
+    localRuntime "curse.maven:ars-elemental-561470:6419081"
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-core:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
 //    implementation "curse.maven:immersive-engineering-231951:6506639"
 //    implementation "curse.maven:ars-additions-974408:6928685"
-    implementation "curse.maven:supplementaries-412082:7326712"
-    implementation "curse.maven:selene-499980:7325079"
-    implementation "curse.maven:bibliocraft-legacy-1122260:7055118"
-    implementation "curse.maven:sodium-394468:6382651"
+    localRuntime "curse.maven:supplementaries-412082:7326712"
+    localRuntime "curse.maven:selene-499980:7325079"
+    localRuntime "curse.maven:bibliocraft-legacy-1122260:7055118"
+    localRuntime "curse.maven:sodium-394468:6382651"
 }
 
 jar {

@@ -53,6 +53,11 @@ public class GuiImageButton extends ANButton {
         return this;
     }
 
+    public GuiImageButton disableSound() {
+        this.soundDisabled = true;
+        return this;
+    }
+
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {

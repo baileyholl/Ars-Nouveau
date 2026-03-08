@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 public class GlyphFormatter {
     int perRow = 7;
     int maxRows = 7;
+    public static int MAX_PER_PAGE = 98;
 
     int bookLeft;
     int bookTop;
@@ -32,20 +33,50 @@ public class GlyphFormatter {
 
     Set<ResourceLocation> addedCategories = new HashSet<>();
 
+    List<List<ANButton>> pages = new ArrayList<>();
+
     static {
         CATEGORIES.add(new Category(ArsNouveau.prefix("form"), p -> p instanceof AbstractCastMethod, Component.translatable("ars_nouveau.form_icon_tooltip"), DocAssets.FORM_ICON_CRAFTING));
         CATEGORIES.add(new Category(ArsNouveau.prefix("effect"), p -> p instanceof AbstractEffect && !(p instanceof AbstractFilter), Component.translatable("ars_nouveau.effect_icon_tooltip"), DocAssets.EFFECT_ICON_CRAFTING));
         CATEGORIES.add(new Category(ArsNouveau.prefix("augment"), p -> p instanceof AbstractAugment, Component.translatable("ars_nouveau.augment_icon_tooltip"), DocAssets.AUGMENT_ICON_CRAFTING));
-        CATEGORIES.add(new Category(ArsNouveau.prefix("filter"), p -> p instanceof IFilter, Component.translatable("ars_nouveau.augment_icon_tooltip"), DocAssets.FILTER_ICON_CRAFTING));
+        CATEGORIES.add(new Category(ArsNouveau.prefix("filter"), p -> p instanceof IFilter, Component.translatable("ars_nouveau.filter_icon_tooltip"), DocAssets.FILTER_ICON_CRAFTING));
     }
 
-    public GlyphFormatter(int bookLeft, int bookTop, Button.OnPress onGlyphClick, Consumer<List<? extends AbstractWidget>> clearButtons, Consumer<AbstractWidget> addRenderableWidget) {
+    public GlyphFormatter(int bookLeft, int bookTop, Button.OnPress onGlyphClick, List<AbstractSpellPart> glyphs, Consumer<List<? extends AbstractWidget>> clearButtons, Consumer<AbstractWidget> addRenderableWidget) {
         this.bookLeft = bookLeft;
         this.bookTop = bookTop;
         this.onGlyphClick = onGlyphClick;
         this.clearButtons = clearButtons;
         this.addRenderableWidget = addRenderableWidget;
+        buildPages(glyphs);
+    }
 
+    public void buildPages(List<AbstractSpellPart> glyphs) {
+        pages.clear();
+        int count = 0;
+        List<ANButton> currentPage = new ArrayList<>();
+        pages.add(currentPage);
+        buildSortedWidgets(glyphs);
+        for (ANButton part : sortedWidgets) {
+            if (count >= MAX_PER_PAGE) {
+                currentPage = new ArrayList<>();
+                pages.add(currentPage);
+                count = 0;
+            }
+            if (count != 0 && !(part instanceof GlyphButton) && (count % perRow) != 0) {
+                // Space an entire row plus the rest of the current row
+                count += (perRow - (count % perRow));
+            }
+            boolean isNextPage = count >= (perRow * maxRows);
+            int numRows = count / perRow;
+            if (isNextPage) {
+                numRows = (count - (perRow * maxRows)) / perRow;
+            }
+            part.x = bookLeft + 16 + (isNextPage ? 134 : 0) + (count % perRow) * 18;
+            part.y = numRows * 18 + bookTop + 18;
+            currentPage.add(part);
+            count++;
+        }
     }
 
     private void buildSortedWidgets(List<AbstractSpellPart> displayedGlyphs) {
@@ -72,41 +103,15 @@ public class GlyphFormatter {
     }
 
 
-    public void layoutAllGlyphs(int page, List<AbstractSpellPart> displayedGlyphs) {
+    public void layoutAllGlyphs(int page) {
         clearButtons.accept(addedWidgets);
-        int fromIndex = 84 * page;
-
-        if (page == 0) {
-            buildSortedWidgets(displayedGlyphs);
-        }
-
-        List<ANButton> buttons = new ArrayList<>(sortedWidgets);
-
-        if (fromIndex < buttons.size()) {
-            buttons = buttons.subList(fromIndex, buttons.size());
-        }
-        int count = 0;
+        List<ANButton> buttons = pages.get(page);
         for (ANButton part : buttons) {
-            if (count > 84) {
-                break;
-            }
-            if (count != 0 && !(part instanceof GlyphButton) && (count % perRow) != 0) {
-                // Space an entire row plus the rest of the current row
-                count += (perRow - (count % perRow));
-            }
-            boolean isNextPage = count >= (perRow * maxRows);
-            int numRows = count / perRow;
-            if (isNextPage) {
-                numRows = (count - (perRow * maxRows)) / perRow;
-            }
-            part.x = bookLeft + 16 + (isNextPage ? 134 : 0) + (count % perRow) * 18;
-            part.y = numRows * 18 + bookTop + 18;
             addRenderableWidget.accept(part);
             if (part instanceof GlyphButton glyphButton) {
                 glyphButtons.add(glyphButton);
             }
             addedWidgets.add(part);
-            count++;
         }
     }
 

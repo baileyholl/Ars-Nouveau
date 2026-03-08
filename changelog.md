@@ -1,36 +1,15 @@
 # Changelog
-Adds the Planarium, a limited size pocket dimension that can be viewed as a small model within a jar
+Adds Bundle interactions within the Bookwyrm Lectern UI (Qther)
 
-Adjusts glyph formatting in the spellbook and readds breaks for glyph categories with new icons and tooltips
+Adds Archwood Boat (Liam Broome)
 
-Mob in jar behaviors can now be disabled with redstone (Jarva)
+Fixes archwood trapdoor rotations (Liam Broome)
 
-Fixes alchemist crown, flask cannon and Infused ignoring flask modifiers (VladislavStafanov)
+Source jars can now be linked to Turrets to direct source consumption (Qther)
 
-Rotate now supports Randomize (Qther)
+Fixes spell descriptions having hardcoded 'starter spell' descriptions even if the config was changed (Will Parker)
 
-Fixes empty mob jars not stacking (Qther)
+Various fixes to Chimera AI and swimming (Alexthw)
 
-Adds missing loot table for wall signs (Qther)
-
-Splitter relays now ignore broken or empty connections and should throughput more consistently (ArnaudBelliere)
-
-Fixes archwood fence gate and pressure plate being replaced by flowing liquid (Qther)
-
-Fixes wololo not coloring relay particles since the particle update (Alexthw)
-
-Fixes mod names not appearing for addon glyphs (Alexthw)
-
-Fixes crash when middle clicking an empty slot in book (Qther)
-
-Fixes portal blocks being destroyed by fluids (Liam Broome)
-
-Fixes weird behavior when changing dimensions while rewinding (Qther)
-
-Fixes render type for alternate portal textures (Alexthw)
-
-Fixes familiars targeting owners (Qther)
-
-Fixes song discs missing their song length (Liam Broome)
-
+Fixes spell damage calculations involving hex, fall damage, and bastion effects (Alexthw)
 

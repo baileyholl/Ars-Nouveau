@@ -144,7 +144,8 @@ public interface IWandable {
         return list;
     }
 
-    private ResourceKey<Level> getStoredDimension(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity) {
+    @Nullable
+    static ResourceKey<Level> getStoredDimension(@Nullable GlobalPos storedPos, @Nullable LivingEntity storedEntity) {
         if (storedPos != null) {
             return storedPos.dimension();
         }
