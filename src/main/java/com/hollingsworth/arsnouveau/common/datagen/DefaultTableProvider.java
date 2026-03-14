@@ -200,7 +200,7 @@ public class DefaultTableProvider extends LootTableProvider {
                 Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs"));
                 registerDropSelf(block);
                 Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab"));
-                registerDropSelf(slab);
+                registerSlabItemTable(slab);
 
             }
             registerBedCondition(BlockRegistry.ALTERATION_TABLE.get(), AlterationTable.PART, ThreePartBlock.HEAD);
