@@ -10,14 +10,17 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.NotEnoughManaPacket;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -60,6 +63,12 @@ public class SpellResolver implements Cloneable {
                 return new SpellResolver(context);
             }
     );
+
+    public static SpellResolver rehydratedFromTag(CompoundTag tag, ServerLevel level){
+        SpellResolver resolver = ANCodecs.decode(SpellResolver.CODEC.codec(), tag);
+        resolver.spellContext.rehydrate(level);
+        return resolver;
+    }
 
 
     public SpellResolver(SpellContext spellContext) {

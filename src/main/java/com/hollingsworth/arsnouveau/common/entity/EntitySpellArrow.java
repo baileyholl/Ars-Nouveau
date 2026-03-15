@@ -286,7 +286,7 @@ public class EntitySpellArrow extends Arrow {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("resolver")) {
-            setResolver(ANCodecs.decode(SpellResolver.CODEC.codec(), tag.get("resolver")));
+            setResolver(SpellResolver.rehydratedFromTag(tag.getCompound("resolver"), (ServerLevel) level));
         }
     }
 
