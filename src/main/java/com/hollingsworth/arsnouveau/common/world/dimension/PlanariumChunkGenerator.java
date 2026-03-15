@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class PlanariumChunkGenerator extends ChunkGenerator {
-    public static AABB innerBox = new AABB(0, 0, 0, 31, 30, 31);
+    public static AABB innerBox = new AABB(0, 1, 0, 31, 30, 31);
     private final Holder<Biome> biome;
 
     public Holder<Biome> biome() {
