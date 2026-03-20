@@ -196,6 +196,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENCHANTED_HOOK.get(), FishingHookRenderer::new);
 
         event.registerEntityRenderer(ModEntities.ARCHWOOD_BOAT.get(), context -> new ArchwoodBoatRenderer(context, false));
+        event.registerEntityRenderer(ModEntities.ARCANO_BOSS.get(), ArcanoBossRenderer::new);
     }
 
     public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {

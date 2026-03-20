@@ -184,7 +184,7 @@ public class LibBlockNames {
     public static final String DIM_BOUNDARY = "dim_boundary";
     public static final String PLANARIUM_PROJECTOR = "planarium_projector";
     public static final String SCRYER_PLANARIUM = "scryer_planarium";
-
+    public static final String ARCANO_JAR = "arcano_jar";
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{
             SOURCESTONE, SOURCESTONE_MOSAIC, SOURCESTONE_BASKET, SOURCESTONE_ALTERNATING, SOURCESTONE_LARGE_BRICKS, SOURCESTONE_SMALL_BRICKS,

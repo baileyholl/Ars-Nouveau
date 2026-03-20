@@ -322,6 +322,10 @@ public class ModEntities {
                     .clientTrackingRange(10)
     );
 
+    public static final DeferredHolder<EntityType<?>, EntityType<ArcanoBoss>> ARCANO_BOSS = registerEntity(LibEntityNames.ARCANO_BOSS, EntityType.Builder.<ArcanoBoss>of(ArcanoBoss::new, MobCategory.CREATURE)
+            .sized(1.4F, 3F).setTrackingRange(10));
+
+
     @SubscribeEvent
     public static void registerPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(STARBUNCLE_TYPE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
@@ -385,6 +389,7 @@ public class ModEntities {
             event.put(LILY.get(), Lily.createAttributes().build());
             event.put(NOOK.get(), Nook.createAttributes().build());
             event.put(ALAKARKINOS_TYPE.get(), Starbuncle.attributes().build());
+            event.put(ARCANO_BOSS.get(), ArcanoBoss.attributes().build());
         }
     }
 

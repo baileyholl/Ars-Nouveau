@@ -381,6 +381,8 @@ public class BlockRegistry {
 //    public static final BlockRegistryWrapper<ScryerPlanarium> SCRYER_PLANARIUM = registerBlockAndItem(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanarium::new);
 //    public static final BlockEntityTypeRegistryWrapper<ScryerPlanariumTile> SCRYER_PLANARIUM_TILE = registerTile(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanariumTile::new, SCRYER_PLANARIUM);
 
+    public static final BlockRegistryWrapper<ArcanoJar> ARCANO_JAR = registerBlockAndItem(LibBlockNames.ARCANO_JAR, ArcanoJar::new);
+    public static final BlockEntityTypeRegistryWrapper<ArcanoJarTile> ARCANO_JAR_TILE = registerTile(LibBlockNames.ARCANO_JAR, ArcanoJarTile::new, ARCANO_JAR);
 
     public static void onBlocksRegistry() {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {

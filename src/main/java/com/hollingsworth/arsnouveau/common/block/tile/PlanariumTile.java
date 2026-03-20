@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.renderer.PlanariumRenderingWorld;
 import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
 import com.hollingsworth.arsnouveau.common.block.DimBoundary;
@@ -122,7 +121,6 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         super.onLoad();
         updateBlock();
     }
-
 
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
@@ -291,13 +289,13 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         public Map<ResourceKey<Level>, Entry> entries = new ConcurrentHashMap<>();
 
         public static void onBlockBroken(BlockEvent.BreakEvent event) {
-            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.JAR_DIMENSION_TYPE_KEY)) {
                 boolean insideJar = PlanariumChunkGenerator.innerBox.contains(event.getPos().getBottomCenter());
-                if(insideJar) {
+                if (insideJar) {
                     PlanariumTile.dimManager.markDirty(level.dimension());
                 }
-                if(event.getState().getBlock() instanceof DimBoundary && !insideJar){
-                    if(event.getPlayer().canInteractWithBlock(event.getPos(), 4.0f)) {
+                if (event.getState().getBlock() instanceof DimBoundary && !insideJar) {
+                    if (event.getPlayer().canInteractWithBlock(event.getPos(), 4.0f)) {
                         DimBoundary.playerAttemptedBreak(level, event.getPlayer());
                     }
                     event.setCanceled(true);
@@ -306,7 +304,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         }
 
         public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
-            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.JAR_DIMENSION_TYPE_KEY)) {
                 PlanariumTile.dimManager.markDirty(level.dimension());
             }
         }
@@ -333,7 +331,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server) {
             return server.registryAccess() // get dynamic registries
                     .registryOrThrow(Registries.DIMENSION_TYPE)
-                    .getHolderOrThrow(ArsNouveau.DIMENSION_TYPE_KEY);
+                    .getHolderOrThrow(ArsNouveau.JAR_DIMENSION_TYPE_KEY);
         }
 
         public StructureTemplate getTemplate(ResourceKey<Level> key) {
