@@ -13,7 +13,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -36,17 +38,16 @@ public class DimBoundary extends ModBlock implements IWandable {
                 .pushReaction(PushReaction.BLOCK));
     }
 
-    @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public static void playerAttemptedBreak(Level level, Player player){
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer instanceof FakePlayer) {
-                return false;
+                return;
             }
             JarDimData jarDimData = JarDimData.from(serverLevel);
             var enteredFrom = jarDimData.getEnteredFrom(player.getUUID());
             if (enteredFrom == null) {
                 sendPlayerToSpawn(serverLevel, serverPlayer);
-                return true;
+                return;
             }
 
             GlobalPos globalPos = enteredFrom.pos();
@@ -59,10 +60,9 @@ public class DimBoundary extends ModBlock implements IWandable {
             }
 
         }
-        return true;
     }
 
-    private void sendPlayerToSpawn(ServerLevel serverLevel, ServerPlayer player) {
+    private static void sendPlayerToSpawn(ServerLevel serverLevel, ServerPlayer player) {
         ServerLevel spawnlevel = serverLevel.getServer().getLevel(player.getRespawnDimension());
         BlockPos respawnPos = player.getRespawnPosition();
         if (spawnlevel == null || respawnPos == null) {

@@ -337,8 +337,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(STORAGE_GEMS).add(BlockRegistry.SOURCE_GEM_BLOCK.get());
         this.tag(STORAGE_MAGEBLOOM).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
-        this.tag(INTANGIBLE_BLACKLIST).add(Blocks.BEDROCK);
+        this.tag(INTANGIBLE_BLACKLIST).add(Blocks.BEDROCK).add(BlockRegistry.DIM_BOUNDARY.get());
         this.tag(BlockTags.WITHER_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
+        this.tag(BlockTags.DRAGON_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
+        this.tag(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS).add(BlockRegistry.DIM_BOUNDARY.get());
     }
 
     public @NotNull String getName() {

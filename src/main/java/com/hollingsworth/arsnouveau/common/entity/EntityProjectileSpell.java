@@ -125,7 +125,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     public void setResolver(SpellResolver resolver) {
         this.entityData.set(SPELL_RESOLVER, resolver);
         this.spellResolver = resolver;
-        buildEmitters();//
+        buildEmitters();
     }
 
     @Override
@@ -486,7 +486,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         isNoGravity = tag.getBoolean("gravity");
         this.entityData.set(OWNER_ID, tag.getInt("ownerId"));
         if (tag.contains("resolver")) {
-            setResolver(ANCodecs.decode(SpellResolver.CODEC.codec(), tag.get("resolver")));
+            setResolver(SpellResolver.rehydratedFromTag(tag.getCompound("resolver"), (ServerLevel) level));
         }
     }
 

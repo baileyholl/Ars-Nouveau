@@ -17,6 +17,8 @@ public class RitualSunrise extends AbstractRitual {
     protected void tick() {
         ParticleUtil.spawnRitualSkyEffect(this, tile, rand, new ParticleColor.IntWrapper(255 + rand.nextInt(1), 255 + rand.nextInt(1), 25 + rand.nextInt(1)));
         if (getWorld() instanceof ServerLevel world) {
+            // Time is global and only changes when set in the Overworld Dimension.
+            world = world.getServer().overworld();
             // credits to Elucent for this trick
             if (world.getDayTime() % 24000 < 1000 || world.getDayTime() % 24000 >= 12000) {
                 world.setDayTime(world.getDayTime() + 100);
