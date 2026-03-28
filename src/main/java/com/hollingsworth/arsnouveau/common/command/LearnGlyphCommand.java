@@ -10,9 +10,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,20 +24,20 @@ public class LearnGlyphCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-glyph")
-                .requires(sender -> sender.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(context -> learnGlyph(context.getSource(), List.of(context.getSource().getPlayer()), null))
                 .then(
                         Commands.argument("targets", EntityArgument.players())
                                 .executes(context -> learnGlyph(context.getSource(), EntityArgument.getPlayers(context, "targets"), null))
-                                .then(Commands.argument("glyph", ResourceLocationArgument.id())
+                                .then(Commands.argument("glyph", IdentifierArgument.id())
                                         .suggests(sugg)
-                                        .executes(context -> learnGlyph(context.getSource(), EntityArgument.getPlayers(context, "targets"), ResourceLocationArgument.getId(context, "glyph"))))
+                                        .executes(context -> learnGlyph(context.getSource(), EntityArgument.getPlayers(context, "targets"), IdentifierArgument.getId(context, "glyph"))))
                 )
 
         );
     }
 
-    private static int learnGlyph(CommandSourceStack source, Collection<ServerPlayer> players, @Nullable ResourceLocation glyph) {
+    private static int learnGlyph(CommandSourceStack source, Collection<ServerPlayer> players, @Nullable Identifier glyph) {
         if (source.getPlayer() == null) return 0;
 
         for (ServerPlayer player : players) {
@@ -46,15 +46,15 @@ public class LearnGlyphCommand {
             if (glyph == null) {
                 if (playerCap == null) continue;
                 playerCap.setKnownGlyphs(GlyphRegistry.getSpellpartMap().values().stream().filter(g -> !g.defaultedStarterGlyph()).toList());
-                player.sendSystemMessage(Component.literal("Unlocked all glyphs"));
+                player.sendSystemMessage(Component.translatable("ars_nouveau.command.learn_glyph.all"));
             } else {
                 AbstractSpellPart spellPart = GlyphRegistry.getSpellPart(glyph);
                 if (spellPart.defaultedStarterGlyph()) continue;
                 boolean learned = playerCap.unlockGlyph(spellPart);
                 if (learned) {
-                    player.sendSystemMessage(Component.literal("Unlocked " + spellPart.getName()));
+                    player.sendSystemMessage(Component.translatable("ars_nouveau.learn_glyph", spellPart.getName()));
                 } else {
-                    player.sendSystemMessage(Component.literal("Glyph already known"));
+                    player.sendSystemMessage(Component.translatable("ars_nouveau.command.glyph_known"));
                 }
             }
 

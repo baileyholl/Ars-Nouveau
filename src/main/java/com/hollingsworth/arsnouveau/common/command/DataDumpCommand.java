@@ -11,7 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ public class DataDumpCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-data")
-                .requires(sender -> sender.hasPermission(2)) // Op required
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)) // Op required
                 .then(Commands.literal("dump")
                         .then(Commands.literal("augment-compatibility-csv")
                                 .executes(DataDumpCommand::dumpAugmentCompat)))
@@ -44,7 +44,7 @@ public class DataDumpCommand {
      * Creates a CSV file at {@link DataDumpCommand#PATH_AUGMENT_COMPATIBILITY} all augment compatibility information
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
-        Map<ResourceLocation, AbstractSpellPart> spells = GlyphRegistry.getSpellpartMap();
+        Map<Identifier, AbstractSpellPart> spells = GlyphRegistry.getSpellpartMap();
 
         // Collect the Augments
         List<AbstractAugment> augments = spells.values().stream()
@@ -89,19 +89,19 @@ public class DataDumpCommand {
             w.close();
         } catch (IOException ex) {
             LogManager.getLogger(ArsNouveau.MODID).error("Unable to dump augment compatibility chart", ex);
-            context.getSource().sendFailure(Component.literal("Error when trying to produce the data dump.  Check the logs."));
+            context.getSource().sendFailure(Component.translatable("ars_nouveau.command.data_dump.error"));
 
             // This is somewhat expected, just fail the command.  Logging took care of reporting.
             return 0;
         } catch (Exception ex) {
             LogManager.getLogger(ArsNouveau.MODID).error("Exception caught when trying to dump data", ex);
-            context.getSource().sendFailure(Component.literal("Error when trying to produce the data dump.  Check the logs."));
+            context.getSource().sendFailure(Component.translatable("ars_nouveau.command.data_dump.error"));
 
             // We really didn't expect this.  Re-throw.
             throw ex;
         }
 
-        context.getSource().sendSuccess(() -> Component.literal("Dumped data to " + file), true);
+        context.getSource().sendSuccess(() -> Component.translatable("ars_nouveau.command.data_dump.success", file), true);
         return 1;
     }
 }

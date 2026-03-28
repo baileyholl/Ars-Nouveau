@@ -12,6 +12,7 @@ import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -27,14 +28,14 @@ public class DroplessMobsCommand {
         dispatcher.register(Commands.literal("ars-dropless").executes(c -> {
             // The root command is accessible to everyone as it isn't too expensive to run.
             c.getSource().sendSystemMessage(Component.literal(listDroplessEntities(c.getSource().getServer().reloadableRegistries(), c.getSource().getLevel(), 0).stream().map(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e).toString()).collect(Collectors.joining(","))));
-            c.getSource().sendSystemMessage(Component.literal("Listed mobs that produce no drops under naive filtering, open your logs if you want to copy them."));
+            c.getSource().sendSystemMessage(Component.translatable("ars_nouveau.command.dropless.naive"));
 
             return 1;
-        }).then(Commands.literal("simulate").requires(c -> c.hasPermission(2)).then(Commands.argument("times", IntegerArgumentType.integer(1)).executes(c -> {
+        }).then(Commands.literal("simulate").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)).then(Commands.argument("times", IntegerArgumentType.integer(1)).executes(c -> {
             // This subcommand requires op as with enough simulations and entity types, it can get quite slow.
             int times = IntegerArgumentType.getInteger(c, "times");
             c.getSource().sendSystemMessage(Component.literal(listDroplessEntities(c.getSource().getServer().reloadableRegistries(), c.getSource().getLevel(), times).stream().map(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e).toString()).collect(Collectors.joining(","))));
-            c.getSource().sendSystemMessage(Component.literal("Listed mobs that produced no drops after " + times + " simulations, open your logs if you want to copy them."));
+            c.getSource().sendSystemMessage(Component.translatable("ars_nouveau.command.dropless.simulated", times));
 
             return 1;
         }))));
@@ -50,7 +51,7 @@ public class DroplessMobsCommand {
         for (EntityType<?> ty : BuiltInRegistries.ENTITY_TYPE) {
             Entity e;
             try {
-                e = ty.create(level);
+                e = ty.create(level, EntitySpawnReason.SPAWNER);
                 if (e == null) {
                     continue;
                 }
@@ -63,7 +64,7 @@ public class DroplessMobsCommand {
                 continue;
             }
 
-            LootTable table = registries.getLootTable(e.getType().getDefaultLootTable());
+            LootTable table = e.getType().getDefaultLootTable().map(registries::getLootTable).orElse(LootTable.EMPTY);
             if (!table.pools.isEmpty()) {
                 e.discard();
                 continue;

@@ -10,22 +10,22 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.WornNotebook;
 import com.hollingsworth.nuggets.client.rendering.RenderHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputQuirks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.joml.Matrix3x2fStack;
 
 public class DocItemTooltipHandler {
 
     private static long lexiconStartLookupTime = -1;
 
     public static void onTooltip(GuiGraphics graphics, ItemStack stack, int mouseX, int mouseY) {
-        PoseStack ms = graphics.pose();
+        // In 1.21.11, graphics.pose() returns Matrix3x2fStack, not PoseStack
+        Matrix3x2fStack ms = graphics.pose();
         Minecraft mc = Minecraft.getInstance();
         int tooltipX = mouseX;
         int tooltipY = mouseY - 4;
@@ -57,13 +57,14 @@ public class DocItemTooltipHandler {
         }
 
         int x = tooltipX - 34;
-        RenderSystem.disableDepthTest();
+        // RenderSystem.disableDepthTest() removed in 1.21.11
 
         graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
         graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
         boolean boundToControl = ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue() == 341;
+        // In 1.21.11: InputConstants.isKeyDown takes Window object, not long
         if (boundToControl ? PageHolderScreen.hasControlDown() :
-                InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue())) {
+                InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), ModKeyBindings.OPEN_DOCUMENTATION.getKey().getValue())) {
 
             if (lexiconStartLookupTime == -1) {
                 lexiconStartLookupTime = System.currentTimeMillis();
@@ -75,24 +76,19 @@ public class DocItemTooltipHandler {
             float time = 1000;
             float angles = (System.currentTimeMillis() - lexiconStartLookupTime) / time * 360F;
 
-            RenderSystem.enableBlend();
-            RenderSystem.disableDepthTest();
-            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-            BufferBuilder buf = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-
-            float a = 0.5F + 0.2F * ((float) Math.cos((ClientInfo.totalTicks) / 10) * 0.5F + 0.5F);
-            buf.addVertex(cx, cy, 0).setColor(0F, 0.5F, 0F, a);
-
-            for (float i = angles; i > 0; i--) {
-                double rad = (i - 90) / 180F * Math.PI;
-                buf.addVertex((float) (cx + Math.cos(rad) * r), (float) (cy + Math.sin(rad) * r), 0).setColor(0F, 1F, 0F, 1F);
+            // RenderSystem blend/depth methods removed in 1.21.11 (replaced by RenderPipelines).
+            // Drawing the arc progress indicator using GuiGraphics.fill as approximation.
+            // TODO: Replace with RenderPipeline-based arc drawing if precise arc needed.
+            if (angles > 0) {
+                int arcColor = (0x80 << 24) | (0x00 << 16) | (0xCC << 8) | 0x00; // semi-transparent green
+                int filled = (int) (angles / 360f * 16);
+                for (int i = 0; i < filled; i++) {
+                    float rad = (float) (i / 16.0 * 2 * Math.PI - Math.PI / 2);
+                    int px = (int) (cx + Math.cos(rad) * r) - 1;
+                    int py = (int) (cy + Math.sin(rad) * r) - 1;
+                    graphics.fill(px, py, px + 2, py + 2, arcColor);
+                }
             }
-
-            buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
-            BufferUploader.drawWithShader(buf.build());
-            RenderSystem.disableBlend();
-            RenderSystem.enableDepthTest();
 
             if (angles >= 360) {
                 DocClientUtils.openToEntry(docEntry.id(), 0);
@@ -102,23 +98,21 @@ public class DocItemTooltipHandler {
             resetLexiconLookupTime();
         }
 
-        ms.pushPose();
-        ms.translate(0, 0, 300);
+        ms.pushMatrix();
+        ms.translate(0, 0);
         RenderHelpers.drawItemAsIcon(docEntry.renderStack(), graphics, x, tooltipY, 16, false);
-        ms.popPose();
+        ms.popMatrix();
 
-        ms.pushPose();
-        ms.translate(0, 0, 500);
+        ms.pushMatrix();
+        ms.translate(0, 0);
         graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
 
-        ms.scale(0.5F, 0.5F, 1F);
-        boolean mac = Minecraft.ON_OSX;
-        Component key = (boundToControl ? (mac ? Component.literal("Cmd") : Component.literal("Ctrl")) : ModKeyBindings.OPEN_DOCUMENTATION.getTranslatedKeyMessage().copy())
+        ms.scale(0.5F, 0.5F);
+        boolean mac = InputQuirks.ON_OSX;
+        Component key = (boundToControl ? (mac ? Component.translatable("ars_nouveau.key.cmd") : Component.translatable("ars_nouveau.key.ctrl")) : ModKeyBindings.OPEN_DOCUMENTATION.getTranslatedKeyMessage().copy())
                 .withStyle(ChatFormatting.BOLD);
         graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
-        ms.popPose();
-
-        RenderSystem.enableDepthTest();
+        ms.popMatrix();
     }
 
     public static void resetLexiconLookupTime() {

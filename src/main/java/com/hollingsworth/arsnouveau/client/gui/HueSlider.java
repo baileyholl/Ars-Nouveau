@@ -16,7 +16,7 @@ public class HueSlider extends HorizontalSlider {
     Supplier<HSLColor> baseColor;
 
     public HueSlider(int x, int y, boolean drawString, Supplier<HSLColor> baseColor, Consumer<Double> onValueChange) {
-        super(x, y, DocAssets.SLIDER_BAR, DocAssets.SLIDER, Component.literal("Hue"), Component.empty(), 0, 360, 1, 1, 1, drawString, onValueChange);
+        super(x, y, DocAssets.SLIDER_BAR, DocAssets.SLIDER, Component.translatable("ars_nouveau.hue"), Component.empty(), 0, 360, 1, 1, 1, drawString, onValueChange);
         this.baseColor = baseColor;
     }
 

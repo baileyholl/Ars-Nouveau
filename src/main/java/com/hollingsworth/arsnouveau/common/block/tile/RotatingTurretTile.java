@@ -17,9 +17,9 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Position;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -56,7 +56,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     public void tick() {
         super.tick();
         // Animated in the renderer
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (clientNeededX != neededRotationX) {
                 float diff = neededRotationX - clientNeededX;
                 if (Math.abs(diff) < 0.1) {
@@ -137,7 +137,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
 
         updateBlock();
         ParticleUtil.beam(blockPos, getBlockPos(), level);
-        PortUtil.sendMessageNoSpam(playerEntity, Component.literal("Turret now aims to " + blockPos.toShortString()));
+        PortUtil.sendMessageNoSpam(playerEntity, Component.translatable("ars_nouveau.turret.aims_to", blockPos.toShortString()));
     }
 
     public static double angleBetween(Vec3 a, Vec3 b) {
@@ -225,8 +225,8 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putFloat("rotationY", rotationY);
         tag.putFloat("rotationX", rotationX);
         tag.putFloat("neededRotationY", neededRotationY);
@@ -234,12 +234,12 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        rotationX = tag.getFloat("rotationX");
-        rotationY = tag.getFloat("rotationY");
-        neededRotationX = tag.getFloat("neededRotationX");
-        neededRotationY = tag.getFloat("neededRotationY");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        rotationX = tag.getFloatOr("rotationX", 0f);
+        rotationY = tag.getFloatOr("rotationY", 0f);
+        neededRotationX = tag.getFloatOr("neededRotationX", 0f);
+        neededRotationY = tag.getFloatOr("neededRotationY", 0f);
     }
 
     public float getRotationX() {

@@ -48,7 +48,7 @@ public class PerkDiagramEntry extends SinglePageWidget {
         DocClientUtils.blit(guiGraphics, DocAssets.THREAD_FRAME, x + xOffset, y + 19);
         int fontYOffset = 111;
         int fontXOffset = xOffset + 21;
-        DocClientUtils.drawParagraph(Component.literal("Tier of armor"), guiGraphics, x + fontXOffset, y + fontYOffset, width - 2, mouseX, mouseY, partialTick);
+        DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.perk.tier_of_armor"), guiGraphics, x + fontXOffset, y + fontYOffset, width - 2, mouseX, mouseY, partialTick);
         DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.thread_tier", 1), guiGraphics, x + fontXOffset, y + fontYOffset + 10, width - 2, mouseX, mouseY, partialTick);
         DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.thread_tier", 2), guiGraphics, x + fontXOffset, y + fontYOffset + 20, width - 2, mouseX, mouseY, partialTick);
         DocClientUtils.drawParagraph(Component.translatable("ars_nouveau.thread_tier", 3), guiGraphics, x + fontXOffset, y + fontYOffset + 30, width - 2, mouseX, mouseY, partialTick);

@@ -1,0 +1,12 @@
+[submodule "deps/geckolib"]
+	path = deps/geckolib
+	url = https://github.com/bernie-g/geckolib.git
+	branch = 1.21.11
+[submodule "deps/curios"]
+	path = deps/curios
+	url = https://github.com/TheIllusiveC4/Curios.git
+	branch = 1.21.x
+[submodule "deps/jei"]
+	path = deps/jei
+	url = https://github.com/mezz/JustEnoughItems.git
+	branch = 1.21.11

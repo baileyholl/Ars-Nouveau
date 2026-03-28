@@ -17,7 +17,7 @@ public class SatLumSlider extends HorizontalSlider {
     boolean isLuminance = false;
 
     public SatLumSlider(int x, int y, boolean drawString, boolean isLuminance, Supplier<HSLColor> baseColor, Consumer<Double> onValueChange) {
-        super(x, y, DocAssets.SLIDER_BAR, DocAssets.SLIDER, isLuminance ? Component.literal("Lightness") : Component.literal("Saturation"), Component.empty(), 0, 1, 0.5, 0.01, 1, drawString, onValueChange);
+        super(x, y, DocAssets.SLIDER_BAR, DocAssets.SLIDER, isLuminance ? Component.translatable("ars_nouveau.lightness") : Component.translatable("ars_nouveau.sat"), Component.empty(), 0, 1, 0.5, 0.01, 1, drawString, onValueChange);
         this.isLuminance = isLuminance;
         this.baseColor = baseColor;
     }
