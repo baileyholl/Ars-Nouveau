@@ -50,7 +50,6 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(world, spellStats, shears);
             if (shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition())) {
-                // TODO: restore fortune bonus on augment
                 List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition());
                 items.forEach(i -> world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
@@ -92,7 +91,6 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
         ItemStack shears = new ItemStack(Items.SHEARS);
         applyEnchantments(world, spellStats, shears);
         if (world.getBlockState(p).getBlock() instanceof IShearable shearable && shearable.isShearable(getPlayer(shooter, (ServerLevel) world), shears, world, p)) {
-            // TODO: restore fortune bonus on augment
             List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p);
             items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
         }

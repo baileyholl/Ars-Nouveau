@@ -62,15 +62,6 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
         }
     }
 
-// TODO: restore looting event
-//    public void onLootingEvent(LootingLevelEvent event) {
-//        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
-//            if (level.random.nextFloat() > 0.4) {
-//                event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
-//            }
-//        }
-//    }
-
     @Override
     public PlayState walkPredicate(AnimationTest<FamiliarEntity> event) {
         if (event.isMoving()) {

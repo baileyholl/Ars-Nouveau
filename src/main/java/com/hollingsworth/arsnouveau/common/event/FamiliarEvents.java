@@ -94,16 +94,6 @@ public class FamiliarEvents {
         }
     }
 
-    // TODO: restore drygmy fortune event
-//    @SubscribeEvent
-//    public static void fortuneEvent(LootingLevelEvent event) {
-//        for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarDrygmy))) {
-//            if (entity instanceof FamiliarDrygmy) {
-//                ((FamiliarDrygmy) entity).onLootingEvent(event);
-//            }
-//        }
-//    }
-
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
         for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarWhirlisprig))) {
