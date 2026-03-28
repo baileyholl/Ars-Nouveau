@@ -1,0 +1,35 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.custom_model",
+				"texture_width": 16,
+				"texture_height": 16,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "specs",
+					"pivot": [0, 4, -6.5],
+					"cubes": [
+						{
+							"origin": [-2.5, 3, -6.75],
+							"size": [5, 2, 0],
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [5, 2]},
+								"east": {"uv": [0, 0], "uv_size": [0, 2]},
+								"south": {"uv": [0, 2], "uv_size": [5, 2]},
+								"west": {"uv": [0, 0], "uv_size": [0, 2]},
+								"up": {"uv": [0, 0], "uv_size": [5, 0]},
+								"down": {"uv": [0, 0], "uv_size": [5, 0]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

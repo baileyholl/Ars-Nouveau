@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/archwood_chest",
+    "model": {
+      "type": "minecraft:chest",
+      "texture": "ars_nouveau:archwood"
+    }
+  }
+}

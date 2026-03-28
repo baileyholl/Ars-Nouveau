@@ -1,0 +1,144 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"drawer1": {
+			"animation_length": 1.25,
+			"bones": {
+				"drawer1": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"drawer2": {
+			"animation_length": 1.25,
+			"bones": {
+				"drawer2": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"drawer3": {
+			"animation_length": 1.25,
+			"bones": {
+				"drawer3": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"drawer4": {
+			"animation_length": 1.25,
+			"bones": {
+				"drawer4": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"drawer5": {
+			"animation_length": 1.25,
+			"bones": {
+				"drawer5": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"drawer6": {
+			"animation_length": 1.25,
+			"bones": {
+				"drawer6": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInOutSine"
+						},
+						"1.25": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

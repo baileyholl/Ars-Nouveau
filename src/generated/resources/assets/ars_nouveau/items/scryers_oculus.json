@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/scryers_oculus",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

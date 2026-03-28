@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/enchanting_apparatus",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

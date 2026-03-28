@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/splash_flask_cannon",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

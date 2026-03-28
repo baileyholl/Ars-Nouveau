@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/novice_spell_book",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

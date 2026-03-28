@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"wand_gem_spin": {
+			"loop": true,
+			"animation_length": 8,
+			"bones": {
+				"gem": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"8.0": {
+							"vector": [0, 0, 360]
+						}
+					}
+				}
+			}
+		},
+		"gem_float": {
+			"loop": true,
+			"bones": {
+				"gem": {
+					"position": {
+						"vector": [0, 0, "math.sin(query.anim_time*60)*.25"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/level/storage/ValueInput.java
++++ b/net/minecraft/world/level/storage/ValueInput.java
+@@ -6,7 +_,7 @@
+ import java.util.stream.Stream;
+ import net.minecraft.core.HolderLookup;
+ 
+-public interface ValueInput {
++public interface ValueInput extends net.neoforged.neoforge.common.extensions.ValueInputExtension {
+     <T> Optional<T> read(String p_421885_, Codec<T> p_421485_);
+ 
+     @Deprecated

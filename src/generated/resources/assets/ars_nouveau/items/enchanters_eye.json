@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/enchanters_eye",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

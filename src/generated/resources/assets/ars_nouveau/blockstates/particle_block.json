@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "waterlogged=false": {"model": "minecraft:block/air"},
+    "waterlogged=true": {"model": "minecraft:block/air"}
+  }
+}

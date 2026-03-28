@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/summoning_crystal",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

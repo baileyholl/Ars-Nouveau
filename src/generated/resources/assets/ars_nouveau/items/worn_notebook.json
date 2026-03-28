@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/worn_notebook",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

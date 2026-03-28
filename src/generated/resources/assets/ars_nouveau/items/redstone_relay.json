@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/redstone_relay",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

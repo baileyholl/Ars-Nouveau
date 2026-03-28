@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/repository_controller",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/basic_spell_turret",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

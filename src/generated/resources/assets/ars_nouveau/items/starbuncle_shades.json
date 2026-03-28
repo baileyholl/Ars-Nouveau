@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/starbuncle_shades",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

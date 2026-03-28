@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "ars_nouveau:item/storage_lectern",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}
