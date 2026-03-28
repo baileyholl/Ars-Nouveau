@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:obsidians"
-    },
-    "y": {
-      "item": "ars_nouveau:spell_prism"
-    }
+    "x": "#c:obsidians",
+    "y": "ars_nouveau:spell_prism"
   },
   "pattern": [
     "xxx",

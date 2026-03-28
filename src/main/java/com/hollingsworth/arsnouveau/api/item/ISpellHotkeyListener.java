@@ -23,7 +23,7 @@ public interface ISpellHotkeyListener {
 
     default void onQuickCast(ItemStack stack, ServerPlayer player, InteractionHand hand, int slot) {
         AbstractCaster<?> iSpellCaster = SpellCasterRegistry.from(stack);
-        iSpellCaster.castSpell(player.level, player, hand, null, iSpellCaster.getSpell(slot));
+        iSpellCaster.castSpell(player.level(), player, hand, null, iSpellCaster.getSpell(slot));
     }
 
     //TODO: 1.20 Remove this and have onQuickCast return a boolean

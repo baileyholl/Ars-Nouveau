@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "g": {
-      "tag": "c:ingots/gold"
-    },
-    "n": {
-      "tag": "c:storage_blocks/quartz"
-    },
-    "x": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "g": "#c:ingots/gold",
+    "n": "#c:storage_blocks/quartz",
+    "x": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "gxg",

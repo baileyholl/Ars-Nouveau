@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:lava_bucket"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    }
+    "minecraft:lava_bucket",
+    "ars_nouveau:water_essence"
   ],
   "result": {
     "count": 1,

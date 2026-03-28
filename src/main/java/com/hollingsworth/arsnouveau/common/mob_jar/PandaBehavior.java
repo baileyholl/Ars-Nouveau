@@ -2,17 +2,18 @@ package com.hollingsworth.arsnouveau.common.mob_jar;
 
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.animal.Panda;
+import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 
 public class PandaBehavior extends JarBehavior<Panda> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide || isPowered(tile))
+        if (tile.getLevel().isClientSide() || isPowered(tile))
             return;
         Panda panda = entityFromJar(tile);
         if (!panda.isSneezing() && canSneeze(panda)) {
@@ -32,7 +33,7 @@ public class PandaBehavior extends JarBehavior<Panda> {
 
     public void afterSneeze(Panda panda, MobJarTile tile) {
         panda.playSound(SoundEvents.PANDA_SNEEZE, 1.0F, 1.0F);
-        if (!panda.level.isClientSide() && panda.getRandom().nextInt(700) == 0 && panda.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if (!panda.level.isClientSide() && panda.getRandom().nextInt(700) == 0 && panda.level instanceof ServerLevel sl && sl.getGameRules().get(GameRules.ENTITY_DROPS)) {
             JarBehavior.insertOrCreateItem(tile, Items.SLIME_BALL.getDefaultInstance());
         }
     }

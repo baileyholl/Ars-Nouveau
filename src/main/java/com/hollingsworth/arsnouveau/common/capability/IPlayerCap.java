@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -40,12 +40,12 @@ public interface IPlayerCap {
     Collection<FamiliarData> getUnlockedFamiliars();
 
     @Nullable
-    FamiliarData getFamiliarData(ResourceLocation id);
+    FamiliarData getFamiliarData(Identifier id);
 
     @Nullable
     FamiliarData getLastSummonedFamiliar();
 
-    void setLastSummonedFamiliar(ResourceLocation lastSummonedFamiliar);
+    void setLastSummonedFamiliar(Identifier lastSummonedFamiliar);
 
     void setUnlockedFamiliars(Collection<FamiliarData> familiars);
 

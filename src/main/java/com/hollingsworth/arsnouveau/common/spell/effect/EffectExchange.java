@@ -57,11 +57,11 @@ public class EffectExchange extends AbstractEffect {
         }
         if (!EventHooks.onEnderTeleport(shooter, entity.getX(), entity.getY(), entity.getZ()).isCanceled())
             if (entity.level instanceof ServerLevel serverLevel) {
-                shooter.teleportTo(serverLevel, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYRot(), entity.getXRot());
+                shooter.teleportTo(serverLevel, entity.getX(), entity.getY(), entity.getZ(), Set.of(), entity.getYRot(), entity.getXRot(), true);
             }
         if (!(entity instanceof LivingEntity living) || !EventHooks.onEnderTeleport(living, origLoc.x(), origLoc.y(), origLoc.z()).isCanceled()) {
             if (shooterLevel instanceof ServerLevel serverLevel) {
-                entity.teleportTo(serverLevel, origLoc.x(), origLoc.y(), origLoc.z(), Set.of(), shooter.getYRot(), shooter.getXRot());
+                entity.teleportTo(serverLevel, origLoc.x(), origLoc.y(), origLoc.z(), Set.of(), shooter.getYRot(), shooter.getXRot(), true);
             }
         }
     }

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:gems/source"
-    }
+    "x": "#c:gems/source"
   },
   "pattern": [
     "xx",

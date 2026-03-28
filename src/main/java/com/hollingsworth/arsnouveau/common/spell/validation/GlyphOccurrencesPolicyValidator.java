@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IContextManipulator;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectReset;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,14 +13,14 @@ import java.util.Map;
 /**
  * Spell validation that enforces the glyph limits policy set out in the configuration.
  */
-public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<ResourceLocation, Integer>> {
+public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<Identifier, Integer>> {
     @Override
-    protected Map<ResourceLocation, Integer> initContext() {
+    protected Map<Identifier, Integer> initContext() {
         return new HashMap<>();
     }
 
     @Override
-    protected void digestSpellPart(Map<ResourceLocation, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
+    protected void digestSpellPart(Map<Identifier, Integer> partCounts, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
         if (spellPart instanceof IContextManipulator manipulator) {
             for (AbstractSpellPart resettable : manipulator.bypassOccurrenceLimitsFor()) {
                 partCounts.remove(resettable.getRegistryName());

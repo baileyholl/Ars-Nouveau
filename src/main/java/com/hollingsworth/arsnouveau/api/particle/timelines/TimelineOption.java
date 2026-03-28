@@ -4,19 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.configurations.IParticleMotionType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
-public record TimelineOption(ResourceLocation id,
+public record TimelineOption(Identifier id,
                              TimelineEntryData entry,
                              ImmutableList<IParticleMotionType<?>> options) {
 
-    public static ResourceLocation SPAWN = ArsNouveau.prefix("spawn");
-    public static ResourceLocation TRAIL = ArsNouveau.prefix("trail");
-    public static ResourceLocation IMPACT = ArsNouveau.prefix("impact");
-    public static ResourceLocation FLAIR = ArsNouveau.prefix("flair");
-    public static ResourceLocation TICK = ArsNouveau.prefix("tick");
+    public static Identifier SPAWN = ArsNouveau.prefix("spawn");
+    public static Identifier TRAIL = ArsNouveau.prefix("trail");
+    public static Identifier IMPACT = ArsNouveau.prefix("impact");
+    public static Identifier FLAIR = ArsNouveau.prefix("flair");
+    public static Identifier TICK = ArsNouveau.prefix("tick");
 
 
     public Component name() {

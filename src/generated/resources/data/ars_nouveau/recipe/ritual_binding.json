@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:purple_archwood_log"
-    },
-    {
-      "item": "ars_nouveau:blank_parchment"
-    },
-    {
-      "item": "minecraft:ender_pearl"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    }
+    "ars_nouveau:purple_archwood_log",
+    "ars_nouveau:blank_parchment",
+    "minecraft:ender_pearl",
+    "#c:gems/source",
+    "#c:gems/source",
+    "#c:gems/source"
   ],
   "result": {
     "count": 1,

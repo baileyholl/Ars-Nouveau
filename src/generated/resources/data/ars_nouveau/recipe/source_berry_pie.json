@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:egg"
-    },
-    {
-      "item": "minecraft:sugar"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    }
+    "minecraft:egg",
+    "minecraft:sugar",
+    "ars_nouveau:magebloom",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush"
   ],
   "result": {
     "count": 1,

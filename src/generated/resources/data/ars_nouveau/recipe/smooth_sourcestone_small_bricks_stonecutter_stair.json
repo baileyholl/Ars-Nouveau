@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "ars_nouveau:smooth_sourcestone_small_bricks"
-  },
+  "ingredient": "ars_nouveau:smooth_sourcestone_small_bricks",
   "result": {
     "count": 1,
     "id": "ars_nouveau:smooth_sourcestone_small_bricks_stairs"

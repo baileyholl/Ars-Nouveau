@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -31,9 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -69,7 +70,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             return InteractionResult.CONSUME;
         }
         if (this.isOwnedBy(pPlayer)) {
@@ -86,9 +87,9 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (level.getGameTime() % 20 == 0 && !ownerLilyMap.containsValue(this.getUUID())) {
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
             }
             if (wagTicks > 0 && isWagging()) {
                 wagTicks--;
@@ -142,28 +143,39 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.MAX_HEALTH, 40f).add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
+    // 1.21.11: WOLF_WHINE/WOLF_PANT/WOLF_AMBIENT/WOLF_HURT/WOLF_DEATH removed from SoundEvents static fields.
+    // Wolf sounds now accessed via WolfSoundVariant system.
+    private static net.minecraft.world.entity.animal.wolf.WolfSoundVariant getWolfVariant() {
+        return SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC);
+    }
+
     protected SoundEvent getAmbientSound() {
+        var v = getWolfVariant();
+        if (v == null) return null;
         if (this.random.nextInt(3) == 0) {
-            return this.isTame() && this.getHealth() < 10.0F ? SoundEvents.WOLF_WHINE : SoundEvents.WOLF_PANT;
+            return this.isTame() && this.getHealth() < 10.0F ? v.whineSound().value() : v.pantSound().value();
         } else {
-            return SoundEvents.WOLF_AMBIENT;
+            return v.ambientSound().value();
         }
     }
 
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return SoundEvents.WOLF_HURT;
+        var v = getWolfVariant();
+        return v != null ? v.hurtSound().value() : null;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.WOLF_DEATH;
+        var v = getWolfVariant();
+        return v != null ? v.deathSound().value() : null;
     }
 
+    // 1.21.11: hurt() is final in Entity; override hurtServer(ServerLevel, DamageSource, float) instead
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource pSource, float pAmount) {
         if (!(pSource.getEntity() instanceof Player)) {
             return false;
         }
-        return super.hurt(pSource, pAmount);
+        return super.hurtServer(serverLevel, pSource, pAmount);
     }
 
     /**
@@ -189,39 +201,40 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "walk", 1, (event) -> {
+        // GeckoLib 5: AnimationController constructor no longer takes entity as first arg; getController() → controller()
+        data.add(new AnimationController<Lily>("walk", 1, (event) -> {
             if (event.isMoving()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController(this, "idle", 1, (event) -> {
+        data.add(new AnimationController<Lily>("idle", 1, (event) -> {
             if (!event.isMoving() && !this.isWagging()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
+        data.add(new AnimationController<Lily>("idle_wag", 1, (event) -> {
             if (!event.isMoving() && this.isWagging()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wagging"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle_wagging"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        data.add(new AnimationController(this, "rest", 1, (event) -> {
+        data.add(new AnimationController<Lily>("rest", 1, (event) -> {
             if (!event.isMoving() && this.isOrderedToSit() && !this.isWagging()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        data.add(new AnimationController(this, "rest_wag", 1, (event) -> {
+        data.add(new AnimationController<Lily>("rest_wag", 1, (event) -> {
             if (!event.isMoving() && this.isOrderedToSit() && this.isWagging()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting_wagging"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("resting_wagging"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -238,18 +251,25 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if (caster.getUUID().equals(this.getOwnerUUID())) {
-            this.remove(RemovalReason.DISCARDED);
+        net.minecraft.world.entity.EntityReference<?> ownerRef = this.getOwnerReference();
+        if (ownerRef != null && caster.getUUID().equals(ownerRef.getUUID())) {
+            this.remove(Entity.RemovalReason.DISCARDED);
             return true;
         }
         return false;
     }
 
+    // 1.21.11: load(CompoundTag) removed; use readAdditionalSaveData(ValueInput)
+    // OwnableEntity.getOwnerUUID() removed; use getOwnerReference().getUUID()
     @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
-        if (!ownerLilyMap.containsKey(this.getOwnerUUID())) {
-            Lily.ownerLilyMap.put(this.getOwnerUUID(), this.getUUID());
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        net.minecraft.world.entity.EntityReference<?> ownerRef = this.getOwnerReference();
+        if (ownerRef != null) {
+            java.util.UUID ownerUUID = ownerRef.getUUID();
+            if (!ownerLilyMap.containsKey(ownerUUID)) {
+                Lily.ownerLilyMap.put(ownerUUID, this.getUUID());
+            }
         }
     }
 }

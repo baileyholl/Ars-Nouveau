@@ -16,7 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -42,7 +42,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             .expireAfterAccess(20, TimeUnit.SECONDS)
             .build();
 
-    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.prefix("starby_transport");
+    public static final Identifier TRANSPORT_ID = ArsNouveau.prefix("starby_transport");
 
     public ItemStack itemScroll = ItemStack.EMPTY;
 
@@ -59,7 +59,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (!entity.isTamed())
             return;
 
-        this.itemScroll = ItemStack.parseOptional(entity.level.registryAccess(), tag.getCompound("itemScroll"));
+        this.itemScroll = tag.read("itemScroll", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             return;
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (berryBackoff > 0) {
                 berryBackoff--;
             }
@@ -147,7 +147,8 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     public @Nullable IItemHandler getItemCapFromTile(BlockPos pos, @Nullable Direction face) {
-        return starbuncle.level.getCapability(Capabilities.ItemHandler.BLOCK, pos, face);
+        var raw = starbuncle.level().getCapability(Capabilities.Item.BLOCK, pos, face);
+        return raw != null ? IItemHandler.of(raw) : null;
     }
 
     public @Nullable BlockPos getValidTakePos() {
@@ -249,7 +250,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos == null)
             return;
-        IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        var cap = level.getCapability(Capabilities.Item.BLOCK, storedPos, side);
         if (cap != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
             addToPos(storedPos, side);
@@ -262,7 +263,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
 
-        IItemHandler cap = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        var cap = level.getCapability(Capabilities.Item.BLOCK, storedPos, side);
         if (cap != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos, side);
@@ -279,7 +280,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         if (!itemScroll.isEmpty()) {
-            tag.put("itemScroll", itemScroll.save(level.registryAccess()));
+            tag.store("itemScroll", ItemStack.OPTIONAL_CODEC, itemScroll);
         }
         return tag;
     }
@@ -295,7 +296,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return TRANSPORT_ID;
     }
 }

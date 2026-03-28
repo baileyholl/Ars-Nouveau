@@ -3,9 +3,7 @@
   "category": "building",
   "group": "wooden_slab",
   "key": {
-    "#": {
-      "item": "ars_nouveau:gilded_sourcestone_mosaic"
-    }
+    "#": "ars_nouveau:gilded_sourcestone_mosaic"
   },
   "pattern": [
     "###"

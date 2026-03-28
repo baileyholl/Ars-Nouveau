@@ -10,15 +10,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class VoidJar extends ModItem implements IScribeable {
 
@@ -38,8 +41,9 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     public static boolean tryVoiding(Player player, ItemStack pickingUp) {
-        NonNullList<ItemStack> list = player.inventory.items;
-        for (ItemStack jar : list) {
+        // Inventory.items is private in 1.21.11; iterate via getItem()
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack jar = player.getInventory().getItem(i);
             if (jar.getItem() instanceof VoidJar voidJar) {
                 return voidJar.voidStack(player, jar, pickingUp);
             }
@@ -70,8 +74,8 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, @NotNull Player player, @NotNull InteractionHand handIn) {
-        if (worldIn.isClientSide)
+    public @NotNull InteractionResult use(Level worldIn, @NotNull Player player, @NotNull InteractionHand handIn) {
+        if (worldIn.isClientSide())
             return super.use(worldIn, player, handIn);
         ItemStack stack = player.getItemInHand(handIn);
         VoidJarData data = stack.getOrDefault(DataComponentRegistry.VOID_JAR, new VoidJarData());
@@ -80,13 +84,13 @@ public class VoidJar extends ModItem implements IScribeable {
             ItemStack stackToWrite = player.getOffhandItem();
             if (player.isShiftKeyDown()) {
                 toggleStatus(player, stack);
-                return InteractionResultHolder.consume(stack);
+                return InteractionResult.CONSUME;
             }
             var items = data.scrollData().mutable();
             items.writeWithFeedback(player, stackToWrite);
             stack.set(DataComponentRegistry.VOID_JAR, new VoidJarData(items.toImmutable(), data.active()));
         }
-        return InteractionResultHolder.success(stack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -99,8 +103,8 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.VOID_JAR, context, tooltip2::add, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.VOID_JAR, context, display, tooltip2, flagIn);
     }
 }

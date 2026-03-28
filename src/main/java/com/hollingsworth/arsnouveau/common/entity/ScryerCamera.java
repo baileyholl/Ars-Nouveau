@@ -13,6 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.server.level.ServerLevel;
@@ -110,7 +112,7 @@ public class ScryerCamera extends Entity {
     }
 
     public void tick() {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             if (this.screenshotSoundCooldown > 0) {
                 --this.screenshotSoundCooldown;
             }
@@ -159,7 +161,7 @@ public class ScryerCamera extends Entity {
     }
 
     public void stopViewing(ServerPlayer player) {
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.discard();
             player.camera = player;
             Networking.sendToPlayerClient(new PacketSetCameraView(player), player);
@@ -168,13 +170,13 @@ public class ScryerCamera extends Entity {
     }
 
     @Override
-    public void remove(RemovalReason pReason) {
+    public void remove(Entity.RemovalReason pReason) {
         super.remove(pReason);
         discardCamera();
     }
 
     public void discardCamera() {
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
 
             if (level.getBlockEntity(this.blockPosition()) instanceof ICameraMountable camMount) {
                 camMount.stopViewing();
@@ -201,11 +203,16 @@ public class ScryerCamera extends Entity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float amount) {
+        return false;
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
+    }
+
+    @Override
+    public void readAdditionalSaveData(ValueInput tag) {
     }
 
     public boolean isAlwaysTicking() {

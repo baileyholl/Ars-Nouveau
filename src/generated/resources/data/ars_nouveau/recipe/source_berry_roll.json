@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:wheat"
-    },
-    {
-      "item": "minecraft:wheat"
-    },
-    {
-      "item": "minecraft:wheat"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    }
+    "minecraft:wheat",
+    "minecraft:wheat",
+    "minecraft:wheat",
+    "ars_nouveau:sourceberry_bush"
   ],
   "result": {
     "count": 1,

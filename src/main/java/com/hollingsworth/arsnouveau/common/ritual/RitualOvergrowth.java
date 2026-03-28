@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.item.BoneMealItem;
@@ -28,7 +28,7 @@ public class RitualOvergrowth extends AbstractRitual {
         BlockPos pos = getPos();
 
 
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         } else {
             if (getWorld().getGameTime() % 200 != 0)
@@ -93,7 +93,7 @@ public class RitualOvergrowth extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.OVERGROWTH);
     }
 

@@ -25,8 +25,9 @@ import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -52,12 +53,13 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     }
 
     @Override
-    public void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.color = ParticleColorRegistry.from(compound.getCompound("color"));
-        lit = compound.getBoolean("lit");
-        if (compound.contains("timeline")) {
-            this.timeline = ANCodecs.decode(LightTimeline.CODEC.codec(), compound.getCompound("timeline"));
+    public void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        compound.read("color", CompoundTag.CODEC).ifPresent(t -> this.color = ParticleColorRegistry.from(t));
+        lit = compound.getBooleanOr("lit", false);
+        var timelineOpt = compound.read("timeline", LightTimeline.CODEC.codec());
+        if (timelineOpt.isPresent()) {
+            this.timeline = timelineOpt.get();
         } else {
             this.timeline = new LightTimeline();
             PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
@@ -70,11 +72,11 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(compound, pRegistries);
-        compound.put("color", color.serialize());
+    public void saveAdditional(ValueOutput compound) {
+        super.saveAdditional(compound);
+        compound.store("color", CompoundTag.CODEC, color.serialize());
         compound.putBoolean("lit", lit);
-        compound.put("timeline", ANCodecs.encode(LightTimeline.CODEC.codec(), timeline));
+        compound.store("timeline", LightTimeline.CODEC.codec(), timeline);
     }
 
     @Override

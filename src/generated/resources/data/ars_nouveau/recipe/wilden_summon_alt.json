@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:purple_archwood_log"
-    },
-    {
-      "item": "minecraft:emerald_block"
-    },
-    {
-      "item": "minecraft:iron_sword"
-    },
-    {
-      "item": "minecraft:bow"
-    },
-    {
-      "item": "minecraft:lapis_block"
-    }
+    "ars_nouveau:purple_archwood_log",
+    "minecraft:emerald_block",
+    "minecraft:iron_sword",
+    "minecraft:bow",
+    "minecraft:lapis_block"
   ],
   "result": {
     "count": 1,

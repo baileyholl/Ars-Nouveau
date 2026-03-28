@@ -2,27 +2,29 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
+// GeckoLib 5.4.2: getModelResource and getTextureResource now take GeoRenderState, not T.
 public class PotionMelderModel extends GeoModel<PotionMelderTile> {
 
-    public static final ResourceLocation model = ArsNouveau.prefix("geo/potion_stirrer.geo.json");
-    public static final ResourceLocation texture = ArsNouveau.prefix("textures/block/potion_stirrer.png");
-    public static final ResourceLocation anim = ArsNouveau.prefix("animations/potion_melder_animation.json");
+    public static final Identifier model = ArsNouveau.prefix("potion_stirrer");
+    public static final Identifier texture = ArsNouveau.prefix("textures/block/potion_stirrer.png");
+    public static final Identifier anim = ArsNouveau.prefix("potion_melder_animation");
 
     @Override
-    public ResourceLocation getModelResource(PotionMelderTile volcanicTile) {
+    public Identifier getModelResource(GeoRenderState renderState) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(PotionMelderTile volcanicTile) {
+    public Identifier getTextureResource(GeoRenderState renderState) {
         return texture;
     }
 
     @Override
-    public ResourceLocation getAnimationResource(PotionMelderTile volcanicTile) {
+    public Identifier getAnimationResource(PotionMelderTile volcanicTile) {
         return anim;
     }
 }

@@ -18,15 +18,15 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -48,16 +48,16 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, ICharmSerializable {
+public class EntityBookwyrm extends PathfinderMob implements IDispellable, ITooltipProvider, IWandable, GeoEntity, ICharmSerializable {
 
     public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityBookwyrm.class, EntityDataSerializers.STRING);
@@ -66,7 +66,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     public int backoffTicks;
     public boolean playerTooFar;
 
-    public EntityBookwyrm(EntityType<? extends FlyingMob> p_i48568_1_, Level p_i48568_2_) {
+    public EntityBookwyrm(EntityType<? extends PathfinderMob> p_i48568_1_, Level p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveControl = new FlyingMoveControl(this, 10, true);
     }
@@ -82,7 +82,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide)
+        if (hand != InteractionHand.MAIN_HAND || player.level().isClientSide())
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
@@ -107,19 +107,19 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         if (level == null || this.dead || lecternPos == null)
             return;
         SummonUtil.healOverTime(this);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (backoffTicks >= 0)
                 backoffTicks--;
         }
 
         if (level.getGameTime() % 20 == 0) {
             if (!(level.getBlockEntity(lecternPos) instanceof StorageLecternTile)) {
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     this.hurt(level.damageSources().playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
                 }
             }
         }
-        if (!level.isClientSide && level.getGameTime() % 100 == 0) {
+        if (!level.isClientSide() && level.getGameTime() % 100 == 0) {
             playerTooFar = true;
             ServerLevel serverLevel = (ServerLevel) level;
             for (ServerPlayer serverPlayer : serverLevel.players()) {
@@ -148,10 +148,10 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float p_70097_2_) {
+    public boolean hurtServer(ServerLevel level, @NotNull DamageSource source, float p_70097_2_) {
         if (!SummonUtil.canSummonTakeDamage(source))
             return false;
-        return super.hurt(source, p_70097_2_);
+        return super.hurtServer(level, source, p_70097_2_);
     }
 
     @Override
@@ -159,7 +159,6 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
-        flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
 
@@ -197,18 +196,18 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         if (this.isRemoved())
             return false;
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
         return true;
     }
 
     @Override
-    public void remove(RemovalReason pReason) {
+    public void remove(Entity.RemovalReason pReason) {
         super.remove(pReason);
         StorageLecternTile tile = getTile();
         if (tile != null) {
@@ -222,32 +221,29 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         if (lecternPos != null) {
             tag.putLong("lectern", lecternPos.asLong());
         }
 
         if (!getHeldStack().isEmpty()) {
-            Tag itemTag = getHeldStack().save(registryAccess());
-            tag.put("held", itemTag);
+            tag.store("held", ItemStack.OPTIONAL_CODEC, getHeldStack());
         }
         tag.putInt("backoff", backoffTicks);
         tag.putString("color", this.entityData.get(COLOR));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("lectern")) {
-            lecternPos = BlockPos.of(tag.getLong("lectern"));
+        if (tag.getLong("lectern").isPresent()) {
+            lecternPos = BlockPos.of(tag.getLongOr("lectern", 0L));
         }
-        setHeldStack(ItemStack.parseOptional(registryAccess(), tag.getCompound("held")));
+        setHeldStack(tag.read("held", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
 
-        this.backoffTicks = tag.getInt("backoff");
-        if (tag.contains("color"))
-            this.entityData.set(COLOR, tag.getString("color"));
-
+        this.backoffTicks = tag.getIntOr("backoff", 0);
+        tag.getString("color").ifPresent(c -> this.entityData.set(COLOR, c));
     }
 
 
@@ -257,8 +253,8 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "walkController", 1, event -> {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
+        data.add(new AnimationController<EntityBookwyrm>("walkController", 1, event -> {
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
         }));
     }
@@ -271,7 +267,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(net.minecraft.server.level.ServerLevel level) {
         return 0;
     }
 
@@ -291,7 +287,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM.get());
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -313,9 +309,9 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
 
     public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
 
-    public static final Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+    public static final Map<String, Identifier> TEXTURES = new HashMap<>();
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";

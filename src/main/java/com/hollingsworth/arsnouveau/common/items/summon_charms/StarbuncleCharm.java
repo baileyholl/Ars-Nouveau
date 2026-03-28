@@ -9,14 +9,17 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class StarbuncleCharm extends AbstractSummonCharm implements AliasProvider {
     public StarbuncleCharm() {
@@ -51,11 +54,12 @@ public class StarbuncleCharm extends AbstractSummonCharm implements AliasProvide
 
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
         StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
         if (data != null) {
-            data.addToTooltip(context, tooltip2::add, flagIn);
+            // 1.21.11: TooltipProvider.addToTooltip now takes 4 params; ItemStack implements DataComponentGetter
+            data.addToTooltip(context, tooltip2, flagIn, stack);
         }
     }
 }

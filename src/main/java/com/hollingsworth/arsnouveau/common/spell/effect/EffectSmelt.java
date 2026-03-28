@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 
 import static net.minecraft.world.item.crafting.RecipeType.SMOKING;
 
@@ -69,11 +72,13 @@ public class EffectSmelt extends AbstractEffect {
 
     public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter, BlockHitResult hitResult, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!canBlockBeHarvested(spellStats, world, pos)) return;
+        if (!(world instanceof ServerLevel serverLvl)) return;
         BlockState state = world.getBlockState(pos);
-        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos)) return;
-        Optional<RecipeHolder<SmeltingRecipe>> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(new ItemStack(state.getBlock().asItem(), 1)), world);
+        if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, serverLvl), world, pos)) return;
+        SingleRecipeInput smeltInput = new SingleRecipeInput(new ItemStack(state.getBlock().asItem(), 1));
+        Optional<RecipeHolder<SmeltingRecipe>> optional = serverLvl.recipeAccess().getRecipeFor(RecipeType.SMELTING, smeltInput, world);
         if (optional.isPresent()) {
-            ItemStack itemstack = optional.get().value().getResultItem(world.registryAccess());
+            ItemStack itemstack = optional.get().value().assemble(smeltInput, world.registryAccess());
             if (!itemstack.isEmpty()) {
                 if (itemstack.getItem() instanceof BlockItem) {
                     world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
@@ -88,22 +93,25 @@ public class EffectSmelt extends AbstractEffect {
     }
 
 
+    @SuppressWarnings("unchecked")
     public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt, SpellStats spellStats) {
+        if (!(world instanceof ServerLevel serverLvl)) return;
         int numSmelted = 0;
         for (ItemEntity itemEntity : itemEntities) {
             if (numSmelted >= maxItemSmelt) break;
-            Optional optional;
+            SingleRecipeInput recipeInput = new SingleRecipeInput(itemEntity.getItem());
 
+            Optional<RecipeHolder<? extends net.minecraft.world.item.crafting.Recipe<SingleRecipeInput>>> optional;
             if (spellStats.hasBuff(AugmentDampen.INSTANCE)) {
-                optional = world.getRecipeManager().getRecipeFor(SMOKING, new SingleRecipeInput(itemEntity.getItem()), world);
+                optional = (Optional) serverLvl.recipeAccess().getRecipeFor(SMOKING, recipeInput, world);
             } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
-                optional = world.getRecipeManager().getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(itemEntity.getItem()), world);
+                optional = (Optional) serverLvl.recipeAccess().getRecipeFor(RecipeType.BLASTING, recipeInput, world);
             } else {
-                optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(itemEntity.getItem()), world);
+                optional = (Optional) serverLvl.recipeAccess().getRecipeFor(RecipeType.SMELTING, recipeInput, world);
             }
 
             if (optional.isPresent()) {
-                ItemStack result = ((RecipeHolder<?>) (optional.get())).value().getResultItem(world.registryAccess()).copy();
+                ItemStack result = optional.get().value().assemble(recipeInput, world.registryAccess()).copy();
                 if (result.isEmpty()) continue;
                 while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
                     itemEntity.getItem().shrink(1);
@@ -124,7 +132,7 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

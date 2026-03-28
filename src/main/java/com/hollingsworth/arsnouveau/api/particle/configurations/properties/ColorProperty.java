@@ -173,9 +173,9 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     propertyHolder.set(getType(), property);
                 }) {
                     @Override
-                    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+                    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
                         DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_BUTTON_BIG, x, y);
-                        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+                        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
                     }
                 };
                 size++;
@@ -190,7 +190,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 selectableButtons.add(noneButton);
                 selectableButtons.add(rainbowButton);
                 textField.setValue(displayColor.toHex());
-                textField.textColor = displayColor.getOppositeColor().getColor();
+                textField.textColor = 0xFF000000 | displayColor.getOppositeColor().getColor();
                 textField.setMaxLength(7);
                 textField.setFilter((s) -> {
                     if (!s.startsWith("#")) {
@@ -229,7 +229,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 particleColor = HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()).toColor().toParticle();
                 displayColor = particleColor;
                 propertyHolder.set(getType(), property);
-                textField.setTextColor(displayColor.getOppositeColor().getColor());
+                textField.setTextColor(0xFF000000 | displayColor.getOppositeColor().getColor());
                 if (!textField.value.equals(displayColor.toHex())) {
                     textField.value = displayColor.toHex();
                 }

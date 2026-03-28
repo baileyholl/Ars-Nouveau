@@ -38,14 +38,15 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     public int enchantLevel;
 
     public EnchantmentRecipe(List<Ingredient> pedestalItems, ResourceKey<Enchantment> enchantmentKey, int level, int source) {
-        super(Ingredient.EMPTY, ItemStack.EMPTY, pedestalItems, source, true);
+        super(Ingredient.of(Items.ENCHANTED_BOOK), ItemStack.EMPTY, pedestalItems, source, true);
         this.enchantmentKey = enchantmentKey;
         this.enchantLevel = level;
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
-        return RecipeRegistry.ENCHANTMENT_TYPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeType<EnchantingApparatusRecipe> getType() {
+        return (RecipeType<EnchantingApparatusRecipe>) (RecipeType<?>) RecipeRegistry.ENCHANTMENT_TYPE.get();
     }
 
     @Override
@@ -60,7 +61,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     }
 
     public Holder<Enchantment> holderFor(Level level) {
-        return level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(enchantmentKey);
+        return level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentKey);
     }
 
     @Override
@@ -110,13 +111,9 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.ENCHANTMENT_SERIALIZER.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeSerializer<EnchantingApparatusRecipe> getSerializer() {
+        return (RecipeSerializer<EnchantingApparatusRecipe>) (RecipeSerializer<?>) RecipeRegistry.ENCHANTMENT_SERIALIZER.get();
     }
 
     public ResourceKey<Enchantment> enchantmentKey() {

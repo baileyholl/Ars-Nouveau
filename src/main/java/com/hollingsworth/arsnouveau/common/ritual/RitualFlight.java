@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
@@ -34,7 +34,7 @@ public class RitualFlight extends RangeEffectRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.FLIGHT);
     }
 

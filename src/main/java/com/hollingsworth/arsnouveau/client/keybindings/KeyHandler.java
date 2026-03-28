@@ -12,6 +12,8 @@ import com.hollingsworth.arsnouveau.common.network.*;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +27,7 @@ import static com.hollingsworth.arsnouveau.api.util.StackUtil.getHeldSpellbook;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class KeyHandler {
-    private static final Minecraft MINECRAFT = Minecraft.getInstance();
+    private static Minecraft mc() { return Minecraft.getInstance(); }
     public static KeyMapping[] CURIO_MAPPINGS = new KeyMapping[]{
             ModKeyBindings.HEAD_CURIO_HOTKEY
     };
@@ -36,8 +38,8 @@ public class KeyHandler {
             Networking.sendToServer(new PacketToggleFamiliar());
         }
         if (key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue() && !ModKeyBindings.OPEN_RADIAL_HUD.isUnbound()) {
-            if (MINECRAFT.screen instanceof GuiRadialMenu) {
-                MINECRAFT.player.closeContainer();
+            if (mc().screen instanceof GuiRadialMenu) {
+                mc().player.closeContainer();
                 return;
             }
         }
@@ -47,14 +49,14 @@ public class KeyHandler {
     public static void checkCasterKeys(int key) {
         if (key == -1)
             return;
-        Player player = MINECRAFT.player;
+        Player player = mc().player;
         ItemStack radialStack = StackUtil.getHeldRadial(player);
         if (radialStack.getItem() instanceof IRadialProvider radialProvider && key == ((IRadialProvider) radialStack.getItem()).forKey()) {
-            if (MINECRAFT.screen == null) {
+            if (mc().screen == null) {
                 radialProvider.onRadialKeyPressed(radialStack, player);
                 return;
-            } else if (MINECRAFT.screen instanceof GuiRadialMenu) {
-                MINECRAFT.player.closeContainer();
+            } else if (mc().screen instanceof GuiRadialMenu) {
+                mc().player.closeContainer();
                 return;
             }
         }
@@ -80,12 +82,12 @@ public class KeyHandler {
 
 
         if (key == ModKeyBindings.OPEN_BOOK.getKey().getValue()) {
-            if (MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spellNameBox.isFocused()) {
-                MINECRAFT.player.closeContainer();
+            if (mc().screen instanceof GuiSpellBook && !((GuiSpellBook) mc().screen).spellNameBox.isFocused()) {
+                mc().player.closeContainer();
                 return;
             }
 
-            if (MINECRAFT.screen == null) {
+            if (mc().screen == null) {
                 // TODO remove these exceptions and have casters tell which keys they capture
                 ItemStack spellbook = getHeldSpellbook(player);
                 if (!spellbook.isEmpty()) {
@@ -111,17 +113,17 @@ public class KeyHandler {
     public static void checkCurioHotkey(int keyMapping) {
         for (KeyMapping mapping : CURIO_MAPPINGS) {
             if (mapping.getKey().getValue() == keyMapping) {
-                IItemHandlerModifiable handler = CuriosUtil.getAllWornItems(MINECRAFT.player);
+                IItemHandlerModifiable handler = CuriosUtil.getAllWornItems(mc().player);
                 if (handler == null)
                     return;
 
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack stack = handler.getStackInSlot(i);
                     if (stack.getItem() instanceof IRadialProvider radialProvider) {
-                        if (MINECRAFT.screen instanceof GuiRadialMenu) {
-                            MINECRAFT.player.closeContainer();
+                        if (mc().screen instanceof GuiRadialMenu) {
+                            mc().player.closeContainer();
                         } else {
-                            radialProvider.onRadialKeyPressed(stack, MINECRAFT.player);
+                            radialProvider.onRadialKeyPressed(stack, mc().player);
                         }
                     }
                 }
@@ -133,22 +135,23 @@ public class KeyHandler {
     @SubscribeEvent
     public static void mouseEvent(final InputEvent.MouseButton.Post event) {
 
-        if (MINECRAFT.player == null || event.getAction() != 1)
+        if (mc().player == null || event.getAction() != 1)
             return;
-        if (MINECRAFT.screen instanceof GuiRadialMenu<?> screen) {
-            screen.mouseClicked(0, 0, 0);
+        if (mc().screen instanceof GuiRadialMenu<?> screen) {
+            // 1.21.11: mouseClicked now takes MouseButtonEvent; simulate left-click at origin
+            screen.mouseClicked(new MouseButtonEvent(0, 0, new MouseButtonInfo(0, 0)), false);
             return;
         }
-        if (MINECRAFT.screen == null)
+        if (mc().screen == null)
             checkKeysPressed(event.getButton());
     }
 
     @SubscribeEvent
     public static void keyEvent(final InputEvent.Key event) {
 
-        if (MINECRAFT.player == null || event.getAction() != 1)
+        if (mc().player == null || event.getAction() != 1)
             return;
-        if (MINECRAFT.screen == null || MINECRAFT.screen instanceof GuiRadialMenu)
+        if (mc().screen == null || mc().screen instanceof GuiRadialMenu)
             checkKeysPressed(event.getKey());
         if (event.getKey() == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
             if (Minecraft.getInstance().player != null

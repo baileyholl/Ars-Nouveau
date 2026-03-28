@@ -29,7 +29,7 @@ public class PacketCastSpell extends AbstractPacket {
 
     public PacketCastSpell(AbstractCaster<?> caster, InteractionHand hand, @Nullable Component invalidMessage) {
         this.slot = caster.getCurrentSlot();
-        var cam = Minecraft.getInstance().cameraEntity;
+        var cam = Minecraft.getInstance().getCameraEntity();
         this.xRot = cam.xRot;
         this.yRot = cam.yRot;
         this.hand = hand;
@@ -43,7 +43,7 @@ public class PacketCastSpell extends AbstractPacket {
         this.yRot = buf.readFloat();
         this.hand = buf.readEnum(InteractionHand.class);
         if (buf.readBoolean()) {
-            this.invalidMessage = buf.readJsonWithCodec(ComponentSerialization.CODEC);
+            this.invalidMessage = buf.readLenientJsonWithCodec(ComponentSerialization.CODEC);
         }
     }
 
@@ -72,7 +72,7 @@ public class PacketCastSpell extends AbstractPacket {
             player.setXRot(this.xRot);
             player.setYHeadRot(this.yRot);
 
-            caster.castSpell(player.level, player, this.hand, this.invalidMessage, caster.getSpell(this.slot));
+            caster.castSpell(player.level(), player, this.hand, this.invalidMessage, caster.getSpell(this.slot));
 
             player.setXRot(pXRot);
             player.setYHeadRot(pYRot);

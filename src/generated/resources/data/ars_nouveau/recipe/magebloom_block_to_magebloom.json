@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:magebloom_block"
-    }
+    "ars_nouveau:magebloom_block"
   ],
   "result": {
     "count": 4,

@@ -1,27 +1,24 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 
-public class RenderBlank extends EntityRenderer {
-    private final ResourceLocation entityTexture;
+// 1.21.11: EntityRenderer is now 2 type params <T, S extends EntityRenderState>
+// render(T, float, float, PoseStack, MultiBufferSource, int) removed; use submit()
+// getTextureLocation(T) removed; no longer part of EntityRenderer
+public class RenderBlank extends EntityRenderer<Entity, EntityRenderState> {
+    private final Identifier entityTexture;
 
-    public RenderBlank(EntityRendererProvider.Context renderManager, ResourceLocation entityTexture) {
+    public RenderBlank(EntityRendererProvider.Context renderManager, Identifier entityTexture) {
         super(renderManager);
         this.entityTexture = entityTexture;
     }
 
     @Override
-    public void render(Entity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(Entity entity) {
-        return entityTexture;
+    public EntityRenderState createRenderState() {
+        return new EntityRenderState();
     }
 }

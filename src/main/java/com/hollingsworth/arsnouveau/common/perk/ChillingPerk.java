@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.spell.IDamageEffect;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
@@ -15,7 +15,7 @@ import net.minecraft.world.phys.EntityHitResult;
 public class ChillingPerk extends Perk implements IEffectResolvePerk {
     public static ChillingPerk INSTANCE = new ChillingPerk(ArsNouveau.prefix("thread_chilling"));
 
-    public ChillingPerk(ResourceLocation key) {
+    public ChillingPerk(Identifier key) {
         super(key);
     }
 

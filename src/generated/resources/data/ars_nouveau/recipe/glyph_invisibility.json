@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "minecraft:fermented_spider_eye"
-    },
-    {
-      "tag": "c:rods/blaze"
-    }
+    "ars_nouveau:abjuration_essence",
+    "minecraft:fermented_spider_eye",
+    "#c:rods/blaze"
   ],
   "output": {
     "count": 1,

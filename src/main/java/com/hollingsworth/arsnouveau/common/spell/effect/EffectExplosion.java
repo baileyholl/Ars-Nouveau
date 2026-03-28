@@ -7,13 +7,10 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
-import net.minecraft.network.protocol.game.ClientboundExplodePacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -44,30 +41,12 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
         explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }
 
-    public Explosion explode(Level world, @Nullable Entity e, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator context,
-                             double x, double y, double z, float radius, boolean p_230546_11_, Explosion.BlockInteraction p_230546_12_, double amp) {
-        ANExplosion explosion = new ANExplosion(world, e, source, context, x, y, z, radius, p_230546_11_, p_230546_12_, amp);
+    public void explode(Level world, @Nullable Entity e, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator context,
+                        double x, double y, double z, float radius, boolean fire, Explosion.BlockInteraction blockInteraction, double amp) {
+        ANExplosion explosion = new ANExplosion(world, e, source, context, x, y, z, radius, fire, blockInteraction, amp);
         explosion.baseDamage = DAMAGE.get();
         explosion.ampDamageScalar = AMP_DAMAGE.get();
-        if (net.neoforged.neoforge.event.EventHooks.onExplosionStart(world, explosion)) return explosion;
-        explosion.explode();
-        explosion.finalizeExplosion(false);
-        if (p_230546_12_ == Explosion.BlockInteraction.KEEP) {
-            explosion.clearToBlow();
-        }
-
-        for (Player serverplayerentity : world.players()) {
-            if (serverplayerentity.distanceToSqr(x, y, z) < 4096.0D) {
-                ((ServerPlayer) serverplayerentity).connection.send(new ClientboundExplodePacket(x, y, z, radius, explosion.getToBlow(),
-                        explosion.getHitPlayers().get(serverplayerentity),
-                        explosion.blockInteraction,
-                        explosion.smallExplosionParticles,
-                        explosion.largeExplosionParticles,
-                        explosion.explosionSound));
-            }
-        }
-
-        return explosion;
+        explosion.explodeWithCustomDamage();
     }
 
     public ModConfigSpec.DoubleValue BASE;
@@ -105,7 +84,7 @@ public class EffectExplosion extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 

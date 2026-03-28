@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ArchwoodChest extends ChestBlock {
     public ArchwoodChest() {
-        super(BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.WOOD), () -> BlockRegistry.ARCHWOOD_CHEST_TILE.get());
+        super(() -> BlockRegistry.ARCHWOOD_CHEST_TILE.get(), SoundEvents.CHEST_OPEN, SoundEvents.CHEST_CLOSE, BlockRegistry.newBlockProperties().strength(2.5F).sound(SoundType.WOOD));
     }
 
     @Override

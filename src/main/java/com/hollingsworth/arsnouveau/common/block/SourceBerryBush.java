@@ -12,8 +12,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -51,12 +52,13 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     public static final MapCodec<SourceBerryBush> CODEC = simpleCodec(SourceBerryBush::new);
 
     @Override
-    protected MapCodec<? extends BushBlock> codec() {
-        return CODEC;
+    @SuppressWarnings("unchecked")
+    public MapCodec<BushBlock> codec() {
+        return (MapCodec<BushBlock>) (MapCodec<?>) CODEC;
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean pPickBlock, Player player) {
         return new ItemStack(BlockRegistry.SOURCEBERRY_BUSH);
     }
 
@@ -88,10 +90,10 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+    protected void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn, InsideBlockEffectApplier pInsideBlockEffectApplier, boolean pFirstEnter) {
         if (entityIn instanceof LivingEntity && !entityIn.getType().is(EntityTags.BERRY_BLACKLIST)) {
             entityIn.makeStuckInBlock(state, new Vec3(0.8F, 0.75D, 0.8F));
-            if (!worldIn.isClientSide && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
+            if (!worldIn.isClientSide() && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
                 double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
                 if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
@@ -102,18 +104,18 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         int i = state.getValue(AGE);
         boolean flag = i == 3;
         if (!flag && player.getItemInHand(handIn).is(Items.BONE_MEAL)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         } else if (i > 1) {
             int j = 1 + worldIn.random.nextInt(2);
             popResource(worldIn, pos, new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, j + (flag ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             BlockState blockstate = state.setValue(AGE, 1);
             worldIn.setBlock(pos, blockstate, 3);
-            return ItemInteractionResult.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.SUCCESS;
         } else {
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         }

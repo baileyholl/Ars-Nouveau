@@ -25,8 +25,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -34,11 +33,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -107,31 +108,30 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
-        tag.put("spell", ANCodecs.encode(Spell.CODEC.codec(), spell));
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
+        tag.store("spell", Spell.CODEC.codec(), spell);
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("redstone", disabled);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
         if (uuid != null)
-            tag.putUUID("uuid", uuid);
+            tag.store("uuid", UUIDUtil.CODEC, uuid);
         tag.putBoolean("sensitive", isSensitive);
         tag.putString("pattern", pattern);
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        this.spell = ANCodecs.decode(Spell.CODEC.codec(), tag.getCompound("spell"));
-        this.isCharged = tag.getBoolean("charged");
-        this.disabled = tag.getBoolean("redstone");
-        this.isTemporary = tag.getBoolean("temp");
-        this.ticksUntilCharge = tag.getInt("cooldown");
-        if (tag.contains("uuid"))
-            this.uuid = tag.getUUID("uuid");
-        this.isSensitive = tag.getBoolean("sensitive");
-        this.pattern = tag.getString("pattern");
+    protected void loadAdditional(@NotNull ValueInput tag) {
+        super.loadAdditional(tag);
+        this.spell = tag.read("spell", Spell.CODEC.codec()).orElseGet(Spell::new);
+        this.isCharged = tag.getBooleanOr("charged", true);
+        this.disabled = tag.getBooleanOr("redstone", false);
+        this.isTemporary = tag.getBooleanOr("temp", false);
+        this.ticksUntilCharge = tag.getIntOr("cooldown", 0);
+        this.uuid = tag.read("uuid", UUIDUtil.CODEC).orElse(null);
+        this.isSensitive = tag.getBooleanOr("sensitive", false);
+        this.pattern = tag.getStringOr("pattern", "");
     }
 
     @Override
@@ -139,17 +139,17 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
 
         if (level == null)
             return;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (--ticksUntilCharge > 0) {
                 return;
             }
         }
         if (this.isCharged)
             return;
-        if (!level.isClientSide && this.isTemporary) {
+        if (!level.isClientSide() && this.isTemporary) {
             level.destroyBlock(this.worldPosition, false);
         }
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             List<ISpecialSourceProvider> provider = SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, spell.getCost());
             if (provider != null) {
                 this.isCharged = true;

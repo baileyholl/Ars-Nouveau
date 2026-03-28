@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "minecraft:tnt"
-    },
-    {
-      "item": "minecraft:tnt"
-    },
-    {
-      "item": "minecraft:tnt"
-    },
-    {
-      "item": "minecraft:fire_charge"
-    }
+    "ars_nouveau:fire_essence",
+    "minecraft:tnt",
+    "minecraft:tnt",
+    "minecraft:tnt",
+    "minecraft:fire_charge"
   ],
   "output": {
     "count": 1,

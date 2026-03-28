@@ -31,7 +31,7 @@ public class GlyphButton extends ANButton {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderContents(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (!visible) {
             return;
         }
@@ -48,7 +48,7 @@ public class GlyphButton extends ANButton {
         for (SpellValidationError ve : validationErrors) {
             tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
         }
-        if (Screen.hasShiftDown()) {
+        if (Minecraft.getInstance().hasShiftDown()) {
             tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
             tip.add(Component.translatable("ars_nouveau.schools"));
             for (SpellSchool s : spellPart.spellSchools) {
@@ -57,7 +57,11 @@ public class GlyphButton extends ANButton {
             tip.add(spellPart.getBookDescLang());
         } else {
             tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
-            var modName = spellPart.getGlyph().getCreatorModId(spellPart.getGlyph().getDefaultInstance());
+            var mc = Minecraft.getInstance();
+            String modName = null;
+            if (mc.level != null) {
+                modName = spellPart.getGlyph().getCreatorModId(mc.level.registryAccess(), spellPart.getGlyph().getDefaultInstance());
+            }
             if (modName == null) {
                 modName = StringUtils.capitalize(spellPart.getRegistryName().getNamespace());
             }

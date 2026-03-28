@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:blank_parchment"
-    },
-    {
-      "tag": "c:chests"
-    }
+    "ars_nouveau:blank_parchment",
+    "#c:chests"
   ],
   "result": {
     "count": 1,

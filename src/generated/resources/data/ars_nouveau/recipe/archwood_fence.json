@@ -3,12 +3,8 @@
   "category": "building",
   "group": "wooden_fence",
   "key": {
-    "#": {
-      "item": "minecraft:stick"
-    },
-    "W": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "#": "minecraft:stick",
+    "W": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "W#W",

@@ -55,7 +55,7 @@ public class ModSetup {
         SoundRegistry.SOUND_REG.register(modEventBus);
         StructureRegistry.STRUCTURES.register(modEventBus);
         StructureRegistry.STRUCTURE_PROCESSOR.register(modEventBus);
-        MaterialRegistry.MATERIALS.register(modEventBus);
+        // MaterialRegistry.MATERIALS removed — ArmorMaterial is a plain record in 1.21.11, not a registry
         ANCriteriaTriggers.TRIGGERS.register(modEventBus);
         MenuRegistry.MENU_REG.register(modEventBus);
         VillagerRegistry.POIs.register(modEventBus);

@@ -10,7 +10,7 @@ import net.neoforged.neoforge.server.command.ModIdArgument;
 public class ExportDocsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-doc-export").
-                requires(sender -> sender.hasPermission(2))
+                requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("modid", ModIdArgument.modIdArgument())
                         .executes(context -> {
                             Networking.sendToPlayerClient(new PacketExportDocs(context.getArgument("modid", String.class)), context.getSource().getPlayerOrException());

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "minecraft:moss_block"
-    },
-    "y": {
-      "item": "ars_nouveau:manipulation_essence"
-    }
+    "x": "minecraft:moss_block",
+    "y": "ars_nouveau:manipulation_essence"
   },
   "pattern": [
     "xxx",

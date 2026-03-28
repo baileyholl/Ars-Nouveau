@@ -15,6 +15,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -137,7 +139,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     public void invalidateNetwork() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         Set<BlockPos> visited = new HashSet<>();
@@ -164,7 +166,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     public void initCache() {
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             slotCache = new SlotCache(false);
             for (int i = 0; i < getContainerSize(); i++) {
                 ItemStack stack = getItem(i);
@@ -180,30 +182,30 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(pTag, pRegistries);
+    protected void saveAdditional(ValueOutput pTag) {
+        super.saveAdditional(pTag);
         if (!this.trySaveLootTable(pTag)) {
-            ContainerHelper.saveAllItems(pTag, this.items, pRegistries);
+            ContainerHelper.saveAllItems(pTag, this.items);
         }
         pTag.putInt("fillLevel", fillLevel);
         pTag.putInt("configuration", configuration);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(pTag)) {
-            ContainerHelper.loadAllItems(pTag, this.items, pRegistries);
+            ContainerHelper.loadAllItems(pTag, this.items);
         }
-        fillLevel = pTag.getInt("fillLevel");
-        configuration = pTag.getInt("configuration");
+        fillLevel = pTag.getIntOr("fillLevel", 0);
+        configuration = pTag.getIntOr("configuration", 0);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
-        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag(), lookupProvider);
+    public void onDataPacket(Connection net, ValueInput input) {
+        super.onDataPacket(net, input);
+        handleUpdateTag(input);
     }
 
     public boolean updateBlock() {
@@ -218,9 +220,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
-        CompoundTag tag = super.getUpdateTag(pRegistries);
-        this.saveAdditional(tag, pRegistries);
-        return tag;
+        return this.saveCustomOnly(pRegistries);
     }
 
     @Override

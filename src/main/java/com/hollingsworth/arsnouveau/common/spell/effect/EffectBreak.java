@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -53,7 +53,7 @@ public class EffectBreak extends AbstractEffect {
         BlockPos pos = rayTraceResult.getBlockPos();
         BlockState state;
 
-        MobEffectInstance miningFatigue = shooter.getEffect(MobEffects.DIG_SLOWDOWN);
+        MobEffectInstance miningFatigue = shooter.getEffect(MobEffects.MINING_FATIGUE);
         if (miningFatigue != null)
             spellStats.setAmpMultiplier(spellStats.getAmpMultiplier() - miningFatigue.getAmplifier());
 
@@ -121,7 +121,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         defaults.put(AugmentFortune.INSTANCE.getRegistryName(), 4);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

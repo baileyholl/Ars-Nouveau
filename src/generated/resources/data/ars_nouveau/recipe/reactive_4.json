@@ -3,24 +3,12 @@
   "enchantment": "ars_nouveau:reactive",
   "level": 4,
   "pedestalItems": [
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "item": "ars_nouveau:wilden_tribute"
-    }
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:ender_pearls",
+    "ars_nouveau:wilden_tribute"
   ],
   "sourceCost": 9000
 }

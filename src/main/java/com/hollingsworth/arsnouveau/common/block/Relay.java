@@ -3,10 +3,12 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.RelayTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -44,12 +47,12 @@ public class Relay extends TickableModBlock implements SimpleWaterloggedBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, orientation, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RelayTile relayTile) {
             relayTile.disabled = world.hasNeighborSignal(pos);
             relayTile.updateBlock();
@@ -79,9 +82,9 @@ public class Relay extends TickableModBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTick, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTick.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }

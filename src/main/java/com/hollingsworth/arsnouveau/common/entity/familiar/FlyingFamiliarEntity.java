@@ -20,7 +20,7 @@ public abstract class FlyingFamiliarEntity extends FamiliarEntity {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
-        flyingpathnavigator.setCanPassDoors(true);
+        // 1.21.11: setCanPassDoors removed from FlyingPathNavigation
         return flyingpathnavigator;
     }
 
@@ -29,13 +29,15 @@ public abstract class FlyingFamiliarEntity extends FamiliarEntity {
         return true;
     }
 
+    // 1.21.11: calculateFallDamage(float, float) → calculateFallDamage(double, float)
     @Override
-    protected int calculateFallDamage(float p_225508_1_, float p_225508_2_) {
+    protected int calculateFallDamage(double p_225508_1_, float p_225508_2_) {
         return 0;
     }
 
+    // 1.21.11: causeFallDamage(float, float, DamageSource) → causeFallDamage(double, float, DamageSource)
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, @NotNull DamageSource p_147189_) {
+    public boolean causeFallDamage(double p_147187_, float p_147188_, @NotNull DamageSource p_147189_) {
         return false;
     }
 }

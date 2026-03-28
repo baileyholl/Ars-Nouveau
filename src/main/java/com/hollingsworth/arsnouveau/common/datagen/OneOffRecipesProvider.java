@@ -5,9 +5,12 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.BookUpgradeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.PotionFlaskRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -38,25 +41,25 @@ public class OneOffRecipesProvider extends SimpleDataProvider {
 
         BookUpgradeRecipe apprentice = new BookUpgradeRecipe("", CraftingBookCategory.MISC, ItemsRegistry.APPRENTICE_SPELLBOOK.get().getDefaultInstance(),
                 NonNullList.copyOf(List.of(
-                        Ingredient.of(ItemsRegistry.NOVICE_SPELLBOOK.get().getDefaultInstance()),
-                        Ingredient.of(Tags.Items.OBSIDIANS),
-                        Ingredient.of(Tags.Items.GEMS_DIAMOND),
-                        Ingredient.of(Tags.Items.GEMS_DIAMOND),
-                        Ingredient.of(Tags.Items.GEMS_DIAMOND),
+                        Ingredient.of(ItemsRegistry.NOVICE_SPELLBOOK.get()),
+                        Ingredient.of(tagHolderSet(Tags.Items.OBSIDIANS)),
+                        Ingredient.of(tagHolderSet(Tags.Items.GEMS_DIAMOND)),
+                        Ingredient.of(tagHolderSet(Tags.Items.GEMS_DIAMOND)),
+                        Ingredient.of(tagHolderSet(Tags.Items.GEMS_DIAMOND)),
                         Ingredient.of(Items.QUARTZ_BLOCK),
                         Ingredient.of(Items.QUARTZ_BLOCK),
-                        Ingredient.of(Tags.Items.RODS_BLAZE),
-                        Ingredient.of(Tags.Items.RODS_BLAZE)
+                        Ingredient.of(tagHolderSet(Tags.Items.RODS_BLAZE)),
+                        Ingredient.of(tagHolderSet(Tags.Items.RODS_BLAZE))
                 )));
 
         BookUpgradeRecipe archmage = new BookUpgradeRecipe("", CraftingBookCategory.MISC, ItemsRegistry.ARCHMAGE_SPELLBOOK.get().getDefaultInstance(),
                 NonNullList.copyOf(List.of(
-                        Ingredient.of(ItemsRegistry.APPRENTICE_SPELLBOOK.get().getDefaultInstance()),
-                        Ingredient.of(Tags.Items.ENDER_PEARLS),
-                        Ingredient.of(Tags.Items.ENDER_PEARLS),
-                        Ingredient.of(Tags.Items.ENDER_PEARLS),
-                        Ingredient.of(Tags.Items.GEMS_EMERALD),
-                        Ingredient.of(Tags.Items.GEMS_EMERALD),
+                        Ingredient.of(ItemsRegistry.APPRENTICE_SPELLBOOK.get()),
+                        Ingredient.of(tagHolderSet(Tags.Items.ENDER_PEARLS)),
+                        Ingredient.of(tagHolderSet(Tags.Items.ENDER_PEARLS)),
+                        Ingredient.of(tagHolderSet(Tags.Items.ENDER_PEARLS)),
+                        Ingredient.of(tagHolderSet(Tags.Items.GEMS_EMERALD)),
+                        Ingredient.of(tagHolderSet(Tags.Items.GEMS_EMERALD)),
                         Ingredient.of(Items.TOTEM_OF_UNDYING),
                         Ingredient.of(Items.NETHER_STAR),
                         Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE)
@@ -77,6 +80,11 @@ public class OneOffRecipesProvider extends SimpleDataProvider {
     @Override
     public String getName() {
         return "Grab bag Datagen";
+    }
+
+    /** Creates a named HolderSet from a TagKey using BuiltInRegistries as the owner. */
+    private static HolderSet<Item> tagHolderSet(TagKey<Item> tag) {
+        return HolderSet.emptyNamed(BuiltInRegistries.ITEM, tag);
     }
 
 }

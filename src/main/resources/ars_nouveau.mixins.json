@@ -6,6 +6,7 @@
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "client": [
     "ChatComponentAccessor",
+    "ScreenAccessor",
     "GameRendererMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",

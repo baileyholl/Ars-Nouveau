@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRec
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 
 import java.nio.file.Path;
@@ -34,7 +34,7 @@ public class BuddingConversionProvider extends SimpleDataProvider {
         recipes.add(new Wrapper(ArsNouveau.prefix("budding_amethyst"), new BuddingConversionRecipe(Blocks.AMETHYST_BLOCK, Blocks.BUDDING_AMETHYST)));
     }
 
-    public record Wrapper(ResourceLocation location, BuddingConversionRecipe recipe) {
+    public record Wrapper(Identifier location, BuddingConversionRecipe recipe) {
 
     }
 

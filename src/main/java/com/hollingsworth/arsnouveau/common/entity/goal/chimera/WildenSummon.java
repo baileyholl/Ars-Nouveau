@@ -36,7 +36,7 @@ public class WildenSummon extends Goal {
     public void start() {
         super.start();
         Networking.sendToNearbyClient(entity.level, entity, new PacketAnimEntity(entity.getId(), WildenHunter.Animations.HOWL.ordinal()));
-        entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.3f);
+        entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_SHAKE, SoundSource.HOSTILE, 1.0f, 0.3f);
         ticksSummoning = 0;
         this.entity.summonCooldown = 400;
         this.entity.getEntityData().set(WildenHunter.ANIM_STATE, WildenHunter.Animations.HOWL.name());

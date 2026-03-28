@@ -11,9 +11,13 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Relative;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -23,12 +27,12 @@ import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F)
+        super(BlockRegistry.newBlockProperties().strength(0.2f, 3600000.0F)
                 .noLootTable()
                 .sound(SoundType.GLASS)
                 .noOcclusion()
@@ -37,7 +41,7 @@ public class DimBoundary extends ModBlock implements IWandable {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid) {
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer instanceof FakePlayer) {
                 return false;
@@ -53,7 +57,7 @@ public class DimBoundary extends ModBlock implements IWandable {
             ServerLevel returnLevel = serverLevel.getServer().getLevel(enteredFrom.pos().dimension());
             if (returnLevel != null) {
                 BlockPos worldPos = globalPos.pos();
-                player.teleportTo(returnLevel, worldPos.getX() + 0.5, worldPos.getY(), worldPos.getZ() + 0.5, new HashSet<>(), enteredFrom.rot().y, enteredFrom.rot().x);
+                player.teleportTo(returnLevel, worldPos.getX() + 0.5, worldPos.getY(), worldPos.getZ() + 0.5, Set.of(), enteredFrom.rot().y, enteredFrom.rot().x, true);
             } else {
                 sendPlayerToSpawn(serverLevel, serverPlayer);
             }
@@ -63,13 +67,16 @@ public class DimBoundary extends ModBlock implements IWandable {
     }
 
     private void sendPlayerToSpawn(ServerLevel serverLevel, ServerPlayer player) {
-        ServerLevel spawnlevel = serverLevel.getServer().getLevel(player.getRespawnDimension());
-        BlockPos respawnPos = player.getRespawnPosition();
+        // Use new 1.21.11 respawn API: getRespawnConfig() replaces getRespawnDimension()/getRespawnPosition()
+        ServerPlayer.RespawnConfig respawnConfig = player.getRespawnConfig();
+        ServerLevel spawnlevel = serverLevel.getServer().getLevel(ServerPlayer.RespawnConfig.getDimensionOrDefault(respawnConfig));
+        BlockPos respawnPos = respawnConfig != null ? respawnConfig.respawnData().pos() : null;
         if (spawnlevel == null || respawnPos == null) {
             spawnlevel = serverLevel.getServer().overworld();
-            respawnPos = serverLevel.getSharedSpawnPos();
+            // getSharedSpawnPos() moved to getRespawnData().pos() on the overworld
+            respawnPos = spawnlevel.getRespawnData().pos();
         }
-        player.teleportTo(spawnlevel, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), new HashSet<>(), player.getYRot(), player.getXRot());
+        player.teleportTo(spawnlevel, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), Set.of(), player.getYRot(), player.getXRot(), true);
     }
 
     @Override
@@ -87,10 +94,10 @@ public class DimBoundary extends ModBlock implements IWandable {
         }
         BlockPos pos = storedPos.pos();
         if (!PlanariumChunkGenerator.innerBox.contains(pos.getX(), pos.getY(), pos.getZ())) {
-            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.jar_spawn_out_of_bounds"));
+            playerEntity.displayClientMessage(Component.translatable("ars_nouveau.jar_spawn_out_of_bounds"), false);
         } else {
             dimData.setSpawnPos(storedPos.pos());
-            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.set_jar_spawn"));
+            playerEntity.displayClientMessage(Component.translatable("ars_nouveau.set_jar_spawn"), false);
         }
         return Result.SUCCESS;
     }

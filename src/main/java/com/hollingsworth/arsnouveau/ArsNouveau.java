@@ -23,7 +23,7 @@ import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -73,7 +73,7 @@ public class ArsNouveau {
                 ticketHelper.removeAllTickets(uuid);
         }));
     });
-    public static boolean isDebug = false && !FMLEnvironment.production;
+    public static boolean isDebug = false && !FMLEnvironment.isProduction();
 
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.addListener(ArsNouveau::onServerStopped);
@@ -122,7 +122,7 @@ public class ArsNouveau {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (FMLEnvironment.dist.isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             ArsNouveau.proxy = new Supplier<IProxy>() {
                 @Override
                 public IProxy get() {
@@ -199,7 +199,7 @@ public class ArsNouveau {
         EventQueue.getServerInstance().clear();
     }
 
-    public static ResourceLocation prefix(String str) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, str);
+    public static Identifier prefix(String str) {
+        return Identifier.fromNamespaceAndPath(MODID, str);
     }
 }

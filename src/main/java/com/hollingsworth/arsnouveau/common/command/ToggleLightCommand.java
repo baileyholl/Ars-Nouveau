@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class ToggleLightCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-light").
-                requires(sender -> sender.hasPermission(0))
+                requires(Commands.hasPermission(Commands.LEVEL_ALL))
                 .then(Commands.literal("on").executes(context -> resetPlayers(context.getSource(), true)))
                 .then(Commands.literal("off").executes(context -> resetPlayers(context.getSource(), false))));
     }

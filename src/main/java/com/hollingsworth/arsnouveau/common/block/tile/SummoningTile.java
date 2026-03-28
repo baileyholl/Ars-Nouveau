@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
@@ -21,7 +21,7 @@ public class SummoningTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
 
         if (!converted) {
@@ -34,15 +34,15 @@ public class SummoningTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.converted = compound.getBoolean("converted");
-        this.isOff = compound.getBoolean("off");
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.converted = compound.getBooleanOr("converted", false);
+        this.isOff = compound.getBooleanOr("off", false);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("converted", converted);
         tag.putBoolean("off", isOff);
     }

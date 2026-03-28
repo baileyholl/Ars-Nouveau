@@ -10,8 +10,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -27,8 +25,8 @@ public class BiomeTagProvider extends BiomeTagsProvider {
 
     public static TagKey<Biome> BERRY_SPAWN = TagKey.create(Registries.BIOME, ArsNouveau.prefix("berry_spawn"));
 
-    public BiomeTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, ArsNouveau.MODID, existingFileHelper);
+    public BiomeTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider) {
+        super(pOutput, pProvider, ArsNouveau.MODID);
     }
 
     @Override

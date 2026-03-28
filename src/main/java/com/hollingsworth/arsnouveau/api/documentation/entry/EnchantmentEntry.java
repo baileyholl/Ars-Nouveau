@@ -9,11 +9,14 @@ import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -32,7 +35,7 @@ public class EnchantmentEntry extends PedestalRecipeEntry {
             this.ingredients = enchantmentRecipe.value().pedestalItems();
         }
         Level level = parent.getMinecraft().level;
-        EnchantmentRecipe recipe = enchantmentRecipe.value();
+        EnchantmentRecipe recipe = enchantmentRecipe != null ? enchantmentRecipe.value() : null;
         if (recipe != null) {
             ItemStack outputBook = new ItemStack(Items.ENCHANTED_BOOK);
 
@@ -48,7 +51,7 @@ public class EnchantmentEntry extends PedestalRecipeEntry {
                 ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(enchantedBook.get(DataComponents.ENCHANTMENTS));
                 enchantments.set(enchantment, recipe.enchantLevel - 1);
                 enchantedBook.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
-                this.reagentStack = Ingredient.of(enchantedBook);
+                this.reagentStack = DataComponentIngredient.of(false, enchantedBook);
             }
             this.outputStack = EnchantmentHelper.enchantItem(level.random, outputBook, recipe.enchantLevel, Stream.of(enchantment));
         }
@@ -58,8 +61,11 @@ public class EnchantmentEntry extends PedestalRecipeEntry {
         return (parent, x, y, width, height) -> new EnchantmentEntry(enchantmentRecipe, parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(ResourceLocation enchantmentRecipe) {
-        return (parent, x, y, width, height) -> new EnchantmentEntry(parent.recipeManager().byKeyTyped(RecipeRegistry.ENCHANTMENT_TYPE.get(), enchantmentRecipe), parent, x, y, width, height);
+    public static SinglePageCtor create(Identifier enchantmentRecipe) {
+        return (parent, x, y, width, height) -> new EnchantmentEntry(
+                (RecipeHolder<? extends EnchantmentRecipe>) parent.recipeManager()
+                        .byKey(ResourceKey.create(Registries.RECIPE, enchantmentRecipe)).orElse(null),
+                parent, x, y, width, height);
     }
 
 

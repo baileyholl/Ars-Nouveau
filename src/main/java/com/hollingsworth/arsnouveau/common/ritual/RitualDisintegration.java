@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +28,7 @@ public class RitualDisintegration extends AbstractRitual {
     @Override
     protected void tick() {
         Level world = getWorld();
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             BlockPos pos = getPos();
 
             for (int i = 0; i < 10; i++) {
@@ -40,7 +40,7 @@ public class RitualDisintegration extends AbstractRitual {
             }
         }
 
-        if (!world.isClientSide && world.getGameTime() % 60 == 0) {
+        if (!world.isClientSide() && world.getGameTime() % 60 == 0) {
             boolean didWorkOnce = false;
             List<LivingEntity> entityList = world.getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5.0),
                     (m) -> (m.getClassification(false).equals(MobCategory.MONSTER) || m.getType().is(EntityTags.DISINTEGRATION_WHITELIST)) && !(m instanceof Player));
@@ -100,7 +100,7 @@ public class RitualDisintegration extends AbstractRitual {
 
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.DISINTEGRATION);
     }
 }

@@ -26,12 +26,12 @@ public record BuddingConversionRecipe(Block input, Block result) implements Spec
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<BuddingConversionRecipe> getSerializer() {
         return RecipeRegistry.BUDDING_CONVERSION_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<BuddingConversionRecipe> getType() {
         return RecipeRegistry.BUDDING_CONVERSION_TYPE.get();
     }
 

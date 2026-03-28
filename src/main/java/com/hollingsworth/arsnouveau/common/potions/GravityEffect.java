@@ -3,11 +3,11 @@ package com.hollingsworth.arsnouveau.common.potions;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -21,10 +21,10 @@ public class GravityEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity livingEntity, int p_76394_2_) {
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity livingEntity, int p_76394_2_) {
         if (!livingEntity.onGround()) {
             boolean isTooHigh = true;
-            Level world = livingEntity.level;
+            ServerLevel world = serverLevel;
             if (livingEntity instanceof Player) {
                 for (int i = 1; i < 3; i++) {
                     if (!world.getBlockState(livingEntity.blockPosition().below(i)).isAir()) {

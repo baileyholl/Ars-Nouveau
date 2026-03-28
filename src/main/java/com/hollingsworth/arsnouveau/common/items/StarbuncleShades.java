@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import java.util.function.Consumer;
 
@@ -71,10 +71,10 @@ public class StarbuncleShades extends AnimModItem implements ICosmeticItem {
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("starbuncle_shades", "item")).withTranslucency();
+            private final GeoItemRenderer<?> renderer = new GenericItemRenderer(new GenericModel<>("starbuncle_shades", "item")).withTranslucency();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });

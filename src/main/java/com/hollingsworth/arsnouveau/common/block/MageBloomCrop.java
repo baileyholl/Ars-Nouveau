@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -19,12 +20,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MageBloomCrop extends CropBlock {
     public static final IntegerProperty AGE_0_4 = IntegerProperty.create("age", 0, 4);
 
     public MageBloomCrop() {
-        super(Properties.of().randomTicks().strength(0.0F).noCollission().sound(SoundType.CROP).noOcclusion().mapColor(MapColor.PLANT).pushReaction(PushReaction.DESTROY));
+        super(BlockRegistry.newBlockProperties().randomTicks().strength(0.0F).noCollision().sound(SoundType.CROP).noOcclusion().mapColor(MapColor.PLANT).pushReaction(PushReaction.DESTROY));
     }
 
     private static final VoxelShape[] SHAPES = new VoxelShape[]{Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D)};
@@ -38,9 +40,7 @@ public class MageBloomCrop extends CropBlock {
         return BlockRegistry.MAGE_BLOOM_CROP;
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTootipComponents, TooltipFlag pTooltipFlag) {
-        super.appendHoverText(pStack, pContext, pTootipComponents, pTooltipFlag);
-        pTootipComponents.add(Component.translatable("tooltip.magebloom"));
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, TooltipDisplay display, Consumer<Component> pTootipComponents, TooltipFlag pTooltipFlag) {
+        pTootipComponents.accept(Component.translatable("tooltip.magebloom"));
     }
 }

@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -68,16 +68,16 @@ public class ImbuementBlock extends TickableModBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override
-    protected boolean hasAnalogOutputSignal(BlockState pState) {
+    public boolean hasAnalogOutputSignal(BlockState pState) {
         return true;
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+    public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos, Direction pDirection) {
         ImbuementTile tile = (ImbuementTile) pLevel.getBlockEntity(pPos);
 
         if (tile == null) return 0;
@@ -92,11 +92,11 @@ public class ImbuementBlock extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!(worldIn.getBlockEntity(pos) instanceof ImbuementTile tile))
-            return ItemInteractionResult.SUCCESS;
-        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
+        if (worldIn.isClientSide() || handIn != InteractionHand.MAIN_HAND)
+            return InteractionResult.SUCCESS;
 
         if (tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()) {
 
@@ -121,7 +121,7 @@ public class ImbuementBlock extends TickableModBlock {
 
                 tile.stack = ItemStack.EMPTY;
             } else {
-                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                tile.stack = player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1);
                 PortUtil.sendMessageNoSpam(player, recipe.value().getCraftingStartedText(tile));
                 tile.updateBlock();
             }
@@ -130,18 +130,18 @@ public class ImbuementBlock extends TickableModBlock {
             ItemEntity item = new ItemEntity(worldIn, player.getX(), player.getY(), player.getZ(), tile.stack.copy());
             worldIn.addFreshEntity(item);
             tile.stack = ItemStack.EMPTY;
-            tile.stack = player.getInventory().getSelected().copy();
+            tile.stack = player.getInventory().getItem(player.getInventory().getSelectedSlot()).copy();
 
             var recipe = tile.getRecipeNow();
             if (recipe != null) {
-                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+                tile.stack = player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1);
             } else {
                 tile.stack = ItemStack.EMPTY;
             }
             tile.draining = false;
             tile.updateBlock();
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

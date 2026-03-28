@@ -74,7 +74,7 @@ public class EffectBlink extends AbstractEffect {
             if (scrollData != null && scrollData.isValid() && scrollData.canTeleportWithDim(world)) {
                 warpEntity(rayTraceResult.getEntity(), scrollData);
             } else if (spellContext.level instanceof ServerLevel serverLevel) {
-                shooter.teleportTo(serverLevel, vec.x(), vec.y(), vec.z(), Set.of(), shooter.getYRot(), shooter.getXRot());
+                shooter.teleportTo(serverLevel, vec.x(), vec.y(), vec.z(), Set.of(), shooter.getYRot(), shooter.getXRot(), true);
             }
         } else if (spellContext.getCaster().getCasterType() == SpellContext.CasterType.RUNE && rayTraceResult.getEntity() instanceof LivingEntity living) {
             blinkForward(spellContext.level, living, distance);
@@ -108,7 +108,7 @@ public class EffectBlink extends AbstractEffect {
                 4, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
         Vec3 vec3 = entity.position;
-        entity.teleportTo(serverLevel, warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot());
+        entity.teleportTo(serverLevel, warpPos.getX() + 0.5, warpPos.getY(), warpPos.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot(), true);
         entity.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(entity));
         Networking.sendToNearbyClient(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ(), entity.getXRot(), entity.getYRot()));
         entity.level.playSound(null, entity.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);

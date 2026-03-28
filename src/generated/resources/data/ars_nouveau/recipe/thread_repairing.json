@@ -2,19 +2,11 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "minecraft:anvil"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    }
+    "minecraft:anvil",
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:manipulation_essence"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_repairing"

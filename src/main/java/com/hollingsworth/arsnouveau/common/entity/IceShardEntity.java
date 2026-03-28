@@ -42,7 +42,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
                 if (living == shooter || living.isAlliedTo(shooter))
                     continue;
                 living.hurt(DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, shooter == null ? ANFakePlayer.getPlayer(world) : shooter), baseDamage);
-                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
+                living.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20 * 3, 1));
             }
 
             world.sendParticles(ParticleTypes.SPIT, position.x, position.y + 0.5, position.z, 10,
@@ -54,7 +54,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
     @Override
     public void doPostHurtEffects(LivingEntity livingentity) {
         super.doPostHurtEffects(livingentity);
-        livingentity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
+        livingentity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20 * 3, 1));
     }
 
     @Override

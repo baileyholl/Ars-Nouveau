@@ -13,8 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -32,7 +32,7 @@ public class AlakarkinosConversionRegistry {
 
     private static List<AlakarkinosRecipe> RECIPES = new ArrayList<>();
     private static Set<Block> CONVERTABLE_BLOCKS = Set.of();
-    private static Map<Block, WeightedRandomList<WeightedEntry.Wrapper<AlakarkinosRecipe>>> CONVERTABLE_BLOCKS_MAP = new HashMap<>();
+    private static Map<Block, WeightedList<AlakarkinosRecipe>> CONVERTABLE_BLOCKS_MAP = new HashMap<>();
 
     public static List<AlakarkinosRecipe> getRecipes() {
         return Collections.unmodifiableList(RECIPES);
@@ -41,7 +41,7 @@ public class AlakarkinosConversionRegistry {
     public static void reloadAlakarkinosRecipes(RecipeManager recipeManager, MinecraftServer server) {
 
         RECIPES = new ArrayList<>();
-        List<AlakarkinosRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.ALAKARKINOS_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        List<AlakarkinosRecipe> recipes = recipeManager.recipeMap().byType(RecipeRegistry.ALAKARKINOS_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
         RECIPES.addAll(recipes);
         CONVERTABLE_BLOCKS = new HashSet<>();
         for (AlakarkinosRecipe recipe : RECIPES) {
@@ -50,10 +50,10 @@ public class AlakarkinosConversionRegistry {
 
         CONVERTABLE_BLOCKS_MAP = new HashMap<>();
         for (AlakarkinosRecipe recipe : RECIPES) {
-            var list = CONVERTABLE_BLOCKS_MAP.getOrDefault(recipe.input(), WeightedRandomList.create());
-            var modifiedList = new ArrayList<>(list.unwrap());
-            modifiedList.add(WeightedEntry.wrap(recipe, recipe.weight()));
-            CONVERTABLE_BLOCKS_MAP.put(recipe.input(), WeightedRandomList.create(modifiedList));
+            var existing = CONVERTABLE_BLOCKS_MAP.getOrDefault(recipe.input(), WeightedList.of());
+            var modifiedList = new ArrayList<>(existing.unwrap());
+            modifiedList.add(new Weighted<>(recipe, recipe.weight()));
+            CONVERTABLE_BLOCKS_MAP.put(recipe.input(), WeightedList.of(modifiedList));
         }
 
         LootDrop.DROPS.clear();
@@ -71,8 +71,7 @@ public class AlakarkinosConversionRegistry {
             return null;
         }
         var list = CONVERTABLE_BLOCKS_MAP.get(block);
-        var entry = list.getRandom(random);
-        return entry.map(WeightedEntry.Wrapper::data).orElse(null);
+        return list.getRandom(random).orElse(null);
     }
 
     public record LootDrops(List<LootDrop> list, int weight) {
@@ -156,7 +155,7 @@ public class AlakarkinosConversionRegistry {
 
                 lootDrops.sort(Comparator.comparing(LootDrop::chance).reversed());
 
-                return new LootDrops(lootDrops, CONVERTABLE_BLOCKS_MAP.get(recipe.input()).totalWeight);
+                return new LootDrops(lootDrops, CONVERTABLE_BLOCKS_MAP.get(recipe.input()).unwrap().stream().mapToInt(Weighted::weight).sum());
             });
         }
     }

@@ -13,10 +13,11 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -85,7 +86,7 @@ public class RitualAwakening extends AbstractRitual {
     @Override
     protected void tick() {
         Level world = getWorld();
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             BlockPos pos = getPos();
 
             for (int i = 0; i < 10; i++) {
@@ -115,7 +116,7 @@ public class RitualAwakening extends AbstractRitual {
                     findTargets(serverLevel);
                     if (entity != null) {
                         ParticleUtil.spawnPoof(serverLevel, foundPos);
-                        LivingEntity walker = entity.create(serverLevel);
+                        LivingEntity walker = entity.create(serverLevel, EntitySpawnReason.SPAWNER);
                         walker.setPos(foundPos.getX() + 0.5, foundPos.getY(), foundPos.getZ() + 0.5);
                         serverLevel.addFreshEntity(walker);
                         setFinished();
@@ -151,7 +152,7 @@ public class RitualAwakening extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.AWAKENING);
     }
 }

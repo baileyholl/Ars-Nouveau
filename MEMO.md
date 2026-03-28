@@ -200,6 +200,28 @@ New keys added to `en_us.json`:
 Existing keys already in lang, now correctly used: `ars_nouveau.hue`, `ars_nouveau.lightness`,
 `ars_nouveau.sat`, `ars_nouveau.learn_glyph` (%s form).
 
+## Spellbook EditBox text invisible fix (2026-03-28)
+
+SearchBar and EnterTextField (spell name field) in GuiSpellBook had invisible text after migration.
+
+**Root cause**: both classes extended `NoShadowTextField` (nuggets inline), which had its own
+`renderWidget` override that used `FormattedCharSequence` submission to `GuiRenderState`. Something
+in that chain failed silently in the MC 1.21.11 deferred rendering pipeline — text was submitted
+but never appeared. Exact failure point could not be isolated through static analysis.
+
+**Fix**: rewrote both classes to extend `EditBox` directly.
+- `setBordered(false)` — suppresses EditBox's own border sprite
+- `textShadow = false` — no shadow
+- `setTextColor(0xFFC1CF93)` — yellow-green color (alpha=255)
+- `renderWidget` draws custom background image, sets `textX`/`textY` manually, calls `super.renderWidget`
+- `super.renderWidget` = `EditBox.renderWidget` = MC 1.21.11 native pipeline (guaranteed to work)
+- Text offsets preserved: SearchBar `+13px`, EnterTextField `+15px` (matching original `bordered(4) + visual_indent`)
+
+**Key lesson**: MC 1.21.11 deferred text pipeline (`GuiRenderState.submitText` → `findAppropriateNode`)
+is strict: if `bounds() == null` (no glyphs) text is silently dropped. Custom EditBox subclasses
+that roll their own `renderWidget` may hit subtle issues. Prefer calling `EditBox.renderWidget`
+directly and controlling layout via `textX`/`textY` fields.
+
 ## What's Pending
 - [ ] Patchouli still commented out (no 1.21.11 version)
 - [ ] Caelus still commented out (no 1.21.11 version)

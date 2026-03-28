@@ -12,7 +12,8 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -55,7 +56,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
 
     @Override
     public void tick() {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             boolean isOnGround = level.getBlockState(blockPosition()).blocksMotion();
             this.setLanded(isOnGround);
         }
@@ -100,7 +101,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
             if (isSensitive()) {
                 for (BlockPos p : BlockPos.betweenClosed(blockPosition().east(flatAoe).north(flatAoe), blockPosition().west(flatAoe).south(flatAoe))) {
                     p = p.immutable();
-                    if (!level.isClientSide) {
+                    if (!level.isClientSide()) {
                         resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
                                 BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                     } else {
@@ -108,7 +109,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
                         resolveEmitter.tick(level);
                     }
                 }
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     resolveSound.playSound(level, getX(), getY(), getZ());
                 }
             } else {
@@ -116,7 +117,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
                 for (Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
                     if (entity.equals(this) || entity.getType().is(EntityTags.LINGERING_BLACKLIST))
                         continue;
-                    if (!level.isClientSide) {
+                    if (!level.isClientSide()) {
                         resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                         resolveSound.playSound(level, getX(), getY(), getZ());
                     } else {
@@ -129,7 +130,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
                 }
                 totalProcs += i;
                 if (totalProcs >= maxProcs)
-                    this.remove(RemovalReason.DISCARDED);
+                    this.remove(Entity.RemovalReason.DISCARDED);
             }
         }
     }
@@ -152,10 +153,10 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
 
     @Override
     protected void onHit(HitResult result) {
-        if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
+        if (!level.isClientSide() && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
             if (state.is(BlockTags.PORTALS)) {
-                state.entityInside(level, ((BlockHitResult) result).getBlockPos(), this);
+                state.entityInside(level, ((BlockHitResult) result).getBlockPos(), this, net.minecraft.world.entity.InsideBlockEffectApplier.NOOP, false);
                 return;
             }
             this.setLanded(true);
@@ -210,16 +211,16 @@ public class EntityLingeringSpell extends EntityProjectileSpell {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sensitive", isSensitive());
         tag.putBoolean("shouldFall", shouldFall());
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        setSensitive(compound.getBoolean("sensitive"));
-        setShouldFall(compound.getBoolean("shouldFall"));
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput compound) {
+        super.readAdditionalSaveData(compound);
+        setSensitive(compound.getBooleanOr("sensitive", false));
+        setShouldFall(compound.getBooleanOr("shouldFall", true));
     }
 }

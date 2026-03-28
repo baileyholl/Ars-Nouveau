@@ -11,17 +11,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -41,6 +44,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -61,7 +66,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos, Direction pDirection) {
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getAmount() <= 0) return 0;
         int step = (tile.getMaxFill() - 1) / 14;
@@ -69,8 +74,8 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide)
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn.isClientSide())
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
 
         PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
@@ -90,14 +95,14 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         } else if (stack.getItem() == Items.GLASS_BOTTLE && tile.getAmount() >= 100) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionContents contents = tile.getData();
-            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
+            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects(), Optional.empty()));
             if (ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
                 tile.remove(100);
             }
         } else if (stack.getItem() == Items.ARROW && tile.getAmount() >= 10) {
             ItemStack potionStack = new ItemStack(Items.TIPPED_ARROW);
             PotionContents contents = tile.getData();
-            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects()));
+            potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(contents.potion(), contents.customColor(), contents.customEffects(), Optional.empty()));
             if (ItemUtil.shrinkHandAndAddStack(potionStack, handIn, player)) {
                 tile.remove(10);
             }
@@ -121,8 +126,7 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         return new PotionJarTile(pos, state);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> tooltip, TooltipFlag pTooltipFlag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, @NotNull TooltipDisplay pTooltipDisplay, @NotNull Consumer<Component> tooltip, TooltipFlag pTooltipFlag) {
         var potion = stack.get(DataComponentRegistry.POTION_JAR);
         if (potion == null)
             return;
@@ -131,10 +135,10 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         if (!data.equals(PotionContents.EMPTY)) {
             ItemStack potionItem = new ItemStack(Items.POTION);
             potionItem.set(DataComponents.POTION_CONTENTS, data);
-            tooltip.add(Component.translatable(potionItem.getDescriptionId()));
+            tooltip.accept(potionItem.getHoverName());
         }
-        PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (fill * 100) / 10000));
+        PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::accept, 1.0F, 20.0f);
+        tooltip.accept(Component.translatable("ars_nouveau.source_jar.fullness", (fill * 100) / 10000));
     }
 
     @Override
@@ -159,9 +163,9 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTick, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, net.minecraft.util.RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTick.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }

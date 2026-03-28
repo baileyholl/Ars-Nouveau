@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:deny_scroll"
-    }
+    "ars_nouveau:deny_scroll"
   ],
   "result": {
     "count": 1,

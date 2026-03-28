@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import org.joml.Matrix3x2fStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -22,14 +22,14 @@ public class BookmarkButton extends NuggetImageButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
         if (entry != null) {
-            PoseStack poseStack = graphics.pose();
-            poseStack.pushPose();
-            poseStack.translate(x - 1, y - 1.5f, 0);
+            Matrix3x2fStack poseStack = graphics.pose();
+            poseStack.pushMatrix();
+            poseStack.translate(x - 1, y - 1.5f);
             RenderUtils.drawItemAsIcon(entry.renderStack(), graphics, 0, 0, 8, false);
-            poseStack.popPose();
+            poseStack.popMatrix();
         }
     }
 

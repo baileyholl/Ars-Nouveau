@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,22 +31,22 @@ public class TimerSpellTurret extends BasicSpellTurret {
 
 
     @Override
-    public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    public @NotNull InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (handIn == InteractionHand.MAIN_HAND) {
-            if ((stack.getItem() instanceof ICasterTool) || worldIn.isClientSide)
+            if ((stack.getItem() instanceof ICasterTool) || worldIn.isClientSide())
                 return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
             if (worldIn.getBlockEntity(pos) instanceof TimerSpellTurretTile timerSpellTurretTile) {
                 if (timerSpellTurretTile.isLocked)
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 timerSpellTurretTile.addTime(20 * (player.isShiftKeyDown() ? 10 : 1));
             }
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
     public void attack(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof TimerSpellTurretTile tile) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof TimerSpellTurretTile tile) {
             if (!tile.isLocked) {
                 tile.addTime(-20 * (player.isShiftKeyDown() ? 10 : 1));
             }

@@ -12,10 +12,11 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownLingeringPotion;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -52,13 +53,20 @@ public class EffectInfuse extends AbstractEffect {
         if (potionData == null) {
             return;
         }
-        Item potionItem = spellStats.getAoeMultiplier() > 0 ? Items.SPLASH_POTION : Items.LINGERING_POTION;
-        ThrownPotion potion = new ThrownPotion(world, shooter);
+        boolean isAoe = spellStats.getAoeMultiplier() > 0;
+        Item potionItem = isAoe ? Items.SPLASH_POTION : Items.LINGERING_POTION;
         ItemStack stack = new ItemStack(potionItem);
         stack.set(DataComponents.POTION_CONTENTS, potionData);
-        potion.setItem(stack);
-        potion.setPos(rayTraceResult.getLocation());
-        world.addFreshEntity(potion);
+        // ThrownSplashPotion/ThrownLingeringPotion constructors require ItemStack in 1.21.11
+        if (isAoe) {
+            ThrownSplashPotion potion = new ThrownSplashPotion(world, shooter, stack);
+            potion.setPos(rayTraceResult.getLocation());
+            world.addFreshEntity(potion);
+        } else {
+            ThrownLingeringPotion potion = new ThrownLingeringPotion(world, shooter, stack);
+            potion.setPos(rayTraceResult.getLocation());
+            world.addFreshEntity(potion);
+        }
     }
 
     @Override
@@ -132,7 +140,7 @@ public class EffectInfuse extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         defaults.put(AugmentAOE.INSTANCE.getRegistryName(), 1);
         defaults.put(AugmentExtendTime.INSTANCE.getRegistryName(), 1);
     }

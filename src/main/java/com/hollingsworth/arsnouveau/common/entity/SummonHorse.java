@@ -3,32 +3,31 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.equine.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 import java.util.UUID;
 
 public class SummonHorse extends Horse implements ISummon, IDispellable {
     public int ticksLeft;
-    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(SummonHorse.class, EntityDataSerializers.OPTIONAL_UUID);
+    @Nullable
+    private UUID ownerUUID;
 
     public SummonHorse(EntityType<? extends Horse> type, Level worldIn) {
         super(type, worldIn);
@@ -45,19 +44,13 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
-        super.defineSynchedData(pBuilder);
-        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
-    }
-
-    @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ticksLeft--;
             if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }
@@ -86,17 +79,16 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
         onSummonDeath(level, cause, false);
     }
 
-    @Override
     public boolean canTakeItem(ItemStack itemstackIn) {
         return false;
     }
 
     @Override
-    protected void dropEquipment() {
+    protected void dropEquipment(ServerLevel level) {
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(ServerLevel level) {
         return 0;
     }
 
@@ -124,14 +116,14 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        this.ticksLeft = compound.getInt("left");
-
+        this.ticksLeft = compound.getIntOr("left", 0);
+        this.ownerUUID = compound.read("owner", net.minecraft.core.UUIDUtil.CODEC).orElse(null);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
         writeOwner(compound);
@@ -147,15 +139,19 @@ public class SummonHorse extends Horse implements ISummon, IDispellable {
         this.ticksLeft = ticks;
     }
 
-
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     @Override
     public UUID getOwnerUUID() {
-        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+        return ownerUUID;
+    }
+
+    @Override
+    public @Nullable EntityReference<LivingEntity> getOwnerReference() {
+        return ownerUUID != null ? EntityReference.of(ownerUUID) : null;
     }
 
     @Override
     public void setOwnerID(UUID uuid) {
-        this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
+        this.ownerUUID = uuid;
     }
 }

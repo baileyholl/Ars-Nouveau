@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = ArsNouveau.MODID)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class Config {
     public static final String CATEGORY_GENERAL = "general";
 
@@ -80,11 +80,11 @@ public class Config {
     private static ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_LIGHT_CONFIG;
     private static ModConfigSpec.ConfigValue<List<? extends String>> ITEM_LIGHT_CONFIG;
 
-    public static Map<ResourceLocation, Integer> ENTITY_LIGHT_MAP = new HashMap<>();
-    public static Map<ResourceLocation, Integer> ITEM_LIGHTMAP = new HashMap<>();
+    public static Map<Identifier, Integer> ENTITY_LIGHT_MAP = new HashMap<>();
+    public static Map<Identifier, Integer> ITEM_LIGHTMAP = new HashMap<>();
 
 
-    public static boolean isGlyphEnabled(ResourceLocation tag) {
+    public static boolean isGlyphEnabled(Identifier tag) {
         AbstractSpellPart spellPart = GlyphRegistry.getSpellpartMap().get(tag);
         if (spellPart == null) {
             throw new IllegalArgumentException("Spell Part with id " + tag + " does not exist in registry. Did you pass the right ID?");
@@ -199,11 +199,11 @@ public class Config {
         ITEM_LIGHTMAP = new HashMap<>();
         // Copy values from ENTITY_LIGHT_CONFIG to ENTITY_LIGHT_MAP
         for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ENTITY_LIGHT_CONFIG).entrySet()) {
-            ENTITY_LIGHT_MAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
+            ENTITY_LIGHT_MAP.put(Identifier.tryParse(entry.getKey()), entry.getValue());
         }
         // Copy values from ITEM_LIGHT_CONFIG to ITEM_LIGHT_MAP
         for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(ITEM_LIGHT_CONFIG).entrySet()) {
-            ITEM_LIGHTMAP.put(ResourceLocation.tryParse(entry.getKey()), entry.getValue());
+            ITEM_LIGHTMAP.put(Identifier.tryParse(entry.getKey()), entry.getValue());
         }
     }
 

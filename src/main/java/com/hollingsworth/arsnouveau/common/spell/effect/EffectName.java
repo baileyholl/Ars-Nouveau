@@ -81,9 +81,8 @@ public class EffectName extends AbstractEffect {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SkullBlockEntity head) {
-            head.setOwner(new ResolvableProfile(Optional.of(name.getString()), Optional.empty(), new PropertyMap()));
-            // TODO AT this
-            // head.updateOwnerProfile();
+            // TODO: SkullBlockEntity.setOwner removed in 1.21.11, need alternative approach via DataComponents.PROFILE
+            // head.setOwner(ResolvableProfile.createUnresolved(name.getString()));
             world.sendBlockUpdated(pos, state, state, 3);
             head.setChanged();
             return;

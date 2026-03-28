@@ -17,9 +17,9 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -32,9 +32,9 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -59,7 +59,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     @Override
     public void tick() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (this.isCrafting) {
                 Level world = getLevel();
                 BlockPos pos = getBlockPos().offset(0, 0, 0);
@@ -118,7 +118,7 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
             if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile
                     && tile.getStack() != null
                     && !tile.getStack().is(ItemTagProvider.APPARATUS_PRESERVES)) {
-                tile.setStack(tile.getStack().getCraftingRemainingItem());
+                tile.setStack(tile.getStack().getCraftingRemainder());
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);
                 tile.setChanged();
@@ -179,15 +179,15 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
     }
 
     @Override
-    public void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        isCrafting = compound.getBoolean("is_crafting");
-        counter = compound.getInt("counter");
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        isCrafting = compound.getBooleanOr("is_crafting", false);
+        counter = compound.getIntOr("counter", 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("is_crafting", isCrafting);
         tag.putInt("counter", counter);
     }
@@ -230,27 +230,22 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "controller", 0, event -> {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
+        animatableManager.add(new AnimationController<EnchantingApparatusTile>("controller", 0, event -> {
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("floating"));
             return PlayState.CONTINUE;
         }));
-        animatableManager.add(new AnimationController<>(this, "craft_controller", 0, event -> {
+        animatableManager.add(new AnimationController<EnchantingApparatusTile>("craft_controller", 0, event -> {
             if (!this.isCrafting) {
-                event.getController().forceAnimationReset();
+                event.controller().reset();
                 return PlayState.STOP;
             } else {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("enchanting"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("enchanting"));
             }
             return PlayState.CONTINUE;
         }));
     }
 
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
-
-    @Override
-    public double getBoneResetTime() {
-        return 0;
-    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

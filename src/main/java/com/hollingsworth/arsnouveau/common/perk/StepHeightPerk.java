@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -18,7 +18,7 @@ public class StepHeightPerk extends Perk {
 
     public static final UUID PERK_STEP_UUID = UUID.fromString("46937d0b-123c-4786-95b5-748afd50f398");
 
-    public StepHeightPerk(ResourceLocation key) {
+    public StepHeightPerk(Identifier key) {
         super(key);
     }
 

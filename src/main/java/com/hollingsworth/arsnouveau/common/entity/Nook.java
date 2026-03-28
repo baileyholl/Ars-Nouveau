@@ -31,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -69,7 +69,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             return InteractionResult.CONSUME;
         }
         if (this.isOwnedBy(pPlayer)) {
@@ -86,9 +86,9 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (level.getGameTime() % 20 == 0 && !ownerNookMap.containsValue(this.getUUID())) {
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
             }
             if (wagTicks > 0 && isWagging()) {
                 wagTicks--;
@@ -147,28 +147,38 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.MAX_HEALTH, 40f).add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
+    // 1.21.11: Wolf sounds moved to WolfSoundVariant system
+    private static net.minecraft.world.entity.animal.wolf.WolfSoundVariant getWolfVariant() {
+        return SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC);
+    }
+
     protected SoundEvent getAmbientSound() {
+        var v = getWolfVariant();
+        if (v == null) return null;
         if (this.random.nextInt(3) == 0) {
-            return this.isTame() && this.getHealth() < 10.0F ? SoundEvents.WOLF_WHINE : SoundEvents.WOLF_PANT;
+            return this.isTame() && this.getHealth() < 10.0F ? v.whineSound().value() : v.pantSound().value();
         } else {
-            return SoundEvents.WOLF_AMBIENT;
+            return v.ambientSound().value();
         }
     }
 
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
-        return SoundEvents.WOLF_HURT;
+        var v = getWolfVariant();
+        return v != null ? v.hurtSound().value() : null;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.WOLF_DEATH;
+        var v = getWolfVariant();
+        return v != null ? v.deathSound().value() : null;
     }
 
+    // 1.21.11: hurt() is final in Entity; override hurtServer(ServerLevel, DamageSource, float)
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource pSource, float pAmount) {
         if (!(pSource.getEntity() instanceof Player)) {
             return false;
         }
-        return super.hurt(pSource, pAmount);
+        return super.hurtServer(serverLevel, pSource, pAmount);
     }
 
     /**
@@ -194,31 +204,33 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "walk", 1, (event) -> {
+        // 1.21.11: AnimationController constructor no longer takes entity as first arg (GeckoLib 5)
+        // event.controller() replaces event.getController()
+        data.add(new AnimationController<Nook>("walk", 1, (event) -> {
             if (event.isMoving()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController(this, "idle", 1, (event) -> {
+        data.add(new AnimationController<Nook>("idle", 1, (event) -> {
             if (!event.isMoving() && !this.isWagging() && !this.isOrderedToSit()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
+        data.add(new AnimationController<Nook>("idle_wag", 1, (event) -> {
             if (!event.isMoving() && this.isWagging()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wag"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle_wag"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        data.add(new AnimationController(this, "rest", 1, (event) -> {
+        data.add(new AnimationController<Nook>("rest", 1, (event) -> {
             if (!event.isMoving() && this.isOrderedToSit()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("sit"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("sit"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -234,18 +246,23 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Override
     public boolean onDispel(@NotNull LivingEntity caster) {
-        if (caster.getUUID().equals(this.getOwnerUUID())) {
-            this.remove(RemovalReason.DISCARDED);
+        // 1.21.11: getOwnerUUID() removed; use getOwnerReference().getUUID()
+        net.minecraft.world.entity.EntityReference<?> ownerRef = this.getOwnerReference();
+        if (ownerRef != null && caster.getUUID().equals(ownerRef.getUUID())) {
+            this.remove(Entity.RemovalReason.DISCARDED);
             return true;
         }
         return false;
     }
 
+    // 1.21.11: load(CompoundTag) removed; use readAdditionalSaveData(ValueInput)
     @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
-        if (!ownerNookMap.containsKey(this.getOwnerUUID())) {
-            Nook.ownerNookMap.put(this.getOwnerUUID(), this.getUUID());
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        // 1.21.11: getOwnerUUID() removed; use getOwnerReference().getUUID()
+        net.minecraft.world.entity.EntityReference<?> ownerRef = this.getOwnerReference();
+        if (ownerRef != null && !ownerNookMap.containsKey(ownerRef.getUUID())) {
+            Nook.ownerNookMap.put(ownerRef.getUUID(), this.getUUID());
         }
     }
 }

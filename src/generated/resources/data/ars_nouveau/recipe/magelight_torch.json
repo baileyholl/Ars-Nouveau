@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:nuggets/gold"
-    },
-    "y": {
-      "tag": "c:gems/source"
-    }
+    "x": "#c:nuggets/gold",
+    "y": "#c:gems/source"
   },
   "pattern": [
     "   ",

@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.91'
+    id 'net.neoforged.moddev' version '2.0.140'
     id 'com.gradleup.shadow' version '9.0.0-beta15'
 }
 
@@ -70,10 +70,11 @@ neoForge {
         }
     }
 
-    parchment {
-        minecraftVersion = project.minecraft_version
-        mappingsVersion = project.parchment_version
-    }
+    // parchment disabled due to NeoForm zip issue with 1.21.11
+    // parchment {
+    //     minecraftVersion = project.minecraft_version
+    //     mappingsVersion = project.parchment_version
+    // }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -154,70 +155,66 @@ dependencies {
 
     compileOnly('org.jetbrains:annotations:26.0.2')
 
-    implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
-    implementation('vazkii.patchouli:Patchouli:1.21-87-NEOFORGE')
+    // TODO: update geckolib artifact ID when 1.21.11 build is released
+    implementation "software.bernie.geckolib:geckolib-neoforge-1.21.11:${geckolib_version}"
+    // TODO: update patchouli when 1.21.11 compatible version is available
+    // implementation('vazkii.patchouli:Patchouli:1.21-87-NEOFORGE')
 
-    localRuntime "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
-    compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
+    // TODO: update caelus when 1.21.11 compatible version is available
+    // localRuntime "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
+    // compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
 
-    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
-    implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21.1-4.1.0.8'
-    implementation "curse.maven:jade-324717:5444008"
-    jarJar(implementation "curse.maven:infiniverse-568341:5486311"){}
-//    implementation 'dev.compactmods.gander:levels:0.2.31'
-//    implementation 'dev.compactmods.gander:core:0.2.31'
-//    implementation 'dev.compactmods.gander:ui:0.2.31'
-//    implementation 'dev.compactmods.gander:rendering:0.2.31'
-//    implementation 'dev.compactmods.gander:world:0.2.31'
+    compileOnly "mezz.jei:jei-1.21.11-neoforge-api:${jei_version}"
+    // runtimeOnly "mezz.jei:jei-1.21.11-neoforge:${jei_version}"
+    // TODO: update EMI when 1.21.11 compatible version is available
+    // compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    // TODO: update TerraBlender when 1.21.11 build is available
+    // implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21.1-4.1.0.8'
+    // TODO: update Jade CurseMaven file ID for 1.21.11
+    // implementation "curse.maven:jade-324717:5444008"
+    // TODO: update Infiniverse CurseMaven file ID for 1.21.11
+    // jarJar(implementation "curse.maven:infiniverse-568341:5486311"){}
 
-    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21.1"
-    compileOnly("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
-        attributes {
-            attribute(mappingsAttribute, "mojmap")
-        }
-    }
-    jarJar("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
-        attributes {
-            attribute(mappingsAttribute, "mojmap")
-        }
-    }
-    localRuntime "curse.maven:create-328085:7178775"
-    localRuntime "dev.emi:emi-neoforge:${emi_version}"
-    localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
-    localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
-    localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
-    localRuntime 'curse.maven:architectury-api-419699:5553800'
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}+1.21.11"
+    // TODO: update lambdynamiclights when 1.21.11 compatible version is available
+    // compileOnly("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
+    //     attributes { attribute(mappingsAttribute, "mojmap") }
+    // }
+    // jarJar("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {
+    //     attributes { attribute(mappingsAttribute, "mojmap") }
+    // }
 
-    localRuntime("dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:${lambdynamiclights_version}") {
-        attributes {
-            attribute(mappingsAttribute, "mojmap")
-        }
-    }
+    // TODO: update all CurseMaven runtime dep file IDs for 1.21.11
+    // localRuntime "curse.maven:create-328085:7178775"
+    // localRuntime "dev.emi:emi-neoforge:${emi_version}"
+    // localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
+    // localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
+    // localRuntime 'curse.maven:ftb-library-forge-404465:5754910'
+    // localRuntime 'curse.maven:architectury-api-419699:5553800'
+    // localRuntime("dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:${lambdynamiclights_version}") {
+    //     attributes { attribute(mappingsAttribute, "mojmap") }
+    // }
 
-    jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21') {
-        version {
-            strictly '[1.0.10,)'
-            prefer '1.0.7.38'
-        }
-    })
-    localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
+    // TODO: update nuggets artifact ID when 1.21.11 build is available
+    // jarJar(implementation('com.hollingsworth.nuggets:nuggets-neoforge-1.21') {
+    //     version { strictly '[1.0.10,)'; prefer '1.0.7.38' }
+    // })
+    // TODO: update cloth-config for 1.21.11
+    // localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
 
-    // Apotheosis
-    localRuntime "curse.maven:apothic-attributes-898963:6430300"
-    localRuntime "curse.maven:placebo-283644:6446766"
-    //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-    localRuntime "curse.maven:ars-elemental-561470:6419081"
-    additionalRuntimeClasspath(shade('org.apache.lucene:lucene-core:10.1.0'))
-    additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
-    additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
-//    implementation "curse.maven:immersive-engineering-231951:6506639"
-//    implementation "curse.maven:ars-additions-974408:6928685"
-    localRuntime "curse.maven:supplementaries-412082:7326712"
-    localRuntime "curse.maven:selene-499980:7325079"
-    localRuntime "curse.maven:bibliocraft-legacy-1122260:7055118"
-    localRuntime "curse.maven:sodium-394468:6382651"
+    // TODO: update Apotheosis-related CurseMaven file IDs for 1.21.11
+    // localRuntime "curse.maven:apothic-attributes-898963:6430300"
+    // localRuntime "curse.maven:placebo-283644:6446766"
+    // localRuntime "curse.maven:ars-elemental-561470:6419081"
+    // additionalRuntimeClasspath removed in 1.21.11; Lucene is shaded so runtimeOnly is fine
+    runtimeOnly(shade('org.apache.lucene:lucene-core:10.1.0'))
+    runtimeOnly(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
+    runtimeOnly(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
+    // TODO: update supplementaries/selene/bibliocraft/sodium for 1.21.11
+    // localRuntime "curse.maven:supplementaries-412082:7326712"
+    // localRuntime "curse.maven:selene-499980:7325079"
+    // localRuntime "curse.maven:bibliocraft-legacy-1122260:7055118"
+    // localRuntime "curse.maven:sodium-394468:6382651"
 }
 
 jar {

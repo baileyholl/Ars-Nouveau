@@ -44,7 +44,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -60,7 +60,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -75,9 +75,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -105,7 +105,8 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public static final EntityDataAccessor<String> PATH_BLOCK = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> BEHAVIOR_KEY = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<ItemStack> HEAD_COSMETIC = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.ITEM_STACK);
-    public static final EntityDataAccessor<CompoundTag> BEHAVIOR_TAG = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.COMPOUND_TAG);
+    // 1.21.11: EntityDataSerializers.COMPOUND_TAG removed; serialize CompoundTag as SNBT string
+    public static final EntityDataAccessor<String> BEHAVIOR_TAG = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     private int backOff; // Used to stop inventory store/take spam when chests are full or empty.
 
     private int bedBackoff;
@@ -165,7 +166,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void setBehavior(ChangeableBehavior behavior) {
         this.dynamicBehavior = behavior;
         this.data.behaviorKey = behavior.getRegistryName();
-        getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+        getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()).toString());
         getEntityData().set(Starbuncle.BEHAVIOR_KEY, behavior.getRegistryName().toString());
         reloadGoals();
         syncBehavior();
@@ -173,34 +174,34 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "walkController", 1, (event) -> {
-            if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+        animatableManager.add(new AnimationController<Starbuncle>("walkController", 1, (event) -> {
+            if (event.isMoving() || (level.isClientSide() && PatchouliHandler.isPatchouliWorld())) {
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "sleepController", 1, (event) -> {
+        animatableManager.add(new AnimationController<Starbuncle>("sleepController", 1, (event) -> {
             boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
             if (!event.isMoving() && shouldSleep) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 sleeping = true;
                 return PlayState.CONTINUE;
             }
             this.sleeping = false;
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "idleController", 1, (event) -> {
+        animatableManager.add(new AnimationController<Starbuncle>("idleController", 1, (event) -> {
             boolean shouldSleep = canSleep || (this.getVehicle() instanceof Starbuncle vehicle && vehicle.sleeping);
             if (!event.isMoving() && !shouldSleep) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) -> {
-            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
+        animatableManager.add(new AnimationController<Starbuncle>("danceController", 1, (event) -> {
+            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position(), jukeboxPos) <= 8)) {
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
@@ -219,9 +220,10 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         return manager;
     }
 
+    // 1.21.11: Entity.hurt() is final void; override hurtServer instead
     @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel serverLevel, @NotNull DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurtServer(serverLevel, pSource, pAmount);
     }
 
     public boolean isTamed() {
@@ -244,7 +246,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (!isTamed() && this.getHeldStack().is(Tags.Items.NUGGETS_GOLD)) {
             tamingTime++;
 
-            if (tamingTime > 60 && !level.isClientSide) {
+            if (tamingTime > 60 && !level.isClientSide()) {
                 ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
                 if (this.data.adopter != null && !this.data.adopter.isEmpty()) {
                     stack.setCount(1);
@@ -253,8 +255,8 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
                 ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.POOF_MOB.get(), (ServerLevel) this.level, this.getOnPos(), 10);
-                this.remove(RemovalReason.DISCARDED);
-            } else if (tamingTime > 55 && level.isClientSide) {
+                this.remove(Entity.RemovalReason.DISCARDED);
+            } else if (tamingTime > 55 && level.isClientSide()) {
                 for (int i = 0; i < 10; i++) {
                     double d0 = getX();
                     double d1 = getY() + 0.1;
@@ -282,15 +284,15 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (this.dynamicBehavior != null) {
             this.dynamicBehavior.tick();
         }
-        if (level.isClientSide && level.getGameTime() % 5 == 0) {
+        if (level.isClientSide() && level.getGameTime() % 5 == 0) {
             this.canSleep = this.getBlockStateOn().is(BlockTagProvider.SUMMON_SLEEPABLE);
         }
         SummonUtil.healOverTime(this);
-        if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
+        if (!level.isClientSide() && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             lastAABBCalc++;
             if (this.backOff > 0)
                 this.backOff--;
@@ -298,16 +300,16 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
                 this.bedBackoff--;
             }
         }
-        if (!level.isClientSide && dynamicBehavior != null && level.getGameTime() % 100 == 0) {
+        if (!level.isClientSide() && dynamicBehavior != null && level.getGameTime() % 100 == 0) {
             dynamicBehavior.syncTag();
         }
         if (this.dead)
             return;
 
-        if (!level.isClientSide && !this.isPassenger() && this.getStarbuncleWithSpace() != null) {
+        if (!level.isClientSide() && !this.isPassenger() && this.getStarbuncleWithSpace() != null) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
-                    this.pickUpItem(itementity);
+                    this.pickUpItem((net.minecraft.server.level.ServerLevel) this.level, itementity);
                     if (getHeldStack() != null && !getHeldStack().isEmpty())
                         break;
                 }
@@ -385,8 +387,9 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     protected void pushEntities() {
     }
 
+    // 1.21.11: pickUpItem(ItemEntity) → pickUpItem(ServerLevel, ItemEntity)
     @Override
-    public void pickUpItem(@NotNull ItemEntity itemEntity) {
+    public void pickUpItem(net.minecraft.server.level.ServerLevel serverLevel, @NotNull ItemEntity itemEntity) {
         if (!this.getHeldStack().isEmpty() && this.getStarbuncleWithSpace() == null)
             return;
         if (!this.isTamed() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)) {
@@ -437,7 +440,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
-        if (!level.isClientSide && isTamed()) {
+        if (!level.isClientSide() && isTamed()) {
             dropData();
         }
     }
@@ -469,7 +472,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide) {
+        if (hand != InteractionHand.MAIN_HAND || player.level().isClientSide()) {
             return InteractionResult.SUCCESS;
         }
 
@@ -536,7 +539,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         pBuilder.define(PATH_BLOCK, "");
         pBuilder.define(HEAD_COSMETIC, ItemStack.EMPTY);
         pBuilder.define(BEHAVIOR_KEY, StarbyTransportBehavior.TRANSPORT_ID.toString());
-        pBuilder.define(BEHAVIOR_TAG, new CompoundTag());
+        pBuilder.define(BEHAVIOR_TAG, "{}"); // SNBT empty CompoundTag
     }
 
     @Override
@@ -585,44 +588,47 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         if (this.isRemoved())
             return false;
 
-        if (!level.isClientSide && isTamed()) {
+        if (!level.isClientSide() && isTamed()) {
             dropData();
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
         return this.isTamed();
     }
 
     private boolean setBehaviors;
 
+    // 1.21.11: readAdditionalSaveData(CompoundTag) → readAdditionalSaveData(ValueInput)
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull net.minecraft.world.level.storage.ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        data = NBTComponent.fromTag(StarbuncleCharmData.CODEC.codec(), tag.contains("starbuncleData") ? tag.getCompound("starbuncleData") : new CompoundTag()).mutable();
+        data = tag.read("starbuncleData", StarbuncleCharmData.CODEC.codec())
+                .map(d -> d.mutable())
+                .orElse(new StarbuncleCharmData().mutable());
         this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, data.behaviorTag);
-        setHeldStack(ItemStack.parseOptional(level.registryAccess(), tag.getCompound("held")));
+        tag.read("held", ItemStack.OPTIONAL_CODEC).ifPresent(this::setHeldStack);
 
-        backOff = tag.getInt("backoff");
-        this.entityData.set(TAMED, tag.getBoolean("tamed"));
+        backOff = tag.getIntOr("backoff", 0);
+        this.entityData.set(TAMED, tag.getBooleanOr("tamed", false));
         if (!setBehaviors) {
             this.goalSelector.availableGoals = new LinkedHashSet<>();
             this.reloadGoals();
             setBehaviors = true;
             restoreFromTag();
-            if (this.dynamicBehavior != null && !this.level.isClientSide) {
+            if (this.dynamicBehavior != null && !this.level.isClientSide()) {
                 this.dynamicBehavior.syncTag();
             }
         }
     }
 
+    // 1.21.11: addAdditionalSaveData(CompoundTag) → addAdditionalSaveData(ValueOutput)
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull net.minecraft.world.level.storage.ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         data.behaviorTag = this.dynamicBehavior.toTag(new CompoundTag());
-        tag.put("starbuncleData", data.immutable().toTag(level));
+        tag.store("starbuncleData", StarbuncleCharmData.CODEC.codec(), data.immutable());
         if (!getHeldStack().isEmpty()) {
-            Tag itemTag = getHeldStack().save(level.registryAccess());
-            tag.put("held", itemTag);
+            tag.store("held", ItemStack.OPTIONAL_CODEC, getHeldStack());
         }
         tag.putInt("backoff", backOff);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
@@ -642,14 +648,14 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
         if (data.behaviorTag != null) {
             this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, data.behaviorTag);
-            this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+            this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()).toString());
             this.reloadGoals();
         } else if (this.isTamed()) {
             this.dynamicBehavior = new StarbyTransportBehavior(this, new CompoundTag());
-            this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
+            this.entityData.set(BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()).toString());
             this.reloadGoals();
         }
-        if (!level.isClientSide && this.dynamicBehavior != null) {
+        if (!level.isClientSide() && this.dynamicBehavior != null) {
             this.dynamicBehavior.syncTag();
         }
     }
@@ -658,7 +664,13 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> pKey) {
         super.onSyncedDataUpdated(pKey);
         if (pKey == BEHAVIOR_TAG) {
-            this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, this.entityData.get(BEHAVIOR_TAG));
+            // BEHAVIOR_TAG is now stored as SNBT string
+            try {
+                CompoundTag behaviorCompound = net.minecraft.nbt.TagParser.parseCompoundFully(this.entityData.get(BEHAVIOR_TAG));
+                this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, behaviorCompound);
+            } catch (com.mojang.brigadier.exceptions.CommandSyntaxException ignored) {
+                this.dynamicBehavior = BehaviorRegistry.create(data.behaviorKey, this, new CompoundTag());
+            }
         }
     }
 
@@ -693,7 +705,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(net.minecraft.server.level.ServerLevel pLevel) {
         return 0;
     }
 
@@ -706,7 +718,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         return this.entityData.get(COLOR);
     }
 
-    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>() {
+    public static Map<String, Identifier> TEXTURES = new HashMap<>() {
         {
             put("Gootastic", ArsNouveau.prefix("textures/entity/starbuncle_goo.png"));
             put("Sir Squirrely", ArsNouveau.prefix("textures/entity/sir_squirrely.png"));
@@ -719,19 +731,19 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
     };
 
-    public static Map<String, ResourceLocation> MODELS = new HashMap<>() {
+    public static Map<String, Identifier> MODELS = new HashMap<>() {
         {
-            put("Gootastic", ArsNouveau.prefix("geo/goobuncle.geo.json"));
-            put("Sir Squirrely", ArsNouveau.prefix("geo/sir_squirrely.geo.json"));
-            put("Zieg", ArsNouveau.prefix("geo/zieg.geo.json"));
-            put("Xacris", ArsNouveau.prefix("geo/xacris.geo.json"));
-            put("starbuncle", ArsNouveau.prefix("geo/starbuncle.geo.json"));
-            put("Xollus", ArsNouveau.prefix("geo/starbuncle_jarva.geo.json"));
-            put("Bootybuncle", ArsNouveau.prefix("geo/bootybuncle.geo.json"));
+            put("Gootastic", ArsNouveau.prefix("goobuncle"));
+            put("Sir Squirrely", ArsNouveau.prefix("sir_squirrely"));
+            put("Zieg", ArsNouveau.prefix("zieg"));
+            put("Xacris", ArsNouveau.prefix("xacris"));
+            put("starbuncle", ArsNouveau.prefix("starbuncle"));
+            put("Xollus", ArsNouveau.prefix("starbuncle_jarva"));
+            put("Bootybuncle", ArsNouveau.prefix("bootybuncle"));
         }
     };
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         var nameTexture = TEXTURES.get(this.getName().getString());
         if (nameTexture != null) {
             return nameTexture;
@@ -741,7 +753,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         return TEXTURES.get(color);
     }
 
-    public ResourceLocation getModel() {
+    public Identifier getModel() {
         String key = getName().getString();
         return MODELS.getOrDefault(key, MODELS.get("starbuncle"));
     }
@@ -749,7 +761,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @SuppressWarnings("all")
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull MobSpawnType pReason, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, @NotNull DifficultyInstance pDifficulty, @NotNull EntitySpawnReason pReason, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnData) {
         RandomSource randomSource = pLevel.getRandom();
         if (randomSource.nextFloat() <= 0.1f && !Rewards.starbuncles.isEmpty()) {
             try {
@@ -800,8 +812,8 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
      */
     @Override
     public void onTagSync(CompoundTag tag) {
-        if (level.isClientSide) {
-            this.dynamicBehavior = BehaviorRegistry.create(ResourceLocation.parse(entityData.get(BEHAVIOR_KEY)), this, tag);
+        if (level.isClientSide()) {
+            this.dynamicBehavior = BehaviorRegistry.create(Identifier.parse(entityData.get(BEHAVIOR_KEY)), this, tag);
         }
     }
 

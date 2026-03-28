@@ -3,27 +3,13 @@
   "enchantment": "minecraft:bane_of_arthropods",
   "level": 4,
   "pedestalItems": [
-    {
-      "item": "minecraft:fermented_spider_eye"
-    },
-    {
-      "item": "minecraft:fermented_spider_eye"
-    },
-    {
-      "item": "minecraft:fermented_spider_eye"
-    },
-    {
-      "item": "minecraft:fermented_spider_eye"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    }
+    "minecraft:fermented_spider_eye",
+    "minecraft:fermented_spider_eye",
+    "minecraft:fermented_spider_eye",
+    "minecraft:fermented_spider_eye",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/lapis"
   ],
   "sourceCost": 6500
 }

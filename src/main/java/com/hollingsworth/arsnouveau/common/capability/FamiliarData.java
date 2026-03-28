@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 
@@ -16,14 +16,14 @@ public class FamiliarData {
     public AbstractFamiliarHolder familiarHolder;
     public CompoundTag entityTag;
 
-    public FamiliarData(ResourceLocation entityID) {
+    public FamiliarData(Identifier entityID) {
         this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().get(entityID);
         this.entityTag = new CompoundTag();
     }
 
     public FamiliarData(CompoundTag tag) {
-        this.entityTag = tag.contains(ENTITY_TAG) ? tag.getCompound(ENTITY_TAG) : new CompoundTag();
-        this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().getOrDefault(ResourceLocation.tryParse(tag.getString(FAMILIAR_ID)),
+        this.entityTag = tag.contains(ENTITY_TAG) ? tag.getCompoundOrEmpty(ENTITY_TAG) : new CompoundTag();
+        this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().getOrDefault(Identifier.tryParse(tag.getStringOr(FAMILIAR_ID, "")),
                 FamiliarRegistry.getFamiliarHolderMap().get(ArsNouveau.prefix(LibEntityNames.FAMILIAR_WIXIE)));
     }
 

@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -57,24 +57,24 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
-        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof EnchantingApparatusTile tile))
-            return ItemInteractionResult.SUCCESS;
+        if (world.isClientSide() || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof EnchantingApparatusTile tile))
+            return InteractionResult.SUCCESS;
         if (tile.isCrafting)
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
 
 
         var facing = state.getValue(BlockStateProperties.FACING);
         var maybeCore = world.getBlockState(pos.relative(facing.getOpposite()));
         if (!(maybeCore.getBlock() instanceof ArcaneCore)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (!maybeCore.getValue(BlockStateProperties.FACING).getAxis().test(facing)) {
             PortUtil.sendMessage(player, Component.translatable("alert.core.wrong_axis"));
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (tile.getStack() == null || tile.getStack().isEmpty()) {
@@ -106,7 +106,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.apparatus.nomana"));
             } else {
                 if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                    tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
+                    tile.setStack(player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1));
                 }
             }
         } else {
@@ -114,12 +114,12 @@ public class EnchantingApparatusBlock extends TickableModBlock {
             world.addFreshEntity(item);
             tile.setStack(ItemStack.EMPTY);
             if (tile.attemptCraft(player.getMainHandItem(), player)) {
-                tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
+                tile.setStack(player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1));
             }
         }
 
         world.sendBlockUpdated(pos, state, state, 2);
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     public static final VoxelShape DOWN_SHAPE = Block.box(1, 0, 1, 15, 15, 15);
@@ -152,7 +152,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override

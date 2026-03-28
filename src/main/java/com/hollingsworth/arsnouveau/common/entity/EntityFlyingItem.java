@@ -19,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -138,13 +139,13 @@ public class EntityFlyingItem extends ColoredProjectile {
 
 
         if (age > 400)
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
 
         Vec3 start = entityData.get(from);
         Vec3 end = entityData.get(to);
         if (BlockUtil.distanceFrom(end, this.position()) <= 1 || this.age > 1000 || BlockUtil.distanceFrom(end, this.position()) > 16) {
-            this.remove(RemovalReason.DISCARDED);
-            if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
+            this.remove(Entity.RemovalReason.DISCARDED);
+            if (level.isClientSide() && entityData.get(SPAWN_TOUCH)) {
                 ParticleUtil.spawnTouch((ClientLevel) level, BlockPos.containing(end.x, end.y, end.z), new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
             }
             return;
@@ -173,7 +174,7 @@ public class EntityFlyingItem extends ColoredProjectile {
             this.setPos(lerpX, lerpY, lerpZ);
         }
 
-        if (level.isClientSide && this.age > 1 && !this.getEntityData().get(IS_BUBBLE)) {
+        if (level.isClientSide() && this.age > 1 && !this.getEntityData().get(IS_BUBBLE)) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;
@@ -183,7 +184,9 @@ public class EntityFlyingItem extends ColoredProjectile {
             for (double i = 0; i < dist; i++) {
                 double coeff = i / dist;
                 counter += level.random.nextInt(3);
-                if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
+                // 1.21.11: ParticleStatus.getId() removed; use ordinal() as proxy (ALL=0, DECREASED=1, MINIMAL=2)
+                int particleLevel = Minecraft.getInstance().options.particles().get().ordinal();
+                if (counter % (particleLevel == 0 ? 1 : 2 * particleLevel) == 0) {
                     level.addAlwaysVisibleParticle(GlowParticleData.createData(
                                     new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE))),
                             true,
@@ -215,31 +218,53 @@ public class EntityFlyingItem extends ColoredProjectile {
         return 3;
     }
 
+    // 1.21.11: load(CompoundTag) removed; use readAdditionalSaveData(ValueInput)
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.entityData.set(HELD_ITEM, ItemStack.parseOptional(level.registryAccess(), compound.getCompound("item")));
-        this.age = compound.getInt("age");
-        this.entityData.set(DIDOFFSET, compound.getBoolean("didoffset"));
-        this.entityData.set(OFFSET, compound.getFloat("offset"));
-        this.entityData.set(EntityFlyingItem.from, NBTUtil.getVec(compound, "from"));
-        this.entityData.set(EntityFlyingItem.to, NBTUtil.getVec(compound, "to"));
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput compound) {
+        super.readAdditionalSaveData(compound);
+        compound.read("item", net.minecraft.world.item.ItemStack.OPTIONAL_CODEC)
+                .ifPresent(stack -> this.entityData.set(HELD_ITEM, stack));
+        this.age = compound.getIntOr("age", 0);
+        this.entityData.set(DIDOFFSET, compound.getBooleanOr("didoffset", false));
+        this.entityData.set(OFFSET, compound.getFloatOr("offset", 0f));
+        // Vec3 stored as 3 doubles directly on the compound
+        double fx = compound.getDoubleOr("from_x", Double.NaN);
+        if (!Double.isNaN(fx)) {
+            this.entityData.set(EntityFlyingItem.from, new net.minecraft.world.phys.Vec3(fx, compound.getDoubleOr("from_y", 0), compound.getDoubleOr("from_z", 0)));
+        }
+        double tx = compound.getDoubleOr("to_x", Double.NaN);
+        if (!Double.isNaN(tx)) {
+            this.entityData.set(EntityFlyingItem.to, new net.minecraft.world.phys.Vec3(tx, compound.getDoubleOr("to_y", 0), compound.getDoubleOr("to_z", 0)));
+        }
     }
 
+    // 1.21.11: addAdditionalSaveData(CompoundTag) → addAdditionalSaveData(ValueOutput)
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput compound) {
         super.addAdditionalSaveData(compound);
-        if (getStack() != null) {
-            Tag tag = getStack().save(level.registryAccess());
-            compound.put("item", tag);
+        ItemStack stack = getStack();
+        if (stack != null && !stack.isEmpty()) {
+            compound.store("item", net.minecraft.world.item.ItemStack.OPTIONAL_CODEC, stack);
         }
         compound.putInt("age", age);
         compound.putBoolean("didoffset", this.entityData.get(DIDOFFSET));
         compound.putFloat("offset", this.entityData.get(OFFSET));
-        if (from != null)
-            NBTUtil.storeVec(compound, "from", this.entityData.get(EntityFlyingItem.from));
-        if (to != null)
-            NBTUtil.storeVec(compound, "to", this.entityData.get(EntityFlyingItem.to));
+        if (from != null) {
+            Vec3 fromVec = this.entityData.get(EntityFlyingItem.from);
+            if (fromVec != null) {
+                compound.putDouble("from_x", fromVec.x);
+                compound.putDouble("from_y", fromVec.y);
+                compound.putDouble("from_z", fromVec.z);
+            }
+        }
+        if (to != null) {
+            Vec3 toVec = this.entityData.get(EntityFlyingItem.to);
+            if (toVec != null) {
+                compound.putDouble("to_x", toVec.x);
+                compound.putDouble("to_y", toVec.y);
+                compound.putDouble("to_z", toVec.z);
+            }
+        }
     }
 
     public ItemStack getStack() {

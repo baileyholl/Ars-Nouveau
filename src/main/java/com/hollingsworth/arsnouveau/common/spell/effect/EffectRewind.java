@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientRewindEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +30,7 @@ public class EffectRewind extends AbstractEffect {
         super("rewind", "Rewind");
     }
 
-    public EffectRewind(ResourceLocation tag, String description) {
+    public EffectRewind(Identifier tag, String description) {
         super(tag, description);
     }
 
@@ -78,7 +78,7 @@ public class EffectRewind extends AbstractEffect {
     }
 
     public static boolean shouldRecordData(Entity entity, IRewindable rewindable) {
-        if (entity.level.isClientSide && !(entity instanceof Player)) {
+        if (entity.level.isClientSide() && !(entity instanceof Player)) {
             return false;
         }
         if (!EffectRewind.INSTANCE.isEnabled() || entity.getType().is(EntityTags.REWIND_BLACKLIST)) {
@@ -99,7 +99,7 @@ public class EffectRewind extends AbstractEffect {
     }
 
     @Override
-    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<Identifier, Integer> defaults) {
         super.buildAugmentLimitsConfig(builder, defaults);
         defaults.put(AugmentExtendTime.INSTANCE.getRegistryName(), 1);
         defaults.put(AugmentDurationDown.INSTANCE.getRegistryName(), 5);

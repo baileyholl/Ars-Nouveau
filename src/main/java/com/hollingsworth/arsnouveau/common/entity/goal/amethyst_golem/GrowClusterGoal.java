@@ -58,8 +58,8 @@ public class GrowClusterGoal extends Goal {
         for (BlockPos p : golem.buddingBlocks) {
             if (numGrown > 3)
                 break;
-            if (golem.level.getBlockState(p).is(BUDDING_BLOCKS)) {
-                golem.level.getBlockState(p).randomTick((ServerLevel) golem.level, p, golem.getRandom());
+            if (golem.level().getBlockState(p).is(BUDDING_BLOCKS)) {
+                golem.level().getBlockState(p).randomTick((ServerLevel) golem.level(), p, golem.getRandom());
                 numGrown++;
             }
         }

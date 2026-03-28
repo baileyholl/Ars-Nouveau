@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.ritual.RangeEffectRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 
 public class RitualGravity extends RangeEffectRitual {
@@ -33,7 +33,7 @@ public class RitualGravity extends RangeEffectRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.GRAVITY);
     }
 

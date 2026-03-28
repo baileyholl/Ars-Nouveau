@@ -1,111 +1,109 @@
 {
-  "credit": "Made with Blockbench",
-  "parent": "builtin/entity",
-  "texture_size": [
-    32,
-    32
-  ],
-  "display": {
-    "thirdperson_righthand": {
-      "rotation": [
-        90,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        4.25,
-        -2
-      ]
+    "textures": {
+        "particle": "minecraft:block/oak_planks"
     },
-    "thirdperson_lefthand": {
-      "rotation": [
-        90,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        4.25,
-        -2
-      ]
-    },
-    "firstperson_righthand": {
-      "rotation": [
-        45,
-        0,
-        0
-      ],
-      "translation": [
-        2.25,
-        0,
-        -2.5
-      ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [
-        45,
-        0,
-        0
-      ],
-      "translation": [
-        2.25,
-        0,
-        -2.5
-      ]
-    },
-    "ground": {
-      "scale": [
-        0.66,
-        0.66,
-        0.66
-      ]
-    },
-    "gui": {
-      "rotation": [
-        80,
-        45,
-        50
-      ],
-      "translation": [
-        2,
-        2,
-        0
-      ]
-    },
-    "head": {
-      "rotation": [
-        90,
-        0,
-        0
-      ],
-      "translation": [
-        0,
-        11.75,
-        -3
-      ],
-      "scale": [
-        0.66,
-        0.66,
-        0.66
-      ]
-    },
-    "fixed": {
-      "rotation": [
-        -90,
-        -180,
-        0
-      ],
-      "translation": [
-        0,
-        0.25,
-        2
-      ],
-      "scale": [
-        0.66,
-        0.66,
-        0.66
-      ]
+    "credit": "Made with Blockbench",
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [
+                90,
+                0,
+                0
+            ],
+            "translation": [
+                0,
+                4.25,
+                -2
+            ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [
+                90,
+                0,
+                0
+            ],
+            "translation": [
+                0,
+                4.25,
+                -2
+            ]
+        },
+        "firstperson_righthand": {
+            "rotation": [
+                45,
+                0,
+                0
+            ],
+            "translation": [
+                2.25,
+                0,
+                -2.5
+            ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [
+                45,
+                0,
+                0
+            ],
+            "translation": [
+                2.25,
+                0,
+                -2.5
+            ]
+        },
+        "ground": {
+            "scale": [
+                0.66,
+                0.66,
+                0.66
+            ]
+        },
+        "gui": {
+            "rotation": [
+                80,
+                45,
+                50
+            ],
+            "translation": [
+                2,
+                2,
+                0
+            ]
+        },
+        "head": {
+            "rotation": [
+                90,
+                0,
+                0
+            ],
+            "translation": [
+                0,
+                11.75,
+                -3
+            ],
+            "scale": [
+                0.66,
+                0.66,
+                0.66
+            ]
+        },
+        "fixed": {
+            "rotation": [
+                -90,
+                -180,
+                0
+            ],
+            "translation": [
+                0,
+                0.25,
+                2
+            ],
+            "scale": [
+                0.66,
+                0.66,
+                0.66
+            ]
+        }
     }
-  }
 }

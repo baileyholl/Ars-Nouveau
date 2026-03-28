@@ -14,7 +14,7 @@ public class GhostweaveRenderer extends MirrorweaveRenderer<GhostWeaveTile> {
         super(pContext);
     }
 
-    @Override
+    // Not an @Override of BlockEntityRenderer - MirrorweaveRenderer.render() is a stub helper
     public void render(GhostWeaveTile tileEntityIn, float partialTick, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         boolean hasMagicFind = Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasEffect(ModPotions.MAGIC_FIND_EFFECT);
         boolean shouldShow = hasMagicFind || !tileEntityIn.isInvisible();

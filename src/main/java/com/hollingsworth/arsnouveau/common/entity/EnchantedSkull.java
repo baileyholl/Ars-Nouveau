@@ -35,15 +35,17 @@ public class EnchantedSkull extends EnchantedFallingBlock {
         return ModEntities.ENCHANTED_HEAD_BLOCK.get();
     }
 
+    // 1.21.11: spawnAtLocation(ItemStack) removed; spawnAtLocation now requires ServerLevel
+    // Override the ServerLevel variant instead
     @Nullable
     @Override
-    public ItemEntity spawnAtLocation(ItemStack pStack) {
+    public ItemEntity spawnAtLocation(net.minecraft.server.level.ServerLevel serverLevel, ItemStack pStack) {
         if (pStack.getItem() instanceof PlayerHeadItem && blockData != null) {
             ResolvableProfile.CODEC
                     .parse(NbtOps.INSTANCE, blockData.get("profile"))
                     .resultOrPartial().ifPresent(profile -> pStack.set(DataComponents.PROFILE, profile));
         }
-        return this.spawnAtLocation(pStack, 0.0F);
+        return super.spawnAtLocation(serverLevel, pStack);
     }
 
     public ItemStack getStack() {

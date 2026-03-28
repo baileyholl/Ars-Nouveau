@@ -36,7 +36,7 @@ public class JumpingRing extends ArsNouveauCurio {
             Vec3 lookVec = player.getLookAngle();
             double lookScale = 0.7;
             player.setDeltaMovement(lookVec.x * lookScale, d0, lookVec.z * lookScale);
-            player.hasImpulse = true;
+            // 1.21.11: hasImpulse field removed; hurtMarked still signals delta movement sync
             player.hurtMarked = true;
             player.fallDistance = 0;
             CommonHooks.onLivingJump(player);

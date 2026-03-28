@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class LinkPage extends AbstractPage {
 
@@ -11,7 +11,7 @@ public class LinkPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("patchouli:link");
+    public Identifier getType() {
+        return Identifier.tryParse("patchouli:link");
     }
 }

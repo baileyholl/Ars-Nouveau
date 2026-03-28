@@ -39,7 +39,7 @@ public class DamageSourceMixin {
         MutableComponent spellName = ComponentUtils.wrapInSquareBrackets(Component.empty().append(spell.name()).withStyle(Style.EMPTY.withColor(spell.color().getColor()))
                         .withStyle(ChatFormatting.ITALIC))
                 .withStyle(mainHand.getRarity().getStyleModifier())
-                .withStyle((comp) -> comp.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(mainHand))));
+                .withStyle((comp) -> comp.withHoverEvent(new HoverEvent.ShowItem(mainHand)));
 
         cir.setReturnValue(Component.translatable(attack + ".item", pLivingEntity.getDisplayName(), livingKiller.getDisplayName(), spellName));
     }

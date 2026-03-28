@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:blue_archwood_log"
-    },
-    {
-      "item": "minecraft:ink_sac"
-    },
-    {
-      "tag": "c:storage_blocks/coal"
-    },
-    {
-      "item": "minecraft:clock"
-    }
+    "ars_nouveau:blue_archwood_log",
+    "minecraft:ink_sac",
+    "#c:storage_blocks/coal",
+    "minecraft:clock"
   ],
   "result": {
     "count": 1,

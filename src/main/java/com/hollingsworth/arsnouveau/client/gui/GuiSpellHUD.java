@@ -8,12 +8,12 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.world.item.ItemStack;
 
 
 public class GuiSpellHUD {
-    public static final LayeredDraw.Layer OVERLAY = GuiSpellHUD::renderOverlay;
+    public static final GuiLayer OVERLAY = GuiSpellHUD::renderOverlay;
 
     private static final Minecraft minecraft = Minecraft.getInstance();
 
@@ -26,7 +26,7 @@ public class GuiSpellHUD {
             int offsetLeft = Config.SPELLNAME_X_OFFSET.get();
             AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
             String renderString = caster.getCurrentSlot() + 1 + " " + caster.getSpellName();
-            graphics.drawString(Minecraft.getInstance().font, renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - Config.SPELLNAME_Y_OFFSET.get(), 0xFFFFFF);
+            graphics.drawString(Minecraft.getInstance().font, renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - Config.SPELLNAME_Y_OFFSET.get(), 0xFFFFFFFF);
         }
     }
 }

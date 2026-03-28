@@ -3,18 +3,10 @@
   "enchantment": "minecraft:efficiency",
   "level": 1,
   "pedestalItems": [
-    {
-      "item": "minecraft:sugar"
-    },
-    {
-      "item": "minecraft:iron_pickaxe"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    }
+    "minecraft:sugar",
+    "minecraft:iron_pickaxe",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source"
   ],
   "sourceCost": 2000
 }

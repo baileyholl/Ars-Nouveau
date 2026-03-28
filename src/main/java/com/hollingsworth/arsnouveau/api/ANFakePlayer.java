@@ -1,16 +1,9 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.network.Connection;
-import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.PacketFlow;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.CommonListenerCookie;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +15,8 @@ import java.lang.ref.WeakReference;
 import java.util.OptionalInt;
 import java.util.UUID;
 
-// https://github.com/Creators-of-Create/Create/blob/mc1.15/dev/src/main/java/com/simibubi/create/content/contraptions/components/deployer/DeployerFakePlayer.java#L57
+// ANFakePlayer - simplified to use NeoForge FakePlayer base which already handles
+// the connection setup via FakePlayerNetHandler + FakeConnection internally.
 public class ANFakePlayer extends FakePlayer {
 
     public static Player getOrFakePlayer(ServerLevel level, @Nullable LivingEntity player) {
@@ -33,15 +27,11 @@ public class ANFakePlayer extends FakePlayer {
         return uuid != null ? FakePlayerFactory.get(level, new GameProfile(uuid, "")) : ANFakePlayer.getPlayer(level);
     }
 
-    private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
-
-
     public static final GameProfile PROFILE =
             new GameProfile(UUID.fromString("7400926d-1007-4e53-880f-b43e67f2bf29"), "Ars_Nouveau");
 
     private ANFakePlayer(ServerLevel world) {
         super(world, PROFILE);
-        connection = new FakePlayNetHandler(world.getServer(), this, CommonListenerCookie.createInitial(PROFILE, false));
     }
 
     @Override
@@ -70,19 +60,5 @@ public class ANFakePlayer extends FakePlayer {
     @Override
     public Component getDisplayName() {
         return Component.literal("AN_Fake_Player");
-    }
-
-    private static class FakePlayNetHandler extends ServerGamePacketListenerImpl {
-        public FakePlayNetHandler(MinecraftServer server, ServerPlayer playerIn, CommonListenerCookie pCookie) {
-            super(server, NETWORK_MANAGER, playerIn, pCookie);
-        }
-
-        @Override
-        public void send(Packet<?> packetIn) {
-        }
-
-        @Override
-        public void send(Packet<?> p_243227_, @Nullable PacketSendListener p_243273_) {
-        }
     }
 }

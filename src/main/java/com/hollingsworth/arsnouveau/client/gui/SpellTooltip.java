@@ -7,11 +7,9 @@ import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 public record SpellTooltip(Spell spell, boolean showName) implements TooltipComponent {
 
@@ -34,8 +32,7 @@ public record SpellTooltip(Spell spell, boolean showName) implements TooltipComp
         }
 
         @Override
-        public int getHeight() {
-
+        public int getHeight(@NotNull Font pFont) {
             return (showName ? 28 : 20) + (spell.size() / 10) * 16;
         }
 
@@ -45,14 +42,14 @@ public record SpellTooltip(Spell spell, boolean showName) implements TooltipComp
         }
 
         @Override
-        public void renderText(@NotNull Font pFont, int pX, int pY, @NotNull Matrix4f pMatrix, MultiBufferSource.@NotNull BufferSource pBufferSource) {
+        public void renderText(@NotNull GuiGraphics pGuiGraphics, @NotNull Font pFont, int pX, int pY) {
             if (showName) {
-                pFont.drawInBatch(Component.literal(spell.name()), (float) (pX + 4), (float) pY, -1, true, pMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+                pGuiGraphics.drawString(pFont, Component.literal(spell.name()), pX + 4, pY, -1);
             }
         }
 
         @Override
-        public void renderImage(@NotNull Font pFont, int pX, int pY, @NotNull GuiGraphics pGuiGraphics) {
+        public void renderImage(@NotNull Font pFont, int pX, int pY, int pWidth, int pHeight, @NotNull GuiGraphics pGuiGraphics) {
             for (int i = 0; i < spell.size(); i++) {
                 int yOffset = i / 10;
                 AbstractSpellPart part = spell.get(i);

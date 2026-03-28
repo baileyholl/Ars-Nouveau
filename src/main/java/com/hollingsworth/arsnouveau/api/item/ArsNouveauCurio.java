@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.common.items.ModItem;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -8,7 +9,7 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 public abstract class ArsNouveauCurio extends ModItem implements ICurioItem {
 
     public ArsNouveauCurio() {
-        this(new Properties().stacksTo(1));
+        this(ItemsRegistry.newItemProperties().stacksTo(1));
     }
 
 

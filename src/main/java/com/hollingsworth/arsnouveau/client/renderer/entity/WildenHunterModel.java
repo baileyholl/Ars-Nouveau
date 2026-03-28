@@ -2,36 +2,27 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
+// GeckoLib 5: setCustomAnimations() removed; head rotation must be ported
+// via addAdditionalStateData + custom GeoRenderState.
+// TODO: Port head pitch/yaw rotation to addAdditionalStateData pattern.
 public class WildenHunterModel extends GeoModel<WildenHunter> {
 
     @Override
-    public void setCustomAnimations(WildenHunter entity, long uniqueID, AnimationState<WildenHunter> customPredicate) {
-        super.setCustomAnimations(entity, uniqueID, customPredicate);
-        GeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(extraData.headPitch() * 0.017453292F);
-        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
+    public Identifier getModelResource(GeoRenderState renderState) {
+        return ArsNouveau.prefix("wilden_hunter");
     }
 
     @Override
-    public ResourceLocation getModelResource(WildenHunter hunter) {
-        return ArsNouveau.prefix("geo/wilden_hunter.geo.json");
-    }
-
-    @Override
-    public ResourceLocation getTextureResource(WildenHunter hunter) {
+    public Identifier getTextureResource(GeoRenderState renderState) {
         return ArsNouveau.prefix("textures/entity/wilden_hunter.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(WildenHunter hunter) {
-        return ArsNouveau.prefix("animations/wilden_hunter_animations.json");
+    public Identifier getAnimationResource(WildenHunter hunter) {
+        return ArsNouveau.prefix("wilden_hunter_animations");
     }
 }

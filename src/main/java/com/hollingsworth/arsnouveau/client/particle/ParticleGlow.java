@@ -1,14 +1,11 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
 
-public class ParticleGlow extends TextureSheetParticle {
+public class ParticleGlow extends SingleQuadParticle {
     public float colorR = 0;
     public float colorG = 0;
     public float colorB = 0;
@@ -18,7 +15,7 @@ public class ParticleGlow extends TextureSheetParticle {
     public boolean disableDepthTest;
 
     public ParticleGlow(ClientLevel worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, SpriteSet sprite, boolean disableDepthTest) {
-        super(worldIn, x, y, z, 0, 0, 0);
+        super(worldIn, x, y, z, 0, 0, 0, sprite.first());
         this.hasPhysics = false;
 
         this.colorR = r;
@@ -41,13 +38,12 @@ public class ParticleGlow extends TextureSheetParticle {
         this.yd = vy * 2.0f;
         this.zd = vz * 2.0f;
         this.initAlpha = a;
-        this.pickSprite(sprite);
         this.disableDepthTest = disableDepthTest;
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return this.disableDepthTest ? ParticleRenderTypes.EMBER_RENDER_NO_MASK : ParticleRenderTypes.EMBER_RENDER;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
     @Override
@@ -55,11 +51,6 @@ public class ParticleGlow extends TextureSheetParticle {
         return 255;
     }
 
-
-    @Override
-    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
-        super.render(buffer, renderInfo, partialTicks);
-    }
 
     @Override
     public void tick() {

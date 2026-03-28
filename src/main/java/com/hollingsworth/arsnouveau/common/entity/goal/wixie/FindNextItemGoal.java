@@ -39,7 +39,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public void start() {
         super.start();
         movePos = null;
-        Level world = wixie.getCommandSenderWorld();
+        Level world = wixie.level();
         WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
         if (tile == null || tile.getInventories() == null) {
             found = true;
@@ -56,7 +56,8 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             BlockEntity blockEntity = world.getBlockEntity(b);
             if (blockEntity == null)
                 continue;
-            IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
+            var rawHandler = world.getCapability(Capabilities.Item.BLOCK, b, null);
+            IItemHandler itemHandler = rawHandler != null ? IItemHandler.of(rawHandler) : null;
             if (itemHandler == null)
                 continue;
             for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -101,8 +102,8 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
 
         if (!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), Vec3.atCenterOf(movePos)) < 1.3 + this.extendedRange) {
 
-            WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
-            Level world = wixie.getCommandSenderWorld();
+            WixieCauldronTile tile = (WixieCauldronTile) wixie.level().getBlockEntity(wixie.cauldronPos);
+            Level world = wixie.level();
             if (tile == null) {
                 found = true;
                 return;
@@ -115,7 +116,8 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                 BlockEntity blockEntity = world.getBlockEntity(b);
                 if (blockEntity == null)
                     continue;
-                IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
+                var rawH = world.getCapability(Capabilities.Item.BLOCK, b, null);
+                IItemHandler itemHandler = rawH != null ? IItemHandler.of(rawH) : null;
                 if (itemHandler == null)
                     continue;
                 handlers.add(new ItemHandlerPos(b.immutable(), itemHandler));

@@ -39,13 +39,13 @@ public record VoidJarData(ItemScrollData scrollData,
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag, net.minecraft.core.component.DataComponentGetter pComponents) {
         if (active) {
             pTooltipAdder.accept(Component.translatable("ars_nouveau.on"));
         } else {
             pTooltipAdder.accept(Component.translatable("ars_nouveau.off"));
         }
-        scrollData.addToTooltip(pContext, pTooltipAdder, pTooltipFlag);
+        scrollData.addToTooltip(pContext, pTooltipAdder, pTooltipFlag, pComponents);
     }
 
     @Override

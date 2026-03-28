@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.ScryRitualRecipe;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -53,8 +53,8 @@ public class ScryRitualProvider extends SimpleDataProvider {
         return ItemTags.create(forgeTag(path));
     }
 
-    private ResourceLocation forgeTag(String path) {
-        return ResourceLocation.fromNamespaceAndPath("c", path);
+    private Identifier forgeTag(String path) {
+        return Identifier.fromNamespaceAndPath("c", path);
     }
 
     protected static Path getRecipePath(Path path, String id) {
@@ -69,7 +69,7 @@ public class ScryRitualProvider extends SimpleDataProvider {
         return "Scry Ritual Datagen";
     }
 
-    public record ScryRecipeWrapper(ResourceLocation id, TagKey<Item> augment, TagKey<Block> highlight) {
+    public record ScryRecipeWrapper(Identifier id, TagKey<Item> augment, TagKey<Block> highlight) {
 
         public ScryRitualRecipe recipe() {
             return new ScryRitualRecipe(augment, highlight);

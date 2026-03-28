@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:source_jar"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    }
+    "ars_nouveau:source_jar",
+    "ars_nouveau:abjuration_essence"
   ],
   "result": {
     "count": 1,

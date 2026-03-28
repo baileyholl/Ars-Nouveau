@@ -5,17 +5,16 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GlyphRecipeTooltip implements ClientTooltipComponent {
 
-    public static final ResourceLocation TEXTURE_LOCATION = ArsNouveau.prefix("textures/gui/bundle.png");
+    public static final Identifier TEXTURE_LOCATION = ArsNouveau.prefix("textures/gui/bundle.png");
     private static final int MARGIN_Y = 4;
     private static final int BORDER_WIDTH = 1;
     private static final int TEX_SIZE = 128;
@@ -28,7 +27,8 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
         this.items = items;
     }
 
-    public int getHeight() {
+    @Override
+    public int getHeight(@NotNull Font pFont) {
         return this.gridSizeY() * SLOT_SIZE_Y + 2 + MARGIN_Y;
     }
 
@@ -37,7 +37,8 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
     }
 
 
-    public void renderImage(@NotNull Font pFont, int pMouseX, int pMouseY, @NotNull GuiGraphics graphics) {
+    @Override
+    public void renderImage(@NotNull Font pFont, int pMouseX, int pMouseY, int pWidth, int pHeight, @NotNull GuiGraphics graphics) {
         if (this.items.isEmpty())
             return;
         int i = this.gridSizeX();
@@ -60,7 +61,8 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
         if (pItemIndex >= this.items.size()) {
             this.blit(graphics, pX, pY, pIsBundleFull ? GlyphRecipeTooltip.Texture.BLOCKED_SLOT : GlyphRecipeTooltip.Texture.SLOT);
         } else {
-            List<ItemStack> items = new ArrayList<>(List.of(this.items.get(pItemIndex).getItems()));
+            List<ItemStack> items = this.items.get(pItemIndex).items()
+                    .map(h -> h.value().getDefaultInstance()).toList();
             ItemStack itemstack = items.get((ClientInfo.ticksInGame / 20) % items.size());
             this.blit(graphics, pX, pY, GlyphRecipeTooltip.Texture.SLOT);
             graphics.renderItem(itemstack, pX + BORDER_WIDTH, pY + BORDER_WIDTH, pItemIndex);
@@ -87,7 +89,7 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
     }
 
     private void blit(GuiGraphics graphics, int pX, int pY, GlyphRecipeTooltip.Texture pTexture) {
-        graphics.blit(TEXTURE_LOCATION, pX, pY, (float) pTexture.x, (float) pTexture.y, pTexture.w, pTexture.h, TEX_SIZE, TEX_SIZE);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, TEXTURE_LOCATION, pX, pY, pTexture.x, pTexture.y, pTexture.w, pTexture.h, TEX_SIZE, TEX_SIZE);
     }
 
     private int gridSizeX() {

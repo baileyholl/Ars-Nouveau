@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "minecraft:tinted_glass"
-    },
-    "y": {
-      "item": "ars_nouveau:source_gem"
-    }
+    "x": "minecraft:tinted_glass",
+    "y": "ars_nouveau:source_gem"
   },
   "pattern": [
     "xyx"

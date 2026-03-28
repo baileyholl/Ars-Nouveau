@@ -7,24 +7,38 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public class PlanariumProjectorRenderer implements BlockEntityRenderer<PlanariumProjectorTile> {
+// MC 1.21.11: BlockEntityRenderer now requires 2 type params <T, S extends BlockEntityRenderState>
+// render() replaced by createRenderState() + submit()
+// TODO: Port block rendering in submit() - renderSingleBlock needs MultiBufferSource which is not in SubmitNodeCollector.
+// Use collector.submitBlock() or submitBlockModel() for block rendering.
+public class PlanariumProjectorRenderer implements BlockEntityRenderer<PlanariumProjectorTile, BlockEntityRenderState> {
     public PlanariumProjectorRenderer(BlockEntityRendererProvider.Context blockRenderDispatcher) {
-
     }
 
     @Override
-    public void render(PlanariumProjectorTile planariumProjectorTile, float v, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1) {
+    public BlockEntityRenderState createRenderState() {
+        return new BlockEntityRenderState();
+    }
+
+    @Override
+    public void submit(BlockEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
         poseStack.pushPose();
         poseStack.translate(0, -24, 0);
         poseStack.scale(32, 32, 32);
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(BlockRegistry.PLANARIUM.defaultBlockState().setValue(Planarium.INVERTED, true), poseStack, multiBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        // TODO: Port block rendering. Old: Minecraft.getInstance().getBlockRenderer().renderSingleBlock(...)
+        // which needed MultiBufferSource. Now use collector.submitBlock() for simple cases,
+        // or collector.submitBlockModel() for custom RenderType.
+        // collector.submitBlock(poseStack, BlockRegistry.PLANARIUM.defaultBlockState().setValue(Planarium.INVERTED, true), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
     }
 
@@ -34,7 +48,7 @@ public class PlanariumProjectorRenderer implements BlockEntityRenderer<Planarium
     }
 
     @Override
-    public boolean shouldRenderOffScreen(PlanariumProjectorTile blockEntity) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 
@@ -47,6 +61,4 @@ public class PlanariumProjectorRenderer implements BlockEntityRenderer<Planarium
     public @NotNull AABB getRenderBoundingBox(@NotNull PlanariumProjectorTile blockEntity) {
         return AABB.INFINITE;
     }
-
-
 }

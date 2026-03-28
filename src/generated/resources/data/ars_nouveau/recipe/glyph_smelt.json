@@ -2,24 +2,12 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "minecraft:blast_furnace"
-    },
-    {
-      "item": "minecraft:blast_furnace"
-    },
-    {
-      "item": "minecraft:blast_furnace"
-    },
-    {
-      "item": "minecraft:blast_furnace"
-    },
-    {
-      "tag": "c:rods/blaze"
-    }
+    "ars_nouveau:fire_essence",
+    "minecraft:blast_furnace",
+    "minecraft:blast_furnace",
+    "minecraft:blast_furnace",
+    "minecraft:blast_furnace",
+    "#c:rods/blaze"
   ],
   "output": {
     "count": 1,

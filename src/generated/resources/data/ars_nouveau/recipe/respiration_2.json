@@ -3,30 +3,14 @@
   "enchantment": "minecraft:respiration",
   "level": 2,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    }
+    "ars_nouveau:water_essence",
+    "ars_nouveau:water_essence",
+    "ars_nouveau:water_essence",
+    "ars_nouveau:water_essence",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source"
   ],
   "sourceCost": 6000
 }

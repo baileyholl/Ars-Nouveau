@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "tag": "c:cobblestones"
-  },
+  "input": "#c:cobblestones",
   "output": [
     {
       "chance": 1.0,

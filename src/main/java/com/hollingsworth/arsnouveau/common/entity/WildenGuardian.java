@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,10 +28,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class WildenGuardian extends Monster implements GeoEntity {
@@ -57,7 +60,8 @@ public class WildenGuardian extends Monster implements GeoEntity {
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if (Config.GUARDIAN_ATTACK_ANIMALS.get())
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
+            // 1.21.11: Explicit type arg required; TargetingConditions.Selector.test takes (LivingEntity, ServerLevel)
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Animal>(this, Animal.class, 10, true, false, (entity, serverLevel) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
     }
 
     public boolean checkSpawnObstruction(LevelReader pLevel) {
@@ -76,37 +80,35 @@ public class WildenGuardian extends Monster implements GeoEntity {
         this.entityData.set(IS_ARMORED, isArmored);
     }
 
+    // 1.21.11: actuallyHurt(DamageSource, float) removed; hurt() is final and returns void.
+    // Override hurtServer(ServerLevel, DamageSource, float) instead — handles both damage filtering
+    // and the former actuallyHurt logic (armor activation, damage reduction, thorn retaliation).
     @Override
-    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-        if (!level.isClientSide && armorCooldown == 0) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource pSource, float pAmount) {
+        if (pSource.is(DamageTypes.DROWN)) {
+            return false;
+        }
+        if (armorCooldown == 0) {
             setArmored(true);
             armorCooldown = 200;
             armorTimeRemaining = 100;
             this.navigation.stop();
         }
-        if (!level.isClientSide && isArmored() && !damageSrc.is(DamageTypeTags.BYPASSES_ARMOR)) {
-            damageAmount *= 0.75;
-
-            if (damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.type().msgId().equals("thorns")) {
-                damageSrc.getEntity().hurt(level.damageSources().thorns(this), 3.0f);
+        if (isArmored() && !pSource.is(DamageTypeTags.BYPASSES_ARMOR)) {
+            pAmount *= 0.75f;
+            if (pSource.getEntity() != null && BlockUtil.distanceFrom(pSource.getEntity().position, this.position) <= 2.0
+                    && !pSource.type().msgId().equals("thorns")) {
+                // hurt() returns void in 1.21.11 — call without checking return value
+                pSource.getEntity().hurt(level.damageSources().thorns(this), 3.0f);
             }
-
         }
-        super.actuallyHurt(damageSrc, damageAmount);
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource.is(DamageTypes.DROWN)) {
-            return false;
-        }
-        return super.hurt(pSource, pAmount);
+        return super.hurtServer(serverLevel, pSource, pAmount);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (armorTimeRemaining > 0)
                 armorTimeRemaining--;
 
@@ -118,7 +120,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
             if (armorCooldown > 0)
                 armorCooldown--;
         }
-        if (isArmored() && !this.level.isClientSide) {
+        if (isArmored() && !this.level.isClientSide()) {
             this.getNavigation().stop();
         }
     }
@@ -142,25 +144,25 @@ public class WildenGuardian extends Monster implements GeoEntity {
         }
     }
 
-    private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {
+    private PlayState runPredicate(AnimationTest<WildenGuardian> tAnimationState) {
         if (this.isArmored()) {
             return PlayState.STOP;
         }
         if (tAnimationState.isMoving()) {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+            tAnimationState.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
-    private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
+    private PlayState idlePredicate(AnimationTest<WildenGuardian> tAnimationState) {
         if (this.isArmored()) {
             return PlayState.STOP;
         }
         if (tAnimationState.isMoving()) {
             return PlayState.STOP;
         }
-        tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+        tAnimationState.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
 
@@ -170,9 +172,9 @@ public class WildenGuardian extends Monster implements GeoEntity {
         pBuilder.define(IS_ARMORED, false);
     }
 
-    private PlayState defendPredicate(AnimationState<?> event) {
+    private PlayState defendPredicate(AnimationTest<WildenGuardian> event) {
         if (this.isArmored()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("defending"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("defending"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -184,9 +186,10 @@ public class WildenGuardian extends Monster implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        controller = new AnimationController<>(this, "attackController", 1, this::defendPredicate);
-        runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
-        idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
+        // GeckoLib 5: AnimationController constructor no longer takes entity as first arg
+        controller = new AnimationController<WildenGuardian>("attackController", 1, this::defendPredicate);
+        runController = new AnimationController<WildenGuardian>("runController", 1, this::runPredicate);
+        idleController = new AnimationController<WildenGuardian>("idleController", 1, this::idlePredicate);
         animatableManager.add(controller);
         animatableManager.add(runController);
         animatableManager.add(idleController);
@@ -196,18 +199,19 @@ public class WildenGuardian extends Monster implements GeoEntity {
         return 80;
     }
 
+    // 1.21.11: save(CompoundTag)/load(CompoundTag) removed; override addAdditionalSaveData/readAdditionalSaveData
     @Override
-    public boolean save(CompoundTag compound) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("armorCooldown", armorCooldown);
         compound.putInt("armorTimeRemaining", armorTimeRemaining);
-        return super.save(compound);
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        armorCooldown = compound.getInt("armorCooldown");
-        armorTimeRemaining = compound.getInt("armorTimeRemaining");
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput compound) {
+        super.readAdditionalSaveData(compound);
+        armorCooldown = compound.getIntOr("armorCooldown", 0);
+        armorTimeRemaining = compound.getIntOr("armorTimeRemaining", 0);
     }
 
     @Override

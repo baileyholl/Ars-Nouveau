@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -10,10 +11,10 @@ import java.util.*;
 public class SingleRecipe {
     public List<Ingredient> recipeIngredients;
     public ItemStack outputStack;
-    public Recipe iRecipe;
+    public Recipe<?> iRecipe;
 
 
-    public SingleRecipe(List<Ingredient> recipeIngredients, ItemStack outputStack, Recipe iRecipe) {
+    public SingleRecipe(List<Ingredient> recipeIngredients, ItemStack outputStack, Recipe<?> iRecipe) {
         this.recipeIngredients = recipeIngredients;
         this.outputStack = outputStack;
         this.iRecipe = iRecipe;
@@ -26,12 +27,14 @@ public class SingleRecipe {
         List<ItemStack> items = new ArrayList<>();
         for (Ingredient i : recipeIngredients) {
             boolean foundStack = false;
-            for (ItemStack stack : i.getItems()) {
+            for (Holder<Item> holder : i.items().toList()) {
+                Item item = holder.value();
+                ItemStack stack = new ItemStack(item);
                 // If our inventory has the item, decrease the effective count
-                if (inventory.containsKey(stack.getItem()) && map.get(stack.getItem()) > 0) {
-                    map.put(stack.getItem(), map.get(stack.getItem()) - 1);
+                if (inventory.containsKey(item) && map.get(item) > 0) {
+                    map.put(item, map.get(item) - 1);
                     foundStack = true;
-                    items.add(stack.copy());
+                    items.add(stack);
                     break;
                 }
             }

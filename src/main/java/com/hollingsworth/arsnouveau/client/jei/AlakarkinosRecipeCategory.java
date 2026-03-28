@@ -44,10 +44,7 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<RecipeHolder<A
         return Component.translatable("ars_nouveau.alakarkinos_recipe");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
+    // getBackground() removed from IRecipeCategory in JEI 27.4
 
     @Override
     public IDrawable getIcon() {
@@ -55,10 +52,20 @@ public class AlakarkinosRecipeCategory implements IRecipeCategory<RecipeHolder<A
     }
 
     @Override
+    public int getWidth() {
+        return 126;
+    }
+
+    @Override
+    public int getHeight() {
+        return 140;
+    }
+
+    @Override
     public void draw(RecipeHolder<AlakarkinosRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         AlakarkinosRecipe recipe = recipeHolder.value();
         Minecraft minecraft = Minecraft.getInstance();
-        String prepared = recipe.table().location().getPath().replace("archaeology/", "").replaceAll("_[0-9]", "").replaceAll("_", " ").toLowerCase(Locale.ROOT);
+        String prepared = recipe.table().identifier().getPath().replace("archaeology/", "").replaceAll("_[0-9]", "").replaceAll("_", " ").toLowerCase(Locale.ROOT);
         String name = WordUtils.capitalizeFully(prepared);
         guiGraphics.drawString(minecraft.font, Component.literal(name), 22, 4, 0xFF000000, false);
     }

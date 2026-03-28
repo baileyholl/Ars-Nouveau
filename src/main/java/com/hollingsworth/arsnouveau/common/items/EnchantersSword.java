@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
+import com.hollingsworth.arsnouveau.common.items.EnchantersGauntlet;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -16,30 +17,34 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -49,19 +54,19 @@ import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry.defaultItemProperties;
 
-public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, IManaDiscountEquipment {
+public class EnchantersSword extends Item implements ICasterTool, GeoItem, IManaDiscountEquipment {
 
-    public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
+    public EnchantersSword(ToolMaterial iItemTier, int baseDamage, float baseAttackSpeed) {
         this(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
     }
 
-    public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
-        super(iItemTier, properties.component(DataComponents.TOOL, createToolProperties())
+    public EnchantersSword(ToolMaterial iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
+        super(properties.component(DataComponents.TOOL, EnchantersGauntlet.createToolProperties())
                 .attributes(ItemAttributeModifiers.builder()
                         .add(
                                 Attributes.ATTACK_DAMAGE,
                                 new AttributeModifier(
-                                        BASE_ATTACK_DAMAGE_ID, (double) ((float) baseDamage + iItemTier.getAttackDamageBonus()), AttributeModifier.Operation.ADD_VALUE
+                                        BASE_ATTACK_DAMAGE_ID, (double) ((float) baseDamage + iItemTier.attackDamageBonus()), AttributeModifier.Operation.ADD_VALUE
                                 ),
                                 EquipmentSlotGroup.MAINHAND
                         )
@@ -76,8 +81,8 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int p_77663_4_, boolean p_77663_5_) {
-        super.inventoryTick(stack, world, entity, p_77663_4_, p_77663_5_);
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull ServerLevel world, @NotNull Entity entity, @Nullable EquipmentSlot slot) {
+        super.inventoryTick(stack, world, entity, slot);
         if (entity instanceof Player player)
             RepairingPerk.attemptRepair(stack, player);
     }
@@ -101,27 +106,27 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, LivingEntity target, @NotNull LivingEntity entity) {
+    public void hurtEnemy(@NotNull ItemStack stack, LivingEntity target, @NotNull LivingEntity entity) {
         AbstractCaster<?> caster = getSpellCaster(stack);
         IWrappedCaster wrappedCaster = entity instanceof Player player ? new PlayerCaster(player) : new LivingCaster(entity);
-        SpellContext context = new SpellContext(entity.level, caster.modifySpellBeforeCasting((ServerLevel) target.level, entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster, stack);
+        SpellContext context = new SpellContext(entity.level(), caster.modifySpellBeforeCasting((ServerLevel) target.level(), entity, InteractionHand.MAIN_HAND, caster.getSpell()), entity, wrappedCaster, stack);
         SpellResolver resolver = entity instanceof Player ? new SpellResolver(context) : new EntitySpellResolver(context);
         EntityHitResult entityRes = new EntityHitResult(target);
         resolver.onCastOnEntity(stack, entityRes.getEntity(), InteractionHand.MAIN_HAND);
-        return super.hurtEnemy(stack, target, entity);
+        super.hurtEnemy(stack, target, entity);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        if (Minecraft.getInstance().hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
             getInformation(stack, context, tooltip2, flagIn);
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (caster != null && !Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && !Minecraft.getInstance().hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }
@@ -143,7 +148,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, GeoItem, 
             final SwordRenderer renderer = new SwordRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });

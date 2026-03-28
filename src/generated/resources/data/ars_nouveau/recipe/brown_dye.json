@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:cocoa_beans"
-  },
+  "input": "minecraft:cocoa_beans",
   "output": [
     {
       "chance": 1.0,

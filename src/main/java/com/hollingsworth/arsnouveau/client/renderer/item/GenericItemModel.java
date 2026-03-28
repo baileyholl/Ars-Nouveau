@@ -1,28 +1,30 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
+// GeckoLib 5: getModelResource/getTextureResource now take GeoRenderState, not the animatable T
 public class GenericItemModel extends GeoModel<AnimBlockItem> {
-    GeoModel model;
+    GeoModel<?> model;
 
-    public GenericItemModel(GeoModel model) {
+    public GenericItemModel(GeoModel<?> model) {
         this.model = model;
     }
 
     @Override
-    public ResourceLocation getModelResource(AnimBlockItem animBlockItem) {
-        return model.getModelResource(null);
+    public Identifier getModelResource(GeoRenderState renderState) {
+        return model.getModelResource(renderState);
     }
 
     @Override
-    public ResourceLocation getTextureResource(AnimBlockItem animBlockItem) {
-        return model.getTextureResource(null);
+    public Identifier getTextureResource(GeoRenderState renderState) {
+        return model.getTextureResource(renderState);
     }
 
     @Override
-    public ResourceLocation getAnimationResource(AnimBlockItem animBlockItem) {
+    public Identifier getAnimationResource(AnimBlockItem animBlockItem) {
         return model.getAnimationResource(null);
     }
 }

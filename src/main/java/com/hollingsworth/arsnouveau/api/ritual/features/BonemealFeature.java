@@ -29,7 +29,7 @@ public class BonemealFeature implements IPlaceableFeature {
     public boolean onPlace(Level level, BlockPos pos, FeaturePlacementRitual placementRitual, RitualBrazierTile brazierTile) {
         ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
         if (level.random.nextFloat() < chance && BoneMealItem.applyBonemeal(stack, level, pos.below(), ANFakePlayer.getPlayer((ServerLevel) level))) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 level.levelEvent(1505, pos.below(), 0); //particles
             }
             return true;

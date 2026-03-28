@@ -10,8 +10,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PlayerRideable;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -22,13 +23,14 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
@@ -49,7 +51,7 @@ import java.util.stream.Stream;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class MobJar extends TickableModBlock implements EntityBlock, SimpleWaterloggedBlock {
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = DirectionalBlock.FACING;
     public static final Property<Integer> LIGHT_LEVEL = IntegerProperty.create("level", 0, 15);
     public static final Property<Boolean> POWERED = BlockStateProperties.POWERED;
 
@@ -68,36 +70,36 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         MobJarTile tile = (MobJarTile) pLevel.getBlockEntity(pPos);
         if (tile == null) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             ItemStack held = pPlayer.getItemInHand(pHand);
             if (held.is(ItemTagProvider.JAR_ITEM_BLACKLIST)) {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
         }
 
         var jarEntity = tile.getEntity();
-        if (jarEntity == null && !pLevel.isClientSide) {
+        if (jarEntity == null && !pLevel.isClientSide()) {
             if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
                 EntityType<?> type = spawnEggItem.getType(stack);
-                Entity entity = type.create(pLevel);
+                Entity entity = type.create(pLevel, EntitySpawnReason.LOAD);
                 if (entity != null) {
                     tile.setEntityData(entity);
                     if (!pPlayer.hasInfiniteMaterials()) {
                         stack.shrink(1);
                     }
-                    return ItemInteractionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
             } else if (!stack.isEmpty() && !(stack.getItem() instanceof MobJarItem) && !(pPlayer instanceof ANFakePlayer)) {
                 ItemEntity entity = new ItemEntity(EntityType.ITEM, pLevel);
                 entity.setItem(stack.copy());
                 tile.setEntityData(entity);
                 stack.setCount(0);
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
         if (jarEntity != null
@@ -110,26 +112,18 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
             }
         }
         if (pPlayer.isSecondaryUseActive() && jarEntity instanceof ContainerEntity ce) {
-            switch (ce.interactWithContainerVehicle(pPlayer)) {
-                case SUCCESS, SUCCESS_NO_ITEM_USED -> {
-                    return ItemInteractionResult.SUCCESS;
-                }
-                case CONSUME -> {
-                    return ItemInteractionResult.CONSUME;
-                }
-                case CONSUME_PARTIAL -> {
-                    return ItemInteractionResult.CONSUME_PARTIAL;
-                }
-                case FAIL -> {
-                    return ItemInteractionResult.FAIL;
-                }
+            InteractionResult containerResult = ce.interactWithContainerVehicle(pPlayer);
+            if (containerResult.consumesAction()) {
+                return containerResult;
+            } else if (containerResult == InteractionResult.FAIL) {
+                return InteractionResult.FAIL;
             }
         }
         tile.dispatchBehavior((behavior) -> {
             behavior.use(pState, pLevel, pPos, pPlayer, pHand, pHit, tile);
         });
         tile.updateBlock();
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -146,16 +140,16 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTickAccess, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }
 
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        if (pLevel.isClientSide)
+        if (pLevel.isClientSide())
             return;
         if (pLevel.getBlockEntity(pPos) instanceof MobJarTile tile) {
             int light = tile.calculateLight();
@@ -166,7 +160,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             boolean flag = pState.getValue(POWERED);
             if (flag != pLevel.hasNeighborSignal(pPos)) {
                 if (!flag) {
@@ -187,7 +181,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+    protected int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos, Direction pDirection) {
         MobJarTile tile = (MobJarTile) worldIn.getBlockEntity(pos);
         AtomicInteger power = new AtomicInteger();
         tile.dispatchBehavior((behavior) -> {

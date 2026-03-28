@@ -8,7 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
@@ -20,11 +20,11 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public record CodexData(Optional<UUID> uuid, String playerName,
-                        List<ResourceLocation> glyphIds) implements TooltipProvider {
+                        List<Identifier> glyphIds) implements TooltipProvider {
     public static Codec<CodexData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(CodexData::uuid),
             Codec.STRING.optionalFieldOf("playerName", "").forGetter(CodexData::playerName),
-            Codec.list(ResourceLocation.CODEC).fieldOf("glyphIds").forGetter(CodexData::glyphIds)
+            Codec.list(Identifier.CODEC).fieldOf("glyphIds").forGetter(CodexData::glyphIds)
     ).apply(instance, CodexData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, CodexData> STREAM = StreamCodec.composite(
@@ -32,10 +32,10 @@ public record CodexData(Optional<UUID> uuid, String playerName,
             CodexData::uuid,
             ByteBufCodecs.STRING_UTF8,
             CodexData::playerName,
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity)
+            Identifier.STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity)
             ), CodexData::glyphIds, CodexData::new);
 
-    public CodexData(UUID uuid, String playerName, List<ResourceLocation> glyphIds) {
+    public CodexData(UUID uuid, String playerName, List<Identifier> glyphIds) {
         this(Optional.of(uuid), playerName, glyphIds);
     }
 
@@ -44,7 +44,7 @@ public record CodexData(Optional<UUID> uuid, String playerName,
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag, net.minecraft.core.component.DataComponentGetter pComponents) {
         if (this.glyphIds().isEmpty()) {
             pTooltipAdder.accept(Component.translatable("ars_nouveau.codex_tooltip"));
         } else {

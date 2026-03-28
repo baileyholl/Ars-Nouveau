@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "ars_nouveau:smooth_sourcestone_alternating"
-    }
+    "#": "ars_nouveau:smooth_sourcestone_alternating"
   },
   "pattern": [
     "#  ",

@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.hollingsworth.arsnouveau.common.entity.AnimHeadSummon;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
-import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -15,19 +14,17 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.Optional;
 
 public class SummonAnimHeadCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-skull").
-                requires(sender -> {
-                    return sender.hasPermission(4);
-                })
+                requires(Commands.hasPermission(Commands.LEVEL_OWNERS))
                 .then(Commands.argument("player_name", StringArgumentType.word())
                         .then(Commands.argument("duration", IntegerArgumentType.integer())
                                 .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
@@ -42,16 +39,16 @@ public class SummonAnimHeadCommand {
     private static int summonSkull(CommandSourceStack source, String player_name, int duration, CompoundTag compoundTag, boolean dropSkull) {
         try {
             compoundTag.putString("id", ArsNouveau.prefix("animated_head").toString());
-            Entity entity = EntityType.loadEntityRecursive(compoundTag, source.getLevel(), (p_138828_) -> {
-                p_138828_.moveTo(source.getPosition().x, source.getPosition().y, source.getPosition().z, p_138828_.getYRot(), p_138828_.getXRot());
+            Entity entity = EntityType.loadEntityRecursive(compoundTag, source.getLevel(), EntitySpawnReason.COMMAND, (p_138828_) -> {
+                p_138828_.snapTo(source.getPosition().x, source.getPosition().y, source.getPosition().z, p_138828_.getYRot(), p_138828_.getXRot());
                 return p_138828_;
             });
             AnimHeadSummon animHeadSummon = (AnimHeadSummon) entity;
             animHeadSummon.blockState = Blocks.PLAYER_HEAD.defaultBlockState();
             CompoundTag compoundtag = new CompoundTag();
-            ResolvableProfile resolvableProfile = new ResolvableProfile(Optional.of(player_name), Optional.empty(), new PropertyMap());
-            resolvableProfile.resolve().thenApply((profile) -> {
-                compoundtag.put("profile", ANCodecs.encode(ResolvableProfile.CODEC, profile));
+            ResolvableProfile resolvableProfile = ResolvableProfile.createUnresolved(player_name);
+            resolvableProfile.resolveProfile(source.getServer().services().profileResolver()).thenApply((profile) -> {
+                compoundtag.put("profile", ANCodecs.encode(ResolvableProfile.CODEC, ResolvableProfile.createResolved(profile)));
                 animHeadSummon.head_data = compoundtag;
                 animHeadSummon.setPos(source.getPosition());
                 animHeadSummon.setTicksLeft(duration);

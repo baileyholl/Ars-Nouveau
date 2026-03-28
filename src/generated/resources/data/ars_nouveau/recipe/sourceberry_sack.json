@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    }
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush"
   ],
   "result": {
     "count": 1,

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "g": {
-      "tag": "c:ingots/gold"
-    },
-    "i": {
-      "item": "minecraft:lava_bucket"
-    },
-    "s": {
-      "tag": "c:gems/source"
-    }
+    "g": "#c:ingots/gold",
+    "i": "minecraft:lava_bucket",
+    "s": "#c:gems/source"
   },
   "pattern": [
     " s ",

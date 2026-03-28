@@ -13,8 +13,8 @@ public class SaveButton extends GuiImageButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
         graphics.drawString(Minecraft.getInstance().font, Component.translatable("ars_nouveau.color_gui.save"), x + 18, y + 4, BaseBook.FONT_COLOR, false);
     }
 }

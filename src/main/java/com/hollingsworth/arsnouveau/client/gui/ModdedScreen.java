@@ -37,7 +37,7 @@ public class ModdedScreen extends Screen {
         if (image.isPresent() && tooltip.isEmpty()) {
             tooltip.add(Component.empty());
         }
-        stack.renderTooltip(font, tooltip, image, mouseX, mouseY);
+        stack.setTooltipForNextFrame(font, tooltip, image, mouseX, mouseY);
     }
 
     public void collectTooltips(int mouseX, int mouseY, List<Component> tooltip) {

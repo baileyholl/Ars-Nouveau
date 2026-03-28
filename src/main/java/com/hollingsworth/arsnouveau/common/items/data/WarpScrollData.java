@@ -7,7 +7,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
@@ -40,7 +41,7 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
     }
 
     public boolean canTeleportWithDim(Level level) {
-        return canTeleportWithDim(level.dimension().location().toString());
+        return canTeleportWithDim(level.dimension().identifier().toString());
     }
 
     public boolean isValid() {
@@ -48,7 +49,7 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag, DataComponentGetter components) {
         if (!isValid()) {
             pTooltipAdder.accept(Component.translatable("ars_nouveau.warp_scroll.no_location"));
             return;
@@ -58,7 +59,7 @@ public record WarpScrollData(Optional<BlockPos> pos, String dimension, Vec2 rota
         if (crossDim) {
             String dimId = dimension();
             if (dimId != null) {
-                ResourceLocation resourceLocation = ResourceLocation.tryParse(dimId);
+                Identifier resourceLocation = Identifier.tryParse(dimId);
                 pTooltipAdder.accept(Component.translatable(resourceLocation.getPath() + "." + resourceLocation.getNamespace() + ".name"));
             }
         }

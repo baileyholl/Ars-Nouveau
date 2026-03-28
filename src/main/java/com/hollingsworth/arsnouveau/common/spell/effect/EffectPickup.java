@@ -59,7 +59,7 @@ public class EffectPickup extends AbstractEffect {
                 var expPickup = NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(player, i));
                 if (expPickup.isCanceled())
                     continue;
-                player.giveExperiencePoints(i.value);
+                player.giveExperiencePoints(i.getValue());
                 i.remove(Entity.RemovalReason.DISCARDED);
             }
         }

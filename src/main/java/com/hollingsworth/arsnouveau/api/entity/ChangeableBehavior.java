@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.entity;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -55,7 +55,7 @@ public abstract class ChangeableBehavior implements IWandable {
     public void pickUpItem(ItemEntity entity) {
     }
 
-    public abstract ResourceLocation getRegistryName();
+    public abstract Identifier getRegistryName();
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         return InteractionResult.PASS;

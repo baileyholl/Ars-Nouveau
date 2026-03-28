@@ -13,7 +13,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -35,7 +35,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (level().isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level().isClientSide() || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
@@ -112,7 +112,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && debuffCooldown > 0)
+        if (!level.isClientSide() && debuffCooldown > 0)
             debuffCooldown--;
     }
 
@@ -126,12 +126,12 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         if (controller == null)
             return;
         if (arg == EntityWixie.Animations.CAST.ordinal()) {
-            controller.forceAnimationReset();
+            controller.reset();
             controller.setAnimation(RawAnimation.begin().thenPlay("cast"));
         }
     }
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
@@ -147,7 +147,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         FamiliarWixie wixie;
 
         public static ArrayList<Holder<MobEffect>> effectTable = new ArrayList<>(Arrays.asList(
-                MobEffects.MOVEMENT_SLOWDOWN, MobEffects.WEAKNESS, MobEffects.LEVITATION, MobEffects.POISON
+                MobEffects.SLOWNESS, MobEffects.WEAKNESS, MobEffects.LEVITATION, MobEffects.POISON
         ));
 
         public DebuffTargetGoal(FamiliarWixie wixie) {

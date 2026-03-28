@@ -42,7 +42,9 @@ import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animation.state.AnimationTest;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -72,7 +74,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
             smashCooldown--;
         if (castCooldown > 0)
             castCooldown--;
-        if (!level.isClientSide && level.getGameTime() % 20 == 0 && !this.isDeadOrDying()) {
+        if (!level.isClientSide() && level.getGameTime() % 20 == 0 && !this.isDeadOrDying()) {
             this.heal(1.0f);
         }
     }
@@ -85,10 +87,10 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
             if (this.isBaby()) {
                 this.usePlayerItem(p_230254_1_, itemstack);
                 this.ageUp((int) ((float) (-i / 20) * 0.1F), true);
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
 
-            if (this.level.isClientSide) {
+            if (this.level.isClientSide()) {
                 return InteractionResult.CONSUME;
             }
         }
@@ -123,7 +125,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
 
     @Override
     public void die(DamageSource source) {
-        if (!isBaby() && !level.isClientSide) {
+        if (!isBaby() && !level.isClientSide()) {
 
             setBaby(true);
             refreshDimensions();
@@ -145,7 +147,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     @Override
     public void setAge(int age) {
         this.age = age;
-        if (this.age >= 0 && !level.isClientSide) {
+        if (this.age >= 0 && !level.isClientSide()) {
             this.ageBoundaryReached();
         }
     }
@@ -161,7 +163,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     @Override
     protected void ageBoundaryReached() {
         super.ageBoundaryReached();
-        if (!level.isClientSide)
+        if (!level.isClientSide())
             this.entityData.set(BABY, false);
     }
 
@@ -183,7 +185,10 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new GoBackHomeGoal(this, this::getHome, 10, () -> this.getTarget() == null || this.isBaby()));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, false, (entity) -> {
+        // 1.21.11: 4-param NearestAttackableTargetGoal(mob, class, mustSee, predicate) removed;
+        // use 6-param (mob, class, randomInterval, mustSee, mustReach, predicate)
+        // 1.21.11: Explicit type arg required; TargetingConditions.Selector.test takes (LivingEntity, ServerLevel)
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<Mob>(this, Mob.class, 10, false, false, (entity, serverLevel) -> {
             if (entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
                 return false;
             }
@@ -196,8 +201,8 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d, 15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
     }
 
-    @Override
-    public boolean isAlliedTo(Entity pEntity) {
+    // 1.21.11: isAlliedTo(Entity) is final in Entity, cannot override
+    public boolean isAlliedToWealdWalker(Entity pEntity) {
         return !(pEntity instanceof Enemy) || (pEntity instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) || super.isAlliedTo(pEntity);
     }
 
@@ -211,7 +216,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("isBaby", entityData.get(BABY));
         NBTUtil.storeBlockPos(tag, "home", getHome());
@@ -219,45 +224,48 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         tag.putInt("cast", castCooldown);
     }
 
+    // 1.21.11: hurt(DamageSource, float) is final; override hurtServer(ServerLevel, DamageSource, float) instead
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
         if (source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.DROWN))
             return false;
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel, source, amount);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        entityData.set(BABY, tag.getBoolean("isBaby"));
+        entityData.set(BABY, tag.getBooleanOr("isBaby", false));
         if (NBTUtil.hasBlockPos(tag, "home")) {
             setHome(NBTUtil.getBlockPos(tag, "home"));
         }
-        this.smashCooldown = tag.getInt("smash");
-        this.castCooldown = tag.getInt("cast");
+        this.smashCooldown = tag.getIntOr("smash", 0);
+        this.castCooldown = tag.getIntOr("cast", 0);
     }
 
-    AnimationController attackController;
+    AnimationController<WealdWalker> attackController;
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "run_controller", 1, this::runController));
-        attackController = new AnimationController<>(this, "attack_controller", 5, this::attackController);
+        // GeckoLib 5: AnimationController no longer takes entity as first arg
+        data.add(new AnimationController<WealdWalker>("run_controller", 1, this::runController));
+        attackController = new AnimationController<WealdWalker>("attack_controller", 5, this::attackController);
         data.add(attackController);
     }
 
-    private PlayState attackController(software.bernie.geckolib.animation.AnimationState<?> AnimationState) {
+    private PlayState attackController(AnimationTest<WealdWalker> AnimationTest) {
         return PlayState.CONTINUE;
     }
 
-    private PlayState runController(AnimationState AnimationState) {
+    private PlayState runController(AnimationTest<WealdWalker> AnimationTest) {
         if (entityData.get(SMASHING) || entityData.get(CASTING))
             return PlayState.STOP;
-        if (AnimationState.getController().getCurrentAnimation() != null && !(AnimationState.getController().getCurrentAnimation().animation().name().equals("run_master"))) {
+        // GeckoLib 5: getCurrentAnimation() → getCurrentRawAnimation(), name via getAnimationStages()
+        if (AnimationTest.controller().getCurrentRawAnimation() != null && !AnimationTest.isCurrentAnimationStage("run_master")) {
             return PlayState.STOP;
         }
-        if (AnimationState.isMoving()) {
-            AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run_master"));
+        if (AnimationTest.isMoving()) {
+            AnimationTest.controller().setAnimation(RawAnimation.begin().thenPlay("run_master"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -275,18 +283,26 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
         try {
             if (arg == Animations.SMASH.ordinal()) {
 
-                if (attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animation().name().equals("smash"))) {
-                    return;
+                {
+                    var cur = attackController.getCurrentRawAnimation();
+                    if (cur != null && !cur.getAnimationStages().isEmpty() && cur.getAnimationStages().get(0).animationName().equals("smash")) {
+                        return;
+                    }
                 }
-                attackController.forceAnimationReset();
+                // GeckoLib 5: forceAnimationReset() → reset()
+                attackController.reset();
                 attackController.setAnimation(RawAnimation.begin().thenPlay("smash").thenPlay("idle"));
             }
 
             if (arg == Animations.CAST.ordinal()) {
-                if (attackController.getCurrentAnimation() != null && attackController.getCurrentAnimation().animation().name().equals("cast")) {
-                    return;
+                {
+                    var cur = attackController.getCurrentRawAnimation();
+                    if (cur != null && !cur.getAnimationStages().isEmpty() && cur.getAnimationStages().get(0).animationName().equals("cast")) {
+                        return;
+                    }
                 }
-                attackController.forceAnimationReset();
+                // GeckoLib 5: forceAnimationReset() → reset()
+                attackController.reset();
                 attackController.setAnimation(RawAnimation.begin().thenPlay("cast").thenPlay("idle"));
             }
         } catch (Exception e) {
@@ -307,7 +323,7 @@ public class WealdWalker extends AgeableMob implements GeoEntity, IAnimationList
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(net.minecraft.server.level.ServerLevel pLevel) {
         return 0;
     }
 

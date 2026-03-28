@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.items.data.ArmorPerkHolder;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -18,6 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PerkUtil {
+
+    // 1.21.11: LivingEntity.getArmorSlots() removed; use this helper instead
+    private static final EquipmentSlot[] ARMOR_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    public static Iterable<ItemStack> getArmorItems(LivingEntity entity) {
+        List<ItemStack> items = new java.util.ArrayList<>();
+        for (EquipmentSlot slot : ARMOR_SLOTS) items.add(entity.getItemBySlot(slot));
+        return items;
+    }
 
     public static @Nullable ArmorPerkHolder getPerkHolder(ItemStack stack) {
         return stack.get(DataComponentRegistry.ARMOR_PERKS);
@@ -59,7 +69,7 @@ public class PerkUtil {
 
     public static List<PerkInstance> getPerksFromLiving(LivingEntity player) {
         List<PerkInstance> perkInstances = new ArrayList<>();
-        for (ItemStack stack : player.getArmorSlots()) {
+        for (ItemStack stack : PerkUtil.getArmorItems(player)) {
             perkInstances.addAll(getPerksFromItem(stack));
         }
         return perkInstances;
@@ -67,7 +77,7 @@ public class PerkUtil {
 
     public static int countForPerk(IPerk perk, LivingEntity entity) {
         int maxCount = 0;
-        for (ItemStack stack : entity.getArmorSlots()) {
+        for (ItemStack stack : PerkUtil.getArmorItems(entity)) {
             var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
             if (data == null) {
                 continue;
@@ -85,7 +95,7 @@ public class PerkUtil {
         ArmorPerkHolder highestHolder = null;
         ItemStack selectedStack = null;
         int maxCount = 0;
-        for (ItemStack stack : entity.getArmorSlots()) {
+        for (ItemStack stack : PerkUtil.getArmorItems(entity)) {
             var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
             if (data == null) {
                 continue;

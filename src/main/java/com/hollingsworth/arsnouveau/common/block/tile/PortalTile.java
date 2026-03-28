@@ -9,15 +9,15 @@ import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundMoveVehiclePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +27,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -60,7 +60,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             if (serverWorld == null) {
                 return;
             }
-            Vec3 vec3 = e.position;
+            Vec3 vec3 = e.position();
             Networking.sendToNearbyClient(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, rotationVec.x, rotationVec.y));
             serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
@@ -77,18 +77,20 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.dimID = compound.getString("dim");
-        this.warpPos = NBTUtil.getBlockPos(compound, "warp");
-        this.rotationVec = new Vec2(compound.getFloat("xRot"), compound.getFloat("yRot"));
-        this.displayName = compound.getString("display");
-        this.isHorizontal = compound.getBoolean("horizontal");
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.dimID = compound.getStringOr("dim", null);
+        if (NBTUtil.hasBlockPos(compound, "warp")) {
+            this.warpPos = NBTUtil.getBlockPos(compound, "warp");
+        }
+        this.rotationVec = new Vec2(compound.getFloatOr("xRot", 0f), compound.getFloatOr("yRot", 0f));
+        this.displayName = compound.getStringOr("display", null);
+        this.isHorizontal = compound.getBooleanOr("horizontal", false);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(compound, pRegistries);
+    protected void saveAdditional(ValueOutput compound) {
+        super.saveAdditional(compound);
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
@@ -126,7 +128,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
     public static @Nullable ServerLevel getServerLevel(String dimID, ServerLevel level) {
         if (dimID != null && level != null) {
-            ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(dimID));
+            ResourceKey<Level> resourcekey = ResourceKey.create(Registries.DIMENSION, Identifier.tryParse(dimID));
             return level.getServer().getLevel(resourcekey);
         }
         return null;
@@ -137,7 +139,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         if (targetWorld == null) {
             return entity;
         }
-        if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
+        if (entity.level().dimension() == targetWorld.dimension()) {
             // Check if the target block is a portal, if so, don't teleport
             if ((targetWorld.getBlockState(target).getBlock() instanceof PortalBlock)) {
                 return entity;
@@ -151,14 +153,14 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
 
             if (!entity.getPassengers().isEmpty()) {
                 //Force re-apply any passengers so that players don't get "stuck" outside what they may be riding
-                ((ServerChunkCache) entity.getCommandSenderWorld().getChunkSource()).broadcast(entity, new ClientboundSetPassengersPacket(entity));
+                ((ServerChunkCache) entity.level().getChunkSource()).sendToTrackingPlayersAndSelf(entity, new ClientboundSetPassengersPacket(entity));
                 Entity controller = entity.getControllingPassenger();
                 if (controller != entity && controller instanceof ServerPlayer player && !(controller instanceof FakePlayer)) {
                     if (player.connection != null) {
                         //Force sync the fact that the vehicle moved to the client that is controlling it
                         // so that it makes sure to use the correct positions when sending move packets
                         // back to the server instead of running into moved wrongly issues
-                        player.connection.send(new ClientboundMoveVehiclePacket(entity));
+                        player.connection.send(ClientboundMoveVehiclePacket.fromEntity(entity));
                     }
                 }
             }
@@ -167,7 +169,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
         //Note: We grab the passengers here instead of in placeEntity as changeDimension starts by removing any passengers
         List<Entity> passengers = entity.getPassengers();
-        return entity.changeDimension(new DimensionTransition((ServerLevel) targetWorld, destination, new Vec3(0, 0, 0), rotationVec.y, rotationVec.x, false, DimensionTransition.DO_NOTHING));
+        return entity.teleport(new TeleportTransition((ServerLevel) targetWorld, destination, new Vec3(0, 0, 0), rotationVec.y, rotationVec.x, TeleportTransition.DO_NOTHING));
     }
 
     @Override

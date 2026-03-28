@@ -19,7 +19,8 @@ public class SkyBlockRenderer extends MirrorweaveRenderer<SkyBlockTile> {
 
     public SkyBlockRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn);
-        this.blockRenderer = rendererDispatcherIn.getBlockRenderDispatcher();
+        // 1.21.11: Context is a record; accessor is blockRenderDispatcher() not getBlockRenderDispatcher()
+        this.blockRenderer = rendererDispatcherIn.blockRenderDispatcher();
     }
 
     public void render(SkyBlockTile tileEntityIn, float partialTicks, PoseStack pPoseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

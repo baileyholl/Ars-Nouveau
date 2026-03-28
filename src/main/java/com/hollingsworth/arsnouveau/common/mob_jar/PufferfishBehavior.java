@@ -6,8 +6,9 @@ import com.hollingsworth.arsnouveau.common.mixin.PufferfishAccessor;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
@@ -20,7 +21,7 @@ public class PufferfishBehavior extends JarBehavior<Pufferfish> {
         super.tick(tile);
         Level level = tile.getLevel();
         Pufferfish pufferfish = (Pufferfish) tile.getEntity();
-        if (level.isClientSide || pufferfish == null || isPowered(tile)) {
+        if (level.isClientSide() || pufferfish == null || isPowered(tile)) {
             return;
         }
         PufferfishAccessor pufferfishAccessor = (PufferfishAccessor) pufferfish;
@@ -62,8 +63,9 @@ public class PufferfishBehavior extends JarBehavior<Pufferfish> {
     }
 
     public boolean mobsNearby(MobJarTile tile, Pufferfish pufferfish) {
-        List<LivingEntity> list = pufferfish.level.getEntitiesOfClass(LivingEntity.class, new AABB(tile.getBlockPos()).inflate(2.4D), (p_149015_) -> {
-            return PufferfishAccessor.targetConditions().test(pufferfish, p_149015_);
+        ServerLevel serverLevel = (ServerLevel) pufferfish.level();
+        List<LivingEntity> list = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(tile.getBlockPos()).inflate(2.4D), (p_149015_) -> {
+            return PufferfishAccessor.targetConditions().test(serverLevel, pufferfish, p_149015_);
         });
         return !list.isEmpty();
     }

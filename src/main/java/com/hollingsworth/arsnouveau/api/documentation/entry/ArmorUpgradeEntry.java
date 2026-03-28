@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class ArmorUpgradeEntry extends PedestalRecipeEntry {
@@ -22,7 +23,7 @@ public class ArmorUpgradeEntry extends PedestalRecipeEntry {
 
         if (recipe != null && recipe.value() != null) {
             this.ingredients = recipe.value().pedestalItems();
-            this.reagentStack = Ingredient.of(new ItemStack(ItemsRegistry.ARCANIST_ROBES.get()));
+            this.reagentStack = DataComponentIngredient.of(false, new ItemStack(ItemsRegistry.ARCANIST_ROBES.get()));
             this.outputStack = new ItemStack(ItemsRegistry.ARCANIST_ROBES.get());
             ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(outputStack);
             if (!(perkHolder instanceof ArmorPerkHolder armorPerkHolder)) {

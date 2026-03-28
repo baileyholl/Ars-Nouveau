@@ -35,7 +35,7 @@ public class ChangeBiomePacket extends AbstractPacket {
 
     public ChangeBiomePacket(RegistryFriendlyByteBuf buf) {
         this.pos = new BlockPos(buf.readInt(), 0, buf.readInt());
-        this.biomeId = ResourceKey.create(Registries.BIOME, buf.readResourceLocation());
+        this.biomeId = ResourceKey.create(Registries.BIOME, buf.readIdentifier());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ChangeBiomePacket extends AbstractPacket {
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(this.pos.getX());
         buf.writeInt(this.pos.getZ());
-        buf.writeResourceLocation(this.biomeId.location());
+        buf.writeIdentifier(this.biomeId.identifier());
     }
 
     @Override
@@ -55,9 +55,9 @@ public class ChangeBiomePacket extends AbstractPacket {
         ClientLevel world = minecraft.level;
         LevelChunk chunkAt = (LevelChunk) world.getChunk(pos);
 
-        Holder<Biome> biome = world.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(biomeId);
+        Holder<Biome> biome = world.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(biomeId);
 
-        int minY = QuartPos.fromBlock(world.getMinBuildHeight());
+        int minY = QuartPos.fromBlock(world.getMinY());
         int maxY = minY + QuartPos.fromBlock(world.getHeight()) - 1;
 
         int x = QuartPos.fromBlock(pos.getX());
@@ -65,10 +65,10 @@ public class ChangeBiomePacket extends AbstractPacket {
 
         for (LevelChunkSection section : chunkAt.getSections()) {
             for (int sy = 0; sy < 16; sy += 4) {
-                int y = Mth.clamp(QuartPos.fromBlock(chunkAt.getMinSection() + sy), minY, maxY);
+                int y = Mth.clamp(QuartPos.fromBlock(chunkAt.getMinSectionY() + sy), minY, maxY);
                 if (section.getBiomes() instanceof PalettedContainer<Holder<Biome>> container)
                     container.set(x & 3, y & 3, z & 3, biome);
-                SectionPos pos = SectionPos.of(this.pos.getX() >> 4, (chunkAt.getMinSection() >> 4) + sy, this.pos.getZ() >> 4);
+                SectionPos pos = SectionPos.of(this.pos.getX() >> 4, (chunkAt.getMinSectionY() >> 4) + sy, this.pos.getZ() >> 4);
                 world.setSectionDirtyWithNeighbors(pos.x(), pos.y(), pos.z());
             }
         }

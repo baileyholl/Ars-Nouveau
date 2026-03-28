@@ -2,13 +2,14 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.Container;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,21 +31,19 @@ public class ArcanePedestalTile extends SingleItemTile implements Container, Nam
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("hasSignal", hasSignal);
         if (this.name != null) {
-            tag.putString("CustomName", Component.Serializer.toJson(this.name, pRegistries));
+            tag.store("CustomName", ComponentSerialization.CODEC, this.name);
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.hasSignal = compound.getBoolean("hasSignal");
-        if (compound.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(compound.getString("CustomName"), pRegistries);
-        }
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.hasSignal = compound.getBooleanOr("hasSignal", false);
+        this.name = compound.read("CustomName", ComponentSerialization.CODEC).orElse(null);
     }
 
     private Component name;

@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarAmethystGolem
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
@@ -18,7 +18,7 @@ public class AmethystFamiliarHolder extends AbstractFamiliarHolder {
         super(LibEntityNames.FAMILIAR_AMETHYST_GOLEM, (e) -> e instanceof AmethystGolem);
     }
 
-    public AmethystFamiliarHolder(ResourceLocation id, Predicate<Entity> isConversionEntity) {
+    public AmethystFamiliarHolder(Identifier id, Predicate<Entity> isConversionEntity) {
         super(id, isConversionEntity);
     }
 

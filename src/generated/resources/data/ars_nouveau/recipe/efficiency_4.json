@@ -3,30 +3,14 @@
   "enchantment": "minecraft:efficiency",
   "level": 4,
   "pedestalItems": [
-    {
-      "tag": "c:storage_blocks/redstone"
-    },
-    {
-      "tag": "c:storage_blocks/redstone"
-    },
-    {
-      "item": "minecraft:diamond_pickaxe"
-    },
-    {
-      "item": "minecraft:iron_shovel"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:obsidians"
-    },
-    {
-      "tag": "c:obsidians"
-    }
+    "#c:storage_blocks/redstone",
+    "#c:storage_blocks/redstone",
+    "minecraft:diamond_pickaxe",
+    "minecraft:iron_shovel",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:obsidians",
+    "#c:obsidians"
   ],
   "sourceCost": 6500
 }

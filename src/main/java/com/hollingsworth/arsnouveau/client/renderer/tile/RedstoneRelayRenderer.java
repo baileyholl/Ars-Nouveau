@@ -3,18 +3,9 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.RedstoneRelayTile;
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.RedStoneWireBlock;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.util.Color;
-
-import java.util.ArrayList;
-import java.util.List;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile> {
 
@@ -23,55 +14,16 @@ public class RedstoneRelayRenderer extends ArsGeoBlockRenderer<RedstoneRelayTile
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, RedstoneRelayTile animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        ArrayList<String> strings = new ArrayList<>(List.of(new String[]{
-                "framework_input",
-                "bone",
-                "bone2",
-                "bone3",
-                "bone4"
-        }));
-        if (strings.contains(bone.getName())) {
-            //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.argbInt());
-        } else {
-            super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        }
-    }
-
-    @Override
-    public void actuallyRender(PoseStack poseStack, RedstoneRelayTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-    }
-
-    @Override
-    public Color getRenderColor(RedstoneRelayTile animatable, float partialTick, int packedLight) {
-        return new Color(0xFF000000 | RedStoneWireBlock.getColorForPower(Math.max(1, animatable.getOutputPower())));
+    public int getRenderColor(RedstoneRelayTile animatable, Void renderState, float partialTick) {
+        return 0xFF000000 | RedStoneWireBlock.getColorForPower(Math.max(1, animatable.getOutputPower()));
     }
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(new GenericModel<>("redstone_relay")) {
-
+            // GeckoLib 5: GeoItemRenderer uses O=GeoItemRenderer.RenderData, not Void
             @Override
-            public void renderRecursively(PoseStack poseStack, AnimBlockItem animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-                ArrayList<String> strings = new ArrayList<>(List.of(new String[]{
-                        "framework_input",
-                        "bone",
-                        "bone2",
-                        "bone3",
-                        "bone4"
-                }));
-                if (strings.contains(bone.getName())) {
-                    //NOTE: if the bone have a parent, the recursion will get here with the neutral color, making the color getter useless
-                    super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, Color.WHITE.argbInt());
-                } else {
-                    super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-                }
-            }
-
-            @Override
-            public Color getRenderColor(AnimBlockItem animatable, float partialTick, int packedLight) {
-                return Color.ofOpaque(RedStoneWireBlock.getColorForPower(1));
+            public int getRenderColor(AnimBlockItem animatable, GeoItemRenderer.RenderData renderState, float partialTick) {
+                return 0xFF000000 | RedStoneWireBlock.getColorForPower(1);
             }
         };
     }

@@ -58,4 +58,20 @@ public final class TintedVertexConsumer implements VertexConsumer {
         return wrapped.setNormal(x, y, z);
     }
 
+    @Override
+    public VertexConsumer setLineWidth(float lineWidth) {
+        // no-op stub for 1.21.11 — TintedVertexConsumer does not support line width
+        return this;
+    }
+
+    @Override
+    public VertexConsumer setColor(int argb) {
+        // Extract ARGB components and apply tint
+        int a = (argb >> 24) & 0xFF;
+        int r = (argb >> 16) & 0xFF;
+        int g = (argb >> 8) & 0xFF;
+        int b = argb & 0xFF;
+        return wrapped.setColor((int)(r * this.red), (int)(g * this.green), (int)(b * this.blue), (int)(a * this.alpha));
+    }
+
 }

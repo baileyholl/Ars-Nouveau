@@ -24,11 +24,16 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+// 1.21.11: ClientboundBlockUpdatePacket no longer needed; use ServerLevel.sendBlockUpdated
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -44,7 +49,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -60,7 +65,7 @@ import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -202,7 +207,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             onHitEntity(hitEntity);
         }
         this.move(MoverType.SELF, this.getDeltaMovement());
-        if (!this.level.isClientSide && !this.isRemoved()) {
+        if (!this.level.isClientSide() && !this.isRemoved()) {
             BlockPos blockpos = this.blockPosition();
             boolean isConcrete = this.blockState.getBlock() instanceof ConcretePowderBlock;
             boolean isConcreteInWater = isConcrete && this.level.getFluidState(blockpos).is(FluidTags.WATER);
@@ -216,9 +221,11 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             }
 
             if (!this.onGround() && !isConcreteInWater) {
-                if (!this.level.isClientSide && (this.time > 100 && (blockpos.getY() <= this.level.getMinBuildHeight() || blockpos.getY() > this.level.getMaxBuildHeight()) || this.time > 600)) {
-                    if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                        this.spawnAtLocation(block);
+                // 1.21.11: getMinBuildHeight→getMinY, getMaxBuildHeight→getMaxY; level.getGameRules removed→ServerLevel; RULE_DOENTITYDROPS→ENTITY_DROPS
+            if (!this.level.isClientSide() && (this.time > 100 && (blockpos.getY() <= this.level.getMinY() || blockpos.getY() > this.level.getMaxY()) || this.time > 600)) {
+                    // 1.21.11: getBoolean removed from GameRules; use .get() which returns T directly
+                    if (this.dropItem && ((ServerLevel)this.level).getGameRules().get(GameRules.ENTITY_DROPS)) {
+                        this.spawnAtLocation((ServerLevel)this.level, block);
                     }
 
                     this.discard();
@@ -255,7 +262,8 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             }
 
             if (this.level.setBlock(blockpos, this.blockState, 3)) {
-                ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level.getBlockState(blockpos)));
+                // 1.21.11: chunkMap.broadcast removed; use sendBlockUpdated
+                ((ServerLevel) this.level).sendBlockUpdated(blockpos, this.blockState, this.level.getBlockState(blockpos), 3);
                 this.discard();
                 if (block instanceof Fallable fallable) {
                     fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
@@ -271,10 +279,9 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                     if (blockentity != null) {
 
                         try {
-                            blockentity.loadWithComponents(this.blockData, level.registryAccess());
-                            if (blockentity instanceof SkullBlockEntity sk && this.blockData != null && this.blockData.contains("SkullOwner")) {
-                                sk.setOwner(ANCodecs.decode(level.registryAccess(), ResolvableProfile.CODEC, this.blockData.getCompound("SkullOwner")));
-                            }
+                            // 1.21.11: loadWithComponents takes ValueInput; wrap CompoundTag with TagValueInput
+                            // SkullBlockEntity.setOwner removed; loadWithComponents handles skull data
+                            blockentity.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), this.blockData));
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -290,7 +297,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 }
 
                 return blockpos;
-            } else if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+            } else if (this.dropItem && ((ServerLevel)this.level).getGameRules().get(GameRules.ENTITY_DROPS)) {
                 this.discard();
                 this.callOnBrokenAfterFall(block, blockpos);
                 ItemStack itemstack = new ItemStack(block);
@@ -299,12 +306,12 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                             .parse(NbtOps.INSTANCE, blockData.get("profile"))
                             .resultOrPartial().ifPresent(profile -> itemstack.set(DataComponents.PROFILE, profile));
                 }
-                this.spawnAtLocation(itemstack);
+                this.spawnAtLocation((ServerLevel)this.level, itemstack);
                 return null;
             }
         } else {
             this.discard();
-            if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+            if (this.dropItem && ((ServerLevel)this.level).getGameRules().get(GameRules.ENTITY_DROPS)) {
                 this.callOnBrokenAfterFall(block, blockpos);
                 ItemStack itemstack = new ItemStack(block);
                 if (this.blockData != null && this.getBlockState().is(Blocks.PLAYER_HEAD)) {
@@ -313,7 +320,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                             .resultOrPartial().ifPresent(profile -> itemstack.set(DataComponents.PROFILE, profile));
 
                 }
-                this.spawnAtLocation(itemstack);
+                this.spawnAtLocation((ServerLevel)this.level, itemstack);
             }
         }
         return null;
@@ -350,7 +357,8 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             entity.igniteForTicks(5);
         }
 
-        if (entity.hurt(damagesource, (float) i)) {
+        // 1.21.11: Entity.hurt() returns void; use hurtOrSimulate() for boolean
+        if (entity.hurtOrSimulate(damagesource, (float) i)) {
             if (isEnderman) {
                 return;
             }
@@ -426,7 +434,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
     }
 
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
+    public boolean causeFallDamage(double pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
         if (!this.hurtEntities) {
             return false;
         } else {
@@ -460,46 +468,40 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         }
     }
 
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.put("BlockState", NbtUtils.writeBlockState(this.blockState));
-        pCompound.putInt("Time", this.time);
-        pCompound.putBoolean("DropItem", this.dropItem);
-        pCompound.putBoolean("HurtEntities", this.hurtEntities);
-        pCompound.putFloat("FallHurtAmount", this.fallDamagePerDistance);
-        pCompound.putInt("FallHurtMax", this.fallDamageMax);
+    // 1.21.11: addAdditionalSaveData/readAdditionalSaveData changed from CompoundTag to ValueOutput/ValueInput
+    @Override
+    protected void addAdditionalSaveData(ValueOutput pOutput) {
+        super.addAdditionalSaveData(pOutput);
+        pOutput.store("BlockState", BlockState.CODEC, this.blockState);
+        pOutput.putInt("Time", this.time);
+        pOutput.putBoolean("DropItem", this.dropItem);
+        pOutput.putBoolean("HurtEntities", this.hurtEntities);
+        pOutput.putFloat("FallHurtAmount", this.fallDamagePerDistance);
+        pOutput.putInt("FallHurtMax", this.fallDamageMax);
         if (this.blockData != null) {
-            pCompound.put("TileEntityData", this.blockData);
+            pOutput.store("TileEntityData", CompoundTag.CODEC, this.blockData);
         }
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
-    protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.blockState = NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), pCompound.getCompound("BlockState"));
-        this.time = pCompound.getInt("Time");
-        if (pCompound.contains("HurtEntities")) {
-            this.hurtEntities = pCompound.getBoolean("HurtEntities");
-            this.fallDamagePerDistance = pCompound.getFloat("FallHurtAmount");
-            this.fallDamageMax = pCompound.getInt("FallHurtMax");
-        } else if (this.blockState.is(BlockTags.ANVIL)) {
-            this.hurtEntities = true;
+    @Override
+    protected void readAdditionalSaveData(@NotNull ValueInput pInput) {
+        super.readAdditionalSaveData(pInput);
+        // 1.21.11: BlockState read via codec instead of NbtUtils
+        pInput.read("BlockState", BlockState.CODEC).ifPresent(bs -> this.blockState = bs);
+        this.time = pInput.getIntOr("Time", 0);
+        pInput.getInt("HurtEntities").ifPresent(v -> {
+            this.hurtEntities = v != 0;
+        });
+        if (pInput.getBooleanOr("HurtEntities", false) || this.blockState.is(BlockTags.ANVIL)) {
+            this.hurtEntities = pInput.getBooleanOr("HurtEntities", this.blockState.is(BlockTags.ANVIL));
+            this.fallDamagePerDistance = pInput.getFloatOr("FallHurtAmount", 0f);
+            this.fallDamageMax = pInput.getIntOr("FallHurtMax", 40);
         }
-
-        if (pCompound.contains("DropItem")) {
-            this.dropItem = pCompound.getBoolean("DropItem");
-        }
-
-        if (pCompound.contains("TileEntityData")) {
-            this.blockData = pCompound.getCompound("TileEntityData");
-        }
-
+        this.dropItem = pInput.getBooleanOr("DropItem", true);
+        pInput.read("TileEntityData", CompoundTag.CODEC).ifPresent(tag -> this.blockData = tag);
         if (this.blockState.isAir()) {
             this.blockState = Blocks.SAND.defaultBlockState();
         }
-
     }
 
     public void setHurtsEntities(float p_149657_, int p_149658_) {

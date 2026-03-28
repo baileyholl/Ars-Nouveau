@@ -3,24 +3,12 @@
   "enchantment": "minecraft:smite",
   "level": 3,
   "pedestalItems": [
-    {
-      "item": "minecraft:bone_block"
-    },
-    {
-      "item": "minecraft:bone_block"
-    },
-    {
-      "item": "minecraft:bone_block"
-    },
-    {
-      "item": "minecraft:bone_block"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    }
+    "minecraft:bone_block",
+    "minecraft:bone_block",
+    "minecraft:bone_block",
+    "minecraft:bone_block",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/lapis"
   ],
   "sourceCost": 5000
 }

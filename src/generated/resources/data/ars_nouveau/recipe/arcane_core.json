@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:sourcestone"
-    },
-    "y": {
-      "tag": "c:ingots/gold"
-    },
-    "z": {
-      "tag": "c:gems/source"
-    }
+    "x": "ars_nouveau:sourcestone",
+    "y": "#c:ingots/gold",
+    "z": "#c:gems/source"
   },
   "pattern": [
     "xxx",

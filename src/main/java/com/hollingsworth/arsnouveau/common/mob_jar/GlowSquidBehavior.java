@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.mob_jar;
 
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
-import net.minecraft.world.entity.GlowSquid;
+import net.minecraft.world.entity.animal.squid.GlowSquid;
 import net.minecraft.world.phys.Vec3;
 
 public class GlowSquidBehavior extends JarBehavior<GlowSquid> {

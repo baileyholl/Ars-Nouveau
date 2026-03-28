@@ -62,7 +62,12 @@ public class DyeRecipeDatagen extends SimpleDataProvider {
     }
 
     public void addDyeRecipe(ItemLike inputItem) {
-        var dyeRecipe = new DyeRecipe("", CraftingBookCategory.MISC, inputItem.asItem().getDefaultInstance(), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Tags.Items.DYES), Ingredient.of(inputItem)));
+        Ingredient dyeIngredient = Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.DYES));
+        Ingredient itemIngredient = Ingredient.of(inputItem);
+        NonNullList<Ingredient> ingredients = NonNullList.create();
+        ingredients.add(dyeIngredient);
+        ingredients.add(itemIngredient);
+        var dyeRecipe = new DyeRecipe("", CraftingBookCategory.MISC, inputItem.asItem().getDefaultInstance(), ingredients);
         files.add(new FileObj(resolvePath("data/ars_nouveau/recipe/dye_" + getRegistryName(inputItem.asItem()).getPath() + ".json"), DyeRecipe.CODEC.encodeStart(JsonOps.INSTANCE, dyeRecipe).getOrThrow()));
     }
 

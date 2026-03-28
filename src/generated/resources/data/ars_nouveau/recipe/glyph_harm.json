@@ -2,18 +2,10 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:iron_sword"
-    },
-    {
-      "item": "minecraft:iron_sword"
-    },
-    {
-      "item": "minecraft:iron_sword"
-    }
+    "ars_nouveau:earth_essence",
+    "minecraft:iron_sword",
+    "minecraft:iron_sword",
+    "minecraft:iron_sword"
   ],
   "output": {
     "count": 1,

@@ -49,7 +49,6 @@ public class SinglePageWidget extends AbstractWidget implements NestedWidgets, I
 
     }
 
-    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return false;
     }

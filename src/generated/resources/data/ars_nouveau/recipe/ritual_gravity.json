@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:green_archwood_log"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:feather"
-    },
-    {
-      "item": "minecraft:anvil"
-    }
+    "ars_nouveau:green_archwood_log",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:earth_essence",
+    "minecraft:feather",
+    "minecraft:anvil"
   ],
   "result": {
     "count": 1,

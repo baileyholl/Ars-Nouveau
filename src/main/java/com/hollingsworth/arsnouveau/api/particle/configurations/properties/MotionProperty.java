@@ -12,7 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,11 +71,12 @@ public class MotionProperty extends BaseProperty<MotionProperty> {
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                graphics.blit(timelineOption.entry().motion().getType().getIconLocation(), x, y, 0, 0, 14, 14, 14, 14, 14);
+                // 1.21.11: blit(Identifier,...) signature: (id, x, y, destW, destH, u, v, srcW, srcH)
+                graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, timelineOption.entry().motion().getType().getIconLocation(), x, y, 0.0f, 0.0f, 14, 14, 14, 14);
             }
 
             public Component timelineName() {
-                ResourceLocation id = timelineOption.id();
+                Identifier id = timelineOption.id();
                 return Component.translatable(id.getNamespace() + ".timeline." + id.getPath());
             }
 

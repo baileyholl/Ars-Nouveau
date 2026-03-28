@@ -16,7 +16,6 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
@@ -24,6 +23,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -39,7 +40,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TargetBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -48,7 +48,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -136,13 +136,13 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     @Override
     public void tick() {
         super.tick();
-        if (age == 0 && castSound != null && !level.isClientSide) {
+        if (age == 0 && castSound != null && !level.isClientSide()) {
             castSound.playSound(level, getX(), getY(), getZ());
         }
         age++;
 
-        if ((!level.isClientSide && this.age > getExpirationTime()) || (!level.isClientSide && resolver() == null)) {
-            this.remove(RemovalReason.DISCARDED);
+        if ((!level.isClientSide() && this.age > getExpirationTime()) || (!level.isClientSide() && resolver() == null)) {
+            this.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
 
@@ -157,7 +157,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         traceAnyHit(getHitResult(), thisPosition, nextPosition);
         tickNextPosition();
 
-        if (level.isClientSide && this.age >= getParticleDelay()) {
+        if (level.isClientSide() && this.age >= getParticleDelay()) {
             playParticles();
         }
     }
@@ -194,8 +194,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
 
         if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, raytraceresult)) {
             this.onHit(raytraceresult);
-            this.hasImpulse = true;
-        }
+            }
         if (raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult blockHitResult
                 && canTraversePortals()) {
             BlockRegistry.PORTAL_BLOCK.get().onProjectileHit(level, level.getBlockState(BlockPos.containing(raytraceresult.getLocation())),
@@ -314,9 +313,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void setRemoved(RemovalReason reason) {
-        if (reason == RemovalReason.UNLOADED_TO_CHUNK)
-            reason = RemovalReason.DISCARDED;
+    public void setRemoved(Entity.RemovalReason reason) {
+        if (reason == Entity.RemovalReason.UNLOADED_TO_CHUNK)
+            reason = Entity.RemovalReason.DISCARDED;
         super.setRemoved(reason);
     }
 
@@ -339,7 +338,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         this.pierceLeft--;
         if (this.pierceLeft < 0) {
             this.level.broadcastEntityEvent(this, (byte) 3);
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
@@ -371,7 +370,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     protected void onHit(HitResult result) {
         result = transformHitResult(result);
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
 
             SpellProjectileHitEvent event = new SpellProjectileHitEvent(this, result);
             NeoForge.EVENT_BUS.post(event);
@@ -398,7 +397,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
                 }
 
                 if (state.is(BlockTags.PORTALS)) {
-                    state.entityInside(level, blockraytraceresult.getBlockPos(), this);
+                    state.entityInside(level, blockraytraceresult.getBlockPos(), this, net.minecraft.world.entity.InsideBlockEffectApplier.NOOP, false);
                     return;
                 }
 
@@ -427,7 +426,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
 
     public void sendResolveParticles() {
         this.resolveEmitter.tick(level);
-        if (!level.isClientSide && resolveSound != null) {
+        if (!level.isClientSide() && resolveSound != null) {
             resolveSound.playSound(level, getX(), getY(), getZ());
         }
     }
@@ -469,50 +468,27 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void readAdditionalSaveData(ValueInput tag) {
+        super.readAdditionalSaveData(tag);
+        this.spellResolver = null;
+        this.pierceLeft = tag.getIntOr("pierce", 0);
+        isNoGravity = tag.getBooleanOr("gravity", true);
+        this.entityData.set(OWNER_ID, tag.getIntOr("ownerId", -1));
+        tag.read("resolver", SpellResolver.CODEC.codec()).ifPresent(this::setResolver);
         if (resolver() != null) {
             resolver().spellContext.level = this.level;
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.spellResolver = null;
-        if (tag.contains("pierce")) {
-            this.pierceLeft = tag.getInt("pierce");
-        }
-        isNoGravity = tag.getBoolean("gravity");
-        this.entityData.set(OWNER_ID, tag.getInt("ownerId"));
-        if (tag.contains("resolver")) {
-            setResolver(ANCodecs.decode(SpellResolver.CODEC.codec(), tag.get("resolver")));
-        }
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    protected void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("pierce", this.pierceLeft);
         tag.putBoolean("gravity", isNoGravity);
         tag.putInt("ownerId", this.entityData.get(OWNER_ID));
         if (this.resolver() != null) {
-            tag.put("resolver", ANCodecs.encode(SpellResolver.CODEC.codec(), this.resolver()));
+            tag.store("resolver", SpellResolver.CODEC.codec(), this.resolver());
         }
-    }
-
-    @Override
-    public Entity changeDimension(@NotNull DimensionTransition transition) {
-        Entity changed = super.changeDimension(transition);
-        if (!(changed instanceof EntityProjectileSpell spell)) {
-            return changed;
-        }
-        spell.setResolver(this.resolver());
-        spell.resolver().spellContext.level = transition.newLevel();
-        spell.prismRedirect = this.prismRedirect;
-        spell.age = this.age;
-        spell.numSensitive = this.numSensitive;
-        return changed;
     }
 
     @Override

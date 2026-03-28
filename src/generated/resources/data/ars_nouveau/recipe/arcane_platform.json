@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:arcane_pedestal"
-    }
+    "ars_nouveau:arcane_pedestal"
   ],
   "result": {
     "count": 1,

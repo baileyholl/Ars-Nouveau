@@ -2,13 +2,13 @@ package com.hollingsworth.arsnouveau.common.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class BondedPerk extends Perk {
 
     public static BondedPerk INSTANCE = new BondedPerk(ArsNouveau.prefix("thread_bonded"));
 
-    public BondedPerk(ResourceLocation key) {
+    public BondedPerk(Identifier key) {
         super(key);
     }
 

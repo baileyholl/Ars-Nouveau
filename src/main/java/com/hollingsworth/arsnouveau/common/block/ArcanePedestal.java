@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -14,8 +14,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -44,24 +47,24 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (handIn != InteractionHand.MAIN_HAND)
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        if (!world.isClientSide && world.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof ArcanePedestalTile tile) {
             if (tile.getStack() != null && player.getItemInHand(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                 world.addFreshEntity(item);
                 tile.setStack(ItemStack.EMPTY);
-            } else if (!player.getInventory().getSelected().isEmpty()) {
+            } else if (!player.getInventory().getSelectedItem().isEmpty()) {
                 if (tile.getStack() != null) {
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
                     world.addFreshEntity(item);
                 }
-                tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
+                tile.setStack(player.getInventory().removeItem(player.getInventory().getSelectedSlot(), 1));
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -130,9 +133,9 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, RandomSource random) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            tickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         return stateIn;
     }
@@ -143,16 +146,16 @@ public class ArcanePedestal extends ModBlock implements EntityBlock, SimpleWater
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos, Direction direction) {
         ArcanePedestalTile tile = (ArcanePedestalTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getStack().isEmpty()) return 0;
         return 15;
     }
 
     @Override
-    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
+    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
-        if (!pLevel.isClientSide && pLevel.getBlockEntity(pPos) instanceof ArcanePedestalTile tile) {
+        if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof ArcanePedestalTile tile) {
             if (tile.hasSignal != pLevel.hasNeighborSignal(pPos)) {
                 tile.hasSignal = !tile.hasSignal;
                 tile.updateBlock();

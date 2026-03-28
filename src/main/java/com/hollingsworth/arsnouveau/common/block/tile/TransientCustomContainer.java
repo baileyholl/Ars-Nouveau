@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -125,7 +125,7 @@ public class TransientCustomContainer implements CraftingContainer {
         return List.copyOf(this.items);
     }
 
-    public void fillStackedContents(StackedContents pContents) {
+    public void fillStackedContents(StackedItemContents pContents) {
         for (ItemStack itemstack : this.items) {
             pContents.accountSimpleStack(itemstack);
         }

@@ -22,11 +22,12 @@ public class ReactiveEvents {
     @SubscribeEvent
     public static void livingHitEvent(LivingDamageEvent.Post e) {
         LivingEntity entity = e.getEntity();
-        if (entity.getCommandSenderWorld().isClientSide)
+        if (entity.level().isClientSide())
             return;
 
-        for (ItemStack s : entity.getArmorSlots()) {
-            castSpell(entity, s);
+        // 1.21.11: getArmorSlots() removed; iterate armor slots manually
+        for (net.minecraft.world.entity.EquipmentSlot armorSlot : new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET}) {
+            castSpell(entity, entity.getItemBySlot(armorSlot));
         }
     }
 
@@ -34,7 +35,7 @@ public class ReactiveEvents {
         int level = stack.getEnchantmentLevel(playerIn.level.holderOrThrow(EnchantmentRegistry.REACTIVE_ENCHANTMENT));
         var reactiveCaster = stack.get(DataComponentRegistry.REACTIVE_CASTER);
         if (level * .25 >= Math.random() && reactiveCaster != null && reactiveCaster.getSpell().isValid()) {
-            reactiveCaster.castSpell(playerIn.getCommandSenderWorld(), playerIn, InteractionHand.MAIN_HAND, null);
+            reactiveCaster.castSpell(playerIn.level(), playerIn, InteractionHand.MAIN_HAND, null);
         }
     }
 
@@ -42,7 +43,7 @@ public class ReactiveEvents {
     public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e) {
         Player entity = e.getEntity();
 
-        if (entity.getCommandSenderWorld().isClientSide)
+        if (entity.level().isClientSide())
             return;
         ItemStack s = e.getItemStack();
         castSpell(entity, s);
@@ -52,7 +53,7 @@ public class ReactiveEvents {
     public static void playerAttackEntity(AttackEntityEvent e) {
         Player entity = e.getEntity();
 
-        if (entity == null || entity.getCommandSenderWorld().isClientSide)
+        if (entity == null || entity.level().isClientSide())
             return;
         ItemStack s = e.getEntity().getMainHandItem();
         castSpell(entity, s);

@@ -2,9 +2,7 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:crafting_table"
-    }
+    "minecraft:crafting_table"
   ],
   "output": {
     "count": 1,

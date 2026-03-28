@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "ars_nouveau:archwood_planks"
   ],
   "result": {
     "count": 1,

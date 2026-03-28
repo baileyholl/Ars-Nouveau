@@ -12,13 +12,12 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,7 +63,7 @@ public class EffectInteract extends AbstractEffect {
                 player.setPose(Pose.CROUCHING);
             }
             useOnEntity(player, spellStats, e);
-            for (ItemStack i : player.inventory.items) {
+            for (ItemStack i : player.getInventory().getNonEquipmentItems()) {
                 manager.insertOrDrop(i, world, e.blockPosition());
             }
         } else {
@@ -113,7 +112,7 @@ public class EffectInteract extends AbstractEffect {
                     player.setItemInHand(hand, result);
                 } else {
                     if (!player.addItem(result)) {
-                        player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), result));
+                        player.level().addFreshEntity(new ItemEntity(player.level(), player.getX(), player.getY(), player.getZ(), result));
                     }
                 }
             }
@@ -128,7 +127,7 @@ public class EffectInteract extends AbstractEffect {
                     player.setItemInHand(hand, result);
                 } else {
                     if (!player.addItem(result)) {
-                        player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), result));
+                        player.level().addFreshEntity(new ItemEntity(player.level(), player.getX(), player.getY(), player.getZ(), result));
                     }
                 }
             }
@@ -165,7 +164,7 @@ public class EffectInteract extends AbstractEffect {
             return;
         }
 
-        ItemInteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
+        InteractionResult iteminteractionresult = blockstate.useItemOn(pPlayer.getItemInHand(pHand), pLevel, pPlayer, pHand, pHitResult);
 
         if (itemstack.getItem() instanceof BucketItem bucket) {
             handleBucket(itemstack, bucket, player, blockstate, pLevel, blockpos, pHitResult, getHand(player));
@@ -176,7 +175,7 @@ public class EffectInteract extends AbstractEffect {
             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(pPlayer, blockpos, itemstack);
         }
 
-        if (iteminteractionresult == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION && pHand == InteractionHand.MAIN_HAND) {
+        if (iteminteractionresult == InteractionResult.TRY_WITH_EMPTY_HAND && pHand == InteractionHand.MAIN_HAND) {
             InteractionResult interactionresult = blockstate.useWithoutItem(pLevel, pPlayer, pHitResult);
             if (interactionresult.consumesAction()) {
                 CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(pPlayer, blockpos);
@@ -213,12 +212,10 @@ public class EffectInteract extends AbstractEffect {
                 player.setPose(Pose.CROUCHING);
             }
             useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
-            for (ItemStack i : player.inventory.items) {
+            for (ItemStack i : player.getInventory().getNonEquipmentItems()) {
                 manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
             }
-            for (ItemStack i : player.inventory.offhand) {
-                manager.insertOrDrop(i, world, rayTraceResult.getBlockPos());
-            }
+            manager.insertOrDrop(player.getOffhandItem(), world, rayTraceResult.getBlockPos());
         }
 
         if (shouldShift) {
@@ -230,7 +227,7 @@ public class EffectInteract extends AbstractEffect {
     public FakePlayer setupFakeInventory(SpellContext context, Level level) {
         InventoryManager manager = context.getCaster().getInvManager();
         ANFakePlayer player = ANFakePlayer.getPlayer((ServerLevel) level);
-        player.inventory.clearContent();
+        player.getInventory().clearContent();
         player.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
         ExtractedStack stack = manager.extractItem(i -> !i.isEmpty(), 1);
@@ -247,7 +244,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 1);

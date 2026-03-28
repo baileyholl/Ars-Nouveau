@@ -13,9 +13,9 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,17 +48,18 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
 
     @Override
     public void tick() {
-        if (level.isClientSide || connectedPos == null || level.getGameTime() % 20 != 0) {
+        if (level.isClientSide() || connectedPos == null || level.getGameTime() % 20 != 0) {
             return;
         }
         BlockEntity tile = level.getBlockEntity(connectedPos);
         if (tile == null) {
             return;
         }
-        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, connectedPos, null);
-        if (handler == null) {
+        var rawHandler = level.getCapability(Capabilities.Item.BLOCK, connectedPos, null);
+        if (rawHandler == null) {
             return;
         }
+        IItemHandler handler = IItemHandler.of(rawHandler);
         int found = 0;
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack ghostStack = handler.getStackInSlot(i);
@@ -121,7 +122,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos != null) {
-            if (level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null) == null) {
+            if (level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.Item.BLOCK, storedPos, null) == null) {
                 return;
             }
             if (BlockUtil.distanceFrom(storedPos, worldPosition) > 30) {
@@ -151,30 +152,30 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (connectedPos != null) {
             tag.putLong("connectedPos", connectedPos.asLong());
         }
         tag.putInt("neededCount", neededCount);
         if (!filterStack.isEmpty()) {
-            tag.put("filterStack", filterStack.save(pRegistries));
+            tag.store("filterStack", ItemStack.OPTIONAL_CODEC, filterStack);
         }
         tag.putBoolean("isPowered", isPowered);
         tag.putBoolean("inverted", inverted);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        if (pTag.contains("connectedPos")) {
-            connectedPos = BlockPos.of(pTag.getLong("connectedPos"));
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
+        long posLong = pTag.getLongOr("connectedPos", Long.MIN_VALUE);
+        if (posLong != Long.MIN_VALUE) {
+            connectedPos = BlockPos.of(posLong);
         }
-        this.neededCount = pTag.getInt("neededCount");
-        filterStack = ItemStack.parseOptional(pRegistries, pTag.getCompound("filterStack"));
-
-        isPowered = pTag.getBoolean("isPowered");
-        inverted = pTag.getBoolean("inverted");
+        this.neededCount = pTag.getIntOr("neededCount", 0);
+        filterStack = pTag.read("filterStack", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        isPowered = pTag.getBooleanOr("isPowered", false);
+        inverted = pTag.getBooleanOr("inverted", false);
     }
 
     @Override

@@ -9,31 +9,30 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.EffectsChangedTrigger;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.advancements.criterion.ConsumeItemTrigger;
+import net.minecraft.advancements.criterion.EffectsChangedTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.MobEffectsPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class ANAdvancements implements AdvancementProvider.AdvancementGenerator {
+public class ANAdvancements implements AdvancementSubProvider {
     Consumer<AdvancementHolder> advCon;
 
     @Override
-    public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> con, @NotNull ExistingFileHelper existingFileHelper) {
+    public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> con) {
         this.advCon = con;
         AdvancementHolder root = builder(ArsNouveau.MODID).display(ItemsRegistry.WORN_NOTEBOOK, Component.translatable("ars_nouveau.advancement.title.root"),
                 Component.translatable("ars_nouveau.advancement.desc.root"),
-                ResourceLocation.parse("ars_nouveau:textures/gui/advancements/backgrounds/sourcestone.png"),
+                Identifier.parse("ars_nouveau:textures/gui/advancements/backgrounds/sourcestone.png"),
                 AdvancementType.TASK, false, false, false).addCriterion("ars_nouveau:worn_notebook",
                 InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK)).save(con, ArsNouveau.prefix("root"));
 
@@ -53,7 +52,7 @@ public class ANAdvancements implements AdvancementProvider.AdvancementGenerator 
         saveBasicItem(ItemsRegistry.SHAPERS_FOCUS, novice);
 
 
-        builder("eat_bombegranate").display(BlockRegistry.BOMBEGRANTE_POD, AdvancementType.TASK, true).addCriterion(ConsumeItemTrigger.TriggerInstance.usedItem(BlockRegistry.BOMBEGRANTE_POD)).parent(root).save(con);
+        builder("eat_bombegranate").display(BlockRegistry.BOMBEGRANTE_POD, AdvancementType.TASK, true).addCriterion(ConsumeItemTrigger.TriggerInstance.usedItem(net.minecraft.advancements.criterion.ItemPredicate.Builder.item().of(registries.lookupOrThrow(net.minecraft.core.registries.Registries.ITEM), BlockRegistry.BOMBEGRANTE_POD))).parent(root).save(con);
 
         AdvancementHolder rituals = saveBasicItem(BlockRegistry.RITUAL_BLOCK, root);
         saveBasicItem(ItemsRegistry.AMETHYST_GOLEM_CHARM, rituals);

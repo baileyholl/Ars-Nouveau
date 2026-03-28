@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:conjuration_essence"
-    },
-    {
-      "item": "minecraft:bone"
-    },
-    {
-      "item": "minecraft:wither_skeleton_skull"
-    }
+    "ars_nouveau:conjuration_essence",
+    "minecraft:bone",
+    "minecraft:wither_skeleton_skull"
   ],
   "output": {
     "count": 1,

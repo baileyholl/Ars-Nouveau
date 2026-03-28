@@ -74,7 +74,7 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
 
     @Override
     public void tick() {
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             return;
         }
 
@@ -118,9 +118,9 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
     @Override
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
-        featureIndex = tag.getInt("featureIndex");
-        positionIndex = tag.getInt("positionIndex");
-        checkRadius = tag.getInt("checkRadius");
+        featureIndex = tag.getIntOr("featureIndex", 0);
+        positionIndex = tag.getIntOr("positionIndex", 0);
+        checkRadius = tag.getIntOr("checkRadius", 0);
         setup();
     }
 

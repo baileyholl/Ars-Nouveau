@@ -16,11 +16,11 @@ import net.minecraft.world.level.Level;
 public interface ICameraMountable {
 
     default void mountCamera(Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) level;
             ServerPlayer serverPlayer = (ServerPlayer) player;
             SectionPos chunkPos = SectionPos.of(pos);
-            int viewDistance = Mth.clamp(serverPlayer.requestedViewDistance(), 2, serverPlayer.server.getPlayerList().getViewDistance());
+            int viewDistance = Mth.clamp(serverPlayer.requestedViewDistance(), 2, serverLevel.getServer().getPlayerList().getViewDistance());
 
             Entity var10 = serverPlayer.getCamera();
             ScryerCamera dummyEntity;
@@ -40,7 +40,7 @@ public interface ICameraMountable {
             }
 
 
-            serverPlayer.camera = dummyEntity;
+            serverPlayer.setCamera(dummyEntity);
             Networking.sendToPlayerClient(new PacketSetCameraView(dummyEntity), serverPlayer);
             startViewing();
         }

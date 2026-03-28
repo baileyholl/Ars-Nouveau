@@ -2,9 +2,7 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "minecraft:firework_star"
-    }
+    "minecraft:firework_star"
   ],
   "output": {
     "count": 1,

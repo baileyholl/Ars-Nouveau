@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:rose_bush"
-  },
+  "input": "minecraft:rose_bush",
   "output": [
     {
       "chance": 1.0,

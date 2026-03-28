@@ -18,6 +18,7 @@ import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -38,7 +39,7 @@ public class AllayBehavior extends JarBehavior<Allay> {
     @Override
     public void tick(MobJarTile tile) {
         super.tick(tile);
-        if (tile.getLevel().isClientSide) {
+        if (tile.getLevel().isClientSide()) {
             Allay allay = entityFromJar(tile);
             allay.tickCount++;
             allay.holdingItemAnimationTicks0 = allay.holdingItemAnimationTicks;
@@ -113,7 +114,9 @@ public class AllayBehavior extends JarBehavior<Allay> {
         super.getTooltip(tile, tooltips);
         Allay allay = entityFromJar(tile);
         if (allay.getMainHandItem().getItem() instanceof ItemScroll scroll) {
-            scroll.appendHoverText(allay.getMainHandItem(), Item.TooltipContext.of(tile.getLevel()), tooltips, TooltipFlag.Default.NORMAL);
+            // New 1.21.11 signature: appendHoverText(stack, ctx, TooltipDisplay, Consumer<Component>, flag)
+            scroll.appendHoverText(allay.getMainHandItem(), Item.TooltipContext.of(tile.getLevel()),
+                    net.minecraft.world.item.component.TooltipDisplay.DEFAULT, tooltips::add, TooltipFlag.Default.NORMAL);
         }
     }
 }

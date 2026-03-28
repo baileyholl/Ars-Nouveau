@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -16,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class PotionUtil {
@@ -53,19 +57,25 @@ public class PotionUtil {
         return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
     }
 
+    /**
+     * Apply potion contents to a target entity.
+     * In 1.21.11, applyInstantenousEffect requires ServerLevel as first argument.
+     */
     public static void applyContents(PotionContents contents, @NotNull LivingEntity target, @Nullable LivingEntity source, @Nullable LivingEntity indirect) {
         contents.forEachEffect(instance -> {
             if (instance.getEffect().value().isInstantenous()) {
-                instance.getEffect().value().applyInstantenousEffect(source, indirect, target, instance.getAmplifier(), 1.0);
+                if (target.level() instanceof ServerLevel sl) {
+                    instance.getEffect().value().applyInstantenousEffect(sl, (Entity) source, (Entity) indirect, target, instance.getAmplifier(), 1.0);
+                }
             } else {
                 target.addEffect(instance);
             }
-        });
+        }, 1.0f);
     }
 
     public static PotionContents merge(PotionContents contents1, PotionContents contents2) {
         if (arePotionContentsEqual(contents1, contents2))
-            return new PotionContents(contents1.potion(), contents1.customColor(), contents1.customEffects());
+            return new PotionContents(contents1.potion(), contents1.customColor(), contents1.customEffects(), Optional.empty());
         Set<MobEffectInstance> set = new HashSet<>();
         for (MobEffectInstance effect : contents1.getAllEffects()) {
             set.add(new MobEffectInstance(effect));
@@ -76,6 +86,6 @@ public class PotionUtil {
         if (contents1.potion().isPresent()) {
             contents1.potion().get().value().getEffects().forEach(set::remove);
         }
-        return new PotionContents(contents1.potion(), contents1.customColor(), new ArrayList<>(set));
+        return new PotionContents(contents1.potion(), contents1.customColor(), new ArrayList<>(set), Optional.empty());
     }
 }

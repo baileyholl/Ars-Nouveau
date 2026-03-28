@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "tag": "c:ingots/gold"
-    },
-    "g": {
-      "item": "minecraft:iron_bars"
-    }
+    "M": "#c:ingots/gold",
+    "g": "minecraft:iron_bars"
   },
   "pattern": [
     " g ",

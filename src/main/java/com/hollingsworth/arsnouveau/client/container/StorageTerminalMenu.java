@@ -14,7 +14,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.RecipeBookType;
@@ -22,15 +23,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BundleContents;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.lang3.math.Fraction;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
+public class StorageTerminalMenu extends RecipeBookMenu {
     protected StorageLecternTile te;
     protected int playerSlotsStart;
     protected List<SlotStorage> storageSlotList = new ArrayList<>();
@@ -156,7 +155,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                 StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()), tabs.get(playerIn.getUUID()));
                 ItemStack itemstack = c != null ? c.getActualStack() : ItemStack.EMPTY;
                 slot.set(itemstack);
-                if (!playerIn.level.isClientSide)
+                if (!playerIn.level.isClientSide())
                     broadcastChanges();
             }
         } else {
@@ -173,36 +172,12 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
     }
 
     @Override
-    public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
+    public void fillCraftSlotsStackedContents(StackedItemContents itemHelperIn) {
     }
 
     @Override
-    public void clearCraftingContent() {
-    }
-
-    @Override
-    public boolean recipeMatches(RecipeHolder pRecipe) {
-        return false;
-    }
-
-    @Override
-    public int getResultSlotIndex() {
-        return 0;
-    }
-
-    @Override
-    public int getGridWidth() {
-        return 0;
-    }
-
-    @Override
-    public int getGridHeight() {
-        return 0;
-    }
-
-    @Override
-    public int getSize() {
-        return 0;
+    public RecipeBookMenu.PostPlaceAction handlePlacement(boolean placeAll, boolean placeOne, RecipeHolder<?> recipe, ServerLevel level, Inventory inventory) {
+        return RecipeBookMenu.PostPlaceAction.NOTHING;
     }
 
     public void updateItems(List<StoredItemStack> stacks) {
@@ -239,11 +214,6 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
     @Override
     public RecipeBookType getRecipeBookType() {
         return RecipeBookType.CRAFTING;
-    }
-
-    @Override
-    public boolean shouldMoveToInventory(int p_150635_) {
-        return false;
     }
 
     public void onInteract(ServerPlayer player, @Nullable StoredItemStack clicked, SlotAction act, boolean pullOne) {
@@ -301,7 +271,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                                 newItems.add(pulled.getActualStack());
                             }
 
-                            player.level.playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                            player.level().playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level().getRandom().nextFloat() * 0.4F);
                             stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                         }
                     } else {
@@ -318,7 +288,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                             }
                         }
 
-                        player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                        player.level().playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level().getRandom().nextFloat() * 0.4F);
                         stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                     }
 
@@ -389,7 +359,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                                     newItems.add(pulled.getActualStack());
                                 }
 
-                                player.level.playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                                player.level().playSound(null, player, SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8F, 0.8F + player.level().getRandom().nextFloat() * 0.4F);
                                 stack.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(newItems));
                             }
                         } else {
@@ -406,7 +376,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
                                     if (!item.isEmpty()) {
                                         newItems.add(item);
                                     }
-                                    player.level.playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level.getRandom().nextFloat() * 0.4F);
+                                    player.level().playSound(null, player, SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + player.level().getRandom().nextFloat() * 0.4F);
                                     pushed = true;
                                     continue;
                                 }

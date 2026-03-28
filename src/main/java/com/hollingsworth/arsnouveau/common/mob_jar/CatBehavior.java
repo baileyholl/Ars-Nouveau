@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class CatBehavior extends JarBehavior<Cat> {
@@ -35,7 +36,7 @@ public class CatBehavior extends JarBehavior<Cat> {
     @Override
     public void tick(MobJarTile tile) {
         Level level = tile.getLevel();
-        if (level == null || level.isClientSide) {
+        if (level == null || level.isClientSide()) {
             return;
         }
 
@@ -58,9 +59,9 @@ public class CatBehavior extends JarBehavior<Cat> {
     }
 
     private static void updateOwnedJars(@NotNull Player player) {
-        var level = player.level;
+        var level = player.level();
 
-        var map = CAT_MAP.posMap.get(level.dimension().location().toString());
+        var map = CAT_MAP.posMap.get(level.dimension().identifier().toString());
         if (map == null) {
             return;
         }
@@ -76,7 +77,7 @@ public class CatBehavior extends JarBehavior<Cat> {
                 continue;
             }
 
-            if (level.getBlockEntity(pos) instanceof MobJarTile jar && jar.getEntity() instanceof Cat cat && player.getUUID().equals(cat.getOwnerUUID())) {
+            if (level.getBlockEntity(pos) instanceof MobJarTile jar && jar.getEntity() instanceof Cat cat && player.getUUID().equals(Optional.ofNullable(cat.getOwnerReference()).map(net.minecraft.world.entity.EntityReference::getUUID).orElse(null))) {
                 level.updateNeighborsAt(pos, jar.getBlockState().getBlock());
             }
         }
@@ -102,7 +103,7 @@ public class CatBehavior extends JarBehavior<Cat> {
             return;
         }
 
-        var key = level.dimension().location().toString();
+        var key = level.dimension().identifier().toString();
         if (!CAT_MAP.posMap.containsKey(key)) {
             return;
         }

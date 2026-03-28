@@ -10,9 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -27,7 +27,10 @@ public class Networking {
         reg.playToServer(ClientSearchPacket.TYPE, ClientSearchPacket.CODEC, Networking::handle);
         reg.playToServer(ClientSlotClick.TYPE, ClientSlotClick.STREAM_CODEC, Networking::handle);
         reg.playToServer(ClientTransferHandlerPacket.TYPE, ClientTransferHandlerPacket.CODEC, Networking::handle);
-        reg.playBidirectional(SetTerminalSettingsPacket.TYPE, SetTerminalSettingsPacket.CODEC, new DirectionalPayloadHandler<>((msg, ctx) -> ClientMessageHandler.handleClient(msg, ctx), (msg, ctx) -> msg.onServerReceived(ctx.player().getServer(), (ServerPlayer) ctx.player())));
+        // DirectionalPayloadHandler removed in 1.21.11; playBidirectional now takes separate server and client handlers
+        reg.playBidirectional(SetTerminalSettingsPacket.TYPE, SetTerminalSettingsPacket.CODEC,
+                (msg, ctx) -> msg.onServerReceived(ctx.player().level().getServer(), (ServerPlayer) ctx.player()),
+                (msg, ctx) -> ClientMessageHandler.handleClient(msg, ctx));
         reg.playToClient(HighlightAreaPacket.TYPE, HighlightAreaPacket.CODEC, Networking::handle);
         reg.playToClient(NotEnoughManaPacket.TYPE, NotEnoughManaPacket.CODEC, Networking::handle);
         reg.playToClient(PacketAddFadingLight.TYPE, PacketAddFadingLight.CODEC, Networking::handle);
@@ -96,7 +99,7 @@ public class Networking {
     }
 
     private static <T extends AbstractPacket> void handleServer(T message, IPayloadContext ctx) {
-        MinecraftServer server = ctx.player().getServer();
+        MinecraftServer server = ctx.player().level().getServer();
         message.onServerReceived(server, (ServerPlayer) ctx.player());
     }
 
@@ -123,6 +126,6 @@ public class Networking {
     }
 
     public static void sendToServer(CustomPacketPayload msg) {
-        PacketDistributor.sendToServer(msg);
+        ClientPacketDistributor.sendToServer(msg);
     }
 }

@@ -6,12 +6,10 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -45,21 +43,22 @@ public class SpellUtil {
     }
 
     public static boolean isCorrectHarvestLevel(int strength, BlockState state) {
-        Tier tier = switch (strength) {
+        ToolMaterial tier = switch (strength) {
             case 2:
-                yield Tiers.STONE;
+                yield ToolMaterial.STONE;
             case 3:
-                yield Tiers.IRON;
+                yield ToolMaterial.IRON;
             case 4:
-                yield Tiers.DIAMOND;
+                yield ToolMaterial.DIAMOND;
             case 5:
-                yield Tiers.NETHERITE;
+                yield ToolMaterial.NETHERITE;
             default:
-                yield Tiers.WOOD;
+                yield ToolMaterial.WOOD;
         };
         if (strength > 5)
-            tier = Tiers.NETHERITE;
-        return !BuiltInRegistries.BLOCK.getOrCreateTag(tier.getIncorrectBlocksForDrops()).contains(state.getBlockHolder());
+            tier = ToolMaterial.NETHERITE;
+        // 1.21.11: getOrCreateTag removed from DefaultedRegistry; BlockState.is(TagKey) does the same check
+        return !state.is(tier.incorrectBlocksForDrops());
     }
 
 
@@ -72,7 +71,8 @@ public class SpellUtil {
     }
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {
-        Vec3i hitVec = caster.getDirection().getNormal();
+        // 1.21.11: Direction.getNormal() renamed to getUnitVec3i()
+        Vec3i hitVec = caster.getDirection().getUnitVec3i();
         if (caster instanceof FakePlayer) { // Do I know why I need this? No. But I do, or else spell turrets break on the wrong plane.
             mop = new BlockHitResult(mop.getLocation(), mop.getDirection(), mop.getBlockPos(), false);
         }
@@ -81,7 +81,10 @@ public class SpellUtil {
     }
 
     public static List<BlockPos> calcAOEBlocks(Vec3 hitVec, BlockPos origin, BlockHitResult mop, int width, int height, int depth, int distance) {
-        return calcAOEBlocks(Direction.getNearest(hitVec.x, hitVec.y, hitVec.z).getOpposite().getNormal(), origin, mop, width, height, depth, distance);
+        // 1.21.11: Direction.getNearest(double,double,double) removed; use getNearest(Vec3i, Direction) variant
+        // getNormal() renamed to getUnitVec3i()
+        Vec3i nearest = Direction.getNearest(new net.minecraft.core.Vec3i((int) hitVec.x, (int) hitVec.y, (int) hitVec.z), Direction.NORTH).getOpposite().getUnitVec3i();
+        return calcAOEBlocks(nearest, origin, mop, width, height, depth, distance);
     }
 
     // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java

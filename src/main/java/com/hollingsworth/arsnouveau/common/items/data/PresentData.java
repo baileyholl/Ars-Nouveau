@@ -34,7 +34,7 @@ public record PresentData(String name, Optional<UUID> uuid) implements TooltipPr
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag, net.minecraft.core.component.DataComponentGetter pComponents) {
         if (uuid().isPresent()) {
             if (uuid().get().equals(ArsNouveau.proxy.getPlayer().getUUID())) {
                 pTooltipAdder.accept(Component.translatable("ars_nouveau.present.give"));

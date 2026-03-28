@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:cobweb"
-    },
-    {
-      "item": "minecraft:cobweb"
-    },
-    {
-      "item": "minecraft:cobweb"
-    },
-    {
-      "item": "minecraft:cobweb"
-    }
+    "ars_nouveau:earth_essence",
+    "minecraft:cobweb",
+    "minecraft:cobweb",
+    "minecraft:cobweb",
+    "minecraft:cobweb"
   ],
   "output": {
     "count": 1,

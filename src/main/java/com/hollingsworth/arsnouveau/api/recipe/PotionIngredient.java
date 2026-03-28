@@ -11,9 +11,15 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 public class PotionIngredient {
     public static Ingredient fromPotion(Holder<Potion> potion) {
+        ItemStack stack = potionItemStack(potion);
+        return PotionIngredient.getIngredient(stack);
+    }
+
+    /** Returns an ItemStack for a potion with the given holder. */
+    public static ItemStack potionItemStack(Holder<Potion> potion) {
         ItemStack stack = new ItemStack(Items.POTION);
         stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
-        return PotionIngredient.getIngredient(stack);
+        return stack;
     }
 
     public static Ingredient getIngredient(ItemStack input) {

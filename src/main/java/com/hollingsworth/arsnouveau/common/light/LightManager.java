@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.light;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
@@ -33,7 +32,7 @@ public class LightManager {
     public static int lastUpdateCount = 0;
     private static final Map<EntityType<?>, List<Function<?, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
-    public static DynamicLightsContext dynamicLightsContext = null;
+    public static Object dynamicLightsContext = null; // TODO: restore when lambdynlights 1.21.11 available
 
     public static void init() {
 

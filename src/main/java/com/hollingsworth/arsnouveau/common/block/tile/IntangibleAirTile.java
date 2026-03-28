@@ -3,10 +3,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class IntangibleAirTile extends ModdedTile implements ITickable {
     public int duration;
@@ -19,7 +19,7 @@ public class IntangibleAirTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         duration++;
         if (duration > maxLength) {
@@ -30,16 +30,16 @@ public class IntangibleAirTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        stateID = tag.getInt("state_id");
-        duration = tag.getInt("duration");
-        maxLength = tag.getInt("max_length");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        stateID = tag.getIntOr("state_id", 0);
+        duration = tag.getIntOr("duration", 0);
+        maxLength = tag.getIntOr("max_length", 0);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt("state_id", stateID);
         tag.putInt("duration", duration);
         tag.putInt("max_length", maxLength);

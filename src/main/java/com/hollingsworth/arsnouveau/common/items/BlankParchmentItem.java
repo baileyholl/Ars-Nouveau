@@ -29,7 +29,7 @@ public class BlankParchmentItem extends ModItem implements IScribeable {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide)
+        if (pContext.getLevel().isClientSide())
             return super.useOn(pContext);
         if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
             ItemStack stack = new ItemStack(ItemsRegistry.SCRYER_SCROLL.get());

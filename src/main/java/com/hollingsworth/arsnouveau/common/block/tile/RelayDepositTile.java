@@ -20,7 +20,7 @@ public class RelayDepositTile extends RelayTile {
         super.tick();
         if (disabled)
             return;
-        if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0) {
+        if (!level.isClientSide() && level.getGameTime() % 20 == 0 && getSource() > 0) {
             List<ISpecialSourceProvider> posList = SourceUtil.canGiveSource(worldPosition, level, 5);
             for (ISpecialSourceProvider provider : posList) {
                 if (this.getSource() <= 0)

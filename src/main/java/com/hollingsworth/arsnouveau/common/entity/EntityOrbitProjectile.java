@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -54,7 +56,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
 
     public EntityOrbitProjectile(Level world, SpellResolver resolver, Vec3 hitPos) {
         super(ModEntities.ORBIT_SPELL.get(), world, resolver);
-        setOwner(null);
+        setOwner((net.minecraft.world.entity.Entity) null);
         tracksGround = true;
         this.entityData.set(LAST_POS, hitPos);
     }
@@ -177,7 +179,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
 
     @Override
     protected void onHit(@NotNull HitResult result) {
-        if (level.isClientSide || result.getType() == HitResult.Type.MISS)
+        if (level.isClientSide() || result.getType() == HitResult.Type.MISS)
             return;
 
         if (result instanceof EntityHitResult entityHitResult) {
@@ -211,7 +213,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("left", ticksLeft);
         tag.putInt("offset", getOffset());
@@ -225,15 +227,15 @@ public class EntityOrbitProjectile extends EntityProjectileSpell {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.ticksLeft = tag.getInt("left");
-        setOffset(tag.getInt("offset"));
-        setAoe(tag.getFloat("aoe"));
-        setAccelerates(tag.getInt("accelerate"));
-        setTotal(tag.getInt("total"));
-        entityData.set(LAST_POS, new Vec3(tag.getDouble("lastX"), tag.getDouble("lastY"), tag.getDouble("lastZ")));
-        tracksGround = tag.getBoolean("canHitOwner");
+        this.ticksLeft = tag.getIntOr("left", 0);
+        setOffset(tag.getIntOr("offset", 0));
+        setAoe(tag.getFloatOr("aoe", 0.0f));
+        setAccelerates(tag.getIntOr("accelerate", 0));
+        setTotal(tag.getIntOr("total", 0));
+        entityData.set(LAST_POS, new Vec3(tag.getDoubleOr("lastX", 0.0), tag.getDoubleOr("lastY", 0.0), tag.getDoubleOr("lastZ", 0.0)));
+        tracksGround = tag.getBooleanOr("canHitOwner", false);
     }
 
     @Override

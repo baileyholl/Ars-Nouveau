@@ -28,7 +28,7 @@ public class AdoptCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-adopted")
-                .requires(sender -> sender.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(
                         Commands.literal("by-name")
                                 .then(

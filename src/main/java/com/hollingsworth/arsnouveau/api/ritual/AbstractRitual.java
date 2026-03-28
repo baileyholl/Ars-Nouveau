@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -177,7 +177,7 @@ public abstract class AbstractRitual {
 
     // Called once the ritual tile has created a new instance of this ritual
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
-        this.setContext(RitualContext.read(provider, tag.getCompound("context")));
+        this.setContext(RitualContext.read(provider, tag.getCompoundOrEmpty("context")));
     }
 
     public @NotNull RitualContext getContext() {
@@ -190,7 +190,7 @@ public abstract class AbstractRitual {
         this.context = context;
     }
 
-    public abstract ResourceLocation getRegistryName();
+    public abstract Identifier getRegistryName();
 
     public ParticleColor getCenterColor() {
         return new ParticleColor(

@@ -32,7 +32,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal {
         LivingEntity player = entity.getOwner();
         if (player == null || player.isSpectator()) {
             return false;
-        } else if (entity.level.dimension() != player.level.dimension()) {
+        } else if (entity.level.dimension() != player.level().dimension()) {
             return false;
         } else if (entity.distanceToSqr(player) < (minDist * minDist)) {
             return false;

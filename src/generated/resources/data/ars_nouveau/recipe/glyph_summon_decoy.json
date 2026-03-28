@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:conjuration_essence"
-    },
-    {
-      "item": "minecraft:armor_stand"
-    },
-    {
-      "item": "minecraft:armor_stand"
-    },
-    {
-      "item": "minecraft:armor_stand"
-    },
-    {
-      "item": "minecraft:armor_stand"
-    }
+    "ars_nouveau:conjuration_essence",
+    "minecraft:armor_stand",
+    "minecraft:armor_stand",
+    "minecraft:armor_stand",
+    "minecraft:armor_stand"
   ],
   "output": {
     "count": 1,

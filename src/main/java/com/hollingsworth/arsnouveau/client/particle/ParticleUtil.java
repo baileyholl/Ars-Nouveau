@@ -87,7 +87,7 @@ public class ParticleUtil {
 
         while ((d4 + .65) < d3) {
             d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
-            if (world.isClientSide)
+            if (world.isClientSide())
                 world.addAlwaysVisibleParticle(ParticleTypes.ENCHANT, true, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
             if (world instanceof ServerLevel) {
                 ((ServerLevel) world).sendParticles(ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, r.nextInt(4), 0, 0.0, 0, 0.0);
@@ -170,7 +170,7 @@ public class ParticleUtil {
             scalar = 5;
         if (ritual.getContext().progress >= 13)
             scalar = 3;
-        if (!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
+        if (!ritual.getWorld().isClientSide() && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
             ParticleUtil.spawnRitualSkyEffect(tileEntity, rand, color);
         }
     }
@@ -202,7 +202,7 @@ public class ParticleUtil {
             scalar = 5;
         if (ritual.getContext().progress >= 13)
             scalar = 3;
-        if (!ritual.getWorld().isClientSide && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
+        if (!ritual.getWorld().isClientSide() && ritual.getProgress() <= 15 && (ritual.getWorld().getGameTime() % 20 == 0 || rand.nextInt(scalar) == 0)) {
             ParticleUtil.spawnFallingSkyEffect(tileEntity, rand, color);
         }
     }

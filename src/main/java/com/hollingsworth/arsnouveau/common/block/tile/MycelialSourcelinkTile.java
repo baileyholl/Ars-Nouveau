@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -31,14 +32,14 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         if (level.getGameTime() % 40 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
-                if (i.getItem().getItem().getFoodProperties(i.getItem(), null) != null) {
+                if (i.getItem().get(DataComponents.FOOD) != null) {
                     int source = getSourceValue(i.getItem());
                     this.addSource(source);
-                    ItemStack containerItem = i.getItem().getCraftingRemainingItem();
+                    ItemStack containerItem = i.getItem().getCraftingRemainder();
                     i.getItem().shrink(1);
                     if (!containerItem.isEmpty()) {
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
@@ -51,7 +52,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                 int sourceValue = getSourceValue(i.getItem(0));
                 if (sourceValue > 0) {
                     this.addSource(sourceValue);
-                    ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
+                    ItemStack containerItem = i.getItem(0).getCraftingRemainder();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
                     Networking.sendToNearbyClient(level, getBlockPos(),
@@ -62,7 +63,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     }
 
     public int getSourceValue(ItemStack i) {
-        var food = i.getItem().getFoodProperties(i, null);
+        var food = i.get(DataComponents.FOOD);
         if (food == null) {
             return 0;
         }
@@ -84,7 +85,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
     @Override
     public void doRandomAction() {
         super.doRandomAction();
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
 
         if (progress > 10) {

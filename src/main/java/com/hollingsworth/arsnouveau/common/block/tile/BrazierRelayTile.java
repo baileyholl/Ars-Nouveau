@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,11 +38,11 @@ public class BrazierRelayTile extends RitualBrazierTile {
 
     @Override
     public void tick() {
-        if (isDecorative && level.isClientSide) {
+        if (isDecorative && level.isClientSide()) {
             makeParticle(color.nextColor((int) level.getGameTime() * 10), color.nextColor((int) level.getGameTime() * 10), 5);
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ticksToLightOff--;
             if (ticksToLightOff <= 0) {
                 ticksToLightOff = 0;
@@ -98,21 +98,19 @@ public class BrazierRelayTile extends RitualBrazierTile {
 
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt("ticksToLightOff", ticksToLightOff);
         if (this.brazierPos != null) {
-            tag.putLong("brazierPos", this.brazierPos.asLong());
+            tag.store("brazierPos", BlockPos.CODEC, this.brazierPos);
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        this.ticksToLightOff = tag.getInt("ticksToLightOff");
-        if (tag.contains("brazierPos")) {
-            this.brazierPos = BlockPos.of(tag.getLong("brazierPos"));
-        }
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        this.ticksToLightOff = tag.getIntOr("ticksToLightOff", 0);
+        this.brazierPos = tag.read("brazierPos", BlockPos.CODEC).orElse(null);
     }
 
     @Override

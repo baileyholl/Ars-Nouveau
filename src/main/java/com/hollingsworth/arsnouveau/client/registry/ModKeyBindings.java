@@ -9,10 +9,11 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.lwjgl.glfw.GLFW;
 
 
-@EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT)
 public class ModKeyBindings {
 
-    public static final String CATEGORY = "key.category.ars_nouveau.general";
+    // 1.21.11: KeyMapping constructor takes KeyMapping.Category (record) instead of String
+    public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ArsNouveau.prefix("general"));
 
     public static final KeyMapping OPEN_BOOK = new KeyMapping("key.ars_nouveau.open_book", GLFW.GLFW_KEY_C, CATEGORY);
     public static final KeyMapping OPEN_RADIAL_HUD = new KeyMapping("key.ars_nouveau.selection_hud", GLFW.GLFW_KEY_V, CATEGORY);

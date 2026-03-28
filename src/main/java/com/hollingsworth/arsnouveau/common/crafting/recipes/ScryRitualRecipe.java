@@ -22,12 +22,12 @@ public record ScryRitualRecipe(TagKey<Item> augment, TagKey<Block> highlight) im
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<ScryRitualRecipe> getSerializer() {
         return RecipeRegistry.SCRY_RITUAL_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<ScryRitualRecipe> getType() {
         return RecipeRegistry.SCRY_RITUAL_TYPE.get();
     }
 

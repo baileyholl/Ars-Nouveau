@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "#": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "# #",

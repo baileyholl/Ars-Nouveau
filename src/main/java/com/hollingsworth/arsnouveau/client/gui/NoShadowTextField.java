@@ -1,12 +1,13 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import net.minecraft.Util;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FastColor;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,10 @@ public class NoShadowTextField extends EditBox {
 
         if (!s.isEmpty()) {
             String s1 = offsetInBounds ? s.substring(0, offset) : s;
-            textStartX = graphics.drawString(font, this.formatter.apply(s1, this.displayPos), xStart, yStart, -8355712, false);
+            // 1.21.11: EditBox.formatter (BiFunction) replaced by formatters (List<TextFormatter>).
+            // 1.21.11: drawString() returns void (not int); compute end X via font.width() instead.
+            graphics.drawString(font, applyFormatters(s1, this.displayPos), xStart, yStart, -8355712, false);
+            textStartX = xStart + this.font.width(s1);
         }
 
         boolean outOfSpace = this.font.width(s + "_") > this.width;
@@ -56,7 +60,7 @@ public class NoShadowTextField extends EditBox {
         }
 
         if (!s.isEmpty() && offsetInBounds && offset < s.length()) {
-            graphics.drawString(font, this.formatter.apply(s.substring(offset), this.cursorPos), textStartX, yStart, textColor);
+            graphics.drawString(font, applyFormatters(s.substring(offset), this.cursorPos), textStartX, yStart, textColor);
         }
 
         if (!outOfSpace && this.suggestion != null && (this.value == null || this.value.isEmpty())) {
@@ -75,6 +79,21 @@ public class NoShadowTextField extends EditBox {
             int selectionVisualEndX = xStart + this.font.width(s.substring(0, selectionVisualEnd));
             this.renderHighlight(graphics, decorationStartX, yStart - 1, selectionVisualEndX - 1, yStart + 9);
         }
+    }
+
+    /**
+     * 1.21.11: EditBox.formatter (single BiFunction) replaced by formatters (List of TextFormatter).
+     * Applies all registered formatters in sequence; falls back to plain text if the list is empty.
+     */
+    private FormattedCharSequence applyFormatters(String text, int cursorOffset) {
+        FormattedCharSequence result = FormattedCharSequence.forward(text, Style.EMPTY);
+        for (EditBox.TextFormatter fmt : this.formatters) {
+            FormattedCharSequence formatted = fmt.format(text, cursorOffset);
+            if (formatted != null) {
+                result = formatted;
+            }
+        }
+        return result;
     }
 
     private void renderHighlight(GuiGraphics guiGraphics, int minX, int minY, int maxX, int maxY) {
@@ -98,11 +117,15 @@ public class NoShadowTextField extends EditBox {
             minX = this.getX() + this.width;
         }
 
-        guiGraphics.fill(RenderType.guiTextHighlight(), minX, minY, maxX, maxY, FastColor.ARGB32.color(255, 0, 0, 255));
+        guiGraphics.textHighlight(minX, minY, maxX, maxY, false);
     }
 
+    // 1.21.11: mouseClicked signature changed from (double, double, int) to (MouseButtonEvent, boolean).
     @Override
-    public boolean mouseClicked(double clickedX, double clickedY, int mouseButton) { // 0 for primary, 1 for secondary
+    public boolean mouseClicked(MouseButtonEvent event, boolean consumed) {
+        double clickedX = event.x();
+        double clickedY = event.y();
+        int mouseButton = event.button();
         if (!this.isVisible()) {
             return false;
         } else {

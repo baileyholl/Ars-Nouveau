@@ -2,39 +2,30 @@ package com.hollingsworth.arsnouveau.client.renderer.entity.familiar;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-import javax.annotation.Nullable;
-
+// GeckoLib 5: setCustomAnimations removed; getModelResource/getTextureResource now take GeoRenderState
+// Head rotation via bone manipulation needs to be done in captureDefaultRenderState / addPerBoneRender
+// TODO: Port head rotation to GeckoLib 5 addPerBoneRender pattern
 public class FamiliarStarbyModel<T extends FamiliarStarbuncle> extends GeoModel<T> {
 
     @Override
-    public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {
-        super.setCustomAnimations(entity, uniqueID, customPredicate);
-        GeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(extraData.headPitch() * 0.017453292F);
-        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
+    public Identifier getModelResource(GeoRenderState renderState) {
+        // TODO: Retrieve model resource from renderState via DataTicket when captureDefaultRenderState is implemented
+        return ArsNouveau.prefix("starbuncle");
     }
 
     @Override
-    public ResourceLocation getModelResource(T carbuncle) {
-        return carbuncle.getModel();
+    public Identifier getTextureResource(GeoRenderState renderState) {
+        // TODO: Retrieve texture from renderState via DataTicket when captureDefaultRenderState is implemented
+        return ArsNouveau.prefix("textures/entity/starbuncle_blue.png");
     }
 
     @Override
-    public ResourceLocation getTextureResource(T carbuncle) {
-        return carbuncle.getTexture();
-    }
-
-    @Override
-    public ResourceLocation getAnimationResource(FamiliarStarbuncle carbuncle) {
-        return ArsNouveau.prefix("animations/starbuncle_animations.json");
+    public Identifier getAnimationResource(FamiliarStarbuncle carbuncle) {
+        return ArsNouveau.prefix("starbuncle_animations");
     }
 
 }

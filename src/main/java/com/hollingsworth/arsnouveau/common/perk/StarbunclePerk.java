@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,7 +17,7 @@ public class StarbunclePerk extends Perk {
     public static final StarbunclePerk INSTANCE = new StarbunclePerk(ArsNouveau.prefix("thread_starbuncle"));
     public static final UUID PERK_SPEED_UUID = UUID.fromString("46937d0b-123c-4786-95b5-748afd50f398");
 
-    protected StarbunclePerk(ResourceLocation key) {
+    protected StarbunclePerk(Identifier key) {
         super(key);
     }
 

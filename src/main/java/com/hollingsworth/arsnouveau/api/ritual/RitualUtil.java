@@ -40,13 +40,14 @@ public class RitualUtil {
     }
 
     public static void changeBiome(Level level, BlockPos pos, ResourceKey<Biome> target) {
-        Holder<Biome> biome = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(target);
+        // 1.21.11: registryOrThrow → lookupOrThrow; getHolderOrThrow → getOrThrow
+        Holder<Biome> biome = level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(target);
         BlockPos dPos = pos;
 
         if (level.getBiome(dPos).is(target))
             return;
 
-        int minY = QuartPos.fromBlock(level.getMinBuildHeight());
+        int minY = QuartPos.fromBlock(level.getMinY());
         int maxY = minY + QuartPos.fromBlock(level.getHeight()) - 1;
 
         int x = QuartPos.fromBlock(dPos.getX());
@@ -55,7 +56,8 @@ public class RitualUtil {
         LevelChunk chunkAt = level.getChunk(dPos.getX() >> 4, dPos.getZ() >> 4);
         for (LevelChunkSection section : chunkAt.getSections()) {
             for (int sy = 0; sy < 16; sy += 4) {
-                int y = Mth.clamp(QuartPos.fromBlock(chunkAt.getMinSection() + sy), minY, maxY);
+                // 1.21.11: getMinSection() removed; use getMinY() >> 4 for section Y index
+            int y = Mth.clamp(QuartPos.fromBlock((chunkAt.getMinY() >> 4) + sy), minY, maxY);
                 if (section.getBiomes().get(x & 3, y & 3, z & 3).is(target))
                     continue;
                 if (section.getBiomes() instanceof PalettedContainer<Holder<Biome>> container)
@@ -64,7 +66,8 @@ public class RitualUtil {
         }
 
         if (level instanceof ServerLevel server) {
-            if (!chunkAt.isUnsaved()) chunkAt.setUnsaved(true);
+            // 1.21.11: setUnsaved(true) → markUnsaved()
+            if (!chunkAt.isUnsaved()) chunkAt.markUnsaved();
             ChangeBiomePacket message = new ChangeBiomePacket(pos, target);
             PacketDistributor.sendToPlayersTrackingChunk(server, chunkAt.getPos(), message);
         }

@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:conjuration_essence"
-    },
-    {
-      "item": "minecraft:totem_of_undying"
-    }
+    "ars_nouveau:conjuration_essence",
+    "minecraft:totem_of_undying"
   ],
   "output": {
     "count": 1,

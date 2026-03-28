@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class EnchantingPage extends AbstractPage {
 
@@ -10,7 +10,7 @@ public class EnchantingPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
+    public Identifier getType() {
         return ArsNouveau.prefix("enchanting_recipe");
     }
 }

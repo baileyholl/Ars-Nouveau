@@ -145,7 +145,8 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         });
         PropertyButton lastClickedButton = propWidgetList.getSelectedButton();
         if (lastClickedButton != null) {
-            lastClickedButton.onPress();
+            // 1.21.11: onPress now requires InputWithModifiers; Button.onPress ignores the parameter
+            lastClickedButton.onPress(null);
         } else {
             addTimelineSelectionWidgets();
         }

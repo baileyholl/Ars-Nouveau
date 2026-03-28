@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    }
+    "ars_nouveau:magebloom",
+    "ars_nouveau:magebloom"
   ],
   "result": {
     "count": 2,

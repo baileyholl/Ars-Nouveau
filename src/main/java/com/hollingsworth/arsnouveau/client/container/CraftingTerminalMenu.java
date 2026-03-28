@@ -3,13 +3,13 @@ package com.hollingsworth.arsnouveau.client.container;
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
-import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -99,10 +99,10 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
         this.addSlot(craftingResultSlot = new ActiveResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
             @Override
             public void onTake(Player thePlayer, ItemStack stack) {
-                if (thePlayer.level.isClientSide)
+                if (thePlayer.level.isClientSide())
                     return;
                 this.checkTakeAchievements(stack);
-                if (!pinv.player.getCommandSenderWorld().isClientSide) {
+                if (!pinv.player.level().isClientSide()) {
                     ((CraftingLecternTile) te).craft((ServerPlayer) thePlayer, tabs.get(thePlayer.getUUID()));
                 }
             }
@@ -144,14 +144,14 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
             if (index == 0) {
                 if (te == null) return ItemStack.EMPTY;
                 ((CraftingLecternTile) te).craftShift(playerIn, tabs.get(playerIn.getUUID()));
-                if (!playerIn.level.isClientSide)
+                if (!playerIn.level.isClientSide())
                     broadcastChanges();
                 return ItemStack.EMPTY;
             } else if (index > 0 && index < 10) {
                 if (te == null) return ItemStack.EMPTY;
                 ItemStack stack = te.pushStack(itemstack, tabs.get(playerIn.getUUID()));
                 slot.set(stack);
-                if (!playerIn.level.isClientSide)
+                if (!playerIn.level.isClientSide())
                     broadcastChanges();
             }
             slot.onTake(playerIn, itemstack1);
@@ -182,58 +182,17 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
     }
 
     @Override
-    public void fillCraftSlotsStackedContents(StackedContents itemHelperIn) {
+    public void fillCraftSlotsStackedContents(StackedItemContents itemHelperIn) {
         this.craftMatrix.fillStackedContents(itemHelperIn);
     }
 
-    @Override
     public void clearCraftingContent() {
         this.craftMatrix.clearContent();
         this.craftResult.clearContent();
     }
 
     @Override
-    public boolean recipeMatches(RecipeHolder pRecipe) {
-        return pRecipe.value().matches(this.craftMatrix.asCraftInput(), this.pinv.player.level);
-    }
-
-    @Override
-    public int getResultSlotIndex() {
-        return 0;
-    }
-
-    @Override
-    public int getGridWidth() {
-        return this.craftMatrix.getWidth();
-    }
-
-    @Override
-    public int getGridHeight() {
-        return this.craftMatrix.getHeight();
-    }
-
-    @Override
-    public int getSize() {
-        return 10;
-    }
-
-    @Override
-    public List<RecipeBookCategories> getRecipeBookCategories() {
-        return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
-    }
-
-    public class TerminalRecipeItemHelper extends StackedContents {
-        @Override
-        public void clear() {
-            super.clear();
-            itemList.forEach(e -> {
-                accountSimpleStack(e.getActualStack());
-            });
-        }
-    }
-
-    @Override
-    public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
+    public RecipeBookMenu.PostPlaceAction handlePlacement(boolean pPlaceAll, boolean pPlaceOne, RecipeHolder<?> pRecipe, ServerLevel level, Inventory inventory) {
         //todo: reenable recipe placement
 //		(new ServerPlaceRecipe<RecipeInput, Recipe>(this) {
 //			{
@@ -290,6 +249,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 //				this.menu.clearCraftingContent();
 //			}
 //		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
+        return RecipeBookMenu.PostPlaceAction.NOTHING;
     }
 
     public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList) {

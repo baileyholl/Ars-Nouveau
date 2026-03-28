@@ -3,9 +3,7 @@
   "category": "building",
   "group": "wooden_slab",
   "key": {
-    "#": {
-      "item": "ars_nouveau:smooth_sourcestone_alternating"
-    }
+    "#": "ars_nouveau:smooth_sourcestone_alternating"
   },
   "pattern": [
     "###"

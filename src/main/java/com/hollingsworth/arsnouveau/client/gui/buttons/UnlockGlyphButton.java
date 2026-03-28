@@ -32,11 +32,11 @@ public class UnlockGlyphButton extends ANButton {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderContents(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.spellPart != null) {
             RenderUtils.drawSpellPart(this.spellPart, pGuiGraphics, x, y, width, !playerKnows, 0);
             if (selected)
-                pGuiGraphics.blit(ArsNouveau.prefix("textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
+                pGuiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
         }
     }
 
@@ -46,12 +46,16 @@ public class UnlockGlyphButton extends ANButton {
             return;
         AbstractSpellPart spellPart = this.spellPart;
         tip.add(Component.translatable(spellPart.getLocalizationKey()));
-        if (Screen.hasShiftDown()) {
+        if (Minecraft.getInstance().hasShiftDown()) {
             tip.add(spellPart.getBookDescLang());
         } else {
             tip.add(Component.translatable("ars_nouveau.tier", spellPart.getConfigTier().value).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
             tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));
-            var modName = spellPart.getGlyph().getCreatorModId(spellPart.getGlyph().getDefaultInstance());
+            var mc = Minecraft.getInstance();
+            String modName = null;
+            if (mc.level != null) {
+                modName = spellPart.getGlyph().getCreatorModId(mc.level.registryAccess(), spellPart.getGlyph().getDefaultInstance());
+            }
             if (modName == null) {
                 modName = spellPart.getRegistryName().getNamespace();
             }

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:arcane_platform"
-    }
+    "ars_nouveau:arcane_platform"
   ],
   "result": {
     "count": 1,

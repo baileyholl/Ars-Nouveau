@@ -1,20 +1,13 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 
+// GeckoLib 5.4.2: getRenderType moved from GeoModel to GeoRenderer interface.
+// PlanariumModel no longer overrides getRenderType - it should be set on the renderer instead.
+// The renderer that uses this model should override getRenderType(R, Identifier).
 public class PlanariumModel extends GenericModel {
     public PlanariumModel(boolean dimModel) {
         super(dimModel ? "planarium_dimension" : "planarium");
         this.textLoc = ArsNouveau.prefix("textures/" + textPathRoot + "/planarium.png");
-    }
-
-
-    @Override
-    public @Nullable RenderType getRenderType(GeoAnimatable animatable, ResourceLocation texture) {
-        return RenderType.entityCutout(texture);
     }
 }

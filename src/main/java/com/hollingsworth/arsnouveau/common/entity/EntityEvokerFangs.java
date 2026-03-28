@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,11 +43,11 @@ public class EntityEvokerFangs extends EvokerFangs {
      */
     public void tick() {
         // Entity.super
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.setSharedFlag(6, this.isCurrentlyGlowing());
         }
         this.baseTick();
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             if (this.clientSideAttackStarted) {
                 --this.lifeTicks;
                 if (this.lifeTicks == 14) {
@@ -74,7 +75,7 @@ public class EntityEvokerFangs extends EvokerFangs {
             }
 
             if (--this.lifeTicks < 0) {
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
             }
         }
 
@@ -97,20 +98,16 @@ public class EntityEvokerFangs extends EvokerFangs {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        this.warmupDelayTicks = compound.getInt("Warmup");
-        if (compound.hasUUID("OwnerUUID")) {
-            this.casterUuid = compound.getUUID("OwnerUUID");
-        }
-
+    protected void readAdditionalSaveData(ValueInput compound) {
+        this.warmupDelayTicks = compound.getIntOr("Warmup", 0);
+        this.casterUuid = compound.read("OwnerUUID", net.minecraft.core.UUIDUtil.CODEC).orElse(null);
     }
 
-    protected void addAdditionalSaveData(CompoundTag compound) {
+    protected void addAdditionalSaveData(ValueOutput compound) {
         compound.putInt("Warmup", this.warmupDelayTicks);
         if (this.casterUuid != null) {
-            compound.putUUID("OwnerUUID", this.casterUuid);
+            compound.store("OwnerUUID", net.minecraft.core.UUIDUtil.CODEC, this.casterUuid);
         }
-
     }
 
     public void handleEntityEvent(byte id) {

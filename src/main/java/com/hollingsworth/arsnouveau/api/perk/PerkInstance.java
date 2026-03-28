@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.perk;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
@@ -13,9 +13,9 @@ public class PerkInstance {
     private IPerk perk;
 
     public PerkInstance(CompoundTag tag) {
-        ResourceLocation perkId = ResourceLocation.tryParse(tag.getString("perkId"));
+        Identifier perkId = Identifier.tryParse(tag.getStringOr("perkId", ""));
         perk = PerkRegistry.getPerkMap().getOrDefault(perkId, StarbunclePerk.INSTANCE);
-        slot = PerkSlot.PERK_SLOTS.getOrDefault(ResourceLocation.tryParse(tag.getString("slotId")), PerkSlot.ONE);
+        slot = PerkSlot.PERK_SLOTS.getOrDefault(Identifier.tryParse(tag.getStringOr("slotId", "")), PerkSlot.ONE);
     }
 
     public PerkInstance(PerkSlot slot, IPerk perk) {

@@ -3,13 +3,13 @@ package com.hollingsworth.arsnouveau.common.perk;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class GlidingPerk extends Perk {
 
     public static final GlidingPerk INSTANCE = new GlidingPerk(ArsNouveau.prefix("thread_gliding"));
 
-    public GlidingPerk(ResourceLocation key) {
+    public GlidingPerk(Identifier key) {
         super(key);
     }
 

@@ -6,11 +6,12 @@ import com.hollingsworth.arsnouveau.client.particle.BubbleParticle;
 import com.hollingsworth.arsnouveau.client.particle.SculkChargeParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -100,7 +101,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> EXPLOSION = PARTICLES.register("explosion", PropertyParticleType::new);
     public static final DeferredHolder<ParticleType<?>, PropertyParticleType> CLOUD = PARTICLES.register("cloud", PropertyParticleType::new);
 
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class Inner {
         @SubscribeEvent
         public static void registerFactories(RegisterParticleProvidersEvent evt) {
@@ -115,73 +116,73 @@ public class ModParticles {
             evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
             evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
             evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
-            evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new PropParticle.Provider(null, (type, level, x, y, z, xSpeed, ySpeed, zSpeed) -> {
-                var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed);
+            evt.registerSpriteSet(DRIPPING_WATER.get(), (spites) -> new PropParticle.Provider(null, (type, level, x, y, z, xSpeed, ySpeed, zSpeed, sprite) -> {
+                TextureAtlasSprite fallingWaterSprite = null /* TODO: 1.21.11 particleEngine.spriteSets is private; falling water sprite unavailable */;
+                var particle = new FallingParticle(type, level, x, y, z, xSpeed, ySpeed, zSpeed, fallingWaterSprite);
                 particle.type = Fluids.WATER;
                 particle.landingSound = type.soundProperty().sound.getSound().getSoundEvent().value();
-                particle.pickSprite(Minecraft.getInstance().particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("falling_water")));
                 return particle;
             }));
 
-            evt.registerSpriteSet(END_ROD.get(), (spites) -> new WrappedProvider(ParticleTypes.END_ROD, EndRodParticle.Provider::new));
+            evt.registerSpriteSet(END_ROD.get(), (spites) -> new WrappedProvider(spites, EndRodParticle.Provider::new));
 
-            evt.registerSpriteSet(GLOW_SQUID.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW, GlowParticle.GlowSquidProvider::new));
+            evt.registerSpriteSet(GLOW_SQUID.get(), (spites) -> new WrappedProvider(spites, GlowParticle.GlowSquidProvider::new));
 
-            evt.registerSpriteSet(GLOW_INK.get(), (spites) -> new WrappedProvider(ParticleTypes.GLOW_SQUID_INK, SquidInkParticle.GlowInkProvider::new));
-            evt.registerSpriteSet(CRIT.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIT, CritParticle.Provider::new));
-            evt.registerSpriteSet(ENCHANT.get(), (spites) -> new WrappedProvider(ParticleTypes.ENCHANT, FlyTowardsPositionParticle.EnchantProvider::new));
-            evt.registerSpriteSet(SPIT.get(), (spites) -> new WrappedProvider(ParticleTypes.SPIT, SpitParticle.Provider::new));
-            evt.registerSpriteSet(DUST_PLUME.get(), (spites) -> new WrappedProvider(ParticleTypes.DUST_PLUME, DustPlumeParticle.Provider::new));
-            evt.registerSpriteSet(SMALL_GUST.get(), (spites) -> new WrappedProvider(ParticleTypes.SMALL_GUST, GustParticle.SmallProvider::new));
-            evt.registerSpriteSet(BIG_GUST.get(), (spites) -> new WrappedProvider(ParticleTypes.GUST, GustParticle.Provider::new));
-            evt.registerSpriteSet(DRAGON_BREATH.get(), (spites) -> new WrappedProvider(ParticleTypes.DRAGON_BREATH, DragonBreathParticle.Provider::new));
-            evt.registerSpriteSet(ENCHANTED_HIT.get(), (spites) -> new WrappedProvider(ParticleTypes.ENCHANTED_HIT, CritParticle.MagicProvider::new));
-            evt.registerSpriteSet(SONIC_BOOM.get(), (spites) -> new WrappedProvider(ParticleTypes.SONIC_BOOM, SonicBoomParticle.Provider::new));
-            evt.registerSpriteSet(FIREWORK.get(), (spites) -> new WrappedProvider(ParticleTypes.FIREWORK, FireworkParticles.SparkProvider::new));
-            evt.registerSpriteSet(FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.FLAME, FlameParticle.Provider::new));
-            evt.registerSpriteSet(INFESTED.get(), (spites) -> new WrappedProvider(ParticleTypes.INFESTED, SpellParticle.Provider::new));
-            evt.registerSpriteSet(SCULK_SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_SOUL, SoulParticle.EmissiveProvider::new));
-            evt.registerSpriteSet(SOUL_FIRE_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL_FIRE_FLAME, FlameParticle.Provider::new));
-            evt.registerSpriteSet(SOUL.get(), (spites) -> new WrappedProvider(ParticleTypes.SOUL, SoulParticle.Provider::new));
-            evt.registerSpriteSet(SCULK_CHARGE_POP.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_CHARGE_POP, SculkChargePopParticle.Provider::new));
-            evt.registerSpriteSet(HAPPY_VILLAGER.get(), (spites) -> new WrappedProvider(ParticleTypes.HAPPY_VILLAGER, SuspendedTownParticle.HappyVillagerProvider::new));
-            evt.registerSpriteSet(COMPOSTER.get(), (spites) -> new WrappedProvider(ParticleTypes.COMPOSTER, SuspendedTownParticle.ComposterFillProvider::new));
-            evt.registerSpriteSet(HEART.get(), (spites) -> new WrappedProvider(ParticleTypes.HEART, HeartParticle.Provider::new));
-            evt.registerSpriteSet(INSTANT_EFFECT.get(), (spites) -> new WrappedProvider(ParticleTypes.INSTANT_EFFECT, SpellParticle.InstantProvider::new));
+            evt.registerSpriteSet(GLOW_INK.get(), (spites) -> new WrappedProvider(spites, SquidInkParticle.GlowInkProvider::new));
+            evt.registerSpriteSet(CRIT.get(), (spites) -> new WrappedProvider(spites, CritParticle.Provider::new));
+            evt.registerSpriteSet(ENCHANT.get(), (spites) -> new WrappedProvider(spites, FlyTowardsPositionParticle.EnchantProvider::new));
+            evt.registerSpriteSet(SPIT.get(), (spites) -> new WrappedProvider(spites, SpitParticle.Provider::new));
+            evt.registerSpriteSet(DUST_PLUME.get(), (spites) -> new WrappedProvider(spites, DustPlumeParticle.Provider::new));
+            evt.registerSpriteSet(SMALL_GUST.get(), (spites) -> new WrappedProvider(spites, GustParticle.SmallProvider::new));
+            evt.registerSpriteSet(BIG_GUST.get(), (spites) -> new WrappedProvider(spites, GustParticle.Provider::new));
+            evt.registerSpriteSet(DRAGON_BREATH.get(), (spites) -> new WrappedProvider(spites, DragonBreathParticle.Provider::new));
+            evt.registerSpriteSet(ENCHANTED_HIT.get(), (spites) -> new WrappedProvider(spites, CritParticle.MagicProvider::new));
+            evt.registerSpriteSet(SONIC_BOOM.get(), (spites) -> new WrappedProvider(spites, SonicBoomParticle.Provider::new));
+            evt.registerSpriteSet(FIREWORK.get(), (spites) -> new WrappedProvider(spites, FireworkParticles.SparkProvider::new));
+            evt.registerSpriteSet(FLAME.get(), (spites) -> new WrappedProvider(spites, FlameParticle.Provider::new));
+            evt.registerSpriteSet(INFESTED.get(), (spites) -> new WrappedProvider(spites, SpellParticle.Provider::new));
+            evt.registerSpriteSet(SCULK_SOUL.get(), (spites) -> new WrappedProvider(spites, SoulParticle.EmissiveProvider::new));
+            evt.registerSpriteSet(SOUL_FIRE_FLAME.get(), (spites) -> new WrappedProvider(spites, FlameParticle.Provider::new));
+            evt.registerSpriteSet(SOUL.get(), (spites) -> new WrappedProvider(spites, SoulParticle.Provider::new));
+            evt.registerSpriteSet(SCULK_CHARGE_POP.get(), (spites) -> new WrappedProvider(spites, SculkChargePopParticle.Provider::new));
+            evt.registerSpriteSet(HAPPY_VILLAGER.get(), (spites) -> new WrappedProvider(spites, SuspendedTownParticle.HappyVillagerProvider::new));
+            evt.registerSpriteSet(COMPOSTER.get(), (spites) -> new WrappedProvider(spites, SuspendedTownParticle.ComposterFillProvider::new));
+            evt.registerSpriteSet(HEART.get(), (spites) -> new WrappedProvider(spites, HeartParticle.Provider::new));
+            evt.registerSpriteSet(INSTANT_EFFECT.get(), (spites) -> new WrappedProvider(spites, SpellParticle.InstantProvider::new));
             evt.registerSpriteSet(ITEM_COBWEB.get(), (spites) -> new WrappedProvider(ParticleTypes.ITEM_COBWEB, new BreakingItemParticle.CobwebProvider()));
-            evt.registerSpriteSet(LARGE_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.LARGE_SMOKE, LargeSmokeParticle.Provider::new));
-            evt.registerSpriteSet(LAVA.get(), (spites) -> new WrappedProvider(ParticleTypes.LAVA, LavaParticle.Provider::new));
-            evt.registerSpriteSet(MYCELIUM.get(), (spites) -> new WrappedProvider(ParticleTypes.MYCELIUM, SuspendedTownParticle.Provider::new));
-            evt.registerSpriteSet(NOTE.get(), (spites) -> new WrappedProvider(ParticleTypes.NOTE, NoteParticle.Provider::new));
-            evt.registerSpriteSet(POOF.get(), (spites) -> new WrappedProvider(ParticleTypes.POOF, ExplodeParticle.Provider::new));
-            evt.registerSpriteSet(SPLASH.get(), (spites) -> new WrappedProvider(ParticleTypes.SPLASH, SplashParticle.Provider::new));
-            evt.registerSpriteSet(SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.SMOKE, SmokeParticle.Provider::new));
-            evt.registerSpriteSet(WHITE_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.WHITE_SMOKE, WhiteSmokeParticle.Provider::new));
-            evt.registerSpriteSet(SNEEZE.get(), (spites) -> new WrappedProvider(ParticleTypes.SNEEZE, PlayerCloudParticle.SneezeProvider::new));
-            evt.registerSpriteSet(SQUID_INK.get(), (spites) -> new WrappedProvider(ParticleTypes.SQUID_INK, SquidInkParticle.Provider::new));
-            evt.registerSpriteSet(SWEEP_ATTACK.get(), (spites) -> new WrappedProvider(ParticleTypes.SWEEP_ATTACK, AttackSweepParticle.Provider::new));
-            evt.registerSpriteSet(TOTEM_OF_UNDYING.get(), (spites) -> new WrappedProvider(ParticleTypes.TOTEM_OF_UNDYING, TotemParticle.Provider::new));
-            evt.registerSpriteSet(WITCH.get(), (spites) -> new WrappedProvider(ParticleTypes.WITCH, SpellParticle.WitchProvider::new));
-            evt.registerSpriteSet(BUBBLE_POP.get(), (spites) -> new WrappedProvider(ParticleTypes.BUBBLE_POP, BubblePopParticle.Provider::new));
-            evt.registerSpriteSet(NAUTILUS.get(), (spites) -> new WrappedProvider(ParticleTypes.NAUTILUS, FlyTowardsPositionParticle.NautilusProvider::new));
-            evt.registerSpriteSet(CAMPFIRE_COSY_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.CAMPFIRE_COSY_SMOKE, CampfireSmokeParticle.CosyProvider::new));
-            evt.registerSpriteSet(CAMPFIRE_SIGNAL_SMOKE.get(), (spites) -> new WrappedProvider(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, CampfireSmokeParticle.SignalProvider::new));
-            evt.registerSpriteSet(ASH.get(), (spites) -> new WrappedProvider(ParticleTypes.ASH, AshParticle.Provider::new));
-            evt.registerSpriteSet(CRIMSON_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIMSON_SPORE, SuspendedParticle.CrimsonSporeProvider::new));
-            evt.registerSpriteSet(WARPED_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.WARPED_SPORE, SuspendedParticle.WarpedSporeProvider::new));
-            evt.registerSpriteSet(REVERSE_PORTAL.get(), (spites) -> new WrappedProvider(ParticleTypes.REVERSE_PORTAL, ReversePortalParticle.Provider::new));
-            evt.registerSpriteSet(WHITE_ASH.get(), (spites) -> new WrappedProvider(ParticleTypes.WHITE_ASH, WhiteAshParticle.Provider::new));
-            evt.registerSpriteSet(SMALL_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SMALL_FLAME, FlameParticle.SmallFlameProvider::new));
-            evt.registerSpriteSet(SNOWFLAKE.get(), (spites) -> new WrappedProvider(ParticleTypes.SNOWFLAKE, SnowflakeParticle.Provider::new));
-            evt.registerSpriteSet(ELECTRIC_SPARK.get(), (spites) -> new WrappedProvider(ParticleTypes.ELECTRIC_SPARK, GlowParticle.ElectricSparkProvider::new));
-            evt.registerSpriteSet(SCRAPE.get(), (spites) -> new WrappedProvider(ParticleTypes.SCRAPE, GlowParticle.ScrapeProvider::new));
-            evt.registerSpriteSet(WAX.get(), (spites) -> new WrappedProvider(ParticleTypes.WAX_OFF, GlowParticle.WaxOffProvider::new));
-            evt.registerSpriteSet(TRIAL_SPAWNER.get(), (spites) -> new WrappedProvider(ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER, TrialSpawnerDetectionParticle.Provider::new));
-            evt.registerSpriteSet(OMINOUS_SPAWNING.get(), (spites) -> new WrappedProvider(ParticleTypes.OMINOUS_SPAWNING, FlyStraightTowardsParticle.OminousSpawnProvider::new));
-            evt.registerSpriteSet(RAID_OMEN.get(), (spites) -> new WrappedProvider(ParticleTypes.RAID_OMEN, SpellParticle.Provider::new));
-            evt.registerSpriteSet(EXPLOSION.get(), (spites) -> new WrappedProvider(ParticleTypes.EXPLOSION, HugeExplosionParticle.Provider::new));
+            evt.registerSpriteSet(LARGE_SMOKE.get(), (spites) -> new WrappedProvider(spites, LargeSmokeParticle.Provider::new));
+            evt.registerSpriteSet(LAVA.get(), (spites) -> new WrappedProvider(spites, LavaParticle.Provider::new));
+            evt.registerSpriteSet(MYCELIUM.get(), (spites) -> new WrappedProvider(spites, SuspendedTownParticle.Provider::new));
+            evt.registerSpriteSet(NOTE.get(), (spites) -> new WrappedProvider(spites, NoteParticle.Provider::new));
+            evt.registerSpriteSet(POOF.get(), (spites) -> new WrappedProvider(spites, ExplodeParticle.Provider::new));
+            evt.registerSpriteSet(SPLASH.get(), (spites) -> new WrappedProvider(spites, SplashParticle.Provider::new));
+            evt.registerSpriteSet(SMOKE.get(), (spites) -> new WrappedProvider(spites, SmokeParticle.Provider::new));
+            evt.registerSpriteSet(WHITE_SMOKE.get(), (spites) -> new WrappedProvider(spites, WhiteSmokeParticle.Provider::new));
+            evt.registerSpriteSet(SNEEZE.get(), (spites) -> new WrappedProvider(spites, PlayerCloudParticle.SneezeProvider::new));
+            evt.registerSpriteSet(SQUID_INK.get(), (spites) -> new WrappedProvider(spites, SquidInkParticle.Provider::new));
+            evt.registerSpriteSet(SWEEP_ATTACK.get(), (spites) -> new WrappedProvider(spites, AttackSweepParticle.Provider::new));
+            evt.registerSpriteSet(TOTEM_OF_UNDYING.get(), (spites) -> new WrappedProvider(spites, TotemParticle.Provider::new));
+            evt.registerSpriteSet(WITCH.get(), (spites) -> new WrappedProvider(spites, SpellParticle.WitchProvider::new));
+            evt.registerSpriteSet(BUBBLE_POP.get(), (spites) -> new WrappedProvider(spites, BubblePopParticle.Provider::new));
+            evt.registerSpriteSet(NAUTILUS.get(), (spites) -> new WrappedProvider(spites, FlyTowardsPositionParticle.NautilusProvider::new));
+            evt.registerSpriteSet(CAMPFIRE_COSY_SMOKE.get(), (spites) -> new WrappedProvider(spites, CampfireSmokeParticle.CosyProvider::new));
+            evt.registerSpriteSet(CAMPFIRE_SIGNAL_SMOKE.get(), (spites) -> new WrappedProvider(spites, CampfireSmokeParticle.SignalProvider::new));
+            evt.registerSpriteSet(ASH.get(), (spites) -> new WrappedProvider(spites, AshParticle.Provider::new));
+            evt.registerSpriteSet(CRIMSON_SPORE.get(), (spites) -> new WrappedProvider(spites, SuspendedParticle.CrimsonSporeProvider::new));
+            evt.registerSpriteSet(WARPED_SPORE.get(), (spites) -> new WrappedProvider(spites, SuspendedParticle.WarpedSporeProvider::new));
+            evt.registerSpriteSet(REVERSE_PORTAL.get(), (spites) -> new WrappedProvider(spites, ReversePortalParticle.Provider::new));
+            evt.registerSpriteSet(WHITE_ASH.get(), (spites) -> new WrappedProvider(spites, WhiteAshParticle.Provider::new));
+            evt.registerSpriteSet(SMALL_FLAME.get(), (spites) -> new WrappedProvider(spites, FlameParticle.SmallFlameProvider::new));
+            evt.registerSpriteSet(SNOWFLAKE.get(), (spites) -> new WrappedProvider(spites, SnowflakeParticle.Provider::new));
+            evt.registerSpriteSet(ELECTRIC_SPARK.get(), (spites) -> new WrappedProvider(spites, GlowParticle.ElectricSparkProvider::new));
+            evt.registerSpriteSet(SCRAPE.get(), (spites) -> new WrappedProvider(spites, GlowParticle.ScrapeProvider::new));
+            evt.registerSpriteSet(WAX.get(), (spites) -> new WrappedProvider(spites, GlowParticle.WaxOffProvider::new));
+            evt.registerSpriteSet(TRIAL_SPAWNER.get(), (spites) -> new WrappedProvider(spites, TrialSpawnerDetectionParticle.Provider::new));
+            evt.registerSpriteSet(OMINOUS_SPAWNING.get(), (spites) -> new WrappedProvider(spites, FlyStraightTowardsParticle.OminousSpawnProvider::new));
+            evt.registerSpriteSet(RAID_OMEN.get(), (spites) -> new WrappedProvider(spites, SpellParticle.Provider::new));
+            evt.registerSpriteSet(EXPLOSION.get(), (spites) -> new WrappedProvider(spites, HugeExplosionParticle.Provider::new));
             evt.registerSpriteSet(BREAKING_CIRCLE.get(), BreakingCircleParticle.Provider::new);
-            evt.registerSpriteSet(CLOUD.get(), (spites) -> new WrappedProvider(ParticleTypes.CLOUD, PlayerCloudParticle.Provider::new));
+            evt.registerSpriteSet(CLOUD.get(), (spites) -> new WrappedProvider(spites, PlayerCloudParticle.Provider::new));
             evt.registerSpriteSet(SCULK_CHARGE.get(), SculkChargeParticle.Provider::new);
         }
     }

@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "tag": "c:storage_blocks/quartz"
-  },
+  "input": "#c:storage_blocks/quartz",
   "output": [
     {
       "chance": 1.0,

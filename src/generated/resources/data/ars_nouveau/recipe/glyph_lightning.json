@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "minecraft:lightning_rod"
-    },
-    {
-      "item": "minecraft:lightning_rod"
-    },
-    {
-      "item": "minecraft:lightning_rod"
-    },
-    {
-      "item": "minecraft:heart_of_the_sea"
-    }
+    "ars_nouveau:air_essence",
+    "minecraft:lightning_rod",
+    "minecraft:lightning_rod",
+    "minecraft:lightning_rod",
+    "minecraft:heart_of_the_sea"
   ],
   "output": {
     "count": 1,

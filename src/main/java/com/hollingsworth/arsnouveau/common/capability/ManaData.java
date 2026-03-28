@@ -2,10 +2,12 @@ package com.hollingsworth.arsnouveau.common.capability;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
-public class ManaData implements INBTSerializable<CompoundTag> {
+public class ManaData implements ValueIOSerializable {
 
     private double mana;
 
@@ -59,6 +61,24 @@ public class ManaData implements INBTSerializable<CompoundTag> {
     }
 
     @Override
+    public void serialize(ValueOutput output) {
+        output.putDouble("current", getMana());
+        output.putInt("max", getMaxMana());
+        output.putInt("glyph", getGlyphBonus());
+        output.putInt("book_tier", getBookTier());
+        output.putFloat("reserved", getReservedMana());
+    }
+
+    @Override
+    public void deserialize(ValueInput input) {
+        setMaxMana(input.getIntOr("max", 0));
+        setMana(input.getDoubleOr("current", 0.0));
+        setBookTier(input.getIntOr("book_tier", 0));
+        setGlyphBonus(input.getIntOr("glyph", 0));
+        setReservedMana(input.getFloatOr("reserved", 0.0f));
+    }
+
+    // Legacy NBT helpers used by ManaData in other serialization contexts
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putDouble("current", getMana());
@@ -69,12 +89,11 @@ public class ManaData implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
-        setMaxMana(tag.getInt("max"));
-        setMana(tag.getDouble("current"));
-        setBookTier(tag.getInt("book_tier"));
-        setGlyphBonus(tag.getInt("glyph"));
-        setReservedMana(tag.getFloat("reserved"));
+        setMaxMana(tag.getIntOr("max", 0));
+        setMana(tag.getDoubleOr("current", 0.0));
+        setBookTier(tag.getIntOr("book_tier", 0));
+        setGlyphBonus(tag.getIntOr("glyph", 0));
+        setReservedMana(tag.getFloatOr("reserved", 0.0f));
     }
 }

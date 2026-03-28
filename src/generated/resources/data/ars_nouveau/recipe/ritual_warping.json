@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:purple_archwood_log"
-    },
-    {
-      "item": "ars_nouveau:warp_scroll"
-    }
+    "ars_nouveau:purple_archwood_log",
+    "ars_nouveau:warp_scroll"
   ],
   "result": {
     "count": 1,

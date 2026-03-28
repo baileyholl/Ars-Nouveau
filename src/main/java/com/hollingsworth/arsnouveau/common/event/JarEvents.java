@@ -42,7 +42,7 @@ public class JarEvents {
     @SubscribeEvent
     public static void onRide(EntityMountEvent mountEvent) {
         if (mountEvent.isDismounting()) return;
-        if (mountEvent.getLevel().isClientSide) return;
+        if (mountEvent.getLevel().isClientSide()) return;
         if (mountEvent.getEntityMounting() instanceof Player) {
             Entity beingMounted = mountEvent.getEntityBeingMounted();
             if (mountEvent.getLevel().isLoaded(beingMounted.getOnPos()) && mountEvent.getLevel().getBlockEntity(beingMounted.getOnPos()) instanceof MobJarTile) {

@@ -7,10 +7,11 @@ import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,18 +38,16 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
+    protected void loadAdditional(@NotNull ValueInput tag) {
+        super.loadAdditional(tag);
         this.sourceStorage = createDefaultStorage();
-        if (tag.contains(SOURCE_TAG)) {
-            this.sourceStorage.setSource(tag.getInt(SOURCE_TAG));
-        }
-        color = ParticleColor.fromInt(tag.getInt(COLOR_TAG));
+        this.sourceStorage.setSource(tag.getIntOr(SOURCE_TAG, 0));
+        color = ParticleColor.fromInt(tag.getIntOr(COLOR_TAG, 0));
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt(SOURCE_TAG, getSource());
         tag.putInt(COLOR_TAG, getColor().getColor());
     }
@@ -195,7 +194,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     }
 
     @Override
-    protected void applyImplicitComponents(@NotNull DataComponentInput pComponentInput) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
         var fill = pComponentInput.getOrDefault(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(0));
         this.getSourceStorage().setSource(fill.amount());

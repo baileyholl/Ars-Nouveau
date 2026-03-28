@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         this.propertyHolder = propertyHolder;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return ParticlePropertyRegistry.PARTICLE_PROPERTY_REGISTRY.getKey(getType());
     }
 

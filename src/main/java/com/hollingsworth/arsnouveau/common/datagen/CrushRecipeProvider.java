@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -27,12 +27,12 @@ public class CrushRecipeProvider extends SimpleDataProvider {
 
     @Override
     public void collectJsons(CachedOutput pOutput) {
-        recipes.add(new CrushWrapper("stone", Ingredient.of(Tags.Items.STONES))
+        recipes.add(new CrushWrapper("stone", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.STONES)))
                 .withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
-        recipes.add(new CrushWrapper("gravel", Ingredient.of(Tags.Items.GRAVELS))
+        recipes.add(new CrushWrapper("gravel", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.GRAVELS)))
                 .withItems(Items.SAND.getDefaultInstance(), 1.0f)
                 .withItems(Items.FLINT.getDefaultInstance(), 0.02f));
-        recipes.add(new CrushWrapper("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES)).withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
+        recipes.add(new CrushWrapper("cobblestone", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.COBBLESTONES))).withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
         recipes.add(new CrushWrapper("white_dye", Ingredient.of(Items.LILY_OF_THE_VALLEY)).withItems(new ItemStack(Items.WHITE_DYE, 2)));
         recipes.add(new CrushWrapper("orange_dye", Ingredient.of(Items.ORANGE_TULIP)).withItems(new ItemStack(Items.ORANGE_DYE, 2)));
         recipes.add(new CrushWrapper("magenta_dye", Ingredient.of(Items.ALLIUM)).withItems(new ItemStack(Items.MAGENTA_DYE, 2)));
@@ -54,7 +54,7 @@ public class CrushRecipeProvider extends SimpleDataProvider {
         recipes.add(new CrushWrapper("terracotta", Ingredient.of(Items.TERRACOTTA)).withItems(Items.RED_SAND.getDefaultInstance()));
         recipes.add(new CrushWrapper("sugar_cane", Ingredient.of(Items.SUGAR_CANE)).withItems(new ItemStack(Items.SUGAR, 2)));
         recipes.add(new CrushWrapper("sandstone_to_sand", Ingredient.of(Items.SANDSTONE)).withItems(Items.SAND.getDefaultInstance()));
-        recipes.add(new CrushWrapper("quartz_block_to_quartz", Ingredient.of(ItemTagProvider.STORAGE_BLOCKS_QUARTZ)).withItems((new ItemStack(Items.QUARTZ, 4))));
+        recipes.add(new CrushWrapper("quartz_block_to_quartz", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ItemTagProvider.STORAGE_BLOCKS_QUARTZ))).withItems((new ItemStack(Items.QUARTZ, 4))));
         recipes.add(new CrushWrapper("glowstone_block_to_dust", Ingredient.of(Blocks.GLOWSTONE)).withItems((new ItemStack(Items.GLOWSTONE_DUST, 4))));
 
 
@@ -65,7 +65,7 @@ public class CrushRecipeProvider extends SimpleDataProvider {
     }
 
     public static class CrushWrapper {
-        public ResourceLocation path;
+        public Identifier path;
         public Ingredient ing;
 
         public CrushWrapper(String string, Ingredient ingredient) {

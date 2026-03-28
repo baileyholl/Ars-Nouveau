@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +15,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import net.minecraft.world.item.component.TooltipDisplay;
+import java.util.function.Consumer;
+import net.minecraft.world.item.Item;
 
 public class RitualTablet extends ModItem {
     public AbstractRitual ritual;
@@ -22,7 +27,7 @@ public class RitualTablet extends ModItem {
     }
 
     public RitualTablet(AbstractRitual ritual) {
-        super(ItemsRegistry.defaultItemProperties());
+        super(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, ritual.getRegistryName())));
         this.ritual = ritual;
     }
 
@@ -31,7 +36,7 @@ public class RitualTablet extends ModItem {
 
         if (!context.getLevel().isClientSide() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof RitualBrazierTile tile) {
             if (!tile.canTakeAnotherRitual()) {
-                context.getPlayer().sendSystemMessage(Component.translatable("ars_nouveau.ritual.no_start"));
+                context.getPlayer().displayClientMessage(Component.translatable("ars_nouveau.ritual.no_start"), false);
                 return InteractionResult.PASS;
             }
 
@@ -43,14 +48,14 @@ public class RitualTablet extends ModItem {
         return InteractionResult.PASS;
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("tooltip.ars_nouveau.tablet"));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
+        tooltip2.accept(Component.translatable("tooltip.ars_nouveau.tablet"));
         if (flagIn.hasShiftDown()) {
-            tooltip2.add(Component.translatable(ritual.getDescriptionKey()));
+            tooltip2.accept(Component.translatable(ritual.getDescriptionKey()));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.accept(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
         }
     }
 

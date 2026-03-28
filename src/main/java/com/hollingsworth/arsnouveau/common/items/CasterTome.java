@@ -11,21 +11,25 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEquipment {
 
@@ -43,23 +47,23 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide) {
-            return InteractionResultHolder.pass(stack);
+        if (!worldIn.isClientSide()) {
+            return InteractionResult.PASS;
         }
 
         var caster = this.getSpellCaster(stack);
         if (caster == null) {
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
         caster.castOnServer(handIn, Component.empty());
 
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         AbstractCaster<?> caster = getSpellCaster(stack);
 
         if (caster != null) {
@@ -67,18 +71,18 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
             // If the caster is hidden, show the hidden recipe
 
             if (caster.isSpellHidden()) {
-                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
-            } else if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get()) {
+                tooltip2.accept(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(new net.minecraft.network.chat.FontDescription.Resource(Identifier.fromNamespaceAndPath("minecraft", "alt"))).withColor(ChatFormatting.GOLD)));
+            } else if (Minecraft.getInstance().hasShiftDown() || !Config.GLYPH_TOOLTIPS.get()) {
                 getInformation(stack, context, tooltip2, flagIn);
             }
 
-            if (!Screen.hasShiftDown() && !caster.getFlavorText().isEmpty())
-                tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
+            if (!Minecraft.getInstance().hasShiftDown() && !caster.getFlavorText().isEmpty())
+                tooltip2.accept(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
 
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
+            tooltip2.accept(Component.translatable("tooltip.ars_nouveau.caster_tome"));
 
         }
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 
     @Override
@@ -89,7 +93,7 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (caster != null && !Screen.hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && !Minecraft.getInstance().hasShiftDown() && Config.GLYPH_TOOLTIPS.get() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }

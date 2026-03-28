@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:iron_hoe"
-    }
+    "ars_nouveau:earth_essence",
+    "minecraft:iron_hoe"
   ],
   "output": {
     "count": 1,

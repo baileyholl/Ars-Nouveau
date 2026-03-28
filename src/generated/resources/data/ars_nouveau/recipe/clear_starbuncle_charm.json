@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:starbuncle_charm"
-    }
+    "ars_nouveau:starbuncle_charm"
   ],
   "result": {
     "count": 1,

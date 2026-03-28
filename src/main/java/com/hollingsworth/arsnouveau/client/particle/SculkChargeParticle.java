@@ -1,14 +1,11 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 
 public class SculkChargeParticle extends net.minecraft.client.particle.SculkChargeParticle {
 
@@ -29,9 +26,8 @@ public class SculkChargeParticle extends net.minecraft.client.particle.SculkChar
         private final SpriteSet sprite;
 
         public Provider(SpriteSet pSprites) {
-            ResourceLocation key = BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.SCULK_CHARGE);
-            SpriteSet spriteSet = Minecraft.getInstance().particleEngine.spriteSets.get(key);
-            this.sprite = spriteSet;
+            // 1.21.11: particleEngine.spriteSets is no longer public; use the passed SpriteSet directly
+            this.sprite = pSprites;
         }
 
         public Particle createParticle(
@@ -42,7 +38,8 @@ public class SculkChargeParticle extends net.minecraft.client.particle.SculkChar
                 double pZ,
                 double pXSpeed,
                 double pYSpeed,
-                double pZSpeed
+                double pZSpeed,
+                RandomSource random
         ) {
             SculkChargeParticle sculkchargeparticle = new SculkChargeParticle(
                     pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.sprite

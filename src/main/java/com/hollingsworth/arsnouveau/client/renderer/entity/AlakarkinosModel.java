@@ -2,35 +2,30 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Alakarkinos;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.animation.AnimationState;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
+// GeckoLib 5: getModelResource/getTextureResource now take GeoRenderState
+// setCustomAnimations removed; bone visibility (sea_bunny/hat) must be ported via captureDefaultRenderState
+// TODO: Port HAS_HAT bone visibility to captureDefaultRenderState
 public class AlakarkinosModel extends GeoModel<Alakarkinos> {
-    public static ResourceLocation MODEL = ArsNouveau.prefix("geo/alakarkinos.geo.json");
-    public static ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/alakarkinos.png");
-    public static ResourceLocation ANIMATION = ArsNouveau.prefix("animations/alakarkinos.animation.json");
-
-
-    @Override
-    public void setCustomAnimations(Alakarkinos animatable, long instanceId, AnimationState<Alakarkinos> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
-        this.getBone("sea_bunny").get().setHidden(animatable.getEntityData().get(Alakarkinos.HAS_HAT));
-        this.getBone("hat").get().setHidden(!animatable.getEntityData().get(Alakarkinos.HAS_HAT));
-    }
+    public static Identifier MODEL = ArsNouveau.prefix("alakarkinos");
+    public static Identifier TEXTURE = ArsNouveau.prefix("textures/entity/alakarkinos.png");
+    public static Identifier ANIMATION = ArsNouveau.prefix("alakarkinos");
 
     @Override
-    public ResourceLocation getModelResource(Alakarkinos animatable) {
+    public Identifier getModelResource(GeoRenderState renderState) {
         return MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureResource(Alakarkinos animatable) {
+    public Identifier getTextureResource(GeoRenderState renderState) {
         return TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationResource(Alakarkinos animatable) {
+    public Identifier getAnimationResource(Alakarkinos animatable) {
         return ANIMATION;
     }
 }

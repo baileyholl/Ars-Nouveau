@@ -23,13 +23,13 @@ public class FamiliarButton extends ANButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         RenderUtils.drawItemAsIcon(familiarHolder.getOutputItem(), graphics, x, y, 16, false);
     }
 
     @Override
     public void getTooltip(List<Component> tip) {
-        if (Screen.hasShiftDown()) {
+        if (Minecraft.getInstance().hasShiftDown()) {
             tip.add(familiarHolder.getLangDescription());
         } else {
             tip.add(familiarHolder.getLangName());

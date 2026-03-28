@@ -9,14 +9,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,9 +40,9 @@ public class AlterationTable extends TableBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof AlterationTile tile))
-            return ItemInteractionResult.SUCCESS;
+    protected InteractionResult useItemOn(ItemStack pStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (world.isClientSide() || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof AlterationTile tile))
+            return InteractionResult.SUCCESS;
         ItemStack stack = player.getMainHandItem();
         // Attempt to put armor and remove perks
         if (tile.isMasterTile()) {
@@ -47,31 +50,31 @@ public class AlterationTable extends TableBlock {
             if (holder instanceof StackPerkHolder) {
                 if (tile.armorStack.isEmpty()) {
                     tile.setArmorStack(stack, player);
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             } else if (stack.isEmpty() && !tile.armorStack.isEmpty()) {
                 tile.removeArmorStack(player);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         } else if (state.getValue(PART) == ThreePartBlock.OTHER) {
             this.useItemOn(pStack, world.getBlockState(pos.below()), world, pos.below(), player, handIn, hit);
         } else {
             tile = tile.getLogicTile();
             if (tile == null)
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             if (stack.isEmpty()) {
                 tile.removePerk(player);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             // Attempt to change perks
             if (!(stack.getItem() instanceof PerkItem)) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.perk.not_perk"));
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             tile.addPerkStack(stack, player);
         }
 
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Nullable
@@ -134,7 +137,7 @@ public class AlterationTable extends TableBlock {
     }
 
     // If the user breaks the other side of the table, this side needs to drop its item
-    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelReader world, BlockPos pos, BlockPos pos2) {
         if (!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof AlterationTile tile) {
@@ -146,7 +149,7 @@ public class AlterationTable extends TableBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @javax.annotation.Nullable LivingEntity entity, ItemStack stack) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return;
         }
         BlockPos blockpos = pos.relative(state.getValue(FACING));
@@ -157,13 +160,13 @@ public class AlterationTable extends TableBlock {
         world.setBlock(lecternPos, state.setValue(PART, ThreePartBlock.OTHER), 3);
 
 
-        world.blockUpdated(pos, Blocks.AIR);
+        world.updateNeighborsAt(pos, Blocks.AIR, null);
         state.updateNeighbourShapes(world, pos, 3);
     }
 
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess pScheduledTickAccess, BlockPos pos, Direction direction, BlockPos pos2, BlockState state2, RandomSource pRandom) {
         List<Direction> connectedDirs = getConnectedDirections(state);
         if (connectedDirs.contains(direction)) {
             for (Direction dir : connectedDirs) {

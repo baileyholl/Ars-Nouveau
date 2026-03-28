@@ -20,6 +20,11 @@ public record LiquidBlockVertexConsumer(VertexConsumer prior, PoseStack pose, Bl
     }
 
     @Override
+    public VertexConsumer setColor(int color) {
+        return prior.setColor(color);
+    }
+
+    @Override
     public VertexConsumer setUv(float u, float v) {
         return prior.setUv(u, v);
     }
@@ -42,6 +47,11 @@ public record LiquidBlockVertexConsumer(VertexConsumer prior, PoseStack pose, Bl
     @Override
     public VertexConsumer setNormal(float x, float y, float z) {
         return prior.setNormal(pose.last(), x, y, z);
+    }
+
+    @Override
+    public VertexConsumer setLineWidth(float width) {
+        return prior.setLineWidth(width);
     }
 
 }

@@ -13,19 +13,19 @@ import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RelationEntry extends SinglePageWidget {
-    public List<ResourceLocation> relatedEntries = new ArrayList<>();
+    public List<Identifier> relatedEntries = new ArrayList<>();
 
     public RelationEntry(BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
     }
 
-    public RelationEntry(List<ResourceLocation> relatedEntries, BaseDocScreen parent, int x, int y, int width, int height) {
+    public RelationEntry(List<Identifier> relatedEntries, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         this.relatedEntries = relatedEntries;
     }
@@ -34,7 +34,7 @@ public class RelationEntry extends SinglePageWidget {
         return (parent, x, y, width, height) -> new RelationEntry(parent, x, y, width, height);
     }
 
-    public static SinglePageCtor create(List<ResourceLocation> relatedEntries) {
+    public static SinglePageCtor create(List<Identifier> relatedEntries) {
         return (parent, x, y, width, height) -> new RelationEntry(relatedEntries, parent, x, y, width, height);
     }
 
@@ -48,7 +48,7 @@ public class RelationEntry extends SinglePageWidget {
     public List<AbstractWidget> getExtras() {
         List<AbstractWidget> entryButtons = super.getExtras();
         int i = 0;
-        for (ResourceLocation id : relatedEntries) {
+        for (Identifier id : relatedEntries) {
             DocEntry entry = DocumentationRegistry.getEntry(id);
             var button = new DocEntryButton(x, y + 16 + 16 * i, entry, (b) -> {
                 parent.transition(new PageHolderScreen(entry));
@@ -61,7 +61,7 @@ public class RelationEntry extends SinglePageWidget {
 
     public static class RelationBuilder implements SinglePageCtor {
 
-        public List<ResourceLocation> entries = new ArrayList<>();
+        public List<Identifier> entries = new ArrayList<>();
 
         public RelationBuilder withEntry(DocEntry entry) {
             entries.add(entry.id());
@@ -83,7 +83,7 @@ public class RelationEntry extends SinglePageWidget {
     public void addExportProperties(JsonObject object) {
         super.addExportProperties(object);
         JsonArray array = new JsonArray();
-        for (ResourceLocation id : relatedEntries) {
+        for (Identifier id : relatedEntries) {
             array.add(id.toString());
         }
         object.add(DocExporter.RELATED_PROPERTY, array);

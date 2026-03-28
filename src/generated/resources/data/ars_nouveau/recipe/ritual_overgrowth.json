@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:green_archwood_log"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    }
+    "ars_nouveau:green_archwood_log",
+    "ars_nouveau:magebloom",
+    "ars_nouveau:magebloom",
+    "ars_nouveau:magebloom",
+    "ars_nouveau:earth_essence",
+    "ars_nouveau:earth_essence"
   ],
   "result": {
     "count": 1,

@@ -7,27 +7,53 @@ import com.hollingsworth.arsnouveau.common.block.tile.TransientCustomContainer;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
 import com.hollingsworth.arsnouveau.common.util.VoxelShapeUtils;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.server.level.ServerLevel;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.network.chat.Component;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.Containers;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.InteractionResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.entity.player.Player;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.*;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.redstone.Orientation;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.StateDefinition;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.PushReaction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.BlockHitResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.Shapes;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.stream.Stream;
@@ -48,7 +74,7 @@ public class CraftingLecternBlock extends TickableModBlock {
     public static final VoxelShape SHAPE_WEST = VoxelShapeUtils.rotateHorizontal(SHAPE_NORTH, Direction.WEST);
 
     public CraftingLecternBlock() {
-        super(Properties.of().strength(3).noOcclusion().pushReaction(PushReaction.BLOCK).ignitedByLava().sound(SoundType.WOOD));
+        super(BlockRegistry.newBlockProperties().strength(3).noOcclusion().pushReaction(PushReaction.BLOCK).ignitedByLava().sound(SoundType.WOOD));
     }
 
     @Override
@@ -79,16 +105,16 @@ public class CraftingLecternBlock extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
                                            Player player, InteractionHand hand, BlockHitResult rtr) {
         ItemStack heldStack = player.getItemInHand(hand);
-        if (world.isClientSide) {
-            return ItemInteractionResult.SUCCESS;
+        if (world.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
         if (heldStack.getItem() instanceof DominionWand
                 || hand != InteractionHand.MAIN_HAND
                 || heldStack.getItem() instanceof BookwyrmCharm) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         BlockEntity blockEntity_1 = world.getBlockEntity(pos);
@@ -97,7 +123,7 @@ public class CraftingLecternBlock extends TickableModBlock {
                 player.displayClientMessage(Component.translatable("ars_nouveau.invalid_lectern"), true);
             }
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -106,7 +132,7 @@ public class CraftingLecternBlock extends TickableModBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, Orientation fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
             tile.powered = world.hasNeighborSignal(pos);
@@ -114,25 +140,20 @@ public class CraftingLecternBlock extends TickableModBlock {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState state2, boolean flag) {
-        if (!state.is(state2.getBlock())) {
-            BlockEntity blockentity = world.getBlockEntity(pos);
-            if (blockentity instanceof CraftingLecternTile te) {
-                for (TransientCustomContainer inv : te.craftingMatrices.values()) {
-                    Containers.dropContents(world, pos, inv);
-                }
-                world.updateNeighbourForOutputSignal(pos, this);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean movedByPiston) {
+        BlockEntity blockentity = world.getBlockEntity(pos);
+        if (blockentity instanceof CraftingLecternTile te) {
+            for (TransientCustomContainer inv : te.craftingMatrices.values()) {
+                Containers.dropContents(world, pos, inv);
             }
-
-            super.onRemove(state, world, pos, state2, flag);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
     }
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.MODEL;
     }
 
     @Override

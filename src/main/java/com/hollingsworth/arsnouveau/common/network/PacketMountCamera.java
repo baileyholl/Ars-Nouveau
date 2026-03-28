@@ -39,12 +39,12 @@ public class PacketMountCamera extends AbstractPacket {
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
-        Level level = player.level;
+        Level level = player.level();
 //        ChunkPos chunkPos = new ChunkPos(pos);
 //        int viewDistance = player.server.getPlayerList().getViewDistance();
 //        for (int x = chunkPos.x - viewDistance; x <= chunkPos.x + viewDistance; x++) {
 //            for (int z = chunkPos.z - viewDistance; z <= chunkPos.z + viewDistance; z++) {
-//                ArsNouveau.ticketController.forceChunk((ServerLevel) player.level, player, x, z, true, true);
+//                ArsNouveau.ticketController.forceChunk((ServerLevel) player.level(), player, x, z, true, true);
 //            }
 //        }
 

@@ -19,7 +19,7 @@ public class RunicChalk extends ModItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
-        if (world.isClientSide)
+        if (world.isClientSide())
             return super.useOn(context);
         BlockPos target = context.getClickedPos().relative(context.getClickedFace());
         if (world.getBlockState(target).canBeReplaced()) {

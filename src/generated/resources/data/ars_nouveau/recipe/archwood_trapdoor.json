@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "wooden_trapdoor",
   "key": {
-    "#": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "#": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "###",

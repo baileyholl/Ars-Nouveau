@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:sands"
-    },
-    "y": {
-      "item": "ars_nouveau:conjuration_essence"
-    }
+    "x": "#c:sands",
+    "y": "ars_nouveau:conjuration_essence"
   },
   "pattern": [
     "xxx",

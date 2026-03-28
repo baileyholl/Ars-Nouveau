@@ -7,11 +7,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CreativeSourceJar extends SourceJar {
 
@@ -26,7 +28,7 @@ public class CreativeSourceJar extends SourceJar {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", 100));
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("ars_nouveau.source_jar.fullness", 100));
     }
 }

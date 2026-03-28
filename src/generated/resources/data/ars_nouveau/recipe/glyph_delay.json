@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:repeater"
-    },
-    {
-      "item": "minecraft:clock"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:repeater",
+    "minecraft:clock"
   ],
   "output": {
     "count": 1,

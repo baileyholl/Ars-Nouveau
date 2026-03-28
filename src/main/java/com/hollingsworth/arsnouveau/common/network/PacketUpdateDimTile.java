@@ -29,7 +29,7 @@ public class PacketUpdateDimTile extends AbstractPacket {
     public PacketUpdateDimTile(RegistryFriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
         this.structureTemplate = new StructureTemplate();
-        this.structureTemplate.load(BuiltInRegistries.BLOCK.asLookup(), (CompoundTag) buf.readNbt(NbtAccounter.unlimitedHeap()));
+        this.structureTemplate.load(BuiltInRegistries.BLOCK, (CompoundTag) buf.readNbt(NbtAccounter.unlimitedHeap()));
     }
 
     @Override

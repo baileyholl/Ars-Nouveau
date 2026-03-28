@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -15,12 +16,12 @@ public class FallingParticle extends PropParticle {
     public Fluid type;
     public SoundEvent landingSound;
 
-    protected FallingParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z) {
-        super(options, level, x, y, z);
+    protected FallingParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
+        super(options, level, x, y, z, sprite);
     }
 
-    public FallingParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        super(options, level, x, y, z, xSpeed, ySpeed, zSpeed);
+    public FallingParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite sprite) {
+        super(options, level, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
         float scale = 0.5f;
         xd = xd * scale;
         yd = yd * scale;

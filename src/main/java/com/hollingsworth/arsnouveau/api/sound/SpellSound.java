@@ -7,7 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.Objects;
@@ -15,11 +15,11 @@ import java.util.Objects;
 public class SpellSound {
 
     public static MapCodec<SpellSound> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(SpellSound::getId)
+            Identifier.CODEC.fieldOf("id").forGetter(SpellSound::getId)
     ).apply(instance, SpellSoundRegistry::get));
 
     public static StreamCodec<RegistryFriendlyByteBuf, SpellSound> STREAM = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+            Identifier.STREAM_CODEC,
             SpellSound::getId,
             SpellSoundRegistry::get
     );
@@ -28,16 +28,16 @@ public class SpellSound {
     private Holder<SoundEvent> soundEvent;
 
     private Component soundName;
-    private ResourceLocation id;
+    private Identifier id;
     private int sortNum = 10;
 
-    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName, ResourceLocation id) {
+    public SpellSound(Holder<SoundEvent> soundEvent, Component soundName, Identifier id) {
         this.soundEvent = soundEvent;
         this.soundName = soundName;
         this.id = id;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 
@@ -50,8 +50,8 @@ public class SpellSound {
         return soundName;
     }
 
-    public ResourceLocation getTexturePath() {
-        return ResourceLocation.fromNamespaceAndPath(this.getId().getNamespace(), "textures/sounds/" + this.getId().getPath() + ".png");
+    public Identifier getTexturePath() {
+        return Identifier.fromNamespaceAndPath(this.getId().getNamespace(), "textures/sounds/" + this.getId().getPath() + ".png");
     }
 
     public SpellSound withSortNum(int num) {

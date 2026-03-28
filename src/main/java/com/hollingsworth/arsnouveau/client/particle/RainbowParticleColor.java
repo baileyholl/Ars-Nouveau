@@ -4,13 +4,13 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.Color;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
 public class RainbowParticleColor extends ParticleColor {
 
-    public static final ResourceLocation ID = ArsNouveau.prefix("rainbow");
+    public static final Identifier ID = ArsNouveau.prefix("rainbow");
 
     public int tickOffset;
 
@@ -21,7 +21,8 @@ public class RainbowParticleColor extends ParticleColor {
 
     public RainbowParticleColor(CompoundTag compoundTag) {
         super(compoundTag);
-        tickOffset = compoundTag.getInt("tickOffset");
+        // 1.21.11: CompoundTag.getInt() returns Optional<Integer>; use getIntOr
+        tickOffset = compoundTag.getIntOr("tickOffset", 0);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class RainbowParticleColor extends ParticleColor {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ID;
     }
 

@@ -16,7 +16,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,7 +24,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -82,11 +82,12 @@ public class EffectWololo extends AbstractEffect {
             if (living instanceof Sheep sheep)
                 sheep.setColor(dye.getDyeColor());
             else if (spellStats.isSensitive() || living instanceof ArmorStand) {
-                for (ItemStack armorStack : living.getArmorSlots()) {
+                for (net.minecraft.world.entity.EquipmentSlot _slot : new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET}) {
+                ItemStack armorStack = living.getItemBySlot(_slot);
                     if (!armorStack.isEmpty()) {
                         var dyeComponent = armorStack.get(DataComponents.DYED_COLOR);
                         if (dyeComponent != null) {
-                            armorStack.set(DataComponents.DYED_COLOR, new DyedItemColor(dye.getDyeColor().getTextureDiffuseColor(), false));
+                            armorStack.set(DataComponents.DYED_COLOR, new DyedItemColor(dye.getDyeColor().getTextureDiffuseColor()));
                         } else if (armorStack.getItem() instanceof IDyeable iDyeable) {
                             iDyeable.onDye(armorStack, dye.getDyeColor());
                         }
@@ -167,7 +168,7 @@ public class EffectWololo extends AbstractEffect {
             recipeCache.add(recipe.get());
             return recipe.get().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
         }
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map(craftingRecipe -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
+        return ((net.minecraft.world.item.crafting.RecipeManager)world.recipeAccess()).getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map(craftingRecipe -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
     }
 
     private static CraftingContainer makeContainer(DyeItem targetColor, ItemLike blockToDye) {
@@ -237,7 +238,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

@@ -2,30 +2,14 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:conjuration_essence"
-    },
-    {
-      "item": "minecraft:bone"
-    },
-    {
-      "item": "minecraft:bone"
-    },
-    {
-      "item": "minecraft:bone"
-    },
-    {
-      "item": "ars_nouveau:wilden_wing"
-    },
-    {
-      "item": "ars_nouveau:wilden_wing"
-    },
-    {
-      "item": "ars_nouveau:wilden_wing"
-    },
-    {
-      "item": "ars_nouveau:wilden_wing"
-    }
+    "ars_nouveau:conjuration_essence",
+    "minecraft:bone",
+    "minecraft:bone",
+    "minecraft:bone",
+    "ars_nouveau:wilden_wing",
+    "ars_nouveau:wilden_wing",
+    "ars_nouveau:wilden_wing",
+    "ars_nouveau:wilden_wing"
   ],
   "output": {
     "count": 1,

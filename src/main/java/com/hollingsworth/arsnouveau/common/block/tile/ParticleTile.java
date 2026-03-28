@@ -3,14 +3,13 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.timelines.PrestidigitationTimeline;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,14 +29,14 @@ public class ParticleTile extends ModdedTile implements ITickable {
 
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
-        if (!level.isClientSide && isTemporary) {
+        if (!level.isClientSide() && isTemporary) {
             if (ticksRemaining <= 0) {
                 level.removeBlock(pos, false);
                 return;
             }
             ticksRemaining--;
         }
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (particleEmitter != null) {
                 particleEmitter.tick(level);
             }
@@ -51,18 +50,18 @@ public class ParticleTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.timeline = ANCodecs.decode(PrestidigitationTimeline.CODEC.codec(), compound.getCompound("timeline"));
+    protected void loadAdditional(@NotNull ValueInput compound) {
+        super.loadAdditional(compound);
+        this.timeline = compound.read("timeline", PrestidigitationTimeline.CODEC.codec()).orElseGet(PrestidigitationTimeline::new);
         particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
-        this.isTemporary = compound.getBoolean("isTemporary");
-        this.ticksRemaining = compound.getInt("ticksRemaining");
+        this.isTemporary = compound.getBooleanOr("isTemporary", false);
+        this.ticksRemaining = compound.getIntOr("ticksRemaining", 0);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
-        tag.put("timeline", ANCodecs.encode(PrestidigitationTimeline.CODEC.codec(), timeline));
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
+        tag.store("timeline", PrestidigitationTimeline.CODEC.codec(), timeline);
         tag.putBoolean("isTemporary", isTemporary);
         tag.putInt("ticksRemaining", ticksRemaining);
     }

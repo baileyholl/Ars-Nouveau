@@ -19,11 +19,14 @@ import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
@@ -44,7 +47,7 @@ public class SpellWriteEntry extends PedestalRecipeEntry {
                 if (ingredient.test(new ItemStack(ItemsRegistry.SPELL_PARCHMENT))) {
                     ItemStack replacementParchment = new ItemStack(ItemsRegistry.SPELL_PARCHMENT);
                     replacementParchment.set(DataComponentRegistry.SPELL_CASTER, new SpellCaster(0, "", false, "", 1).setSpell(new Spell().add(MethodTouch.INSTANCE).add(EffectLight.INSTANCE)));
-                    ingredients1.add(Ingredient.of(replacementParchment));
+                    ingredients1.add(DataComponentIngredient.of(false, replacementParchment));
                 } else {
                     ingredients1.add(ingredient);
                 }
@@ -59,7 +62,7 @@ public class SpellWriteEntry extends PedestalRecipeEntry {
         enchantments.set(enchantment, 1);
         inputStick.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
         inputStick.set(DataComponentRegistry.REACTIVE_CASTER, new ReactiveCasterData(0, "", false, "", 1).setSpell(new Spell().add(MethodProjectile.INSTANCE).add(EffectBreak.INSTANCE)));
-        this.reagentStack = Ingredient.of(inputStick);
+        this.reagentStack = DataComponentIngredient.of(false, inputStick);
 
         ItemStack outputStick = new ItemStack(Items.STICK);
         outputStick.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
@@ -67,9 +70,10 @@ public class SpellWriteEntry extends PedestalRecipeEntry {
         this.outputStack = outputStick;
     }
 
-    public static SinglePageCtor create(ResourceLocation id) {
+    public static SinglePageCtor create(Identifier id) {
         return (parent, x, y, width, height) -> {
-            RecipeHolder<SpellWriteRecipe> recipe = parent.recipeManager().byKeyTyped(RecipeRegistry.SPELL_WRITE_TYPE.get(), id);
+            RecipeHolder<SpellWriteRecipe> recipe = (RecipeHolder<SpellWriteRecipe>) parent.recipeManager()
+                    .byKey(ResourceKey.create(Registries.RECIPE, id)).orElse(null);
             return new SpellWriteEntry(recipe, parent, x, y, width, height);
         };
     }

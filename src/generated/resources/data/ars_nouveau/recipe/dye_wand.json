@@ -2,12 +2,8 @@
   "type": "ars_nouveau:dye",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dyes"
-    },
-    {
-      "item": "ars_nouveau:wand"
-    }
+    "#c:dyes",
+    "ars_nouveau:wand"
   ],
   "result": {
     "count": 1,

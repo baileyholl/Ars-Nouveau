@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:amethyst_golem_charm"
-    }
+    "ars_nouveau:amethyst_golem_charm"
   ],
   "result": {
     "count": 1,

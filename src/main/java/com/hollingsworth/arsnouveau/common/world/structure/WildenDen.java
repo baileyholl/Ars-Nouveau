@@ -6,7 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.NoiseColumn;
@@ -37,7 +37,7 @@ public class WildenDen extends Structure {
     public static final MapCodec<WildenDen> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(WildenDen.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-                    ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+                    Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(0, 30).fieldOf("size").forGetter(structure -> structure.size),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
@@ -45,7 +45,7 @@ public class WildenDen extends Structure {
             ).apply(instance, WildenDen::new));
 
     public final Holder<StructureTemplatePool> startPool;
-    public final Optional<ResourceLocation> startJigsawName;
+    public final Optional<Identifier> startJigsawName;
     public final int size;
     public final HeightProvider startHeight;
     public final Optional<Heightmap.Types> projectStartToHeightmap;
@@ -58,7 +58,7 @@ public class WildenDen extends Structure {
 
     public WildenDen(Structure.StructureSettings config,
                      Holder<StructureTemplatePool> startPool,
-                     Optional<ResourceLocation> startJigsawName,
+                     Optional<Identifier> startJigsawName,
                      int size,
                      HeightProvider startHeight,
                      Optional<Heightmap.Types> projectStartToHeightmap,
@@ -138,7 +138,7 @@ public class WildenDen extends Structure {
                         // Here, blockpos's y value is 60 which means the structure spawn 60 blocks above terrain height.
                         // Set this to false for structure to be place only at the passed in blockpos's Y value instead.
                         // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-                        this.maxDistanceFromCenter, PoolAliasLookup.EMPTY, DimensionPadding.ZERO, LiquidSettings.APPLY_WATERLOGGING); // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
+                        new net.minecraft.world.level.levelgen.structure.structures.JigsawStructure.MaxDistance(this.maxDistanceFromCenter), PoolAliasLookup.EMPTY, DimensionPadding.ZERO, LiquidSettings.APPLY_WATERLOGGING); // Maximum limit for how far pieces can spawn from center. You cannot set this bigger than 128 or else pieces gets cutoff.
 
         return structurePiecesGenerator;
     }

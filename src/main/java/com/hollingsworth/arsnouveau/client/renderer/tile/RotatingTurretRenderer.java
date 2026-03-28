@@ -1,49 +1,20 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.Direction;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
-@SuppressWarnings("rawtypes")
+// GeckoLib 5 migration: actuallyRender and rotateBlock removed.
+// TODO: Move rotation interpolation to a tick event or store it in render state via captureDefaultRenderState.
 public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTile> {
 
     public RotatingTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, BasicTurretRenderer.model);
     }
 
+    // GeckoLib 5: tryRotateByBlockstate is called internally. Override adjustRenderPose to disable auto-rotation.
     @Override
-    public void actuallyRender(PoseStack poseStack, RotatingTurretTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        super.actuallyRender(poseStack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        float rotationX = tile.rotationX;
-        float neededRotationX = tile.clientNeededX;
-        float rotationY = tile.rotationY;
-        float neededRotationY = tile.clientNeededY;
-        float step = (0.1f + partialTick);
-        if (rotationX != neededRotationX) {
-            float diff = neededRotationX - rotationX;
-            if (Math.abs(diff) < step) {
-                tile.setRotationX(neededRotationX);
-            } else {
-                tile.setRotationX(rotationX + diff * step);
-            }
-        }
-        if (rotationY != neededRotationY) {
-            float diff = neededRotationY - rotationY;
-            if (Math.abs(diff) < step) {
-                tile.setRotationY(neededRotationY);
-            } else {
-                tile.setRotationY(rotationY + diff * step);
-            }
-        }
-    }
-
-    //Disable geckolib automatic rotation based on blockstate
-    @Override
-    protected void rotateBlock(Direction facing, PoseStack poseStack) {
+    public void adjustRenderPose(RenderPassInfo<ArsBlockEntityRenderState> renderPassInfo) {
+        // Intentionally skip super to disable automatic blockstate-based rotation from GeoBlockRenderer
     }
 }

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -15,7 +16,8 @@ public abstract class AbstractFlyingCreature extends PathfinderMob {
         super(type, worldIn);
     }
 
-    public boolean causeFallDamage(float distance, float damageMultiplier) {
+    @Override
+    public boolean causeFallDamage(double distance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
@@ -23,7 +25,7 @@ public abstract class AbstractFlyingCreature extends PathfinderMob {
     }
 
     public void travel(Vec3 pTravelVector) {
-        if (this.isControlledByLocalInstance()) {
+        if (this.isLocalInstanceAuthoritative()) {
             if (this.isInWater()) {
                 this.moveRelative(0.02F, pTravelVector);
                 this.move(MoverType.SELF, this.getDeltaMovement());

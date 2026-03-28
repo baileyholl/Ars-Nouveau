@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:glass_blocks"
-    },
-    "y": {
-      "item": "ars_nouveau:archwood_slab"
-    }
+    "x": "#c:glass_blocks",
+    "y": "ars_nouveau:archwood_slab"
   },
   "pattern": [
     "yyy",

@@ -24,7 +24,7 @@ public class CompostablesProvider extends DataMapProvider {
     }
 
     @Override
-    protected void gather() {
+    protected void gather(net.minecraft.core.HolderLookup.Provider provider) {
         builder(NeoForgeDataMaps.COMPOSTABLES)
                 .add(BlockRegistry.BLAZING_SAPLING.getResourceLocation(), new Compostable(0.3f), false)
                 .add(BlockRegistry.CASCADING_SAPLING.getResourceLocation(), new Compostable(0.3f), false)

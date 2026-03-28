@@ -3,11 +3,11 @@ package com.hollingsworth.arsnouveau.common.datagen.advancement;
 import com.google.common.collect.Maps;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.advancements.*;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.extensions.IAdvancementBuilderExtension;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  */
 public class ANAdvancementBuilder implements IAdvancementBuilderExtension {
     @Nullable
-    private ResourceLocation parentId;
+    private Identifier parentId;
     @Nullable
     private AdvancementHolder parent;
     @Nullable
@@ -35,7 +35,7 @@ public class ANAdvancementBuilder implements IAdvancementBuilderExtension {
     private String modid;
     private String fileKey;
 
-    private ANAdvancementBuilder(@Nullable ResourceLocation pParentId, @Nullable DisplayInfo pDisplay, AdvancementRewards pRewards, Map<String, Criterion<?>> pCriteria, AdvancementRequirements pRequirements) {
+    private ANAdvancementBuilder(@Nullable Identifier pParentId, @Nullable DisplayInfo pDisplay, AdvancementRewards pRewards, Map<String, Criterion<?>> pCriteria, AdvancementRequirements pRequirements) {
         this.parentId = pParentId;
         this.display = pDisplay;
         this.rewards = pRewards;
@@ -57,17 +57,17 @@ public class ANAdvancementBuilder implements IAdvancementBuilderExtension {
         return this.parent(parent.id());
     }
 
-    public ANAdvancementBuilder parent(ResourceLocation pParentId) {
+    public ANAdvancementBuilder parent(Identifier pParentId) {
         this.parentId = pParentId;
         return this;
     }
 
-    public ANAdvancementBuilder display(ItemStack pStack, Component pTitle, Component pDescription, @Nullable ResourceLocation pBackground, AdvancementType pFrame, boolean pShowToast, boolean pAnnounceToChat, boolean pHidden) {
-        return this.display(new DisplayInfo(pStack, pTitle, pDescription, Optional.ofNullable(pBackground), pFrame, pShowToast, pAnnounceToChat, pHidden));
+    public ANAdvancementBuilder display(ItemStack pStack, Component pTitle, Component pDescription, @Nullable Identifier pBackground, AdvancementType pFrame, boolean pShowToast, boolean pAnnounceToChat, boolean pHidden) {
+        return this.display(new DisplayInfo(pStack, pTitle, pDescription, Optional.ofNullable(pBackground).map(net.minecraft.core.ClientAsset.ResourceTexture::new), pFrame, pShowToast, pAnnounceToChat, pHidden));
     }
 
-    public ANAdvancementBuilder display(ItemLike pItem, Component pTitle, Component pDescription, @Nullable ResourceLocation pBackground, AdvancementType pFrame, boolean pShowToast, boolean pAnnounceToChat, boolean pHidden) {
-        return this.display(new DisplayInfo(new ItemStack(pItem.asItem()), pTitle, pDescription, Optional.ofNullable(pBackground), pFrame, pShowToast, pAnnounceToChat, pHidden));
+    public ANAdvancementBuilder display(ItemLike pItem, Component pTitle, Component pDescription, @Nullable Identifier pBackground, AdvancementType pFrame, boolean pShowToast, boolean pAnnounceToChat, boolean pHidden) {
+        return this.display(new DisplayInfo(new ItemStack(pItem.asItem()), pTitle, pDescription, Optional.ofNullable(pBackground).map(net.minecraft.core.ClientAsset.ResourceTexture::new), pFrame, pShowToast, pAnnounceToChat, pHidden));
     }
 
     public ANAdvancementBuilder display(DisplayInfo pDisplay) {
@@ -149,7 +149,7 @@ public class ANAdvancementBuilder implements IAdvancementBuilderExtension {
         return new Advancement(Optional.ofNullable(this.parentId), Optional.ofNullable(this.display), this.rewards, this.criteria, this.requirements, false);
     }
 
-    public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer, ResourceLocation pId) {
+    public AdvancementHolder save(Consumer<AdvancementHolder> pConsumer, Identifier pId) {
         var adv = this.build();
         AdvancementHolder advancement = new AdvancementHolder(pId, adv);
         pConsumer.accept(advancement);

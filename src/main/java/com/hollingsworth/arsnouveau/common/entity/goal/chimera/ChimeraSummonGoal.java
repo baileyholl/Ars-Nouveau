@@ -57,7 +57,7 @@ public class ChimeraSummonGoal extends Goal {
             ChimeraSummonEvent summonEvent = new ChimeraSummonEvent(40 + mob.getPhase() * 20, mob.getPhase(), mob.level, mob.blockPosition(), this.mob.getId());
             EventQueue.getServerInstance().addEvent(summonEvent);
             Networking.sendToNearbyClient(mob.level, mob, new PacketTimedEvent(summonEvent));
-            mob.level.playSound(null, mob.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.2f);
+            mob.level.playSound(null, mob.blockPosition(), SoundEvents.WOLF_SHAKE, SoundSource.HOSTILE, 1.0f, 0.2f);
         }
         timeSummoning++;
         if (timeSummoning >= 80) {

@@ -16,14 +16,15 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ClipBlockStateContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -130,7 +131,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
 
     @Override
     public void tick() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         if (outputDuration > 0) {
@@ -151,23 +152,23 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt("outputDuration", outputDuration);
         tag.putInt("outputStrength", outputStrength);
         tag.putBoolean("isOnResolve", isOnResolve);
         if (!this.parchment.isEmpty()) {
-            tag.put("parchment", parchment.save(pRegistries));
+            tag.store("parchment", ItemStack.OPTIONAL_CODEC, parchment);
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        this.outputDuration = pTag.getInt("outputDuration");
-        this.outputStrength = pTag.getInt("outputStrength");
-        this.isOnResolve = pTag.getBoolean("isOnResolve");
-        this.parchment = ItemStack.parseOptional(pRegistries, pTag.getCompound("parchment"));
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
+        this.outputDuration = pTag.getIntOr("outputDuration", 0);
+        this.outputStrength = pTag.getIntOr("outputStrength", 0);
+        this.isOnResolve = pTag.getBooleanOr("isOnResolve", false);
+        this.parchment = pTag.read("parchment", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -178,7 +179,8 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
             tooltip.add(Component.translatable("ars_nouveau.sensor.on_cast"));
         }
         if (!this.parchment.isEmpty() && parchment.getItem() instanceof SpellParchment spellParchment) {
-            spellParchment.getInformation(parchment, Item.TooltipContext.of(level), tooltip, TooltipFlag.Default.NORMAL);
+            // appendHoverText signature changed in 1.21.11: now requires TooltipDisplay; use DEFAULT for plain display
+            spellParchment.appendHoverText(parchment, Item.TooltipContext.of(level), TooltipDisplay.DEFAULT, tooltip::add, TooltipFlag.Default.NORMAL);
         }
     }
 }

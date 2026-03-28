@@ -3,13 +3,14 @@ package com.hollingsworth.arsnouveau.client.particle;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.util.RandomSource;
 
-public class SnowParticle extends TextureSheetParticle {
+public class SnowParticle extends SingleQuadParticle {
     private float rotSpeed;
     private final float spinAcceleration;
 
     protected SnowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
-        super(level, x, y, z);
+        super(level, x, y, z, spriteSet.first());
         this.setSprite(spriteSet.get(this.random.nextInt(12), 12));
         this.rotSpeed = (float) Math.toRadians(this.random.nextBoolean() ? -30.0 : 30.0);
         this.spinAcceleration = (float) Math.toRadians(this.random.nextBoolean() ? -5.0 : 5.0);
@@ -32,8 +33,8 @@ public class SnowParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     @Override
@@ -83,13 +84,12 @@ public class SnowParticle extends TextureSheetParticle {
                 double pZ,
                 double pXSpeed,
                 double pYSpeed,
-                double pZSpeed
+                double pZSpeed,
+                RandomSource random
         ) {
-            SnowParticle snowParticle = new SnowParticle(
+            return new SnowParticle(
                     pLevel, pX, pY, pZ, sprite
             );
-            snowParticle.pickSprite(this.sprite);
-            return snowParticle;
         }
     }
 }

@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:gunpowders"
-    },
-    {
-      "tag": "c:gunpowders"
-    },
-    {
-      "tag": "c:gunpowders"
-    },
-    {
-      "tag": "c:gunpowders"
-    }
+    "#c:ingots/gold",
+    "#c:ingots/gold",
+    "#c:rods/blaze",
+    "#c:rods/blaze",
+    "#c:gunpowders",
+    "#c:gunpowders",
+    "#c:gunpowders",
+    "#c:gunpowders"
   ],
-  "reagent": {
-    "item": "minecraft:dispenser"
-  },
+  "reagent": "minecraft:dispenser",
   "result": {
     "count": 1,
     "id": "ars_nouveau:splash_flask_cannon"

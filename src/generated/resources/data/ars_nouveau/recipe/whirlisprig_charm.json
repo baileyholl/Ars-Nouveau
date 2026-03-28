@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "item": "ars_nouveau:magebloom_crop"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "item": "minecraft:oak_sapling"
-    },
-    {
-      "item": "minecraft:spruce_sapling"
-    },
-    {
-      "item": "minecraft:birch_sapling"
-    },
-    {
-      "tag": "c:seeds/wheat"
-    }
+    "#c:gems/source",
+    "ars_nouveau:magebloom_crop",
+    "ars_nouveau:magebloom",
+    "#c:gems/diamond",
+    "minecraft:oak_sapling",
+    "minecraft:spruce_sapling",
+    "minecraft:birch_sapling",
+    "#c:seeds/wheat"
   ],
-  "reagent": {
-    "item": "ars_nouveau:whirlisprig_shards"
-  },
+  "reagent": "ars_nouveau:whirlisprig_shards",
   "result": {
     "count": 1,
     "id": "ars_nouveau:whirlisprig_charm"

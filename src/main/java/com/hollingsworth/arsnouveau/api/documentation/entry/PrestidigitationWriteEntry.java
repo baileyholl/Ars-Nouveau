@@ -14,11 +14,14 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,23 +39,24 @@ public class PrestidigitationWriteEntry extends PedestalRecipeEntry {
                 if (ingredient.test(new ItemStack(ItemsRegistry.SPELL_PARCHMENT))) {
                     ItemStack replacementParchment = new ItemStack(ItemsRegistry.SPELL_PARCHMENT);
                     replacementParchment.set(DataComponentRegistry.SPELL_CASTER, new SpellCaster(0, "", false, "", 1).setSpell(new Spell().add(EffectPrestidigitation.INSTANCE)));
-                    ingredients1.add(Ingredient.of(replacementParchment));
+                    ingredients1.add(DataComponentIngredient.of(false, replacementParchment));
                 } else {
                     ingredients1.add(ingredient);
                 }
             }
             this.ingredients = ingredients1;
         }
-        this.reagentStack = Ingredient.of(new ItemStack(Items.STICK));
+        this.reagentStack = DataComponentIngredient.of(false, new ItemStack(Items.STICK));
 
         ItemStack outputStick = new ItemStack(Items.STICK);
         outputStick.set(DataComponentRegistry.PRESTIDIGITATION, new PrestidigitationData(new PrestidigitationTimeline()));
         this.outputStack = outputStick;
     }
 
-    public static SinglePageCtor create(ResourceLocation id) {
+    public static SinglePageCtor create(Identifier id) {
         return (parent, x, y, width, height) -> {
-            RecipeHolder<PrestidigitationRecipe> recipe = parent.recipeManager().byKeyTyped(RecipeRegistry.PRESTIDIGITATION_TYPE.get(), id);
+            RecipeHolder<PrestidigitationRecipe> recipe = (RecipeHolder<PrestidigitationRecipe>) parent.recipeManager()
+                    .byKey(ResourceKey.create(Registries.RECIPE, id)).orElse(null);
             return new PrestidigitationWriteEntry(recipe, parent, x, y, width, height);
         };
     }

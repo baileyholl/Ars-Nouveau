@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "minecraft:soul_sand"
-    },
-    {
-      "item": "minecraft:cobweb"
-    },
-    {
-      "item": "minecraft:clock"
-    }
+    "minecraft:soul_sand",
+    "minecraft:cobweb",
+    "minecraft:clock"
   ],
   "output": {
     "count": 1,

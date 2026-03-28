@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "ars_nouveau:smooth_sourcestone"
-    },
-    "g": {
-      "item": "minecraft:iron_bars"
-    }
+    "M": "ars_nouveau:smooth_sourcestone",
+    "g": "minecraft:iron_bars"
   },
   "pattern": [
     " g ",

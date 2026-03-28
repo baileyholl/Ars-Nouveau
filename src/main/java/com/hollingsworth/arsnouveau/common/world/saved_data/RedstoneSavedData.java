@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
@@ -24,15 +25,22 @@ public class RedstoneSavedData extends SavedData {
 
     }
 
-    public static SavedData.Factory<RedstoneSavedData> factory() {
-        return new SavedData.Factory<>(RedstoneSavedData::new, RedstoneSavedData::load, null);
-    }
+    // SavedDataType replaces SavedData.Factory in 1.21.11
+    public static final SavedDataType<RedstoneSavedData> TYPE = new SavedDataType<>(
+            "an_redstone_signals",
+            level -> new RedstoneSavedData(),
+            level -> net.minecraft.nbt.CompoundTag.CODEC.xmap(
+                    tag -> RedstoneSavedData.load(tag, level.registryAccess()),
+                    data -> data.save(new net.minecraft.nbt.CompoundTag(), level.registryAccess())
+            )
+    );
 
     public static RedstoneSavedData load(CompoundTag tag, HolderLookup.Provider p_323806_) {
         RedstoneSavedData data = new RedstoneSavedData();
-        ListTag signalList = tag.getList("SignalList", 10);
+        // 1.21.11: getList returns Optional; use getListOrEmpty. getCompound returns Optional.
+        ListTag signalList = tag.getListOrEmpty("SignalList");
         for (int i = 0; i < signalList.size(); i++) {
-            var signal = new Entry(signalList.getCompound(i));
+            var signal = new Entry(signalList.getCompoundOrEmpty(i));
             data.SIGNAL_MAP.put(signal.pos, signal);
         }
         return data;
@@ -59,7 +67,7 @@ public class RedstoneSavedData extends SavedData {
         return true;
     }
 
-    @Override
+    // save() is no longer an override of SavedData in 1.21.11; called by the Codec in SavedDataType
     public CompoundTag save(CompoundTag pCompoundTag, HolderLookup.Provider pRegistries) {
         ListTag signalList = new ListTag();
         for (var signal : SIGNAL_MAP.values()) {
@@ -71,7 +79,7 @@ public class RedstoneSavedData extends SavedData {
 
     public static RedstoneSavedData from(ServerLevel level) {
         return level.getDataStorage()
-                .computeIfAbsent(factory(), "an_redstone_signals");
+                .computeIfAbsent(TYPE);
     }
 
     public static class Entry {
@@ -86,7 +94,8 @@ public class RedstoneSavedData extends SavedData {
         }
 
         public Entry(CompoundTag tag) {
-            this(new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z")), tag.getInt("power"), tag.getInt("ticks"));
+            // 1.21.11: getInt returns Optional; use getIntOr
+            this(new BlockPos(tag.getIntOr("x", 0), tag.getIntOr("y", 0), tag.getIntOr("z", 0)), tag.getIntOr("power", 0), tag.getIntOr("ticks", 0));
         }
 
         public CompoundTag save(CompoundTag tag) {
@@ -102,7 +111,7 @@ public class RedstoneSavedData extends SavedData {
     @SubscribeEvent
     public static void serverTick(LevelTickEvent.Post e) {
 
-        if (e.getLevel().isClientSide)
+        if (e.getLevel().isClientSide())
             return;
 
         RedstoneSavedData data = RedstoneSavedData.from((ServerLevel) e.getLevel());

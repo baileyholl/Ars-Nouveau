@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -73,7 +73,7 @@ public class SpellSchool {
         this.spellParts = spellParts;
     }
 
-    public ResourceLocation getTexturePath() {
-        return ResourceLocation.fromNamespaceAndPath("ars_nouveau", "textures/gui/schools/" + getId() + "_tooltip.png");
+    public Identifier getTexturePath() {
+        return Identifier.fromNamespaceAndPath("ars_nouveau", "textures/gui/schools/" + getId() + "_tooltip.png");
     }
 }

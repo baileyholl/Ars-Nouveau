@@ -2,11 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 public class TempLightTile extends LightTile {
@@ -19,23 +18,23 @@ public class TempLightTile extends LightTile {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(nbt, pRegistries);
-        this.age = nbt.getInt("age");
-        this.lengthModifier = nbt.getDouble("modifier");
+    public void loadAdditional(@NotNull ValueInput nbt) {
+        super.loadAdditional(nbt);
+        this.age = nbt.getIntOr("age", 0);
+        this.lengthModifier = nbt.getDoubleOr("modifier", 0.0);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putDouble("modifier", lengthModifier);
-        tag.put("age", IntTag.valueOf(age));
+        tag.putInt("age", age);
     }
 
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
         super.tick(level, state, pos);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             age++;
             //15 seconds
             if (age > (20 * 15 + 20 * 5 * lengthModifier)) {

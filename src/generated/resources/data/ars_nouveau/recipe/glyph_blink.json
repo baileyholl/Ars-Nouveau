@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "tag": "c:ender_pearls"
-    }
+    "ars_nouveau:manipulation_essence",
+    "#c:ender_pearls",
+    "#c:ender_pearls",
+    "#c:ender_pearls",
+    "#c:ender_pearls"
   ],
   "output": {
     "count": 1,

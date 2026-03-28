@@ -8,7 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTable,
+public record DispelEntityRecipe(EntityType<?> entity, Identifier lootTable,
                                  LootItemCondition[] conditions) implements SpecialSingleInputRecipe {
 
     public boolean matches(LivingEntity killer, Entity victim) {
@@ -75,19 +75,21 @@ public record DispelEntityRecipe(EntityType<?> entity, ResourceLocation lootTabl
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.DISPEL_ENTITY_SERIALIZER.get();
+    @SuppressWarnings("unchecked")
+    public RecipeSerializer<DispelEntityRecipe> getSerializer() {
+        return (RecipeSerializer<DispelEntityRecipe>) RecipeRegistry.DISPEL_ENTITY_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return RecipeRegistry.DISPEL_ENTITY_TYPE.get();
+    @SuppressWarnings("unchecked")
+    public RecipeType<DispelEntityRecipe> getType() {
+        return (RecipeType<DispelEntityRecipe>) RecipeRegistry.DISPEL_ENTITY_TYPE.get();
     }
 
     public static class Serializer implements RecipeSerializer<DispelEntityRecipe> {
         public static final MapCodec<DispelEntityRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(DispelEntityRecipe::entity),
-                ResourceLocation.CODEC.fieldOf("loot_table").forGetter(DispelEntityRecipe::lootTable),
+                Identifier.CODEC.fieldOf("loot_table").forGetter(DispelEntityRecipe::lootTable),
                 IGlobalLootModifier.LOOT_CONDITIONS_CODEC.optionalFieldOf("loot_conditions", new LootItemCondition[]{}).forGetter(DispelEntityRecipe::conditions)
         ).apply(instance, DispelEntityRecipe::new));
 

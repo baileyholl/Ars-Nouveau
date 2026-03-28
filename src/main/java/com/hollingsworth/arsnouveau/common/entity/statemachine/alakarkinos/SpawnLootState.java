@@ -63,7 +63,8 @@ public class SpawnLootState extends CrabState {
         alakarkinos.findBlockCooldown = 60 * 20;
         List<ItemStack> loot = getLoot();
         if (!loot.isEmpty()) {
-            IItemHandler handler = alakarkinos.level.getCapability(Capabilities.ItemHandler.BLOCK, alakarkinos.getHome(), null);
+            var rawHandler = alakarkinos.level.getCapability(Capabilities.Item.BLOCK, alakarkinos.getHome(), null);
+            IItemHandler handler = rawHandler != null ? IItemHandler.of(rawHandler) : null;
 
             for (ItemStack stack : loot) {
                 if (stack.isEmpty()) {

@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:shears"
-    },
-    {
-      "item": "minecraft:iron_sword"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:shears",
+    "minecraft:iron_sword"
   ],
   "output": {
     "count": 1,

@@ -3,30 +3,14 @@
   "enchantment": "ars_nouveau:reactive",
   "level": 2,
   "pedestalItems": [
-    {
-      "item": "minecraft:blaze_powder"
-    },
-    {
-      "item": "minecraft:blaze_powder"
-    },
-    {
-      "item": "minecraft:blaze_powder"
-    },
-    {
-      "item": "minecraft:blaze_powder"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    }
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:earth_essence",
+    "ars_nouveau:fire_essence",
+    "ars_nouveau:water_essence"
   ],
   "sourceCost": 6000
 }

@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,7 +64,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof LivingEntity living))
             return;
-        this.applyConfigPotion(living, MobEffects.MOVEMENT_SLOWDOWN, spellStats);
+        this.applyConfigPotion(living, MobEffects.SLOWNESS, spellStats);
     }
 
     /**
@@ -115,7 +115,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
 

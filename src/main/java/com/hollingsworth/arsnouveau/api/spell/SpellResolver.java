@@ -83,7 +83,7 @@ public class SpellResolver implements Cloneable {
             return enoughMana(entity);
         } else {
             // Validation failed, explain why if applicable
-            if (!silent && !entity.getCommandSenderWorld().isClientSide) {
+            if (!silent && !entity.level().isClientSide()) {
                 // Sending only the first error to avoid spam
                 PortUtil.sendMessageNoSpam(entity, validationErrors.get(0).makeTextComponentExisting());
             }
@@ -170,7 +170,7 @@ public class SpellResolver implements Cloneable {
      */
     // TODO: 1.22 make params ServerLevel
     public void onResolveEffect(Level world, HitResult result) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return;
         }
         this.hitResult = result;
@@ -181,7 +181,7 @@ public class SpellResolver implements Cloneable {
      * Sets the starting index to 0 and uncancels the spell, then resolves all effects.
      */
     protected void resolveAllEffects(Level world) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return;
         }
         spellContext.resetCastCounter();
@@ -192,7 +192,7 @@ public class SpellResolver implements Cloneable {
      * Attempts to resolve the remaining effects of the SpellContext without restarting.
      */
     public void resume(Level world) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return;
         }
         LivingEntity shooter = spellContext.getUnwrappedCaster();

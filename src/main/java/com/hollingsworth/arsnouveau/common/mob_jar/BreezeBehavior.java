@@ -7,13 +7,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.monster.breeze.Breeze;
-import net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.BreezeWindCharge;
 import net.minecraft.world.phys.Vec3;
 
 public class BreezeBehavior extends JarBehavior<Breeze> {
     @Override
     public void onRedstonePower(MobJarTile tile) {
-        if (!(tile.getLevel() instanceof ServerLevel level) || isPowered(tile) || tile.getExtraDataTag().getLong("lastActive") == level.getGameTime()) {
+        if (!(tile.getLevel() instanceof ServerLevel level) || isPowered(tile) || tile.getExtraDataTag().getLongOr("lastActive", 0L) == level.getGameTime()) {
             return;
         }
 

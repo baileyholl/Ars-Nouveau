@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ public class MultiblockPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("patchouli:multiblock");
+    public Identifier getType() {
+        return Identifier.tryParse("patchouli:multiblock");
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -95,7 +96,7 @@ public class AnimatedAttackGoal extends Goal {
             return false;
         } else if (!this.followingTargetEvenIfNotSeen) {
             return !this.mob.getNavigation().isDone();
-        } else if (!this.mob.isWithinRestriction(livingentity.blockPosition())) {
+        } else if (!this.mob.isWithinHome(livingentity.blockPosition())) {
             return false;
         } else {
             return !(livingentity instanceof Player player) || !livingentity.isSpectator() && !player.isCreative();
@@ -182,7 +183,7 @@ public class AnimatedAttackGoal extends Goal {
     protected void attack(LivingEntity target) {
         if (BlockUtil.distanceFrom(target.position, this.mob.position) <= attackRange) {
             this.ticksUntilNextAttack = 20;
-            this.mob.doHurtTarget(target);
+            this.mob.doHurtTarget((ServerLevel) this.mob.level(), target);
         }
     }
 

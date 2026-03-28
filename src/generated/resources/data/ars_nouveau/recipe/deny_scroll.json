@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:blank_parchment"
-    },
-    {
-      "tag": "c:cobblestones"
-    }
+    "ars_nouveau:blank_parchment",
+    "#c:cobblestones"
   ],
   "result": {
     "count": 1,

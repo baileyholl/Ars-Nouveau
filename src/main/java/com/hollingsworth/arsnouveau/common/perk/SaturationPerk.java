@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ public class SaturationPerk extends Perk {
 
     public static final SaturationPerk INSTANCE = new SaturationPerk(ArsNouveau.prefix("thread_whirlisprig"));
 
-    public SaturationPerk(ResourceLocation key) {
+    public SaturationPerk(Identifier key) {
         super(key);
     }
 

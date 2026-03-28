@@ -24,7 +24,8 @@ public abstract class FilterSet {
 
     public static FilterSet forPosition(Level level, BlockPos pos) {
         List<Function<ItemStack, ItemScroll.SortPref>> filters = new ArrayList<>();
-        IItemHandler inv = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+        var rawCap = level.getCapability(Capabilities.Item.BLOCK, pos, null);
+        IItemHandler inv = rawCap != null ? IItemHandler.of(rawCap) : null;
         if (inv == null) {
             return new FilterSet.ListSet(filters);
         }

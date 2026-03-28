@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyPotionBehavior;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import java.util.function.Consumer;
 
@@ -48,10 +48,10 @@ public class WixieHat extends AnimModItem implements ICosmeticItem {
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private final BlockEntityWithoutLevelRenderer renderer = new GenericItemRenderer(new GenericModel<>("witch_hat", "item")).withTranslucency();
+            private final GeoItemRenderer<?> renderer = new GenericItemRenderer(new GenericModel<>("witch_hat", "item")).withTranslucency();
 
             @Override
-            public @Nullable BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public @Nullable GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });

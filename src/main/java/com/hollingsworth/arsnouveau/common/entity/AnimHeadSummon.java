@@ -32,7 +32,7 @@ public class AnimHeadSummon extends AnimBlockSummon {
     }
 
     public void returnToFallingBlock(BlockState blockState) {
-        if (level.isClientSide || !this.dropItem || blockState == null) {
+        if (level.isClientSide() || !this.dropItem || blockState == null) {
             return;
         }
         EnchantedFallingBlock fallingBlock = new EnchantedSkull(level, blockPosition(), blockState);

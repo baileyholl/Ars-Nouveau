@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ public class MagicCapacityPerk extends Perk {
 
     public static final MagicCapacityPerk INSTANCE = new MagicCapacityPerk(ArsNouveau.prefix("thread_magic_capacity"));
 
-    public MagicCapacityPerk(ResourceLocation key) {
+    public MagicCapacityPerk(Identifier key) {
         super(key);
     }
 

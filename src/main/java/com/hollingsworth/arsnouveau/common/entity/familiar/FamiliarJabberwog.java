@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 
@@ -26,9 +26,9 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
+    public PlayState walkPredicate(AnimationTest<FamiliarEntity> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("hop"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("hop"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -42,7 +42,7 @@ public class FamiliarJabberwog extends FlyingFamiliarEntity {
     }
 
     @Override
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         return null;
     }
 }

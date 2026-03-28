@@ -19,11 +19,12 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.block.Block;
 
@@ -39,7 +40,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
 //            Block.CODEC.fieldOf("path").forGetter(data -> data.pathBlock),
             BlockPos.CODEC.optionalFieldOf("bed").forGetter(StarbuncleCharmData::getBedPos),
             ItemStack.OPTIONAL_CODEC.optionalFieldOf("cosmetic").forGetter(StarbuncleCharmData::getCosmetic),
-            ResourceLocation.CODEC.optionalFieldOf("behavior", StarbyTransportBehavior.TRANSPORT_ID).forGetter(StarbuncleCharmData::getBehavior),
+            Identifier.CODEC.optionalFieldOf("behavior", StarbyTransportBehavior.TRANSPORT_ID).forGetter(StarbuncleCharmData::getBehavior),
             CompoundTag.CODEC.optionalFieldOf("behaviorTag", new CompoundTag()).forGetter(StarbuncleCharmData::getBehaviorTag),
             Codec.STRING.optionalFieldOf("adopter", "").forGetter(StarbuncleCharmData::getAdopter),
             Codec.STRING.optionalFieldOf("bio", "").forGetter(StarbuncleCharmData::getBio)
@@ -54,7 +55,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
             StarbuncleCharmData::getBedPos,
             ItemStack.STREAM_CODEC.apply(ByteBufCodecs::optional),
             StarbuncleCharmData::getCosmetic,
-            ResourceLocation.STREAM_CODEC,
+            Identifier.STREAM_CODEC,
             StarbuncleCharmData::getBehavior,
             ByteBufCodecs.COMPOUND_TAG,
             StarbuncleCharmData::getBehaviorTag,
@@ -71,16 +72,16 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     private final Optional<ItemStack> cosmetic;
     private final Block pathBlock;
     private final Optional<BlockPos> bedPos;
-    private final ResourceLocation behavior;
+    private final Identifier behavior;
     private final CompoundTag behaviorTag;
     private final String adopter;
     private final String bio;
 
-    public StarbuncleCharmData(Optional<Component> name, String color, Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color, Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, Identifier behavior, CompoundTag behaviorTag, String adopter, String bio) {
         this(name, color, null, bedPos, cosmetic, behavior, behaviorTag, adopter, bio);
     }
 
-    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock, Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, ResourceLocation behavior, CompoundTag behaviorTag, String adopter, String bio) {
+    public StarbuncleCharmData(Optional<Component> name, String color, Block pathBlock, Optional<BlockPos> bedPos, Optional<ItemStack> cosmetic, Identifier behavior, CompoundTag behaviorTag, String adopter, String bio) {
         this.name = name;
         this.color = color;
         this.cosmetic = cosmetic;
@@ -107,7 +108,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip2, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip2, TooltipFlag pTooltipFlag, DataComponentGetter pComponents) {
         name.ifPresent(tooltip2);
         if (adopter != null && !adopter.isEmpty()) {
             tooltip2.accept(Component.translatable("ars_nouveau.adopter", adopter).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
@@ -162,7 +163,7 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         return bedPos;
     }
 
-    public ResourceLocation getBehavior() {
+    public Identifier getBehavior() {
         return behavior;
     }
 
@@ -184,12 +185,12 @@ public class StarbuncleCharmData implements NBTComponent<StarbuncleCharmData>, T
         public ItemStack cosmetic;
         public Block pathBlock;
         public BlockPos bedPos;
-        public ResourceLocation behaviorKey;
+        public Identifier behaviorKey;
         public CompoundTag behaviorTag;
         public String adopter;
         public String bio;
 
-        public Mutable(Component name, String color, ItemStack cosmetic, Block pathBlock, BlockPos bedPos, ResourceLocation behaviorKey, CompoundTag behaviorTag, String adopter, String bio) {
+        public Mutable(Component name, String color, ItemStack cosmetic, Block pathBlock, BlockPos bedPos, Identifier behaviorKey, CompoundTag behaviorTag, String adopter, String bio) {
             this.name = name;
             this.color = color;
             this.cosmetic = cosmetic;

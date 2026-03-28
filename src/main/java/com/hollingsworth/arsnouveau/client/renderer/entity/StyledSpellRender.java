@@ -1,77 +1,58 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
-import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
-import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.client.renderer.ANDataTickets;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
-public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> {
-
-    ModelProperty modelProp;
+/**
+ * GeckoLib 5 renderer for EntityProjectileSpell.
+ *
+ * extractRenderState:
+ *   - super call triggers GeoEntityRenderer → model.addAdditionalStateData → MODEL_TICKET/TEXTURE_TICKET
+ *   - also stores interpolated yRot/xRot in PROJ_Y_ROT/PROJ_X_ROT for trajectory orientation
+ *
+ * adjustRenderPose:
+ *   - reads rotation tickets and rotates the model so it faces along its flight path
+ */
+public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell, ArsEntityRenderState> {
 
     public StyledSpellRender(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new StyledProjectileModel());
     }
 
     @Override
-    public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        ProjectileTimeline timeline = entity.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
-        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
-        if (modelProperty == null || modelProperty.selectedResource == ModelProperty.NONE) {
-            return;
-        }
-        modelProp = modelProperty;
-//        packedLight = LightTexture.FULL_BRIGHT;
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    public ArsEntityRenderState createRenderState(EntityProjectileSpell animatable, Void context) {
+        return new ArsEntityRenderState();
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, EntityProjectileSpell animatable, BakedGeoModel model, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        poseStack.pushPose();
-//        if(modelProp.selectedResource == ModelProperty.CUBE_BODY){
-//            packedLight = LightTexture.FULL_BRIGHT;
-//            poseStack.translate(0, -0.25, 0);
-//            poseStack.scale(0.5f, 0.5f, 0.5f);
-
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
-//        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
-//        }
-
-//        matrixStackIn.pushPose();
-//        matrixStackIn.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.yRot) - 90.0F));
-//        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
-
-
-        if (modelProp.selectedResource.supportsColor()) {
-            colour = modelProp.subPropMap.getParticleColor().getColor();
-        }
-
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-        poseStack.popPose();
+    public void extractRenderState(EntityProjectileSpell entity, ArsEntityRenderState renderState, float partialTick) {
+        super.extractRenderState(entity, renderState, partialTick); // triggers addAdditionalStateData
+        // Interpolated trajectory rotation for adjustRenderPose
+        float yRot = Mth.rotLerp(partialTick, entity.yRotO, entity.getYRot());
+        float xRot = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
+        renderState.addGeckolibData(ANDataTickets.PROJ_Y_ROT, yRot);
+        renderState.addGeckolibData(ANDataTickets.PROJ_X_ROT, xRot);
     }
 
     @Override
-    public @Nullable RenderType getRenderType(EntityProjectileSpell animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityCutout(texture);
+    public void adjustRenderPose(RenderPassInfo<ArsEntityRenderState> renderPassInfo) {
+        super.adjustRenderPose(renderPassInfo);
+        Float yRot = renderPassInfo.renderState().getGeckolibData(ANDataTickets.PROJ_Y_ROT);
+        Float xRot = renderPassInfo.renderState().getGeckolibData(ANDataTickets.PROJ_X_ROT);
+        if (yRot != null) renderPassInfo.poseStack().mulPose(Axis.YP.rotationDegrees(yRot - 90f));
+        if (xRot != null) renderPassInfo.poseStack().mulPose(Axis.ZP.rotationDegrees(xRot));
     }
 
     @Override
-    public GeoModel<EntityProjectileSpell> getGeoModel() {
-        return super.getGeoModel();
+    public RenderType getRenderType(ArsEntityRenderState renderState, Identifier texture) {
+        return RenderTypes.entityCutout(texture);
     }
 }

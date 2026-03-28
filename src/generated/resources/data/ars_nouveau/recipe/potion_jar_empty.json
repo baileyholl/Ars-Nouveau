@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:potion_jar"
-    }
+    "ars_nouveau:potion_jar"
   ],
   "result": {
     "count": 1,

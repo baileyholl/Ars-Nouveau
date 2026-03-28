@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistryWrapper;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,13 +19,13 @@ public abstract class RendererBlockItem extends AnimBlockItem {
         this(block.get(), props);
     }
 
-    public abstract Supplier<BlockEntityWithoutLevelRenderer> getRenderer();
+    public abstract Supplier<GeoItemRenderer<?>> getRenderer();
 
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return getRenderer().get();
             }
         });

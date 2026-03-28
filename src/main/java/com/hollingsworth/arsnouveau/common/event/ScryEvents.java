@@ -17,7 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -37,21 +37,21 @@ import java.util.List;
 public class ScryEvents {
     @SubscribeEvent
     public static void playerLoginEvent(final PlayerLoggedInEvent event) {
-        if (!event.getEntity().level.isClientSide && event.getEntity().hasEffect(ModPotions.SCRYING_EFFECT)) {
-            CompoundTag tag = event.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+        if (!event.getEntity().level.isClientSide() && event.getEntity().hasEffect(ModPotions.SCRYING_EFFECT)) {
+            CompoundTag tag = event.getEntity().getPersistentData().getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
             Networking.sendToPlayerClient((CustomPacketPayload) new PacketGetPersistentData(tag), (ServerPlayer) event.getEntity());
         }
     }
 
     @SubscribeEvent
     public static void playerTickEvent(final PlayerTickEvent.Post event) {
-        if (event.getEntity().level.isClientSide && event.getEntity().getEffect(ModPotions.SCRYING_EFFECT) != null && ClientInfo.ticksInGame % 30 == 0) {
+        if (event.getEntity().level.isClientSide() && event.getEntity().getEffect(ModPotions.SCRYING_EFFECT) != null && ClientInfo.ticksInGame % 30 == 0) {
 
             List<BlockPos> scryingPos = new ArrayList<>();
             CompoundTag tag = ClientInfo.persistentData;
             if (!tag.contains("an_scryer"))
                 return;
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(ResourceLocation.tryParse(tag.getCompound("an_scryer").getString("id"))).fromTag(tag.getCompound("an_scryer"));
+            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(Identifier.tryParse(tag.getCompoundOrEmpty("an_scryer").getStringOr("id", ""))).fromTag(tag.getCompoundOrEmpty("an_scryer"));
             if (scryer == null)
                 return;
             Player playerEntity = event.getEntity();
@@ -72,8 +72,7 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderHighlights(final RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
+    public static void onRenderHighlights(final RenderLevelStageEvent.AfterWeather event) {
         ClientLevel world = Minecraft.getInstance().level;
 
         if (ClientInfo.highlightTicks > 0) {
@@ -103,14 +102,12 @@ public class ScryEvents {
     }
 
     @SubscribeEvent
-    public static void renderScry(final RenderLevelStageEvent event) {
-
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
+    public static void renderScry(final RenderLevelStageEvent.AfterWeather event) {
         ClientLevel world = Minecraft.getInstance().level;
         final Player playerEntity = Minecraft.getInstance().player;
         if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT) == null)
             return;
-        Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().position();
 
         double yView = vector3d.y();
         if (Minecraft.getInstance().isPaused())

@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -129,7 +129,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     public boolean canDamage(LivingEntity livingEntity) {
-        return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) || livingEntity.getPercentFrozen() > 0.0;
+        return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.SLOWNESS) || livingEntity.getPercentFrozen() > 0.0;
     }
 
     public void damage(Vec3 vec, ServerLevel world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, int snareTime, float damage) {
@@ -156,7 +156,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
         defaults.put(AugmentAOE.INSTANCE.getRegistryName(), 1);
     }

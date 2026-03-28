@@ -14,19 +14,16 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
@@ -102,7 +99,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             if (isAnyTab || (level.getBlockEntity(handler.pos) instanceof Nameable nameable
                     && nameable.hasCustomName()
                     && nameable.getCustomName().getString().trim().equals(tab.trim()))) {
-                itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos)).withSlotCache(handler.slotCache));
+                var rawHandlerCap = handler.handler.getCapability();
+                if (rawHandlerCap != null) {
+                    itemHandlers.add(new FilterableItemHandler(IItemHandler.of(rawHandlerCap), FilterSet.forPosition(level, handler.pos)).withSlotCache(handler.slotCache));
+                }
             }
         }
         return new InventoryManager(itemHandlers);
@@ -275,11 +275,12 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return;
         }
         if (!isValidInv(storedPos)) {
-            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.lectern_blacklist"));
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.lectern_blacklist"));
             return;
         }
 
-        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side);
+        var rawHandler = level.getCapability(Capabilities.Item.BLOCK, storedPos, side);
+        IItemHandler handler = rawHandler != null ? IItemHandler.of(rawHandler) : null;
         if (handler == null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
             return;
@@ -346,7 +347,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
     @Override
     public void tick() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         if (backoffTicks > 0) {
             backoffTicks--;
@@ -391,10 +392,11 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             if (!isValidInv(pos) || handlerPos.handler == null) {
                 continue;
             }
-            IItemHandler handler = handlerPos.handler.getCapability();
-            if (handler == null) {
+            var rawCap = handlerPos.handler.getCapability();
+            if (rawCap == null) {
                 continue;
             }
+            IItemHandler handler = IItemHandler.of(rawCap);
             StorageItemHandler storageItemHandler = new StorageItemHandler(handler, FilterSet.forPosition(level, pos), handlerPos.slotCache);
             mappedFilterables.computeIfAbsent(TAB_ALL, s -> new ArrayList<>()).add(storageItemHandler);
             if (level.getBlockEntity(pos) instanceof Nameable nameable && nameable.hasCustomName()) {
@@ -458,7 +460,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
             if (mainLectern.handlerPosList.stream().anyMatch(p -> p.pos.equals(pos)))
                 continue;
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            var rawHandler462 = level.getCapability(Capabilities.Item.BLOCK, pos, null);
+            IItemHandler handler = rawHandler462 != null ? IItemHandler.of(rawHandler462) : null;
             if (handler == null || (level.getBlockEntity(pos) instanceof HopperBlockEntity hopperBlockEntity && hopperBlockEntity.getBlockPos().equals(worldPosition.below())))
                 continue;
             for (int i = 0; i < handler.getSlots(); i++) {
@@ -524,7 +527,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     public @Nullable EntityBookwyrm addBookwyrm() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return null;
         EntityBookwyrm bookwyrm = new EntityBookwyrm(level, this.getBlockPos());
         bookwyrm.setPos(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 1, this.getBlockPos().getZ() + 0.5);
@@ -539,55 +542,43 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(compound, pRegistries);
-        compound.put("settings", ANCodecs.encode(SortSettings.CODEC, sortSettings));
-        ListTag list = new ListTag();
+    public void saveAdditional(ValueOutput compound) {
+        super.saveAdditional(compound);
+        compound.store("settings", SortSettings.CODEC, sortSettings);
+        ValueOutput.ValueOutputList list = compound.childrenList("invs");
         for (HandlerPos handlerPos : handlerPosList) {
             BlockPos pos = handlerPos.pos;
-            CompoundTag c = new CompoundTag();
+            ValueOutput c = list.addChild();
             c.putInt("x", pos.getX());
             c.putInt("y", pos.getY());
             c.putInt("z", pos.getZ());
-            list.add(c);
         }
-        compound.put("invs", list);
         if (mainLecternPos != null) {
             compound.putLong("mainLecternPos", mainLecternPos.asLong());
         }
-        ListTag bookwyrmList = new ListTag();
+        ValueOutput.ValueOutputList bookwyrmList = compound.childrenList("bookwyrmUUIDs");
         for (UUID uuid : bookwyrmUUIDs) {
-            bookwyrmList.add(NbtUtils.createUUID(uuid));
+            bookwyrmList.addChild().store("id", UUIDUtil.CODEC, uuid);
         }
-        compound.put("bookwyrmUUIDs", bookwyrmList);
         compound.putBoolean("powered", powered);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        if (compound.contains("settings")) {
-            sortSettings = ANCodecs.decode(SortSettings.CODEC, compound.getCompound("settings"));
-        }
-        ListTag list = compound.getList("invs", 10);
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        compound.read("settings", SortSettings.CODEC).ifPresent(s -> sortSettings = s);
         handlerPosList.clear();
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag c = list.getCompound(i);
-            handlerPosList.add(new HandlerPos(new BlockPos(c.getInt("x"), c.getInt("y"), c.getInt("z")), null));
+        for (ValueInput c : compound.childrenListOrEmpty("invs")) {
+            handlerPosList.add(new HandlerPos(new BlockPos(c.getIntOr("x", 0), c.getIntOr("y", 0), c.getIntOr("z", 0)), null));
         }
         mainLecternPos = null;
-        if (compound.contains("mainLecternPos")) {
-            mainLecternPos = BlockPos.of(compound.getLong("mainLecternPos"));
-        }
+        compound.getLong("mainLecternPos").ifPresent(l -> mainLecternPos = BlockPos.of(l));
         bookwyrmUUIDs.clear();
-        if (compound.contains("bookwyrmUUIDs")) {
-            ListTag bookwyrmList = compound.getList("bookwyrmUUIDs", 11);
-            for (Tag tag : bookwyrmList) {
-                bookwyrmUUIDs.add(NbtUtils.loadUUID(tag));
-            }
+        for (ValueInput entry : compound.childrenListOrEmpty("bookwyrmUUIDs")) {
+            entry.read("id", UUIDUtil.CODEC).ifPresent(bookwyrmUUIDs::add);
         }
         updateItems = true;
-        powered = compound.getBoolean("powered");
+        powered = compound.getBooleanOr("powered", false);
     }
 
     @Override
@@ -623,7 +614,8 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (HandlerPos handlerPos : lecternTile.handlerPosList) {
             if (handlerPos.handler == null || level.getBlockEntity(handlerPos.pos) instanceof StorageLecternTile)
                 continue;
-            IItemHandler handler = handlerPos.handler.getCapability();
+            var rawCap = handlerPos.handler.getCapability();
+            IItemHandler handler = rawCap != null ? IItemHandler.of(rawCap) : null;
             if (handler != null) {
                 handlers.add(handler);
             }
@@ -632,7 +624,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     }
 
     public void addHandlerPos(StorageLecternTile tile, BlockPos pos) {
-        BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !tile.isRemoved(), () -> {
+        BlockCapabilityCache<net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource>, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.Item.BLOCK, (ServerLevel) level, pos, null, () -> !tile.isRemoved(), () -> {
             this.invalidateNextTick = true;
         });
         if (capabilityCache.getCapability() != null) {
@@ -643,7 +635,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 
     // Initialized all existing handlers with their capabilities as they load in null before onLoad
     public void initHandlerCache() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         StorageLecternTile lecternTile = this.getMainLectern();
         if (lecternTile == null) {
@@ -655,7 +647,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
                 continue;
             }
 
-            handlerPos.handler = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
+            handlerPos.handler = BlockCapabilityCache.create(Capabilities.Item.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
                 this.invalidateNextTick = true;
             });
 
@@ -677,10 +669,10 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     public static class HandlerPos {
 
         public BlockPos pos;
-        public BlockCapabilityCache<? extends IItemHandler, Direction> handler;
+        public BlockCapabilityCache<net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource>, Direction> handler;
         public SlotCache slotCache;
 
-        public HandlerPos(BlockPos pos, BlockCapabilityCache<? extends IItemHandler, Direction> handler) {
+        public HandlerPos(BlockPos pos, BlockCapabilityCache<net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource>, Direction> handler) {
             this.pos = pos;
             this.handler = handler;
             this.slotCache = new SlotCache();
@@ -690,7 +682,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             return pos;
         }
 
-        public BlockCapabilityCache<? extends IItemHandler, Direction> handler() {
+        public BlockCapabilityCache<net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource>, Direction> handler() {
             return handler;
         }
 

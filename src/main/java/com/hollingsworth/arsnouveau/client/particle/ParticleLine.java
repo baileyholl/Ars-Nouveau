@@ -1,12 +1,11 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.world.level.Level;
 
-public class ParticleLine extends TextureSheetParticle {
+public class ParticleLine extends SingleQuadParticle {
     public float colorR;
     public float colorG;
     public float colorB;
@@ -19,7 +18,7 @@ public class ParticleLine extends TextureSheetParticle {
     public float destZ;
 
     protected ParticleLine(Level worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, SpriteSet sprite) {
-        super((ClientLevel) worldIn, x, y, z, 0, 0, 0);
+        super((ClientLevel) worldIn, x, y, z, 0, 0, 0, sprite.first());
         this.colorR = r;
         this.colorG = g;
         this.colorB = b;
@@ -46,7 +45,6 @@ public class ParticleLine extends TextureSheetParticle {
         this.destY = (float) vy;
         this.destZ = (float) vz;
         this.roll = 2.0f * (float) Math.PI;
-        this.pickSprite(sprite);
     }
 
     @Override
@@ -72,8 +70,8 @@ public class ParticleLine extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderTypes.EMBER_RENDER;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
 

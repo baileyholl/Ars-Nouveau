@@ -3,9 +3,7 @@
   "category": "building",
   "group": "wooden_pressure_plate",
   "key": {
-    "#": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "#": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "##"

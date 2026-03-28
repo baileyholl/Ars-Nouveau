@@ -4,11 +4,12 @@ import com.hollingsworth.arsnouveau.common.block.tile.SpellSensorTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -47,17 +48,17 @@ public class SpellSensor extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
-            return ItemInteractionResult.SUCCESS;
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
         ItemStack heldStack = pPlayer.getItemInHand(pHand);
         if (heldStack.getItem() instanceof SpellParchment) {
             if (pLevel.getBlockEntity(pPos) instanceof SpellSensorTile sensorTile) {
                 sensorTile.parchment = heldStack.copy();
                 sensorTile.updateBlock();
-                pPlayer.sendSystemMessage(Component.translatable("ars_nouveau.sensor.set_spell"));
-                return ItemInteractionResult.SUCCESS;
+                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.sensor.set_spell"));
+                return InteractionResult.SUCCESS;
             }
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);

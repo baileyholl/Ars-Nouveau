@@ -21,10 +21,11 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -43,13 +44,15 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -107,7 +110,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
                 visited.add(pos);
                 if (level.getBlockState(pos).getBlock() instanceof RepositoryBlock) {
                     var mapCap = BlockCapabilityCache.create(CapabilityRegistry.MAP_INV_CAP, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
-                    var invCap = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
+                    var invCap = BlockCapabilityCache.create(Capabilities.Item.BLOCK, serverLevel, pos, direction, () -> !this.isRemoved(), () -> this.invalidateNextTick = true);
                     connectedRepositories.add(new ConnectedRepository(pos, mapCap, invCap));
 
                     buildRepositoryNetwork(visited, pos);
@@ -131,7 +134,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
             tooltip.add(scrollStack.getHoverName().copy().withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
             ItemScrollData scrollData = scrollStack.get(DataComponentRegistry.ITEM_SCROLL_DATA);
             if (scrollData != null) {
-                scrollData.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL);
+                scrollData.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL, new net.minecraft.core.component.DataComponentGetter() { @Override public <T> T get(net.minecraft.core.component.DataComponentType<? extends T> type) { return null; } });
             }
         }
     }
@@ -150,7 +153,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
             if (drawerTicks == 15) {
                 level.playSound(null, worldPosition, SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS, 0.5f, 1.6f + (float) ParticleUtil.inRange(-0.2, 0.2));
             }
-            if (drawerTicks == 38 && !level.isClientSide) {
+            if (drawerTicks == 38 && !level.isClientSide()) {
                 Direction direction = level.getBlockState(worldPosition).getValue(RepositoryCatalog.FACING);
                 for (Entity entity : level.getEntities(null, AABB.unitCubeFromLowerCorner(worldPosition.relative(direction).getBottomCenter()))) {
                     entity.push(direction.getStepX() * 0.5, 0.1, direction.getStepZ() * 0.5);
@@ -166,7 +169,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
 
         openDrawer = level.random.nextIntBetweenInclusive(1, 6);
         drawerTicks = 60;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             Networking.sendToNearbyClient(level, worldPosition, new PacketOneShotAnimation(worldPosition));
         }
     }
@@ -180,9 +183,9 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     public ControllerInv getControllerInv() {
         List<IItemHandler> handlers = new ArrayList<>();
         for (ConnectedRepository connectedRepository : this.connectedRepositories) {
-            IItemHandler handler = connectedRepository.itemHandler.getCapability();
-            if (handler != null) {
-                handlers.add(handler);
+            ResourceHandler<ItemResource> rawHandler = connectedRepository.itemHandler.getCapability();
+            if (rawHandler != null) {
+                handlers.add(IItemHandler.of(rawHandler));
             }
         }
         return new ControllerInv(this, handlers.toArray(new IItemHandler[0]));
@@ -211,42 +214,40 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains("name")) {
-            this.name = Component.literal(tag.getString("name"));
-        }
-        this.scrollStack = ItemStack.parseOptional(registries, tag.getCompound("scrollStack"));
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        tag.getString("name").ifPresent(n -> this.name = Component.literal(n));
+        this.scrollStack = tag.read("scrollStack", net.minecraft.world.item.ItemStack.OPTIONAL_CODEC).orElse(net.minecraft.world.item.ItemStack.EMPTY);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (name != null) {
             tag.putString("name", name.getString());
         }
-        tag.put("scrollStack", scrollStack.saveOptional(registries));
+        tag.store("scrollStack", net.minecraft.world.item.ItemStack.OPTIONAL_CODEC, scrollStack);
     }
 
     @Override
-    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
         this.name = componentInput.get(DataComponents.CUSTOM_NAME);
     }
 
 
-    List<AnimationController> animControllers = new ArrayList<>();
+    List<AnimationController<RepositoryCatalogTile>> animControllers = new ArrayList<>();
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         for (int index = 1; index < 7; index++) {
             int finalIndex = index;
-            AnimationController controller = new AnimationController<>(this, "drawer" + index, 20, event -> {
+            AnimationController<RepositoryCatalogTile> controller = new AnimationController<RepositoryCatalogTile>("drawer" + index, 20, event -> {
                 if (openDrawer == finalIndex) {
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay("drawer" + finalIndex));
+                    event.controller().setAnimation(RawAnimation.begin().thenPlay("drawer" + finalIndex));
                     return PlayState.CONTINUE;
                 } else {
-                    event.getController().forceAnimationReset();
+                    event.controller().reset();
                     return PlayState.STOP;
                 }
             });
@@ -265,7 +266,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     @Override
     public void startAnimation(int arg) {
         for (var controller : animControllers) {
-            controller.forceAnimationReset();
+            controller.reset();
         }
         openRandomDrawer();
     }
@@ -293,9 +294,9 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
     public static class ConnectedRepository {
         public BlockPos pos;
         public BlockCapabilityCache<IMapInventory, Direction> capability;
-        public BlockCapabilityCache<IItemHandler, Direction> itemHandler;
+        public BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> itemHandler;
 
-        public ConnectedRepository(BlockPos pos, BlockCapabilityCache<IMapInventory, Direction> capability, BlockCapabilityCache<IItemHandler, Direction> itemHandler) {
+        public ConnectedRepository(BlockPos pos, BlockCapabilityCache<IMapInventory, Direction> capability, BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> itemHandler) {
             this.pos = pos;
             this.capability = capability;
             this.itemHandler = itemHandler;

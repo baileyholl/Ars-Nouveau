@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,10 +40,10 @@ public class Planarium extends TickableModBlock {
     public static VoxelShape shape = Shapes.box(0, 0, 0, 1, 2, 1);
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof PlanariumTile tile && hand == InteractionHand.MAIN_HAND) {
             if (tile.key == null) {
-                player.sendSystemMessage(Component.translatable("ars_nouveau.planarium.set_name"));
+                player.displayClientMessage(Component.translatable("ars_nouveau.planarium.set_name"), false);
             }
             if (player.isCrouching()) {
                 tile.sendEntityTo(player);

@@ -41,9 +41,9 @@ public class ParticleEmitter {
         ByteBufCodecs.DOUBLE.encode(buf, val.rand3);
 
     }, (buf) -> {
-        Vector3f position = ByteBufCodecs.VECTOR3F.decode(buf);
-        Vector3f previousPosition = ByteBufCodecs.VECTOR3F.decode(buf);
-        Vector3f rotation = ByteBufCodecs.VECTOR3F.decode(buf);
+        Vector3f position = (Vector3f) ByteBufCodecs.VECTOR3F.decode(buf);
+        Vector3f previousPosition = (Vector3f) ByteBufCodecs.VECTOR3F.decode(buf);
+        Vector3f rotation = (Vector3f) ByteBufCodecs.VECTOR3F.decode(buf);
         int age = ByteBufCodecs.INT.decode(buf);
         ParticleMotion particleConfig = ParticleMotion.STREAM_CODEC.decode(buf);
         ParticleOptions particleOptions = ParticleTypes.STREAM_CODEC.decode(buf);

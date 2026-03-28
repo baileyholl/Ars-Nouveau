@@ -3,30 +3,14 @@
   "enchantment": "minecraft:infinity",
   "level": 1,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "tag": "c:storage_blocks/diamond"
-    }
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "#c:storage_blocks/diamond"
   ],
   "sourceCost": 9000
 }

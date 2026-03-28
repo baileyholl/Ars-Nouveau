@@ -6,6 +6,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
@@ -17,11 +20,11 @@ public class ArcaneCoreTile extends ModdedTile implements GeoBlockEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "controller", 1, this::spin));
+        data.add(new AnimationController<ArcaneCoreTile>("controller", 1, this::spin));
     }
 
-    public PlayState spin(AnimationState<?> e) {
-        e.getController().setAnimation(RawAnimation.begin().thenPlay("gem_spin"));
+    public PlayState spin(AnimationTest<ArcaneCoreTile> e) {
+        e.controller().setAnimation(RawAnimation.begin().thenPlay("gem_spin"));
         return PlayState.CONTINUE;
     }
 

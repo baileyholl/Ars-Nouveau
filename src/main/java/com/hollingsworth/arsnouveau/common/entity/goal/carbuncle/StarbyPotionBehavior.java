@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class StarbyPotionBehavior extends StarbyListBehavior {
-    public static final ResourceLocation POTION_ID = ArsNouveau.prefix("starby_potion");
+    public static final Identifier POTION_ID = ArsNouveau.prefix("starby_potion");
 
     private @Nullable PotionContents heldPotion = PotionContents.EMPTY;
     private int amount;
@@ -32,7 +32,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
         if (tag.contains("potionData")) {
             heldPotion = ANCodecs.decode(PotionContents.CODEC, tag.get("potionData"));
         }
-        amount = tag.getInt("amount");
+        amount = tag.getIntOr("amount", 0);
         goals.add(new WrappedGoal(4, new GoToBedGoal(starbuncle, this)));
         goals.add(new WrappedGoal(3, new PotionTakeGoal(entity, this)));
         goals.add(new WrappedGoal(3, new PotionStoreGoal(entity, this)));
@@ -136,7 +136,7 @@ public class StarbyPotionBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return POTION_ID;
     }
 }

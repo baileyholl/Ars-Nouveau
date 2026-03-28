@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:bombegranate_pod"
-    }
+    "ars_nouveau:bombegranate_pod"
   ],
   "result": {
     "count": 1,

@@ -1,15 +1,9 @@
 package com.hollingsworth.arsnouveau.common.world;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.world.biome.ArchwoodRegion;
-import com.hollingsworth.arsnouveau.setup.config.Config;
-import terrablender.api.Regions;
-
-
+// TerraBlender compat - stubbed until 1.21.11 compatible version is available
 public class Terrablender {
 
     public static void registerBiomes() {
-        Regions.register(new ArchwoodRegion(ArsNouveau.prefix("overworld"), Config.ARCHWOOD_FOREST_WEIGHT.get()));
+        // TODO: restore when TerraBlender-neoforge 1.21.11 is available
     }
-
 }

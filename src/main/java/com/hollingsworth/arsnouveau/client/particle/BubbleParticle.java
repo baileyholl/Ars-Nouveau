@@ -3,12 +3,14 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
-public class BubbleParticle extends TextureSheetParticle {
+public class BubbleParticle extends SingleQuadParticle {
 
-    protected BubbleParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-        super(pLevel, pX, pY, pZ);
+    protected BubbleParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, TextureAtlasSprite sprite) {
+        super(pLevel, pX, pY, pZ, sprite);
         this.friction = 0.85F;
         this.setSize(0.02F, 0.02F);
         this.quadSize = this.quadSize * (this.random.nextFloat() * 0.6F + 0.2F);
@@ -20,8 +22,8 @@ public class BubbleParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
@@ -39,13 +41,12 @@ public class BubbleParticle extends TextureSheetParticle {
                 double pZ,
                 double pXSpeed,
                 double pYSpeed,
-                double pZSpeed
+                double pZSpeed,
+                RandomSource random
         ) {
-            BubbleParticle bubblecolumnupparticle = new BubbleParticle(
-                    pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed
+            return new BubbleParticle(
+                    pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, sprite.get(random)
             );
-            bubblecolumnupparticle.pickSprite(this.sprite);
-            return bubblecolumnupparticle;
         }
     }
 }

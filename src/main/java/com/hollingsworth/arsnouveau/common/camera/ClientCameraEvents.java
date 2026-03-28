@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.camera;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.util.ClientCameraUtil;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,13 +30,13 @@ public class ClientCameraEvents {
         }
     }
 
-    public static final ResourceLocation[] overlays = new ResourceLocation[]{VanillaGuiLayers.JUMP_METER, VanillaGuiLayers.EXPERIENCE_BAR, VanillaGuiLayers.EFFECTS};
+    public static final Identifier[] overlays = new Identifier[]{VanillaGuiLayers.EXPERIENCE_LEVEL, VanillaGuiLayers.CONTEXTUAL_INFO_BAR, VanillaGuiLayers.EFFECTS};
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void onGuiOpen(RenderGuiLayerEvent.Pre event) {
         if (ClientCameraUtil.isPlayerMountedOnCamera()) {
-            for (ResourceLocation overlay : overlays) {
+            for (Identifier overlay : overlays) {
                 if (event.getName().equals(overlay)) {
                     event.setCanceled(true);
                 }

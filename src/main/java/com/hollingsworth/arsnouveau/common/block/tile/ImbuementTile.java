@@ -15,9 +15,8 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -33,6 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -78,7 +80,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void tick() {
         if (level == null) return;
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
 
             int baseAge = draining ? 20 : 40;
             int randBound = draining ? 3 : 6;
@@ -168,21 +170,19 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        stack = ItemStack.parseOptional(pRegistries, tag.getCompound("itemStack"));
-
-        draining = tag.getBoolean("draining");
-        this.hasRecipe = tag.getBoolean("hasRecipe");
-        this.craftTicks = tag.getInt("craftTicks");
+    protected void loadAdditional(@NotNull ValueInput tag) {
+        super.loadAdditional(tag);
+        stack = tag.read("itemStack", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        draining = tag.getBooleanOr("draining", false);
+        this.hasRecipe = tag.getBooleanOr("hasRecipe", false);
+        this.craftTicks = tag.getIntOr("craftTicks", 0);
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
         if (!stack.isEmpty()) {
-            Tag reagentTag = stack.save(pRegistries);
-            tag.put("itemStack", reagentTag);
+            tag.store("itemStack", ItemStack.OPTIONAL_CODEC, stack);
         }
         tag.putBoolean("draining", draining);
         tag.putBoolean("hasRecipe", hasRecipe);
@@ -259,17 +259,17 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "controller", 1, this::idlePredicate));
-        data.add(new AnimationController<>(this, "slowcraft_controller", 1, this::slowCraftPredicate));
+        data.add(new AnimationController<ImbuementTile>("controller", 1, this::idlePredicate));
+        data.add(new AnimationController<ImbuementTile>("slowcraft_controller", 1, this::slowCraftPredicate));
     }
 
-    private PlayState slowCraftPredicate(AnimationState<?> AnimationState) {
-        AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("imbue_slow"));
+    private PlayState slowCraftPredicate(AnimationTest<ImbuementTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("imbue_slow"));
         return PlayState.CONTINUE;
     }
 
-    private PlayState idlePredicate(AnimationState<?> AnimationState) {
-        AnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("float"));
+    private PlayState idlePredicate(AnimationTest<ImbuementTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("float"));
         return PlayState.CONTINUE;
     }
 
@@ -302,7 +302,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public void getTooltip(List<Component> tooltip) {
         var holder = getRecipeNow();
         var recipe = holder == null ? null : holder.value();
-        if (recipe != null && !recipe.getResultItem(this.level.registryAccess()).isEmpty() && stack != null && !stack.isEmpty()) {
+        if (recipe != null && !recipe.assemble(this, this.level.registryAccess()).isEmpty() && stack != null && !stack.isEmpty()) {
             int cost = recipe.getSourceCost(this);
             tooltip.add(recipe.getCraftingText(this));
             if (cost > 0) {

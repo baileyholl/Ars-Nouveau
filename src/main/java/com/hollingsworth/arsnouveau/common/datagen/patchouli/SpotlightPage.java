@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -31,7 +31,7 @@ public class SpotlightPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("patchouli:spotlight");
+    public Identifier getType() {
+        return Identifier.tryParse("patchouli:spotlight");
     }
 }

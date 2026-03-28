@@ -2,24 +2,12 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "item": "minecraft:water_bucket"
-    },
-    {
-      "tag": "minecraft:boats"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    }
+    "#c:feathers",
+    "#c:feathers",
+    "#c:feathers",
+    "minecraft:water_bucket",
+    "#minecraft:boats",
+    "ars_nouveau:water_essence"
   ],
   "output": {
     "count": 1,

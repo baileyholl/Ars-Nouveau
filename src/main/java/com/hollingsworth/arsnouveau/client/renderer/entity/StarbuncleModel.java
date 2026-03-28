@@ -2,46 +2,35 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-import javax.annotation.Nullable;
-
+// GeckoLib 5: setCustomAnimations() removed - basket bone visibility and head rotation must be
+// ported via addAdditionalStateData + custom GeoRenderState.
+// TODO: Port basket bone visibility (entity.isTamed()) to addAdditionalStateData pattern.
+// TODO: Port entity-specific model/texture (carbuncle.getModel()/getTexture()) via addAdditionalStateData pattern;
+//       currently returns static defaults.
 public class StarbuncleModel extends GeoModel<Starbuncle> {
 
-    public static ResourceLocation ANIMATION = ArsNouveau.prefix("animations/starbuncle_animations.json");
+    public static final Identifier ANIMATION = ArsNouveau.prefix("starbuncle_animations");
+    private static final Identifier DEFAULT_MODEL = ArsNouveau.prefix("starbuncle");
+    private static final Identifier DEFAULT_TEXTURE = ArsNouveau.prefix("textures/entity/starbuncle_blue.png");
 
     @Override
-    public void setCustomAnimations(Starbuncle entity, long uniqueID, @Nullable AnimationState<Starbuncle> customPredicate) {
-        super.setCustomAnimations(entity, uniqueID, customPredicate);
-        if (this.getBone("basket").isPresent())
-            this.getBone("basket").get().setHidden(!entity.isTamed());
-        if (entity.partyCarby)
-            return;
-        if (customPredicate == null)
-            return;
-        GeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(extraData.headPitch() * 0.017453292F);
-        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
+    public Identifier getModelResource(GeoRenderState renderState) {
+        // TODO: Return entity-specific model via GeoRenderState data ticket once ported.
+        return DEFAULT_MODEL;
     }
 
     @Override
-    public ResourceLocation getModelResource(Starbuncle carbuncle) {
-        return carbuncle.getModel();
+    public Identifier getTextureResource(GeoRenderState renderState) {
+        // TODO: Return entity-specific texture via GeoRenderState data ticket once ported.
+        return DEFAULT_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getTextureResource(Starbuncle carbuncle) {
-        return carbuncle.getTexture();
-    }
-
-    @Override
-    public ResourceLocation getAnimationResource(Starbuncle carbuncle) {
+    public Identifier getAnimationResource(Starbuncle carbuncle) {
         return ANIMATION;
     }
 }

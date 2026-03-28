@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,8 +14,8 @@ public class SoakedEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(@NotNull LivingEntity living, int amplifier) {
-        super.applyEffectTick(living, amplifier);
+    public boolean applyEffectTick(ServerLevel serverLevel, @NotNull LivingEntity living, int amplifier) {
+        super.applyEffectTick(serverLevel, living, amplifier);
         if (living.isOnFire()) {
             living.clearFire();
         }

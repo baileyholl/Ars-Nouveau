@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin;
 
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -19,7 +19,7 @@ public interface PufferfishAccessor {
     @Accessor
     void setDeflateTimer(int deflateTimer);
 
-    @Accessor("targetingConditions")
+    @Accessor("TARGETING_CONDITIONS")
     static TargetingConditions targetConditions() {
         throw new AssertionError();
     }

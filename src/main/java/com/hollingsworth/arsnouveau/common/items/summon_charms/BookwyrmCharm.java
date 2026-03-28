@@ -16,6 +16,9 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import net.minecraft.world.item.component.TooltipDisplay;
+import java.util.function.Consumer;
+import net.minecraft.world.item.Item;
 
 public class BookwyrmCharm extends ModItem {
     public BookwyrmCharm() {
@@ -27,7 +30,7 @@ public class BookwyrmCharm extends ModItem {
     public InteractionResult useOn(UseOnContext pContext) {
         Level world = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
-        if (world.isClientSide) return InteractionResult.SUCCESS;
+        if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
             EntityBookwyrm bookwyrm = tile.addBookwyrm();
             if (bookwyrm != null) {
@@ -42,10 +45,10 @@ public class BookwyrmCharm extends ModItem {
         return super.useOn(pContext);
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, tooltip2::add, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.tooltip.bookwyrm"));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, display, tooltip2, flagIn);
+        tooltip2.accept(Component.translatable("ars_nouveau.tooltip.bookwyrm"));
     }
 }

@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,13 +23,15 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -48,7 +50,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class BasicSpellTurret extends TickableModBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = DirectionalBlock.FACING;
 
     public static HashMap<AbstractCastMethod, ITurretBehavior> TURRET_BEHAVIOR_MAP = new HashMap<>();
 
@@ -129,7 +131,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override
@@ -145,31 +147,31 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction side, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+    protected @NotNull BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTick, @NotNull BlockPos currentPos, @NotNull Direction side, @NotNull BlockPos facingPos, @NotNull BlockState facingState, RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTick.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }
 
     @Override
-    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack pStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult pHitResult) {
+    protected @NotNull InteractionResult useItemOn(@NotNull ItemStack pStack, @NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult pHitResult) {
         if (handIn != InteractionHand.MAIN_HAND) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
-        if (worldIn.isClientSide)
-            return ItemInteractionResult.SUCCESS;
+        if (worldIn.isClientSide())
+            return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(handIn);
         if (SpellCasterRegistry.from(stack) != null) {
             Spell spell = SpellCasterRegistry.from(stack).getSpell();
             if (!spell.isEmpty()) {
                 if (spell.getCastMethod() == null) {
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_needs_form"));
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
                 if (!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))) {
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.alert.turret_type"));
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
                 if (worldIn.getBlockEntity(pos) instanceof BasicSpellTurretTile tile) {
                     tile.setSpell(spell);

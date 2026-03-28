@@ -164,7 +164,7 @@ public class PerkEvents {
         if (holder == null)
             return;
         CompoundTag tag = holder.getB().getTagForPerk(TotemPerk.INSTANCE);
-        if (tag == null || !tag.getBoolean("isActive")) {
+        if (tag == null || !tag.getBooleanOr("isActive", false)) {
             return;
         }
         entity.setHealth(1.0F);

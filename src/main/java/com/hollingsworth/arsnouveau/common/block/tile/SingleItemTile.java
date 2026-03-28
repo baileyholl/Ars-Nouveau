@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.Container;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -89,21 +88,16 @@ public class SingleItemTile extends ModdedTile implements Container {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.stack = ItemStack.parseOptional(pRegistries, compound.getCompound("itemStack"));
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.stack = compound.read("itemStack", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (!stack.isEmpty()) {
-            try {
-                Tag stackTag = stack.save(pRegistries);
-                tag.put("itemStack", stackTag);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            tag.store("itemStack", ItemStack.OPTIONAL_CODEC, stack);
         }
     }
 }

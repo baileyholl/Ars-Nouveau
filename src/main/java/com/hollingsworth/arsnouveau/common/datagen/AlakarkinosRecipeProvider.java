@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
@@ -42,7 +42,7 @@ public class AlakarkinosRecipeProvider extends SimpleDataProvider {
         recipes.add(new Wrapper(ArsNouveau.prefix("trail_ruins_rare"), new AlakarkinosRecipe(Blocks.GRAVEL, BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE, 25)));
     }
 
-    public record Wrapper(ResourceLocation location, AlakarkinosRecipe recipe) {
+    public record Wrapper(Identifier location, AlakarkinosRecipe recipe) {
 
     }
 

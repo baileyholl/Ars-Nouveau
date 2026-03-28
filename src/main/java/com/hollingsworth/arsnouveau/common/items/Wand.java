@@ -9,25 +9,44 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.client.Minecraft;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.component.DataComponents;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.InteractionResult;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.player.Player;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.DyeColor;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.Item;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.TooltipFlag;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.item.component.TooltipDisplay;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -43,35 +62,37 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     public Wand() {
-        super(new Item.Properties().stacksTo(1)
+        super(ItemsRegistry.newItemProperties().stacksTo(1)
                 .component(DataComponents.BASE_COLOR, DyeColor.PURPLE)
                 .component(DataComponentRegistry.SPELL_CASTER, new SpellCaster()));
     }
 
-    private <P extends Item & GeoAnimatable> PlayState predicate(AnimationState<P> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("wand_gem_spin"));
+    private PlayState predicate(AnimationTest<Wand> event) {
+        // GeckoLib 5: setAnimation is now directly on AnimationTest; getController() removed
+        event.setAnimation(RawAnimation.begin().thenPlay("wand_gem_spin"));
         return PlayState.CONTINUE;
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide) {
-            return InteractionResultHolder.pass(stack);
+        if (!worldIn.isClientSide()) {
+            return InteractionResult.PASS;
         }
 
         var caster = this.getSpellCaster(stack);
         if (caster == null) {
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
         caster.castOnServer(handIn, Component.translatable("ars_nouveau.wand.invalid"));
 
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "controller", 20, this::predicate));
+        // GeckoLib 5: AnimationController no longer takes the animatable as first arg
+        data.add(new AnimationController<Wand>("controller", 20, this::predicate));
     }
 
     @Override
@@ -99,10 +120,10 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        if (Minecraft.getInstance().hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
             getInformation(stack, context, tooltip2, flagIn);
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 
     @Override
@@ -111,7 +132,7 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
             final WandRenderer renderer = new WandRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });
@@ -121,7 +142,7 @@ public class Wand extends ModItem implements GeoItem, ICasterTool {
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Minecraft.getInstance().hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }

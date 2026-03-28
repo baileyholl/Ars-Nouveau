@@ -5,8 +5,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CopperBulbBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -21,7 +23,7 @@ public class SourceLamp extends CopperBulbBlock implements ILightable {
     public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light_level", 0, 15);
 
     public SourceLamp() {
-        super(BlockBehaviour.Properties.of().lightLevel((p) -> p.getValue(LIT) ? p.getValue(LIGHT_LEVEL) : 0));
+        super(BlockRegistry.newBlockProperties().lightLevel((p) -> p.getValue(LIT) ? p.getValue(LIGHT_LEVEL) : 0));
         this.registerDefaultState(this.defaultBlockState().setValue(LIT, Boolean.valueOf(false)).setValue(LIGHT_LEVEL, 15).setValue(POWERED, Boolean.valueOf(false)));
     }
 
@@ -39,7 +41,7 @@ public class SourceLamp extends CopperBulbBlock implements ILightable {
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+    protected int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos, Direction pDirection) {
         return pLevel.getBlockState(pPos).getValue(LIT) ? pState.getValue(LIGHT_LEVEL) : 0;
     }
 }

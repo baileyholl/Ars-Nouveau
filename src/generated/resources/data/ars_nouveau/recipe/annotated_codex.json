@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:blank_parchment"
-    },
-    {
-      "item": "minecraft:leather"
-    }
+    "ars_nouveau:blank_parchment",
+    "minecraft:leather"
   ],
   "result": {
     "count": 1,

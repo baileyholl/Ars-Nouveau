@@ -15,7 +15,7 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -23,11 +23,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -38,7 +39,8 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -90,24 +92,24 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         AbstractCaster<?> caster = getSpellCaster(playerIn.getItemInHand(handIn));
         boolean hasAmmo = !findAmmo(playerIn, itemstack).isEmpty();
 
-        InteractionResultHolder<ItemStack> ret = EventHooks.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
+        InteractionResult ret = EventHooks.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
         if (ret != null) return ret;
 
         if (hasAmmo || (caster.getSpell().isValid() && new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerIn, new PlayerCaster(playerIn), itemstack)).withSilent(true).canCast(playerIn))) {
             playerIn.startUsingItem(handIn);
-            return InteractionResultHolder.consume(itemstack);
+            return InteractionResult.CONSUME;
         }
 
         if (!playerIn.hasInfiniteMaterials() && !hasAmmo) {
-            return InteractionResultHolder.fail(itemstack);
+            return InteractionResult.FAIL;
         } else {
             playerIn.startUsingItem(handIn);
-            return InteractionResultHolder.consume(itemstack);
+            return InteractionResult.CONSUME;
         }
     }
 
@@ -120,16 +122,16 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack bowStack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving, int timeLeft) {
+    public boolean releaseUsing(ItemStack bowStack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         //Copied from BowItem, so we can spawn arrows in case there are no items.
         if (!(entityLiving instanceof Player playerentity))
-            return;
+            return false;
         boolean isInfinity = playerentity.hasInfiniteMaterials() || bowStack.getEnchantmentLevel(HolderHelper.unwrap(worldIn, Enchantments.INFINITY)) > 0;
         ItemStack arrowStack = findAmmo(playerentity, bowStack);
 
         int useTime = this.getUseDuration(bowStack, entityLiving) - timeLeft;
         useTime = net.neoforged.neoforge.event.EventHooks.onArrowLoose(bowStack, worldIn, playerentity, useTime, !arrowStack.isEmpty() || isInfinity);
-        if (useTime < 0) return;
+        if (useTime < 0) return false;
         boolean canFire = false;
         if (!arrowStack.isEmpty() || isInfinity) {
             if (arrowStack.isEmpty()) {
@@ -145,14 +147,14 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         }
 
         if (!canFire)
-            return;
+            return false;
 
         float f = getPowerForTime(useTime);
         boolean didCastSpell = false;
         if (f >= 0.1D) {
 
             boolean isArrowInfinite = playerentity.hasInfiniteMaterials() || (arrowStack.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(arrowStack, bowStack, playerentity));
-            if (!worldIn.isClientSide) {
+            if (!worldIn.isClientSide()) {
                 int use = EnchantmentHelper.processAmmoUse((ServerLevel) worldIn, bowStack, arrowStack, 1);
                 ArrowItem arrowitem = (ArrowItem) (arrowStack.getItem() instanceof ArrowItem ? arrowStack.getItem() : Items.ARROW);
                 AbstractArrow abstractarrowentity = arrowitem.createArrow(worldIn, arrowStack, playerentity, bowStack);
@@ -162,7 +164,7 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
                 SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.modifySpellBeforeCasting((ServerLevel) worldIn, entityLiving, InteractionHand.MAIN_HAND, caster.getSpell()), playerentity, new PlayerCaster(playerentity), bowStack));
                 if (arrowitem instanceof SpellArrow) {
                     if (!(resolver.canCast(playerentity))) {
-                        return;
+                        return false;
                     } else if (resolver.canCast(playerentity)) {
                         resolver.expendMana();
                         didCastSpell = true;
@@ -206,13 +208,15 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
 
             worldIn.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (worldIn.random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
         }
+        return true;
     }
 
     public void addArrow(AbstractArrow abstractarrowentity, ItemStack bowStack, ItemStack arrowStack, boolean isArrowInfinite, Player playerentity) {
         // TODO: verify if enchant checking is needed here
         int power = bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.POWER));
         if (power > 0) {
-            abstractarrowentity.setBaseDamage(abstractarrowentity.getBaseDamage() + power * 0.5D + 0.5D);
+            // 1.21.11: getBaseDamage() removed; use setBaseDamage with base value 2.0 + power bonus
+            abstractarrowentity.setBaseDamage(2.0D + power * 0.5D + 0.5D);
         }
 
         if (bowStack.getEnchantmentLevel(HolderHelper.unwrap(playerentity.level, Enchantments.FLAME)) > 0) {
@@ -244,16 +248,16 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        if (Minecraft.getInstance().hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
             getInformation(stack, context, tooltip2, flagIn);
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Minecraft.getInstance().hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }
@@ -276,23 +280,22 @@ public class SpellBow extends BowItem implements GeoItem, ICasterTool, IManaDisc
         spell.recipe = recipe;
     }
 
-    @Override
-    public boolean isEnchantable(@NotNull ItemStack stack) {
+    // isEnchantable and isBookEnchantable removed from Item in 1.21.11
+    public boolean isEnchantable(ItemStack stack) {
         return true;
     }
 
-    @Override
-    public boolean isBookEnchantable(@NotNull ItemStack stack, @NotNull ItemStack book) {
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return true;
     }
 
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private final BlockEntityWithoutLevelRenderer renderer = new SpellBowRenderer();
+            private final GeoItemRenderer<?> renderer = new SpellBowRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });

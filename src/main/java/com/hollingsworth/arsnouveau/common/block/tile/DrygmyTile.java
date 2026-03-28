@@ -16,10 +16,10 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -56,7 +56,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             for (int i = 0; i < progress / 2; i++) {
                 level.addParticle(
                         GlowParticleData.createData(new ParticleColor(
@@ -110,7 +110,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
 
     public void convertedEffect() {
         super.convertedEffect();
-        if (tickCounter >= 120 && !level.isClientSide) {
+        if (tickCounter >= 120 && !level.isClientSide()) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
             EntityDrygmy entityDrygmy = new EntityDrygmy(level, true);
@@ -121,7 +121,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
             tickCounter = 0;
             return;
         }
-        if (tickCounter % 10 == 0 && !level.isClientSide) {
+        if (tickCounter % 10 == 0 && !level.isClientSide()) {
             RandomSource r = level.random;
             int min = -2;
             int max = 2;
@@ -131,7 +131,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
     }
 
     public void refreshEntitiesAndBonus() {
-        Set<ResourceLocation> uniqueEntities;
+        Set<Identifier> uniqueEntities;
         this.nearbyEntities = new ArrayList<>();
         if (this.includeEntities) {
             this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6).getBottomCenter(), getBlockPos().south(10).east(10).above(6).getBottomCenter()));
@@ -163,11 +163,12 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
                 continue;
             }
 
-            var key = entity.getLootTable();
-            if (key == null) {
+            var keyOpt = entity.getLootTable();
+            if (keyOpt == null || keyOpt.isEmpty()) {
                 Log.getLogger().warn("Entity is missing loot table, report to that mods author! : {}", entity.getType().getDescriptionId());
                 continue;
             }
+            var key = keyOpt.get();
             LootTable loottable = serverLevel.getServer().reloadableRegistries().getLootTable(key);
             LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.level))
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
@@ -226,17 +227,17 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.progress = compound.getInt("progress");
-        this.bonus = compound.getInt("bonus");
-        this.needsMana = compound.getBoolean("needsMana");
-        this.includeEntities = !compound.contains("includeEntities") || compound.getBoolean("includeEntities");
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.progress = compound.getIntOr("progress", 0);
+        this.bonus = compound.getIntOr("bonus", 0);
+        this.needsMana = compound.getBooleanOr("needsMana", false);
+        this.includeEntities = compound.getBooleanOr("includeEntities", true);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt("progress", progress);
         tag.putInt("bonus", bonus);
         tag.putBoolean("needsMana", needsMana);

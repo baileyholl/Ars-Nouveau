@@ -25,7 +25,7 @@ public class ArcaneCore extends ModBlock implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
 

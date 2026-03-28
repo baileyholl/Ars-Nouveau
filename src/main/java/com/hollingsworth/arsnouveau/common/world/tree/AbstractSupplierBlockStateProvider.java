@@ -4,7 +4,7 @@ package com.hollingsworth.arsnouveau.common.world.tree;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,14 +14,14 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import java.util.function.Function;
 
 public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvider {
-    public static <T extends AbstractSupplierBlockStateProvider> Codec<T> codecBuilder(Function<ResourceLocation, T> builder) {
-        return ResourceLocation.CODEC.fieldOf("key").xmap(builder, (provider) -> provider.key).codec();
+    public static <T extends AbstractSupplierBlockStateProvider> Codec<T> codecBuilder(Function<Identifier, T> builder) {
+        return Identifier.CODEC.fieldOf("key").xmap(builder, (provider) -> provider.key).codec();
     }
 
-    protected final ResourceLocation key;
+    protected final Identifier key;
     protected BlockState state = null;
 
-    public AbstractSupplierBlockStateProvider(ResourceLocation key) {
+    public AbstractSupplierBlockStateProvider(Identifier key) {
         this.key = key;
     }
 
@@ -31,7 +31,8 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     @Override
     public BlockState getState(RandomSource randomIn, BlockPos blockPosIn) {
         if (state == null) {
-            Block block = BuiltInRegistries.BLOCK.get(key);
+            // 1.21.11: BuiltInRegistries.get() returns Optional<Reference<T>>
+            Block block = BuiltInRegistries.BLOCK.get(key).map(net.minecraft.core.Holder.Reference::value).orElse(net.minecraft.world.level.block.Blocks.AIR);
             state = block.defaultBlockState();
         }
 

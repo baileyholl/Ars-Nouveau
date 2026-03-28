@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,11 +24,11 @@ import java.util.function.Function;
 public class ModelProperty extends BaseProperty<ModelProperty> {
 
     public static MapCodec<ModelProperty> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("resource").forGetter(i -> i.selectedResource.resourceLocation),
+            Identifier.CODEC.fieldOf("resource").forGetter(i -> i.selectedResource.resourceLocation),
             PropMap.CODEC.fieldOf("subPropMap").forGetter(i -> i.subPropMap)
     ).apply(instance, ModelProperty::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ModelProperty> STREAM_CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC, i -> i.selectedResource.resourceLocation,
+    public static StreamCodec<RegistryFriendlyByteBuf, ModelProperty> STREAM_CODEC = StreamCodec.composite(Identifier.STREAM_CODEC, i -> i.selectedResource.resourceLocation,
             PropMap.STREAM_CODEC, i -> i.subPropMap, ModelProperty::new);
 
     public Model selectedResource;
@@ -68,7 +68,7 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
         subPropMap = new PropMap();
     }
 
-    public ModelProperty(ResourceLocation resourceLocation, PropMap subPropMap) {
+    public ModelProperty(Identifier resourceLocation, PropMap subPropMap) {
         this(new PropMap());
         this.selectedResource = resources.stream().filter(res -> res.resourceLocation.equals(resourceLocation)).findFirst().orElse(NONE);
         this.subPropMap = subPropMap;
@@ -114,17 +114,17 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
                 }
             }
 
-            private ResourceLocation getImagePath(Model location) {
+            private Identifier getImagePath(Model location) {
                 return location.blitInfo.location();
             }
 
-            private Component getTypeName(ResourceLocation location) {
+            private Component getTypeName(Identifier location) {
                 return Component.translatable(location.getNamespace() + ".model." + location.getPath());
             }
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                graphics.blit(getImagePath(selectedResource), x, y, 0, 0, 14, 14, 14, 14);
+                graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, getImagePath(selectedResource), x, y, 0, 0, 14, 14, 14, 14);
             }
 
             @Override
@@ -165,10 +165,10 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
         return Objects.hash(selectedResource, subPropMap);
     }
 
-    public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor,
-                        Function<EntityProjectileSpell, ResourceLocation> getTexture) {
-        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor) {
-            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"));
+    public record Model(Identifier resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor,
+                        Function<EntityProjectileSpell, Identifier> getTexture) {
+        public Model(Identifier resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor) {
+            this(resourceLocation, blitInfo, supportsColor, spell -> Identifier.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"));
         }
 
 

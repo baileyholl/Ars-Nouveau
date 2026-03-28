@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.world.saved_data.RedstoneSavedData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +49,7 @@ public class EffectRedstone extends AbstractEffect {
                     return;
                 pos1 = pos1.immutable();
                 RedstoneSavedData.from((ServerLevel) world).SIGNAL_MAP.put(pos1, new RedstoneSavedData.Entry(pos1, signalModifier, delay));
-                world.neighborChanged(pos1, world.getBlockState(pos1).getBlock(), pos1);
+                world.neighborChanged(pos1, world.getBlockState(pos1).getBlock(), null);
                 world.updateNeighborsAt(pos1, world.getBlockState(pos1).getBlock());
             } else {
 
@@ -88,7 +88,7 @@ public class EffectRedstone extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

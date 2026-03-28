@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:worn_notebook"
-    },
-    {
-      "item": "minecraft:iron_shovel"
-    },
-    {
-      "item": "minecraft:iron_pickaxe"
-    },
-    {
-      "item": "minecraft:iron_axe"
-    },
-    {
-      "item": "minecraft:iron_sword"
-    }
+    "ars_nouveau:worn_notebook",
+    "minecraft:iron_shovel",
+    "minecraft:iron_pickaxe",
+    "minecraft:iron_axe",
+    "minecraft:iron_sword"
   ],
   "result": {
     "count": 1,

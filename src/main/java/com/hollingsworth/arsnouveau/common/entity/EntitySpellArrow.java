@@ -16,6 +16,8 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +28,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -169,7 +171,7 @@ public class EntitySpellArrow extends Arrow {
 
             if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS && !isNoClip && !EventHooks.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
-                this.hasImpulse = true;
+                // 1.21.11: hasImpulse removed
             }
 
             if (entityraytraceresult == null || this.getPierceLevel() <= 0) {
@@ -218,23 +220,23 @@ public class EntitySpellArrow extends Arrow {
         }
 
         this.setPos(d5, d1, d2);
-        this.checkInsideBlocks();
+        // 1.21.11: checkInsideBlocks() removed from Entity
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             playParticles();
         }
-        if (!level.isClientSide && tickCount == 1 && castSound != null) {
+        if (!level.isClientSide() && tickCount == 1 && castSound != null) {
             castSound.playSound(level, position);
         }
     }
 
     protected void attemptRemoval() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         this.pierceLeft--;
         if (this.pierceLeft < 0) {
             this.level.broadcastEntityEvent(this, (byte) 3);
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
@@ -245,18 +247,17 @@ public class EntitySpellArrow extends Arrow {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("resolver")) {
-            setResolver(ANCodecs.decode(SpellResolver.CODEC.codec(), tag.get("resolver")));
-        }
+        // 1.21.11: ValueInput.read returns Optional<T> with codec
+        tag.read("resolver", SpellResolver.CODEC.codec()).ifPresent(this::setResolver);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         if (this.resolver() != null) {
-            tag.put("resolver", ANCodecs.encode(SpellResolver.CODEC.codec(), this.resolver()));
+            tag.store("resolver", SpellResolver.CODEC.codec(), this.resolver());
         }
     }
 
@@ -264,7 +265,8 @@ public class EntitySpellArrow extends Arrow {
         super.onHitEntity(p_213868_1_);
         Entity entity = p_213868_1_.getEntity();
         float f = (float) this.getDeltaMovement().length();
-        double d0 = this.getBaseDamage();
+        // 1.21.11: getBaseDamage() removed from AbstractArrow; use default arrow damage of 2.0
+        double d0 = 2.0;
         Entity entity1 = this.getOwner();
         DamageSource damagesource = this.damageSources().arrow(this, entity1 != null ? entity1 : this);
         if (level instanceof ServerLevel serverlevel) {
@@ -288,13 +290,14 @@ public class EntitySpellArrow extends Arrow {
             entity.igniteForSeconds(5.0F);
         }
 
-        if (entity.hurt(damagesource, (float) j)) {
+        // 1.21.11: Entity.hurt() returns void; use hurtOrSimulate() for boolean result
+        if (entity.hurtOrSimulate(damagesource, (float) j)) {
             if (flag) {
                 return;
             }
 
             if (entity instanceof LivingEntity livingentity) {
-                if (!this.level().isClientSide && this.getPierceLevel() <= 0) {
+                if (!this.level().isClientSide() && this.getPierceLevel() <= 0) {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
 
@@ -307,7 +310,8 @@ public class EntitySpellArrow extends Arrow {
             }
         } else {
             entity.setRemainingFireTicks(i);
-            this.deflect(ProjectileDeflection.REVERSE, entity, this.getOwner(), false);
+            // 1.21.11: deflect() third param is EntityReference<Entity>, not Entity; use this.owner field
+            this.deflect(ProjectileDeflection.REVERSE, entity, this.owner, false);
             this.setDeltaMovement(this.getDeltaMovement().scale(0.2));
         }
 

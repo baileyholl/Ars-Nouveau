@@ -6,12 +6,12 @@ import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class VampiricPerk extends Perk implements IEffectResolvePerk {
     public static VampiricPerk INSTANCE = new VampiricPerk(ArsNouveau.prefix("thread_life_drain"));
 
-    public VampiricPerk(ResourceLocation key) {
+    public VampiricPerk(Identifier key) {
         super(key);
     }
 

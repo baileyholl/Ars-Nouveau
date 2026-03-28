@@ -8,8 +8,6 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -21,13 +19,16 @@ public class StructureTagProvider extends TagsProvider<Structure> {
     public static final ResourceKey<Structure> STALKER_DEN = register("stalker_wilden_den");
     public static final ResourceKey<Structure> GUARDIAN_DEN = register("guardian_wilden_den");
 
-    public StructureTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, Registries.STRUCTURE, pProvider, ArsNouveau.MODID, existingFileHelper);
+    public StructureTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider) {
+        super(pOutput, Registries.STRUCTURE, pProvider, ArsNouveau.MODID);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(WILDEN_DEN).add(HUNTER_DEN, STALKER_DEN, GUARDIAN_DEN);
+        this.getOrCreateRawBuilder(WILDEN_DEN)
+                .addElement(HUNTER_DEN.identifier())
+                .addElement(STALKER_DEN.identifier())
+                .addElement(GUARDIAN_DEN.identifier());
     }
 
     public static ResourceKey<Structure> register(String name) {

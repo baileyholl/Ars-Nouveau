@@ -1,22 +1,14 @@
 {
   "type": "ars_nouveau:imbuement",
-  "input": {
-    "tag": "minecraft:arrows"
-  },
+  "input": "#minecraft:arrows",
   "output": {
     "count": 1,
     "id": "ars_nouveau:split_arrow"
   },
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:source_gem"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:wilden_horn"
-    }
+    "ars_nouveau:source_gem",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:wilden_horn"
   ],
   "source": 100
 }

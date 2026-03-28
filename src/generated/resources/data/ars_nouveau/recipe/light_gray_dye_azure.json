@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:azure_bluet"
-  },
+  "input": "minecraft:azure_bluet",
   "output": [
     {
       "chance": 1.0,

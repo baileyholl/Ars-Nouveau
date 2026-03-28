@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.WildenSummon;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,10 +21,12 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 
@@ -56,8 +58,9 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if (Config.HUNTER_ATTACK_ANIMALS.get())
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
-
+            // 1.21.11: Explicit type arg needed for NearestAttackableTargetGoal with lambda predicate
+            // 1.21.11: TargetingConditions.Selector.test takes (LivingEntity, ServerLevel)
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Animal>(this, Animal.class, 10, true, false, (entity, serverLevel) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
     }
 
     @Override
@@ -66,16 +69,24 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
         pBuilder.define(ANIM_STATE, Animations.IDLE.name());
     }
 
+    // 1.21.11: Wolf sounds moved from SoundEvents static fields to WolfSoundVariant system.
+    // Access default (CLASSIC) variant via SoundEvents.WOLF_SOUNDS map.
+    private static net.minecraft.world.entity.animal.wolf.WolfSoundVariant getWolfVariant() {
+        return SoundEvents.WOLF_SOUNDS.get(net.minecraft.world.entity.animal.wolf.WolfSoundVariants.SoundSet.CLASSIC);
+    }
+
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.WOLF_HURT;
+        var v = getWolfVariant();
+        return v != null ? v.hurtSound().value() : null;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.WOLF_DEATH;
+        var v = getWolfVariant();
+        return v != null ? v.deathSound().value() : null;
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(ServerLevel pLevel) {
         return 5;
     }
 
@@ -93,7 +104,8 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.WOLF_GROWL;
+        var v = getWolfVariant();
+        return v != null ? v.growlSound().value() : null;
     }
 
     public static AttributeSupplier.Builder getModdedAttributes() {
@@ -109,7 +121,7 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         if (ramCooldown > 0)
             ramCooldown--;
@@ -123,7 +135,8 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
             if (controller == null)
                 return;
             if (arg == Animations.HOWL.ordinal()) {
-                controller.forceAnimationReset();
+                // GeckoLib 5: forceAnimationReset() → reset()
+                controller.reset();
                 controller.setAnimation(RawAnimation.begin().thenPlay("howl_master").thenPlay("idle"));
             }
         } catch (Exception e) {
@@ -132,7 +145,7 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
 
     }
 
-    private PlayState attackPredicate(AnimationState<?> event) {
+    private PlayState attackPredicate(AnimationTest<WildenHunter> event) {
         return PlayState.CONTINUE;
     }
 
@@ -143,33 +156,35 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        controller = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
-        runController = new AnimationController<>(this, "runController", 1, this::runPredicate);
-        idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
+        // GeckoLib 5: AnimationController constructor no longer takes entity as first arg
+        controller = new AnimationController<WildenHunter>("attackController", 1, this::attackPredicate);
+        runController = new AnimationController<WildenHunter>("runController", 1, this::runPredicate);
+        idleController = new AnimationController<WildenHunter>("idleController", 1, this::idlePredicate);
         animatableManager.add(controller);
         animatableManager.add(runController);
         animatableManager.add(idleController);
     }
 
-    private <T extends GeoAnimatable> PlayState runPredicate(AnimationState<T> tAnimationState) {
+    private PlayState runPredicate(AnimationTest<WildenHunter> tAnimationState) {
         if (this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())) {
             return PlayState.STOP;
         }
         if (tAnimationState.isMoving()) {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+            // GeckoLib 5: getController() → controller() (record accessor)
+            tAnimationState.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
-    private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
+    private PlayState idlePredicate(AnimationTest<WildenHunter> tAnimationState) {
         if (this.getEntityData().get(ANIM_STATE).equals(Animations.HOWL.name())) {
             return PlayState.STOP;
         }
         if (tAnimationState.isMoving()) {
             return PlayState.STOP;
         }
-        tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+        tAnimationState.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
 
@@ -185,15 +200,16 @@ public class WildenHunter extends Monster implements GeoEntity, IAnimationListen
         IDLE
     }
 
+    // 1.21.11: save(CompoundTag)/load(CompoundTag) removed; use addAdditionalSaveData/readAdditionalSaveData
     @Override
-    public boolean save(CompoundTag pCompound) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput pCompound) {
+        super.addAdditionalSaveData(pCompound);
         pCompound.putInt("summonCooldown", summonCooldown);
-        return super.save(pCompound);
     }
 
     @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
-        summonCooldown = pCompound.getInt("summonCooldown");
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        summonCooldown = pCompound.getIntOr("summonCooldown", 0);
     }
 }

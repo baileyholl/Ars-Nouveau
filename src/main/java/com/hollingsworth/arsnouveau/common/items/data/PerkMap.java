@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.mojang.serialization.Codec;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 import java.util.Objects;
@@ -17,7 +17,7 @@ public record PerkMap(Map<IPerk, CompoundTag> map) {
         var builder = ImmutableMap.<IPerk, CompoundTag>builder();
         stringMap.forEach((key, value) -> {
             if (key != null) {
-                var loc = ResourceLocation.tryParse(key);
+                var loc = Identifier.tryParse(key);
                 if (loc == null) {
                     return;
                 }

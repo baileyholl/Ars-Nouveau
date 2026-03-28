@@ -29,7 +29,7 @@ public class TickEmitterPacket extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         super.onClientReceived(minecraft, player);
-        emitter.tick(player.level);
+        emitter.tick(player.level());
     }
 
     @Override

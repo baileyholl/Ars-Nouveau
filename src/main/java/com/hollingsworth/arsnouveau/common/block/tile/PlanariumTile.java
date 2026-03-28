@@ -19,11 +19,13 @@ import com.hollingsworth.nuggets.common.util.WorldHelpers;
 import net.commoble.infiniverse.internal.DimensionManager;
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -104,7 +106,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
     }
 
     public void setTemplateClientSide(StructureTemplate template) {
-        if (level.isClientSide && key != null) {
+        if (level.isClientSide() && key != null) {
             ArrayList<CulledStatePos> statePos = new ArrayList<>();
             var palette = ((StructureTemplateAccessor) template).getPalettes().get(0);
             for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
@@ -123,10 +125,10 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
 
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.handleUpdateTag(tag, lookupProvider);
+    public void handleUpdateTag(ValueInput tag) {
+        super.handleUpdateTag(tag);
         // Checks if the client is up to date with this template compared to
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (key != null && (!clientTemplates.containsKey(key) || clientTemplates.get(key).lastUpdated < lastUpdated)) {
                 Networking.sendToServer(new PacketClientRequestDim(worldPosition));
             }
@@ -134,34 +136,32 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (key != null) {
-            tag.putString("key", key.location().toString());
+            tag.putString("key", key.identifier().toString());
         }
         if (name != null) {
             tag.putString("name", name.getString());
         }
-
         tag.putLong("lastUpdated", lastUpdated);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains("key"))
-            key = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("key")));
-        if (tag.contains("name")) {
-            this.name = Component.literal(tag.getString("name"));
-        }
-        lastUpdated = tag.getLong("lastUpdated");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        tag.getString("key").ifPresent(k ->
+            key = ResourceKey.create(Registries.DIMENSION, Identifier.parse(k))
+        );
+        tag.getString("name").ifPresent(n -> this.name = Component.literal(n));
+        lastUpdated = tag.getLongOr("lastUpdated", 0L);
     }
 
     public @Nullable StructureTemplate getTemplate() {
         if (key == null) {
             return null;
         }
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             var entry = PlanariumTile.clientTemplates.get(key);
             return entry == null ? null : entry.template();
         } else {
@@ -170,7 +170,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
     }
 
     @Override
-    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
         this.name = componentInput.get(DataComponents.CUSTOM_NAME);
         if (name != null && level instanceof ServerLevel serverLevel) {
@@ -230,11 +230,11 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
             // Ensure we are not already in another jar dimension, preventing players from getting trapped between two jars
             DimMappingData dimMappingData = DimMappingData.from(serverLevel);
             JarDimData jarData = JarDimData.from(dimLevel);
-            if (entity instanceof ServerPlayer && dimMappingData.getByKey(level.dimension().location()) == null) {
+            if (entity instanceof ServerPlayer && dimMappingData.getByKey(level.dimension().identifier()) == null) {
                 jarData.setEnteredFrom(entity.getUUID(), GlobalPos.of(level.dimension(), entity.blockPosition()), entity.getRotationVector());
             }
             BlockPos spawnPos = jarData.getSpawnPos();
-            entity.teleportTo(dimLevel, spawnPos.getX() + 0.5, spawnPos.getY() + 1, spawnPos.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot());
+            entity.teleportTo(dimLevel, spawnPos.getX() + 0.5, spawnPos.getY() + 1, spawnPos.getZ() + 0.5, Set.of(), entity.getYRot(), entity.getXRot(), false);
         }
     }
 
@@ -321,8 +321,8 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
 
         public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server) {
             return server.registryAccess() // get dynamic registries
-                    .registryOrThrow(Registries.DIMENSION_TYPE)
-                    .getHolderOrThrow(ArsNouveau.DIMENSION_TYPE_KEY);
+                    .lookupOrThrow(Registries.DIMENSION_TYPE)
+                    .getOrThrow(ArsNouveau.DIMENSION_TYPE_KEY);
         }
 
         public StructureTemplate getTemplate(ResourceKey<Level> key) {
@@ -367,7 +367,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
             BlockPos pos = new BlockPos(0, 1, 0);
             Vec3i size = new Vec3i(32, 31, 32);
             StructureTemplate template = new StructureTemplate();
-            template.fillFromWorld(dimLevel, pos, size, true, Blocks.AIR);
+            template.fillFromWorld(dimLevel, pos, size, true, List.of(Blocks.AIR));
             forceLoad(chunkPos, chunkLoadingDistance, dimLevel, worldPosition, false);
             return template;
         }

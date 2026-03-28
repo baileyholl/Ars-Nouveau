@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:alakarkinos_charm"
-    }
+    "ars_nouveau:alakarkinos_charm"
   ],
   "result": {
     "count": 1,

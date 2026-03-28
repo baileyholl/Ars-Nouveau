@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,8 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide() || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
@@ -57,7 +57,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null) {
+        if (!level.isClientSide() && level.getGameTime() % 60 == 0 && getOwner() != null) {
             getOwner().addEffect(new MobEffectInstance(ModPotions.LOOTING_EFFECT, 600, 0, false, false, true));
         }
     }
@@ -72,9 +72,9 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
 //    }
 
     @Override
-    public PlayState walkPredicate(AnimationState event) {
+    public PlayState walkPredicate(AnimationTest<FamiliarEntity> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -85,7 +85,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
         return ModEntities.ENTITY_FAMILIAR_DRYGMY.get();
     }
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty()) color = "brown";
         return ArsNouveau.prefix("textures/entity/drygmy_" + color + ".png");

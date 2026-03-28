@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.common.datagen.PatchouliProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class RelationsPage extends AbstractPage {
     public RelationsPage() {
     }
 
-    public RelationsPage withEntry(ResourceLocation category, String fileName) {
+    public RelationsPage withEntry(Identifier category, String fileName) {
         return withEntry(category.toString() + "/" + fileName);
     }
 
@@ -55,7 +55,7 @@ public class RelationsPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("patchouli:relations");
+    public Identifier getType() {
+        return Identifier.tryParse("patchouli:relations");
     }
 }

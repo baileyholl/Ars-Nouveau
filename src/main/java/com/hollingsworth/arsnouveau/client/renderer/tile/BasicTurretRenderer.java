@@ -3,36 +3,16 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
-import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
-import java.util.Optional;
-
+// TODO: Bone rotation (setRotX/setRotY) for RotatingTurretTile needs migration to addAdditionalStateData in GeckoLib 5.
+// The setCustomAnimations override was removed because the method no longer exists in GeoModel.
 public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTile> {
-    public static GeoModel model = new GenericModel("basic_spell_turret") {
-        @Override
-        public void setCustomAnimations(GeoAnimatable animatable, long instanceId, AnimationState animationState) {
-            super.setCustomAnimations(animatable, instanceId, animationState);
-            Optional<GeoBone> master = this.getBone("spell_turret");
-            master.get().setRotX(0);
-            master.get().setRotY(0);
-            if (animatable instanceof RotatingTurretTile tile) {
-                master.get().setRotY((tile.getRotationX() + 90) * Mth.DEG_TO_RAD);
-                master.get().setRotX(tile.getRotationY() * Mth.DEG_TO_RAD);
-            }
-        }
-    };
+    public static GeoModel model = new GenericModel("basic_spell_turret");
 
     public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         this(rendererDispatcherIn, model);
@@ -42,17 +22,17 @@ public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTil
         super(rendererDispatcherIn, modelProvider);
     }
 
+    // GeckoLib 5: actuallyRender replaced with adjustRenderPose for pose manipulation
     @Override
-    public void actuallyRender(PoseStack poseStack, BasicSpellTurretTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        poseStack.pushPose();
-        Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);
+    public void adjustRenderPose(RenderPassInfo<ArsBlockEntityRenderState> renderPassInfo) {
+        super.adjustRenderPose(renderPassInfo);
+        PoseStack poseStack = renderPassInfo.poseStack();
+        Direction direction = renderPassInfo.renderState().blockState.getValue(BasicSpellTurret.FACING);
         if (direction == Direction.UP) {
             poseStack.translate(0, 0.5, -0.5);
         } else if (direction == Direction.DOWN) {
             poseStack.translate(0, 0.5, 0.5);
         }
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        poseStack.popPose();
     }
 
     public static GenericItemBlockRenderer getISTER() {

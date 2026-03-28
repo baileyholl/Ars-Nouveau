@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +43,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super(tag, description);
     }
 
-    public AbstractEffect(ResourceLocation tag, String description) {
+    public AbstractEffect(Identifier tag, String description) {
         super(tag, description);
     }
 
@@ -136,11 +136,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     @Override
     public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        Map<ResourceLocation, Integer> defaultAugmentLimits = new HashMap<>();
+        Map<Identifier, Integer> defaultAugmentLimits = new HashMap<>();
         addDefaultAugmentLimits(defaultAugmentLimits);
         buildAugmentLimitsConfig(builder, defaultAugmentLimits);
 
-        Map<ResourceLocation, Integer> defaultAugmentCosts = new HashMap<>();
+        Map<Identifier, Integer> defaultAugmentCosts = new HashMap<>();
         addAugmentCostOverrides(defaultAugmentCosts);
         buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
         super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));

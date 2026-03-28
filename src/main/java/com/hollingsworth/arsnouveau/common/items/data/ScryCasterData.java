@@ -23,7 +23,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,15 +61,15 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @org.jetbrains.annotations.Nullable Component invalidMessage, @NotNull Spell spell) {
+    public InteractionResult castSpell(Level worldIn, LivingEntity entity, InteractionHand handIn, @org.jetbrains.annotations.Nullable Component invalidMessage, @NotNull Spell spell) {
         ItemStack stack = entity.getItemInHand(handIn);
 
-        if (worldIn.isClientSide)
-            return InteractionResultHolder.pass(entity.getItemInHand(handIn));
+        if (worldIn.isClientSide())
+            return InteractionResult.PASS;
         spell = modifySpellBeforeCasting((ServerLevel) worldIn, entity, handIn, spell);
         if (!spell.isValid() && invalidMessage != null) {
             PortUtil.sendMessageNoSpam(entity, invalidMessage);
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+            return InteractionResult.SUCCESS;
         }
         Player player = entity instanceof Player thisPlayer ? thisPlayer : ANFakePlayer.getPlayer((ServerLevel) worldIn);
         IWrappedCaster wrappedCaster = entity instanceof Player pCaster ? new PlayerCaster(pCaster) : new LivingCaster(entity);
@@ -77,7 +77,7 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
         ITurretBehavior behavior = BasicSpellTurret.TURRET_BEHAVIOR_MAP.get(spell.getCastMethod());
         if (behavior == null) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.invalid_behavior"));
-            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+            return InteractionResult.CONSUME;
         }
 
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
@@ -86,20 +86,20 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
         BlockPos scryPos = globalPos == null ? null : globalPos.pos();
         if (scryPos == null) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.no_pos"));
-            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+            return InteractionResult.CONSUME;
         }
         if (!worldIn.isLoaded(scryPos)) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.camera.not_loaded"));
-            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+            return InteractionResult.CONSUME;
         }
         BlockState castingAtState = worldIn.getBlockState(scryPos);
         if (!(castingAtState.getBlock() instanceof ScryerCrystal)) {
             PortUtil.sendMessage(entity, Component.translatable("ars_nouveau.scry_caster.not_crystal"));
-            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+            return InteractionResult.CONSUME;
         }
 
         if (!resolver.canCast(player)) {
-            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+            return InteractionResult.CONSUME;
         }
 
         Position position;
@@ -115,7 +115,7 @@ public class ScryCasterData extends AbstractCaster<ScryCasterData> {
                 position,
                 direction);
         resolver.expendMana();
-        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+        return InteractionResult.CONSUME;
     }
 
     @Override

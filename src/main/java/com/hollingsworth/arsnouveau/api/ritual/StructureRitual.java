@@ -5,7 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class StructureRitual extends AbstractRitual {
-    public ResourceLocation structure;
+    public Identifier structure;
     public BlockPos offset;
     public List<StructureTemplate.StructureBlockInfo> blocks = new ArrayList<>();
     public List<StructureTemplate.StructureEntityInfo> entityInfoList = new ArrayList<>();
@@ -32,7 +35,7 @@ public abstract class StructureRitual extends AbstractRitual {
     public ResourceKey<Biome> biome;
     public boolean hasDoneSetup;
 
-    public StructureRitual(ResourceLocation structure, BlockPos offset, int sourceRequired, ResourceKey<Biome> biome) {
+    public StructureRitual(Identifier structure, BlockPos offset, int sourceRequired, ResourceKey<Biome> biome) {
         this.structure = structure;
         this.offset = offset;
         this.sourceRequired = sourceRequired;
@@ -43,13 +46,13 @@ public abstract class StructureRitual extends AbstractRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if (getWorld().isClientSide)
+        if (getWorld().isClientSide())
             return;
         setup();
     }
 
     public void setup() {
-        if (getWorld().isClientSide || hasDoneSetup)
+        if (getWorld().isClientSide() || hasDoneSetup)
             return;
         StructureTemplateManager manager = getWorld().getServer().getStructureManager();
         StructureTemplate structureTemplate = manager.getOrCreate(structure);
@@ -62,7 +65,7 @@ public abstract class StructureRitual extends AbstractRitual {
 
     @Override
     protected void tick() {
-        if (getWorld().isClientSide)
+        if (getWorld().isClientSide())
             return;
         if (!hasDoneSetup) {
             setup();
@@ -80,12 +83,15 @@ public abstract class StructureRitual extends AbstractRitual {
                     try {
                         CompoundTag entityTag = entityInfo.nbt;
                         entityTag.remove("UUID");
-                        entity = EntityType.create(entityTag, getWorld());
+                        // 1.21.11: EntityType.create(CompoundTag, Level) → create(ValueInput, Level, EntitySpawnReason)
+                        var input = TagValueInput.create(ProblemReporter.DISCARDING, getWorld().registryAccess(), entityTag);
+                        entity = EntityType.create(input, getWorld(), EntitySpawnReason.LOAD);
                     } catch (Exception e) {
                         continue;
                     }
                     if (entity.isPresent()) {
-                        entity.get().moveTo(translatedPos.getX(), translatedPos.getY(), translatedPos.getZ());
+                        // 1.21.11: moveTo(x,y,z) → snapTo(x,y,z)
+                        entity.get().snapTo(translatedPos.getX(), translatedPos.getY(), translatedPos.getZ());
                         getWorld().addFreshEntity(entity.get());
                     }
                 }
@@ -103,7 +109,9 @@ public abstract class StructureRitual extends AbstractRitual {
                     }
 
                     if (blockInfo.nbt() != null) {
-                        blockentity1.loadWithComponents(blockInfo.nbt(), getWorld().registryAccess());
+                        // 1.21.11: loadWithComponents(CompoundTag, RegistryAccess) → loadWithComponents(ValueInput)
+                        var beInput = TagValueInput.create(ProblemReporter.DISCARDING, getWorld().registryAccess(), blockInfo.nbt());
+                        blockentity1.loadWithComponents(beInput);
                     }
                 }
                 getWorld().playSound(null, translatedPos, blockInfo.state().getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -127,8 +135,8 @@ public abstract class StructureRitual extends AbstractRitual {
     @Override
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
-        index = tag.getInt("index");
-        hasConsumed = tag.getBoolean("hasConsumed");
+        index = tag.getIntOr("index", 0);
+        hasConsumed = tag.getBooleanOr("hasConsumed", false);
     }
 
     @Override
@@ -144,5 +152,5 @@ public abstract class StructureRitual extends AbstractRitual {
     }
 
     @Override
-    public abstract ResourceLocation getRegistryName();
+    public abstract Identifier getRegistryName();
 }

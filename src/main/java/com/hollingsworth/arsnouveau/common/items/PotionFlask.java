@@ -13,10 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -27,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.minecraft.world.item.component.TooltipDisplay;
+import java.util.function.Consumer;
+import net.minecraft.world.item.Item;
 
 public abstract class PotionFlask extends ModItem {
 
@@ -43,7 +46,7 @@ public abstract class PotionFlask extends ModItem {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().isClientSide ||
+        if (context.getLevel().isClientSide() ||
                 !(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile jarTile))
             return super.useOn(context);
         ItemStack thisStack = context.getItemInHand();
@@ -83,12 +86,12 @@ public abstract class PotionFlask extends ModItem {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, Level worldIn, @NotNull LivingEntity entityLiving) {
         Player playerentity = entityLiving instanceof Player player ? player : null;
 
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
             for (MobEffectInstance effectinstance : data.contents().getAllEffects()) {
                 effectinstance = getEffectInstance(effectinstance);
                 if (effectinstance.getEffect().value().isInstantenous()) {
-                    effectinstance.getEffect().value().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
+                    effectinstance.getEffect().value().applyInstantenousEffect((ServerLevel) worldIn, playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
                 } else {
                     entityLiving.addEffect(new MobEffectInstance(effectinstance));
                 }
@@ -112,7 +115,7 @@ public abstract class PotionFlask extends ModItem {
 
         contents.customEffects().stream().map(this::getEffectInstance).forEach(newPotionEffects::add);
 
-        return new PotionContents(Optional.empty(), contents.customColor(), newPotionEffects);
+        return new PotionContents(Optional.empty(), contents.customColor(), newPotionEffects, Optional.empty());
     }
 
 
@@ -150,21 +153,26 @@ public abstract class PotionFlask extends ModItem {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
-        return UseAnim.DRINK;
-    }
-
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
-        return data.charges() > 0 ? ItemUtils.startUsingInstantly(worldIn, playerIn, handIn) : InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
+    public @NotNull ItemUseAnimation getUseAnimation(@NotNull ItemStack stack) {
+        return ItemUseAnimation.DRINK;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
-        tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-        PotionContents.addPotionTooltip(data.contents().getAllEffects(), tooltip::add, 1.0F, context.tickRate());
+        if (data.charges() > 0) {
+            playerIn.startUsingItem(handIn);
+            return InteractionResult.CONSUME;
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
+        MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
+        tooltip.accept(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+        PotionContents.addPotionTooltip(data.contents().getAllEffects(), tooltip::accept, 1.0F, context.tickRate());
     }
 }

@@ -61,8 +61,8 @@ public class SummonBed extends ModBlock {
         pBuilder.add(POWERED);
     }
 
-    public void fallOn(Level pLevel, BlockState pState, BlockPos pPos, Entity pEntity, float pFallDistance) {
-        super.fallOn(pLevel, pState, pPos, pEntity, pFallDistance * 0.5F);
+    public void fallOn(Level pLevel, BlockState pState, BlockPos pPos, Entity pEntity, double pFallDistance) {
+        super.fallOn(pLevel, pState, pPos, pEntity, pFallDistance * 0.5);
     }
 
     /**
@@ -70,9 +70,9 @@ public class SummonBed extends ModBlock {
      * This method is responsible for doing any modification on the motion of the entity that should result from the
      * landing.
      */
-    public void updateEntityAfterFallOn(BlockGetter pLevel, Entity pEntity) {
+    public void updateEntityMovementAfterFallOn(BlockGetter pLevel, Entity pEntity) {
         if (pEntity.isSuppressingBounce()) {
-            super.updateEntityAfterFallOn(pLevel, pEntity);
+            super.updateEntityMovementAfterFallOn(pLevel, pEntity);
         } else {
             this.bounceUp(pEntity);
         }

@@ -28,7 +28,7 @@ public class MethodSelf extends AbstractCastMethod {
 
     @Override
     public CastResolveType onCast(ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(caster));
+        resolver.onResolveEffect(caster.level(), new EntityHitResult(caster));
         ParticleEmitter emitter = resolveEmitter(context, caster.getHitbox().getCenter());
         emitter.tick(world);
         playResolveSound(context, caster.level(), caster.getHitbox().getCenter());

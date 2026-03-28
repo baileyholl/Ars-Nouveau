@@ -1,7 +1,6 @@
 {
-    "parent": "builtin/entity",
     "textures": {
-        "particle": "block/acacia_planks"
+        "particle": "ars_nouveau:block/archwood_planks"
     },
     "display": {
         "gui": {

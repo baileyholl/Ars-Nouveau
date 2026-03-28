@@ -24,10 +24,11 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -43,7 +44,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -125,13 +126,13 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
 
     @Override
     public void tick() {
-        if (isDecorative && level.isClientSide) {
+        if (isDecorative && level.isClientSide()) {
             makeParticle(color.nextColor((int) level.getGameTime() * 20), color.nextColor((int) level.getGameTime() * 20 + 200), 10);
             return;
         }
 
 
-        if (level.isClientSide && ritual != null) {
+        if (level.isClientSide() && ritual != null) {
             makeParticle(ritual.getCenterColor(), ritual.getOuterColor(), ritual.getParticleIntensity());
         }
         if (isOff)
@@ -146,7 +147,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
                 updateBlock();
                 return;
             }
-            if (!ritual.isRunning() && !level.isClientSide && level.getGameTime() % 5 == 0) {
+            if (!ritual.isRunning() && !level.isClientSide() && level.getGameTime() % 5 == 0) {
                 level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i -> {
                     tryBurnStack(i.getItem());
                 });
@@ -189,7 +190,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     public boolean tryBurnStack(ItemStack stack) {
-        if (ritual != null && !ritual.isRunning() && !level.isClientSide && ritual.canConsumeItem(stack)) {
+        if (ritual != null && !ritual.isRunning() && !level.isClientSide() && ritual.canConsumeItem(stack)) {
             ritual.onItemConsumed(stack);
             ParticleUtil.spawnPoof((ServerLevel) level, getBlockPos());
             level.playSound(null, getBlockPos(), SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 0.3f, 1.0f);
@@ -220,43 +221,45 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        String ritualIDString = tag.getString("ritualID");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        String ritualIDString = tag.getStringOr("ritualID", "");
         if (!ritualIDString.isEmpty()) {
-            ResourceLocation ritualID = ResourceLocation.tryParse(ritualIDString);
+            Identifier ritualID = Identifier.tryParse(ritualIDString);
             ritual = RitualRegistry.getRitual(ritualID);
             if (ritual != null) {
                 ritual.tile = this;
-                ritual.read(pRegistries, tag);
+                // AbstractRitual.read still uses HolderLookup.Provider + CompoundTag;
+                // reconstruct a mutable CompoundTag to pass through. ritualData holds
+                // the "context" sub-tag written by AbstractRitual.write.
+                CompoundTag ritualData = tag.read("ritualData", CompoundTag.CODEC).orElse(new CompoundTag());
+                ritual.read(tag.lookup(), ritualData);
             }
         } else {
             ritual = null;
         }
-        color = ParticleColorRegistry.from(tag.getCompound("color"));
-        isDecorative = tag.getBoolean("decorative");
-        isOff = tag.getBoolean("off");
-
-        if (tag.contains("relayPos")) {
-            this.relayPos = BlockPos.of(tag.getLong("relayPos"));
-        }
+        tag.read("color", CompoundTag.CODEC).ifPresent(c -> color = ParticleColorRegistry.from(c));
+        isDecorative = tag.getBooleanOr("decorative", false);
+        isOff = tag.getBooleanOr("off", false);
+        this.relayPos = tag.read("relayPos", BlockPos.CODEC).orElse(null);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (ritual != null) {
             tag.putString("ritualID", ritual.getRegistryName().toString());
-            ritual.write(pRegistries, tag);
-        } else {
-            tag.remove("ritualID");
+            // AbstractRitual.write still uses HolderLookup.Provider + CompoundTag;
+            // bridge by writing into a temporary CompoundTag then storing it.
+            CompoundTag ritualData = new CompoundTag();
+            ritual.write(level != null ? level.registryAccess() : null, ritualData);
+            tag.store("ritualData", CompoundTag.CODEC, ritualData);
         }
-        tag.put("color", color.serialize());
+        tag.store("color", CompoundTag.CODEC, color.serialize());
         tag.putBoolean("decorative", isDecorative);
         tag.putBoolean("off", isOff);
-        // store the relay position
         if (this.relayPos != null) {
-            tag.putLong("relayPos", this.relayPos.asLong());
+            tag.store("relayPos", BlockPos.CODEC, this.relayPos);
         }
     }
 
@@ -264,7 +267,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         return this.ritual == null || this.ritual.isRunning();
     }
 
-    public void setRitual(ResourceLocation selectedRitual) {
+    public void setRitual(Identifier selectedRitual) {
         this.ritual = RitualRegistry.getRitual(selectedRitual);
         if (ritual != null) {
             this.ritual.tile = this;

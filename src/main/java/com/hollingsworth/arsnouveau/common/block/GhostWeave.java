@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,13 +26,13 @@ public class GhostWeave extends MirrorWeave {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
-            return ItemInteractionResult.SUCCESS;
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide() || pHand != InteractionHand.MAIN_HAND) {
+            return InteractionResult.SUCCESS;
         }
         if (pLevel.getBlockEntity(pPos) instanceof GhostWeaveTile tile) {
             if (tile.isInvisible() && !pPlayer.hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);

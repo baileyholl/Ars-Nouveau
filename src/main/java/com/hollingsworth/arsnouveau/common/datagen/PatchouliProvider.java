@@ -27,7 +27,7 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -48,21 +48,21 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 //
 public class PatchouliProvider extends SimpleDataProvider {
 
-    public static ResourceLocation AUTOMATION = ArsNouveau.prefix("automation");
-    public static ResourceLocation ENCHANTMENTS = ArsNouveau.prefix("enchantments");
-    public static ResourceLocation EQUIPMENT = ArsNouveau.prefix("equipment");
-    public static ResourceLocation FAMILIARS = ArsNouveau.prefix("familiars");
-    public static ResourceLocation GETTING_STARTED = ArsNouveau.prefix("getting_started");
-    public static ResourceLocation MOD_NEWS = ArsNouveau.prefix("mod_news");
+    public static Identifier AUTOMATION = ArsNouveau.prefix("automation");
+    public static Identifier ENCHANTMENTS = ArsNouveau.prefix("enchantments");
+    public static Identifier EQUIPMENT = ArsNouveau.prefix("equipment");
+    public static Identifier FAMILIARS = ArsNouveau.prefix("familiars");
+    public static Identifier GETTING_STARTED = ArsNouveau.prefix("getting_started");
+    public static Identifier MOD_NEWS = ArsNouveau.prefix("mod_news");
 
-    public static ResourceLocation MACHINES = ArsNouveau.prefix("machines");
-    public static ResourceLocation RESOURCES = ArsNouveau.prefix("resources");
-    public static ResourceLocation RITUALS = ArsNouveau.prefix("rituals");
-    public static ResourceLocation SOURCE = ArsNouveau.prefix("source");
-    public static ResourceLocation GLYPHS_1 = ArsNouveau.prefix("glyphs_1");
-    public static ResourceLocation GLYPHS_2 = ArsNouveau.prefix("glyphs_2");
-    public static ResourceLocation GLYPHS_3 = ArsNouveau.prefix("glyphs_3");
-    public static ResourceLocation ARMOR = ArsNouveau.prefix("armor");
+    public static Identifier MACHINES = ArsNouveau.prefix("machines");
+    public static Identifier RESOURCES = ArsNouveau.prefix("resources");
+    public static Identifier RITUALS = ArsNouveau.prefix("rituals");
+    public static Identifier SOURCE = ArsNouveau.prefix("source");
+    public static Identifier GLYPHS_1 = ArsNouveau.prefix("glyphs_1");
+    public static Identifier GLYPHS_2 = ArsNouveau.prefix("glyphs_2");
+    public static Identifier GLYPHS_3 = ArsNouveau.prefix("glyphs_3");
+    public static Identifier ARMOR = ArsNouveau.prefix("armor");
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
@@ -220,11 +220,11 @@ public class PatchouliProvider extends SimpleDataProvider {
         addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath()))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath()))
                 .withLocalizedText()
-                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2))
-                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3))
-                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 4))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 2))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 3))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 4))
                 .withLocalizedText()
                 .withPage(new ApparatusTextPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
@@ -691,7 +691,7 @@ public class PatchouliProvider extends SimpleDataProvider {
         return patchouliPage;
     }
 
-    public PatchouliBuilder buildBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+    public PatchouliBuilder buildBasicItem(ItemLike item, Identifier category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
                 .withPage(new TextPage("ars_nouveau.page." + getRegistryName(item.asItem()).getPath()));
@@ -701,16 +701,16 @@ public class PatchouliProvider extends SimpleDataProvider {
         return builder;
     }
 
-    public PatchouliPage addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+    public PatchouliPage addBasicItem(ItemLike item, Identifier category, IPatchouliPage recipePage) {
         PatchouliBuilder builder = buildBasicItem(item, category, recipePage);
         return addPage(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()))));
     }
 
-    public Path getPath(ResourceLocation category, ResourceLocation fileName) {
+    public Path getPath(Identifier category, Identifier fileName) {
         return this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + category.getPath() + "/" + fileName.getPath() + ".json");
     }
 
-    public Path getPath(ResourceLocation category, String fileName) {
+    public Path getPath(Identifier category, String fileName) {
         return this.output.resolve("assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/" + category.getPath() + "/" + fileName + ".json");
     }
 
@@ -741,7 +741,7 @@ public class PatchouliProvider extends SimpleDataProvider {
 
 
     public void addGlyphPage(AbstractSpellPart spellPart) {
-        ResourceLocation category = switch (spellPart.defaultTier().value) {
+        Identifier category = switch (spellPart.defaultTier().value) {
             case 1 -> GLYPHS_1;
             case 2 -> GLYPHS_2;
             default -> GLYPHS_3;
@@ -785,7 +785,7 @@ public class PatchouliProvider extends SimpleDataProvider {
         }
         var enchantment = maybeEnchant.get().value();
 
-        var path = enchKey.location().getPath();
+        var path = enchKey.identifier().getPath();
         PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, path)
                 .withName(((TranslatableContents) enchantment.description().getContents()).getKey())
                 .withIcon(Items.ENCHANTED_BOOK);

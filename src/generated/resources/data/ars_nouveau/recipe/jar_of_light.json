@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "minecraft:glowstone"
-    },
-    {
-      "item": "minecraft:glowstone"
-    },
-    {
-      "item": "minecraft:glowstone"
-    },
-    {
-      "item": "minecraft:glowstone"
-    },
-    {
-      "item": "minecraft:redstone_lamp"
-    },
-    {
-      "item": "minecraft:redstone_lamp"
-    },
-    {
-      "tag": "c:glass_blocks"
-    },
-    {
-      "tag": "c:glass_blocks"
-    }
+    "minecraft:glowstone",
+    "minecraft:glowstone",
+    "minecraft:glowstone",
+    "minecraft:glowstone",
+    "minecraft:redstone_lamp",
+    "minecraft:redstone_lamp",
+    "#c:glass_blocks",
+    "#c:glass_blocks"
   ],
-  "reagent": {
-    "item": "minecraft:glass_bottle"
-  },
+  "reagent": "minecraft:glass_bottle",
   "result": {
     "count": 1,
     "id": "ars_nouveau:jar_of_light"

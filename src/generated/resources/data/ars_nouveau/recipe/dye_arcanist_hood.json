@@ -2,12 +2,8 @@
   "type": "ars_nouveau:dye",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dyes"
-    },
-    {
-      "item": "ars_nouveau:arcanist_hood"
-    }
+    "#c:dyes",
+    "ars_nouveau:arcanist_hood"
   ],
   "result": {
     "count": 1,

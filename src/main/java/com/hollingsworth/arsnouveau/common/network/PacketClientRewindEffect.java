@@ -36,7 +36,7 @@ public class PacketClientRewindEffect extends AbstractPacket {
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        Level world = player.level;
+        Level world = player.level();
         Entity hitEntity = world.getEntity(hitEntityID);
         if (hitEntity != null) {
             EventQueue.getClientQueue().addEvent(new RewindEvent(hitEntity, hitEntity.level.getGameTime(), duration));

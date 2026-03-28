@@ -83,7 +83,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         // We do not want to update the entity on the server.
-        if (level.isClientSide && !LightManager.shouldUpdateDynamicLight()) {
+        if (level.isClientSide() && !LightManager.shouldUpdateDynamicLight()) {
             ars_nouveau$luminance = 0;
         }
         if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight()) {

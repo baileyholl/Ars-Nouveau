@@ -2,9 +2,7 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:diamond_pickaxe"
-    }
+    "minecraft:diamond_pickaxe"
   ],
   "output": {
     "count": 1,

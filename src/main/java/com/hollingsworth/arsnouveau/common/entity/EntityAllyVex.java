@@ -4,17 +4,10 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -31,34 +24,33 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.Optional;
 import java.util.UUID;
 
 public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDispellable {
-    public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(EntityAllyVex.class, EntityDataSerializers.OPTIONAL_UUID);
 
-    private LivingEntity owner;
+    // EntityReference<LivingEntity> tracks our summoner — separate from Vex's own Mob-typed owner field.
     @Nullable
-    private BlockPos boundOrigin;
+    private EntityReference<LivingEntity> ownerReference;
+
     private boolean limitedLifespan;
     private int limitedLifeTicks;
 
-    public EntityAllyVex(EntityType<? extends Vex> p_i50190_1_, Level p_i50190_2_) {
-        super(p_i50190_1_, p_i50190_2_);
+    public EntityAllyVex(EntityType<? extends Vex> type, Level level) {
+        super(type, level);
     }
 
-
-    public EntityAllyVex(Level p_i50190_2_, LivingEntity owner) {
-        super(ModEntities.ALLY_VEX.get(), p_i50190_2_);
-        this.owner = owner;
+    public EntityAllyVex(Level level, LivingEntity owner) {
+        super(ModEntities.ALLY_VEX.get(), level);
         this.limitedLifespan = false;
-        setOwnerID(owner.getUUID());
+        this.ownerReference = EntityReference.of(owner);
         this.moveControl = new EntityAllyVex.MoveHelperController(this);
     }
 
@@ -69,52 +61,59 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType pSpawnType, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason pSpawnType, @org.jetbrains.annotations.Nullable SpawnGroupData pSpawnGroupData) {
         this.populateDefaultEquipmentSlots(worldIn.getRandom(), difficultyIn);
         this.populateDefaultEquipmentEnchantments(worldIn, getRandom(), difficultyIn);
         return super.finalizeSpawn(worldIn, difficultyIn, pSpawnType, pSpawnGroupData);
     }
 
-    /**
-     * Gives armor or weapon for entity based on given DifficultyInstance
-     */
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource source, DifficultyInstance difficulty) {
+    protected void populateDefaultEquipmentSlots(net.minecraft.util.RandomSource source, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
         this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
     }
 
     @Override
     protected void registerGoals() {
-
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new EntityAllyVex.ChargeAttackGoal());
-
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-        this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 12.0f));
+        LivingEntity ownerEntity = getOwner();
+        if (ownerEntity != null) {
+            this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, ownerEntity, 1.0, 6.0f, 12.0f));
+        }
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
-                (entity) -> (entity instanceof Mob mob && mob.getTarget() != null &&
-                        mob.getTarget().equals(this.owner)) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Mob>(this, Mob.class, 10, false, true,
+                (entity, serverLevel) -> (entity instanceof Mob mob && mob.getTarget() != null &&
+                        mob.getTarget().equals(this.getOwner())) || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.getOwner()))
         ));
     }
 
+    @Override
     protected PathNavigation createNavigation(Level worldIn) {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
-        flyingpathnavigator.setCanPassDoors(true);
+        // setCanPassDoors removed in 1.21.11
         return flyingpathnavigator;
     }
 
-    public void setOwner(LivingEntity owner) {
-        this.owner = owner;
+    // ISummon / OwnableEntity implementation — ownerReference is EntityReference<LivingEntity>
+    @Override
+    @Nullable
+    public EntityReference<LivingEntity> getOwnerReference() {
+        return ownerReference;
+    }
+
+    @Override
+    public void setOwnerID(UUID uuid) {
+        this.ownerReference = EntityReference.of(uuid);
     }
 
     @Override
     public Level getWorld() {
-        return this.level;
+        return this.level();
     }
 
     @Override
@@ -128,12 +127,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
     }
 
     public LivingEntity getSummoner() {
-        return this.getOwnerFromID();
+        return this.getOwner();
     }
 
     @Override
     public LivingEntity getOwnerAlt() {
-        return owner;
+        return getOwner();
     }
 
     @Override
@@ -147,9 +146,6 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
-        /**
-         * Returns whether the EntityAIBase should begin execution.
-         */
         public boolean canUse() {
             if (EntityAllyVex.this.getTarget() != null && !EntityAllyVex.this.getMoveControl().hasWanted() && EntityAllyVex.this.random.nextInt(7) == 0) {
                 return EntityAllyVex.this.distanceToSqr(EntityAllyVex.this.getTarget()) > 4.0D;
@@ -158,16 +154,10 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
             }
         }
 
-        /**
-         * Returns whether an in-progress EntityAIBase should continue executing
-         */
         public boolean canContinueToUse() {
             return EntityAllyVex.this.getMoveControl().hasWanted() && EntityAllyVex.this.isCharging() && EntityAllyVex.this.getTarget() != null && EntityAllyVex.this.getTarget().isAlive();
         }
 
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
         public void start() {
             LivingEntity livingentity = EntityAllyVex.this.getTarget();
             Vec3 vec3d = livingentity.getEyePosition(1.0F);
@@ -176,20 +166,14 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
             EntityAllyVex.this.playSound(SoundEvents.VEX_CHARGE, 1.0F, 1.0F);
         }
 
-        /**
-         * Reset the task's internal state. Called when this task is interrupted by another one
-         */
         public void stop() {
             EntityAllyVex.this.setIsCharging(false);
         }
 
-        /**
-         * Keep ticking a continuous task that has already been started
-         */
         public void tick() {
             LivingEntity livingentity = EntityAllyVex.this.getTarget();
             if (EntityAllyVex.this.getBoundingBox().intersects(livingentity.getBoundingBox())) {
-                EntityAllyVex.this.doHurtTarget(livingentity);
+                EntityAllyVex.this.doHurtTarget((ServerLevel) EntityAllyVex.this.level(), livingentity);
                 EntityAllyVex.this.setIsCharging(false);
             } else {
                 double d0 = EntityAllyVex.this.distanceToSqr(livingentity);
@@ -198,108 +182,49 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
                     EntityAllyVex.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.0D);
                 }
             }
-
         }
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 0;
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
-    public void readAdditionalSaveData(CompoundTag compound) {
+    @Override
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("BoundX")) {
-            this.boundOrigin = new BlockPos(compound.getInt("BoundX"), compound.getInt("BoundY"), compound.getInt("BoundZ"));
+        if (compound.keySet().contains("LifeTicks")) {
+            this.setLimitedLife(compound.getIntOr("LifeTicks", 0));
         }
-
-        if (compound.contains("LifeTicks")) {
-            this.setLimitedLife(compound.getInt("LifeTicks"));
-        }
-        UUID s;
-        if (compound.contains("OwnerUUID", 8)) {
-            s = compound.getUUID("OwnerUUID");
-        } else {
-            String s1 = compound.getString("Owner");
-            s = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
-        }
-
-        if (s != null) {
-            try {
-                this.setOwnerID(s);
-
-            } catch (Throwable ignored) {
-            }
-        }
-
-    }
-
-    public LivingEntity getOwnerFromID() {
-        try {
-            UUID uuid = this.getOwnerUUID();
-
-            return uuid == null ? null : this.level.getPlayerByUUID(uuid);
-        } catch (IllegalArgumentException var2) {
-            return null;
-        }
+        // Read owner UUID and build EntityReference from it
+        compound.read("OwnerUUID", net.minecraft.core.UUIDUtil.CODEC)
+            .ifPresent(uuid -> this.ownerReference = EntityReference.of(uuid));
     }
 
     @Override
     public PlayerTeam getTeam() {
-        if (this.getOwnerAlt() != null) {
-            LivingEntity livingentity = this.getOwnerAlt();
-            if (livingentity != null) {
-                return livingentity.getTeam();
-            }
+        LivingEntity owner = this.getOwner();
+        if (owner != null) {
+            return owner.getTeam();
         }
-
         return super.getTeam();
     }
 
     @Override
-    public boolean isAlliedTo(Entity pEntity) {
-        if (this.getOwnerAlt() != null) {
-            LivingEntity livingentity = this.getOwnerAlt();
-            return pEntity == livingentity || livingentity.isAlliedTo(pEntity);
-        }
-        return super.isAlliedTo(pEntity);
-    }
-
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
-        super.defineSynchedData(pBuilder);
-        pBuilder.define(OWNER_UNIQUE_ID, Optional.empty());
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
-        if (this.boundOrigin != null) {
-            compound.putInt("BoundX", this.boundOrigin.getX());
-            compound.putInt("BoundY", this.boundOrigin.getY());
-            compound.putInt("BoundZ", this.boundOrigin.getZ());
-        }
-
         if (this.limitedLifespan) {
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
-        if (this.getOwnerUUID() == null) {
-            compound.putUUID("OwnerUUID", Util.NIL_UUID);
-        } else {
-            compound.putUUID("OwnerUUID", this.getOwnerUUID());
+        if (this.ownerReference != null) {
+            compound.store("OwnerUUID", net.minecraft.core.UUIDUtil.CODEC, this.ownerReference.getUUID());
         }
-
     }
-
 
     @Override
     public void die(DamageSource cause) {
         super.die(cause);
-        onSummonDeath(level, cause, false);
+        onSummonDeath(level(), cause, false);
     }
 
     @Override
@@ -313,44 +238,27 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
     }
 
     @Override
-    public UUID getOwnerUUID() {
-        return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
-    }
-
-    @Override
-    public void setOwnerID(UUID uuid) {
-        this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
-    }
-
-
-    @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
-
     }
 
     @Override
     protected void dropAllDeathLoot(ServerLevel p_level, DamageSource damageSource) {
-
     }
 
     @Override
-    protected void dropEquipment() {
-
+    protected void dropEquipment(ServerLevel level) {
     }
 
     @Override
-    protected void dropExperience(@org.jetbrains.annotations.Nullable Entity entity) {
-
+    protected void dropExperience(ServerLevel level, @org.jetbrains.annotations.Nullable Entity entity) {
     }
 
     @Override
-    protected void dropFromLootTable(DamageSource damageSource, boolean attackedRecently) {
-
+    protected void dropFromLootTable(ServerLevel level, DamageSource damageSource, boolean attackedRecently) {
     }
 
     @Override
-    public void dropPreservedEquipment() {
-
+    public void dropPreservedEquipment(ServerLevel level) {
     }
 
     class MoveHelperController extends MoveControl {
@@ -378,9 +286,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon, IDi
                         EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     }
                 }
-
             }
         }
     }
-
 }

@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:ender_chest"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:ender_chest"
   ],
   "output": {
     "count": 1,

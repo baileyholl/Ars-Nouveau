@@ -3,15 +3,9 @@
   "enchantment": "minecraft:thorns",
   "level": 1,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:wilden_spike"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    }
+    "ars_nouveau:wilden_spike",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/lapis"
   ],
   "sourceCost": 2000
 }

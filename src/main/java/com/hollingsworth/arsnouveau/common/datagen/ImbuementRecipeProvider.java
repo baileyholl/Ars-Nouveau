@@ -42,7 +42,7 @@ public class ImbuementRecipeProvider extends SimpleDataProvider {
 
     @Override
     public void collectJsons(CachedOutput pOutput) {
-        recipes.add(new ImbuementRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.get().getDefaultInstance(), 500));
+        recipes.add(new ImbuementRecipe("lapis", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.GEMS_LAPIS)), ItemsRegistry.SOURCE_GEM.get().getDefaultInstance(), 500));
         recipes.add(new ImbuementRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.get().getDefaultInstance(), 500));
         recipes.add(new ImbuementRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_BLOCK), new ItemStack(BlockRegistry.SOURCE_GEM_BLOCK), 2000));
         recipes.add(new ImbuementRecipe("fire_essence", RecipeDatagen.SOURCE_GEM, new ItemStack(ItemsRegistry.FIRE_ESSENCE.get()), 2000)
@@ -51,11 +51,11 @@ public class ImbuementRecipeProvider extends SimpleDataProvider {
         recipes.add(new ImbuementRecipe("air_essence", RecipeDatagen.SOURCE_GEM, new ItemStack(ItemsRegistry.AIR_ESSENCE.get()), 2000)
                 .withPedestalItem(Items.FEATHER)
                 .withPedestalItem(ItemsRegistry.WILDEN_WING)
-                .withPedestalItem(Ingredient.of(ItemTags.ARROWS)));
+                .withPedestalItem(Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ItemTags.ARROWS))));
         recipes.add(new ImbuementRecipe("earth_essence", RecipeDatagen.SOURCE_GEM, new ItemStack(ItemsRegistry.EARTH_ESSENCE.get()), 2000)
-                .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_IRON))
-                .withPedestalItem(Ingredient.of(Tags.Items.SEEDS))
-                .withPedestalItem(Ingredient.of(ItemTags.DIRT)));
+                .withPedestalItem(Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.INGOTS_IRON)))
+                .withPedestalItem(Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.SEEDS)))
+                .withPedestalItem(Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ItemTags.DIRT))));
         recipes.add(new ImbuementRecipe("water_essence", RecipeDatagen.SOURCE_GEM, new ItemStack(ItemsRegistry.WATER_ESSENCE.get()), 2000)
                 .withPedestalItem(Items.WATER_BUCKET)
                 .withPedestalItem(Items.SNOW_BLOCK)
@@ -75,17 +75,17 @@ public class ImbuementRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(Items.REDSTONE)
                 .withPedestalItem(Items.CLOCK));
 
-        recipes.add(new ImbuementRecipe("pierce_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.PIERCE_ARROW.get()), 100)
+        recipes.add(new ImbuementRecipe("pierce_arrow", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ItemTags.ARROWS)), new ItemStack(ItemsRegistry.PIERCE_ARROW.get()), 100)
                 .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
                 .withPedestalItem(ItemsRegistry.WILDEN_SPIKE.get()));
 
-        recipes.add(new ImbuementRecipe("amplify_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get()), 100)
+        recipes.add(new ImbuementRecipe("amplify_arrow", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ItemTags.ARROWS)), new ItemStack(ItemsRegistry.AMPLIFY_ARROW.get()), 100)
                 .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
-                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND)));
+                .withPedestalItem(Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, Tags.Items.GEMS_DIAMOND))));
 
-        recipes.add(new ImbuementRecipe("split_arrow", Ingredient.of(ItemTags.ARROWS), new ItemStack(ItemsRegistry.SPLIT_ARROW.get()), 100)
+        recipes.add(new ImbuementRecipe("split_arrow", Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ItemTags.ARROWS)), new ItemStack(ItemsRegistry.SPLIT_ARROW.get()), 100)
                 .withPedestalItem(ItemsRegistry.SOURCE_GEM.get())
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE.get())
                 .withPedestalItem(ItemsRegistry.WILDEN_HORN.get()));

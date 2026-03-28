@@ -4,14 +4,12 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.common.items.data.ItemScrollData;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,20 +29,21 @@ import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2fStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuiEntityInfoHUD {
     public static MultiBufferSource.BufferSource renderType = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
-    public static final LayeredDraw.Layer OVERLAY = GuiEntityInfoHUD::renderOverlay;
+    public static final GuiLayer OVERLAY = GuiEntityInfoHUD::renderOverlay;
 
     public static int hoverTicks = 0;
     public static Object lastHovered = null;
 
     public static void renderOverlay(GuiGraphics graphics, DeltaTracker tracker) {
-        PoseStack poseStack = graphics.pose();
+        // In 1.21.11 graphics.pose() returns Matrix3x2fStack — only used for pushMatrix/popMatrix/translate
+        Matrix3x2fStack poseStack = graphics.pose();
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
             return;
@@ -63,7 +62,7 @@ public class GuiEntityInfoHUD {
             }
             if (result.getEntity() instanceof ItemFrame frame) {
                 ItemScrollData data = frame.getItem().getOrDefault(DataComponentRegistry.ITEM_SCROLL_DATA, new ItemScrollData(List.of()));
-                data.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL);
+                data.addToTooltip(Item.TooltipContext.EMPTY, tooltip::add, TooltipFlag.NORMAL, new net.minecraft.core.component.DataComponentGetter() { @Override public <T> T get(net.minecraft.core.component.DataComponentType<? extends T> type) { return null; } });
             }
             hovering = result.getEntity();
         }
@@ -83,7 +82,7 @@ public class GuiEntityInfoHUD {
         if (tooltip.isEmpty()) {
             return;
         }
-        poseStack.pushPose();
+        poseStack.pushMatrix();
 
         int tooltipTextWidth = 0;
         for (FormattedText textLine : tooltip) {
@@ -112,14 +111,14 @@ public class GuiEntityInfoHUD {
         Color colorBorderBot = VANILLA_TOOLTIP_BORDER_2;
 
         if (fade < 1) {
-            poseStack.translate((1 - fade) * Math.signum(xOffset + .5f) * 4, 0, 0);
+            poseStack.translate((1 - fade) * Math.signum(xOffset + .5f) * 4, 0);
             colorBackground.scaleAlpha(fade);
             colorBorderTop.scaleAlpha(fade);
             colorBorderBot.scaleAlpha(fade);
         }
         drawHoveringText(ItemStack.EMPTY, graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     public static final Color VANILLA_TOOLTIP_BORDER_1 = new Color(0x50_5000ff, true);
@@ -133,7 +132,6 @@ public class GuiEntityInfoHUD {
         if (textLines.isEmpty())
             return;
 
-        PoseStack pStack = graphics.pose();
         List<ClientTooltipComponent> list = ClientHooks.gatherTooltipComponents(stack, textLines, stack.getTooltipImage(), mouseX, screenWidth, screenHeight, font);
         RenderTooltipEvent.Pre event =
                 new RenderTooltipEvent.Pre(stack, graphics, mouseX, mouseY, screenWidth, screenHeight, font, list, DefaultTooltipPositioner.INSTANCE);
@@ -147,8 +145,6 @@ public class GuiEntityInfoHUD {
         screenHeight = event.getScreenHeight();
         font = event.getFont();
 
-        // RenderSystem.disableRescaleNormal();
-        RenderSystem.disableDepthTest();
         int tooltipTextWidth = 0;
 
         for (FormattedText textLine : textLines) {
@@ -163,8 +159,7 @@ public class GuiEntityInfoHUD {
         int tooltipX = mouseX + 12;
         if (tooltipX + tooltipTextWidth + 4 > screenWidth) {
             tooltipX = mouseX - 16 - tooltipTextWidth;
-            if (tooltipX < 4) // if the tooltip doesn't fit on the screen
-            {
+            if (tooltipX < 4) {
                 if (mouseX > screenWidth / 2)
                     tooltipTextWidth = mouseX - 12 - 8;
                 else
@@ -210,7 +205,7 @@ public class GuiEntityInfoHUD {
         if (textLines.size() > 1) {
             tooltipHeight += (textLines.size() - 1) * 10;
             if (textLines.size() > titleLinesCount)
-                tooltipHeight += 2; // gap between title lines and next lines
+                tooltipHeight += 2;
         }
 
         if (tooltipY < 4)
@@ -218,17 +213,11 @@ public class GuiEntityInfoHUD {
         else if (tooltipY + tooltipHeight + 4 > screenHeight)
             tooltipY = screenHeight - tooltipHeight - 4;
 
+        // RenderTooltipEvent.Color removed in 1.21.11 — use passed colors directly
         final int zLevel = 400;
-        RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, graphics, tooltipX, tooltipY,
-                font, backgroundColor, borderColorStart, borderColorEnd, list);
-        NeoForge.EVENT_BUS.post(colorEvent);
-        backgroundColor = colorEvent.getBackgroundStart();
-        borderColorStart = colorEvent.getBorderStart();
-        borderColorEnd = colorEvent.getBorderEnd();
 
-        pStack.pushPose();
-        Matrix4f mat = pStack.last()
-                .pose();
+        Matrix3x2fStack pStack = graphics.pose();
+        pStack.pushMatrix();
         graphics.fillGradient(tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3,
                 tooltipY - 3, backgroundColor, backgroundColor);
         graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 3,
@@ -247,20 +236,17 @@ public class GuiEntityInfoHUD {
                 tooltipY - 3 + 1, borderColorStart, borderColorStart);
         graphics.fillGradient(tooltipX - 3, tooltipY + tooltipHeight + 2,
                 tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
-        pStack.translate(0.0D, 0.0D, zLevel);
+
+        // Render tooltip text components using new 1.21.11 API: renderText(GuiGraphics, Font, x, y)
+        Font finalFont = font;
         for (int lineNumber = 0; lineNumber < list.size(); ++lineNumber) {
             ClientTooltipComponent line = list.get(lineNumber);
-
             if (line != null)
-                line.renderText(font, tooltipX, tooltipY, mat, renderType);
-
+                line.renderText(graphics, finalFont, tooltipX, tooltipY);
             if (lineNumber + 1 == titleLinesCount)
                 tooltipY += 2;
-            tooltipY += line == null ? 10 : line.getHeight();
+            tooltipY += line == null ? 10 : line.getHeight(finalFont);
         }
-        renderType.endBatch();
-        pStack.popPose();
-
-        RenderSystem.enableDepthTest();
+        pStack.popMatrix();
     }
 }

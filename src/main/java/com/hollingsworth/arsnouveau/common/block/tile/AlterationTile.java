@@ -12,9 +12,9 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -163,41 +163,38 @@ public class AlterationTile extends ModdedTile implements GeoBlockEntity, ITicka
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (!armorStack.isEmpty()) {
-            Tag armorTag = armorStack.save(pRegistries);
-            tag.put("armorStack", armorTag);
+            tag.store("armorStack", ItemStack.CODEC, armorStack);
         }
         tag.putInt("numPerks", perkList.size());
         int count = 0;
         for (ItemStack i : perkList) {
-            Tag perkTag = i.saveOptional(pRegistries);
-            tag.put("perk" + count, perkTag);
+            tag.store("perk" + count, ItemStack.OPTIONAL_CODEC, i);
             count++;
         }
         tag.putInt("newPerkTimer", newPerkTimer);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.armorStack = ItemStack.parseOptional(pRegistries, compound.getCompound("armorStack"));
-        int count = compound.getInt("numPerks");
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        this.armorStack = compound.read("armorStack", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        int count = compound.getIntOr("numPerks", 0);
         perkList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            CompoundTag perkTag = compound.getCompound("perk" + i);
-            ItemStack perk = ItemStack.parseOptional(pRegistries, perkTag);
+            ItemStack perk = compound.read("perk" + i, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
             if (!perk.isEmpty()) {
                 perkList.add(perk);
             }
         }
-        this.newPerkTimer = compound.getInt("newPerkTimer");
+        this.newPerkTimer = compound.getIntOr("newPerkTimer", 0);
     }
 
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (newPerkTimer >= 0) {
                 newPerkTimer--;
             }

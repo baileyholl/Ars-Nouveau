@@ -17,7 +17,7 @@ import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -99,7 +99,7 @@ public class WorldgenRegistry {
         context.register(NATURAL_CONFIGURED_BLAZING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.BLAZING_LEAVES, LibBlockNames.BLAZING_LOG, true, ArsNouveau.prefix(LibBlockNames.BOMBEGRANATE_POD))));
         context.register(NATURAL_CONFIGURED_VEXING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.VEXING_LEAVES, LibBlockNames.VEXING_LOG, true, ArsNouveau.prefix(LibBlockNames.BASTION_POD))));
         context.register(NATURAL_CONFIGURED_FLOURISHING_TREE, new ConfiguredFeature<>(Feature.TREE, buildTree(LibBlockNames.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LOG, true, ArsNouveau.prefix(LibBlockNames.MENDOSTEEN_POD))));
-        context.register(PATCH_BERRY_BUSH, new ConfiguredFeature<>(Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(LibBlockNames.SOURCEBERRY_BUSH)).defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK))));
+        context.register(PATCH_BERRY_BUSH, new ConfiguredFeature<>(Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(BuiltInRegistries.BLOCK.getValue(ArsNouveau.prefix(LibBlockNames.SOURCEBERRY_BUSH)).defaultBlockState().setValue(SourceBerryBush.AGE, 3))), List.of(Blocks.GRASS_BLOCK))));
         context.register(MIXED_ARCHWOODS, new ConfiguredFeature<>(Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(placed.getOrThrow(PLACED_NATURAL_CASCADING_TREE), placed.getOrThrow(PLACED_NATURAL_BLAZING_TREE), placed.getOrThrow(PLACED_NATURAL_VEXING_TREE), placed.getOrThrow(PLACED_NATURAL_FLOURISHING_TREE)))));
         context.register(CONFIGURED_LIGHTS, new ConfiguredFeature<>(WorldgenRegistry.LIGHT_FEATURE.get(), new BlockStateConfiguration(BlockRegistry.LIGHT_BLOCK.get().defaultBlockState())));
     }
@@ -118,7 +118,7 @@ public class WorldgenRegistry {
         context.register(PLACED_DENSE_ARCHWOODS, new PlacedFeature(features.get(MIXED_ARCHWOODS).get(), VegetationPlacements.treePlacement(PlacementUtils.countExtra(7, 0.01f, 1))));
     }
 
-    public static TreeConfiguration buildTree(String leaves, String log, boolean natural, ResourceLocation podRegistryName) {
+    public static TreeConfiguration buildTree(String leaves, String log, boolean natural, Identifier podRegistryName) {
         return new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(log),
                 new MagicTrunkPlacer(9, 1, 0, natural, podRegistryName.toString()),
                 new SupplierBlockStateProvider(leaves),

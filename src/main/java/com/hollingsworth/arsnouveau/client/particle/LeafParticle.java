@@ -2,15 +2,16 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 
 public class LeafParticle extends PropParticle {
 
     float rotSpeed;
 
-    public LeafParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        super(propertyParticleOptions, level, x, y, z, xSpeed, ySpeed, zSpeed);
+    public LeafParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite sprite) {
+        super(propertyParticleOptions, level, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
         this.lifetime = 40 + this.random.nextInt(20); // shorter lifespan
         this.yd = yd * 0.7 - 0.015; // slightly down from projectile
         this.xd = xd + (this.random.nextDouble() - 0.5) * 0.005;
@@ -25,8 +26,8 @@ public class LeafParticle extends PropParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     @Override

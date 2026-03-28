@@ -2,7 +2,10 @@ package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
@@ -29,8 +32,13 @@ public interface IEnchantingRecipe extends Recipe<ApparatusRecipeInput> {
     }
 
     @Override
-    default boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return false;
+    default PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    default RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
     static @Nullable RecipeHolder<? extends IEnchantingRecipe> getRecipe(Level level, ApparatusRecipeInput input) {

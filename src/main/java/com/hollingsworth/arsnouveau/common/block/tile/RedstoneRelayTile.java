@@ -13,18 +13,19 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     @Override
     public void tick() {
 
-        if (!level.isClientSide && updateListeners) {
+        if (!level.isClientSide() && updateListeners) {
             // force update a tick later to account for connection checks
             calculateNewPower();
             updateListeners = false;
@@ -77,7 +78,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     public void calculateNewPower() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         int oldPower = currentPower;
@@ -148,7 +149,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof RedstoneRelayTile))
+        if (storedPos == null || level.isClientSide() || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof RedstoneRelayTile))
             return;
 
         if (BlockUtil.distanceFrom(storedPos, this.worldPosition) <= getMaxDistance()) {
@@ -169,7 +170,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     @Override
     public void onFinishedConnectionFirst(@javax.annotation.Nullable BlockPos storedPos, @javax.annotation.Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof RedstoneRelayTile))
+        if (storedPos == null || level.isClientSide() || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof RedstoneRelayTile))
             return;
 
         if (BlockUtil.distanceFrom(storedPos, this.worldPosition) <= getMaxDistance()) {
@@ -201,49 +202,34 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    public void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
         poweredFrom = new ArrayList<>();
         powering = new ArrayList<>();
         currentParent = null;
-        ListTag listTag = pTag.getList("poweredFrom", 10);
-        for (int i = 0; i < listTag.size(); i++) {
-            CompoundTag tag = listTag.getCompound(i);
-            poweredFrom.add(BlockPos.of(tag.getLong("pos")));
-        }
-        ListTag poweringTag = pTag.getList("powering", 10);
-        for (int i = 0; i < poweringTag.size(); i++) {
-            CompoundTag tag = poweringTag.getCompound(i);
-            powering.add(BlockPos.of(tag.getLong("pos")));
-        }
-
-        localPower = pTag.getInt("localPower");
-        currentPower = pTag.getInt("currentPower");
-        powerFromParentRelays = pTag.getInt("powerFromParentRelays");
-        if (pTag.contains("currentParent")) {
-            currentParent = BlockPos.of(pTag.getLong("currentParent"));
-        }
+        pTag.childrenListOrEmpty("poweredFrom").forEach(entry ->
+            poweredFrom.add(BlockPos.of(entry.getLongOr("pos", 0L)))
+        );
+        pTag.childrenListOrEmpty("powering").forEach(entry ->
+            powering.add(BlockPos.of(entry.getLongOr("pos", 0L)))
+        );
+        localPower = pTag.getIntOr("localPower", 0);
+        currentPower = pTag.getIntOr("currentPower", 0);
+        powerFromParentRelays = pTag.getIntOr("powerFromParentRelays", 0);
+        pTag.getLong("currentParent").ifPresent(l -> currentParent = BlockPos.of(l));
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
-        ListTag listTag = new ListTag();
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
+        var listTag = tag.childrenList("poweredFrom");
         for (BlockPos pos : poweredFrom) {
-            CompoundTag posTag = new CompoundTag();
-            posTag.putLong("pos", pos.asLong());
-            listTag.add(posTag);
+            listTag.addChild().putLong("pos", pos.asLong());
         }
-        tag.put("poweredFrom", listTag);
-
-        ListTag poweringTag = new ListTag();
+        var poweringTag = tag.childrenList("powering");
         for (BlockPos pos : powering) {
-            CompoundTag posTag = new CompoundTag();
-            posTag.putLong("pos", pos.asLong());
-            poweringTag.add(posTag);
+            poweringTag.addChild().putLong("pos", pos.asLong());
         }
-        tag.put("powering", poweringTag);
-
         tag.putInt("localPower", localPower);
         tag.putInt("currentPower", currentPower);
         tag.putInt("powerFromParentRelays", powerFromParentRelays);
@@ -257,7 +243,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
     }
 
     public void setLocalPower(int newLocalPower) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         if (newLocalPower != localPower) {
@@ -283,30 +269,25 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
-        data.add(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
+        data.add(new AnimationController<RedstoneRelayTile>("rotate_controller", 0, this::idlePredicate));
+        data.add(new AnimationController<RedstoneRelayTile>("float_controller", 0, this::floatPredicate));
 
     }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
-    private <P extends GeoAnimatable> PlayState idlePredicate(AnimationState<P> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
+    private PlayState idlePredicate(AnimationTest<RedstoneRelayTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("floating"));
         return PlayState.CONTINUE;
     }
 
-    private <P extends GeoAnimatable> PlayState floatPredicate(AnimationState<P> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("rotating"));
+    private PlayState floatPredicate(AnimationTest<RedstoneRelayTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("rotating"));
         return PlayState.CONTINUE;
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
-    }
-
-    @Override
-    public double getTick(Object o) {
-        return 0;
     }
 }

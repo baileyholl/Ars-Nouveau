@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:green_archwood_log"
-    },
-    {
-      "item": "minecraft:iron_pickaxe"
-    },
-    {
-      "tag": "c:storage_blocks/coal"
-    }
+    "ars_nouveau:green_archwood_log",
+    "minecraft:iron_pickaxe",
+    "#c:storage_blocks/coal"
   ],
   "result": {
     "count": 1,

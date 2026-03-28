@@ -2,27 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:red_archwood_log"
-    },
-    {
-      "item": "minecraft:golden_sword"
-    },
-    {
-      "item": "minecraft:golden_sword"
-    },
-    {
-      "item": "minecraft:golden_sword"
-    },
-    {
-      "item": "minecraft:book"
-    },
-    {
-      "item": "minecraft:book"
-    },
-    {
-      "item": "minecraft:book"
-    }
+    "ars_nouveau:red_archwood_log",
+    "minecraft:golden_sword",
+    "minecraft:golden_sword",
+    "minecraft:golden_sword",
+    "minecraft:book",
+    "minecraft:book",
+    "minecraft:book"
   ],
   "result": {
     "count": 1,

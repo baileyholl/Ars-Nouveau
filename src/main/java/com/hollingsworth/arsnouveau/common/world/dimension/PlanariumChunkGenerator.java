@@ -24,7 +24,6 @@ import net.minecraft.world.level.biome.FixedBiomeSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
@@ -58,7 +57,7 @@ public class PlanariumChunkGenerator extends ChunkGenerator {
 
     // create chunk generator at runtime when dynamic dimension is created
     public PlanariumChunkGenerator(MinecraftServer server) {
-        this(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(ArsNouveau.BIOME_KEY));
+        this(server.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(ArsNouveau.BIOME_KEY));
     }
 
     // create chunk generator when dimension is loaded from the dimension registry on server init
@@ -75,7 +74,7 @@ public class PlanariumChunkGenerator extends ChunkGenerator {
 
     // apply carvers
     @Override
-    public void applyCarvers(WorldGenRegion world, long seed, RandomState random, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess, GenerationStep.Carving carvingStep) {
+    public void applyCarvers(WorldGenRegion world, long seed, RandomState random, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess) {
         // noop
     }
 
@@ -108,12 +107,12 @@ public class PlanariumChunkGenerator extends ChunkGenerator {
 
                         if (worldPosX == 0 && y == 0 && worldPosZ == 0) {
                             BlockPos pos = new BlockPos(x, y - 1, z);
-                            chunk.setBlockState(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState(), false);
+                            chunk.setBlockState(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState(), 0);
                             chunk.setBlockEntity(new PlanariumProjectorTile(pos, BlockRegistry.PLANARIUM_PROJECTOR.defaultBlockState()));
-                            chunk.setBlockState(new BlockPos(x, y, z), BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
+                            chunk.setBlockState(new BlockPos(x, y, z), BlockRegistry.DIM_BOUNDARY.defaultBlockState(), 0);
                         } else if (isEdge) {
                             BlockPos pos = new BlockPos(x, y, z);
-                            chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), false);
+                            chunk.setBlockState(pos, BlockRegistry.DIM_BOUNDARY.defaultBlockState(), 0);
                         }
                     }
                 }

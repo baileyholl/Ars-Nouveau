@@ -22,8 +22,8 @@ public class DocSectionButton extends NuggetImageButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
         graphics.renderItem(renderItem, x + 3, y + 3);
         DocClientUtils.drawHeader(message, graphics, x + 68, y);
     }

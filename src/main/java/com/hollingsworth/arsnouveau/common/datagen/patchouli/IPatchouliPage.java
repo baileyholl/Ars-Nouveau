@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IPatchouliPage {
 
 
-    ResourceLocation getType();
+    Identifier getType();
 
     JsonObject build();
 

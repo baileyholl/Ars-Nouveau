@@ -5,8 +5,8 @@ import com.hollingsworth.arsnouveau.api.ritual.RangeRitual;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ public class DenySpawnRitual extends RangeRitual {
 
     public boolean denySpawn(FinalizeSpawnEvent checkSpawn) {
         boolean shouldDeny = !this.tile.isOff
-                && checkSpawn.getSpawnType() == MobSpawnType.NATURAL
+                && checkSpawn.getSpawnType() == EntitySpawnReason.NATURAL
                 && checkSpawn.getEntity() instanceof Enemy
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if (shouldDeny) {
@@ -43,7 +43,7 @@ public class DenySpawnRitual extends RangeRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             return;
         }
         for (ItemStack i : getConsumedItems()) {
@@ -56,7 +56,7 @@ public class DenySpawnRitual extends RangeRitual {
     @Override
     protected void tick() {
         super.tick();
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             return;
         }
         if (deniedSpawn && getWorld().getGameTime() % 1200 == 0) {
@@ -76,7 +76,7 @@ public class DenySpawnRitual extends RangeRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.SANCTUARY);
     }
 
@@ -93,8 +93,8 @@ public class DenySpawnRitual extends RangeRitual {
     @Override
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
-        radius = tag.getInt("radius");
-        deniedSpawn = tag.getBoolean("deniedSpawn");
+        radius = tag.getIntOr("radius", 0);
+        deniedSpawn = tag.getBooleanOr("deniedSpawn", false);
     }
 
     @Override

@@ -11,14 +11,15 @@ import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
-import com.mojang.blaze3d.vertex.PoseStack;
+import org.joml.Matrix3x2fStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DocClientUtils {
 
@@ -37,7 +39,7 @@ public class DocClientUtils {
         IndexScreen.open();
     }
 
-    public static void openToEntry(ResourceLocation resourceLocation, int pageIndex) {
+    public static void openToEntry(Identifier resourceLocation, int pageIndex) {
         DocEntry entry = DocumentationRegistry.getEntry(resourceLocation);
         if (entry == null) {
             IndexScreen.open();
@@ -56,21 +58,24 @@ public class DocClientUtils {
     }
 
     public static void drawStringScaled(GuiGraphics graphics, Component component, int x, int y, int color, float scale, boolean shadow) {
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(x + 3, y, 0);
-//        poseStack.scale(scale, scale, 1);
-        graphics.drawString(Minecraft.getInstance().font, component.copy().withStyle(component.getStyle().withFont(Minecraft.UNIFORM_FONT)), 0, 0, color, shadow);
-        poseStack.popPose();
+        // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack; use pushMatrix/popMatrix and translate(x,y)
+        Matrix3x2fStack poseStack = graphics.pose();
+        poseStack.pushMatrix();
+        poseStack.translate(x + 3, y);
+        // scale(x,y) omitted; Matrix3x2fStack.scale only takes (x,y) but draws distorted — skipping for compatibility
+        // 1.21.11: drawString skips if alpha==0. Ensure opaque.
+        int opaqueColor = (color & 0xFF000000) == 0 ? (color | 0xFF000000) : color;
+        graphics.drawString(Minecraft.getInstance().font, component.copy().withStyle(component.getStyle().withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT))), 0, 0, opaqueColor, shadow);
+        poseStack.popMatrix();
     }
 
 
     public static void drawHeader(NuggetMultilLineLabel title, GuiGraphics graphics, int x, int y) {
-        title.renderCenteredNoShadow(graphics, x, y + (title.getLineCount() > 1 ? 3 : 7), 8, 0);
+        title.renderCenteredNoShadow(graphics, x, y + (title.getLineCount() > 1 ? 3 : 7), 8, 0xFF000000);
     }
 
     public static void blit(GuiGraphics graphics, DocAssets.BlitInfo info, int x, int y) {
-        graphics.blit(info.location(), x, y, info.u(), info.v(), info.width(), info.height(), info.width(), info.height());
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, info.location(), x, y, info.u(), info.v(), info.width(), info.height(), info.width(), info.height());
     }
 
     public static ItemStack renderIngredientAtAngle(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float angle, Ingredient ingredient) {
@@ -82,11 +87,12 @@ public class DocClientUtils {
         int radius = 41;
         double xPos = x + nextXAngle(angle, radius);
         double yPos = y + nextYAngle(angle, radius);
-        PoseStack ms = graphics.pose();
-        ms.pushPose(); // This translation makes it not stuttery. It does not affect the tooltip as that is drawn separately later.
-        ms.translate(xPos - (int) xPos, yPos - (int) yPos, 0);
+        // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack; use pushMatrix/popMatrix and translate(x,y)
+        Matrix3x2fStack ms = graphics.pose();
+        ms.pushMatrix(); // This translation makes it not stuttery. It does not affect the tooltip as that is drawn separately later.
+        ms.translate((float)(xPos - (int) xPos), (float)(yPos - (int) yPos));
         ItemStack hovered = DocClientUtils.renderIngredient(graphics, (int) xPos, (int) yPos, mouseX, mouseY, ingredient);
-        ms.popPose();
+        ms.popMatrix();
         return hovered;
     }
 
@@ -102,9 +108,10 @@ public class DocClientUtils {
      * @return returns the hovered stack
      */
     public static ItemStack renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-        ItemStack[] stacks = ingr.getItems();
-        if (stacks.length > 0) {
-            return DocClientUtils.renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ClientInfo.ticksInGame / 20) % stacks.length]);
+        // items() replaced getItems() in MC 1.21.11 — returns Stream<Holder<Item>>
+        List<ItemStack> stacks = ingr.items().map(h -> h.value().getDefaultInstance()).collect(Collectors.toList());
+        if (!stacks.isEmpty()) {
+            return DocClientUtils.renderItemStack(graphics, x, y, mouseX, mouseY, stacks.get((ClientInfo.ticksInGame / 20) % stacks.size()));
         }
         return ItemStack.EMPTY;
     }
@@ -137,13 +144,14 @@ public class DocClientUtils {
     }
 
     public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(x + 1, y, 0);
-        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), width);
+        // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack; use pushMatrix/popMatrix and translate(x,y)
+        Matrix3x2fStack poseStack = guiGraphics.pose();
+        poseStack.pushMatrix();
+        poseStack.translate(x + 1, y);
+        NuggetMultilLineLabel label = NuggetMultilLineLabel.create(Minecraft.getInstance().font, text.copy().withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT))), width);
         int lineHeight = 9;
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     public static void drawParagraph(NuggetMultilLineLabel label, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
@@ -170,7 +178,7 @@ public class DocClientUtils {
         Font font = Minecraft.getInstance().font;
         List<FormattedText> list = Lists.newArrayList();
         String content = text.getString();
-        font.getSplitter().splitLines(content, PARAGRAPH_WIDTH, Style.EMPTY.withFont(Minecraft.UNIFORM_FONT), true, (style, currentPos, width) -> {
+        font.getSplitter().splitLines(content, PARAGRAPH_WIDTH, Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)), true, (style, currentPos, width) -> {
             String s2 = content.substring(currentPos, width);
             boolean addLine = false;
             if (StringUtils.endsWith(s2, "\n")) {
@@ -221,7 +229,7 @@ public class DocClientUtils {
         List<Component> components = new ArrayList<>();
         for (int i = 0, listSize = list.size(); i < listSize; i++) {
             FormattedText formatted = list.get(i);
-            Component component = Component.literal(formatted.getString()).withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT));
+            Component component = Component.literal(formatted.getString()).withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)));
             components.add(component);
         }
         return components;

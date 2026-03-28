@@ -57,13 +57,15 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe {
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
-        return RecipeRegistry.REACTIVE_TYPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeType<EnchantingApparatusRecipe> getType() {
+        return (RecipeType<EnchantingApparatusRecipe>) (RecipeType<?>) RecipeRegistry.REACTIVE_TYPE.get();
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.REACTIVE_RECIPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeSerializer<EnchantingApparatusRecipe> getSerializer() {
+        return (RecipeSerializer<EnchantingApparatusRecipe>) (RecipeSerializer<?>) RecipeRegistry.REACTIVE_RECIPE.get();
     }
 
 

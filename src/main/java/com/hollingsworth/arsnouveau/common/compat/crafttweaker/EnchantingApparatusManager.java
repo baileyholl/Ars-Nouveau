@@ -9,7 +9,7 @@
 //import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 //import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 //import net.minecraft.world.item.crafting.RecipeType;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import org.openzen.zencode.java.ZenCodeType;
 //
 //import java.util.Arrays;
@@ -22,7 +22,7 @@
 //    @ZenCodeType.Method
 //    public void addRecipe(String name, IItemStack result, IIngredient reagent, IIngredient[] pedestalItems) {
 //        name = fixRecipeName(name);
-//        EnchantingApparatusRecipe recipe = new EnchantingApparatusRecipe(new ResourceLocation("crafttweaker", name), Arrays.stream(pedestalItems).map(IIngredient::asVanillaIngredient).collect(Collectors.toList()), reagent.asVanillaIngredient(), result.getInternal());
+//        EnchantingApparatusRecipe recipe = new EnchantingApparatusRecipe(new Identifier("crafttweaker", name), Arrays.stream(pedestalItems).map(IIngredient::asVanillaIngredient).collect(Collectors.toList()), reagent.asVanillaIngredient(), result.getInternal());
 //        CraftTweakerAPI.apply(new ActionAddRecipe(this, recipe, ""));
 //    }
 //

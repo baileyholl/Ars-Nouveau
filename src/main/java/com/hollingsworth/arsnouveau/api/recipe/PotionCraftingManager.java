@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -82,17 +82,18 @@ public class PotionCraftingManager extends CraftingManager {
     }
 
     @Override
-    public void write(HolderLookup.Provider provider, CompoundTag tag) {
-        super.write(provider, tag);
-        tag.put("potionout", ANCodecs.encode(provider, PotionContents.CODEC, potionOut));
-        tag.put("potionNeeded", ANCodecs.encode(provider, PotionContents.CODEC, getPotionNeeded()));
+    public void write(ValueOutput tag) {
+        super.write(tag);
+        tag.store("potionout", PotionContents.CODEC, potionOut);
+        tag.store("potionNeeded", PotionContents.CODEC, getPotionNeeded());
         tag.putBoolean("gotPotion", hasObtainedPotion);
     }
 
-    public void read(HolderLookup.Provider provider, CompoundTag tag) {
-        super.read(provider, tag);
-        potionOut = ANCodecs.decode(provider, PotionContents.CODEC, tag.getCompound("potionout"));
-        potionNeeded = ANCodecs.decode(provider, PotionContents.CODEC, tag.getCompound("potionNeeded"));
-        hasObtainedPotion = tag.getBoolean("gotPotion");
+    @Override
+    public void read(ValueInput tag) {
+        super.read(tag);
+        potionOut = tag.read("potionout", PotionContents.CODEC).orElse(PotionContents.EMPTY);
+        potionNeeded = tag.read("potionNeeded", PotionContents.CODEC).orElse(PotionContents.EMPTY);
+        hasObtainedPotion = tag.getBooleanOr("gotPotion", false);
     }
 }

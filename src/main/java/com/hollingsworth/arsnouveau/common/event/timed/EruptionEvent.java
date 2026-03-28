@@ -75,7 +75,7 @@ public class EruptionEvent implements ITimedEvent {
     }
 
     public static EruptionEvent get(CompoundTag tag) {
-        return new EruptionEvent(ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "pos"), tag.getInt("delay"), tag.getInt("particleDelay"));
+        return new EruptionEvent(ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "pos"), tag.getIntOr("delay", 0), tag.getIntOr("particleDelay", 0));
     }
 
     public static final String ID = "eruption";

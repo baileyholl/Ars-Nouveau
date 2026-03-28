@@ -27,14 +27,14 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         if (level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
                 int source = getSourceValue(i.getItem());
                 if (source > 0 && (canConsumeEntireItem(i.getItem()) || this.getSource() <= 0)) {
                     this.addSource(source);
-                    ItemStack containerItem = i.getItem().getCraftingRemainingItem();
+                    ItemStack containerItem = i.getItem().getCraftingRemainder();
                     i.getItem().shrink(1);
                     if (!containerItem.isEmpty()) {
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
@@ -48,7 +48,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
                 int sourceValue = getSourceValue(i.getItem(0));
                 if (sourceValue > 0 && (canConsumeEntireItem(i.getItem(0)) || this.getSource() <= 0)) {
                     this.addSource(sourceValue);
-                    ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
+                    ItemStack containerItem = i.getItem(0).getCraftingRemainder();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
                     Networking.sendToNearbyClient(level, getBlockPos(),
@@ -66,7 +66,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     public int getSourceValue(ItemStack i) {
         int source = 0;
         int progress = 0;
-        int burnTime = i.getBurnTime(RecipeType.SMELTING);
+        int burnTime = i.getBurnTime(RecipeType.SMELTING, level.fuelValues());
         if (burnTime > 0) {
             source = burnTime / 12;
             progress = 1;
@@ -87,7 +87,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     }
 
     public void doRandomAction() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
 
         BlockPos magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);

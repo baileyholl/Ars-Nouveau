@@ -25,6 +25,16 @@ public abstract class MultiInputCategory<T extends Recipe<?>> implements IRecipe
     }
 
     @Override
+    public int getWidth() {
+        return 114;
+    }
+
+    @Override
+    public int getHeight() {
+        return 108;
+    }
+
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipeHolder, IFocusGroup focuses) {
         MultiProvider provider = multiProvider.apply(recipeHolder.value());
         List<Ingredient> inputs = provider.input;

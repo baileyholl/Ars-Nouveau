@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -73,7 +73,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
 
     private boolean dupeCheck(Level world, BlockPos pos) {
         BlockEntity be = world.getBlockEntity(pos);
-        return be != null && (world.getCapability(Capabilities.ItemHandler.BLOCK, pos, null) != null || be instanceof Container);
+        return be != null && (world.getCapability(Capabilities.Item.BLOCK, pos, null) != null || be instanceof Container);
     }
 
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
@@ -130,7 +130,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         defaults.put(AugmentAmplify.INSTANCE.getRegistryName(), 2);
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Random;
@@ -50,7 +50,7 @@ public class ScryersOculusTile extends ModdedTile implements GeoBlockEntity, ITi
 
     @Override
     public void tick() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             bookAnimationTick(level, getBlockPos(), getBlockState(), this);
         }
     }

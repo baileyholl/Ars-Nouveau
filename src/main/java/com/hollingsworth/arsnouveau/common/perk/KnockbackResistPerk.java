@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -14,7 +14,7 @@ public class KnockbackResistPerk extends Perk {
 
     public static final KnockbackResistPerk INSTANCE = new KnockbackResistPerk(ArsNouveau.prefix("thread_amethyst_golem"));
 
-    public KnockbackResistPerk(ResourceLocation key) {
+    public KnockbackResistPerk(Identifier key) {
         super(key);
     }
 

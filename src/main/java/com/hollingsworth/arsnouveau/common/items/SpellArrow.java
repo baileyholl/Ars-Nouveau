@@ -11,16 +11,18 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class SpellArrow extends ArrowItem {
 
@@ -56,12 +58,12 @@ public class SpellArrow extends ArrowItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        pTooltipComponents.add(Component.translatable("ars_nouveau.spell_arrow.desc"));
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, TooltipDisplay pDisplay, Consumer<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
+        pTooltipComponents.accept(Component.translatable("ars_nouveau.spell_arrow.desc"));
         var spell = new Spell().mutable();
         for (int i = 0; i < numParts; i++) {
             spell.recipe.add(part);
         }
-        pTooltipComponents.add(Component.literal(spell.immutable().getDisplayString()));
+        pTooltipComponents.accept(Component.literal(spell.immutable().getDisplayString()));
     }
 }

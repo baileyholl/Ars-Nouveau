@@ -7,7 +7,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -29,7 +30,7 @@ public class LightBlock extends ModBlock implements ITickableBlock, SimpleWaterl
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(defaultProperties().lightLevel((bs) -> bs.getValue(LIGHT_LEVEL) == 0 ? 14 : bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f, 0f));
+        super(defaultProperties().lightLevel((bs) -> bs.getValue(LIGHT_LEVEL) == 0 ? 14 : bs.getValue(LIGHT_LEVEL)).noCollision().noOcclusion().dynamicShape().strength(0f, 0f));
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
     }
 
@@ -45,7 +46,7 @@ public class LightBlock extends ModBlock implements ITickableBlock, SimpleWaterl
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
 
@@ -79,9 +80,9 @@ public class LightBlock extends ModBlock implements ITickableBlock, SimpleWaterl
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, RandomSource random) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            scheduledTickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
         return stateIn;
     }

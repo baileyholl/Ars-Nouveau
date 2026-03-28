@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -40,10 +40,10 @@ public class ItemDetector extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (handIn == InteractionHand.MAIN_HAND) {
-            if (worldIn.isClientSide) {
-                return ItemInteractionResult.SUCCESS;
+            if (worldIn.isClientSide()) {
+                return InteractionResult.SUCCESS;
             }
             if ((stack.getItem() instanceof DominionWand) || !(worldIn.getBlockEntity(pos) instanceof ItemDetectorTile itemDetector))
                 return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
@@ -53,7 +53,7 @@ public class ItemDetector extends TickableModBlock {
                 itemDetector.setFilterStack(stack.copy());
             }
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ItemDetector extends TickableModBlock {
 
     @Override
     public void attack(BlockState state, Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof ItemDetectorTile tile) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ItemDetectorTile tile) {
             tile.addCount(player.isShiftKeyDown() ? -8 : -1);
         }
     }

@@ -9,7 +9,7 @@
 //import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 //import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 //import net.minecraft.world.item.crafting.RecipeType;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import org.openzen.zencode.java.ZenCodeType;
 //
 //import java.util.Arrays;
@@ -30,7 +30,7 @@
 //        if(spellTier == null) {
 //            throw new IllegalArgumentException("Invalid spell tier! Valid values are: " + Arrays.toString(ISpellTier.Tier.values()));
 //        }
-//        GlyphPressRecipe recipe = new GlyphPressRecipe(new ResourceLocation("crafttweaker", name), spellTier, reagent.getInternal(), output.getInternal());
+//        GlyphPressRecipe recipe = new GlyphPressRecipe(new Identifier("crafttweaker", name), spellTier, reagent.getInternal(), output.getInternal());
 //        CraftTweakerAPI.apply(new ActionAddRecipe(this, recipe, ""));
 //    }
 //

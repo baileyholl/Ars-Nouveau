@@ -9,15 +9,14 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectDispel;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectPrestidigitation;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -28,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -45,7 +44,7 @@ public class DecorBlossomTile extends ModdedTile implements ITickable, IWandable
 
     @Override
     public void tick() {
-        if (timeline != null && level.isClientSide && emitPos != null) {
+        if (timeline != null && level.isClientSide() && emitPos != null) {
             if (emitter == null) {
                 emitter = new ParticleEmitter(() -> this.emitPos.getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
             }
@@ -67,7 +66,7 @@ public class DecorBlossomTile extends ModdedTile implements ITickable, IWandable
             return IWandable.super.onFirstConnection(storedPos, face, storedEntity, playerEntity);
         }
         if (BlockUtil.distanceFrom(storedPos.pos(), this.worldPosition) > ServerConfig.DECOR_BLOSSOM_RANGE.get()) {
-            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.connection.range", ServerConfig.DECOR_BLOSSOM_RANGE.get()));
+            playerEntity.displayClientMessage(Component.translatable("ars_nouveau.connection.range", ServerConfig.DECOR_BLOSSOM_RANGE.get()), false);
             return Result.FAIL;
         }
         if (storedPos != null) {
@@ -88,10 +87,10 @@ public class DecorBlossomTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (timeline != null) {
-            tag.put("prestidigitation_timeline", ANCodecs.encode(PrestidigitationTimeline.CODEC.codec(), timeline));
+            tag.store("prestidigitation_timeline", PrestidigitationTimeline.CODEC.codec(), timeline);
         }
         if (emitPos != null) {
             tag.putLong("emitPos", emitPos.asLong());
@@ -99,17 +98,12 @@ public class DecorBlossomTile extends ModdedTile implements ITickable, IWandable
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
         timeline = null;
         emitPos = null;
-        if (tag.contains("prestidigitation_timeline")) {
-            timeline = ANCodecs.decode(PrestidigitationTimeline.CODEC.codec(), tag.getCompound("prestidigitation_timeline"));
-        }
-
-        if (tag.contains("emitPos")) {
-            emitPos = BlockPos.of(tag.getLong("emitPos"));
-        }
+        timeline = tag.read("prestidigitation_timeline", PrestidigitationTimeline.CODEC.codec()).orElse(null);
+        tag.getLong("emitPos").ifPresent(l -> emitPos = BlockPos.of(l));
     }
 
     @Override
@@ -126,13 +120,13 @@ public class DecorBlossomTile extends ModdedTile implements ITickable, IWandable
         return ResolveStatus.CONTINUE;
     }
 
-    AnimationController openCloseController;
+    AnimationController<DecorBlossomTile> openCloseController;
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        openCloseController = new AnimationController<>(this, "openClose", (event) -> {
+        openCloseController = new AnimationController<DecorBlossomTile>("openClose", (event) -> {
 
-            event.getController().setAnimation(RawAnimation.begin().thenPlayAndHold(timeline == null ? "close" : "open"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlayAndHold(timeline == null ? "close" : "open"));
             return PlayState.CONTINUE;
         });
         controllers.add(openCloseController);

@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.JukeboxRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -36,7 +36,7 @@ public class MusicProvider extends DatapackBuiltinEntriesProvider {
     ) {
         p_350719_.register(
                 p_350460_,
-                new JukeboxSong(p_350456_, Component.translatable(Util.makeDescriptionId("jukebox_song", p_350460_.location())), (float) p_350314_, p_350919_)
+                new JukeboxSong(p_350456_, Component.translatable(Util.makeDescriptionId("jukebox_song", p_350460_.identifier())), (float) p_350314_, p_350919_)
         );
 
 

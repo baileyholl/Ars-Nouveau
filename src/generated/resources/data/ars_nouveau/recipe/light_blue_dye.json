@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:blue_orchid"
-  },
+  "input": "minecraft:blue_orchid",
   "output": [
     {
       "chance": 1.0,

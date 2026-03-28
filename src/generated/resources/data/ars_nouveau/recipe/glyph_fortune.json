@@ -2,9 +2,7 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "minecraft:rabbit_foot"
-    }
+    "minecraft:rabbit_foot"
   ],
   "output": {
     "count": 1,

@@ -16,18 +16,20 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -105,7 +107,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos())) {
+        if (storedPos == null || level.isClientSide() || storedPos.equals(getBlockPos())) {
             return;
         }
         if (!(level.getBlockEntity(storedPos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, storedPos, null) == null) {
@@ -154,7 +156,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void tick() {
-        if (level.isClientSide || disabled) {
+        if (level.isClientSide() || disabled) {
             return;
         }
         if (level.getGameTime() % 20 != 0)
@@ -204,8 +206,8 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     String FROM = "from";
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
+    protected void loadAdditional(@NotNull ValueInput tag) {
+        super.loadAdditional(tag);
         this.toPos = null;
         this.fromPos = null;
 
@@ -215,12 +217,12 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (NBTUtil.hasBlockPos(tag, FROM)) {
             this.fromPos = NBTUtil.getBlockPos(tag, FROM);
         }
-        this.disabled = tag.getBoolean("disabled");
+        this.disabled = tag.getBooleanOr("disabled", false);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
         if (toPos != null) {
             NBTUtil.storeBlockPos(tag, TO, toPos.immutable());
         } else {
@@ -257,17 +259,17 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
-        data.add(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
+        data.add(new AnimationController<RelayTile>("rotate_controller", 0, this::idlePredicate));
+        data.add(new AnimationController<RelayTile>("float_controller", 0, this::floatPredicate));
     }
 
-    private <P extends GeoAnimatable> PlayState idlePredicate(AnimationState<P> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("floating"));
+    private PlayState idlePredicate(AnimationTest<RelayTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("floating"));
         return PlayState.CONTINUE;
     }
 
-    private <P extends GeoAnimatable> PlayState floatPredicate(AnimationState<P> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("rotation"));
+    private PlayState floatPredicate(AnimationTest<RelayTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("rotation"));
         return PlayState.CONTINUE;
     }
 

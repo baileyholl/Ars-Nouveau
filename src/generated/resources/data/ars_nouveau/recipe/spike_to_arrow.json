@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:wilden_spike"
-    },
-    "y": {
-      "item": "minecraft:stick"
-    },
-    "z": {
-      "item": "minecraft:feather"
-    }
+    "x": "ars_nouveau:wilden_spike",
+    "y": "minecraft:stick",
+    "z": "minecraft:feather"
   },
   "pattern": [
     " x ",

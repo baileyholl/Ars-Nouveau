@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:magebloom_fiber"
-    },
-    "y": {
-      "tag": "c:nuggets/gold"
-    }
+    "x": "ars_nouveau:magebloom_fiber",
+    "y": "#c:nuggets/gold"
   },
   "pattern": [
     "xxx",

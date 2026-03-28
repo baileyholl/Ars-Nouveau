@@ -7,15 +7,12 @@ import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,6 +20,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +42,7 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     public void tick() {
         if (isOff)
             return;
-        if (level.isClientSide && !isOff && ticksToConsume > 0 && !PotionUtil.isEmpty(lastConsumedPotion) && level.getGameTime() % 8 == 0) {
+        if (level.isClientSide() && !isOff && ticksToConsume > 0 && !PotionUtil.isEmpty(lastConsumedPotion) && level.getGameTime() % 8 == 0) {
             level.addParticle(ParticleTypes.SMOKE, getX() + 0.5, getY() + 1, getZ() + 0.5, 0, 0, 0);
             return;
         }
@@ -57,11 +56,11 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
                 for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos()).inflate(10))) {
                     lastConsumedPotion.forEachEffect(effectinstance -> {
                         if (effectinstance.getEffect().value().isInstantenous()) {
-                            effectinstance.getEffect().value().applyInstantenousEffect(null, null, entity, effectinstance.getAmplifier(), 1.0D);
+                            effectinstance.getEffect().value().applyInstantenousEffect((ServerLevel) level, null, null, entity, effectinstance.getAmplifier(), 1.0D);
                         } else {
                             entity.addEffect(new MobEffectInstance(effectinstance), null);
                         }
-                    });
+                    }, 1.0f);
                 }
             }
         }
@@ -97,28 +96,24 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
         boundPos = NBTUtil.getNullablePos(pTag, "boundPos");
-
-        isOff = pTag.getBoolean("isOff");
-        ticksToConsume = pTag.getInt("ticksToConsume");
-        if (pTag.contains("lastConsumedPotion")) {
-            lastConsumedPotion = ANCodecs.decode(pRegistries, PotionContents.CODEC, pTag.getCompound("lastConsumedPotion"));
-        }
+        isOff = pTag.getBooleanOr("isOff", false);
+        ticksToConsume = pTag.getIntOr("ticksToConsume", 0);
+        lastConsumedPotion = pTag.read("lastConsumedPotion", PotionContents.CODEC).orElse(PotionContents.EMPTY);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (boundPos != null) {
             NBTUtil.storeBlockPos(tag, "boundPos", boundPos);
         }
         tag.putBoolean("isOff", isOff);
         tag.putInt("ticksToConsume", ticksToConsume);
-        if (lastConsumedPotion != null) {
-            tag.put("lastConsumedPotion", ANCodecs.encode(pRegistries, PotionContents.CODEC, lastConsumedPotion));
+        if (lastConsumedPotion != null && lastConsumedPotion != PotionContents.EMPTY) {
+            tag.store("lastConsumedPotion", PotionContents.CODEC, lastConsumedPotion);
         }
     }
 
@@ -130,8 +125,8 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
         if (isOff) {
             tooltip.add(Component.translatable("ars_nouveau.potion_diffuser.off").withStyle(ChatFormatting.GOLD));
         }
-        if (lastConsumedPotion != null) {
-            lastConsumedPotion.addPotionTooltip(tooltip::add, 1.0f, 20f);
+        if (lastConsumedPotion != null && lastConsumedPotion != PotionContents.EMPTY) {
+            PotionContents.addPotionTooltip(lastConsumedPotion.getAllEffects(), tooltip::add, 1.0f, 20f);
         }
     }
 

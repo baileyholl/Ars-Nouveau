@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,7 +48,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
         if (entity instanceof LivingEntity livingEntity && spellStats.getDurationMultiplier() > 0) {
             applyConfigPotion(livingEntity, ModPotions.SOAKED_EFFECT, spellStats);
         }
-        if (spellStats.isSensitive() && !world.dimensionType().ultraWarm()) {
+        if (spellStats.isSensitive() && !world.dimension().equals(net.minecraft.world.level.Level.NETHER)) {
             placeWater((ServerLevel) world, shooter, spellContext, resolver, entity.blockPosition(), Direction.UP);
         }
 
@@ -58,7 +58,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         double aoeBuff = spellStats.getAoeMultiplier();
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, aoeBuff, spellStats.getBuffCount(AugmentPierce.INSTANCE));
-        if (world.dimensionType().ultraWarm())
+        if (world.dimension().equals(net.minecraft.world.level.Level.NETHER))
             return;
         for (BlockPos pos1 : posList) {
             placeWater((ServerLevel) world, shooter, spellContext, resolver, pos1, rayTraceResult.getDirection());
@@ -104,7 +104,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

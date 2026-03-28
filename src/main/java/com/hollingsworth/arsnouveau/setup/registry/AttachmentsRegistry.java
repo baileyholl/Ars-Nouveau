@@ -35,7 +35,7 @@ public class AttachmentsRegistry {
     public static final Supplier<AttachmentType<Pair<BlockPos, Optional<Direction>>>> LINKED_SOURCE_PROVIDER =
             ATTACHMENT_TYPES.register("linked_source_provider",
                     () -> AttachmentType.builder(() -> Pair.<BlockPos, Optional<Direction>>of(BlockPos.ZERO, null))
-                            .serialize(ANCodecs.BLOCKPOS_DIRECTION_PAIR_CODEC)
+                            .serialize(ANCodecs.BLOCKPOS_DIRECTION_PAIR_MAP_CODEC)
                             .sync(ANCodecs.BLOCKPOS_DIRECTION_PAIR_STREAM_CDOEC)
                             .build());
 }

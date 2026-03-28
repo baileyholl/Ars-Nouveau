@@ -2,45 +2,27 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-import javax.annotation.Nullable;
-
+// GeckoLib 5: setCustomAnimations() removed; bone visibility (wings/head) must be
+// ported via addAdditionalStateData + custom GeoRenderState. Head rotation similarly removed.
+// TODO: Port wing bone visibility (fly vs run wings) and head rotation to addAdditionalStateData pattern.
 public class WildenStalkerModel extends GeoModel<WildenStalker> {
 
     @Override
-    public void setCustomAnimations(WildenStalker entity, long uniqueID, @Nullable AnimationState customPredicate) {
-        super.setCustomAnimations(entity, uniqueID, customPredicate);
-        GeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(extraData.headPitch() * 0.017453292F);
-        head.setRotY(extraData.netHeadYaw() * 0.017453292F);
-
-        this.getBone("wing_fly_left").get().setHidden(!entity.isFlying());
-        this.getBone("wing_fly_right").get().setHidden(!entity.isFlying());
-
-        this.getBone("wing_run_left").get().setHidden(entity.isFlying());
-        this.getBone("wing_run_right").get().setHidden(entity.isFlying());
+    public Identifier getModelResource(GeoRenderState renderState) {
+        return ArsNouveau.prefix("wilden_stalker");
     }
 
     @Override
-    public ResourceLocation getModelResource(WildenStalker wildenStalker) {
-        return ArsNouveau.prefix("geo/wilden_stalker.geo.json");
-    }
-
-    @Override
-    public ResourceLocation getTextureResource(WildenStalker wildenStalker) {
+    public Identifier getTextureResource(GeoRenderState renderState) {
         return ArsNouveau.prefix("textures/entity/wilden_stalker.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(WildenStalker wildenStalker) {
-        return ArsNouveau.prefix("animations/wilden_stalker_animations.json");
+    public Identifier getAnimationResource(WildenStalker wildenStalker) {
+        return ArsNouveau.prefix("wilden_stalker_animations");
     }
-
 }

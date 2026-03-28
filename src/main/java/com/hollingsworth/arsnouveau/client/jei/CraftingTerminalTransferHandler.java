@@ -11,7 +11,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
@@ -63,7 +63,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
             Set<StoredItemStack> stored = new HashSet<>(term.getStoredItems());
 
             for (IRecipeSlotView view : views) {
-                if (view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {
+                if (view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CRAFTING_STATION) {
                     List<ItemStack> possibleStacks = view.getIngredients(VanillaTypes.ITEM_STACK).toList();
                     if (possibleStacks.isEmpty()) {
                         inputs.add(List.of());
@@ -141,7 +141,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
     }
 
     @Override
-    public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
+    public IRecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
         return RecipeTypes.CRAFTING;
     }
 

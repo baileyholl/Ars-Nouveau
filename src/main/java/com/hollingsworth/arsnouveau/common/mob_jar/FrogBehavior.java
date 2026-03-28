@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.frog.Frog;
@@ -19,7 +20,7 @@ public class FrogBehavior extends JarBehavior<Frog> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide || isPowered(tile)) {
+        if (tile.getLevel().isClientSide() || isPowered(tile)) {
             return;
         }
         ExtraData data = new ExtraData(tile.getExtraDataTag());
@@ -30,7 +31,7 @@ public class FrogBehavior extends JarBehavior<Frog> {
                     Frog frog = entityFromJar(tile);
                     livingEntity.playSound(SoundEvents.FROG_EAT, 2.0F, 1.0f);
                     if (livingEntity.isAlive()) {
-                        frog.doHurtTarget(livingEntity);
+                        frog.doHurtTarget((ServerLevel) tile.getLevel(), livingEntity);
                         if (!livingEntity.isAlive()) {
                             livingEntity.remove(Entity.RemovalReason.KILLED);
                         }
@@ -50,7 +51,7 @@ public class FrogBehavior extends JarBehavior<Frog> {
             LivingEntity entity = livingEntities.get(tile.getLevel().getRandom().nextInt(livingEntities.size()));
             entity.level.playSound(null, entity, SoundEvents.FROG_TONGUE, SoundSource.NEUTRAL, 2.0F, 1.0F);
             entity.setDeltaMovement(entity.position().vectorTo(frog.position()).normalize().scale(0.75D));
-            entity.hasImpulse = true;
+            // 1.21.11: hasImpulse removed
             data.position = entity.position();
             data.tickCounter = 0;
             data.isEating = true;
@@ -74,9 +75,9 @@ public class FrogBehavior extends JarBehavior<Frog> {
         public ExtraData(CompoundTag tag) {
             super(tag);
             position = NBTUtil.getVec(tag, "position");
-            tickCounter = tag.getInt("tickCounter");
-            isEating = tag.getBoolean("isEating");
-            entityId = tag.getInt("entityId");
+            tickCounter = tag.getIntOr("tickCounter", 0);
+            isEating = tag.getBooleanOr("isEating", false);
+            entityId = tag.getIntOr("entityId", 0);
         }
 
         @Override

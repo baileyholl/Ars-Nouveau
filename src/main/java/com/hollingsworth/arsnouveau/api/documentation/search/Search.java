@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.documentation.DocDataLoader;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.apache.lucene.analysis.Analyzer;
@@ -104,7 +104,7 @@ public class Search {
                 if (doc.score < 0.5f)
                     continue;
                 Document document = storedFields.document(doc.doc);
-                ResourceLocation entryId = ResourceLocation.tryParse(document.get("ID"));
+                Identifier entryId = Identifier.tryParse(document.get("ID"));
                 String connectedIndex = document.get("connectedIndex");
                 DocEntry entry = DocumentationRegistry.getEntry(entryId);
                 if (connectedIndex != null) {

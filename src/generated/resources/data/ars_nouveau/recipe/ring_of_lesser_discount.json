@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    }
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:ender_pearls",
+    "#c:ender_pearls",
+    "#c:gems/source",
+    "#c:gems/source"
   ],
-  "reagent": {
-    "item": "ars_nouveau:ring_of_potential"
-  },
+  "reagent": "ars_nouveau:ring_of_potential",
   "result": {
     "count": 1,
     "id": "ars_nouveau:ring_of_lesser_discount"

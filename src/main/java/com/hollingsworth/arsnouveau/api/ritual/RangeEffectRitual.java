@@ -15,7 +15,7 @@ public abstract class RangeEffectRitual extends RangeRitual {
     abstract public int getDuration();
 
     public boolean shouldApply(ServerPlayer player) {
-        return !player.level.isClientSide && !needsSourceNow() && BlockUtil.distanceFrom(getPos(), player.blockPosition()) <= getRange();
+        return !player.level().isClientSide() && !needsSourceNow() && BlockUtil.distanceFrom(getPos(), player.blockPosition()) <= getRange();
     }
 
     public boolean attemptRefresh(ServerPlayer player) {

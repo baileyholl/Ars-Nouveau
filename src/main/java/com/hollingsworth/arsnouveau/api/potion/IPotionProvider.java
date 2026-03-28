@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.potion;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +42,10 @@ public interface IPotionProvider {
         for (MobEffectInstance effectinstance : getPotionData(stack).getAllEffects()) {
             effectinstance = getEffectInstance(effectinstance);
             if (effectinstance.getEffect().value().isInstantenous()) {
-                effectinstance.getEffect().value().applyInstantenousEffect(source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
+                // 1.21.11: applyInstantenousEffect now requires ServerLevel as first param
+                if (target.level() instanceof ServerLevel serverLevel) {
+                    effectinstance.getEffect().value().applyInstantenousEffect(serverLevel, source, inDirectSource, target, effectinstance.getAmplifier(), 1.0D);
+                }
             } else {
                 target.addEffect(new MobEffectInstance(effectinstance), source);
             }
@@ -50,7 +54,8 @@ public interface IPotionProvider {
 
     default void addTooltip(ItemStack stack, List<Component> tooltips) {
         PotionContents potionStack = getPotionData(stack);
-        potionStack.addPotionTooltip(tooltips::add, 1.0F, 20.0f);
+        // 1.21.11: use static addPotionTooltip(Iterable, Consumer, float, float)
+        PotionContents.addPotionTooltip(potionStack.getAllEffects(), tooltips::add, 1.0F, 20.0f);
     }
 
     default boolean isEmpty(ItemStack stack) {

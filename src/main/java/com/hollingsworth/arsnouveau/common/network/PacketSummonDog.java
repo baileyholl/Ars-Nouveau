@@ -38,16 +38,16 @@ public class PacketSummonDog extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         if (dogType == DogType.NOOK) {
-            Nook nook = new Nook(player.level);
+            Nook nook = new Nook(player.level());
             nook.setPos(player.getX(), player.getY(), player.getZ());
-            nook.setOwnerUUID(player.getUUID());
-            player.level.addFreshEntity(nook);
+            nook.setOwner(player);
+            player.level().addFreshEntity(nook);
             Nook.ownerNookMap.put(player.getUUID(), nook.getUUID());
         } else {
-            Lily lily = new Lily(player.level);
+            Lily lily = new Lily(player.level());
             lily.setPos(player.getX(), player.getY(), player.getZ());
-            lily.setOwnerUUID(player.getUUID());
-            player.level.addFreshEntity(lily);
+            lily.setOwner(player);
+            player.level().addFreshEntity(lily);
             Lily.ownerLilyMap.put(player.getUUID(), lily.getUUID());
         }
     }

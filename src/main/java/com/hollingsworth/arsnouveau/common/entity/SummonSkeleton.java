@@ -4,11 +4,10 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
@@ -18,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
@@ -26,7 +26,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +41,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummon, IDispellable {
-    public static EntityDataAccessor<Optional<UUID>> OWNER_UNIQUE_ID = SynchedEntityData.defineId(SummonSkeleton.class, EntityDataSerializers.OPTIONAL_UUID);
+    // OPTIONAL_UUID removed from EntityDataSerializers in 1.21.11; use regular field
+    @Nullable
+    private UUID ownerUUIDField;
 
     private final RangedBowAttackGoal<SummonSkeleton> bowGoal = new RangedBowAttackGoal<>(this, 1.0D, 20, 15.0F);
 
@@ -89,7 +91,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pSpawnType, @Nullable SpawnGroupData pSpawnGroupData) {
         this.populateDefaultEquipmentSlots(getRandom(), pDifficulty);
         this.populateDefaultEquipmentEnchantments(pLevel, getRandom(), pDifficulty);
         return super.finalizeSpawn(pLevel, pDifficulty, pSpawnType, pSpawnGroupData);
@@ -109,7 +111,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected boolean shouldDropLoot() {
+    protected boolean shouldDropLoot(ServerLevel level) {
         return false;
     }
 
@@ -119,7 +121,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    protected void dropEquipment() {
+    protected void dropEquipment(ServerLevel level) {
     }
 
     @Override
@@ -137,7 +139,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         });
         this.targetSelector.addGoal(1, new CopyOwnerTargetGoal<>(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
-                (LivingEntity entity) ->
+                (entity, serverLevel) ->
                         (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner))
                                 || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
@@ -168,11 +170,11 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurtServer(ServerLevel level, DamageSource pSource, float pAmount) {
         if (pSource.is(DamageTypes.MOB_ATTACK) && pSource.getEntity() instanceof ISummon summon) {
             if (summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID())) return false;
         }
-        return super.hurt(pSource, pAmount);
+        return super.hurtServer(level, pSource, pAmount);
     }
 
     /**
@@ -194,17 +196,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
 
-    @Override
-    public boolean isAlliedTo(Entity pEntity) {
-        LivingEntity summoner = this.getSummoner();
-
-        if (summoner != null) {
-            if (pEntity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getOwnerUUID()))
-                return true;
-            return pEntity == summoner || summoner.isAlliedTo(pEntity);
-        }
-        return super.isAlliedTo(pEntity);
-    }
+    // isAlliedTo(Entity) is final on Entity in 1.21.11 - cannot override
 
     @Override
     public Level getWorld() {
@@ -230,7 +222,7 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(ServerLevel level) {
         return 0;
     }
 
@@ -238,27 +230,24 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("BoundX")) {
-            this.boundOrigin = new BlockPos(compound.getInt("BoundX"), compound.getInt("BoundY"), compound.getInt("BoundZ"));
+        if (compound.keySet().contains("BoundX")) {
+            this.boundOrigin = new BlockPos(compound.getIntOr("BoundX", 0), compound.getIntOr("BoundY", 0), compound.getIntOr("BoundZ", 0));
         }
 
-        if (compound.contains("LifeTicks")) {
-            this.setLimitedLife(compound.getInt("LifeTicks"));
+        if (compound.keySet().contains("LifeTicks")) {
+            this.setLimitedLife(compound.getIntOr("LifeTicks", 0));
         }
-        UUID s;
-        if (compound.contains("OwnerUUID", 8)) {
-            s = compound.getUUID("OwnerUUID");
-        } else {
-            String s1 = compound.getString("Owner");
-            s = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
-        }
+        UUID s = compound.read("OwnerUUID", net.minecraft.core.UUIDUtil.CODEC).orElseGet(() -> {
+            String s1 = compound.getStringOr("Owner", "");
+            // getServer() not available here; fall back to null for legacy conversion
+            return OldUsersConverter.convertMobOwnerIfNecessary(null, s1);
+        });
 
-        if (s != null) {
+        if (s != null && !s.equals(Util.NIL_UUID)) {
             try {
-                this.setOwnerID(s);
-
+                this.ownerUUIDField = s;
             } catch (Throwable ignored) {
             }
         }
@@ -282,11 +271,10 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
-        pBuilder.define(OWNER_UNIQUE_ID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {
             compound.putInt("BoundX", this.boundOrigin.getX());
@@ -297,15 +285,11 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
         if (this.limitedLifespan) {
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
-        if (this.getOwnerUUID() == null) {
-            compound.putUUID("OwnerUUID", Util.NIL_UUID);
-        } else {
-            compound.putUUID("OwnerUUID", this.getOwnerUUID());
-        }
+        compound.store("OwnerUUID", net.minecraft.core.UUIDUtil.CODEC,
+                this.getOwnerUUID() != null ? this.getOwnerUUID() : Util.NIL_UUID);
 
     }
 
-    @Override
     protected boolean isSunBurnTick() {
         return false;
     }
@@ -329,12 +313,17 @@ public class SummonSkeleton extends Skeleton implements IFollowingSummon, ISummo
     @Nullable
     @Override
     public UUID getOwnerUUID() {
-        return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
+        return ownerUUIDField;
+    }
+
+    @Override
+    public @Nullable EntityReference<LivingEntity> getOwnerReference() {
+        return ownerUUIDField != null ? EntityReference.of(ownerUUIDField) : null;
     }
 
     @Override
     public void setOwnerID(UUID uuid) {
-        this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
+        this.ownerUUIDField = uuid;
     }
 
     @Override

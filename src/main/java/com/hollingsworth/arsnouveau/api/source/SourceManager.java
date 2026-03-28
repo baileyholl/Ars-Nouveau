@@ -17,7 +17,7 @@ public class SourceManager {
     private Map<String, Set<ISpecialSourceProvider>> posMap = new ConcurrentHashMap<>();
 
     public void addInterface(Level world, ISpecialSourceProvider pos) {
-        String key = world.dimension().location().toString();
+        String key = world.dimension().identifier().toString();
         if (!posMap.containsKey(key))
             posMap.put(key, new HashSet<>());
 
@@ -25,7 +25,7 @@ public class SourceManager {
     }
 
     public @NotNull Set<ISpecialSourceProvider> getSetForLevel(Level world) {
-        String key = world.dimension().location().toString();
+        String key = world.dimension().identifier().toString();
         return posMap.computeIfAbsent(key, k -> new HashSet<>());
     }
 
@@ -98,7 +98,7 @@ public class SourceManager {
     @SubscribeEvent
     public static void serverTick(LevelTickEvent.Post e) {
 
-        if (e.getLevel().isClientSide)
+        if (e.getLevel().isClientSide())
             return;
 
         INSTANCE.tick(e.getLevel());

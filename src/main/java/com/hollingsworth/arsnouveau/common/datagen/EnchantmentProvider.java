@@ -22,10 +22,8 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.holdersets.AnyHolderSet;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -70,7 +68,7 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
                 )));
 
         register(ctx, EnchantmentRegistry.REACTIVE_ENCHANTMENT, Enchantment.enchantment(Enchantment.definition(
-                new AnyHolderSet<>(BuiltInRegistries.ITEM.asLookup()),
+                new AnyHolderSet<>(ctx.registryLookup(Registries.ITEM).orElseThrow()),
                 1,
                 4,
                 Enchantment.dynamicCost(1, 11),
@@ -81,7 +79,7 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
     }
 
     protected static void register(BootstrapContext<Enchantment> ctx, ResourceKey<Enchantment> enchantment, Enchantment.Builder builder) {
-        ctx.register(enchantment, builder.build(enchantment.location()));
+        ctx.register(enchantment, builder.build(enchantment.identifier()));
     }
 
     public EnchantmentProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -101,19 +99,19 @@ public class EnchantmentProvider extends DatapackBuiltinEntriesProvider {
 
     public static class EnchantmentTagsProvider extends net.minecraft.data.tags.EnchantmentTagsProvider {
 
-        public EnchantmentTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
-            super(pPackOutput, provider, ArsNouveau.MODID, existingFileHelper);
+        public EnchantmentTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> provider) {
+            super(pPackOutput, provider, ArsNouveau.MODID);
         }
 
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
 
             this.tag(EnchantmentTags.NON_TREASURE).addOptional(
-                            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.location())
-                    .addOptional(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.location());
+                            EnchantmentRegistry.MANA_BOOST_ENCHANTMENT)
+                    .addOptional(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT);
             this.tag(EnchantmentTags.TRADEABLE).addOptional(
-                    EnchantmentRegistry.MANA_BOOST_ENCHANTMENT.location()).addOptional(
-                    EnchantmentRegistry.MANA_REGEN_ENCHANTMENT.location());
+                    EnchantmentRegistry.MANA_BOOST_ENCHANTMENT).addOptional(
+                    EnchantmentRegistry.MANA_REGEN_ENCHANTMENT);
         }
     }
 

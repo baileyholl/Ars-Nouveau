@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.items.data.WarpScrollData;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -26,7 +26,7 @@ public class RitualWarp extends AbstractRitual {
     @Override
     protected void tick() {
         Level world = getWorld();
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             BlockPos pos = getPos();
 
             for (int i = 0; i < 10; i++) {
@@ -37,7 +37,7 @@ public class RitualWarp extends AbstractRitual {
                         pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
             }
         }
-        if (!world.isClientSide && world.getGameTime() % 20 == 0) {
+        if (!world.isClientSide() && world.getGameTime() % 20 == 0) {
             incrementProgress();
             if (getProgress() >= 3) {
                 List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(5));
@@ -80,7 +80,7 @@ public class RitualWarp extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.WARP);
     }
 }

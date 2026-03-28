@@ -3,30 +3,14 @@
   "enchantment": "minecraft:efficiency",
   "level": 5,
   "pedestalItems": [
-    {
-      "tag": "c:storage_blocks/redstone"
-    },
-    {
-      "tag": "c:storage_blocks/redstone"
-    },
-    {
-      "item": "minecraft:diamond_pickaxe"
-    },
-    {
-      "item": "minecraft:diamond_shovel"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    }
+    "#c:storage_blocks/redstone",
+    "#c:storage_blocks/redstone",
+    "minecraft:diamond_pickaxe",
+    "minecraft:diamond_shovel",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/lapis",
+    "#c:storage_blocks/lapis"
   ],
   "sourceCost": 8000
 }

@@ -19,7 +19,7 @@ public class DecoyBehavior extends JarBehavior<EntityDummy> {
 
         Level level = tile.getLevel();
         if (level == null) return;
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
 
         BlockPos pos = tile.getBlockPos();
         EntityDummy dummy = entityFromJar(tile);

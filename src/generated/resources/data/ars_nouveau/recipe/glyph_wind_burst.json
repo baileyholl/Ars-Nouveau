@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:wind_charge"
-    },
-    {
-      "item": "minecraft:wind_charge"
-    },
-    {
-      "item": "minecraft:wind_charge"
-    },
-    {
-      "item": "minecraft:wind_charge"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    }
+    "minecraft:wind_charge",
+    "minecraft:wind_charge",
+    "minecraft:wind_charge",
+    "minecraft:wind_charge",
+    "ars_nouveau:air_essence"
   ],
   "output": {
     "count": 1,

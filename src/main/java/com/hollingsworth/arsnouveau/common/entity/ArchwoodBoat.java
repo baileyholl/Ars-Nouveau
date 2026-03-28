@@ -2,12 +2,13 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ public class ArchwoodBoat extends Boat {
         SynchedEntityData.defineId(ArchwoodBoat.class, EntityDataSerializers.INT);
 
     public ArchwoodBoat(EntityType<? extends Boat> entityType, Level level) {
-        super(entityType, level);
+        super(entityType, level, () -> ItemsRegistry.ARCHWOOD_BOAT.get());
     }
 
     public ArchwoodBoat(Level level, double x, double y, double z) {
@@ -35,15 +36,7 @@ public class ArchwoodBoat extends Boat {
         builder.define(MOD_BOAT_TYPE, Type.ARCHWOOD.ordinal());
     }
 
-    @Override
-    public @NotNull Item getDropItem() {
-        return ItemsRegistry.ARCHWOOD_BOAT.get();
-    }
 
-    @Override
-    public net.minecraft.world.entity.vehicle.Boat.@NotNull Type getVariant() {
-        return net.minecraft.world.entity.vehicle.Boat.Type.OAK;
-    }
 
     public void setArchwoodVariant(ArchwoodBoat.Type type) {
         this.entityData.set(MOD_BOAT_TYPE, type.ordinal());
@@ -54,16 +47,16 @@ public class ArchwoodBoat extends Boat {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("ArchwoodType", this.getArchwoodVariant().getName());
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("ArchwoodType", 8)) {
-            this.setArchwoodVariant(ArchwoodBoat.Type.getByName(compound.getString("ArchwoodType")));
+        if (compound.keySet().contains("ArchwoodType")) {
+            this.setArchwoodVariant(ArchwoodBoat.Type.getByName(compound.getStringOr("ArchwoodType", "")));
         }
     }
 

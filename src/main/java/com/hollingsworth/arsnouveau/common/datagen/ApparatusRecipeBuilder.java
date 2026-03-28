@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantmentRecipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ public class ApparatusRecipeBuilder {
     private List<Ingredient> pedestalItems = new ArrayList<>();
     private int sourceCost;
     private boolean keepNbtOfReagent;
-    private ResourceLocation id;
+    private Identifier id;
 
     public ApparatusRecipeBuilder() {
     }
@@ -88,7 +88,7 @@ public class ApparatusRecipeBuilder {
 
 
     public ApparatusRecipeBuilder withPedestalItem(int count, TagKey<Item> ingred) {
-        return this.withPedestalItem(count, Ingredient.of(ingred));
+        return this.withPedestalItem(count, Ingredient.of(net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.ITEM, ingred)));
     }
 
     public ApparatusRecipeBuilder keepNbtOfReagent(boolean keepEnchantmentsOfReagent) {
@@ -101,7 +101,7 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public ApparatusRecipeBuilder withId(ResourceLocation id) {
+    public ApparatusRecipeBuilder withId(Identifier id) {
         this.id = id;
         return this;
     }
@@ -118,12 +118,12 @@ public class ApparatusRecipeBuilder {
 
     public RecipeWrapper<EnchantmentRecipe> buildEnchantmentRecipe(ResourceKey<Enchantment> enchantment, int level, int mana) {
         if (id == null || id.getPath().equals("empty")) {
-            id = ArsNouveau.prefix(enchantment.location().getPath() + "_" + level);
+            id = ArsNouveau.prefix(enchantment.identifier().getPath() + "_" + level);
         }
         return new RecipeWrapper<>(id, new EnchantmentRecipe(this.pedestalItems, enchantment, level, mana), EnchantmentRecipe.CODEC);
     }
 
-    public record RecipeWrapper<T extends EnchantingApparatusRecipe>(ResourceLocation id, T recipe,
+    public record RecipeWrapper<T extends EnchantingApparatusRecipe>(Identifier id, T recipe,
                                                                      Codec<Recipe<?>> codec) {
         public JsonElement serialize() {
             return codec().encodeStart(JsonOps.INSTANCE, recipe).getOrThrow();

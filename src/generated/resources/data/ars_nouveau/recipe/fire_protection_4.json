@@ -3,30 +3,14 @@
   "enchantment": "minecraft:fire_protection",
   "level": 4,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:rods/blaze"
-    }
+    "ars_nouveau:fire_essence",
+    "ars_nouveau:fire_essence",
+    "ars_nouveau:abjuration_essence",
+    "ars_nouveau:abjuration_essence",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:rods/blaze",
+    "#c:rods/blaze"
   ],
   "sourceCost": 6500
 }

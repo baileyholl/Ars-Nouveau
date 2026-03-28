@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -111,7 +111,7 @@ public class EffectBurst extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }
@@ -130,7 +130,7 @@ public class EffectBurst extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    protected void addDefaultInvalidCombos(Set<Identifier> defaults) {
         defaults.add(EffectLinger.INSTANCE.getRegistryName());
         defaults.add(EffectWall.INSTANCE.getRegistryName());
     }

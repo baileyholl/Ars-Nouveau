@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
@@ -19,7 +20,7 @@ public class ModBlock extends Block {
     }
 
     public static Block.Properties defaultProperties() {
-        return Block.Properties.of().sound(SoundType.STONE).strength(2.0f, 6.0f).mapColor(MapColor.STONE);
+        return BlockRegistry.newBlockProperties().sound(SoundType.STONE).strength(2.0f, 6.0f).mapColor(MapColor.STONE);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class LevelPosMap {
     }
 
     public void addPosition(Level world, BlockPos pos) {
-        String key = world.dimension().location().toString();
+        String key = world.dimension().identifier().toString();
         if (!posMap.containsKey(key))
             posMap.put(key, new HashSet<>());
 
@@ -30,7 +30,7 @@ public class LevelPosMap {
     }
 
     public void applyForRange(Level level, Vec3 atPos, double distanceFrom, Function<BlockPos, Boolean> breakEarlyFunction) {
-        String key = level.dimension().location().toString();
+        String key = level.dimension().identifier().toString();
         if (!posMap.containsKey(key))
             return;
         Set<BlockPos> worldList = posMap.getOrDefault(key, new HashSet<>());

@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "minecraft:clock"
-    },
-    {
-      "item": "minecraft:glowstone_dust"
-    }
+    "minecraft:clock",
+    "minecraft:glowstone_dust"
   ],
   "output": {
     "count": 1,

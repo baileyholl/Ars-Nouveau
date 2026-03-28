@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.mojang.blaze3d.pipeline.TextureTarget;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,9 +30,10 @@ public class ClientInfo {
     public static int highlightTicks;
 
     public static TextureTarget skyRenderTarget;
-    public static ShaderInstance skyShader;
-    public static ShaderInstance blameShader;
-    public static ShaderInstance rainbowShader;
+    // TODO: Migrate to RenderPipeline API (MC 1.21.11 removed ShaderInstance)
+    // public static ShaderInstance skyShader;
+    // public static ShaderInstance blameShader;
+    // public static ShaderInstance rainbowShader;
 
     public static boolean isSupporter = false;
 

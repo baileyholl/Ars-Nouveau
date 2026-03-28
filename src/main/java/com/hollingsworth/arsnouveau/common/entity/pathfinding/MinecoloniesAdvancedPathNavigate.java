@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMo
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.DebugPackets;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -195,7 +195,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
                 }
             }
 
-            DebugPackets.sendPathFindingPacket(this.level, this.mob, this.path, this.maxDistanceToWaypoint);
+            // DebugPackets.sendPathFindingPacket removed in 1.21.11
             if (!this.isDone()) {
                 Vec3 vector3d2 = this.path.getNextEntityPos(this.mob);
                 BlockPos blockpos = BlockPos.containing(vector3d2);
@@ -288,7 +288,9 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     protected PathFinder createPathFinder(final int p_179679_1_) {
-        return null;
+        // Must return non-null: PathNavigation calls pathFinder.setCaptureDebug() in its constructor.
+        // Minecolonies uses its own async pathfinding, so this vanilla PathFinder is never used for navigation.
+        return new PathFinder(new WalkNodeEvaluator(), p_179679_1_);
     }
 
     @Override

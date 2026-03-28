@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -16,7 +16,7 @@ public class ImbuementPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("ars_nouveau:imbuement_recipe");
+    public Identifier getType() {
+        return Identifier.tryParse("ars_nouveau:imbuement_recipe");
     }
 }

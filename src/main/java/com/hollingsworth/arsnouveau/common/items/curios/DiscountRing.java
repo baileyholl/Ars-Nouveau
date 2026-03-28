@@ -8,6 +8,9 @@ import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import net.minecraft.world.item.component.TooltipDisplay;
+import java.util.function.Consumer;
+import net.minecraft.world.item.Item;
 
 public abstract class DiscountRing extends AbstractManaCurio implements IManaDiscountEquipment {
 
@@ -28,9 +31,9 @@ public abstract class DiscountRing extends AbstractManaCurio implements IManaDis
         return getManaDiscount();
     }
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("tooltip.discount_item", getManaDiscount(stack)));
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
+        tooltip2.accept(Component.translatable("tooltip.discount_item", getManaDiscount(stack)));
     }
 }

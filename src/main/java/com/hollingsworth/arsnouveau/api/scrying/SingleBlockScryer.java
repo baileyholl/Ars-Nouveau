@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +30,7 @@ public class SingleBlockScryer implements IScryer {
     @Override
     public IScryer fromTag(CompoundTag tag) {
         SingleBlockScryer scryer = new SingleBlockScryer(null);
-        scryer.block = tag.contains("block") ? BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(tag.getString("block"))) : null;
+        scryer.block = tag.contains("block") ? BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(tag.getStringOr("block", ""))) : null;
         return scryer;
     }
 
@@ -42,7 +42,7 @@ public class SingleBlockScryer implements IScryer {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix("single_block");
     }
 }

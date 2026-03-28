@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.ViewArea;
+import net.minecraft.core.SectionPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,9 +22,9 @@ public class LevelRendererMixin {
     @Final
     private Minecraft minecraft;
 
-    @Redirect(method = "setupRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ViewArea;repositionCamera(DD)V"))
-    public void anonRepositionCamera(ViewArea viewArea, double x, double z) {
+    @Redirect(method = "setupRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ViewArea;repositionCamera(Lnet/minecraft/core/SectionPos;)V"))
+    public void anonRepositionCamera(ViewArea viewArea, SectionPos sectionPos) {
         if (!CameraUtil.isPlayerMountedOnCamera(minecraft.player))
-            viewArea.repositionCamera(x, z);
+            viewArea.repositionCamera(sectionPos);
     }
 }

@@ -5,6 +5,6 @@ import net.minecraft.client.Minecraft;
 
 public class ClientCameraUtil {
     public static boolean isPlayerMountedOnCamera() {
-        return Minecraft.getInstance().cameraEntity instanceof ScryerCamera;
+        return Minecraft.getInstance().getCameraEntity() instanceof ScryerCamera;
     }
 }

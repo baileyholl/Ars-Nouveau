@@ -4,31 +4,59 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.InvalidateMirrorweaveRender;
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.server.level.ServerLevel;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.util.RandomSource;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.InteractionResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.entity.player.Player;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.BlockItem;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockAndTintGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Block;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.EntityBlock;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.RenderShape;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.SoundType;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.StateDefinition;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.properties.Property;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.redstone.Orientation;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.BlockHitResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,11 +68,11 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     public MirrorWeave() {
-        this(Block.Properties.of().strength(0.1F).sound(SoundType.WOOL).noOcclusion());
+        this(BlockRegistry.newBlockProperties().strength(0.1F).sound(SoundType.WOOL).noOcclusion());
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         MirrorWeaveTile tile = (MirrorWeaveTile) pLevel.getBlockEntity(pPos);
         if (tile != null) {
             if (stack.getItem() instanceof BlockItem blockItem && !(blockItem.getBlock() instanceof EntityBlock)) {
@@ -53,7 +81,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
                 }
                 tile.nextState = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(pLevel, pPlayer, pHand, stack, pHit));
                 this.setMimicState(pLevel, pPos, !pPlayer.isShiftKeyDown());
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
@@ -62,7 +90,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     public void setMimicState(Level level, BlockPos pos, boolean updateNeighbors) {
         MirrorWeaveTile tile = (MirrorWeaveTile) level.getBlockEntity(pos);
-        if (level.isClientSide || tile == null || tile.mimicState == null || tile.nextState == null || tile.nextState.equals(tile.mimicState)) {
+        if (level.isClientSide() || tile == null || tile.mimicState == null || tile.nextState == null || tile.nextState.equals(tile.mimicState)) {
             return;
         }
         BlockState previousState = tile.mimicState;
@@ -139,11 +167,8 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)) {
-            return tile.mimicState.propagatesSkylightDown(level, pos);
-        }
-        return super.propagatesSkylightDown(state, level, pos);
+    protected boolean propagatesSkylightDown(BlockState state) {
+        return false;
     }
 
     @Override
@@ -160,26 +185,14 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
     }
 
     @Override
-    protected boolean isOcclusionShapeFullBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)) {
-            return Block.isShapeFullBlock(tile.mimicState.getOcclusionShape(level, pos));
-        }
-        return super.isOcclusionShapeFullBlock(state, level, pos);
-    }
-
-
-    @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof MirrorWeaveTile tile && !tile.mimicState.is(BlockTagProvider.FALSE_OCCLUSION)) {
-            return tile.mimicState.getOcclusionShape(level, pos);
-        }
-        return super.getOcclusionShape(state, level, pos);
+    protected VoxelShape getOcclusionShape(BlockState state) {
+        return super.getOcclusionShape(state);
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, Orientation neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MirrorWeaveTile tile) {
             if (tile.lastUpdateTick != level.getGameTime()) {
                 tile.lastUpdateTick = level.getGameTime();
                 tile.renderInvalid = true;
@@ -212,7 +225,7 @@ public class MirrorWeave extends ModBlock implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override

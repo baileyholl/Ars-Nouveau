@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.common.perk.StarbunclePerk;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.Objects;
 public abstract class StackPerkHolder<T> implements IPerkHolder<T> {
 
     public static Codec<IPerk> PERK_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("perk").forGetter(IPerk::getRegistryName)
+            Identifier.CODEC.fieldOf("perk").forGetter(IPerk::getRegistryName)
     ).apply(instance, (name) -> PerkRegistry.getPerkMap().getOrDefault(name, StarbunclePerk.INSTANCE)));
 
     private List<IPerk> perks;

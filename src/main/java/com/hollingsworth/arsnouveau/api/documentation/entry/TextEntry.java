@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -28,7 +29,7 @@ public class TextEntry extends SinglePageWidget {
 
     public TextEntry(Component body, Component title, ItemStack renderStack, BaseDocScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        this.body = NuggetMultilLineLabel.create(Minecraft.getInstance().font, body.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), width);
+        this.body = NuggetMultilLineLabel.create(Minecraft.getInstance().font, body.copy().withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT))), width);
         ;
         this.title = title;
         this.renderStack = renderStack;

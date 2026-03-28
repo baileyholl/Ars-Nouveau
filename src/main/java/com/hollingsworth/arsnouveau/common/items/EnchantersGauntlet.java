@@ -9,20 +9,46 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.client.Minecraft;
+
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.component.DataComponents;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.tags.BlockTags;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.tags.TagKey;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.InteractionResult;
+
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.player.Player;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.item.Item;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.TooltipFlag;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.item.component.TooltipDisplay;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.component.Tool;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
@@ -30,7 +56,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -48,36 +74,39 @@ public class EnchantersGauntlet extends ModItem implements ICasterTool, GeoItem,
     }
 
     public EnchantersGauntlet() {
-        super(new Properties().stacksTo(1)
+        super(ItemsRegistry.newItemProperties().stacksTo(1)
                 .component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())
                 .component(DataComponents.TOOL, createToolProperties())
         );
     }
 
+    // 1.21.11: Tool.Rule.minesAndDrops takes HolderSet<Block>, not TagKey<Block>
+    // BuiltInRegistries.BLOCK is a HolderGetter<Block>; getOrThrow(TagKey) returns HolderSet.Named<Block>
+    // Tool constructor adds boolean canDestroyBlocksInCreative as 4th parameter
+    // acquireBootstrapRegistrationLookup returns a HolderGetter valid during bootstrap/registration phase
     static Tool createToolProperties() {
-        @SuppressWarnings("unchecked") TagKey<Block>[] blocks = new TagKey[]{BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_AXE,
-                BlockTags.MINEABLE_WITH_SHOVEL, BlockTags.MINEABLE_WITH_HOE};
+        HolderGetter<Block> getter = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
         List<Tool.Rule> rules = new ArrayList<>();
-        for (TagKey<Block> block : blocks) {
-            rules.add(Tool.Rule.minesAndDrops(block, 8.0F));
+        for (TagKey<Block> block : List.of(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_AXE,
+                BlockTags.MINEABLE_WITH_SHOVEL, BlockTags.MINEABLE_WITH_HOE)) {
+            rules.add(Tool.Rule.minesAndDrops(getter.getOrThrow(block), 8.0F));
         }
-        rules.add(Tool.Rule.deniesDrops(BlockTags.INCORRECT_FOR_DIAMOND_TOOL));
-        rules.add(Tool.Rule.overrideSpeed(BlockTags.SWORD_EFFICIENT, 1.5F));
-        return new Tool(rules, 1.0F, 1);
+        rules.add(Tool.Rule.deniesDrops(getter.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)));
+        rules.add(Tool.Rule.overrideSpeed(getter.getOrThrow(BlockTags.SWORD_EFFICIENT), 1.5F));
+        return new Tool(rules, 1.0F, 1, false);
     }
 
-    @Override
+    // 1.21.11: getEnchantmentValue(ItemStack) and isEnchantable(ItemStack) removed from Item interface
     public int getEnchantmentValue(@NotNull ItemStack stack) {
         return 15;
     }
 
-    @Override
     public boolean isEnchantable(@NotNull ItemStack stack) {
         return true;
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         AbstractCaster<?> caster = getSpellCaster(stack);
         return caster.castSpell(worldIn, playerIn, handIn, Component.translatable("ars_nouveau.gauntlet.invalid"));
@@ -106,17 +135,18 @@ public class EnchantersGauntlet extends ModItem implements ICasterTool, GeoItem,
         spell.recipe = recipe;
     }
 
+    // 1.21.11: appendHoverText changed to (ItemStack, TooltipContext, TooltipDisplay, Consumer<Component>, TooltipFlag)
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        if (Minecraft.getInstance().hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
             getInformation(stack, context, tooltip2, flagIn);
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Minecraft.getInstance().hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }
@@ -139,16 +169,14 @@ public class EnchantersGauntlet extends ModItem implements ICasterTool, GeoItem,
             final GauntletRenderer renderer = new GauntletRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public software.bernie.geckolib.renderer.GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });
     }
 
-    static Set<ItemAbility> ACTIONS = Set.of(
-            ItemAbilities.PICKAXE_DIG, ItemAbilities.AXE_DIG, ItemAbilities.SWORD_DIG,
-            ItemAbilities.SHOVEL_DIG, ItemAbilities.HOE_DIG, ItemAbilities.SHEARS_DIG
-    );
+    // 1.21.11: PICKAXE_DIG, AXE_DIG, SWORD_DIG, SHOVEL_DIG, HOE_DIG removed from ItemAbilities
+    static Set<ItemAbility> ACTIONS = Set.of(ItemAbilities.SHEARS_DIG);
 
     @Override
     public boolean canPerformAction(@NotNull ItemStack stack, net.neoforged.neoforge.common.@NotNull ItemAbility itemAbility) {

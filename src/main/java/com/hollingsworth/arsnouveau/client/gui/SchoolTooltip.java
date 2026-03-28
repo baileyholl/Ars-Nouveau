@@ -42,7 +42,7 @@ public record SchoolTooltip(AbstractSpellPart part, boolean glyphItem) implement
         }
 
         @Override
-        public int getHeight() {
+        public int getHeight(@NotNull Font font) {
             return 0;
         }
 
@@ -52,10 +52,10 @@ public record SchoolTooltip(AbstractSpellPart part, boolean glyphItem) implement
         }
 
         @Override
-        public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics guiGraphics) {
+        public void renderImage(@NotNull Font font, int x, int y, int width, int height, @NotNull GuiGraphics guiGraphics) {
             x += offset;
             for (SpellSchool school : schools) {
-                guiGraphics.blit(school.getTexturePath(), x + font.width(name), y - 16, 0, 0, 16, 16, 16, 16);
+                guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, school.getTexturePath(), x + font.width(name), y - 16, 0, 0, 16, 16, 16, 16);
                 x += 16;
             }
         }

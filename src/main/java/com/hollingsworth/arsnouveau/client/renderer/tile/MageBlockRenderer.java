@@ -2,16 +2,14 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.entity.ArsEntityRenderState;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedMageblock;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class MageBlockRenderer extends GeoEntityRenderer<EnchantedMageblock> {
+// GeckoLib 5.4.2: GeoEntityRenderer requires R extends EntityRenderState & GeoRenderState
+// ArsEntityRenderState satisfies this at compile time; GeckoLib's mixin does it at runtime.
+public class MageBlockRenderer extends GeoEntityRenderer<EnchantedMageblock, ArsEntityRenderState> {
 
     public static GenericModel model = new GenericModel("mage_block");
 
@@ -19,10 +17,20 @@ public class MageBlockRenderer extends GeoEntityRenderer<EnchantedMageblock> {
         super(rendererDispatcherIn, model);
     }
 
+    // GeckoLib 5: getRenderColor returns ARGB int, context is Void
     @Override
-    public void actuallyRender(PoseStack poseStack, EnchantedMageblock animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+    public int getRenderColor(EnchantedMageblock animatable, Void context, float partialTick) {
         ParticleColor particleColor = animatable.getColor();
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, particleColor.getColor());
+        int r = (int)(particleColor.getRed() * 255);
+        int g = (int)(particleColor.getGreen() * 255);
+        int b = (int)(particleColor.getBlue() * 255);
+        return (0xFF << 24) | (r << 16) | (g << 8) | b;
+    }
+
+    // GeckoLib 5: createRenderState(T, Void) is the correct override (no-arg is final)
+    @Override
+    public ArsEntityRenderState createRenderState(EnchantedMageblock animatable, Void context) {
+        return new ArsEntityRenderState();
     }
 
     public static GenericItemBlockRenderer getISTER() {

@@ -2,24 +2,12 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "minecraft:flint_and_steel"
-    },
-    {
-      "item": "minecraft:flint_and_steel"
-    },
-    {
-      "item": "minecraft:fire_charge"
-    },
-    {
-      "item": "minecraft:fire_charge"
-    },
-    {
-      "item": "minecraft:blaze_rod"
-    }
+    "ars_nouveau:fire_essence",
+    "minecraft:flint_and_steel",
+    "minecraft:flint_and_steel",
+    "minecraft:fire_charge",
+    "minecraft:fire_charge",
+    "minecraft:blaze_rod"
   ],
   "output": {
     "count": 1,

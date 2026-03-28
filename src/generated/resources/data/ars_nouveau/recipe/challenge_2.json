@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:purple_archwood_log"
-    },
-    {
-      "item": "ars_nouveau:wilden_horn"
-    },
-    {
-      "item": "minecraft:emerald"
-    }
+    "ars_nouveau:purple_archwood_log",
+    "ars_nouveau:wilden_horn",
+    "minecraft:emerald"
   ],
   "result": {
     "count": 1,

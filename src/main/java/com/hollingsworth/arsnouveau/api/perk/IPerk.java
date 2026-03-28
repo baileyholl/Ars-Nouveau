@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,7 +74,7 @@ public interface IPerk {
         return null;
     }
 
-    ResourceLocation getRegistryName();
+    Identifier getRegistryName();
 
     default String getName() {
         return Component.translatable(getRegistryName().getNamespace() + ".thread_of", Component.translatable("item." + getRegistryName().getNamespace() + "." + getRegistryName().getPath()).getString()).getString();

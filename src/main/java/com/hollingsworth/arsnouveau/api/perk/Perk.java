@@ -1,17 +1,17 @@
 package com.hollingsworth.arsnouveau.api.perk;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
 public abstract class Perk implements IPerk {
-    private ResourceLocation id;
+    private Identifier id;
 
-    public Perk(ResourceLocation key) {
+    public Perk(Identifier key) {
         this.id = key;
     }
 
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return id;
     }
 

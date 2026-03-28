@@ -10,8 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.SpriteSourceProvider;
+import net.neoforged.neoforge.client.data.SpriteSourceProvider;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -28,16 +27,18 @@ public class AtlasProvider extends SpriteSourceProvider {
         MATERIALS = builder.build();
     }
 
-    public AtlasProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, ExistingFileHelper helper) {
-        super(output, provider, ArsNouveau.MODID, helper);
+    public AtlasProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, provider, ArsNouveau.MODID);
     }
 
     private static EnumMap<ChestType, Material> chestMaterial(String type) {
         EnumMap<ChestType, Material> map = new EnumMap<>(ChestType.class);
 
-        map.put(ChestType.SINGLE, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/" + type)));
-        map.put(ChestType.LEFT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/left")));
-        map.put(ChestType.RIGHT, new Material(Sheets.CHEST_SHEET, ArsNouveau.prefix("model/chest/" + type + "/right")));
+        // Texture paths match CHEST_MAPPER convention: entity/chest/<namespace>/<name>
+        // So "texture": "ars_nouveau:<type>" in items/ special JSON → sprite ars_nouveau:entity/chest/<type>
+        map.put(ChestType.SINGLE, Sheets.CHEST_MAPPER.apply(ArsNouveau.prefix(type)));
+        map.put(ChestType.LEFT, Sheets.CHEST_MAPPER.apply(ArsNouveau.prefix(type + "_left")));
+        map.put(ChestType.RIGHT, Sheets.CHEST_MAPPER.apply(ArsNouveau.prefix(type + "_right")));
 
         return map;
     }
@@ -45,6 +46,6 @@ public class AtlasProvider extends SpriteSourceProvider {
     @Override
     protected void gather() {
         MATERIALS.values().stream().flatMap(e -> e.values().stream()).map(Material::texture)
-                .forEach(resourceLocation -> this.atlas(CHESTS_ATLAS).addSource(new SingleFile(resourceLocation, Optional.empty())));
+                .forEach(resourceLocation -> this.atlas(net.minecraft.data.AtlasIds.CHESTS).addSource(new SingleFile(resourceLocation, Optional.empty())));
     }
 }

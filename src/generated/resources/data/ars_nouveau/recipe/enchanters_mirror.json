@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:glass_blocks"
-    },
-    {
-      "tag": "c:glass_blocks"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "tag": "c:logs/archwood"
-    },
-    {
-      "tag": "c:logs/archwood"
-    },
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:ingots/gold"
-    }
+    "#c:glass_blocks",
+    "#c:glass_blocks",
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:manipulation_essence",
+    "#c:logs/archwood",
+    "#c:logs/archwood",
+    "#c:ingots/gold",
+    "#c:ingots/gold"
   ],
-  "reagent": {
-    "tag": "c:storage_blocks/source"
-  },
+  "reagent": "#c:storage_blocks/source",
   "result": {
     "count": 1,
     "id": "ars_nouveau:enchanters_mirror"

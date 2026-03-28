@@ -20,11 +20,17 @@ public class CasterTomeRegistry {
     }
 
     public static List<RecipeHolder<CasterTomeData>> reloadTomeData(RecipeManager recipeManager, RegistryAccess access) {
-        var recipes = recipeManager.getAllRecipesFor(RecipeRegistry.CASTER_TOME_TYPE.get());
+        var recipes = recipeManager.recipeMap().byType(RecipeRegistry.CASTER_TOME_TYPE.get());
         DungeonLootTables.CASTER_TOMES = new ArrayList<>();
         TOME_DATA = new ArrayList<>();
         TOME_DATA.addAll(recipes);
-        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.value().getResultItem(access)));
+        // 1.21.11: Recipe.getResultItem(RegistryAccess) removed; build the tome ItemStack via makeTome
+        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> {
+            CasterTomeData data = tome.value();
+            net.minecraft.world.item.Item tomeItem = net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(data.tomeType());
+            if (tomeItem == null || tomeItem == net.minecraft.world.item.Items.AIR) return net.minecraft.world.item.ItemStack.EMPTY;
+            return CasterTomeData.makeTome(tomeItem, data.spell(), data.flavorText());
+        }));
         return TOME_DATA;
     }
 

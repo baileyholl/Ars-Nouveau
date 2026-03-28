@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectBreak;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -25,12 +25,12 @@ public class GlyphRegistry {
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
-    private static final ConcurrentHashMap<ResourceLocation, AbstractSpellPart> spellpartMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Identifier, AbstractSpellPart> spellpartMap = new ConcurrentHashMap<>();
 
     /**
      * Contains the list of glyph item instances.
      */
-    private static final ConcurrentHashMap<ResourceLocation, Supplier<Glyph>> glyphItemMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Identifier, Supplier<Glyph>> glyphItemMap = new ConcurrentHashMap<>();
 
     public static AbstractSpellPart registerSpell(AbstractSpellPart part) {
         glyphItemMap.put(part.getRegistryName(), part::getGlyph);
@@ -49,21 +49,21 @@ public class GlyphRegistry {
         return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
-    public static @Nullable AbstractSpellPart getSpellPart(ResourceLocation id) {
+    public static @Nullable AbstractSpellPart getSpellPart(Identifier id) {
         return spellpartMap.get(id);
     }
 
-    public static @NotNull AbstractSpellPart getSpellPartOrDefault(ResourceLocation id) {
+    public static @NotNull AbstractSpellPart getSpellPartOrDefault(Identifier id) {
         AbstractSpellPart part = spellpartMap.get(id);
         return part == null ? EffectBreak.INSTANCE : part;
     }
 
 
-    public static Map<ResourceLocation, AbstractSpellPart> getSpellpartMap() {
+    public static Map<Identifier, AbstractSpellPart> getSpellpartMap() {
         return spellpartMap;
     }
 
-    public static Map<ResourceLocation, Supplier<Glyph>> getGlyphItemMap() {
+    public static Map<Identifier, Supplier<Glyph>> getGlyphItemMap() {
         return glyphItemMap;
     }
 }

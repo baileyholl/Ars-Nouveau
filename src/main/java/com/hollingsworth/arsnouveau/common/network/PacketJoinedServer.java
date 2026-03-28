@@ -32,7 +32,7 @@ public class PacketJoinedServer extends AbstractPacket {
     public void onClientReceived(Minecraft minecraft, Player player) {
         ClientInfo.isSupporter = isSupporter;
         if (Config.SHOW_SUPPORTER_MESSAGE.get()) {
-            Minecraft.getInstance().player.sendSystemMessage(Component.translatable("ars_nouveau.rewards.enabled"));
+            Minecraft.getInstance().player.displayClientMessage(Component.translatable("ars_nouveau.rewards.enabled"), false);
             Config.SHOW_SUPPORTER_MESSAGE.set(false);
             Config.SHOW_SUPPORTER_MESSAGE.save();
         }

@@ -4,6 +4,9 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 
 
 public class EnchantedTurretTile extends BasicSpellTurretTile {
@@ -20,11 +23,11 @@ public class EnchantedTurretTile extends BasicSpellTurretTile {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         super.registerControllers(data);
-        data.add(new AnimationController<>(this, "spinController", 0, this::spinPredicate));
+        data.add(new AnimationController<EnchantedTurretTile>("spinController", 0, this::spinPredicate));
     }
 
-    public PlayState spinPredicate(AnimationState event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("gem_rotation"));
+    public PlayState spinPredicate(AnimationTest<EnchantedTurretTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("gem_rotation"));
         return PlayState.CONTINUE;
     }
 }

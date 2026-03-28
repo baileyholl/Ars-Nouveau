@@ -112,13 +112,13 @@ public class MethodProjectile extends AbstractCastMethod {
     @Override
     public CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         caster.lookAt(EntityAnchorArgument.Anchor.EYES, blockRayTraceResult.getLocation().add(0, 0, 0));
-        summonProjectiles(caster.getCommandSenderWorld(), blockRayTraceResult.getBlockPos(), caster, spellStats, resolver);
+        summonProjectiles(caster.level(), blockRayTraceResult.getBlockPos(), caster, spellStats, resolver);
         return CastResolveType.SUCCESS;
     }
 
     @Override
     public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        summonProjectiles(caster.getCommandSenderWorld(), caster, spellStats, resolver);
+        summonProjectiles(caster.level(), caster, spellStats, resolver);
         return CastResolveType.SUCCESS;
     }
 

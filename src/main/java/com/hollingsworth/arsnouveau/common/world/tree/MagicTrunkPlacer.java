@@ -10,7 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
@@ -30,7 +30,7 @@ import java.util.function.BiConsumer;
 
 public class MagicTrunkPlacer extends TrunkPlacer {
     boolean isWorldGen;
-    ResourceLocation podID;
+    Identifier podID;
 
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b) {
         super(baseHeight, height_rand_a, height_rand_b);
@@ -39,7 +39,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b, boolean isWorldGen, String podName) {
         this(baseHeight, height_rand_a, height_rand_b);
         this.isWorldGen = isWorldGen;
-        this.podID = ResourceLocation.tryParse(podName);
+        this.podID = Identifier.tryParse(podName);
     }
 
     @Override
@@ -234,7 +234,7 @@ public class MagicTrunkPlacer extends TrunkPlacer {
     }
 
     public BlockState getPodState() {
-        return BuiltInRegistries.BLOCK.get(podID).defaultBlockState();
+        return BuiltInRegistries.BLOCK.getValue(podID).defaultBlockState();
     }
 
     public void addBranch(LevelSimulatedReader world, BlockPos pos, int height, Direction d, RandomSource random, TreeConfiguration baseTreeFeatureConfig, BiConsumer<BlockPos, BlockState> consumer) {

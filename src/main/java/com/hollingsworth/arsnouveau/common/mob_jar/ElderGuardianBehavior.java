@@ -30,7 +30,7 @@ public class ElderGuardianBehavior extends JarBehavior<ElderGuardian> {
 
     public void applyMiningFatigue(MobJarTile tile) {
         if (tile.getLevel() instanceof ServerLevel serverLevel) {
-            MobEffectInstance effect = new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 6000, 2);
+            MobEffectInstance effect = new MobEffectInstance(MobEffects.MINING_FATIGUE, 6000, 2);
             List<ServerPlayer> list = MobEffectUtil.addEffectToPlayersAround(serverLevel, entityFromJar(tile), Vec3.atCenterOf(tile.getBlockPos()), 50.0D, effect, 1200);
             list.forEach((player) -> {
                 player.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 1.0F));

@@ -15,6 +15,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.item.component.TooltipDisplay;
+import java.util.function.Consumer;
+import net.minecraft.world.item.Item;
 
 public class ScryerScroll extends ModItem {
 
@@ -25,7 +28,7 @@ public class ScryerScroll extends ModItem {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide)
+        if (pContext.getLevel().isClientSide())
             return super.useOn(pContext);
         if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ICameraMountable) {
             ScryPosData data = new ScryPosData(new GlobalPos(pContext.getLevel().dimension(), pContext.getClickedPos()));
@@ -36,16 +39,16 @@ public class ScryerScroll extends ModItem {
     }
 
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         ScryPosData data = stack.get(DataComponentRegistry.SCRY_DATA);
         var globalPos = data.pos().orElse(null);
         if (globalPos != null) {
             BlockPos pos = globalPos.pos();
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
+            tooltip2.accept(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
         } else {
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.craft"));
+            tooltip2.accept(Component.translatable("ars_nouveau.scryer_scroll.craft"));
         }
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 }

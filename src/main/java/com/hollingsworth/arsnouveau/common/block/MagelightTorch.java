@@ -6,12 +6,13 @@ import com.hollingsworth.arsnouveau.common.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -74,7 +75,7 @@ public class MagelightTorch extends TickableModBlock {
     }
 
     public MagelightTorch() {
-        super(BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollission().lightLevel((b) -> b.getValue(SconceBlock.LIGHT_LEVEL)));
+        super(BlockRegistry.newBlockProperties().sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollision().lightLevel((b) -> b.getValue(SconceBlock.LIGHT_LEVEL)));
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.FACING, Direction.NORTH).setValue(FLOOR, true).setValue(ROOF, false));
     }
 
@@ -93,9 +94,9 @@ public class MagelightTorch extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
-            return ItemInteractionResult.SUCCESS;
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
         BlockEntity tile = pLevel.getBlockEntity(pPos);
         if (tile instanceof MagelightTorchTile torchTile) {

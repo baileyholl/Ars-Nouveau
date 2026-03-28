@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +51,7 @@ public class SpellContext implements Cloneable {
     private SpellContext previousContext;
     private DelayedSpellEvent delayedSpellEvent;
 
-    public Map<ResourceLocation, IContextAttachment> attachments = new HashMap<>();
+    public Map<Identifier, IContextAttachment> attachments = new HashMap<>();
 
     public static final MapCodec<SpellContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Spell.CODEC.fieldOf("spell").forGetter(s -> s.spell)
@@ -105,11 +105,11 @@ public class SpellContext implements Cloneable {
         return spell.particleTimeline().get(type);
     }
 
-    public <T extends IContextAttachment> T getOrCreateAttachment(ResourceLocation id, T attachment) {
+    public <T extends IContextAttachment> T getOrCreateAttachment(Identifier id, T attachment) {
         return (T) attachments.computeIfAbsent(id, k -> attachment);
     }
 
-    public @Nullable <T extends IContextAttachment> T getAttachment(ResourceLocation id) {
+    public @Nullable <T extends IContextAttachment> T getAttachment(Identifier id) {
         return (T) attachments.get(id);
     }
 

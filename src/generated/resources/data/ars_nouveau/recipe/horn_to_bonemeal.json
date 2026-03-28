@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:wilden_horn"
-    }
+    "ars_nouveau:wilden_horn"
   ],
   "result": {
     "count": 3,

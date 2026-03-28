@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -28,12 +27,12 @@ public class FluidBlockItem extends BlockItem {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * .
      */
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         BlockHitResult blockraytraceresult = getPlayerPOVHitResult(worldIn, playerIn, ClipContext.Fluid.ANY);
         BlockHitResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getBlockPos().above());
         if (worldIn.getBlockState(blockraytraceresult.getBlockPos()).isAir())
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
+            return InteractionResult.SUCCESS;
         super.useOn(new UseOnContext(playerIn, handIn, blockraytraceresult1));
-        return new InteractionResultHolder<>(InteractionResult.FAIL, playerIn.getItemInHand(handIn));
+        return InteractionResult.FAIL;
     }
 }

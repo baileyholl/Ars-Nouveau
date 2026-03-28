@@ -194,8 +194,7 @@ public class SoundRegistry {
     public static SpellSound WITCH_DRINK = register(SoundEvents.WITCH_DRINK, "witch_drink");
     public static SpellSound WOLF_ARMOR_BREAK = register(SoundEvents.WOLF_ARMOR_BREAK, "wolf_armor_break");
     public static SpellSound WOLF_ARMOR_CRACK = register(SoundEvents.WOLF_ARMOR_CRACK, "wolf_armor_crack");
-    public static SpellSound WOLF_AMBIENT = register(SoundEvents.WOLF_AMBIENT, "wolf_ambient");
-    public static SpellSound WOLF_HOWL = register(SoundEvents.WOLF_HOWL, "wolf_howl");
+    // WOLF_AMBIENT and WOLF_HOWL removed in MC 1.21.11 - wolves use per-variant sound maps (WolfSoundVariants)
     public static SpellSound WOLF_SHAKE = register(SoundEvents.WOLF_SHAKE, "wolf_shake");
     public static SpellSound ZOMBIE_INFECT = register(SoundEvents.ZOMBIE_INFECT, "zombie_infect");
     public static SpellSound ZOMBIE_VILLAGER_CONVERTED = register(SoundEvents.ZOMBIE_VILLAGER_CONVERTED, "zombie_villager_converted");

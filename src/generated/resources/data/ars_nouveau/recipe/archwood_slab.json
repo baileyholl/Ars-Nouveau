@@ -3,9 +3,7 @@
   "category": "building",
   "group": "wooden_slab",
   "key": {
-    "#": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "#": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "###"

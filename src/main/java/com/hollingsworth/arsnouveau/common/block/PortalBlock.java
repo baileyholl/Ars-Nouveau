@@ -11,14 +11,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlockContainer;
@@ -43,7 +48,7 @@ public class PortalBlock extends TickableModBlock implements LiquidBlockContaine
     public static final BooleanProperty ALTERNATE = BooleanProperty.create("alternate");
 
     public PortalBlock() {
-        super(BlockBehaviour.Properties.of().pushReaction(PushReaction.BLOCK).noCollission().strength(-1.0F, 3600000.0F).noLootTable());
+        super(BlockRegistry.newBlockProperties().pushReaction(PushReaction.BLOCK).noCollision().strength(-1.0F, 3600000.0F).noLootTable());
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X).setValue(ALTERNATE, false));
     }
 
@@ -81,14 +86,14 @@ public class PortalBlock extends TickableModBlock implements LiquidBlockContaine
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND)
-            return ItemInteractionResult.SUCCESS;
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide() || pHand != InteractionHand.MAIN_HAND)
+            return InteractionResult.SUCCESS;
         if (pPlayer.getItemInHand(pHand).getItem() instanceof DominionWand) {
             if (pLevel.getBlockEntity(pPos) instanceof PortalTile) {
                 boolean nextVal = !pLevel.getBlockState(pPos).getValue(ALTERNATE);
                 setType(pLevel, pPos, nextVal);
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
@@ -108,7 +113,7 @@ public class PortalBlock extends TickableModBlock implements LiquidBlockContaine
     }
 
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+    protected void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn, InsideBlockEffectApplier applier, boolean fromMovement) {
         if (entityIn.canUsePortal(false) && worldIn.getBlockEntity(pos) instanceof PortalTile tile) {
             if (entityIn instanceof Player player) {
                 tile.entityQueue.add(player);
@@ -171,21 +176,21 @@ public class PortalBlock extends TickableModBlock implements LiquidBlockContaine
      * Note that this method should ideally consider only the specific face passed in.
      */
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTick, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource pRandom) {
         Direction.Axis direction$axis = facing.getAxis();
         Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
         boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
 
-        if (worldIn.getBlockEntity(currentPos) instanceof PortalTile portal && portal.isHorizontal) {
+        if (pLevel.getBlockEntity(currentPos) instanceof PortalTile portal && portal.isHorizontal) {
             FlatPortalAreaHelper frameTester = new FlatPortalAreaHelper();
-            frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
+            frameTester.init((Level) pLevel, currentPos, null, (bs) -> bs.is(BlockTagProvider.DECORATIVE_AN));
             if (!frameTester.isValidFrame()) {
                 return Blocks.AIR.defaultBlockState();
             }
-            return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+            return super.updateShape(stateIn, pLevel, pScheduledTick, currentPos, facing, facingPos, facingState, pRandom);
         }
 
-        Size portalSize = new Size(worldIn, currentPos, direction$axis1);
+        Size portalSize = new Size((LevelAccessor) pLevel, currentPos, direction$axis1);
         boolean isComplete = portalSize.isComplete();
         boolean shouldDestroy = !flag && facingState.getBlock() != this && !isComplete;
 
@@ -193,7 +198,7 @@ public class PortalBlock extends TickableModBlock implements LiquidBlockContaine
             return Blocks.AIR.defaultBlockState();
         }
 
-        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, pLevel, pScheduledTick, currentPos, facing, facingPos, facingState, pRandom);
     }
 
     @Override
@@ -223,7 +228,7 @@ public class PortalBlock extends TickableModBlock implements LiquidBlockContaine
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable net.minecraft.world.entity.player.Player pPlayer, net.minecraft.world.level.BlockGetter pLevel, BlockPos pPos, BlockState pState, net.minecraft.world.level.material.Fluid pFluid) {
+    public boolean canPlaceLiquid(@Nullable LivingEntity pPlayer, net.minecraft.world.level.BlockGetter pLevel, BlockPos pPos, BlockState pState, net.minecraft.world.level.material.Fluid pFluid) {
         return false;
     }
 

@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLeapGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -41,9 +41,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -114,10 +114,11 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, AnimBlockSummon.class)).setAlertOthers(AnimBlockSummon.class));
     }
 
+    // 1.21.11: doHurtTarget(Entity) → doHurtTarget(ServerLevel, Entity)
     @Override
-    public boolean doHurtTarget(Entity pEntity) {
+    public boolean doHurtTarget(ServerLevel serverLevel, Entity pEntity) {
         if (getOwner() != null && pEntity.isAlliedTo(getOwner())) return false;
-        boolean result = super.doHurtTarget(pEntity);
+        boolean result = super.doHurtTarget(serverLevel, pEntity);
         if (result) ticksLeft -= 20 * 20;
         return result;
     }
@@ -132,7 +133,8 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
             if (pTarget.getUUID().equals(getOwnerUUID()))
                 return false;
             if (pTarget instanceof ISummon summon) {
-                return super.canAttack(pTarget) && !getOwnerUUID().equals(summon.getOwnerUUID());
+                var summonOwnerRef = summon.getOwnerReference();
+                return super.canAttack(pTarget) && (summonOwnerRef == null || !getOwnerUUID().equals(summonOwnerRef.getUUID()));
             }
         }
         return super.canAttack(pTarget);
@@ -141,7 +143,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ticksLeft--;
             this.entityData.set(AGE, this.entityData.get(AGE) + 1);
             if (this.entityData.get(AGE) > 20) {
@@ -150,7 +152,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
             if (ticksLeft <= 0 && !isDeadOrDying()) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
                 returnToFallingBlock(blockState);
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }
@@ -171,7 +173,9 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         level.addFreshEntity(fallingBlock);
     }
 
-    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.OPTIONAL_UUID);
+    // 1.21.11: EntityDataSerializers.OPTIONAL_UUID removed; store owner UUID as plain field
+    @Nullable
+    private UUID ownerUUID;
     public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(AnimBlockSummon.class, EntityDataSerializers.INT);
 
     @Nullable
@@ -183,7 +187,6 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
-        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
         pBuilder.define(COLOR, ParticleColor.defaultParticleColor().getColor());
         pBuilder.define(AGE, 0);
         pBuilder.define(CAN_WALK, false);
@@ -218,7 +221,7 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(net.minecraft.server.level.ServerLevel pLevel) {
         return 0;
     }
 
@@ -233,31 +236,31 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
     }
 
     @Nullable
-    @Override
     public UUID getOwnerUUID() {
-        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+        return ownerUUID != null ? ownerUUID : this.getUUID();
     }
 
     @Override
     public void setOwnerID(UUID uuid) {
-        this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
+        this.ownerUUID = uuid;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         String spawnAnim = "spawn";
-        data.add(new AnimationController<>(this, spawnAnim, 1, (e) -> {
+        // GeckoLib 5: AnimationController constructor no longer takes entity as first arg
+        data.add(new AnimationController<AnimBlockSummon>(spawnAnim, 1, (e) -> {
             if (!entityData.get(CAN_WALK)) {
-                e.getController().setAnimation(RawAnimation.begin().thenPlay(spawnAnim));
+                e.controller().setAnimation(RawAnimation.begin().thenPlay(spawnAnim));
                 return PlayState.CONTINUE;
             }
-            e.getController().forceAnimationReset();
+            e.controller().reset();
             return PlayState.STOP;
         }));
 
-        data.add(new AnimationController<>(this, "run", 1, (e) -> {
+        data.add(new AnimationController<AnimBlockSummon>("run", 1, (e) -> {
             if (e.isMoving() && entityData.get(CAN_WALK)) {
-                e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+                e.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
 
@@ -296,40 +299,31 @@ public class AnimBlockSummon extends TamableAnimal implements GeoEntity, ISummon
         this.getEntityData().set(COLOR, color);
     }
 
+    // 1.21.11: save(CompoundTag)/load(CompoundTag) removed; use addAdditionalSaveData(ValueOutput)/readAdditionalSaveData(ValueInput)
     @Override
-    public boolean save(CompoundTag pCompound) {
-        pCompound.putInt("color", color);
-        return super.save(pCompound);
-    }
-
-    @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
-        this.getEntityData().set(COLOR, pCompound.getInt("color"));
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.ticksLeft = pCompound.getInt("left");
-        this.color = pCompound.getInt("color");
-        this.blockState = Block.stateById(pCompound.getInt("blockState"));
-        this.getEntityData().set(AGE, pCompound.getInt("ticksAlive"));
-        this.getEntityData().set(CAN_WALK, pCompound.getBoolean("canWalk"));
-        this.dropItem = !pCompound.contains("dropItem") || pCompound.getBoolean("dropItem");
-        head_data = pCompound.getCompound("head_data");
+        this.ticksLeft = pCompound.getIntOr("left", 0);
+        this.color = pCompound.getIntOr("color", 0);
+        this.blockState = Block.stateById(pCompound.getIntOr("blockState", 0));
+        this.getEntityData().set(AGE, pCompound.getIntOr("ticksAlive", 0));
+        this.getEntityData().set(CAN_WALK, pCompound.getBooleanOr("canWalk", false));
+        this.dropItem = pCompound.getBooleanOr("dropItem", true);
+        pCompound.read("head_data", CompoundTag.CODEC).ifPresent(nbt -> head_data = nbt);
+        pCompound.read("ownerUUID", net.minecraft.core.UUIDUtil.CODEC).ifPresent(uuid -> this.ownerUUID = uuid);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.put("head_data", head_data);
+        pCompound.store("head_data", CompoundTag.CODEC, head_data);
         pCompound.putInt("left", ticksLeft);
         pCompound.putInt("color", color);
         pCompound.putInt("blockState", Block.getId(blockState));
         pCompound.putInt("ticksAlive", this.getEntityData().get(AGE));
         pCompound.putBoolean("canWalk", this.getEntityData().get(CAN_WALK));
         pCompound.putBoolean("dropItem", this.dropItem);
+        if (ownerUUID != null) pCompound.store("ownerUUID", net.minecraft.core.UUIDUtil.CODEC, ownerUUID);
     }
 
     public int getColor() {

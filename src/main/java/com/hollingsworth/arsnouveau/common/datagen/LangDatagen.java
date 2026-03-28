@@ -17,7 +17,7 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -52,7 +52,7 @@ public class LangDatagen extends LanguageProvider {
         for (Supplier<Glyph> supplier : GlyphRegistry.getGlyphItemMap().values()) {
             Glyph glyph = supplier.get();
             AbstractSpellPart spellPart = glyph.spellPart;
-            ResourceLocation registryName = glyph.spellPart.getRegistryName();
+            Identifier registryName = glyph.spellPart.getRegistryName();
             if (registryName.getNamespace().equals(ArsNouveau.MODID)) {
                 add("ars_nouveau.glyph_desc." + registryName.getPath(), spellPart.getBookDescription());
                 add("ars_nouveau.glyph_name." + registryName.getPath(), spellPart.getName());

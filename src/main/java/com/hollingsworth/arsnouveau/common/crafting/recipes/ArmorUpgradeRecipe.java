@@ -15,6 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -31,7 +32,7 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
 //    }
 
     public ArmorUpgradeRecipe(List<Ingredient> pedestalItems, int cost, int tier) {
-        super(Ingredient.EMPTY, ItemStack.EMPTY, pedestalItems, cost, false);
+        super(Ingredient.of(Items.ENCHANTED_BOOK), ItemStack.EMPTY, pedestalItems, cost, false);
         this.tier = tier;
     }
 
@@ -54,11 +55,6 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public @NotNull ItemStack assemble(ApparatusRecipeInput input, HolderLookup.@NotNull Provider p_346030_) {
         ItemStack reagent = input.catalyst();
         ArmorPerkHolder perkHolder = PerkUtil.getPerkHolder(reagent);
@@ -70,8 +66,9 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
-        return RecipeRegistry.ARMOR_UPGRADE_TYPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeType<EnchantingApparatusRecipe> getType() {
+        return (RecipeType<EnchantingApparatusRecipe>) (RecipeType<?>) RecipeRegistry.ARMOR_UPGRADE_TYPE.get();
     }
 
     @Override
@@ -80,8 +77,9 @@ public class ArmorUpgradeRecipe extends EnchantingApparatusRecipe implements ITe
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.ARMOR_SERIALIZER.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeSerializer<EnchantingApparatusRecipe> getSerializer() {
+        return (RecipeSerializer<EnchantingApparatusRecipe>) (RecipeSerializer<?>) RecipeRegistry.ARMOR_SERIALIZER.get();
     }
 
     public static class Serializer implements RecipeSerializer<ArmorUpgradeRecipe> {

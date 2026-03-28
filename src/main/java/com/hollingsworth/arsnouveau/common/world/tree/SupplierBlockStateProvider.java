@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 
 public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider {
@@ -13,7 +13,7 @@ public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvid
         this(ArsNouveau.prefix(path));
     }
 
-    public SupplierBlockStateProvider(ResourceLocation path) {
+    public SupplierBlockStateProvider(Identifier path) {
         super(path);
     }
 

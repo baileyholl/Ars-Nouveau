@@ -1,78 +1,81 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.Util;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Util;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
 
 import java.util.EnumMap;
-import java.util.List;
-import java.util.function.Supplier;
-
-import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
 public class MaterialRegistry {
-    public static final DeferredRegister<ArmorMaterial> MATERIALS = DeferredRegister.create(BuiltInRegistries.ARMOR_MATERIAL, MODID);
 
+    /**
+     * Equipment asset keys for our custom armor models.
+     * These are referenced in the armor material for rendering.
+     * The actual asset data must be provided via data pack JSON.
+     */
+    public static final ResourceKey<EquipmentAsset> LIGHT_ASSET = EquipmentAssets.createId(ArsNouveau.MODID + "/light_armor");
+    public static final ResourceKey<EquipmentAsset> MEDIUM_ASSET = EquipmentAssets.createId(ArsNouveau.MODID + "/medium_armor");
+    public static final ResourceKey<EquipmentAsset> HEAVY_ASSET = EquipmentAssets.createId(ArsNouveau.MODID + "/heavy_armor");
 
-    public static final Holder<ArmorMaterial> LIGHT = MATERIALS.register("an_light", () -> register("an_light", Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-        map.put(ArmorItem.Type.BOOTS, 1);
-        map.put(ArmorItem.Type.LEGGINGS, 3);
-        map.put(ArmorItem.Type.CHESTPLATE, 5);
-        map.put(ArmorItem.Type.HELMET, 2);
-        map.put(ArmorItem.Type.BODY, 4);
-    }), 30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> Ingredient.of(ItemsRegistry.MAGE_FIBER)));
+    /**
+     * ArmorMaterial is no longer a registry in 1.21.11 - it's a plain record.
+     * Repair tag uses WOOL as a placeholder; define a proper mage_fiber tag for production.
+     * Defense values: boots, leggings, chestplate, helmet, body
+     */
+    public static final ArmorMaterial LIGHT = new ArmorMaterial(
+            20,
+            Util.make(new EnumMap<>(ArmorType.class), map -> {
+                map.put(ArmorType.BOOTS, 1);
+                map.put(ArmorType.LEGGINGS, 3);
+                map.put(ArmorType.CHESTPLATE, 5);
+                map.put(ArmorType.HELMET, 2);
+                map.put(ArmorType.BODY, 4);
+            }),
+            30,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            0.0f,
+            0.0f,
+            ItemTags.WOOL,  // TODO: replace with a mage_fiber item tag
+            LIGHT_ASSET
+    );
 
-    public static final Holder<ArmorMaterial> MEDIUM = MATERIALS.register("an_medium", () -> register("an_medium", Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-        map.put(ArmorItem.Type.BOOTS, 2);
-        map.put(ArmorItem.Type.LEGGINGS, 5);
-        map.put(ArmorItem.Type.CHESTPLATE, 6);
-        map.put(ArmorItem.Type.HELMET, 2);
-        map.put(ArmorItem.Type.BODY, 4);
-    }), 30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> Ingredient.of(ItemsRegistry.MAGE_FIBER)));
+    public static final ArmorMaterial MEDIUM = new ArmorMaterial(
+            25,
+            Util.make(new EnumMap<>(ArmorType.class), map -> {
+                map.put(ArmorType.BOOTS, 2);
+                map.put(ArmorType.LEGGINGS, 5);
+                map.put(ArmorType.CHESTPLATE, 6);
+                map.put(ArmorType.HELMET, 2);
+                map.put(ArmorType.BODY, 4);
+            }),
+            30,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            0.0f,
+            0.0f,
+            ItemTags.WOOL,  // TODO: replace with a mage_fiber item tag
+            MEDIUM_ASSET
+    );
 
-    public static final Holder<ArmorMaterial> HEAVY = MATERIALS.register("an_heavy", () -> register("an_heavy", Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-        map.put(ArmorItem.Type.BOOTS, 3);
-        map.put(ArmorItem.Type.LEGGINGS, 6);
-        map.put(ArmorItem.Type.CHESTPLATE, 8);
-        map.put(ArmorItem.Type.HELMET, 3);
-        map.put(ArmorItem.Type.BODY, 4);
-    }), 30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> Ingredient.of(ItemsRegistry.MAGE_FIBER)));
-
-    private static ArmorMaterial register(
-            String pName,
-            EnumMap<ArmorItem.Type, Integer> pDefense,
-            int pEnchantmentValue,
-            Holder<SoundEvent> pEquipSound,
-            float pToughness,
-            float pKnockbackResistance,
-            Supplier<Ingredient> pRepairIngredient
-    ) {
-        List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(ArsNouveau.prefix(pName)));
-        return register(pDefense, pEnchantmentValue, pEquipSound, pToughness, pKnockbackResistance, pRepairIngredient, list);
-    }
-
-    private static ArmorMaterial register(
-            EnumMap<ArmorItem.Type, Integer> pDefense,
-            int pEnchantmentValue,
-            Holder<SoundEvent> pEquipSound,
-            float pToughness,
-            float pKnockbackResistance,
-            Supplier<Ingredient> pRepairIngridient,
-            List<ArmorMaterial.Layer> pLayers
-    ) {
-        EnumMap<ArmorItem.Type, Integer> enummap = new EnumMap<>(ArmorItem.Type.class);
-
-        for (ArmorItem.Type armoritem$type : ArmorItem.Type.values()) {
-            enummap.put(armoritem$type, pDefense.get(armoritem$type));
-        }
-
-        return new ArmorMaterial(enummap, pEnchantmentValue, pEquipSound, pRepairIngridient, pLayers, pToughness, pKnockbackResistance);
-    }
+    public static final ArmorMaterial HEAVY = new ArmorMaterial(
+            35,
+            Util.make(new EnumMap<>(ArmorType.class), map -> {
+                map.put(ArmorType.BOOTS, 3);
+                map.put(ArmorType.LEGGINGS, 6);
+                map.put(ArmorType.CHESTPLATE, 8);
+                map.put(ArmorType.HELMET, 3);
+                map.put(ArmorType.BODY, 4);
+            }),
+            30,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            0.0f,
+            0.0f,
+            ItemTags.WOOL,  // TODO: replace with a mage_fiber item tag
+            HEAVY_ASSET
+    );
 }

@@ -5,10 +5,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
-public class SourceStorage implements ISourceCap, INBTSerializable<Tag> {
+public class SourceStorage implements ISourceCap {
     protected int source;
     protected int capacity;
     protected int maxReceive;
@@ -174,16 +173,14 @@ public class SourceStorage implements ISourceCap, INBTSerializable<Tag> {
         return this.maxExtract > 0;
     }
 
-    @Override
     public Tag serializeNBT(HolderLookup.@NotNull Provider provider) {
         return IntTag.valueOf(this.getSource());
     }
 
-    @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull Tag nbt) {
         if (!(nbt instanceof IntTag intNbt))
             throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");
-        this.source = intNbt.getAsInt();
+        this.source = intNbt.intValue();
     }
 
     /**

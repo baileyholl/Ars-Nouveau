@@ -31,7 +31,7 @@ public class CameraController {
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Pre event) {
-        Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+        Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
 
         if (cameraEntity instanceof ScryerCamera cam) {
             Options options = Minecraft.getInstance().options;
@@ -60,7 +60,7 @@ public class CameraController {
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
-        Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+        Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
 
         if (cameraEntity instanceof ScryerCamera cam) {
             Options options = Minecraft.getInstance().options;
@@ -93,7 +93,7 @@ public class CameraController {
                 double xRotChange = player.getXRot() - player.xRotLast;
 
                 if (yRotChange != 0.0D || xRotChange != 0.0D)
-                    player.connection.send(new ServerboundMovePlayerPacket.Rot(player.getYRot(), player.getXRot(), player.onGround()));
+                    player.connection.send(new ServerboundMovePlayerPacket.Rot(player.getYRot(), player.getXRot(), player.onGround(), player.horizontalCollision));
             }
         }
     }

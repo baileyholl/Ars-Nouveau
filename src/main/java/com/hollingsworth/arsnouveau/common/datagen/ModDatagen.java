@@ -7,65 +7,65 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber()
 public class ModDatagen {
     public static CompletableFuture<HolderLookup.Provider> registries;
     public static PackOutput output;
 
+    // 1.21.11 NeoForge: GatherDataEvent is abstract — must use a concrete subclass
     @SubscribeEvent
-    public static void datagen(GatherDataEvent event) {
+    public static void datagen(GatherDataEvent.Server event) {
         APIRegistry.postInit();
         output = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> provider = event.getLookupProvider();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
         ModDatagen.registries = provider;
-        event.getGenerator().addProvider(event.includeClient(), new ItemModelGenerator(output, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new BlockTagProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeClient(), new LangDatagen(output, ArsNouveau.MODID, "en_us"));
+        // 1.21.11: GatherDataEvent.includeServer()/includeClient() removed; always pass true
+        event.getGenerator().addProvider(true, new ItemModelGenerator(output));
+        event.getGenerator().addProvider(true, new BlockTagProvider(output, provider));
+        event.getGenerator().addProvider(true, new LangDatagen(output, ArsNouveau.MODID, "en_us"));
 
-        event.getGenerator().addProvider(event.includeServer(), new RecipeDatagen(output, provider));
-        event.getGenerator().addProvider(event.includeServer(), new BlockStatesDatagen(output, ArsNouveau.MODID, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new GlyphRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new ApparatusRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new DefaultTableProvider(output, provider));
-        event.getGenerator().addProvider(event.includeServer(), new ImbuementRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new CrushRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new ItemTagProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new EntityTagProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new BannerTagsProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new PlacedFeatureTagProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new PotionEffectTagProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new DyeRecipeDatagen(event.getGenerator()));
+        event.getGenerator().addProvider(true, new RecipeDatagen.Runner(output, provider));
+        event.getGenerator().addProvider(true, new BlockStatesDatagen(output, ArsNouveau.MODID));
+        event.getGenerator().addProvider(true, new GlyphRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new ApparatusRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new DefaultTableProvider(output, provider));
+        event.getGenerator().addProvider(true, new ImbuementRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new CrushRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new ItemTagProvider(output, provider));
+        event.getGenerator().addProvider(true, new EntityTagProvider(output, provider));
+        event.getGenerator().addProvider(true, new BannerTagsProvider(output, provider));
+        event.getGenerator().addProvider(true, new PlacedFeatureTagProvider(output, provider));
+        event.getGenerator().addProvider(true, new PotionEffectTagProvider(output, provider));
+        event.getGenerator().addProvider(true, new DyeRecipeDatagen(event.getGenerator()));
 
-        event.getGenerator().addProvider(event.includeServer(), new AdvancementProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new CasterTomeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new SummonRitualProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new BuddingConversionProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new AlakarkinosRecipeProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new ScryRitualProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new OneOffRecipesProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new DispelEntityProvider(event.getGenerator()));
-        event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeClient(), new AtlasProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider(output, provider));
-        event.getGenerator().addProvider(event.includeServer(), new EnchantmentProvider.EnchantmentTagsProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new MusicProvider(output, provider));
-        event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider(output, provider));
-        event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider.DamageTypesTagsProvider(output, provider, fileHelper));
-        event.getGenerator().addProvider(event.includeServer(), new CompostablesProvider(output, provider));
+        event.getGenerator().addProvider(true, new AdvancementProvider(output, provider));
+        event.getGenerator().addProvider(true, new CasterTomeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new SummonRitualProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new BuddingConversionProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new AlakarkinosRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new ScryRitualProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new OneOffRecipesProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new DispelEntityProvider(event.getGenerator()));
+        event.getGenerator().addProvider(true, new StructureTagProvider(output, provider));
+        event.getGenerator().addProvider(true, new AtlasProvider(output, provider));
+        event.getGenerator().addProvider(true, new EnchantmentProvider(output, provider));
+        event.getGenerator().addProvider(true, new EnchantmentProvider.EnchantmentTagsProvider(output, provider));
+        event.getGenerator().addProvider(true, new MusicProvider(output, provider));
+        event.getGenerator().addProvider(true, new DamageTypesProvider(output, provider));
+        event.getGenerator().addProvider(true, new DamageTypesProvider.DamageTypesTagsProvider(output, provider));
+        event.getGenerator().addProvider(true, new CompostablesProvider(output, provider));
 
-        event.getGenerator().addProvider(event.includeServer(), new ANCurioProvider(output, fileHelper, provider));
+        event.getGenerator().addProvider(true, new ANCurioProvider(output, null, provider));
 
-        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator(), provider));
+        event.getGenerator().addProvider(true, new PatchouliProvider(event.getGenerator(), provider));
 
         DatapackBuiltinEntriesProvider datapackProvider = new WorldgenProvider(output, provider);
-        event.getGenerator().addProvider(event.includeServer(), datapackProvider);
+        event.getGenerator().addProvider(true, datapackProvider);
         CompletableFuture<HolderLookup.Provider> lookupProvider = datapackProvider.getRegistryProvider();
-        event.getGenerator().addProvider(event.includeServer(), new BiomeTagProvider(output, lookupProvider, fileHelper));
+        event.getGenerator().addProvider(true, new BiomeTagProvider(output, lookupProvider));
     }
 }

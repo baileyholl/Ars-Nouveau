@@ -17,9 +17,9 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
@@ -31,10 +31,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
 
     @Override
     public void tick() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             BlockPos pos = getBlockPos();
             if (level.random.nextInt(6) == 0) {
                 level.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + ParticleUtil.inRange(-0.25, 0.25) + 0.5, pos.getY() + 1, pos.getZ() + 0.5 + ParticleUtil.inRange(-0.25, 0.25), 0, 0, 0);
@@ -71,7 +73,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             timeMixing = 0;
             return;
         }
-        if (!level.isClientSide && !hasSource && level.getGameTime() % 20 == 0) {
+        if (!level.isClientSide() && !hasSource && level.getGameTime() % 20 == 0) {
             if (SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
                 hasSource = true;
                 updateBlock();
@@ -102,7 +104,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         ParticleColor color1 = ParticleColor.fromInt(tile1.getColor());
         ParticleColor color2 = ParticleColor.fromInt(tile2.getColor());
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             //Burning jar
             if (timeMixing >= 120) {
                 for (int i = 0; i < 3; i++) {
@@ -110,13 +112,13 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
                     double d1 = worldPosition.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
                     double d2 = worldPosition.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
                     level.addParticle(GlowParticleData.createData(
-                                    ParticleColor.fromInt(PotionContents.getColor(data.getAllEffects()))),
+                                    ParticleColor.fromInt(data.getColor())),
                             d0, d1, d2,
                             0,
                             0.01f,
                             0);
                 }
-                lastMixedColor = PotionContents.getColor(data.getAllEffects());
+                lastMixedColor = data.getColor();
             }
             if (timeMixing >= 160)
                 timeMixing = 0;
@@ -236,14 +238,14 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
         return BlockUtil.distanceFrom(Vec3.atCenterOf(pos1), Vec3.atCenterOf(pos2)) <= 3.5;
     }
 
-    private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("stir"));
+    private PlayState idlePredicate(AnimationTest<PotionMelderTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("stir"));
         return this.isMixing ? PlayState.CONTINUE : PlayState.STOP;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        animatableManager.add(new AnimationController<PotionMelderTile>("rotate_controller", 0, this::idlePredicate));
     }
 
     @Override
@@ -252,12 +254,12 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(nbt, pRegistries);
+    protected void loadAdditional(ValueInput nbt) {
+        super.loadAdditional(nbt);
         fromJars = new ArrayList<>();
-        this.timeMixing = nbt.getInt("mixing");
-        this.isMixing = nbt.getBoolean("isMixing");
-        this.hasSource = nbt.getBoolean("hasMana");
+        this.timeMixing = nbt.getIntOr("mixing", 0);
+        this.isMixing = nbt.getBooleanOr("isMixing", false);
+        this.hasSource = nbt.getBooleanOr("hasMana", false);
         int counter = 0;
 
         while (NBTUtil.hasBlockPos(nbt, "from_" + counter)) {
@@ -267,14 +269,14 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             counter++;
         }
 
-        this.toPos = NBTUtil.getNullablePos(nbt, "to_pos");
-        this.isOff = nbt.getBoolean("off");
-        this.lastMixedColor = nbt.getInt("lastMixedColor");
+        this.toPos = NBTUtil.hasBlockPos(nbt, "to_pos") ? NBTUtil.getBlockPos(nbt, "to_pos") : null;
+        this.isOff = nbt.getBooleanOr("off", false);
+        this.lastMixedColor = nbt.getIntOr("lastMixedColor", 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(compound, pRegistries);
+    protected void saveAdditional(ValueOutput compound) {
+        super.saveAdditional(compound);
         compound.putInt("mixing", timeMixing);
         compound.putBoolean("isMixing", isMixing);
         compound.putBoolean("hasMana", hasSource);

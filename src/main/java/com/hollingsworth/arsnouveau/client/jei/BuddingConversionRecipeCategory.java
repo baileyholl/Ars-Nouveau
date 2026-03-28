@@ -38,14 +38,21 @@ public class BuddingConversionRecipeCategory implements IRecipeCategory<RecipeHo
         return Component.translatable("ars_nouveau.budding_conversion_recipe");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
+    // getBackground() removed from IRecipeCategory in JEI 27.4
 
     @Override
     public IDrawable getIcon() {
         return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return 120;
+    }
+
+    @Override
+    public int getHeight() {
+        return 24;
     }
 
     @Override

@@ -3,25 +3,29 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.tile.DecorBlossomTile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
-public class BlossomRenderer extends GeoBlockRenderer<DecorBlossomTile> {
+public class BlossomRenderer extends GeoBlockRenderer<DecorBlossomTile, ArsBlockEntityRenderState> {
     public BlossomRenderer(BlockEntityRendererProvider.Context rendererProvider) {
         super(new GenericModel<>("decor_blossom"));
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, DecorBlossomTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        poseStack.pushPose();
-        Direction direction = animatable.getBlockState().getValue(BasicSpellTurret.FACING);
-//        poseStack.translate(0.5, 0.5, 0);
+    public ArsBlockEntityRenderState createRenderState() {
+        return new ArsBlockEntityRenderState();
+    }
+
+    // GeckoLib 5: actuallyRender replaced with adjustRenderPose for pose manipulation.
+    // blockState is available in the render state so we can still read facing direction.
+    @Override
+    public void adjustRenderPose(RenderPassInfo<ArsBlockEntityRenderState> renderPassInfo) {
+        super.adjustRenderPose(renderPassInfo);
+        PoseStack poseStack = renderPassInfo.poseStack();
+        Direction direction = renderPassInfo.renderState().blockState.getValue(BasicSpellTurret.FACING);
         switch (direction) {
             case UP -> {
                 poseStack.translate(0, 0, 0);
@@ -53,8 +57,5 @@ public class BlossomRenderer extends GeoBlockRenderer<DecorBlossomTile> {
                 poseStack.mulPose(Axis.YP.rotationDegrees(180));
             }
         }
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        poseStack.popPose();
     }
-
 }

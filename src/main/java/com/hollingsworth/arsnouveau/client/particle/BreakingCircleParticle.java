@@ -3,15 +3,16 @@ package com.hollingsworth.arsnouveau.client.particle;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.util.RandomSource;
 
 public class BreakingCircleParticle extends PropParticle {
 
     SpriteSet spriteSet;
 
     public BreakingCircleParticle(PropertyParticleOptions propertyParticleOptions, SpriteSet spriteSet, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        super(propertyParticleOptions, level, x, y, z, 0, 0, 0);
+        super(propertyParticleOptions, level, x, y, z, 0, 0, 0, spriteSet.first());
         this.lifetime = 6 + this.random.nextInt(4);
         float f = this.random.nextFloat() * 0.6F + 0.4F;
         this.rCol = f;
@@ -29,8 +30,8 @@ public class BreakingCircleParticle extends PropParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     @Override
@@ -66,12 +67,12 @@ public class BreakingCircleParticle extends PropParticle {
                 double pZ,
                 double pXSpeed,
                 double pYSpeed,
-                double pZSpeed
+                double pZSpeed,
+                RandomSource random
         ) {
-            BreakingCircleParticle circleParticle = new BreakingCircleParticle(
+            return new BreakingCircleParticle(
                     pType, sprite, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed
             );
-            return circleParticle;
         }
     }
 }

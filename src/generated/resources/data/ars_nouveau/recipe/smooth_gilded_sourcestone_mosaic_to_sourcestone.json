@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:smooth_gilded_sourcestone_mosaic"
-    }
+    "ars_nouveau:smooth_gilded_sourcestone_mosaic"
   ],
   "result": {
     "count": 1,

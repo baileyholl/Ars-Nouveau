@@ -4,13 +4,13 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public class TotemPerk extends Perk {
     public static TotemPerk INSTANCE = new TotemPerk(ArsNouveau.prefix("thread_undying"));
 
-    public TotemPerk(ResourceLocation key) {
+    public TotemPerk(Identifier key) {
         super(key);
     }
 

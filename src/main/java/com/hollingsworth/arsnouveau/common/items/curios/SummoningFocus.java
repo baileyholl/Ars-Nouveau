@@ -48,7 +48,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
     }
 
     public static boolean containsThis(Level world, Entity entity) {
-        if (!world.isClientSide && entity instanceof Player) {
+        if (!world.isClientSide() && entity instanceof Player) {
             IItemHandlerModifiable items = CuriosUtil.getAllWornItems((LivingEntity) entity);
             if (items != null) {
                 for (int i = 0; i < items.getSlots(); i++) {
@@ -65,18 +65,19 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     @SubscribeEvent
     public static void summonedEvent(SummonEvent event) {
-        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner())) {
+        if (!event.world.isClientSide() && SummoningFocus.containsThis(event.world, event.summon.getOwner())) {
             event.summon.setTicksLeft(event.summon.getTicksLeft() * 2);
             if (event.summon.getLivingEntity() != null) {
-                event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 500, 2));
-                event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 500, 1));
+                // 1.21.11: DAMAGE_BOOST → STRENGTH, MOVEMENT_SPEED → SPEED
+                event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.STRENGTH, 500, 2));
+                event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.SPEED, 500, 1));
             }
         }
     }
 
     @SubscribeEvent
     public static void castSpell(SpellCastEvent event) {
-        if (!event.getWorld().isClientSide && event.getEntity() instanceof Player && SummoningFocus.containsThis(event.getWorld(), event.getEntity())) {
+        if (!event.getWorld().isClientSide() && event.getEntity() instanceof Player && SummoningFocus.containsThis(event.getWorld(), event.getEntity())) {
             if (event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())) {
                 for (LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntity().blockPosition()).inflate(30), ISummon.class::isInstance)) {
                     if (event.getEntity().equals(((ISummon) i).getOwnerAlt())) {
@@ -90,7 +91,7 @@ public class SummoningFocus extends ArsNouveauCurio implements ISpellModifierIte
 
     @SubscribeEvent
     public static void summonDeathEvent(SummonEvent.Death event) {
-        if (!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwnerAlt())) {
+        if (!event.world.isClientSide() && SummoningFocus.containsThis(event.world, event.summon.getOwnerAlt())) {
             DamageSource source = event.source;
             if (source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwnerAlt()) {
                 source.getEntity().hurt(source.getEntity().level.damageSources().thorns(source.getEntity()), 5.0f);

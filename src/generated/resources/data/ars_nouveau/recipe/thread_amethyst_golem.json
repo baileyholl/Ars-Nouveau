@@ -2,19 +2,11 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:obsidians"
-    },
-    {
-      "tag": "c:obsidians"
-    },
-    {
-      "tag": "c:obsidians"
-    }
+    "#c:obsidians",
+    "#c:obsidians",
+    "#c:obsidians"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_amethyst_golem"

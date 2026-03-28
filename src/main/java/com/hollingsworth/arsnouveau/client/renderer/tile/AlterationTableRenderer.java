@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.google.common.collect.Maps;
-import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
-import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ThreePartBlock;
@@ -12,49 +10,46 @@ import com.hollingsworth.arsnouveau.common.items.data.StackPerkHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.ArmorStandArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.object.armorstand.ArmorStandArmorModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.trim.ArmorTrim;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.client.ClientHooks;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
-import java.util.List;
 import java.util.Map;
 
-public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
-    private static final Map<String, ResourceLocation> ARMOR_LOCATION_CACHE = Maps.newHashMap();
+// GeckoLib 5.4.2 migration:
+// - GeoBlockRenderer now requires 2 type params <T, R extends BlockEntityRenderState & GeoRenderState>
+// - actuallyRender() REMOVED - direction rotation ported to adjustRenderPose(RenderPassInfo)
+// - getRenderType(T, Identifier, MultiBufferSource, float) signature changed to (R, Identifier)
+// - ArmorStandArmorModel moved to net.minecraft.client.model.object.armorstand
+// - ArmorMaterial moved to net.minecraft.world.item.equipment.ArmorMaterial
+// - ArmorTrim moved to net.minecraft.world.item.equipment.trim.ArmorTrim
+// - FastColor.ABGR32/ARGB32 replaced by ARGB class
+// TODO: Port render() override (item/perk rendering) to preRenderPass or a separate hook in GeckoLib 5.
+// The render() method no longer exists; use captureDefaultRenderState + preRenderPass for complex rendering.
+public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile, ArsBlockEntityRenderState> {
+    private static final Map<String, Identifier> ARMOR_LOCATION_CACHE = Maps.newHashMap();
 
     public final ArmorStandArmorModel innerModel;
     public final ArmorStandArmorModel outerModel;
@@ -62,111 +57,64 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
 
     public AlterationTableRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
         super(new GenericModel<>("alteration_table").withEmptyAnim());
-        innerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_INNER_ARMOR));
-        outerModel = new ArmorStandArmorModel(p_i226006_1_.bakeLayer(ModelLayers.ARMOR_STAND_OUTER_ARMOR));
-        this.armorTrimAtlas = Minecraft.getInstance().getModelManager().getAtlas(Sheets.ARMOR_TRIMS_SHEET);
+        // 1.21.11: ARMOR_STAND_INNER/OUTER_ARMOR removed; replaced by ARMOR_STAND_ARMOR (ArmorModelSet)
+        // Stub with null for now; TODO: port to new ArmorModelSet.bake() API
+        innerModel = null;
+        outerModel = null;
+        // 1.21.11: ModelManager.getAtlas() removed; TODO: port armor trim rendering
+        this.armorTrimAtlas = null;
+    }
+
+    @Override
+    public ArsBlockEntityRenderState createRenderState() {
+        return new ArsBlockEntityRenderState();
+    }
+
+    @Override
+    public void adjustRenderPose(RenderPassInfo<ArsBlockEntityRenderState> renderPassInfo) {
+        super.adjustRenderPose(renderPassInfo);
+        BlockState state = renderPassInfo.renderState().blockState;
+        if (state.getValue(AlterationTable.PART) != ThreePartBlock.HEAD) return;
+        Direction direction = state.getValue(AlterationTable.FACING);
+        PoseStack stack = renderPassInfo.poseStack();
+        if (direction == Direction.NORTH) {
+            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.translate(1, 0, 0);
+        } else if (direction == Direction.SOUTH) {
+            stack.mulPose(Axis.YP.rotationDegrees(270));
+            stack.translate(-1, 0, 0);
+        } else if (direction == Direction.WEST) {
+            stack.mulPose(Axis.YP.rotationDegrees(270));
+            stack.translate(0, 0, -1);
+        } else if (direction == Direction.EAST) {
+            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.translate(0, 0, 1);
+        }
+    }
+
+    @Override
+    public RenderType getRenderType(ArsBlockEntityRenderState renderState, Identifier texture) {
+        return RenderTypes.entityTranslucent(texture);
+    }
+
+    // TODO: GeckoLib 5 + 1.21.11: Port item/perk/armor rendering.
+    // Removed APIs: model.getBone(), bone.getRotX/Y/Z(), RenderUtil.translateToPivotPoint(),
+    // ItemRenderer.renderStatic(7-arg), animatable.getTick(), bone.setHidden().
+    // All rendering here is stubbed until the GeckoLib 5 migration is complete.
+    public void renderForTile(AlterationTile animatable, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        // Stub - see class-level TODO
     }
 
     public void renderArmorStack(AlterationTile tile, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, int packedLightIn, int packedOverlayIn) {
-        matrixStack.pushPose();
-        ItemStack stack = tile.armorStack;
-//        if (stack.getItem() instanceof ArmorItem armorItem) {
-        // to rotate around a point: scale, point translate, rotate, object translate
-        matrixStack.scale(0.5f, 0.5f, 0.5f);
-//            matrixStack.translate(-2.1, 3.3, 0);
-        double yOffset = Mth.smoothstepDerivative((Math.sin((ClientInfo.ticksInGame + ticks) / 20f) + 1f) / 2f) * 0.0625;
-        if (tile.newPerkTimer >= 0) {
-            // need zero it out or else it fights the translation we're doing below
-            yOffset = 0;
-            float percentage = Mth.abs(tile.newPerkTimer - 20) / 20f;
-            double smooooooooth = Mth.smoothstep(percentage);
-            double perkYOffset = 0.625 - (smooooooooth * 0.625);
-//                matrixStack.mulPose(Axis.YP.rotationDegrees((float) (Mth.smoothstep(tile.newPerkTimer / 40f) * 360)));
-            matrixStack.translate(0, perkYOffset, 0);
-        }
-//            matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
-        matrixStack.translate(0, yOffset, 0);
-
-//            this.renderArmorPiece(tile,stack, matrixStack, iRenderTypeBuffer, packedLightIn, getArmorModel(armorItem.getEquipmentSlot()));
-//        } else {
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
-//        }
-        matrixStack.popPose();
+        // Stub - see class-level TODO
     }
 
     public void renderPerks(AlterationTile tile, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLightIn, int packedOverlayIn) {
-        if (tile.perkList.isEmpty()) {
-            return;
-        }
-        for (int i = 0; i < Math.min(3, tile.perkList.size()); i++) {
-            ItemStack perkStack = tile.perkList.get(i);
-            if (perkStack.isEmpty()) {
-                continue;
-            }
-            matrixStack.pushPose();
-            matrixStack.translate(-0.25, 0.74 - (0.175 * i), -0.3 - (0.175 * i));
-            GeoBone bone = model.getBone("display").get();
-            if (bone.getRotZ() != 0.0F) {
-                matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotZ()));
-            }
-
-            if (bone.getRotY() != 0.0F) {
-                matrixStack.mulPose(Axis.YP.rotation(-bone.getRotY()));
-            }
-
-            if (bone.getRotX() != 0.0F) {
-                matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
-            }
-            GeoBone locBone = model.getBone("top_" + (i + 1)).get();
-            RenderUtil.translateToPivotPoint(matrixStack, locBone);
-            matrixStack.scale(0.18f, 0.18f, 0.18f);
-            Minecraft.getInstance().getItemRenderer().renderStatic(perkStack, ItemDisplayContext.FIXED, packedLightIn, packedOverlayIn, matrixStack, iRenderTypeBuffer, tile.getLevel(), (int) tile.getBlockPos().asLong());
-            matrixStack.popPose();
-        }
+        // Stub - see class-level TODO
     }
 
     public void renderSlate(AlterationTile tile, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
-        String[] rowNames = new String[]{"top", "mid", "bot"};
-        for (String s : rowNames) {
-            for (int i = 0; i < 4; i++) {
-                int finalI = i;
-                model.getBone(s + "_" + i).ifPresent(bone -> bone.setHidden(finalI != 0));
-            }
-        }
-
-        if (!(PerkUtil.getPerkHolder(tile.armorStack) instanceof StackPerkHolder<?> armorPerkHolder)) {
-            return;
-        }
-        Font font = Minecraft.getInstance().font;
-        List<PerkSlot> perks = armorPerkHolder.getSlotsForTier(tile.armorStack);
-        for (int i = 0; i < Math.min(3, perks.size()); i++) {
-            var tier = perks.get(i);
-            var component = Component.translatable("enchantment.level." + tier.value()).withStyle(ChatFormatting.BOLD);
-            var height = font.lineHeight / 2;
-
-            matrixStack.pushPose();
-            matrixStack.translate(0.25, 1 - (0.175 * i), -0.05 - (0.175 * i));
-            GeoBone bone = model.getBone("display").get();
-            if (bone.getRotZ() != 0.0F) {
-                matrixStack.mulPose(Axis.ZP.rotation(-bone.getRotZ()));
-            }
-
-            if (bone.getRotY() != 0.0F) {
-                matrixStack.mulPose(Axis.YP.rotation(-bone.getRotY()));
-            }
-
-            if (bone.getRotX() != 0.0F) {
-                matrixStack.mulPose(Axis.XP.rotation(-bone.getRotX()));
-            }
-
-            GeoBone locBone = model.getBone("top_" + (i + 1)).get();
-            RenderUtil.translateToPivotPoint(matrixStack, locBone);
-            matrixStack.translate(0.0815, -0.20, 0);
-            matrixStack.scale(-0.02f, -0.02f, -0.02f);
-            float x = (float) (font.width("WWW") - font.width(component)) / 2;
-            font.drawInBatch(component, x, height, 5987163, false, matrixStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
-            matrixStack.popPose();
-        }
+        // Stub - see class-level TODO
     }
 
     public float rotForSlot(EquipmentSlot slot) {
@@ -182,36 +130,22 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return (this.usesInnerModel(pSlot) ? this.innerModel : this.outerModel);
     }
 
+    // TODO: Port armor rendering to 1.21.11 EquipmentClientInfo / EquipmentClientInfo.Layer API.
+    // ArmorItem was removed; equipment slot comes from DataComponents.EQUIPPABLE.
+    // ArmorMaterial.layers() no longer exists; use EquipmentClientInfo.getLayers(LayerType) instead.
+    // ClientHooks.getArmorModel / getArmorTexture signatures have changed.
     private void renderArmorPiece(AlterationTile tile, ItemStack itemstack, PoseStack pPoseStack, MultiBufferSource pBuffer, int packedLightIn, ArmorStandArmorModel armorModel) {
-        if (!(itemstack.getItem() instanceof ArmorItem armoritem))
+        var equippable = itemstack.getComponents().get(DataComponents.EQUIPPABLE);
+        if (equippable == null)
             return;
 
-        EquipmentSlot pSlot = armoritem.getEquipmentSlot();
+        EquipmentSlot pSlot = equippable.slot();
         setPartVisibility(armorModel, pSlot);
-
-        Model model = ClientHooks.getArmorModel(Minecraft.getInstance().player, itemstack, pSlot, armorModel);
-        boolean innerModel = this.usesInnerModel(pSlot);
-        var dyeColor = itemstack.get(DataComponents.DYED_COLOR);
-        int color = dyeColor != null ? FastColor.ABGR32.opaque(dyeColor.rgb()) : -1;
-        ArmorMaterial armormaterial = armoritem.getMaterial().value();
-        for (ArmorMaterial.Layer armormaterial$layer : armormaterial.layers()) {
-            int j = armormaterial$layer.dyeable() ? color : -1;
-            var texture = ClientHooks.getArmorTexture(Minecraft.getInstance().player, itemstack, armormaterial$layer, innerModel, pSlot);
-            this.renderModel(pPoseStack, pBuffer, packedLightIn, model, j, texture);
-        }
-
-        ArmorTrim armortrim = itemstack.get(DataComponents.TRIM);
-        if (armortrim != null) {
-            this.renderTrim(armoritem.getMaterial(), pPoseStack, pBuffer, packedLightIn, armortrim, model, innerModel);
-        }
-
-        if (itemstack.hasFoil()) {
-            this.renderGlint(pPoseStack, pBuffer, packedLightIn, model);
-        }
+        // Full armor layer rendering requires EquipmentClientInfo — stubbed until ported.
     }
 
-    private void renderModel(PoseStack p_289664_, MultiBufferSource p_289689_, int p_289681_, net.minecraft.client.model.Model p_289658_, int p_350798_, ResourceLocation p_324344_) {
-        VertexConsumer vertexconsumer = p_289689_.getBuffer(RenderType.armorCutoutNoCull(p_324344_));
+    private void renderModel(PoseStack p_289664_, MultiBufferSource p_289689_, int p_289681_, Model p_289658_, int p_350798_, Identifier p_324344_) {
+        VertexConsumer vertexconsumer = p_289689_.getBuffer(RenderTypes.armorCutoutNoCull(p_324344_));
         p_289658_.renderToBuffer(p_289664_, vertexconsumer, p_289681_, OverlayTexture.NO_OVERLAY, p_350798_);
     }
 
@@ -219,110 +153,18 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         return pSlot == EquipmentSlot.LEGS;
     }
 
-
     private void renderTrim(
-            Holder<ArmorMaterial> p_323506_, PoseStack p_289687_, MultiBufferSource p_289643_, int p_289683_, ArmorTrim p_289692_, net.minecraft.client.model.Model p_289663_, boolean p_289651_
+            Holder<ArmorMaterial> p_323506_, PoseStack p_289687_, MultiBufferSource p_289643_, int p_289683_, ArmorTrim p_289692_, Model p_289663_, boolean p_289651_
     ) {
-        TextureAtlasSprite textureatlassprite = this.armorTrimAtlas
-                .getSprite(p_289651_ ? p_289692_.innerTexture(p_323506_) : p_289692_.outerTexture(p_323506_));
-        VertexConsumer vertexconsumer = textureatlassprite.wrap(p_289643_.getBuffer(Sheets.armorTrimsSheet(p_289692_.pattern().value().decal())));
-        p_289663_.renderToBuffer(p_289687_, vertexconsumer, p_289683_, OverlayTexture.NO_OVERLAY);
+        // TODO: 1.21.11: ArmorTrim.innerTexture/outerTexture removed; use new EquipmentClientInfo-based API
     }
 
-    private void renderGlint(PoseStack p_289673_, MultiBufferSource p_289654_, int p_289649_, net.minecraft.client.model.Model p_289659_) {
-        p_289659_.renderToBuffer(p_289673_, p_289654_.getBuffer(RenderType.armorEntityGlint()), p_289649_, OverlayTexture.NO_OVERLAY);
+    private void renderGlint(PoseStack p_289673_, MultiBufferSource p_289654_, int p_289649_, Model p_289659_) {
+        p_289659_.renderToBuffer(p_289673_, p_289654_.getBuffer(RenderTypes.armorEntityGlint()), p_289649_, OverlayTexture.NO_OVERLAY);
     }
-
-    @Override
-    public void actuallyRender(PoseStack stack, AlterationTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        BlockState state = tile.getBlockState();
-        if (state.getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-            return;
-        Direction direction = state.getValue(AlterationTable.FACING);
-        stack.pushPose();
-
-        if (direction == Direction.NORTH) {
-            stack.mulPose(Axis.YP.rotationDegrees(-90));
-            stack.translate(1, 0, 0);
-        }
-
-        if (direction == Direction.SOUTH) {
-            stack.mulPose(Axis.YP.rotationDegrees(270));
-            stack.translate(-1, 0, 0);
-        }
-
-        if (direction == Direction.WEST) {
-            stack.mulPose(Axis.YP.rotationDegrees(270));
-
-            stack.translate(0, 0, -1);
-        }
-
-        if (direction == Direction.EAST) {
-            stack.mulPose(Axis.YP.rotationDegrees(-90));
-            stack.translate(0, 0, 1);
-
-        }
-        super.actuallyRender(stack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        stack.popPose();
-    }
-
-    @Override
-    public void render(AlterationTile animatable, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        super.render(animatable, partialTick, stack, bufferSource, packedLight, packedOverlay);
-        BlockState state = animatable.getBlockState();
-        if (state.getValue(AlterationTable.PART) != ThreePartBlock.HEAD)
-            return;
-        Direction direction = state.getValue(AlterationTable.FACING);
-        Vector3d perkTranslate = new Vector3d(0, 0, 0);
-        Quaternionf perkQuat = Axis.YP.rotationDegrees(-90);
-        if (direction == Direction.NORTH) {
-            perkQuat = Axis.YP.rotationDegrees(-90);
-            perkTranslate = new Vector3d(1.55, 0.00, -.5);
-        }
-
-        if (direction == Direction.SOUTH) {
-            perkQuat = Axis.YP.rotationDegrees(90);
-            perkTranslate = new Vector3d(.55, 0, .5);
-        }
-
-        if (direction == Direction.WEST) {
-            perkQuat = Axis.YP.rotationDegrees(0);
-            perkTranslate = new Vector3d(1.55, 0, 0.5);
-        }
-
-        if (direction == Direction.EAST) {
-            perkQuat = Axis.YP.rotationDegrees(180);
-            perkTranslate = new Vector3d(.55, 0, -.5);
-        }
-        double ticks = animatable.getTick(animatable);
-        stack.pushPose();
-        stack.mulPose(perkQuat);
-        stack.translate(perkTranslate.x, perkTranslate.y + 0.2, perkTranslate.z);
-
-//        if (!(animatable.armorStack.getItem() instanceof ArmorItem)) {
-        stack.scale(0.75f, 0.75f, 0.75f);
-        stack.translate(-1.5, 1.95, 0);
-//        }
-
-        this.renderArmorStack(animatable, stack, (float) ticks, bufferSource, packedLight, packedOverlay);
-        stack.popPose();
-
-        stack.pushPose();
-        stack.mulPose(perkQuat);
-        stack.translate(perkTranslate.x, perkTranslate.y, perkTranslate.z);
-        this.renderSlate(animatable, stack, bufferSource, packedLight);
-        this.renderPerks(animatable, stack, bufferSource, packedLight, packedOverlay);
-        stack.popPose();
-    }
-
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(new GenericModel<>("alteration_table").withEmptyAnim());
-    }
-
-    @Override
-    public RenderType getRenderType(AlterationTile animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(texture);
     }
 
     protected void setPartVisibility(HumanoidModel<?> pModel, EquipmentSlot pSlot) {
@@ -348,8 +190,9 @@ public class AlterationTableRenderer extends GeoBlockRenderer<AlterationTile> {
         }
     }
 
+    // 1.21.11: shouldRenderOffScreen() takes no parameter anymore
     @Override
-    public boolean shouldRenderOffScreen(@NotNull AlterationTile pBlockEntity) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 

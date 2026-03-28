@@ -1,11 +1,10 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
 
-public class ParticleSparkle extends TextureSheetParticle {
+public class ParticleSparkle extends SingleQuadParticle {
     public float colorR;
     public float colorG;
     public float colorB;
@@ -13,7 +12,7 @@ public class ParticleSparkle extends TextureSheetParticle {
     public float initAlpha = 0;
 
     protected ParticleSparkle(ClientLevel worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, SpriteSet sprite) {
-        super(worldIn, x, y, z, 0, 0, 0);
+        super(worldIn, x, y, z, 0, 0, 0, sprite.first());
         this.colorR = r;
         this.colorG = g;
         this.colorB = b;
@@ -34,12 +33,11 @@ public class ParticleSparkle extends TextureSheetParticle {
         this.xd = ParticleUtil.inRange(-0.01, 0.01);
         this.yd = -0.02;
         this.zd = ParticleUtil.inRange(-0.01, 0.01);
-        this.pickSprite(sprite);
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderTypes.EMBER_RENDER;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
 

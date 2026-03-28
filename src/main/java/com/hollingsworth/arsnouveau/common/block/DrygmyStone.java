@@ -3,6 +3,10 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -100,16 +104,16 @@ public class DrygmyStone extends SummonBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTick, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTick.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }
 
     @Override
-    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
-        super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
+    protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation orientation, boolean pIsMoving) {
+        super.neighborChanged(pState, pLevel, pPos, pBlock, orientation, pIsMoving);
         if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof DrygmyTile henge) {
             henge.isOff = pLevel.hasNeighborSignal(pPos);
             henge.updateBlock();

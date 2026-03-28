@@ -55,7 +55,7 @@ public class MethodTouch extends AbstractCastMethod {
 
     @Override
     public CastResolveType onCastOnBlock(BlockHitResult res, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), res);
+        resolver.onResolveEffect(caster.level(), res);
         ParticleEmitter particleEmitter = resolveEmitter(spellContext, res.getLocation());
         particleEmitter.tick(caster.level);
         playResolveSound(spellContext, caster.level(), res.getLocation());
@@ -65,7 +65,7 @@ public class MethodTouch extends AbstractCastMethod {
 
     @Override
     public CastResolveType onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(target));
+        resolver.onResolveEffect(caster.level(), new EntityHitResult(target));
         ParticleEmitter particleEmitter = resolveEmitter(spellContext, target.position);
         particleEmitter.tick(caster.level);
         playResolveSound(spellContext, caster.level(), target.position());

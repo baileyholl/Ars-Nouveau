@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,7 +22,7 @@ public class DocDataLoader {
     public static final Path DOC_DATA_PATH = Path.of(DATA_FOLDER + "doc_data.json");
 
     public static void writeBookmarks() {
-        List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
+        List<Identifier> bookmarks = DocPlayerData.bookmarks;
         List<SpellSound> spellSounds = DocPlayerData.favoriteSounds;
         try {
             Files.createDirectories(Path.of(DATA_FOLDER));
@@ -49,7 +49,7 @@ public class DocDataLoader {
     }
 
     public static void loadBookmarks() {
-        List<ResourceLocation> bookmarks = new ArrayList<>();
+        List<Identifier> bookmarks = new ArrayList<>();
         List<SpellSound> sounds = new ArrayList<>();
         List<ParticleType<?>> particles = new ArrayList<>();
         try {
@@ -57,10 +57,10 @@ public class DocDataLoader {
             String content = Files.readString(Path.of(DATA_FOLDER + "doc_data.json"), StandardCharsets.UTF_8);
             JsonObject element = JsonParser.parseString(content).getAsJsonObject();
             if (element.has("bookmarks")) {
-                element.getAsJsonArray("bookmarks").forEach(e -> bookmarks.add(ResourceLocation.tryParse(e.getAsString())));
+                element.getAsJsonArray("bookmarks").forEach(e -> bookmarks.add(Identifier.tryParse(e.getAsString())));
 
-                List<ResourceLocation> toRemove = new ArrayList<>();
-                for (ResourceLocation loc : bookmarks) {
+                List<Identifier> toRemove = new ArrayList<>();
+                for (Identifier loc : bookmarks) {
                     if (loc == null || DocumentationRegistry.getEntry(loc) == null) {
                         toRemove.add(loc);
                     }
@@ -70,7 +70,7 @@ public class DocDataLoader {
 
             if (element.has("sounds")) {
                 element.getAsJsonArray("sounds").forEach(e -> {
-                    SpellSound spellSound = SpellSoundRegistry.get(ResourceLocation.tryParse(e.getAsString()));
+                    SpellSound spellSound = SpellSoundRegistry.get(Identifier.tryParse(e.getAsString()));
                     if (spellSound != null) {
                         sounds.add(spellSound);
                     }
@@ -78,10 +78,8 @@ public class DocDataLoader {
             }
             if (element.has("particles")) {
                 element.getAsJsonArray("particles").forEach(e -> {
-                    ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.tryParse(e.getAsString()));
-                    if (particle != null) {
-                        particles.add(particle);
-                    }
+                    // 1.21.11: BuiltInRegistries.get() returns Optional<Reference<T>>
+                    BuiltInRegistries.PARTICLE_TYPE.get(Identifier.tryParse(e.getAsString())).map(net.minecraft.core.Holder.Reference::value).ifPresent(particles::add);
                 });
             }
         } catch (Exception e) {

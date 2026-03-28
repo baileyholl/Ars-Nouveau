@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "item": "ars_nouveau:sourcestone"
-    },
-    {
-      "item": "ars_nouveau:sourcestone"
-    }
+    "#c:gems/source",
+    "ars_nouveau:sourcestone",
+    "ars_nouveau:sourcestone"
   ],
   "result": {
     "count": 1,

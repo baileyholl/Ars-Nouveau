@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "ars_nouveau:dowsing_rod"
-    },
-    {
-      "item": "ars_nouveau:starbuncle_shards"
-    }
+    "ars_nouveau:abjuration_essence",
+    "ars_nouveau:dowsing_rod",
+    "ars_nouveau:starbuncle_shards"
   ],
   "output": {
     "count": 1,

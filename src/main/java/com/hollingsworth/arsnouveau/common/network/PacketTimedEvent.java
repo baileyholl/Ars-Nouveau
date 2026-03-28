@@ -40,9 +40,9 @@ public class PacketTimedEvent extends AbstractPacket {
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if (!methodMap.containsKey(tag.getString("id")))
+        if (!methodMap.containsKey(tag.getStringOr("id", "")))
             throw new IllegalStateException("No event found for ID or ID missing");
-        methodMap.get(tag.getString("id")).apply(tag);
+        methodMap.get(tag.getStringOr("id", "")).apply(tag);
     }
 
     public static final Type<PacketTimedEvent> TYPE = new Type<>(ArsNouveau.prefix("timed_event"));

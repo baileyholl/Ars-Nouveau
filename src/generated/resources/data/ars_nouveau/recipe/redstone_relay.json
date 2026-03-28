@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "tag": "c:storage_blocks/source"
-    },
-    "g": {
-      "tag": "c:ingots/gold"
-    },
-    "x": {
-      "tag": "c:dusts/redstone"
-    }
+    "M": "#c:storage_blocks/source",
+    "g": "#c:ingots/gold",
+    "x": "#c:dusts/redstone"
   },
   "pattern": [
     "gxg",

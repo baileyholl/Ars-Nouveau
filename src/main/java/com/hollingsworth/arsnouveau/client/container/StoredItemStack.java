@@ -71,21 +71,21 @@ public class StoredItemStack {
 //	public CompoundTag writeToNBT(CompoundTag tag) {
 //		tag.putLong(ITEM_COUNT_NAME, getQuantity());
 //		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
-//		tag.getCompound(ITEMSTACK_NAME).remove("Count");
+//		tag.getCompoundOrEmpty(ITEMSTACK_NAME).remove("Count");
 //		return tag;
 //	}
 //
 //	public CompoundTag writeToNBT(CompoundTag tag, long q) {
 //		tag.putLong(ITEM_COUNT_NAME, q);
 //		tag.put(ITEMSTACK_NAME, stack.save(new CompoundTag()));
-//		tag.getCompound(ITEMSTACK_NAME).remove("Count");
+//		tag.getCompoundOrEmpty(ITEMSTACK_NAME).remove("Count");
 //		return tag;
 //	}
 //
 //	public static StoredItemStack readFromNBT(CompoundTag tag) {
 //		ItemStack cheat = ItemStack.of(tag);
-//		tag.getCompound(ITEMSTACK_NAME).putByte("Count", (byte) 1);
-//		StoredItemStack stack = new StoredItemStack(!cheat.isEmpty() ? cheat : ItemStack.of(tag.getCompound(ITEMSTACK_NAME)), !cheat.isEmpty() ? cheat.getCount() : tag.getLong(ITEM_COUNT_NAME));
+//		tag.getCompoundOrEmpty(ITEMSTACK_NAME).putByte("Count", (byte) 1);
+//		StoredItemStack stack = new StoredItemStack(!cheat.isEmpty() ? cheat : ItemStack.of(tag.getCompoundOrEmpty(ITEMSTACK_NAME)), !cheat.isEmpty() ? cheat.getCount() : tag.getLong(ITEM_COUNT_NAME));
 //		return !stack.stack.isEmpty() ? stack : null;
 //	}
 

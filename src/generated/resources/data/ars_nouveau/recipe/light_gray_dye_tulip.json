@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:white_tulip"
-  },
+  "input": "minecraft:white_tulip",
   "output": [
     {
       "chance": 1.0,

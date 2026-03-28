@@ -32,15 +32,17 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.entity.BannerPattern;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.component.TypedEntityData;
+import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -58,19 +60,33 @@ public class ItemsRegistry {
     public static Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(true);
     public static PerkItem BLANK_THREAD;
 
-    public static FoodProperties SOURCE_BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEdible().build();
-    public static FoodProperties SOURCE_PIE_FOOD = new FoodProperties.Builder().nutrition(9).saturationModifier(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEdible().build();
-    public static FoodProperties SOURCE_ROLL_FOOD = new FoodProperties.Builder().nutrition(8).saturationModifier(0.6F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20), 1.0f).alwaysEdible().build();
-    public static FoodProperties MENDOSTEEN_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).effect(() ->
-            new MobEffectInstance(ModPotions.RECOVERY_EFFECT, 60 * 20), 1.0f).alwaysEdible().build();
-    public static FoodProperties BLASTING_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F)
-            .effect(() -> new MobEffectInstance(ModPotions.BLAST_EFFECT, 10 * 20), 1.0f).alwaysEdible().build();
-    public static FoodProperties BASTION_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F)
-            .effect(() -> new MobEffectInstance(ModPotions.DEFENCE_EFFECT, 60 * 20), 1.0f).alwaysEdible().build();
-    public static FoodProperties FROSTAYA_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F)
-            .effect(() -> new MobEffectInstance(ModPotions.FREEZING_EFFECT, 30 * 20), 1.0f).alwaysEdible().build();
+    public static final ThreadLocal<ResourceKey<Item>> PENDING_KEY = new ThreadLocal<>();
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
+    /** Creates Item.Properties with the current pending registry key injected. */
+    public static Item.Properties newItemProperties() {
+        Item.Properties props = new Item.Properties();
+        ResourceKey<Item> key = PENDING_KEY.get();
+        if (key != null) props.setId(key);
+        return props;
+    }
+
+    /** Wraps an item supplier to inject PENDING_KEY before construction. */
+    public static <T extends Item> Supplier<T> withKey(String name, Supplier<T> sup) {
+        return () -> {
+            PENDING_KEY.set(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, name)));
+            try { return sup.get(); } finally { PENDING_KEY.remove(); }
+        };
+    }
+
+    public static FoodProperties SOURCE_BERRY_FOOD = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).alwaysEdible().build();
+    public static FoodProperties SOURCE_PIE_FOOD = new FoodProperties.Builder().nutrition(9).saturationModifier(0.9F).alwaysEdible().build();
+    public static FoodProperties SOURCE_ROLL_FOOD = new FoodProperties.Builder().nutrition(8).saturationModifier(0.6F).alwaysEdible().build();
+    public static FoodProperties MENDOSTEEN_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).alwaysEdible().build();
+    public static FoodProperties BLASTING_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).alwaysEdible().build();
+    public static FoodProperties BASTION_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).alwaysEdible().build();
+    public static FoodProperties FROSTAYA_FOOD = new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).alwaysEdible().build();
+
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final ItemRegistryWrapper<RunicChalk> RUNIC_CHALK = register(LibItemNames.RUNIC_CHALK, RunicChalk::new);
 
     public static final ItemRegistryWrapper<SpellBook> NOVICE_SPELLBOOK = register(LibItemNames.NOVICE_SPELL_BOOK, () -> new SpellBook(SpellTier.ONE));
@@ -190,7 +206,7 @@ public class ItemsRegistry {
         gem.withTooltip(Component.translatable("ars_nouveau.tooltip.exp_gem"));
         return gem;
     });
-    public static final ItemRegistryWrapper<EnchantersSword> ENCHANTERS_SWORD = register(LibItemNames.ENCHANTERS_SWORD, () -> new EnchantersSword(Tiers.NETHERITE, 3, -2.4F));
+    public static final ItemRegistryWrapper<EnchantersSword> ENCHANTERS_SWORD = register(LibItemNames.ENCHANTERS_SWORD, () -> new EnchantersSword(ToolMaterial.NETHERITE, 3, -2.4F));
     public static final ItemRegistryWrapper<EnchantersShield> ENCHANTERS_SHIELD = register(LibItemNames.ENCHANTERS_SHIELD, EnchantersShield::new);
     public static final ItemRegistryWrapper<CasterTome> CASTER_TOME = register(LibItemNames.CASTER_TOME, CasterTome::new);
     public static final ItemRegistryWrapper<DrygmyCharm> DRYGMY_CHARM = register(LibItemNames.DRYGMY_CHARM, DrygmyCharm::new);
@@ -201,18 +217,18 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<ModItem> SOURCE_BERRY_PIE = register(LibItemNames.SOURCE_BERRY_PIE, () -> new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
     public static final ItemRegistryWrapper<ModItem> SOURCE_BERRY_ROLL = register(LibItemNames.SOURCE_BERRY_ROLL, () -> new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD)).withTooltip(Component.translatable("tooltip.ars_nouveau.source_food")));
     public static final ItemRegistryWrapper<EnchantersMirror> ENCHANTERS_MIRROR = register(LibItemNames.ENCHANTERS_MIRROR, () -> new EnchantersMirror(defaultItemProperties().stacksTo(1).component(DataComponentRegistry.SPELL_CASTER, new SpellCaster())));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_BOOTS = register(LibItemNames.SORCERER_BOOTS, () -> AnimatedMagicArmor.light(ArmorItem.Type.BOOTS));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_LEGGINGS = register(LibItemNames.SORCERER_LEGGINGS, () -> AnimatedMagicArmor.light(ArmorItem.Type.LEGGINGS));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_ROBES = register(LibItemNames.SORCERER_ROBES, () -> AnimatedMagicArmor.light(ArmorItem.Type.CHESTPLATE));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_HOOD = register(LibItemNames.SORCERER_HOOD, () -> AnimatedMagicArmor.light(ArmorItem.Type.HELMET));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_BOOTS = register(LibItemNames.ARCANIST_BOOTS, () -> AnimatedMagicArmor.medium(ArmorItem.Type.BOOTS));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_LEGGINGS = register(LibItemNames.ARCANIST_LEGGINGS, () -> AnimatedMagicArmor.medium(ArmorItem.Type.LEGGINGS));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_ROBES = register(LibItemNames.ARCANIST_ROBES, () -> AnimatedMagicArmor.medium(ArmorItem.Type.CHESTPLATE));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_HOOD = register(LibItemNames.ARCANIST_HOOD, () -> AnimatedMagicArmor.medium(ArmorItem.Type.HELMET));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_BOOTS = register(LibItemNames.BATTLEMAGE_BOOTS, () -> AnimatedMagicArmor.heavy(ArmorItem.Type.BOOTS));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_LEGGINGS = register(LibItemNames.BATTLEMAGE_LEGGINGS, () -> AnimatedMagicArmor.heavy(ArmorItem.Type.LEGGINGS));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_ROBES = register(LibItemNames.BATTLEMAGE_ROBES, () -> AnimatedMagicArmor.heavy(ArmorItem.Type.CHESTPLATE));
-    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_HOOD = register(LibItemNames.BATTLEMAGE_HOOD, () -> AnimatedMagicArmor.heavy(ArmorItem.Type.HELMET));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_BOOTS = register(LibItemNames.SORCERER_BOOTS, () -> AnimatedMagicArmor.light(ArmorType.BOOTS));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_LEGGINGS = register(LibItemNames.SORCERER_LEGGINGS, () -> AnimatedMagicArmor.light(ArmorType.LEGGINGS));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_ROBES = register(LibItemNames.SORCERER_ROBES, () -> AnimatedMagicArmor.light(ArmorType.CHESTPLATE));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> SORCERER_HOOD = register(LibItemNames.SORCERER_HOOD, () -> AnimatedMagicArmor.light(ArmorType.HELMET));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_BOOTS = register(LibItemNames.ARCANIST_BOOTS, () -> AnimatedMagicArmor.medium(ArmorType.BOOTS));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_LEGGINGS = register(LibItemNames.ARCANIST_LEGGINGS, () -> AnimatedMagicArmor.medium(ArmorType.LEGGINGS));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_ROBES = register(LibItemNames.ARCANIST_ROBES, () -> AnimatedMagicArmor.medium(ArmorType.CHESTPLATE));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> ARCANIST_HOOD = register(LibItemNames.ARCANIST_HOOD, () -> AnimatedMagicArmor.medium(ArmorType.HELMET));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_BOOTS = register(LibItemNames.BATTLEMAGE_BOOTS, () -> AnimatedMagicArmor.heavy(ArmorType.BOOTS));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_LEGGINGS = register(LibItemNames.BATTLEMAGE_LEGGINGS, () -> AnimatedMagicArmor.heavy(ArmorType.LEGGINGS));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_ROBES = register(LibItemNames.BATTLEMAGE_ROBES, () -> AnimatedMagicArmor.heavy(ArmorType.CHESTPLATE));
+    public static final ItemRegistryWrapper<AnimatedMagicArmor> BATTLEMAGE_HOOD = register(LibItemNames.BATTLEMAGE_HOOD, () -> AnimatedMagicArmor.heavy(ArmorType.HELMET));
     public static final ItemRegistryWrapper<DowsingRod> DOWSING_ROD = register(LibItemNames.DOWSING_ROD, DowsingRod::new);
     public static final ItemRegistryWrapper<ModItem> ABJURATION_ESSENCE = register(LibItemNames.ABJURATION_ESSENCE, AbjurationEssence::new);
     public static final ItemRegistryWrapper<ModItem> CONJURATION_ESSENCE = register(LibItemNames.CONJURATION_ESSENCE, () -> new AbstractEssence("conjuration"));
@@ -242,16 +258,16 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<AlakarkinosCharm> ALAKARKINOS_CHARM = register(LibItemNames.ALAKARKINOS_CHARM, AlakarkinosCharm::new);
     public static final ItemRegistryWrapper<Item> ALAKARKINOS_SHARD = register(LibItemNames.ALAKARKINOS_SHARD, () -> new ModItem().withTooltip("tooltip.alakarkinos_shard1").withTooltip(Component.translatable("tooltip.alakarkinos_shard2").withStyle(LORE_STYLE)));
 
-    public static final DeferredHolder<Item, BannerPatternItem> ARS_STENCIL = createPatternItem("ars_stencil", Rarity.UNCOMMON);
+    public static final DeferredHolder<Item, Item> ARS_STENCIL = createPatternItem("ars_stencil", Rarity.UNCOMMON);
     public static final ItemRegistryWrapper<Item> ENCHANTERS_GAUNTLET = register(LibItemNames.ENCHANTERS_GAUNTLET, EnchantersGauntlet::new);
     public static final ItemRegistryWrapper<Item> ENCHANTERS_FISHING_ROD = register(LibItemNames.ENCHANTERS_ROD, EnchantersFishingRod::new);
 
-    public static final ItemRegistryWrapper<SignItem> ARCHWOOD_SIGN = register(LibBlockNames.ARCHWOOD_SIGN, () -> new SignItem(defaultItemProperties().stacksTo(16), BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get()));
+    public static final ItemRegistryWrapper<SignItem> ARCHWOOD_SIGN = register(LibBlockNames.ARCHWOOD_SIGN, () -> new SignItem(BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get(), defaultItemProperties().stacksTo(16)));
     public static final ItemRegistryWrapper<HangingSignItem> ARCHWOOD_HANGING_SIGN = register(LibBlockNames.ARCHWOOD_HANGING_SIGN, () -> new HangingSignItem(BlockRegistry.ARCHWOOD_HANGING_SIGN.get(), BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN.get(), defaultItemProperties().stacksTo(16)));
     public static final ItemRegistryWrapper<ArchwoodBoatItem> ARCHWOOD_BOAT = register(LibItemNames.ARCHWOOD_BOAT, () -> new ArchwoodBoatItem(defaultItemProperties().stacksTo(1)));
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
-        return new ItemRegistryWrapper<>(ITEMS.register(name, item));
+        return new ItemRegistryWrapper<>(ITEMS.register(name, withKey(name, item)));
     }
 
     public static ItemRegistryWrapper<ModItem> register(String name) {
@@ -260,7 +276,7 @@ public class ItemsRegistry {
 
     public static void onItemRegistry(RegisterEvent.RegisterHelper<Item> helper) {
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        for (Map.Entry<ResourceLocation, Supplier<Glyph>> glyphEntry : GlyphRegistry.getGlyphItemMap().entrySet()) {
+        for (Map.Entry<Identifier, Supplier<Glyph>> glyphEntry : GlyphRegistry.getGlyphItemMap().entrySet()) {
             Glyph glyph = glyphEntry.getValue().get();
             helper.register(glyphEntry.getKey(), glyph);
             glyph.spellPart.glyphItem = glyph;
@@ -287,22 +303,21 @@ public class ItemsRegistry {
             }
         }
 
-        ITEMS.register(LibItemNames.DRYGMY_SE, () -> new DeferredSpawnEggItem(ModEntities.ENTITY_DRYGMY, 10051392, 0xFFE633, defaultItemProperties()));
-        ITEMS.register(LibItemNames.STARBUNCLE_SE, () -> new DeferredSpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233, 0xFFE633, defaultItemProperties()));
-        ITEMS.register(LibItemNames.SYLPH_SE, () -> new DeferredSpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33, 0xFFFB00, defaultItemProperties()));
-        ITEMS.register(LibItemNames.WILDEN_HUNTER_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD, 0xCAA97F, defaultItemProperties()));
-        ITEMS.register(LibItemNames.WILDEN_GUARDIAN_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF, 0xFF9E00, defaultItemProperties()));
-        ITEMS.register(LibItemNames.WILDEN_STALKER_SE, () -> new DeferredSpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C, 0xEF1818, defaultItemProperties()));
-        ITEMS.register(LibItemNames.ALAKARKINOS_SE, () -> new DeferredSpawnEggItem(ModEntities.ALAKARKINOS_TYPE, 16724530, 3289855, defaultItemProperties()));
+        ITEMS.register(LibItemNames.DRYGMY_SE, withKey(LibItemNames.DRYGMY_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.ENTITY_DRYGMY.get(), new CompoundTag())))));
+        ITEMS.register(LibItemNames.STARBUNCLE_SE, withKey(LibItemNames.STARBUNCLE_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.STARBUNCLE_TYPE.get(), new CompoundTag())))));
+        ITEMS.register(LibItemNames.SYLPH_SE, withKey(LibItemNames.SYLPH_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.WHIRLISPRIG_TYPE.get(), new CompoundTag())))));
+        ITEMS.register(LibItemNames.WILDEN_HUNTER_SE, withKey(LibItemNames.WILDEN_HUNTER_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.WILDEN_HUNTER.get(), new CompoundTag())))));
+        ITEMS.register(LibItemNames.WILDEN_GUARDIAN_SE, withKey(LibItemNames.WILDEN_GUARDIAN_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.WILDEN_GUARDIAN.get(), new CompoundTag())))));
+        ITEMS.register(LibItemNames.WILDEN_STALKER_SE, withKey(LibItemNames.WILDEN_STALKER_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.WILDEN_STALKER.get(), new CompoundTag())))));
+        ITEMS.register(LibItemNames.ALAKARKINOS_SE, withKey(LibItemNames.ALAKARKINOS_SE, () -> new SpawnEggItem(newItemProperties().component(DataComponents.ENTITY_DATA, TypedEntityData.of(ModEntities.ALAKARKINOS_TYPE.get(), new CompoundTag())))));
     }
 
-    private static DeferredHolder<Item, BannerPatternItem> createPatternItem(String name, Rarity rarity) {
-        final TagKey<BannerPattern> bannerTag = TagKey.create(Registries.BANNER_PATTERN, prefix("pattern_item/" + name));
-        return ITEMS.register(name, () -> new BannerPatternItem(bannerTag, new Item.Properties().stacksTo(1).rarity(rarity)));
+    private static DeferredHolder<Item, Item> createPatternItem(String name, Rarity rarity) {
+        return ITEMS.register(name, withKey(name, () -> new Item(newItemProperties().stacksTo(1).rarity(rarity))));
     }
 
     public static Item.Properties defaultItemProperties() {
-        return new Item.Properties();
+        return newItemProperties();
     }
 }
 

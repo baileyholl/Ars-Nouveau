@@ -12,7 +12,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -74,10 +73,6 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         if (inputs.size() != recipeItems.size()) {
             return false;
         }
-        StackedContents recipeitemhelper = new StackedContents();
-        for (ItemStack i : inputs)
-            recipeitemhelper.accountStack(i, 1);
-
         return (net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(inputs, recipeItems) != null);
     }
 
@@ -105,17 +100,12 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider pRegistries) {
-        return this.result.copy();
-    }
-
-    @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<EnchantingApparatusRecipe> getSerializer() {
         return RecipeRegistry.APPARATUS_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public @NotNull RecipeType<EnchantingApparatusRecipe> getType() {
         return RecipeRegistry.APPARATUS_TYPE.get();
     }
 
@@ -129,11 +119,6 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     public List<Ingredient> pedestalItems() {
         return pedestalItems;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return ingredients;
     }
 
     public boolean keepNbtOfReagent() {
@@ -153,7 +138,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         public static StreamCodec<RegistryFriendlyByteBuf, EnchantingApparatusRecipe> STREAM_CODEC = StreamCodec.composite(
                 Ingredient.CONTENTS_STREAM_CODEC,
                 EnchantingApparatusRecipe::reagent,
-                ItemStack.STREAM_CODEC,
+                ItemStack.OPTIONAL_STREAM_CODEC,
                 EnchantingApparatusRecipe::result,
                 ANCodecs.INGREDIENT_LIST_STREAM,
                 EnchantingApparatusRecipe::pedestalItems,

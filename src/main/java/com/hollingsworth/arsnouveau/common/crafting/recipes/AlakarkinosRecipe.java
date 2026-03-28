@@ -40,12 +40,12 @@ public record AlakarkinosRecipe(Block input, ResourceKey<LootTable> table, int w
 
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<AlakarkinosRecipe> getSerializer() {
         return RecipeRegistry.ALAKARKINOS_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<AlakarkinosRecipe> getType() {
         return RecipeRegistry.ALAKARKINOS_RECIPE_TYPE.get();
     }
 

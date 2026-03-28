@@ -15,20 +15,21 @@ import com.hollingsworth.arsnouveau.common.network.ClientSlotClick;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import org.joml.Matrix3x2fStack;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -61,6 +62,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
     private static final LoadingCache<StoredItemStack, List<String>> tagCache =
             CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build(CacheLoader.from(
+                    // 1.21.11: TagKey.identifier() renamed to TagKey.location()
                     key -> key.getStack().getTags().map(t -> t.location().toString()).toList()
             ));
 
@@ -89,8 +91,8 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
     private String searchLast = "";
     protected boolean loadedSearch = false;
     private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
-    protected static final ResourceLocation scrollBall = ArsNouveau.prefix("textures/gui/scroll_ball.png");
-    protected static final ResourceLocation tabImages = ArsNouveau.prefix("textures/gui/bookwyrm_storage_tabs.png");
+    protected static final Identifier scrollBall = ArsNouveau.prefix("textures/gui/scroll_ball.png");
+    protected static final Identifier tabImages = ArsNouveau.prefix("textures/gui/bookwyrm_storage_tabs.png");
     protected StateButton buttonSortingType;
     protected StateButton buttonDirection;
     protected StateButton buttonSearchType;
@@ -342,8 +344,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        PoseStack st = graphics.pose();
-        boolean flag = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_RELEASE;
+        // 1.21.11: GuiGraphics.pose() now returns Matrix3x2fStack (2D), not PoseStack.
+        // Shift/control state is on Minecraft instance, not Screen.
+        // getWindow().getWindow() → getWindow().handle() for GLFW handle.
+        boolean flag = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_RELEASE;
         int i = this.leftPos;
         int j = this.topPos;
         int k = i + 187;
@@ -351,7 +355,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         int i1 = k + 14;
         int j1 = l + rowCount * 18;
 
-        if (hasShiftDown()) {
+        if (mc.hasShiftDown()) {
             if (!noSort) {
                 List<StoredItemStack> list = this.itemsSorted;
                 Object2IntMap<StoredItemStack> map = new Object2IntOpenHashMap<>();
@@ -385,50 +389,53 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         }
         super.render(graphics, mouseX, mouseY, partialTicks);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        // 1.21.11: RenderSystem.setShader() and setShaderColor() removed — shader state is now
+        // managed by the GuiGraphics / RenderPipeline system; no manual shader binding needed here.
         i = k;
         j = l;
         k = j1;
-        graphics.blit(scrollBall, i, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
+        // 1.21.11: blit(Identifier, ...) without RenderPipeline removed; use GUI_TEXTURED pipeline.
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, scrollBall, i, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0.0f, 0.0f, 12, 12, 12, 12);
 
-
+        // 1.21.11: GuiGraphics.renderTooltip(Font, ItemStack, int, int) removed.
+        // Use setTooltipForNextFrame(Font, ItemStack, int, int) instead.
         if (this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
             SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
             if (slot.stack() != null) {
                 if (slot.stack().getQuantity() > 9999) {
                     ClientInfo.setTooltip(Component.translatable("tooltip.ars_nouveau.amount", slot.stack().getQuantity()));
                 }
-                graphics.renderTooltip(font, slot.stack().getActualStack(), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, slot.stack().getActualStack(), mouseX, mouseY);
                 ClientInfo.setTooltip();
             }
         } else
             this.renderTooltip(graphics, mouseX, mouseY);
 
         if (buttonSortingType.isHovered()) {
-            graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
         }
         if (buttonSearchType.isHovered()) {
-            graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
         }
         if (buttonDirection.isHovered()) {
-            graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
         }
         for (StorageTabButton tabButton : tabButtons) {
             if (tabButton.isHovered() && tabButton.isAll) {
-                graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
             } else if (tabButton.isHovered() && tabButton.highlightText != null) {
-                graphics.renderTooltip(font, Component.literal(tabButton.highlightText), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, Component.literal(tabButton.highlightText), mouseX, mouseY);
             }
         }
     }
 
     @Override
     protected void renderLabels(GuiGraphics p_281635_, int mouseX, int mouseY) {
-        PoseStack st = p_281635_.pose();
-        st.pushPose();
+        // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack; use pushMatrix()/popMatrix().
+        Matrix3x2fStack st = p_281635_.pose();
+        st.pushMatrix();
         slotIDUnderMouse = drawSlots(p_281635_, mouseX, mouseY);
-        st.popPose();
+        st.popMatrix();
     }
 
     protected int drawSlots(GuiGraphics st, int mouseX, int mouseY) {
@@ -459,8 +466,9 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         if (mouseX >= getGuiLeft() + slot.xPosition() - 1 && mouseY >= getGuiTop() + slot.yPosition() - 1 && mouseX < getGuiLeft() + slot.xPosition() + 17 && mouseY < getGuiTop() + slot.yPosition() + 17) {
             int l = slot.xPosition();
             int t = slot.yPosition();
-
-            renderSlotHighlight(st, l, t, 0);
+            // 1.21.11: renderSlotHighlight(GuiGraphics, int, int, int) removed.
+            // Draw the standard slot hover highlight manually (semi-transparent white, matching vanilla behavior).
+            st.fill(l, t, l + 16, t + 16, 0x80FFFFFF);
             return true;
         }
         return false;
@@ -468,28 +476,33 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
 
     private void drawStackSize(GuiGraphics graphics, Font fr, long size, int x, int y) {
         float scaleFactor = 0.6f;
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableBlend();
+        // 1.21.11: RenderSystem.disableDepthTest/disableBlend/enableDepthTest removed.
+        // Depth and blend state are now managed by the render pipeline; no manual state changes needed.
         String stackSize = NumberFormatUtil.formatNumber(size);
-        PoseStack st = graphics.pose();
-        st.pushPose();
-        st.scale(scaleFactor, scaleFactor, scaleFactor);
-        st.translate(0, 0, 450);
+        // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack (2D); use pushMatrix()/popMatrix().
+        // Z-translate (depth layering) is no longer possible here; removed translate(0,0,450).
+        Matrix3x2fStack st = graphics.pose();
+        st.pushMatrix();
+        st.scale(scaleFactor, scaleFactor);
         float inverseScaleFactor = 1.0f / scaleFactor;
         int X = (int) (((float) x + 0 + 16.0f - fr.width(stackSize) * scaleFactor) * inverseScaleFactor);
         int Y = (int) (((float) y + 0 + 16.0f - 7.0f * scaleFactor) * inverseScaleFactor);
-        graphics.drawString(font, stackSize, X, Y, 16777215);
-        st.popPose();
-        RenderSystem.enableDepthTest();
+        graphics.drawString(font, stackSize, X, Y, 0xFFFFFFFF);
+        st.popMatrix();
     }
 
     protected boolean needsScrollBars() {
         return itemsSorted.size() > rowCount * 9;
     }
 
+    // 1.21.11: mouseClicked signature changed from (double, double, int) to (MouseButtonEvent, boolean).
+    // Button index (0=left, 1=right) is now event.button(). Shift/control is on Minecraft instance.
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(MouseButtonEvent event, boolean consumed) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int mouseButton = event.button();
+        this.searchField.mouseClicked(event, consumed);
         if (slotIDUnderMouse > -1) {
             SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
             if (isPullOne(mouseButton)) {
@@ -497,10 +510,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
                 return true;
             } else if (pullHalf(mouseButton)) {
                 if (!menu.getCarried().isEmpty()) {
-                    storageSlotClick(slot.stack(), hasControlDown() ? GET_QUARTER : GET_HALF, false);
+                    storageSlotClick(slot.stack(), mc.hasControlDown() ? GET_QUARTER : GET_HALF, false);
                 } else {
                     if (slot.stack() != null && slot.stack().getQuantity() > 0) {
-                        storageSlotClick(slot.stack(), hasControlDown() ? GET_QUARTER : GET_HALF, false);
+                        storageSlotClick(slot.stack(), mc.hasControlDown() ? GET_QUARTER : GET_HALF, false);
                         return true;
                     }
                 }
@@ -510,16 +523,16 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
                 } else {
                     if (slot.stack() != null) {
                         if (slot.stack().getQuantity() > 0) {
-                            storageSlotClick(slot.stack(), hasShiftDown() ? SHIFT_PULL : PULL_OR_PUSH_STACK, false);
+                            storageSlotClick(slot.stack(), mc.hasShiftDown() ? SHIFT_PULL : PULL_OR_PUSH_STACK, false);
                             return true;
                         }
                     }
                 }
             }
-        } else if (GLFW.glfwGetKey(mc.getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
+        } else if (GLFW.glfwGetKey(mc.getWindow().handle(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
             storageSlotClick(null, SPACE_CLICK, false);
         }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(event, consumed);
     }
 
     protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
@@ -527,11 +540,11 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
     }
 
     public boolean isPullOne(int mouseButton) {
-        return mouseButton == 1 && hasShiftDown();
+        return mouseButton == 1 && mc.hasShiftDown();
     }
 
     public boolean isTransferOne(int mouseButton) {
-        return hasShiftDown() && hasControlDown();
+        return mc.hasShiftDown() && mc.hasControlDown();
     }
 
     public boolean pullHalf(int mouseButton) {
@@ -547,8 +560,10 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         return font;
     }
 
+    // 1.21.11: keyPressed signature changed from (int, int, int) to (KeyEvent).
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
         if (keyCode == 256) {
             this.onClose();
             return true;
@@ -559,7 +574,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
             this.clearFocus();
             this.setFocused(searchField);
             searchField.active = true;
-            if (!searchField.keyPressed(keyCode, scanCode, modifiers)) {
+            if (!searchField.keyPressed(event)) {
                 searchField.active = false;
                 this.clearFocus();
                 this.setFocused(prevFocus);
@@ -568,12 +583,13 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
             return true;
         }
 
-        return this.searchField.canConsumeInput() && this.searchField.keyPressed(keyCode, scanCode, modifiers);
+        return this.searchField.canConsumeInput() && this.searchField.keyPressed(event);
     }
 
+    // 1.21.11: charTyped signature changed from (char, int) to (CharacterEvent).
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        if (super.charTyped(codePoint, modifiers)) {
+    public boolean charTyped(CharacterEvent event) {
+        if (super.charTyped(event)) {
             return true;
         }
 
@@ -585,7 +601,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
             if (this.searchField.onClear != null) {
                 this.searchField.onClear.apply("");
             }
-            return searchField.charTyped(codePoint, modifiers);
+            return searchField.charTyped(event);
         }
 
         return false;
@@ -604,12 +620,14 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         }
     }
 
-    public abstract ResourceLocation getGui();
+    public abstract Identifier getGui();
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        graphics.blit(getGui(), this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15);
+        // 1.21.11: blit(Identifier, ...) overloads removed; must pass RenderPipeline explicitly.
+        // The trailing two ints are the source texture dimensions (256x256 for standard GUI atlas).
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, getGui(), this.leftPos, this.topPos, 0.0f, 0.0f, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0.0f, 0.0f, 72, 15, 72, 15);
     }
 
     protected void onUpdateSearch(String text) {

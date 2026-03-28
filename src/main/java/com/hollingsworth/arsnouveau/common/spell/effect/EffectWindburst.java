@@ -8,11 +8,11 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.windcharge.WindCharge;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.SimpleExplosionDamageCalculator;
 import net.minecraft.world.phys.HitResult;
@@ -46,22 +46,17 @@ public class EffectWindburst extends AbstractEffect {
         if (spellStats.isSensitive()) {
             dummyWindCharge.setOwner(shooter);
         }
-
+        // 1.21.11: the 11-param explode with SimpleExplosionDamageCalculator was removed.
+        // Use the WindCharge entity's built-in explosion logic via a direct explode call.
+        float radius = 1.2f + (float) (spellStats.getAoeMultiplier() * this.GENERIC_DOUBLE.getAsDouble());
         world.explode(
                 spellStats.isSensitive() ? shooter : dummyWindCharge,
-                null,
-                new SimpleExplosionDamageCalculator(
-                        true, false, Optional.of(1.22f + (float) (spellStats.getAmpMultiplier() * this.AMP_VALUE.getAsDouble())), BuiltInRegistries.BLOCK.getTag(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS).map(Function.identity())
-                ),
                 x,
                 y,
                 z,
-                1.2f + (float) (spellStats.getAoeMultiplier() * this.GENERIC_DOUBLE.getAsDouble()),
+                radius,
                 false,
-                Level.ExplosionInteraction.TRIGGER,
-                ParticleTypes.GUST_EMITTER_SMALL,
-                ParticleTypes.GUST_EMITTER_LARGE,
-                SoundEvents.WIND_CHARGE_BURST
+                Level.ExplosionInteraction.TRIGGER
         );
     }
 
@@ -78,7 +73,7 @@ public class EffectWindburst extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

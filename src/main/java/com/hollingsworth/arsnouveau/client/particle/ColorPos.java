@@ -44,6 +44,6 @@ public class ColorPos {
     }
 
     public static ColorPos fromTag(CompoundTag tag) {
-        return new ColorPos(new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")), ParticleColorRegistry.from(tag.getCompound("color")));
+        return new ColorPos(new Vec3(tag.getDoubleOr("x", 0.0), tag.getDoubleOr("y", 0.0), tag.getDoubleOr("z", 0.0)), ParticleColorRegistry.from(tag.getCompoundOrEmpty("color")));
     }
 }

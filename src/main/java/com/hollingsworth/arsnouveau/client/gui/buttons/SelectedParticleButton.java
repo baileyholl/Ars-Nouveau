@@ -6,7 +6,7 @@ import com.hollingsworth.nuggets.client.BlitInfo;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SelectedParticleButton extends NuggetImageButton {
 
@@ -23,29 +23,29 @@ public class SelectedParticleButton extends NuggetImageButton {
         super(x, y, blitInfo, onPress);
     }
 
-    public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, OnPress onPress) {
+    public SelectedParticleButton(int x, int y, int w, int h, Identifier image, OnPress onPress) {
         super(x, y, w, h, image, onPress);
         xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - w) / 2;
         yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - h) / 2;
     }
 
-    public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, ResourceLocation hoveredImage, OnPress onPress) {
+    public SelectedParticleButton(int x, int y, int w, int h, Identifier image, Identifier hoveredImage, OnPress onPress) {
         super(x, y, w, h, image, hoveredImage, onPress);
     }
 
-    public SelectedParticleButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, ResourceLocation hoveredImage, OnPress onPress) {
+    public SelectedParticleButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, Identifier image, Identifier hoveredImage, OnPress onPress) {
         super(x, y, u, v, w, h, image_width, image_height, image, hoveredImage, onPress);
     }
 
-    public SelectedParticleButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, OnPress onPress) {
+    public SelectedParticleButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, Identifier image, OnPress onPress) {
         super(x, y, u, v, w, h, image_width, image_height, image, onPress);
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (selected) {
             DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_SELECTED_FRAME, x, y);
         }
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
     }
 }

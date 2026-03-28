@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "b": {
-      "tag": "c:rods/blaze"
-    },
-    "r": {
-      "tag": "c:dusts/redstone"
-    },
-    "x": {
-      "tag": "c:gems/source"
-    }
+    "b": "#c:rods/blaze",
+    "r": "#c:dusts/redstone",
+    "x": "#c:gems/source"
   },
   "pattern": [
     " x ",

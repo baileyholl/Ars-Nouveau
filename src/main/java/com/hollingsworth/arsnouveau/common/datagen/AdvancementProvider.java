@@ -1,16 +1,15 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class AdvancementProvider extends net.neoforged.neoforge.common.data.AdvancementProvider {
+public class AdvancementProvider extends net.minecraft.data.advancements.AdvancementProvider {
 
-    public AdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
-        super(output, registries, existingFileHelper, List.of(new com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancements()));
+    public AdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, List.of(new com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancements()));
     }
 }

@@ -37,7 +37,7 @@ public class HarvestBerryState extends TravelToPosState {
             starbuncle.addGoalDebug(this, new DebugEvent("PickedBerry", "Popped berries at " + targetPos.getX() + "," + targetPos.getY() + "," + targetPos.getZ()));
             for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, starbuncle.getBoundingBox().inflate(2.0D))) {
                 if (itemEntity.getItem().getItem() == BlockRegistry.SOURCEBERRY_BUSH.asItem()) {
-                    starbuncle.pickUpItem(itemEntity);
+                    starbuncle.pickUpItem((net.minecraft.server.level.ServerLevel) starbuncle.level(), itemEntity);
                     break;
                 }
             }

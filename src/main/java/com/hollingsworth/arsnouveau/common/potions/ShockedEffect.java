@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 
 public class ShockedEffect extends MobEffect {
 
@@ -21,28 +22,27 @@ public class ShockedEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amp) {
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int amp) {
         int multiplier = 0;
-        for (ItemStack i : entity.getArmorSlots()) {
-            IEnergyStorage energyStorage = i.getCapability(Capabilities.EnergyStorage.ITEM);
+        // 1.21.11: getArmorSlots() removed; iterate armor EquipmentSlots
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+            ItemStack i = entity.getItemBySlot(slot);
+            EnergyHandler energyStorage = Capabilities.Energy.ITEM.getCapability(i, ItemAccess.forStack(i));
             if (energyStorage != null) {
                 multiplier++;
             }
         }
 
-        IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(Capabilities.EnergyStorage.ITEM);
+        ItemStack mainHand = entity.getMainHandItem();
+        EnergyHandler energyStorage = Capabilities.Energy.ITEM.getCapability(mainHand, ItemAccess.forStack(mainHand));
         if (energyStorage != null)
             multiplier++;
-        energyStorage = entity.getOffhandItem().getCapability(Capabilities.EnergyStorage.ITEM);
+        ItemStack offHand = entity.getOffhandItem();
+        energyStorage = Capabilities.Energy.ITEM.getCapability(offHand, ItemAccess.forStack(offHand));
         if (energyStorage != null)
             multiplier++;
         if (multiplier > 0) {
-            int numTicks = 0;
-            if (entity instanceof Player) {
-                CompoundTag tag = entity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-            }
-            entity.hurt(entity.level.damageSources().lightningBolt(), 20 * multiplier * (amp + 1));
-
+            entity.hurt(serverLevel.damageSources().lightningBolt(), 20 * multiplier * (amp + 1));
         }
         return true;
     }

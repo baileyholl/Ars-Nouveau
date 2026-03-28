@@ -2,18 +2,10 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "tag": "c:dyes"
-    },
-    {
-      "tag": "c:dyes"
-    },
-    {
-      "tag": "c:dyes"
-    }
+    "ars_nouveau:abjuration_essence",
+    "#c:dyes",
+    "#c:dyes",
+    "#c:dyes"
   ],
   "output": {
     "count": 1,

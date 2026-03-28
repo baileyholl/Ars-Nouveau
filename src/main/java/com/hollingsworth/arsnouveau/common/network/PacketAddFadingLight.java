@@ -61,9 +61,10 @@ public class PacketAddFadingLight extends AbstractPacket {
                 var event = new FadeLightTimedEvent(minecraft.level, new Vec3(packet.x, packet.y, packet.z), Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get());
                 EventQueue.getClientQueue().addEvent(event);
 
-                if (LightManager.dynamicLightsContext != null) {
-                    LightManager.dynamicLightsContext.dynamicLightBehaviorManager().add(event);
-                }
+                // TODO: restore dynamicLightBehaviorManager when lambdynlights 1.21.11 is available
+                // if (LightManager.dynamicLightsContext != null) {
+                //     LightManager.dynamicLightsContext.dynamicLightBehaviorManager().add(event);
+                // }
             }
         }
     }

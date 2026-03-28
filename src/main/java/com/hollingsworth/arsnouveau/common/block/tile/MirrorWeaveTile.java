@@ -8,33 +8,23 @@ import com.hollingsworth.arsnouveau.common.block.MirrorWeave;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import static net.minecraft.world.level.block.Block.OCCLUSION_CACHE;
 
 public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILightable, IDispellable {
     public BlockState mimicState;
@@ -65,54 +55,29 @@ public class MirrorWeaveTile extends ModdedTile implements GeoBlockEntity, ILigh
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
-        tag.put("mimic_state", NbtUtils.writeBlockState(mimicState));
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
+        tag.store("mimic_state", BlockState.CODEC, mimicState);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
         renderInvalid = true;
-        if (pTag.contains("mimic_state")) {
-            HolderGetter<Block> holdergetter = this.level != null ? this.level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
-            mimicState = NbtUtils.readBlockState(holdergetter, pTag.getCompound("mimic_state"));
-        } else {
-            mimicState = getDefaultBlockState();
-        }
+        mimicState = pTag.read("mimic_state", BlockState.CODEC).orElseGet(this::getDefaultBlockState);
     }
 
-    // Copy of Block.shouldRenderFace with getStateForCulling replacing the first state param
+    // Delegates to Block.shouldRenderFace, substituting getStateForCulling() for our actual block state.
+    // This lets the mimic state drive face-culling decisions while preserving vanilla cache behaviour.
     public boolean shouldRenderFace(BlockState blockstate, Level level, BlockPos offset, Direction face, BlockPos pos) {
         BlockState state = getStateForCulling();
         if (state.skipRendering(blockstate, face)) {
             return false;
         } else if (blockstate.hidesNeighborFace(level, pos, state, face.getOpposite()) && state.supportsExternalFaceHiding()) {
             return false;
-        } else if (blockstate.canOcclude()) {
-            Block.BlockStatePairKey block$blockstatepairkey = new Block.BlockStatePairKey(state, blockstate, face);
-            Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2bytelinkedopenhashmap = OCCLUSION_CACHE.get();
-            byte b0 = object2bytelinkedopenhashmap.getAndMoveToFirst(block$blockstatepairkey);
-            if (b0 != 127) {
-                return b0 != 0;
-            } else {
-                VoxelShape voxelshape = state.getFaceOcclusionShape(level, offset, face);
-                if (voxelshape.isEmpty()) {
-                    return true;
-                } else {
-                    VoxelShape voxelshape1 = blockstate.getFaceOcclusionShape(level, pos, face.getOpposite());
-                    boolean flag = Shapes.joinIsNotEmpty(voxelshape, voxelshape1, BooleanOp.ONLY_FIRST);
-                    if (object2bytelinkedopenhashmap.size() == 2048) {
-                        object2bytelinkedopenhashmap.removeLastByte();
-                    }
-
-                    object2bytelinkedopenhashmap.putAndMoveToFirst(block$blockstatepairkey, (byte) (flag ? 1 : 0));
-                    return flag;
-                }
-            }
-        } else {
-            return true;
         }
+        // Delegate occlusion check to vanilla which has access to the package-private OCCLUSION_CACHE key type.
+        return Block.shouldRenderFace(state, blockstate, face);
     }
 
     public BlockState getDefaultBlockState() {

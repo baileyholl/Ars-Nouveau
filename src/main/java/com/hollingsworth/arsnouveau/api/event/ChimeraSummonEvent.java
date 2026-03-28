@@ -33,8 +33,8 @@ public class ChimeraSummonEvent implements ITimedEvent {
     }
 
     public static ChimeraSummonEvent get(CompoundTag tag) {
-        return new ChimeraSummonEvent(tag.getInt("duration"),
-                tag.getInt("phase"), ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "loc"), -1);
+        return new ChimeraSummonEvent(tag.getIntOr("duration", 0),
+                tag.getIntOr("phase", 0), ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "loc"), -1);
     }
 
     @Override

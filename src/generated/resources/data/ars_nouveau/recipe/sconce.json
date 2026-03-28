@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:nuggets/gold"
-    },
-    {
-      "tag": "c:nuggets/gold"
-    }
+    "#c:gems/source",
+    "#c:nuggets/gold",
+    "#c:nuggets/gold"
   ],
   "result": {
     "count": 1,

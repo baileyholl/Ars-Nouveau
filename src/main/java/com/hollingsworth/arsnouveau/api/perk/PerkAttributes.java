@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Function;
 
-@EventBusSubscriber(modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ArsNouveau.MODID)
 public class PerkAttributes {
     public static final HashMap<DeferredHolder<Attribute, Attribute>, UUID> UUIDS = new HashMap<DeferredHolder<Attribute, Attribute>, UUID>();
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, ArsNouveau.MODID);

@@ -154,9 +154,9 @@ public class BlockUtil {
         if (world == null || pos == null) return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for (Direction d : Direction.values()) {
-            var cap = world.getCapability(Capabilities.ItemHandler.BLOCK, pos.relative(d), null);
+            var cap = world.getCapability(Capabilities.Item.BLOCK, pos.relative(d), null);
             if (cap != null) {
-                iInventories.add(cap);
+                iInventories.add(IItemHandler.of(cap));
             }
         }
 
@@ -338,7 +338,7 @@ public class BlockUtil {
             }
         }
 
-        player.getInventory().items.set(player.getInventory().selected, mainhand);
+        player.getInventory().setItem(player.getInventory().getSelectedSlot(), mainhand);
 
         if (!bypassTool && (state.getDestroySpeed(level, pos) < 0 || !state.canHarvestBlock(level, pos, player))) {
             return false;
@@ -393,7 +393,7 @@ public class BlockUtil {
      * @return If the block was actually removed.
      */
     public static boolean removeBlock(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, boolean canHarvest) {
-        boolean removed = state.onDestroyedByPlayer(level, pos, player, canHarvest, level.getFluidState(pos));
+        boolean removed = state.onDestroyedByPlayer(level, pos, player, player.getMainHandItem(), canHarvest, level.getFluidState(pos));
         if (removed) {
             state.getBlock().destroy(level, pos, state);
         }

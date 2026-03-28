@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:purple_archwood_log"
-    },
-    {
-      "tag": "ars_nouveau:wilden_drop"
-    },
-    {
-      "tag": "ars_nouveau:wilden_drop"
-    },
-    {
-      "tag": "ars_nouveau:wilden_drop"
-    },
-    {
-      "item": "minecraft:lapis_block"
-    }
+    "ars_nouveau:purple_archwood_log",
+    "#ars_nouveau:wilden_drop",
+    "#ars_nouveau:wilden_drop",
+    "#ars_nouveau:wilden_drop",
+    "minecraft:lapis_block"
   ],
   "result": {
     "count": 1,

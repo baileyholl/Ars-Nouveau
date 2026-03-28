@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:arcane_pedestal"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:ingots/gold"
-    }
+    "ars_nouveau:arcane_pedestal",
+    "#c:storage_blocks/source",
+    "#c:ingots/gold",
+    "#c:ingots/gold",
+    "#c:ingots/gold"
   ],
   "result": {
     "count": 1,

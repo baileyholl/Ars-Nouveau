@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.mixin.camera;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,7 +52,7 @@ public abstract class ChunkMapMixin {
      * viewing the camera
      */
     @Inject(method = "onChunkReadyToSend", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;getChunkTrackingView()Lnet/minecraft/server/level/ChunkTrackingView;"))
-    private void an$sendChunksToCameras(LevelChunk chunk, CallbackInfo callback, @Local ServerPlayer player) {
+    private void an$sendChunksToCameras(ChunkHolder holder, LevelChunk chunk, CallbackInfo callback, @Local ServerPlayer player) {
         if (player.getCamera() instanceof ScryerCamera camera && camera.getCameraChunks().contains(chunk.getPos()))
             markChunkPendingToSend(player, chunk);
     }

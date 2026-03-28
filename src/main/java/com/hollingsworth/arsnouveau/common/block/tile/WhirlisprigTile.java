@@ -14,7 +14,6 @@ import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -26,10 +25,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             for (int i = 0; i < progress / 20; i++) {
                 level.addParticle(
                         GlowParticleData.createData(new ParticleColor(
@@ -72,7 +73,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             }
 
         }
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (ticksToNextEval > 0)
                 ticksToNextEval--;
             if (ticksToNextEval <= 0)
@@ -197,7 +198,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
 
     public void convertedEffect() {
         super.convertedEffect();
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             if (tickCounter >= 120) {
                 converted = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
@@ -219,33 +220,33 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(net.minecraft.world.level.storage.ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt("moodScore", moodScore);
         tag.putInt("diversityScore", diversityScore);
         tag.putInt("progress", progress);
         tag.putInt("evalTicks", ticksToNextEval);
         if (ignoreItems != null && !ignoreItems.isEmpty())
-            NBTUtil.writeItems(pRegistries, tag, "ignored_", ignoreItems);
+            NBTUtil.writeItems(tag, "ignored_", ignoreItems);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        moodScore = compound.getInt("moodScore");
-        diversityScore = compound.getInt("diversityScore");
-        progress = compound.getInt("progress");
-        ticksToNextEval = compound.getInt("evalTicks");
-        ignoreItems = NBTUtil.readItems(pRegistries, compound, "ignored_");
+    protected void loadAdditional(net.minecraft.world.level.storage.ValueInput compound) {
+        super.loadAdditional(compound);
+        moodScore = compound.getIntOr("moodScore", 0);
+        diversityScore = compound.getIntOr("diversityScore", 0);
+        progress = compound.getIntOr("progress", 0);
+        ticksToNextEval = compound.getIntOr("evalTicks", 0);
+        ignoreItems = NBTUtil.readItems(compound, "ignored_");
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "rotateController", 1, this::walkPredicate));
+        data.add(new AnimationController<WhirlisprigTile>("rotateController", 1, this::walkPredicate));
     }
 
-    private <T extends GeoAnimatable> PlayState walkPredicate(AnimationState<T> tAnimationState) {
-        tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("spin"));
+    private PlayState walkPredicate(AnimationTest<WhirlisprigTile> tAnimationState) {
+        tAnimationState.controller().setAnimation(RawAnimation.begin().thenPlay("spin"));
         return PlayState.CONTINUE;
     }
 

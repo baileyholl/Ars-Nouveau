@@ -44,7 +44,7 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
 
         if (!focuses.isEmpty()) {
             //takes a copy of the magic armor hovered
-            List<ItemStack> list = focuses.getItemStackFocuses(RecipeIngredientRole.CATALYST).map(i -> i.getTypedValue().getIngredient().copy()).filter(i -> i.getItem() instanceof AnimatedMagicArmor).toList();
+            List<ItemStack> list = focuses.getItemStackFocuses(RecipeIngredientRole.CRAFTING_STATION).map(i -> i.getTypedValue().getIngredient().copy()).filter(i -> i.getItem() instanceof AnimatedMagicArmor).toList();
             List<ItemStack> list2 = focuses.getItemStackFocuses(RecipeIngredientRole.OUTPUT).map(i -> i.getTypedValue().getIngredient().copy()).filter(i -> i.getItem() instanceof AnimatedMagicArmor).toList();
             if (!list.isEmpty()) {
                 stacks = list;
@@ -86,9 +86,9 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
     public void draw(RecipeHolder<ArmorUpgradeRecipe> recipeHolder, @NotNull IRecipeSlotsView slotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         ArmorUpgradeRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
-        graphics.drawString(renderer, Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 10, false);
+        graphics.drawString(renderer, Component.translatable("ars_nouveau.tier", 1 + recipe.tier), 0, 0, 0xFF000000, false);
 
         if (recipe.consumesSource())
-            graphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 10, false);
+            graphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 0xFF000000, false);
     }
 }

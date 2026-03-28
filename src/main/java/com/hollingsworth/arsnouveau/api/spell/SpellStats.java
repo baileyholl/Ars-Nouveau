@@ -15,6 +15,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A wrapper for spell modifiers as they exist for a single effect before resolving.
@@ -66,6 +67,15 @@ public class SpellStats {
             components.add(Component.translatable("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
 
         return components;
+    }
+
+    public void addTooltip(Consumer<Component> tooltip) {
+        if (this.damageModifier != 0.0d)
+            tooltip.accept(Component.translatable("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        if (this.getDurationMultiplier() != 0.0d)
+            tooltip.accept(Component.translatable("tooltip.ars_nouveau.duration_modifier", this.getDurationMultiplier()).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
+        if (this.amplification != 0.0d)
+            tooltip.accept(Component.translatable("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
     }
 
     public double getAmpMultiplier() {
@@ -189,8 +199,8 @@ public class SpellStats {
                     spellStats.modifierItems.add(item);
                 }
             }
-            for (ItemStack i : entity.getAllSlots()) {
-                spellStats.modifierItems.add(i);
+            for (net.minecraft.world.entity.EquipmentSlot slot : net.minecraft.world.entity.EquipmentSlot.values()) {
+                spellStats.modifierItems.add(entity.getItemBySlot(slot));
             }
 
             return this;

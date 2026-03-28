@@ -37,10 +37,7 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
         return Component.translatable("ars_nouveau.enchanting_apparatus");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
+    // getBackground() removed from IRecipeCategory in JEI 27.4; width/height defined in MultiInputCategory
 
     @Override
     public IDrawable getIcon() {
@@ -52,6 +49,6 @@ public class EnchantingApparatusRecipeCategory<T extends EnchantingApparatusReci
         EnchantingApparatusRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
         if (recipe.consumesSource())
-            guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 10, false);
+            guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.source", recipe.sourceCost()), 0, 100, 0xFF000000, false);
     }
 }

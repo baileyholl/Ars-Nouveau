@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JavaOps;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;

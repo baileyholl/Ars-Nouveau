@@ -1,26 +1,55 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.util.RandomSource;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.LevelAccessor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.LevelReader;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.ScheduledTickAccess;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.redstone.Orientation;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Block;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.RenderShape;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.SoundType;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.StateDefinition;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.FluidState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.Fluids;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.MapColor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.Shapes;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +67,7 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
     }
 
     public WhirlisprigFlower() {
-        this(Block.Properties.of().sound(SoundType.SPORE_BLOSSOM).noOcclusion().strength(2.0f, 6.0f).mapColor(MapColor.PLANT));
+        this(BlockRegistry.newBlockProperties().sound(SoundType.SPORE_BLOSSOM).noOcclusion().strength(2.0f, 6.0f).mapColor(MapColor.PLANT));
     }
 
     VoxelShape shape = Stream.of(
@@ -59,7 +88,7 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.MODEL;
     }
 
     @Override
@@ -86,16 +115,16 @@ public class WhirlisprigFlower extends SummonBlock implements SimpleWaterloggedB
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction side, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTickAccess, BlockPos currentPos, Direction side, BlockPos facingPos, BlockState facingState, RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }
 
     @Override
-    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
-        super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
+    protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation pOrientation, boolean pIsMoving) {
+        super.neighborChanged(pState, pLevel, pPos, pBlock, pOrientation, pIsMoving);
         if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof WhirlisprigTile flower) {
             flower.isOff = pLevel.hasNeighborSignal(pPos);
             flower.updateBlock();

@@ -17,7 +17,7 @@ public class BeltOfLevitation extends ArsNouveauCurio {
     @Override
     public void curioTick(SlotContext context, ItemStack stack) {
         if (context.entity() instanceof Player player && !player.abilities.flying) {
-            Level world = player.getCommandSenderWorld();
+            Level world = player.level();
 
             if (!player.onGround() && player.isShiftKeyDown() && !world.isClientSide()) {
                 boolean isTooHigh = true;
@@ -43,7 +43,7 @@ public class BeltOfLevitation extends ArsNouveauCurio {
                 if (Math.sqrt(motion.length()) > 0.6) {
                     return;
                 }
-                player.lerpMotion(motion.x, y, motion.z);
+                player.lerpMotion(new Vec3(motion.x, y, motion.z));
                 player.hurtMarked = true;
             }
         }

@@ -14,34 +14,27 @@ import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
+import com.hollingsworth.arsnouveau.common.entity.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
-import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
-import com.hollingsworth.arsnouveau.common.world.dimension.JarDimensionEffects;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.LayeredDraw;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.neoforged.neoforge.client.gui.GuiLayer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.*;
-import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.item.ItemProperties;
+// ItemProperties and ClampedItemPropertyFunction removed in MC 1.21.11 — replaced by JSON item model properties
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -61,7 +54,7 @@ import static com.hollingsworth.arsnouveau.client.events.ClientEvents.localize;
 
 
 @SuppressWarnings("unchecked")
-@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientHandler {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
@@ -117,21 +110,24 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ALLY_VEX.get(), VexRenderer::new);
 
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE.get(), StarbuncleRenderer::new);
-        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WhirlisprigModel<>()) {
+        // 1.21.11: GeoEntityRenderer requires explicit type R extends EntityRenderState & GeoRenderState.
+        // getTextureLocation(T) no longer exists in EntityRenderer — dynamic texture broken until
+        // entity texture variant is stored in a custom GeoRenderState (TODO).
+        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE.get(), (t) -> new GeoEntityRenderer<Whirlisprig, ArsEntityRenderState>(t, new WhirlisprigModel<>()) {
             @Override
-            public @NotNull ResourceLocation getTextureLocation(@NotNull Whirlisprig animatable) {
-                return animatable.getTexture();
+            public ArsEntityRenderState createRenderState(Whirlisprig animatable, Void context) {
+                return new ArsEntityRenderState();
             }
         });
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()) {
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<EntityWixie, ArsEntityRenderState>(t, new WixieModel<>()) {
             @Override
-            public @NotNull ResourceLocation getTextureLocation(@NotNull EntityWixie animatable) {
-                return animatable.getTexture();
+            public ArsEntityRenderState createRenderState(EntityWixie animatable, Void context) {
+                return new ArsEntityRenderState();
             }
         });
-        event.registerEntityRenderer(ModEntities.WILDEN_STALKER.get(), (t) -> new GeoEntityRenderer<>(t, new WildenStalkerModel()));
-        event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN.get(), (t) -> new GeoEntityRenderer<>(t, new WildenGuardianModel()));
-        event.registerEntityRenderer(ModEntities.WILDEN_HUNTER.get(), (t) -> new GeoEntityRenderer<>(t, new WildenHunterModel()));
+        event.registerEntityRenderer(ModEntities.WILDEN_STALKER.get(), (t) -> new GeoEntityRenderer<WildenStalker, ArsEntityRenderState>(t, new WildenStalkerModel()));
+        event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN.get(), (t) -> new GeoEntityRenderer<WildenGuardian, ArsEntityRenderState>(t, new WildenGuardianModel()));
+        event.registerEntityRenderer(ModEntities.WILDEN_HUNTER.get(), (t) -> new GeoEntityRenderer<WildenHunter, ArsEntityRenderState>(t, new WildenHunterModel()));
         event.registerEntityRenderer(ModEntities.SUMMON_WOLF.get(), WolfRenderer::new);
         event.registerEntityRenderer(ModEntities.SUMMON_HORSE.get(), HorseRenderer::new);
         event.registerEntityRenderer(ModEntities.LIGHTNING_ENTITY.get(), LightningBoltRenderer::new);
@@ -141,28 +137,32 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_RITUAL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_SPELL_ARROW.get(), TippableArrowRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WixieModel<>()) {
+        event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE.get(), (t) -> new GeoEntityRenderer<EntityWixie, ArsEntityRenderState>(t, new WixieModel<>()) {
             @Override
-            public @NotNull ResourceLocation getTextureLocation(@NotNull EntityWixie animatable) {
-                return animatable.getTexture();
+            public ArsEntityRenderState createRenderState(EntityWixie animatable, Void context) {
+                return new ArsEntityRenderState();
             }
         });
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY.get(), DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new GeoEntityRenderer<>(t, new DrygmyModel<>()) {
+        event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY.get(), (t) -> new GeoEntityRenderer<EntityDrygmy, ArsEntityRenderState>(t, new DrygmyModel<>()) {
             @Override
-            public @NotNull ResourceLocation getTextureLocation(@NotNull EntityDrygmy animatable) {
-                return animatable.getTexture();
+            public ArsEntityRenderState createRenderState(EntityDrygmy animatable, Void context) {
+                return new ArsEntityRenderState();
+            }
+
+            @Override
+            public void addRenderData(EntityDrygmy entity, Void context, ArsEntityRenderState state, float partialTick) {
+                super.addRenderData(entity, context, state, partialTick);
+                state.addGeckolibData(com.hollingsworth.arsnouveau.client.renderer.ANDataTickets.DRYGMY_COLOR, entity.getColor());
             }
         });
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), rendermanager -> new GeoEntityRenderer<>(rendermanager, new WildenChimeraModel()));
+        event.registerEntityRenderer(ModEntities.WILDEN_BOSS.get(), rendermanager -> new GeoEntityRenderer<WildenChimera, ArsEntityRenderState>(rendermanager, new WildenChimeraModel()));
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE.get(), ChimeraProjectileRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (t) -> new GenericFamiliarRenderer<>(t, new FamiliarStarbyModel<>()) {
-            @Override
-            public @Nullable RenderType getRenderType(FamiliarStarbuncle animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-                return StarbuncleRenderer.specialShaders.getOrDefault(animatable.getName().getString(), RenderType::entityCutoutNoCull).apply(texture);
-            }
-        });
+        // TODO: special shader render types (rainbow/blame) for named starbuncles need GeckoLib 5.4.2 migration
+        // getRenderType now takes (GeoRenderState/LivingEntityRenderState, Identifier) — entity name
+        // available via renderState.nameTag; shader stubs use entityCutoutNoCull anyway
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), (t) -> new GenericFamiliarRenderer<>(t, new FamiliarStarbyModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY.get(), (t) -> new GenericFamiliarRenderer<>(t, new DrygmyModel<>()));
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH.get(), FamiliarWhirlisprigRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE.get(), (t) -> new GenericFamiliarRenderer<>(t, new WixieModel<>()));
@@ -171,10 +171,10 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), FamiliarBookwyrmRenderer::new);
         event.registerEntityRenderer(ModEntities.LINGER_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("cascading_weald")));
-        event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("blazing_weald")));
-        event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("flourishing_weald")));
-        event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD.get(), (v) -> new GeoEntityRenderer<>(v, new WealdWalkerModel<>("vexing_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_CASCADING_WEALD.get(), (v) -> new GeoEntityRenderer<WealdWalker, ArsEntityRenderState>(v, new WealdWalkerModel<>("cascading_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_BLAZING_WEALD.get(), (v) -> new GeoEntityRenderer<WealdWalker, ArsEntityRenderState>(v, new WealdWalkerModel<>("blazing_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD.get(), (v) -> new GeoEntityRenderer<WealdWalker, ArsEntityRenderState>(v, new WealdWalkerModel<>("flourishing_weald")));
+        event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD.get(), (v) -> new GeoEntityRenderer<WealdWalker, ArsEntityRenderState>(v, new WealdWalkerModel<>("vexing_weald")));
 
         event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM.get(), AmethystGolemRenderer::new);
         event.registerEntityRenderer(ModEntities.SCRYER_CAMERA.get(), renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
@@ -182,26 +182,27 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ICE_SHARD.get(), EnchantedFallingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_MAGE_BLOCK.get(), MageBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_HEAD_BLOCK.get(), EnchantedSkullRenderer::new);
-        event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), (renderer) -> new GeoEntityRenderer<>(renderer, new GiftStarbyModel()));
+        event.registerEntityRenderer(ModEntities.GIFT_STARBY.get(), (renderer) -> new GeoEntityRenderer<GiftStarbuncle, ArsEntityRenderState>(renderer, new GiftStarbyModel()));
         event.registerEntityRenderer(ModEntities.ANIMATED_BLOCK.get(), AnimBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.ANIMATED_HEAD.get(), AnimSkullRenderer::new);
         event.registerEntityRenderer(ModEntities.CINDER.get(), CinderRenderer::new);
         event.registerEntityRenderer(ModEntities.WALL_SPELL.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
 
-        event.registerEntityRenderer(ModEntities.LILY.get(), (v) -> new GeoEntityRenderer<>(v, new LilyModel()));
-        event.registerEntityRenderer(ModEntities.NOOK.get(), (v) -> new GeoEntityRenderer<>(v, new NookModel()));
-        event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new GeoEntityRenderer<>(v, new AlakarkinosModel()));
+        event.registerEntityRenderer(ModEntities.LILY.get(), (v) -> new GeoEntityRenderer<Lily, ArsEntityRenderState>(v, new LilyModel()));
+        event.registerEntityRenderer(ModEntities.NOOK.get(), (v) -> new GeoEntityRenderer<Nook, ArsEntityRenderState>(v, new NookModel()));
+        event.registerEntityRenderer(ModEntities.ALAKARKINOS_TYPE.get(), (v) -> new GeoEntityRenderer<Alakarkinos, ArsEntityRenderState>(v, new AlakarkinosModel()));
         event.registerEntityRenderer(ModEntities.BUBBLE.get(), BubbleRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHANTED_HOOK.get(), FishingHookRenderer::new);
 
         event.registerEntityRenderer(ModEntities.ARCHWOOD_BOAT.get(), context -> new ArchwoodBoatRenderer(context, false));
     }
 
-    public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {
+    public static GuiLayer cameraOverlay = (gui, tracker) -> {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
-        BlockPos pos = mc.cameraEntity.blockPosition();
+        // 1.21.11: cameraEntity became private; use getCameraEntity()
+        BlockPos pos = mc.getCameraEntity().blockPosition();
         if (!CameraUtil.isPlayerMountedOnCamera(mc.player) || mc.options.hideGui) {
             return;
         }
@@ -212,8 +213,8 @@ public class ClientHandler {
                 Options settings = Minecraft.getInstance().options;
                 Component lookAround = localize("ars_nouveau.camera.move", settings.keyUp.getTranslatedKeyMessage(), settings.keyLeft.getTranslatedKeyMessage(), settings.keyDown.getTranslatedKeyMessage(), settings.keyRight.getTranslatedKeyMessage());
                 Component exit = Component.translatable("ars_nouveau.camera.exit", settings.keyShift.getTranslatedKeyMessage().getString());
-                gui.drawString(font, lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40, 0xFFFFFF);
-                gui.drawString(font, exit, 10, mc.getWindow().getGuiScaledHeight() - 30, 0xFFFFFF);
+                gui.drawString(font, lookAround, 10, mc.getWindow().getGuiScaledHeight() - 40, 0xFFFFFFFF);
+                gui.drawString(font, exit, 10, mc.getWindow().getGuiScaledHeight() - 30, 0xFFFFFFFF);
             }
         }
     };
@@ -233,39 +234,19 @@ public class ClientHandler {
     }
 
 
-    @SubscribeEvent
-    public static void registerDimSpecialEffects(final RegisterDimensionSpecialEffectsEvent evt) {
-        evt.register(ArsNouveau.prefix("jar"), new JarDimensionEffects());
-    }
+    // RegisterDimensionSpecialEffectsEvent was removed in NeoForge 21.11 - stubbed until replaced
+    // TODO: re-implement jar dimension sky effects using new rendering API
+    // @SubscribeEvent
+    // public static void registerDimSpecialEffects(final RegisterDimensionSpecialEffectsEvent evt) {
+    //     evt.register(ArsNouveau.prefix("jar"), new JarDimensionEffects());
+    // }
 
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
-
-        evt.enqueueWork(() -> {
-            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD.get(), ArsNouveau.prefix("blocking"), (item, resourceLocation, livingEntity, arg4) -> {
-                return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;
-            });
-            ItemProperties.register(ItemsRegistry.DOWSING_ROD.get(), ArsNouveau.prefix("uses"), new ClampedItemPropertyFunction() {
-                @Override
-                public float unclampedCall(@NotNull ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
-                    return switch (pStack.getDamageValue()) {
-                        case 1 -> 0.75f;
-                        case 2 -> 0.50f;
-                        case 3 -> 0.25f;
-                        default -> 1.0f;
-                    };
-                }
-            });
-            ItemProperties.register(BlockRegistry.POTION_JAR.asItem(), ArsNouveau.prefix("amount"), (stack, level, entity, seed) -> {
-                int amount = stack.getOrDefault(DataComponentRegistry.POTION_JAR, new PotionJarData(0, PotionContents.EMPTY, false)).fill();
-                return amount / 10000.0f;
-            });
-            ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), ArsNouveau.prefix("source"), (stack, level, entity, seed) -> {
-                int amount = BlockFillContents.get(stack);
-                return amount / 10000.0F;
-            });
-        });
+        // TODO: MC 1.21.11 removed ItemProperties.register() — item model predicates (blocking,
+        // uses, amount, source) must now be defined via JSON range_dispatch/conditional item models.
+        // Migrate item model JSON files for: enchanters_shield, dowsing_rod, potion_jar, source_jar.
     }
 
     @SubscribeEvent
@@ -285,93 +266,14 @@ public class ClientHandler {
                         ? mageBlockTile.color.getColor() : -1, BlockRegistry.MAGE_BLOCK.get());
     }
 
-    @SubscribeEvent
-    public static void initItemColors(final RegisterColorHandlersEvent.Item event) {
-        event.register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
-                ItemsRegistry.POTION_FLASK);
-
-        event.register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
-                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
-
-        event.register((stack, color) -> color > 0 ? -1 : colorFromFlask(stack),
-                ItemsRegistry.POTION_FLASK_AMPLIFY);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        new ParticleColor(200, 0, 200).getColor(),
-                BuiltInRegistries.ITEM.get(ArsNouveau.prefix(LibBlockNames.POTION_MELDER_BLOCK)));
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.SORCERER_ROBES);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.SORCERER_BOOTS);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.SORCERER_HOOD);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.SORCERER_LEGGINGS);
-
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCANIST_ROBES);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCANIST_BOOTS);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCANIST_HOOD);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.ARCANIST_LEGGINGS);
-
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.BATTLEMAGE_ROBES);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.BATTLEMAGE_BOOTS);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.BATTLEMAGE_HOOD);
-
-        event.register((stack, color) -> color > 0 ? -1 :
-                        colorFromArmor(stack),
-                ItemsRegistry.BATTLEMAGE_LEGGINGS);
-
-        event.register((stack, tintIndex) -> {
-            if (tintIndex == 1) {
-                DyeColor dyeColor = stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
-                return FastColor.ABGR32.opaque(dyeColor.getTextColor());
-            }
-            return -1;
-
-        }, ItemsRegistry.SPELL_PARCHMENT);
-
-        event.register((stack, color) -> {
-            var contents = stack.get(DataComponentRegistry.POTION_JAR);
-            if (contents == null) {
-                return -1;
-            }
-            return contents.contents().getColor();
-        }, BlockRegistry.POTION_JAR);
-
-    }
+    // TODO: MC 1.21.11 — RegisterColorHandlersEvent.Item is gone; item tints are now data-driven
+    // via ItemTintSource JSON. Re-implement as ItemTintSource codecs + item model JSON tint entries.
+    // @SubscribeEvent
+    // public static void initItemColors(final RegisterColorHandlersEvent.Item event) { ... }
 
     public static int colorFromArmor(ItemStack stack) {
         DyeColor color = stack.getOrDefault(DataComponents.BASE_COLOR, DyeColor.PURPLE);
-        return FastColor.ABGR32.opaque(color.getTextColor());
+        return ARGB.opaque(color.getTextColor());
     }
 
     public static int colorFromFlask(ItemStack stack) {

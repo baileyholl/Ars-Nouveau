@@ -13,13 +13,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.*;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import java.util.List;
 
 public class PotionFlaskRecipe extends ShapelessRecipe {
 
     public PotionFlaskRecipe(String groupIn, ItemStack result, ItemStack recipeOutputIn) {
-        super(groupIn, CraftingBookCategory.MISC, recipeOutputIn, NonNullList.copyOf(List.of(Ingredient.of(result), Ingredient.of(Items.POTION))));
+        // 1.21.11: Ingredient.of(ItemStack) removed; use DataComponentIngredient.of(false, stack)
+        super(groupIn, CraftingBookCategory.MISC, recipeOutputIn, NonNullList.copyOf(List.of(DataComponentIngredient.of(false, result), Ingredient.of(Items.POTION))));
     }
 
     public PotionFlaskRecipe(String pGroup, CraftingBookCategory pCategory, ItemStack pResult, NonNullList<Ingredient> pIngredients) {
@@ -69,8 +71,9 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
         for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack item = inv.getItem(i);
-            if (item.hasCraftingRemainingItem()) {
-                nonnulllist.set(i, item.getCraftingRemainingItem());
+            // 1.21.11: hasCraftingRemainingItem/getCraftingRemainingItem moved to Item class
+            if (!item.getItem().getCraftingRemainder().isEmpty()) {
+                nonnulllist.set(i, item.getItem().getCraftingRemainder());
             } else if (item.getItem() instanceof PotionItem) {
                 nonnulllist.set(i, new ItemStack(Items.GLASS_BOTTLE));
             }
@@ -79,7 +82,8 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.POTION_FLASK_RECIPE.get();
+    @SuppressWarnings("unchecked")
+    public RecipeSerializer<ShapelessRecipe> getSerializer() {
+        return (RecipeSerializer<ShapelessRecipe>) (RecipeSerializer<?>) RecipeRegistry.POTION_FLASK_RECIPE.get();
     }
 }

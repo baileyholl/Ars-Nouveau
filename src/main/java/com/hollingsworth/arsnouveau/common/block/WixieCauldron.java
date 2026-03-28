@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -61,9 +62,9 @@ public class WixieCauldron extends SummonBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile) || player.getMainHandItem().getItem() == ItemsRegistry.DOMINION_ROD.get()) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn.isClientSide() || handIn != InteractionHand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile) || player.getMainHandItem().getItem() == ItemsRegistry.DOMINION_ROD.get()) {
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         if (player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM.get()
@@ -75,9 +76,9 @@ public class WixieCauldron extends SummonBlock {
             } else {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.wixie.recipe_set"));
             }
-            return ItemInteractionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
@@ -87,8 +88,8 @@ public class WixieCauldron extends SummonBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, orientation, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof WixieCauldronTile cauldronTile) {
             cauldronTile.isOff = world.hasNeighborSignal(pos);
             cauldronTile.updateBlock();

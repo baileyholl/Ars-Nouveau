@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:green_archwood_log"
-    }
+    "x": "ars_nouveau:green_archwood_log"
   },
   "pattern": [
     "xx ",

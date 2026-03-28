@@ -54,7 +54,7 @@ public class DiveAttackGoal extends Goal {
         LivingEntity livingentity = stalker.getTarget();
         stalker.orbitOffset = new Vec3(livingentity.getX(), livingentity.getY(0.5D), livingentity.getZ());
         if (stalker.getBoundingBox().inflate(0.2F).intersects(livingentity.getBoundingBox())) {
-            stalker.doHurtTarget(livingentity);
+            stalker.doHurtTarget((net.minecraft.server.level.ServerLevel) stalker.level(), livingentity);
             stalker.setFlying(false);
         } else if (stalker.horizontalCollision || stalker.hurtTime > 0) {
             stalker.setFlying(false);

@@ -82,7 +82,7 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty> {
 
             @Override
             public void renderIcon(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
-                graphics.blit(ArsNouveau.prefix("textures/block/runes/" + runeTexture + ".png"), x + 1, y + 1, 0, 0, 12, 12, 12, 12);
+                graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/block/runes/" + runeTexture + ".png"), x + 1, y + 1, 0, 0, 12, 12, 12, 12);
             }
 
             @Override

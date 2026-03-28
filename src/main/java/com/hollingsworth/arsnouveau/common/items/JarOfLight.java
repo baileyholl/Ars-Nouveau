@@ -10,13 +10,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -27,10 +29,10 @@ public class JarOfLight extends ModItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+    public void inventoryTick(ItemStack stack, ServerLevel worldIn, Entity entityIn, @Nullable EquipmentSlot slot) {
+        super.inventoryTick(stack, worldIn, entityIn, slot);
 
-        if (worldIn.isClientSide)
+        if (worldIn.isClientSide())
             return;
         LightJarData data = stack.get(DataComponentRegistry.LIGHT_JAR);
         if (data == null || !data.enabled() || data.pos().isEmpty()) {
@@ -60,21 +62,21 @@ public class JarOfLight extends ModItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
-        if (worldIn.isClientSide)
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
+        if (worldIn.isClientSide())
+            return InteractionResult.SUCCESS;
 
         LightJarData tag = itemstack.get(DataComponentRegistry.LIGHT_JAR);
         if (tag.pos().isPresent()) {
             removeLight(worldIn, tag);
             itemstack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(Optional.empty(), false));
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
+            return InteractionResult.SUCCESS;
         }
         // No light exists. Place a new one.
         placeLight(worldIn, playerIn.blockPosition());
         itemstack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(playerIn.blockPosition(), true));
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
+        return InteractionResult.SUCCESS;
     }
 
     public boolean placeLight(Level world, BlockPos pos) {

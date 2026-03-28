@@ -31,7 +31,7 @@ public class Cinder extends EnchantedFallingBlock {
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             level.addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), ParticleUtil.inRange(-0.05f, 0.05f), ParticleUtil.inRange(0.01f, 0.05f), ParticleUtil.inRange(-0.05f, 0.05f));
         }
     }

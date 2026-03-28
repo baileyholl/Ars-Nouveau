@@ -3,9 +3,7 @@
   "category": "building",
   "group": "bark",
   "key": {
-    "#": {
-      "item": "ars_nouveau:stripped_blue_archwood_log"
-    }
+    "#": "ars_nouveau:stripped_blue_archwood_log"
   },
   "pattern": [
     "##",

@@ -2,28 +2,14 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:whirlisprig_shards"
-    },
-    {
-      "item": "ars_nouveau:whirlisprig_shards"
-    },
-    {
-      "item": "ars_nouveau:whirlisprig_shards"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:golden_apple"
-    }
+    "ars_nouveau:whirlisprig_shards",
+    "ars_nouveau:whirlisprig_shards",
+    "ars_nouveau:whirlisprig_shards",
+    "ars_nouveau:earth_essence",
+    "ars_nouveau:earth_essence",
+    "minecraft:golden_apple"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_whirlisprig"

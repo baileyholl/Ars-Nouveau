@@ -7,32 +7,31 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> SUMMON_BED_ITEMS = ItemTags.create(ArsNouveau.prefix("summon_bed"));
-    public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "gems/source"));
-    public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/source"));
-    public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood"));
-    public static TagKey<Item> ARCHWOOD_STRIPPED_LOG_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood_stripped"));
+    public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(Identifier.fromNamespaceAndPath("c", "gems/source"));
+    public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(Identifier.fromNamespaceAndPath("c", "storage_blocks/source"));
+    public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(Identifier.fromNamespaceAndPath("c", "logs/archwood"));
+    public static TagKey<Item> ARCHWOOD_STRIPPED_LOG_TAG = ItemTags.create(Identifier.fromNamespaceAndPath("c", "logs/archwood_stripped"));
     public static TagKey<Item> MAGIC_FOOD = ItemTags.create(ArsNouveau.prefix("magic_food"));
     public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(ArsNouveau.prefix("wilden_drop"));
     public static TagKey<Item> SHARD_TAG = ItemTags.create(ArsNouveau.prefix("golem/shard"));
-    public static TagKey<Item> BERRY_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "fruits/berry"));
+    public static TagKey<Item> BERRY_TAG = ItemTags.create(Identifier.fromNamespaceAndPath("c", "fruits/berry"));
     public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(ArsNouveau.prefix("magic_shards"));
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(ArsNouveau.prefix("interact_jar_blacklist"));
     public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(ArsNouveau.prefix("ritual_loot_blacklist"));
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(ArsNouveau.prefix("ritual_trade_blacklist"));
-    public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/quartz"));
+    public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(Identifier.fromNamespaceAndPath("c", "storage_blocks/quartz"));
     public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(ArsNouveau.prefix("shady_wizard_fruits"));
 
     public static TagKey<Item> MAGIC_ARMOR = ItemTags.create(ArsNouveau.prefix("magic_armor"));
@@ -43,8 +42,8 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> APPARATUS_PRESERVES = ItemTags.create(ArsNouveau.prefix("apparatus_not_consumed"));
 
 
-    public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
-        super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
+    public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future) {
+        super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
                 BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
         );
-        this.tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "planks/archwood")))
+        this.tag(ItemTags.create(Identifier.fromNamespaceAndPath("c", "planks/archwood")))
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(Tags.Items.SEEDS)
                 .add(BlockRegistry.MAGE_BLOOM_CROP.asItem());

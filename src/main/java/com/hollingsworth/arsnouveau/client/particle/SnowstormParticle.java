@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.client.particle;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +14,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public abstract class SnowstormParticle extends TextureSheetParticle {
+public abstract class SnowstormParticle extends SingleQuadParticle {
     public static final float TIME_SCALE = 1.0f / 20f;
     private Vector3f acceleration = new Vector3f(0, 0, 0);
     private Vector3f speed = new Vector3f(0, 0, 0);
@@ -22,12 +22,12 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
     protected PropertyParticleOptions propertyParticleOptions;
     float phase = (float) Math.random() * 2 * (float) Math.PI;
 
-    protected SnowstormParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z) {
-        this(propertyParticleOptions, level, x, y, z, 0, 0, 0);
+    protected SnowstormParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
+        this(propertyParticleOptions, level, x, y, z, 0, 0, 0, sprite);
     }
 
-    protected SnowstormParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, xSpeed, ySpeed, zSpeed);
+    protected SnowstormParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite sprite) {
+        super(level, x, y, z, sprite);
         Vec3 pointOffset = getPointSpawnOffset();
         this.setPos(x + pointOffset.x, y + pointOffset.y, z + pointOffset.z);
         this.propertyParticleOptions = propertyParticleOptions;
@@ -43,8 +43,8 @@ public abstract class SnowstormParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     @Override

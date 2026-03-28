@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,9 +26,11 @@ public class InvUtil {
         for (Direction d : Direction.values()) {
             BlockPos relativePos = pos.relative(d);
 
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, relativePos, level.getBlockState(relativePos), null, d.getOpposite());
-            if (handler == null)
+            // 1.21.11: Capabilities.ItemHandler removed; use Capabilities.Item.BLOCK then wrap with IItemHandler.of()
+            ResourceHandler<ItemResource> rawHandler = level.getCapability(Capabilities.Item.BLOCK, relativePos, level.getBlockState(relativePos), null, d.getOpposite());
+            if (rawHandler == null)
                 continue;
+            IItemHandler handler = IItemHandler.of(rawHandler);
             inventories.add(new FilterableItemHandler(handler, FilterSet.forPosition(level, relativePos)));
         }
         return inventories;

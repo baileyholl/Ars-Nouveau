@@ -1,11 +1,10 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
@@ -40,17 +39,13 @@ public class BookSlider extends ExtendedSlider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        // MC 1.21.11: RenderSystem.setShader/setShaderColor/enableBlend/defaultBlendFunc/enableDepthTest removed.
+        // blit now requires a RenderPipeline argument.
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-        guiGraphics.blit(ArsNouveau.prefix("textures/gui/sound_bar.png"), this.x, this.y, 0, 0, 100, 20, this.width, this.height);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        guiGraphics.blit(ArsNouveau.prefix("textures/gui/sound_bar_knob.png"), this.x + (int) (this.value * (double) (this.width - 8)), this.y, 0, 0, 8, 20, 8, 20);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/sound_bar.png"), this.getX(), this.getY(), 0.0f, 0.0f, this.width, this.height, this.width, this.height);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/sound_bar_knob.png"), this.getX() + (int) (this.value * (double) (this.width - 8)), this.getY(), 0.0f, 0.0f, 8, 20, 8, 20);
         int j = 10526880;
-        guiGraphics.drawString(font, this.getMessage(), this.x + this.width / 4, this.y + (this.height - 32) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24, false);
+        guiGraphics.drawString(font, this.getMessage(), this.getX() + this.width / 4, this.getY() + (this.height - 32) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24, false);
     }
 }

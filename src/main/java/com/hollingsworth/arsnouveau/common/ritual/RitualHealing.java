@@ -6,11 +6,11 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class RitualHealing extends AbstractRitual {
     @Override
     protected void tick() {
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         } else {
             if (getWorld().getGameTime() % 100 == 0) {
@@ -31,7 +31,7 @@ public class RitualHealing extends AbstractRitual {
                 boolean didWorkOnce = false;
                 for (LivingEntity a : entities) {
                     if (a instanceof ZombieVillager zv) {
-                        zv.startConverting(player.map(Entity::getUUID).orElse(null), 0);
+                        zv.setVillagerConversionTime(200); // Heal/cure the zombie villager (startConverting is private in 1.21.11)
                         didWorkOnce = true;
                         continue;
                     }
@@ -53,7 +53,7 @@ public class RitualHealing extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.RESTORATION);
     }
 

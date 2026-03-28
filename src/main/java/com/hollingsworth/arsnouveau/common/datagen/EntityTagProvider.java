@@ -7,19 +7,17 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public class EntityTagProvider extends EntityTypeTagsProvider {
 
 
-    public EntityTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, ArsNouveau.MODID, existingFileHelper);
+    public EntityTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider) {
+        super(pOutput, pProvider, ArsNouveau.MODID);
     }
 
     @Override
@@ -76,18 +74,19 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.JAR_WHITELIST)
                 .add(EntityType.ITEM)
                 .add(EntityType.END_CRYSTAL)
-                .add(EntityType.BOAT)
-                .add(EntityType.CHEST_BOAT)
+                .addTag(Tags.EntityTypes.BOATS)
                 .add(EntityType.ARROW)
                 .add(EntityType.SNOWBALL)
                 .add(EntityType.EGG)
                 .add(EntityType.ENDER_PEARL)
                 .add(EntityType.EYE_OF_ENDER)
-                .add(EntityType.POTION)
+                .add(EntityType.SPLASH_POTION)
+                .add(EntityType.LINGERING_POTION)
                 .add(EntityType.ARMOR_STAND)
                 .add(EntityType.LIGHTNING_BOLT)
                 .add(ModEntities.LIGHTNING_ENTITY.get())
-                .add(EntityType.TRIDENT).addOptional(ResourceLocation.parse("create:contraption"));
+                .add(EntityType.TRIDENT);
+        this.getOrCreateRawBuilder(EntityTags.JAR_WHITELIST).addOptionalElement(Identifier.parse("create:contraption"));
         this.tag(EntityTags.LINGERING_BLACKLIST)
                 .add(ModEntities.LIGHTNING_ENTITY.get(), ModEntities.LINGER_SPELL.get(), ModEntities.WALL_SPELL.get());
         this.tag(EntityTags.BERRY_BLACKLIST)

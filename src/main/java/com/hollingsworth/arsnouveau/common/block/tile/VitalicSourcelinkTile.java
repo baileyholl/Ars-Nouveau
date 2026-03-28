@@ -35,7 +35,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && level.getGameTime() % 60 == 0) {
+        if (!level.isClientSide() && level.getGameTime() % 60 == 0) {
             for (AgeableMob entity : level.getEntitiesOfClass(AgeableMob.class, new AABB(worldPosition).inflate(15))) {
                 if (!entity.getType().is(EntityTags.VITALIC_GROWTH_BLACKLIST) && entity.isBaby()) {
                     if (entity.getAge() < 0) {
@@ -61,7 +61,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent event) {
         LivingEntity e = event.getEntity();
-        if (e.level.isClientSide || e instanceof IDispellable || e instanceof ISummon || e.getType().is(EntityTags.VITALIC_DEATH_BLACKLIST))
+        if (e.level.isClientSide() || e instanceof IDispellable || e instanceof ISummon || e.getType().is(EntityTags.VITALIC_DEATH_BLACKLIST))
             return;
         int mana = 200;
         SourcelinkEventQueue.addManaEvent(e.level, VitalicSourcelinkTile.class, mana, event, e.blockPosition());

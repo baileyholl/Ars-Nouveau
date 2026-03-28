@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -59,8 +59,8 @@ public class EffectSummonUndead extends AbstractEffect {
                 }
             }
             SummonSkeleton undeadentity = new SummonSkeleton(world, shooter, weapon);
-            undeadentity.moveTo(blockpos, 0.0F, 0.0F);
-            undeadentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
+            undeadentity.snapTo(blockpos, 0.0F, 0.0F);
+            undeadentity.finalizeSpawn((ServerLevelAccessor) world, ((ServerLevelAccessor) world).getCurrentDifficultyAt(blockpos), EntitySpawnReason.MOB_SUMMONED, null);
             undeadentity.setOwner(shooter);
             undeadentity.setLimitedLife(ticks);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, undeadentity);

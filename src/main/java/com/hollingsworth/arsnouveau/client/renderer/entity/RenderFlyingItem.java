@@ -4,37 +4,70 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 
-public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem> {
+// MC 1.21.11: EntityRenderer uses submit() + render states; item rendering via ItemModelResolver
+public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem, RenderFlyingItem.FlyingItemRenderState> {
+
+    private final ItemModelResolver itemModelResolver;
+
+    public static class FlyingItemRenderState extends EntityRenderState {
+        public boolean isBubble;
+        public final ItemStackRenderState item = new ItemStackRenderState();
+        public int blockPosHash;
+    }
 
     public RenderFlyingItem(EntityRendererProvider.Context renderManager) {
         super(renderManager);
+        this.itemModelResolver = renderManager.getItemModelResolver();
     }
 
     @Override
-    public void render(EntityFlyingItem entityIn, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLightIn) {
-        super.render(entityIn, entityYaw, partialTicks, matrixStack, bufferIn, packedLightIn);
-        var isBubble = entityIn.getEntityData().get(EntityFlyingItem.IS_BUBBLE);
-        if (isBubble) {
-            BubbleRenderer.renderBubble(entityIn, this.entityRenderDispatcher, matrixStack, bufferIn);
-        }
-        matrixStack.pushPose();
-        if (isBubble) {
-            matrixStack.translate(0, 0.5, 0);
-        }
-        matrixStack.scale(0.35f, 0.35f, 0.35F);
-        Minecraft.getInstance().getItemRenderer().renderStatic(entityIn.getStack(), ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, bufferIn, entityIn.level, (int) entityIn.blockPosition().asLong());
-        matrixStack.popPose();
+    public FlyingItemRenderState createRenderState() {
+        return new FlyingItemRenderState();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityFlyingItem entity) {
+    public void extractRenderState(EntityFlyingItem entity, FlyingItemRenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.isBubble = entity.getEntityData().get(EntityFlyingItem.IS_BUBBLE);
+        ItemStack stack = entity.getStack() != null ? entity.getStack() : ItemStack.EMPTY;
+        this.itemModelResolver.updateForNonLiving(state.item, stack, ItemDisplayContext.GROUND, entity);
+        state.blockPosHash = (int) entity.blockPosition().asLong();
+    }
+
+    @Override
+    public void submit(FlyingItemRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
+        super.submit(state, poseStack, collector, cameraState);
+
+        if (state.isBubble) {
+            poseStack.pushPose();
+            BubbleRenderer.renderBubble(null, this.entityRenderDispatcher, poseStack,
+                    Minecraft.getInstance().renderBuffers().bufferSource());
+            poseStack.popPose();
+        }
+
+        poseStack.pushPose();
+        if (state.isBubble) {
+            poseStack.translate(0, 0.5, 0);
+        }
+        poseStack.scale(0.35f, 0.35f, 0.35f);
+        state.item.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        poseStack.popPose();
+    }
+
+    // 1.21.11: EntityRenderer no longer has getTextureLocation(T entity) — not an @Override
+    public Identifier getTextureLocation(EntityFlyingItem entity) {
         return ArsNouveau.prefix("textures/entity/spell_proj.png");
     }
 }

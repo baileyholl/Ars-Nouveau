@@ -25,7 +25,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             poppingTicks++;
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             age++;
             if (age > maxAge) {
                 this.pop();
@@ -83,8 +83,8 @@ public class BubbleEntity extends Projectile implements GeoEntity {
             }
         }
 
-        if (poppingTicks > 5 && !level.isClientSide) {
-            this.remove(RemovalReason.DISCARDED);
+        if (poppingTicks > 5 && !level.isClientSide()) {
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
 
         this.xOld = this.getX();
@@ -115,7 +115,7 @@ public class BubbleEntity extends Projectile implements GeoEntity {
     }
 
     public void pop() {
-        if (this.level.isClientSide)
+        if (this.level.isClientSide())
             return;
         if (this.entityData.get(HAS_POPPED)) {
             return;
@@ -167,8 +167,10 @@ public class BubbleEntity extends Projectile implements GeoEntity {
         tryCapturing(pResult.getEntity());
     }
 
+    // 1.21.11: hurt() is final in Entity — but BubbleEntity extends Projectile which may override.
+    // Projectile also makes hurtServer available. Use hurtServer to intercept damage.
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel serverLevel, DamageSource pSource, float pAmount) {
         if (this.getPassengers().isEmpty() || this.getFirstPassenger() instanceof ItemEntity) {
             this.pop();
         }
@@ -215,20 +217,21 @@ public class BubbleEntity extends Projectile implements GeoEntity {
         return cache;
     }
 
+    // 1.21.11: save/load(CompoundTag) removed; use addAdditionalSaveData/readAdditionalSaveData
     @Override
-    public boolean save(CompoundTag pCompound) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput pCompound) {
+        super.addAdditionalSaveData(pCompound);
         pCompound.putInt("maxAge", this.maxAge);
         pCompound.putFloat("damage", this.damage);
         pCompound.putInt("age", this.age);
-        return super.save(pCompound);
     }
 
     @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
-        this.maxAge = pCompound.getInt("maxAge");
-        this.damage = pCompound.getFloat("damage");
-        this.age = pCompound.getInt("age");
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.maxAge = pCompound.getIntOr("maxAge", 0);
+        this.damage = pCompound.getFloatOr("damage", 0f);
+        this.age = pCompound.getIntOr("age", 0);
     }
 
     @Override
@@ -236,8 +239,9 @@ public class BubbleEntity extends Projectile implements GeoEntity {
         return this.getPassengers().isEmpty() || this.getFirstPassenger() instanceof ItemEntity && (this.isAlive() && age > 1);
     }
 
+    // 1.21.11: mayInteract(Level, BlockPos) → mayInteract(ServerLevel, BlockPos)
     @Override
-    public boolean mayInteract(Level pLevel, BlockPos pPos) {
+    public boolean mayInteract(net.minecraft.server.level.ServerLevel pLevel, BlockPos pPos) {
         return true;
     }
 }

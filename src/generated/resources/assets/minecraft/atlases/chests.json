@@ -2,15 +2,15 @@
   "sources": [
     {
       "type": "minecraft:single",
-      "resource": "ars_nouveau:model/chest/archwood/archwood"
+      "resource": "ars_nouveau:entity/chest/archwood"
     },
     {
       "type": "minecraft:single",
-      "resource": "ars_nouveau:model/chest/archwood/left"
+      "resource": "ars_nouveau:entity/chest/archwood_left"
     },
     {
       "type": "minecraft:single",
-      "resource": "ars_nouveau:model/chest/archwood/right"
+      "resource": "ars_nouveau:entity/chest/archwood_right"
     }
   ]
 }

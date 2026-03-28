@@ -5,21 +5,23 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.properties.Emitt
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.RandomSource;
 
 import javax.annotation.Nullable;
 
-public abstract class PropParticle extends TextureSheetParticle {
+public abstract class PropParticle extends SingleQuadParticle {
     PropertyParticleOptions options;
 
-    protected PropParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z) {
-        this(options, level, x, y, z, 0, 0, 0);
+    protected PropParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
+        this(options, level, x, y, z, 0, 0, 0, sprite);
     }
 
-    protected PropParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, xSpeed, ySpeed, zSpeed);
+    protected PropParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite sprite) {
+        super(level, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
         this.options = options;
         if (tinted()) {
             setColorFromProps();
@@ -70,8 +72,8 @@ public abstract class PropParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.OPAQUE;
     }
 
     public boolean tinted() {
@@ -92,7 +94,7 @@ public abstract class PropParticle extends TextureSheetParticle {
             this.particleConstructor = particleConstructor;
         }
 
-        public TextureSheetParticle createParticle(
+        public Particle createParticle(
                 PropertyParticleOptions pType,
                 ClientLevel pLevel,
                 double pX,
@@ -100,21 +102,19 @@ public abstract class PropParticle extends TextureSheetParticle {
                 double pZ,
                 double pXSpeed,
                 double pYSpeed,
-                double pZSpeed
+                double pZSpeed,
+                RandomSource random
         ) {
-            TextureSheetParticle particle = this.particleConstructor.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            if (this.sprite != null) {
-                particle.pickSprite(this.sprite);
-            }
-            return particle;
+            TextureAtlasSprite selectedSprite = this.sprite != null ? this.sprite.get(random) : null;
+            return this.particleConstructor.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, selectedSprite);
         }
     }
 
     @FunctionalInterface
     public interface ParticleProvider<T extends PropertyParticleOptions> {
         @Nullable
-        TextureSheetParticle createParticle(
-                T type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed
+        Particle createParticle(
+                T type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, @Nullable TextureAtlasSprite sprite
         );
     }
 }

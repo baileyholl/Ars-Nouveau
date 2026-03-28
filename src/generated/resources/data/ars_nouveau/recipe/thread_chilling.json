@@ -2,22 +2,12 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "minecraft:blue_ice"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "minecraft:powder_snow_bucket"
-    }
+    "minecraft:blue_ice",
+    "ars_nouveau:water_essence",
+    "ars_nouveau:water_essence",
+    "minecraft:powder_snow_bucket"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_chilling"

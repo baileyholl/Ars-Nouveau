@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "minecraft:gunpowder"
-    },
-    {
-      "item": "minecraft:coal"
-    }
+    "ars_nouveau:fire_essence",
+    "minecraft:gunpowder",
+    "minecraft:coal"
   ],
   "result": {
     "count": 3,

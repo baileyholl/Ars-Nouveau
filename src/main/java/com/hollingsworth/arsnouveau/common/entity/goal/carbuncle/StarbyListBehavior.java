@@ -44,14 +44,14 @@ public abstract class StarbyListBehavior extends StarbyBehavior {
             counter++;
         }
 
-        for (String key : tag.getAllKeys()) {
+        for (String key : tag.keySet()) {
             if (key.startsWith("from_direction_")) {
                 int hash = Integer.parseInt(key.substring(15));
-                FROM_DIRECTION_MAP.put(hash, Direction.from3DDataValue(tag.getInt(key)));
+                FROM_DIRECTION_MAP.put(hash, Direction.from3DDataValue(tag.getIntOr(key, 0)));
             }
             if (key.startsWith("to_direction_")) {
                 int hash = Integer.parseInt(key.substring(13));
-                TO_DIRECTION_MAP.put(hash, Direction.from3DDataValue(tag.getInt(key)));
+                TO_DIRECTION_MAP.put(hash, Direction.from3DDataValue(tag.getIntOr(key, 0)));
             }
         }
 

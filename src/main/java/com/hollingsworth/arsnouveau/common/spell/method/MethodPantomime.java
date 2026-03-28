@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,7 +40,7 @@ public class MethodPantomime extends AbstractCastMethod {
         double dist = viewXRot < 45.0f ? 2 + offset : 3 + offset;
         Vec3 to = eyes.add(shooter.getViewVector(1.0f).scale(dist));
         BlockPos toPos = BlockPos.containing(to);
-        return new BlockHitResult(to, Direction.getNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
+        return new BlockHitResult(to, Direction.getApproximateNearest(to.x, to.y, to.z).getOpposite(), toPos, true);
     }
 
     public CastResolveType getTarget(Level world, LivingEntity shooter, SpellResolver resolver, SpellStats stats) {
@@ -67,7 +67,7 @@ public class MethodPantomime extends AbstractCastMethod {
 
     @Override
     public CastResolveType onCastOnBlock(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        return getTarget(caster.getCommandSenderWorld(), caster, resolver, spellStats);
+        return getTarget(caster.level(), caster, resolver, spellStats);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class MethodPantomime extends AbstractCastMethod {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentDampen.INSTANCE.getRegistryName(), 1);
     }

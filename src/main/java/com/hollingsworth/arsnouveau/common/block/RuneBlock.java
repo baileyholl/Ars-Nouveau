@@ -17,10 +17,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -34,8 +36,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -50,7 +52,7 @@ public class RuneBlock extends TickableModBlock {
     public static VoxelShape shape = Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
 
     public RuneBlock() {
-        this(defaultProperties().noCollission().noOcclusion().strength(0f, 0f));
+        this(defaultProperties().noCollision().noOcclusion().strength(0f, 0f));
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(FLOOR, true));
     }
 
@@ -65,26 +67,26 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
+    public @NotNull InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
 
         if (worldIn.getBlockEntity(pos) instanceof RuneTile runeTile) {
 
-            if (!worldIn.isClientSide && stack.getItem() instanceof RunicChalk) {
+            if (!worldIn.isClientSide() && stack.getItem() instanceof RunicChalk) {
                 if (runeTile.isTemporary) {
                     runeTile.isTemporary = false;
                     PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.setperm"));
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
-            if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
-                return ItemInteractionResult.SUCCESS;
+            if (!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide())
+                return InteractionResult.SUCCESS;
             Spell spell = SpellCasterRegistry.from(stack).getSpell();
             if (spell.isEmpty())
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
 
             if (!(spell.get(0) instanceof MethodTouch)) {
                 PortUtil.sendMessage(player, Component.translatable("ars_nouveau.rune.touch"));
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             runeTile.setSpell(spell);
             runeTile.setPlayer(player.getUUID());
@@ -115,8 +117,8 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entityIn) {
-        super.entityInside(state, worldIn, pos, entityIn);
+    protected void entityInside(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Entity entityIn, @NotNull InsideBlockEffectApplier applier, boolean fromMovement) {
+        super.entityInside(state, worldIn, pos, entityIn, applier, fromMovement);
         List<Entity> entities = worldIn.getEntitiesOfClass(Entity.class, getShape(state, worldIn, pos, CollisionContext.empty()).bounds().move(pos), EntitySelector.NO_SPECTATORS.and((p_289691_) -> {
             return !p_289691_.isIgnoringBlockTriggers();
         }));
@@ -141,8 +143,8 @@ public class RuneBlock extends TickableModBlock {
     }
 
     @Override
-    public void neighborChanged(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+    protected void neighborChanged(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Block blockIn, Orientation orientation, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, orientation, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RuneTile runeTile) {
             runeTile.disabled = world.hasNeighborSignal(pos);
         }
@@ -168,7 +170,7 @@ public class RuneBlock extends TickableModBlock {
 
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override
@@ -178,5 +180,5 @@ public class RuneBlock extends TickableModBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 }

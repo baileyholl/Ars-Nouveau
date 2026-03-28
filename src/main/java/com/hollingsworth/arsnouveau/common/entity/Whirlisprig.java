@@ -26,17 +26,20 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -61,6 +64,9 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -83,18 +89,18 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     public int timeSinceGen;
     private boolean setBehaviors;
 
-    private PlayState idlePredicate(AnimationState<?> event) {
+    private PlayState idlePredicate(AnimationTest<Whirlisprig> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("fly"));
         } else {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
         }
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "idleController", 1, this::idlePredicate));
+        animatableManager.add(new AnimationController<Whirlisprig>("idleController", 1, this::idlePredicate));
     }
 
     @Override
@@ -103,13 +109,13 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(ServerLevel level) {
         return 0;
     }
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (player.getCommandSenderWorld().isClientSide)
+        if (player.level().isClientSide())
             return super.mobInteract(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL.asItem() && getTile() != null) {
@@ -148,7 +154,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !this.entityData.get(TAMED))
+        if (hand != InteractionHand.MAIN_HAND || player.level().isClientSide() || !this.entityData.get(TAMED))
             return InteractionResult.PASS;
 
         ItemStack stack = player.getItemInHand(hand);
@@ -233,8 +239,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public void setRemoved(RemovalReason pRemovalReason) {
-        super.setRemoved(pRemovalReason);
+    public void setRemoved(Entity.RemovalReason pReason) {
+        super.setRemoved(pReason);
         Whirlisprig.WHIRLI_MAP.removeEntity(level, this.getUUID());
     }
 
@@ -242,12 +248,12 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             if (!this.isRemoved() && !this.isTamed()) {
                 Whirlisprig.WHIRLI_MAP.addEntity(level, this.getUUID());
             }
-            if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
-                this.remove(RemovalReason.DISCARDED);
+            if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinY()) {
+                this.remove(Entity.RemovalReason.DISCARDED);
                 return;
             }
 
@@ -259,7 +265,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             }
         }
 
-        if (!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && flowerPos != null && !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
+        if (!level.isClientSide() && level.getGameTime() % 60 == 0 && isTamed() && flowerPos != null && !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
             this.hurt(level.damageSources().playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
             return;
         }
@@ -269,12 +275,12 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
             if (tamingTime % 20 == 0 && !level.isClientSide())
                 Networking.sendToNearbyClient(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.GREEN));
 
-            if (tamingTime > 60 && !level.isClientSide) {
+            if (tamingTime > 60 && !level.isClientSide()) {
                 ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS, 1 + level.random.nextInt(1));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
-            } else if (tamingTime > 55 && level.isClientSide) {
+            } else if (tamingTime > 55 && level.isClientSide()) {
                 for (int i = 0; i < 10; i++) {
                     double d0 = getX();
                     double d1 = getY() + 0.1;
@@ -304,14 +310,14 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    public boolean hurtServer(ServerLevel level, DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurtServer(level, pSource, pAmount);
     }
 
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
-        if (!level.isClientSide && isTamed()) {
+        if (!level.isClientSide() && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, this.createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -384,24 +390,24 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
-        flyingpathnavigator.setCanPassDoors(true);
+        // setCanPassDoors removed in 1.21.11
         return flyingpathnavigator;
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("summoner_x"))
-            flowerPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
-        timeSinceBonemeal = tag.getInt("bonemeal");
-        this.entityData.set(TAMED, tag.getBoolean("tamed"));
-        this.entityData.set(Whirlisprig.MOOD_SCORE, tag.getInt("score"));
+        if (tag.keySet().contains("summoner_x"))
+            flowerPos = new BlockPos(tag.getIntOr("summoner_x", 0), tag.getIntOr("summoner_y", 0), tag.getIntOr("summoner_z", 0));
+        timeSinceBonemeal = tag.getIntOr("bonemeal", 0);
+        this.entityData.set(TAMED, tag.getBooleanOr("tamed", false));
+        this.entityData.set(Whirlisprig.MOOD_SCORE, tag.getIntOr("score", 0));
         if (!setBehaviors) {
             tryResetGoals();
             setBehaviors = true;
         }
-        this.entityData.set(COLOR, tag.getString("color"));
-        this.timeSinceGen = tag.getInt("genTime");
+        this.entityData.set(COLOR, tag.getStringOr("color", ""));
+        this.timeSinceGen = tag.getIntOr("genTime", 0);
     }
 
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
@@ -411,7 +417,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         if (flowerPos != null) {
             tag.putInt("summoner_x", flowerPos.getX());
@@ -441,19 +447,19 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         if (this.isRemoved())
             return false;
 
-        if (!level.isClientSide && isTamed()) {
+        if (!level.isClientSide() && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, this.createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
         return this.isTamed();
     }
 
-    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+    public static Map<String, Identifier> TEXTURES = new HashMap<>();
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         var color = getColor();
         if (color.isEmpty()) {
             color = "summer";

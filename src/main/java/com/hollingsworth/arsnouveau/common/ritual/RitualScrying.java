@@ -15,7 +15,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -34,10 +34,10 @@ public class RitualScrying extends AbstractRitual {
     protected void tick() {
 
         ParticleUtil.spawnFallingSkyEffect(this, tile, rand, getCenterColor().toWrapper());
-        if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide)
+        if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide())
             incrementProgress();
 
-        if (!getWorld().isClientSide && getProgress() >= 15) {
+        if (!getWorld().isClientSide() && getProgress() >= 15) {
             List<ServerPlayer> players = getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
             if (!players.isEmpty()) {
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() != ItemsRegistry.MANIPULATION_ESSENCE.get()).findFirst().orElse(ItemStack.EMPTY);
@@ -58,13 +58,13 @@ public class RitualScrying extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.SCRYING);
     }
 
     public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer) {
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT, ticks));
-        CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+        CompoundTag tag = playerEntity.getPersistentData().getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
         tag.put("an_scryer", scryer.toTag(new CompoundTag()));
         playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
         Networking.sendToPlayerClient(new PacketGetPersistentData(tag), playerEntity);

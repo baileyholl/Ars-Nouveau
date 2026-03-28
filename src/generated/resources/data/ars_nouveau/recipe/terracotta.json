@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:terracotta"
-  },
+  "input": "minecraft:terracotta",
   "output": [
     {
       "chance": 1.0,

@@ -5,53 +5,71 @@ import com.hollingsworth.arsnouveau.client.registry.ShaderRegistry;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
 
-public class BubbleRenderer extends EntityRenderer<BubbleEntity> {
-    public static ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/bubble.png");
-    public static ResourceLocation POP_1 = ArsNouveau.prefix("textures/entity/bubble_pop1.png");
-    public static ResourceLocation POP_2 = ArsNouveau.prefix("textures/entity/bubble_pop2.png");
-    public static ResourceLocation POP_3 = ArsNouveau.prefix("textures/entity/bubble_pop3.png");
-    public static ResourceLocation POP_4 = ArsNouveau.prefix("textures/entity/bubble_pop4.png");
-    public static ResourceLocation POP_5 = ArsNouveau.prefix("textures/entity/bubble_pop5.png");
+// MC 1.21.11: EntityRenderer uses submit() + render states. cameraOrientation() removed from EntityRenderDispatcher.
+// Use Minecraft.getInstance().gameRenderer.getMainCamera().rotation() instead.
+public class BubbleRenderer extends EntityRenderer<BubbleEntity, EntityRenderState> {
+    public static Identifier TEXTURE = ArsNouveau.prefix("textures/entity/bubble.png");
+    public static Identifier POP_1 = ArsNouveau.prefix("textures/entity/bubble_pop1.png");
+    public static Identifier POP_2 = ArsNouveau.prefix("textures/entity/bubble_pop2.png");
+    public static Identifier POP_3 = ArsNouveau.prefix("textures/entity/bubble_pop3.png");
+    public static Identifier POP_4 = ArsNouveau.prefix("textures/entity/bubble_pop4.png");
+    public static Identifier POP_5 = ArsNouveau.prefix("textures/entity/bubble_pop5.png");
 
     public BubbleRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(BubbleEntity pEntity) {
+    public EntityRenderState createRenderState() {
+        return new EntityRenderState();
+    }
+
+    // 1.21.11: EntityRenderer no longer has getTextureLocation(T entity) — removed @Override
+    public Identifier getTextureLocation(BubbleEntity pEntity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(BubbleEntity entityIn, float pEntityYaw, float pPartialTick, PoseStack matrixStack, MultiBufferSource buffer, int pPackedLight) {
-        renderBubble(entityIn, this.entityRenderDispatcher, matrixStack, buffer);
+    public void submit(EntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
+        super.submit(state, poseStack, collector, cameraState);
+        // TODO: Port BubbleEntity rendering - entity-specific data (passengers, poppingTicks) must be
+        // stored in a custom render state via extractRenderState. For now this is a stub.
     }
 
-    public static void renderBubble(Entity entityIn, EntityRenderDispatcher entityRenderDispatcher, PoseStack matrixStack, MultiBufferSource buffer) {
-        double y = entityIn.getPassengers().isEmpty() ? 0.25f : entityIn.getBbHeight();
+    /**
+     * Static helper used by RenderFlyingItem. Entity may be null when called from render state context.
+     * If entity is null, renders a default bubble texture without pop animation.
+     */
+    public static void renderBubble(Entity entityIn, net.minecraft.client.renderer.entity.EntityRenderDispatcher entityRenderDispatcher, PoseStack matrixStack, MultiBufferSource buffer) {
+        double y = (entityIn != null && !entityIn.getPassengers().isEmpty()) ? entityIn.getBbHeight() : 0.25f;
         matrixStack.pushPose();
         matrixStack.translate(0, y, 0);
-        matrixStack.mulPose(entityRenderDispatcher.cameraOrientation());
+        // MC 1.21.11: cameraOrientation() removed. Use camera rotation quaternion.
+        matrixStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
 
         matrixStack.scale(0.025F, -0.025F, 0.025F);
         float base = 2.0f;
-        var passenger = entityIn.getFirstPassenger();
-        if (passenger != null) {
-            base += 1f;
-            // Compare the size difference between the bubble hitbox and the passenger
-            base *= passenger.getBbWidth() / entityIn.getBbWidth();
+        if (entityIn != null) {
+            var passenger = entityIn.getFirstPassenger();
+            if (passenger != null) {
+                base += 1f;
+                base *= passenger.getBbWidth() / entityIn.getBbWidth();
+            }
         }
         matrixStack.scale(base, base, base);
         final Matrix4f pose = matrixStack.last().pose();
-        ResourceLocation texture = TEXTURE;
+        Identifier texture = TEXTURE;
 
         if (entityIn instanceof BubbleEntity bubbleEntity && bubbleEntity.poppingTicks > 0) {
             int popTicks = bubbleEntity.poppingTicks;

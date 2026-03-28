@@ -9,10 +9,11 @@ import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,10 +44,10 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     public void onWanded(Player playerEntity) {
         if (!isLocked) {
             this.isLocked = true;
-            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.locked"));
+            playerEntity.displayClientMessage(Component.translatable("ars_nouveau.locked"), false);
         } else {
             this.isLocked = false;
-            playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.unlocked"));
+            playerEntity.displayClientMessage(Component.translatable("ars_nouveau.unlocked"), false);
         }
         updateBlock();
     }
@@ -65,8 +66,8 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.handleUpdateTag(tag, lookupProvider);
+    public void handleUpdateTag(ValueInput tag) {
+        super.handleUpdateTag(tag);
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 8);
     }
 
@@ -114,7 +115,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
         if (!data.equals(PotionContents.EMPTY)) {
             ItemStack potion = new ItemStack(Items.POTION);
             potion.set(DataComponents.POTION_CONTENTS, data);
-            tooltip.add(Component.translatable(potion.getDescriptionId()));
+            tooltip.add(potion.getHoverName());
         }
         PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
         tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getAmount() * 100) / this.getMaxFill()));
@@ -123,18 +124,17 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        if (tag.contains("potionData"))
-            this.data = ANCodecs.decode(pRegistries, PotionContents.CODEC, tag.get("potionData"));
-        this.isLocked = tag.getBoolean("locked");
-        this.currentFill = tag.getInt("currentFill");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        this.data = tag.read("potionData", PotionContents.CODEC).orElse(PotionContents.EMPTY);
+        this.isLocked = tag.getBooleanOr("locked", false);
+        this.currentFill = tag.getIntOr("currentFill", 0);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
-        tag.put("potionData", ANCodecs.encode(pRegistries, PotionContents.CODEC, this.data));
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
+        tag.store("potionData", PotionContents.CODEC, this.data);
         tag.putBoolean("locked", this.isLocked);
         tag.putInt("currentFill", this.currentFill);
 
@@ -157,7 +157,7 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput pComponentInput) {
+    protected void applyImplicitComponents(DataComponentGetter pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
         var jarContents = pComponentInput.getOrDefault(DataComponentRegistry.POTION_JAR, new PotionJarData(0, PotionContents.EMPTY, false));
         this.currentFill = jarContents.fill();

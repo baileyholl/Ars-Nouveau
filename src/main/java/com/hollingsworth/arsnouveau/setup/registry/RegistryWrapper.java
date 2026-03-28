@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -36,7 +36,7 @@ public class RegistryWrapper<R, T extends R> implements Supplier<T>, ItemLike {
         return registryObject.getDelegate();
     }
 
-    public ResourceLocation getResourceLocation() {
+    public Identifier getResourceLocation() {
         return registryObject.getId();
     }
 

@@ -22,9 +22,9 @@ public class GuiSpellSlot extends SelectableButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
-        graphics.drawCenteredString(Minecraft.getInstance().font, String.valueOf(this.slotNum + 1), x + 8, y + 3, 16777215); // White
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
+        graphics.drawCenteredString(Minecraft.getInstance().font, String.valueOf(this.slotNum + 1), x + 8, y + 3, 0xFFFFFFFF); // White
     }
 
     @Override

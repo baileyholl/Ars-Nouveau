@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IFiltersetProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
+import com.hollingsworth.arsnouveau.api.item.inv.LegacyItemHandlerAdapter;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
@@ -23,7 +24,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
 import java.util.List;
 
@@ -73,11 +74,13 @@ public class CapabilityRegistry {
                 BlockRegistry.ARCHWOOD_CHEST_TILE,
                 BlockRegistry.REPOSITORY_TILE);
         for (var container : containers) {
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
+            // 1.21.11: Capabilities.ItemHandler removed; use Capabilities.Item.BLOCK with VanillaContainerWrapper
+            event.registerBlockEntity(Capabilities.Item.BLOCK, container.get(), (c, side) -> VanillaContainerWrapper.of(c));
         }
 
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> c.getCapability(c, side));
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
+        // 1.21.11: Capabilities.ItemHandler.BLOCK → Capabilities.Item.BLOCK; adapt IItemHandler via LegacyItemHandlerAdapter
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BlockRegistry.CRAFTING_LECTERN_TILE.get(), (c, side) -> LegacyItemHandlerAdapter.of(c.getCapability(c, side)));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> LegacyItemHandlerAdapter.of(c.getControllerInv()));
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
         event.registerBlockEntity(FILTERSET_CAPABILITY, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c);
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_TILE.get(), (c, side) -> c);
@@ -91,7 +94,12 @@ public class CapabilityRegistry {
             event.registerBlockEntity(SOURCE_CAPABILITY, container.get(), (sourceJar, side) -> sourceJar.getSourceStorage());
         }
 
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.MOB_JAR_TILE.get(), (c, side) -> MobJarTile.SavingItemHandler.of(c, c.getEntityCapability(Capabilities.ItemHandler.ENTITY_AUTOMATION, null)));
+        // 1.21.11: Capabilities.ItemHandler.ENTITY_AUTOMATION → Capabilities.Item.ENTITY_AUTOMATION; adapt via LegacyItemHandlerAdapter
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BlockRegistry.MOB_JAR_TILE.get(), (c, side) -> {
+            var rawHandler = c.getEntityCapability(Capabilities.Item.ENTITY_AUTOMATION, null);
+            var itemHandler = rawHandler != null ? net.neoforged.neoforge.items.IItemHandler.of(rawHandler) : null;
+            return LegacyItemHandlerAdapter.of(MobJarTile.SavingItemHandler.of(c, itemHandler));
+        });
         event.registerBlockEntity(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, none) -> c.getSpellListener());
         event.registerBlockEntity(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, BlockRegistry.PLANARIUM_TILE.get(), (c, none) -> c.onResolve());
         event.registerBlockEntity(CapabilityRegistry.BLOCK_SPELL_RESOLVE_CAP, BlockRegistry.DECOR_BLOSSOM_TILE.get(), (c, none) -> c);

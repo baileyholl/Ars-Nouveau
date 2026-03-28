@@ -2,25 +2,45 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.DecorBlossomTile;
 import com.hollingsworth.arsnouveau.common.util.VoxelShapeUtils;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.server.level.ServerLevel;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.util.RandomSource;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Block;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Mirror;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Rotation;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.SoundType;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.StateDefinition;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.MapColor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.PushReaction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.Shapes;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,9 +73,9 @@ public class DecorBlossom extends ModBlock implements ITickableBlock {
 
 
     public DecorBlossom() {
-        super(Properties.of().mapColor(MapColor.PLANT)
+        super(BlockRegistry.newBlockProperties().mapColor(MapColor.PLANT)
                 .instabreak()
-                .noCollission()
+                .noCollision()
                 .sound(SoundType.SPORE_BLOSSOM)
                 .pushReaction(PushReaction.DESTROY));
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.FACING, Direction.NORTH));

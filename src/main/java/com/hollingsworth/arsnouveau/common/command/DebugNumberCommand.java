@@ -12,7 +12,7 @@ public class DebugNumberCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-debug").
-                requires(sender -> sender.hasPermission(1))
+                requires(Commands.hasPermission(Commands.LEVEL_MODERATORS))
                 .then(Commands.literal("on").executes(context -> toggleDebugNumbers(context.getSource(), true)))
                 .then(Commands.literal("off").executes(context -> toggleDebugNumbers(context.getSource(), false))));
     }

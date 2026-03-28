@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "minecraft:snow_block"
-    },
-    {
-      "item": "minecraft:snow_block"
-    }
+    "ars_nouveau:water_essence",
+    "minecraft:snow_block",
+    "minecraft:snow_block"
   ],
   "output": {
     "count": 1,

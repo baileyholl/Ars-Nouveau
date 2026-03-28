@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:lantern"
-    },
-    {
-      "item": "minecraft:torch"
-    }
+    "minecraft:lantern",
+    "minecraft:torch"
   ],
   "output": {
     "count": 1,

@@ -3,21 +3,23 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.RedstoneRelayTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneRelay extends TickableModBlock implements EntityBlock {
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
     public RedstoneRelay() {
@@ -48,7 +50,7 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
+    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, Orientation pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
         updatePower(pLevel, pPos, pState);
     }
@@ -66,18 +68,11 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.MODEL;
     }
 
     @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (pState.is(pNewState.getBlock())) {
-            return;
-        }
-        if (pLevel.isClientSide) {
-            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-            return;
-        }
+    protected void affectNeighborsAfterRemoval(BlockState pState, ServerLevel pLevel, BlockPos pPos, boolean pMovedByPiston) {
         if (!(pLevel.getBlockEntity(pPos) instanceof RedstoneRelayTile thisTile))
             return;
         BlockPos worldPosition = pPos.immutable();
@@ -86,7 +81,6 @@ public class RedstoneRelay extends TickableModBlock implements EntityBlock {
                 redstoneRelayTile.onParentRemoved(worldPosition);
             }
         }
-        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
     @Override

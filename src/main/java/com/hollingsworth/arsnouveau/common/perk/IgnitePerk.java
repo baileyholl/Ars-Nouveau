@@ -6,13 +6,13 @@ import com.hollingsworth.arsnouveau.api.perk.IEffectResolvePerk;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.spell.IDamageEffect;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.EntityHitResult;
 
 public class IgnitePerk extends Perk implements IEffectResolvePerk {
     public static IgnitePerk INSTANCE = new IgnitePerk(ArsNouveau.prefix("thread_kindling"));
 
-    public IgnitePerk(ResourceLocation key) {
+    public IgnitePerk(Identifier key) {
         super(key);
     }
 

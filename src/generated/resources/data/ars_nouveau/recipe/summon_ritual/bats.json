@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:summon_ritual",
-  "augment": {
-    "item": "minecraft:amethyst_shard"
-  },
+  "augment": "minecraft:amethyst_shard",
   "count": 5,
   "mobs": [
     {

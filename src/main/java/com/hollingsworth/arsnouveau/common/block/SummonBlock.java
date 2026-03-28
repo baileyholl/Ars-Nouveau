@@ -23,8 +23,8 @@ public abstract class SummonBlock extends TickableModBlock {
         //todo: check if needed?
 //        CompoundTag tag = context.getItemInHand().getTag();
 //        if (tag != null && tag.contains("BlockEntityTag")) {
-//            tag = tag.getCompound("BlockEntityTag");
-//            if (tag.contains("converted") && tag.getBoolean("converted")) {
+//            tag = tag.getCompoundOrEmpty("BlockEntityTag");
+//            if (tag.contains("converted") && tag.getBooleanOr("converted", false)) {
 //                state = state.setValue(CONVERTED, true);
 //            }
 //        }

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:gems/lapis"
-    },
-    {
-      "item": "minecraft:book"
-    }
+    "#c:gems/lapis",
+    "minecraft:book"
   ],
   "result": {
     "count": 1,

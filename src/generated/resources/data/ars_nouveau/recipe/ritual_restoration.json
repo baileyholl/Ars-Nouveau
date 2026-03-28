@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:green_archwood_log"
-    },
-    {
-      "item": "minecraft:golden_apple"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    }
+    "ars_nouveau:green_archwood_log",
+    "minecraft:golden_apple",
+    "ars_nouveau:abjuration_essence"
   ],
   "result": {
     "count": 1,

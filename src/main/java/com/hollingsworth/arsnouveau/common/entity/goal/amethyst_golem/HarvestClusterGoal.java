@@ -62,7 +62,7 @@ public class HarvestClusterGoal extends Goal {
     }
 
     public void harvest(BlockPos p) {
-        if (!(golem.level instanceof ServerLevel level)) return;
+        if (!(golem.level() instanceof ServerLevel level)) return;
         for (Direction d : Direction.values()) {
             BlockState state = level.getBlockState(p.relative(d));
             if (state.is(CLUSTER_BLOCKS)) {
@@ -76,7 +76,7 @@ public class HarvestClusterGoal extends Goal {
 
     public boolean hasCluster(BlockPos p) {
         for (Direction d : Direction.values()) {
-            if (golem.level.getBlockState(p.relative(d)).is(CLUSTER_BLOCKS)) {
+            if (golem.level().getBlockState(p.relative(d)).is(CLUSTER_BLOCKS)) {
                 return true;
             }
         }

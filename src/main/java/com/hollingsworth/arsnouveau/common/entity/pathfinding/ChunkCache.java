@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.attribute.EnvironmentAttributeReader;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
@@ -96,7 +97,7 @@ public class ChunkCache implements LevelReader {
 
     @Override
     public BlockState getBlockState(BlockPos pos) {
-        if (pos.getY() >= getMinBuildHeight() && pos.getY() < getMaxBuildHeight()) {
+        if (pos.getY() >= dimType.minY() && pos.getY() < (dimType.minY() + dimType.height())) {
             int i = (pos.getX() >> 4) - this.chunkX;
             int j = (pos.getZ() >> 4) - this.chunkZ;
 
@@ -114,7 +115,7 @@ public class ChunkCache implements LevelReader {
 
     @Override
     public FluidState getFluidState(final BlockPos pos) {
-        if (pos.getY() >= getMinBuildHeight() && pos.getY() < getMaxBuildHeight()) {
+        if (pos.getY() >= dimType.minY() && pos.getY() < (dimType.minY() + dimType.height())) {
             int i = (pos.getX() >> 4) - this.chunkX;
             int j = (pos.getZ() >> 4) - this.chunkZ;
 
@@ -229,6 +230,11 @@ public class ChunkCache implements LevelReader {
 
     private boolean withinBounds(int x, int z) {
         return x >= 0 && x < chunkArray.length && z >= 0 && z < chunkArray[x].length && chunkArray[x][z] != null;
+    }
+
+    @Override
+    public EnvironmentAttributeReader environmentAttributes() {
+        return this.world != null ? this.world.environmentAttributes() : EnvironmentAttributeReader.EMPTY;
     }
 
     @Override

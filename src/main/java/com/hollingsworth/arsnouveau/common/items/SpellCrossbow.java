@@ -16,7 +16,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,10 +28,11 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.CustomData;
@@ -47,7 +48,8 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
 
     // Duplicate override except we use our own tryLoadProjectiles
     @Override
-    public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
+    public boolean releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
         int i = this.getUseDuration(pStack, pEntityLiving) - pTimeLeft;
         float f = getPowerForTime(i, pStack, pEntityLiving);
         if (f >= 1.0F && !isCharged(pStack) && tryLoadProjectiles(pEntityLiving, pStack)) {
@@ -86,10 +88,11 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
                             )
                     );
         }
+        return true;
     }
 
     private boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
-        if (pShooter.level().isClientSide) {
+        if (pShooter.level().isClientSide()) {
             return true;
         }
 
@@ -149,7 +152,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     public void shootOne(Level worldIn, LivingEntity pShooter, InteractionHand pHand, ItemStack pCrossbowStack, ItemStack pAmmoStack, float pSoundPitch, boolean pIsCreativeMode, float pVelocity, float pInaccuracy, float pProjectileAngle, boolean isSpell) {
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             boolean flag = pAmmoStack.is(Items.FIREWORK_ROCKET);
             Projectile projectile;
             if (flag) {
@@ -202,8 +205,9 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         if (chargedprojectiles == null)
             return;
         var customData = pCrossbowStack.get(DataComponents.CUSTOM_DATA);
-        CompoundTag tag = customData != null ? customData.getUnsafe() : new CompoundTag();
-        boolean isSpell = tag.getBoolean("isSpell");
+        // 1.21.11: CustomData.getUnsafe() removed → use copyTag(); CompoundTag.getBoolean() returns Optional<Boolean>
+        CompoundTag tag = customData != null ? customData.copyTag() : new CompoundTag();
+        boolean isSpell = tag.getBoolean("isSpell").orElse(false);
         for (int i = 0; i < chargedprojectiles.getItems().size(); ++i) {
             ItemStack itemstack = chargedprojectiles.getItems().get(i);
             boolean flag = pShooter instanceof Player player && player.hasInfiniteMaterials();
@@ -218,7 +222,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         }
 
         if (pShooter instanceof ServerPlayer serverplayer) {
-            if (!pLevel.isClientSide) {
+            if (!pLevel.isClientSide()) {
                 CriteriaTriggers.SHOT_CROSSBOW.trigger(serverplayer, pCrossbowStack);
             }
 
@@ -238,16 +242,16 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        if (Minecraft.getInstance().hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
             getInformation(stack, context, tooltip2, flagIn);
-        super.appendHoverText(stack, context, tooltip2, flagIn);
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
     }
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         AbstractCaster<?> caster = getSpellCaster(pStack);
-        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Screen.hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
+        if (caster != null && Config.GLYPH_TOOLTIPS.get() && !Minecraft.getInstance().hasShiftDown() && !caster.isSpellHidden() && !caster.getSpell().isEmpty())
             return Optional.of(new SpellTooltip(caster));
         return Optional.empty();
     }
@@ -275,7 +279,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
         return MethodProjectile.INSTANCE.getCastingCost();
     }
 
-    @Override
+    // 1.21.11: isEnchantable removed from Item; handled via IItemExtension in NeoForge
     public boolean isEnchantable(@NotNull ItemStack stack) {
         return true;
     }
@@ -283,10 +287,10 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private final BlockEntityWithoutLevelRenderer renderer = new SpellCrossbowRenderer();
+            private final GeoItemRenderer<?> renderer = new SpellCrossbowRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });

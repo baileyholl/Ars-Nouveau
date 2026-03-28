@@ -610,6 +610,7 @@ public class PathingStuckHandler implements IStuckHandler {
 
     public static Direction getFacing(final BlockPos pos, final BlockPos neighbor) {
         final BlockPos vector = neighbor.subtract(pos);
-        return Direction.getNearest(vector.getX(), vector.getY(), vector.getZ());
+        Direction dir = Direction.getNearest(vector.getX(), vector.getY(), vector.getZ(), Direction.NORTH);
+        return dir != null ? dir : Direction.NORTH;
     }
 }

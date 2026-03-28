@@ -56,7 +56,7 @@ public class TomeCasterData extends AbstractCaster<TomeCasterData> {
                 if (manaCap == null)
                     return false;
                 boolean canCast = totalCost <= manaCap.getCurrentMana() || manaCap.getCurrentMana() == manaCap.getMaxMana() || (entity instanceof Player player && player.isCreative());
-                if (!canCast && !entity.getCommandSenderWorld().isClientSide && !silent) {
+                if (!canCast && !entity.level().isClientSide() && !silent) {
                     PortUtil.sendMessageNoSpam(entity, Component.translatable("ars_nouveau.spell.no_mana"));
                     if (entity instanceof ServerPlayer serverPlayer)
                         Networking.sendToPlayerClient(new NotEnoughManaPacket(totalCost), serverPlayer);

@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.Serializable;
 
 public interface IContextAttachment extends Serializable {
 
-    ResourceLocation id();
+    Identifier id();
 }

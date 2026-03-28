@@ -8,13 +8,18 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
@@ -49,7 +54,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
     public GlyphRecipe withIngredient(TagKey<Item> tag, int count) {
         for (int i = 0; i < count; i++) {
-            withIngredient(Ingredient.of(tag));
+            withIngredient(Ingredient.of(HolderSet.emptyNamed(BuiltInRegistries.ITEM, tag)));
         }
         return this;
     }
@@ -68,7 +73,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     }
 
     public GlyphRecipe withStack(ItemStack i) {
-        this.inputs.add(Ingredient.of(i));
+        this.inputs.add(Ingredient.of(i.getItem()));
         return this;
     }
 
@@ -107,22 +112,27 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
+
+    @Override
+    public boolean isSpecial() {
         return true;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return output.copy();
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<GlyphRecipe> getSerializer() {
         return RecipeRegistry.GLYPH_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<GlyphRecipe> getType() {
         return RecipeRegistry.GLYPH_TYPE.get();
     }
 

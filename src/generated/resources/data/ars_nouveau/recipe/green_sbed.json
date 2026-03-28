@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "ars_nouveau:summon_bed"
-    },
-    {
-      "tag": "c:dyes/green"
-    }
+    "#ars_nouveau:summon_bed",
+    "#c:dyes/green"
   ],
   "result": {
     "count": 1,

@@ -30,7 +30,7 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
 
     @Override
     public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
-        if (world.isClientSide)
+        if (world.isClientSide())
             return;
         ItemStack heldStack = player.getItemInHand(handIn);
         Piglin piglin = entityFromJar(tile);
@@ -43,7 +43,7 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
 
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide || isPowered(tile)) {
+        if (tile.getLevel().isClientSide() || isPowered(tile)) {
             return;
         }
         ExtraData data = new ExtraData(tile.getExtraDataTag());
@@ -123,8 +123,8 @@ public class PiglinBehavior extends JarBehavior<Piglin> {
 
         public ExtraData(CompoundTag tag) {
             super(tag);
-            hasCurrency = tag.getBoolean("hasCurrency");
-            ticksWithCurrency = tag.getInt("ticksWithCurrency");
+            hasCurrency = tag.getBooleanOr("hasCurrency", false);
+            ticksWithCurrency = tag.getIntOr("ticksWithCurrency", 0);
         }
 
         @Override

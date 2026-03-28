@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
 
 import java.util.Set;
@@ -19,8 +20,9 @@ public class DynamicTooltipRegistry {
     }
 
     public static void appendTooltips(ItemStack stack, Item.TooltipContext context, Consumer<Component> adder, TooltipFlag flag) {
+        // 1.21.11: addToTooltip requires TooltipDisplay parameter; use DEFAULT to show all
         for (DataComponentType<? extends TooltipProvider> type : dataTypes) {
-            stack.addToTooltip(type, context, adder, flag);
+            stack.addToTooltip(type, context, TooltipDisplay.DEFAULT, adder, flag);
         }
     }
 }

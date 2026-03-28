@@ -6,19 +6,22 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -28,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class RepositoryCatalog extends TickableModBlock {
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = DirectionalBlock.FACING;
 
     public RepositoryCatalog() {
         super(ModBlock.defaultProperties().noOcclusion());
@@ -36,7 +39,7 @@ public class RepositoryCatalog extends TickableModBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemScrollData scrollData = stack.get(DataComponentRegistry.ITEM_SCROLL_DATA);
         if (hand != InteractionHand.MAIN_HAND || !(level.getBlockEntity(pos) instanceof RepositoryCatalogTile controllerTile)) {
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
@@ -49,14 +52,14 @@ public class RepositoryCatalog extends TickableModBlock {
             } else {
                 player.setItemInHand(hand, resultStack);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (player.getItemInHand(hand).isEmpty()) {
             ItemStack resultStack = controllerTile.setNewScroll(ItemStack.EMPTY);
             player.setItemInHand(hand, resultStack);
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
@@ -79,21 +82,27 @@ public class RepositoryCatalog extends TickableModBlock {
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState stateIn, @NotNull Direction side, @NotNull BlockState facingState, @NotNull LevelAccessor worldIn, @NotNull BlockPos currentPos, @NotNull BlockPos facingPos) {
+    protected @NotNull BlockState updateShape(BlockState stateIn, LevelReader pLevel, ScheduledTickAccess pScheduledTickAccess, @NotNull BlockPos currentPos, @NotNull Direction side, @NotNull BlockPos facingPos, @NotNull BlockState facingState, RandomSource pRandom) {
         if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            pScheduledTickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
         return stateIn;
     }
 
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof RepositoryCatalogTile tile) {
+    // Called when block is removed — drops stored scroll. No longer an @Override in 1.21.11 (onRemove removed).
+    // Invoked via playerWillDestroy to handle player-driven removal.
+    protected void dropContentsOnRemove(Level level, BlockPos pos) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof RepositoryCatalogTile tile) {
             if (!tile.scrollStack.isEmpty()) {
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, tile.scrollStack));
             }
         }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull net.minecraft.world.entity.player.Player player) {
+        dropContentsOnRemove(level, pos);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Nullable
@@ -104,7 +113,7 @@ public class RepositoryCatalog extends TickableModBlock {
 
     @Override
     protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.MODEL;
     }
 
     @Override

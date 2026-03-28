@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Items;
@@ -33,11 +33,11 @@ public class RitualMobCapture extends AbstractRitual {
     protected void tick() {
         Level world = getWorld();
         int radius = 3;
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             BlockPos pos = getPos();
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), radius);
         }
-        if (!getWorld().isClientSide && world.getGameTime() % 60 == 0) {
+        if (!getWorld().isClientSide() && world.getGameTime() % 60 == 0) {
             boolean didWorkOnce = false;
             Level level = getWorld();
             BlockPos pos = getPos();
@@ -54,11 +54,11 @@ public class RitualMobCapture extends AbstractRitual {
                         }
                         if (e instanceof Mob mob && ((Mob) e).isLeashed() && e.shouldBeSaved()) {
                             if (mob.isLeashed()) {
-                                mob.dropLeash(true, true);
+                                mob.dropLeash();
                             }
                         }
-                        if (e instanceof Raider raider && raider.hasActiveRaid()) {
-                            raider.getCurrentRaid().removeFromRaid(raider, false);
+                        if (e instanceof Raider raider && raider.hasActiveRaid() && level instanceof net.minecraft.server.level.ServerLevel sl) {
+                            raider.getCurrentRaid().removeFromRaid(sl, raider, false);
                         }
                         if (e instanceof Villager villager) {
                             villager.releasePoi(MemoryModuleType.HOME);
@@ -120,7 +120,7 @@ public class RitualMobCapture extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.CONTAINMENT);
     }
 }

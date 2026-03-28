@@ -29,7 +29,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     @Override
     public void onStart(@Nullable Player player) {
         super.onStart(player);
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             return;
         }
         for (ItemStack i : getConsumedItems()) {
@@ -42,7 +42,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
 
     @Override
     protected void tick() {
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             return;
         }
         for (int i = 0; i < radius; i++) {
@@ -91,9 +91,9 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
     public void read(HolderLookup.Provider provider, CompoundTag tag) {
         super.read(provider, tag);
         if (tag.contains("tracker")) {
-            tracker = new ManhattenTracker(tag.getCompound("tracker"));
+            tracker = new ManhattenTracker(tag.getCompoundOrEmpty("tracker"));
         }
-        radius = tag.getInt("radius");
+        radius = tag.getIntOr("radius", 0);
     }
 
     @Override

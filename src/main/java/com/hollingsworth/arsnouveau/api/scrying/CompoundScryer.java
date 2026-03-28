@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -29,11 +29,12 @@ public class CompoundScryer implements IScryer {
     @Override
     public IScryer fromTag(CompoundTag tag) {
         CompoundScryer compoundScryer = new CompoundScryer();
-        int count = tag.getInt("scryer_count");
+        int count = tag.getIntOr("scryer_count", 0);
         for (int i = 0; i < count; i++) {
-            CompoundTag scryerTag = tag.getCompound("scryer_" + i);
-            String id = scryerTag.getString("id");
-            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(ResourceLocation.tryParse(id));
+            // 1.21.11: CompoundTag.getCompound() returns Optional<CompoundTag>
+            CompoundTag scryerTag = tag.getCompoundOrEmpty("scryer_" + i);
+            String id = scryerTag.getStringOr("id", "");
+            IScryer scryer = ArsNouveauAPI.getInstance().getScryer(Identifier.tryParse(id));
             if (scryer != null) {
                 compoundScryer.scryerList.add(scryer.fromTag(scryerTag));
             }
@@ -51,7 +52,7 @@ public class CompoundScryer implements IScryer {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix("compound_scryer");
     }
 }

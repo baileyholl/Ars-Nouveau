@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:scaffolding"
-    },
-    {
-      "item": "minecraft:poppy"
-    },
-    {
-      "item": "minecraft:water_bucket"
-    }
+    "minecraft:scaffolding",
+    "minecraft:poppy",
+    "minecraft:water_bucket"
   ],
   "output": {
     "count": 1,

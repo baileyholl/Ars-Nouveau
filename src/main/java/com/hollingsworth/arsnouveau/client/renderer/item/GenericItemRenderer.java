@@ -2,12 +2,13 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.common.items.AnimModItem;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 public class GenericItemRenderer extends GeoItemRenderer<AnimModItem> {
     public GenericItemRenderer(GeoModel<AnimModItem> modelProvider) {
@@ -25,8 +26,9 @@ public class GenericItemRenderer extends GeoItemRenderer<AnimModItem> {
         return this;
     }
 
+    // GeckoLib 5: getRenderType(R renderState, Identifier texture) — no animatable/bufferSource/partialTick
     @Override
-    public RenderType getRenderType(AnimModItem animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
-        return this.isTranslucent ? RenderType.entityTranslucent(texture) : super.getRenderType(animatable, texture, bufferSource, partialTick);
+    public RenderType getRenderType(GeoRenderState renderState, Identifier texture) {
+        return this.isTranslucent ? RenderTypes.entityTranslucent(texture) : super.getRenderType(renderState, texture);
     }
 }

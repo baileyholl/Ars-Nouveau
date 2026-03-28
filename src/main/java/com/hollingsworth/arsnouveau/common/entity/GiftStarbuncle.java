@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -33,6 +34,9 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
@@ -46,10 +50,11 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.getMainHandItem().isEmpty() && !level.isClientSide) {
+        if (this.getMainHandItem().isEmpty() && !level.isClientSide()) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
-                    this.pickUpItem(itementity);
+                    // 1.21.11: pickUpItem(ItemEntity) → pickUpItem(ServerLevel, ItemEntity)
+                    this.pickUpItem((ServerLevel) level, itementity);
                     if (!getMainHandItem().isEmpty())
                         break;
                 }
@@ -59,7 +64,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
             return;
         tamingTime++;
 
-        if (tamingTime > 60 && !level.isClientSide) {
+        if (tamingTime > 60 && !level.isClientSide()) {
             ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD.get(), 1 + level.random.nextInt(2));
             ItemStack gift = new ItemStack(ItemsRegistry.STARBY_GIFY.get(), 1);
             level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), gift));
@@ -67,8 +72,8 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
 
             level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.POOF_MOB.get(), (ServerLevel) this.level, this.getOnPos(), 10);
-            this.remove(RemovalReason.DISCARDED);
-        } else if (tamingTime == 60 && level.isClientSide) {
+            this.remove(Entity.RemovalReason.DISCARDED);
+        } else if (tamingTime == 60 && level.isClientSide()) {
             for (int i = 0; i < 10; i++) {
                 double d0 = getX();
                 double d1 = getY() + 0.1;
@@ -85,7 +90,8 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || isTaming() || !this.getMainHandItem().isEmpty()) {
+        // 1.21.11: getCommandSenderWorld() removed → use level()
+        if (hand != InteractionHand.MAIN_HAND || player.level().isClientSide() || isTaming() || !this.getMainHandItem().isEmpty()) {
             return super.mobInteract(player, hand);
         }
 
@@ -99,8 +105,9 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
         return InteractionResult.PASS;
     }
 
+    // 1.21.11: pickUpItem(ItemEntity) → pickUpItem(ServerLevel, ItemEntity)
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    protected void pickUpItem(net.minecraft.server.level.ServerLevel serverLevel, ItemEntity itemEntity) {
         if (!this.getMainHandItem().isEmpty())
             return;
         if (!this.isTaming() && itemEntity.getItem().is(Tags.Items.NUGGETS_GOLD)) {
@@ -136,26 +143,30 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
-        animatableManager.add(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
+        // GeckoLib 5: AnimationController constructor no longer takes entity as first arg
+        animatableManager.add(new AnimationController<GiftStarbuncle>("walkController", 1, this::animationPredicate));
+        animatableManager.add(new AnimationController<GiftStarbuncle>("danceController", 1, this::dancePredicate));
     }
 
-    private PlayState animationPredicate(AnimationState<?> event) {
-        if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+    private PlayState animationPredicate(AnimationTest<GiftStarbuncle> event) {
+        if (event.isMoving() || (level.isClientSide() && PatchouliHandler.isPatchouliWorld())) {
+            // GeckoLib 5: getController() → controller()
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
+    // 1.21.11: hurt() is final and returns void; override hurtServer(ServerLevel, DamageSource, float)
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel serverLevel, DamageSource pSource, float pAmount) {
+        if (!SummonUtil.canSummonTakeDamage(pSource)) return false;
+        return super.hurtServer(serverLevel, pSource, pAmount);
     }
 
-    private PlayState dancePredicate(AnimationState<?> event) {
+    private PlayState dancePredicate(AnimationTest<GiftStarbuncle> event) {
         if (this.entityData.get(BEING_TAMED)) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("dance"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

@@ -3,10 +3,12 @@ package com.hollingsworth.arsnouveau.common.mob_jar;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.world.entity.animal.MushroomCow;
+import net.minecraft.world.entity.animal.cow.Cow;
+import net.minecraft.world.entity.animal.cow.MushroomCow;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,9 +24,12 @@ public class MooshroomBehavior extends JarBehavior<MushroomCow> {
     public void use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, MobJarTile tile) {
         ItemStack itemstack = player.getItemInHand(handIn);
         MushroomCow mooshroom = entityFromJar(tile);
-        if (itemstack.getItem() == Items.SHEARS && mooshroom.readyForShearing()) {
-            Cow cow = EntityType.COW.create(world);
-            cow.moveTo(mooshroom.getX(), mooshroom.getY(), mooshroom.getZ(), mooshroom.getYRot(), mooshroom.getXRot());
+        if (itemstack.getItem() == Items.SHEARS && mooshroom.readyForShearing() && world instanceof ServerLevel serverLevel) {
+            Cow cow = EntityType.COW.create(serverLevel, null, mooshroom.blockPosition(), EntitySpawnReason.MOB_SUMMONED, false, false);
+            if (cow == null) return;
+            cow.setPos(mooshroom.getX(), mooshroom.getY(), mooshroom.getZ());
+            cow.setYRot(mooshroom.getYRot());
+            cow.setXRot(mooshroom.getXRot());
             cow.setHealth(mooshroom.getHealth());
             cow.yBodyRot = mooshroom.yBodyRot;
             if (mooshroom.hasCustomName()) {

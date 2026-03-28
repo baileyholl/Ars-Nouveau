@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -70,7 +70,7 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     @Override
     @Nullable
-    public FamiliarData getFamiliarData(ResourceLocation id) {
+    public FamiliarData getFamiliarData(Identifier id) {
         return playerData.familiars.stream().filter(f -> f.familiarHolder.getRegistryName().equals(id)).findFirst().orElse(null);
     }
 
@@ -80,7 +80,7 @@ public class ANPlayerDataCap implements IPlayerCap {
         return playerData.lastSummonedFamiliar == null ? null : getFamiliarData(playerData.lastSummonedFamiliar);
     }
 
-    public void setLastSummonedFamiliar(ResourceLocation lastSummonedFamiliar) {
+    public void setLastSummonedFamiliar(Identifier lastSummonedFamiliar) {
         playerData.lastSummonedFamiliar = lastSummonedFamiliar;
         entity.setData(AttachmentsRegistry.PLAYER_DATA, playerData);
     }

@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class ImagePage extends AbstractPage {
     public ImagePage() {
     }
 
-    public ImagePage withEntry(ResourceLocation file) {
+    public ImagePage withEntry(Identifier file) {
         images.add(file.toString());
         return this;
     }
@@ -43,7 +43,7 @@ public class ImagePage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("patchouli:image");
+    public Identifier getType() {
+        return Identifier.tryParse("patchouli:image");
     }
 }

@@ -2,19 +2,11 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "minecraft:elytra"
-    }
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence",
+    "minecraft:elytra"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_gliding"

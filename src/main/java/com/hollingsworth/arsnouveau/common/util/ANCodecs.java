@@ -46,6 +46,12 @@ public class ANCodecs {
             Direction.CODEC.optionalFieldOf("face").forGetter(it.unimi.dsi.fastutil.Pair::second)
     ).apply(instance, it.unimi.dsi.fastutil.Pair::of));
 
+    // MapCodec variant required by AttachmentType.Builder.serialize(MapCodec) in NeoForge 21.11
+    public static final com.mojang.serialization.MapCodec<it.unimi.dsi.fastutil.Pair<BlockPos, Optional<Direction>>> BLOCKPOS_DIRECTION_PAIR_MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            BlockPos.CODEC.fieldOf("pos").forGetter(it.unimi.dsi.fastutil.Pair::first),
+            Direction.CODEC.optionalFieldOf("face").forGetter(it.unimi.dsi.fastutil.Pair::second)
+    ).apply(instance, it.unimi.dsi.fastutil.Pair::of));
+
     public static final StreamCodec<RegistryFriendlyByteBuf, it.unimi.dsi.fastutil.Pair<BlockPos, Optional<Direction>>> BLOCKPOS_DIRECTION_PAIR_STREAM_CDOEC = StreamCodec.<RegistryFriendlyByteBuf, it.unimi.dsi.fastutil.Pair<BlockPos, Optional<Direction>>, BlockPos, Optional<Direction>>composite(
             BlockPos.STREAM_CODEC, it.unimi.dsi.fastutil.Pair::first,
             ByteBufCodecs.optional(Direction.STREAM_CODEC), it.unimi.dsi.fastutil.Pair::second,

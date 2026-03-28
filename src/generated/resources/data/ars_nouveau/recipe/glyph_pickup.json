@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:hopper"
-    },
-    {
-      "item": "minecraft:hopper"
-    }
+    "minecraft:hopper",
+    "minecraft:hopper"
   ],
   "output": {
     "count": 1,

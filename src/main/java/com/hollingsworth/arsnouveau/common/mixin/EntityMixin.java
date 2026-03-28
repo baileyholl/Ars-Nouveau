@@ -64,7 +64,7 @@ public abstract class EntityMixin {
             if (((Object) this) instanceof LivingEntity livingEntity) {
                 var perData = livingEntity.getPersistentData();
                 if (perData.contains("ars_nouveau:glow_color")) {
-                    color = perData.getInt("ars_nouveau:glow_color");
+                    color = perData.getIntOr("ars_nouveau:glow_color", 0);
                     if (color < 0) {
                         color = Color.rainbowColor(ClientInfo.ticksInGame).getRGB();
                     }

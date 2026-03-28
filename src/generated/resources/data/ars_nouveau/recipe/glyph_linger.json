@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:dragon_breath"
-    },
-    {
-      "tag": "c:storage_blocks/diamond"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:rods/blaze"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:dragon_breath",
+    "#c:storage_blocks/diamond",
+    "#c:rods/blaze",
+    "#c:rods/blaze"
   ],
   "output": {
     "count": 1,

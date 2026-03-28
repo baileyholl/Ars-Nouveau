@@ -33,14 +33,14 @@ public class EffectGrow extends AbstractEffect {
             ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
             if (BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerLevel serverLevel) {
                 if (BoneMealItem.applyBonemeal(stack, world, blockpos, ANFakePlayer.getPlayer(serverLevel))) {
-                    if (!world.isClientSide) {
+                    if (!world.isClientSide()) {
                         world.levelEvent(1505, blockpos, 0); //particles
                     }
                 } else {
                     BlockPos relative = blockpos.relative(rayTraceResult.getDirection());
                     boolean flag = world.getBlockState(blockpos).isFaceSturdy(world, blockpos, rayTraceResult.getDirection());
                     if (flag && BoneMealItem.growWaterPlant(stack, world, relative, rayTraceResult.getDirection())) {
-                        if (!world.isClientSide) {
+                        if (!world.isClientSide()) {
                             world.levelEvent(1505, relative, 0); //particles
                         }
                     }

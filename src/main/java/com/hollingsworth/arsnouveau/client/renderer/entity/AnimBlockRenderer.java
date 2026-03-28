@@ -6,130 +6,89 @@ import com.hollingsworth.arsnouveau.common.block.MageBlock;
 import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
+import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.Color;
-import software.bernie.geckolib.util.RenderUtil;
+import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
 
-public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY> {
+// GeckoLib 5.4.2 migration:
+// - GeoEntityRenderer now requires 2 type params <T, R extends EntityRenderState & GeoRenderState>
+// - renderRecursively() and preRender() REMOVED
+// - getRenderColor signature changed: now returns int (was Color)
+// - Block rendering API changed: BlockStateModel.collectParts() + ModelBlockRenderer.tesselateBlock(List<BlockModelPart>)
+// - ModelData moved to net.neoforged.neoforge.model.data.ModelData
+// - software.bernie.geckolib.util.Color REMOVED; use int (ARGB packed)
+// TODO: Port bone-specific block rendering to preRenderPass / addPerBoneRender
+public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY, ArsEntityRenderState> {
     public static MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
-    protected static final ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/anim_block.png");
-    public static final ResourceLocation BASE_MODEL = ArsNouveau.prefix("geo/animated_block.geo.json");
-    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix("animations/animated_block_animations.json");
+    protected static final Identifier TEXTURE = ArsNouveau.prefix("textures/entity/anim_block.png");
+    public static final Identifier BASE_MODEL = ArsNouveau.prefix("animated_block");
+    public static final Identifier ANIMATIONS = ArsNouveau.prefix("animated_block_animations");
 
-    private final BlockRenderDispatcher dispatcher;
+    protected final BlockRenderDispatcher dispatcher;
+    // bufferSource stored during preRenderPass for block rendering
     protected MultiBufferSource bufferSource;
 
     public AnimBlockRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeoModel<BOBBY>() {
             @Override
-            public ResourceLocation getModelResource(BOBBY object) {
+            public Identifier getModelResource(software.bernie.geckolib.renderer.base.GeoRenderState renderState) {
                 return BASE_MODEL;
             }
 
             @Override
-            public ResourceLocation getTextureResource(BOBBY object) {
+            public Identifier getTextureResource(software.bernie.geckolib.renderer.base.GeoRenderState renderState) {
                 return TEXTURE;
             }
 
             @Override
-            public ResourceLocation getAnimationResource(BOBBY animatable) {
+            public Identifier getAnimationResource(BOBBY animatable) {
                 return ANIMATIONS;
             }
 
-            @Override
-            public void setCustomAnimations(BOBBY animatable, long instanceId, AnimationState<BOBBY> customPredicate) {
-                super.setCustomAnimations(animatable, instanceId, customPredicate);
-                GeoBone head = this.getAnimationProcessor().getBone("block");
-                head.setHidden(!(animatable.getBlockState().getBlock() instanceof MageBlock));
-            }
+            // GeckoLib 5: setCustomAnimations removed; bone hiding needs captureDefaultRenderState/addPerBoneRender
+            // TODO: Port "block" bone hiding based on MageBlock check to GeckoLib 5 pattern
         });
         dispatcher = renderManager.getBlockRenderDispatcher();
     }
 
     @Override
-    public void render(BOBBY animatable, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        if (animatable.isDeadOrDying()) {
-            return;
-        }
-        poseStack.pushPose();
-        poseStack.scale(0.8F, 0.8F, 0.8F);
-        super.render(animatable, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-        poseStack.popPose();
+    public ArsEntityRenderState createRenderState(@NotNull BOBBY entity, Void unused) {
+        return new ArsEntityRenderState();
     }
 
     @Override
-    public void preRender(PoseStack poseStack, BOBBY animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        this.bufferSource = bufferSource;
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+    public void scaleModelForRender(RenderPassInfo<ArsEntityRenderState> renderPassInfo, float width, float height) {
+        renderPassInfo.poseStack().scale(0.8F, 0.8F, 0.8F);
+        super.scaleModelForRender(renderPassInfo, width, height);
     }
 
+    // GeckoLib 5: getRenderColor returns int (ARGB packed), not geckolib Color
     @Override
-    public void renderRecursively(PoseStack poseStack, BOBBY animatable, GeoBone bone, RenderType ty, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.renderRecursively(poseStack, animatable, bone, ty, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-        if (bone.getName().equals("block")) {
-            AnimBlockSummon animBlock = animatable;
-            if (animBlock == null) return;
-            BlockState blockstate = animatable.getBlockState();
-            //don't override the block and color it or
-            //hide the block and render the blockstate
-            if (!(blockstate.getBlock() instanceof MageBlock)) {
-                try {
-                    Level level = animatable.level();
-
-                    if (blockstate != level.getBlockState(animBlock.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
-                        poseStack.pushPose();
-                        BlockPos blockpos = animBlock.blockPosition().above();
-                        RenderUtil.translateToPivotPoint(poseStack, bone);
-                        poseStack.translate(-0.5D, -0.5, -0.5D);
-                        var model = this.dispatcher.getBlockModel(blockstate);
-                        for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(animBlock.blockPosition())), ModelData.EMPTY))
-                            this.dispatcher.getModelRenderer().tesselateBlock(level,
-                                    model,
-                                    blockstate,
-                                    blockpos,
-                                    poseStack,
-                                    AnimBlockRenderer.buffer.getBuffer(net.neoforged.neoforge.client.RenderTypeHelper.getMovingBlockRenderType(renderType)),
-                                    false,
-                                    RandomSource.create(),
-                                    blockstate.getSeed(animBlock.getOnPos()),
-                                    OverlayTexture.NO_OVERLAY,
-                                    ModelData.EMPTY,
-                                    renderType);
-                        poseStack.popPose();
-                        AnimBlockRenderer.buffer.endBatch();
-//                        buffer = this.bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
-                    }
-                } catch (Exception e) {
-                    // We typically don't render non-models like this, so catch our shenanigans.
-                }
-            }
-        }
-    }
-
-    @Override
-    public Color getRenderColor(BOBBY animatable, float partialTick, int packedLight) {
+    public int getRenderColor(BOBBY animatable, java.lang.Void context, float partialTick) {
         if (animatable != null) {
             ParticleColor color = ParticleColor.fromInt(animatable.getColor());
-            return Color.ofRGBA(color.getRed(), color.getGreen(), color.getBlue(), 0.75f);
+            // Pack as ARGB with 75% alpha
+            int alpha = (int)(0.75f * 255);
+            int r = (int)(color.getRed() * 255);
+            int g = (int)(color.getGreen() * 255);
+            int b = (int)(color.getBlue() * 255);
+            return (alpha << 24) | (r << 16) | (g << 8) | b;
         }
-        return super.getRenderColor(animatable, partialTick, packedLight);
+        return super.getRenderColor(animatable, context, partialTick);
     }
+
+    // TODO: Port "block" bone rendering to preRenderPass/addPerBoneRender in GeckoLib 5.
+    // Previously in renderRecursively, when bone == "block", the actual block model was rendered at the bone's pivot.
+    // This needs captureDefaultRenderState to store BlockState, then in preRenderPass use addPerBoneRender("block", ...).
+    // Block rendering now uses: dispatcher.getBlockModel(blockState).collectParts(random, parts)
+    // Then: dispatcher.getModelRenderer().tesselateBlock(level, parts, blockState, blockPos, poseStack, bufferSource::getBuffer, false, packedOverlay)
 }

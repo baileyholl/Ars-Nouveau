@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
@@ -48,7 +49,7 @@ public class ItemGrate extends ModBlock implements BucketPickup {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
+    protected InteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
         BlockState below = pLevel.getBlockState(pPos.below());
         BlockHitResult belowRes = new BlockHitResult(pHitResult.getLocation().add(0, -1, 0), pHitResult.getDirection(), pPos.below(), pHitResult.isInside());
         return below.useItemOn(pStack, pLevel, pPlayer, pHand, belowRes);
@@ -103,7 +104,7 @@ public class ItemGrate extends ModBlock implements BucketPickup {
                     var accessor = (BlockBehaviourAccessor) cauldronBlock;
                     ANFakePlayer fakePlayer = ANFakePlayer.getPlayer(pLevel);
                     fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
-                    ItemInteractionResult result = accessor.callUseItemOn(stack, stateBelow, pLevel, pPos.below(), fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(below.getX(), below.getY(), below.getZ()), Direction.UP, pPos.below(), false));
+                    InteractionResult result = accessor.callUseItemOn(stack, stateBelow, pLevel, pPos.below(), fakePlayer, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(below.getX(), below.getY(), below.getZ()), Direction.UP, pPos.below(), false));
                     if (!ItemStack.isSameItem(fakePlayer.getItemInHand(InteractionHand.MAIN_HAND), stack)) {
                         if (pLevel.getBlockState(pPos.above()).getFluidState().isSource()) {
                             pLevel.setBlockAndUpdate(pPos.above(), Blocks.AIR.defaultBlockState());
@@ -116,9 +117,9 @@ public class ItemGrate extends ModBlock implements BucketPickup {
     }
 
     @Override
-    protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock, BlockPos pNeighborPos, boolean pMovedByPiston) {
+    protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock, Orientation pNeighborPos, boolean pMovedByPiston) {
         super.neighborChanged(pState, pLevel, pPos, pNeighborBlock, pNeighborPos, pMovedByPiston);
-        if (!pLevel.isClientSide && pLevel.getBlockState(pPos.above()).getFluidState().isSource()) {
+        if (!pLevel.isClientSide() && pLevel.getBlockState(pPos.above()).getFluidState().isSource()) {
             pLevel.scheduleTick(pPos, this, 10);
         }
     }
@@ -170,7 +171,7 @@ public class ItemGrate extends ModBlock implements BucketPickup {
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+    public ItemStack pickupBlock(@Nullable LivingEntity pPlayer, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
         BlockState belowState = pLevel.getBlockState(pPos.below());
         if (belowState.getBlock() instanceof BucketPickup bucketPickup) {
             return bucketPickup.pickupBlock(pPlayer, pLevel, pPos.below(), belowState);

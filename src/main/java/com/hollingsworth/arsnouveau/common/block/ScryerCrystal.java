@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class ScryerCrystal extends TickableModBlock {
-    public static final DirectionProperty FACING = DirectionProperty.create("facing");
+    public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class);
     public static final BooleanProperty BEING_VIEWED = BooleanProperty.create("being_viewed");
 
     public static VoxelShape SOUTH = box(5, 5, 0, 11, 11, 1);
@@ -100,7 +100,7 @@ public class ScryerCrystal extends TickableModBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.getBlockEntity(pPos) instanceof ScryerCrystalTile scryerCrystalTile && pPlayer.getItemInHand(pHand).isEmpty() & pHand == InteractionHand.MAIN_HAND) {
             scryerCrystalTile.mountCamera(pLevel, pPos, pPlayer);
         }
@@ -121,7 +121,7 @@ public class ScryerCrystal extends TickableModBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos, Direction direction) {
         if (worldIn.getBlockEntity(pos) instanceof ScryerCrystalTile scryerCrystalTile) {
             return scryerCrystalTile.playersViewing;
         }

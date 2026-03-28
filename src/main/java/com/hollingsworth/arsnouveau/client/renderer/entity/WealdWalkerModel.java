@@ -2,16 +2,13 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-import javax.annotation.Nullable;
-
+// GeckoLib 5: setCustomAnimations removed; getModelResource/getTextureResource now take GeoRenderState
+// Head rotation / leg animation needs to be ported to addPerBoneRender or captureDefaultRenderState
+// TODO: Port head/leg bone rotation to GeckoLib 5 addPerBoneRender pattern
 public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
     String type;
 
@@ -21,33 +18,19 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
     }
 
     @Override
-    public void setCustomAnimations(W entity, long uniqueID, @Nullable AnimationState<W> customPredicate) {
-        super.setCustomAnimations(entity, uniqueID, customPredicate);
-
-        GeoBone head = this.getAnimationProcessor().getBone("head");
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraData().get(DataTickets.ENTITY_MODEL_DATA);
-        head.setRotX(extraData.headPitch() * 0.010453292F);
-        head.setRotY(extraData.netHeadYaw() * 0.015453292F);
-        if (entity.getEntityData().get(WealdWalker.CASTING)) {
-            GeoBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
-            GeoBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
-            frontLeftLeg.setRotX(Mth.cos(entity.walkAnimation.position() * 0.6662F) * 1.4F * entity.walkAnimation.speed());
-            frontRightLeg.setRotX(Mth.cos(entity.walkAnimation.position() * 0.6662F + (float) Math.PI) * 1.4F * entity.walkAnimation.speed());
-        }
+    public Identifier getModelResource(GeoRenderState renderState) {
+        // TODO: Store isBaby in renderState via DataTicket for entity-specific model selection
+        return ArsNouveau.prefix(type + "_walker");
     }
 
     @Override
-    public ResourceLocation getModelResource(WealdWalker walker) {
-        return walker.isBaby() ? ArsNouveau.prefix("geo/" + type + "_waddler.geo.json") : ArsNouveau.prefix("geo/" + type + "_walker.geo.json");
+    public Identifier getTextureResource(GeoRenderState renderState) {
+        // TODO: Store isBaby in renderState via DataTicket for entity-specific texture selection
+        return ArsNouveau.prefix("textures/entity/" + type + "_walker.png");
     }
 
     @Override
-    public ResourceLocation getTextureResource(WealdWalker walker) {
-        return walker.isBaby() ? ArsNouveau.prefix("textures/entity/" + type + "_waddler.png") : ArsNouveau.prefix("textures/entity/" + type + "_walker.png");
-    }
-
-    @Override
-    public ResourceLocation getAnimationResource(WealdWalker walker) {
-        return walker.isBaby() ? ArsNouveau.prefix("animations/weald_waddler_animations.json") : ArsNouveau.prefix("animations/weald_walker_animations.json");
+    public Identifier getAnimationResource(W walker) {
+        return walker.isBaby() ? ArsNouveau.prefix("weald_waddler_animations") : ArsNouveau.prefix("weald_walker_animations");
     }
 }

@@ -6,12 +6,12 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.SetTerminalSettingsPacket;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,9 +28,9 @@ import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -46,7 +46,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 
         @Override
         public void slotsChanged(Container inventory) {
-            if (level != null && !level.isClientSide && uuid != null) {
+            if (level != null && !level.isClientSide() && uuid != null) {
                 onCraftingMatrixChanged(uuid);
             }
         }
@@ -72,71 +72,57 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
         return new CraftingTerminalMenu(id, plInv, this);
     }
 
-    private ListTag getCraftMatrixTag(TransientCustomContainer craftingMatrix, HolderLookup.Provider pRegistries) {
-        ListTag listTag = new ListTag();
+    private void writeCraftMatrixTo(TransientCustomContainer craftingMatrix, ValueOutput.ValueOutputList listOut) {
         for (int i = 0; i < craftingMatrix.getContainerSize(); ++i) {
             ItemStack itemstack = craftingMatrix.getItem(i);
             if (!itemstack.isEmpty()) {
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putInt("Slot", i);
-                compoundTag.put("item", itemstack.save(pRegistries));
-                listTag.add(compoundTag);
+                ValueOutput slot = listOut.addChild();
+                slot.putInt("Slot", i);
+                slot.store("item", ItemStack.OPTIONAL_CODEC, itemstack);
             }
         }
-        return listTag;
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
 
         if (legacyCraftMatrix != null && !legacyCraftMatrix.isEmpty()) {
-            tag.put("CraftingTable", getCraftMatrixTag(legacyCraftMatrix, pRegistries));
+            writeCraftMatrixTo(legacyCraftMatrix, tag.childrenList("CraftingTable"));
         }
 
-        ListTag matrices = new ListTag();
+        ValueOutput.ValueOutputList matrices = tag.childrenList("CraftingMatrices");
         for (Map.Entry<UUID, TransientCustomContainer> entry : craftingMatrices.entrySet()) {
             UUID uuid = entry.getKey();
-            CompoundTag matrix = new CompoundTag();
-
-            matrix.putUUID("UUID", uuid);
-            matrix.put("CraftingTable", getCraftMatrixTag(entry.getValue(), pRegistries));
-            matrices.add(matrix);
+            ValueOutput matrix = matrices.addChild();
+            matrix.store("UUID", UUIDUtil.CODEC, uuid);
+            writeCraftMatrixTo(entry.getValue(), matrix.childrenList("CraftingTable"));
         }
-
-        tag.put("CraftingMatrices", matrices);
     }
 
     private boolean reading;
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
+    protected void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
         reading = true;
 
-        ListTag matrices = compound.getList("CraftingMatrices", Tag.TAG_COMPOUND);
-
-        for (int i = 0; i < matrices.size(); i++) {
-            CompoundTag entry = matrices.getCompound(i);
-            UUID uuid = entry.getUUID("UUID");
+        for (ValueInput entry : compound.childrenListOrEmpty("CraftingMatrices")) {
+            UUID uuid = entry.read("UUID", UUIDUtil.CODEC).orElse(null);
+            if (uuid == null) continue;
             TransientCustomContainer container = getCraftingInv(uuid);
-
-            ListTag table = entry.getList("CraftingTable", Tag.TAG_COMPOUND);
-            for (int j = 0; j < table.size(); j++) {
-                CompoundTag itemSlot = table.getCompound(j);
-                int slot = itemSlot.getInt("Slot");
+            for (ValueInput itemSlot : entry.childrenListOrEmpty("CraftingTable")) {
+                int slot = itemSlot.getIntOr("Slot", -1);
                 if (slot >= 0 && slot < container.getContainerSize()) {
-                    container.setItem(slot, ItemStack.parseOptional(pRegistries, itemSlot.getCompound("item")));
+                    container.setItem(slot, itemSlot.read("item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
                 }
             }
         }
 
-        ListTag listTag = compound.getList("CraftingTable", 10);
-        for (int i = 0; i < listTag.size(); ++i) {
-            CompoundTag compoundTag = listTag.getCompound(i);
-            int j = compoundTag.getInt("Slot");
+        for (ValueInput compoundTag : compound.childrenListOrEmpty("CraftingTable")) {
+            int j = compoundTag.getIntOr("Slot", -1);
             if (j >= 0 && j < legacyCraftMatrix.getContainerSize()) {
-                legacyCraftMatrix.setItem(j, ItemStack.parseOptional(pRegistries, compoundTag.getCompound("item")));
+                legacyCraftMatrix.setItem(j, compoundTag.read("item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
             }
         }
 
@@ -196,7 +182,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
             }
         }
 
-        crafted.onCraftedBy(player.level, player, amountCrafted);
+        crafted.onCraftedBy(player, amountCrafted);
         var copyStack = crafted.copy();
         copyStack.setCount(amountCrafted);
         EventHooks.firePlayerCraftingEvent(player, copyStack, craftMatrix);
@@ -220,7 +206,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
             }
             if (currentStack.isEmpty() && !oldItem.isEmpty()) {
                 StoredItemStack is = null;
-                for (int j = 0; j < thePlayer.getInventory().items.size(); j++) {
+                for (int j = 0; j < thePlayer.getInventory().getContainerSize(); j++) {
                     ItemStack st = thePlayer.getInventory().getItem(j);
                     if (ItemStack.isSameItemSameComponents(oldItem, st)) {
                         st = thePlayer.getInventory().removeItem(j, 1);
@@ -285,7 +271,9 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
         TransientCustomContainer craftMatrix = getCraftingInv(uuid);
 
         if (currentRecipe == null || !currentRecipe.matches(craftMatrix.asCraftInput(), level)) {
-            var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
+            var holder = level instanceof ServerLevel serverLevel
+                    ? serverLevel.recipeAccess().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null)
+                    : null;
             currentRecipe = holder == null ? null : holder.value();
         }
 
@@ -369,8 +357,8 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "controller", 1, (event -> {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("ledger_float"));
+        data.add(new AnimationController<CraftingLecternTile>("controller", 1, (event -> {
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("ledger_float"));
             return PlayState.CONTINUE;
         })));
     }

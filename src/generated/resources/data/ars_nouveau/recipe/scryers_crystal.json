@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:ender_eye"
-    },
-    {
-      "tag": "c:gems/source"
-    }
+    "minecraft:ender_eye",
+    "#c:gems/source"
   ],
   "result": {
     "count": 1,

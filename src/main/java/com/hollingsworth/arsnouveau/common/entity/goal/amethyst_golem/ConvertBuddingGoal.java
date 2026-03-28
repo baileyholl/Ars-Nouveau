@@ -49,11 +49,11 @@ public class ConvertBuddingGoal extends Goal {
 
     public void convert() {
         if (targetCluster != null) {
-            BlockState targetState = golem.level.getBlockState(targetCluster);
+            BlockState targetState = golem.level().getBlockState(targetCluster);
             Optional<BuddingConversionRecipe> recipe = golem.recipes.stream().filter(r -> r.matches(targetState)).findFirst();
             recipe.ifPresent(r -> {
-                golem.level.setBlock(targetCluster, r.result().defaultBlockState(), 3);
-                ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleColor.defaultParticleColor());
+                golem.level().setBlock(targetCluster, r.result().defaultBlockState(), 3);
+                ParticleUtil.spawnTouchPacket(golem.level(), targetCluster, ParticleColor.defaultParticleColor());
             });
         }
         golem.convertCooldown = 20 * 60 * 5;
@@ -68,7 +68,7 @@ public class ConvertBuddingGoal extends Goal {
         outerLoop:
         for (BlockPos pos : golem.amethystBlocks) {
             for (BuddingConversionRecipe recipe : golem.recipes) {
-                if (recipe.matches(golem.level.getBlockState(pos))) {
+                if (recipe.matches(golem.level().getBlockState(pos))) {
                     targetCluster = pos;
                     break outerLoop;
                 }

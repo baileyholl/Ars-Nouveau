@@ -26,11 +26,13 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -55,6 +57,9 @@ import net.neoforged.neoforge.common.Tags;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -76,7 +81,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public static String[] COLORS = {"brown", "cyan", "orange"};
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(ServerLevel level) {
         return 0;
     }
 
@@ -98,14 +103,14 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    public boolean hurtServer(ServerLevel level, DamageSource pSource, float pAmount) {
+        return SummonUtil.canSummonTakeDamage(pSource) && super.hurtServer(level, pSource, pAmount);
     }
 
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
-        if (!level.isClientSide && isTamed()) {
+        if (!level.isClientSide() && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -114,7 +119,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (level.isClientSide || hand != InteractionHand.MAIN_HAND)
+        if (level.isClientSide() || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
 
@@ -144,16 +149,16 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public void tick() {
         super.tick();
         SummonUtil.healOverTime(this);
-        if (!level.isClientSide && channelCooldown > 0) {
+        if (!level.isClientSide() && channelCooldown > 0) {
             channelCooldown--;
         }
 
-        if (!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && homePos != null && !(level.getBlockEntity(homePos) instanceof DrygmyTile)) {
+        if (!level.isClientSide() && level.getGameTime() % 60 == 0 && isTamed() && homePos != null && !(level.getBlockEntity(homePos) instanceof DrygmyTile)) {
             this.hurt(level.damageSources().playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
             return;
         }
 
-        if (level.isClientSide && isChanneling() && getChannelEntity() != -1) {
+        if (level.isClientSide() && isChanneling() && getChannelEntity() != -1) {
             Entity entity = level.getEntity(getChannelEntity());
             if (entity == null || entity.isRemoved())
                 return;
@@ -166,8 +171,10 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
                     0, 0, 0);
         }
         if (!isTamed() && !this.entityData.get(BEING_TAMED) && level.getGameTime() % 40 == 0) {
-            for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
-                pickUpItem(itementity);
+            if (!level.isClientSide()) {
+                for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
+                    pickUpItem((net.minecraft.server.level.ServerLevel) this.level, itementity);
+                }
             }
         }
         if (!isTamed() && this.entityData.get(BEING_TAMED)) {
@@ -176,10 +183,10 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
             if (tamingTime % 20 == 0 && !level.isClientSide())
                 Networking.sendToNearbyClient(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition(), ParticleColor.ORANGE));
 
-            if (tamingTime > 60 && !level.isClientSide) {
+            if (tamingTime > 60 && !level.isClientSide()) {
                 ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD, 1 + level.random.nextInt(2));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
             }
         }
@@ -189,13 +196,13 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         return false;
     }
 
-    private PlayState animationPredicate(AnimationState<?> event) {
-        if (isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("channel"));
+    private PlayState animationPredicate(AnimationTest<EntityDrygmy> event) {
+        if (isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide() && PatchouliHandler.isPatchouliWorld())) {
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("channel"));
             return PlayState.CONTINUE;
         }
         if (event.isMoving()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -285,12 +292,12 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "walkController", 20, this::animationPredicate));
-        animatableManager.add(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+        animatableManager.add(new AnimationController<EntityDrygmy>("walkController", 20, this::animationPredicate));
+        animatableManager.add(new AnimationController<EntityDrygmy>("idleController", 20, this::idlePredicate));
     }
 
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    protected void pickUpItem(net.minecraft.server.level.ServerLevel serverLevel, ItemEntity itemEntity) {
         if (!isTamed() && !entityData.get(BEING_TAMED) && itemEntity.getItem().is(ItemTagProvider.WILDEN_DROP_TAG)) {
             entityData.set(BEING_TAMED, true);
             itemEntity.getItem().shrink(1);
@@ -303,17 +310,17 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         if (this.isRemoved())
             return false;
 
-        if (!level.isClientSide && isTamed()) {
+        if (!level.isClientSide() && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
         return this.isTamed();
     }
 
-    private PlayState idlePredicate(AnimationState<?> event) {
+    private PlayState idlePredicate(AnimationTest<EntityDrygmy> event) {
         return PlayState.CONTINUE;
     }
 
@@ -325,7 +332,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         NBTUtil.storeBlockPos(tag, "home", homePos);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
@@ -338,20 +345,20 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(ValueInput tag) {
         super.readAdditionalSaveData(tag);
         if (NBTUtil.hasBlockPos(tag, "home"))
             this.homePos = NBTUtil.getBlockPos(tag, "home");
-        setTamed(tag.getBoolean("tamed"));
+        setTamed(tag.getBooleanOr("tamed", false));
         if (!setBehaviors) {
             tryResetGoals();
             setBehaviors = true;
         }
-        channelCooldown = tag.getInt("cooldown");
-        this.tamingTime = tag.getInt("taming");
-        entityData.set(BEING_TAMED, tag.getBoolean("beingTamed"));
-        if (tag.contains("color"))
-            this.entityData.set(COLOR, tag.getString("color"));
+        channelCooldown = tag.getIntOr("cooldown", 0);
+        this.tamingTime = tag.getIntOr("taming", 0);
+        entityData.set(BEING_TAMED, tag.getBooleanOr("beingTamed", false));
+        if (tag.keySet().contains("color"))
+            this.entityData.set(COLOR, tag.getStringOr("color", ""));
     }
 
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
@@ -360,9 +367,9 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         this.addGoalsAfterConstructor();
     }
 
-    public static Map<String, ResourceLocation> TEXTURES = new HashMap<>();
+    public static Map<String, Identifier> TEXTURES = new HashMap<>();
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "brown";

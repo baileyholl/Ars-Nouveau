@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.util.RandomSource;
 import net.minecraft.core.particles.ParticleOptions;
 
 public class HelixParticleData implements ParticleProvider<HelixParticleTypeData> {
@@ -16,7 +17,7 @@ public class HelixParticleData implements ParticleProvider<HelixParticleTypeData
     }
 
     @Override
-    public Particle createParticle(HelixParticleTypeData data, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+    public Particle createParticle(HelixParticleTypeData data, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
         return new ParticleHelixGlow(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), data.alpha, data.size, data.age, this.spriteSet, data.disableDepthTest, data.angle);
     }
 

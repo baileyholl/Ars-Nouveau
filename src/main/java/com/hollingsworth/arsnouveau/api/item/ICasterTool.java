@@ -16,10 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * An interface for caster items that provides default behavior for scribing, displaying mana, and tooltips
@@ -96,9 +98,9 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
         return spell.isValid();
     }
 
-    default void getInformation(ItemStack stack, Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
+    default void getInformation(ItemStack stack, Item.TooltipContext context, Consumer<Component> tooltip2, TooltipFlag flagIn) {
         AbstractCaster<?> caster = getSpellCaster(stack);
         if (caster == null) return;
-        stack.addToTooltip(caster.getComponentType(), context, tooltip2::add, flagIn);
+        stack.addToTooltip(caster.getComponentType(), context, TooltipDisplay.DEFAULT, tooltip2, flagIn);
     }
 }

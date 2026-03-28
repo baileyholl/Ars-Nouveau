@@ -2,18 +2,10 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "minecraft:leather"
-    },
-    {
-      "item": "minecraft:leather"
-    },
-    {
-      "item": "minecraft:leather"
-    },
-    {
-      "item": "minecraft:leather"
-    }
+    "minecraft:leather",
+    "minecraft:leather",
+    "minecraft:leather",
+    "minecraft:leather"
   ],
   "output": {
     "count": 1,

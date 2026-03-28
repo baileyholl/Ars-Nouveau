@@ -15,15 +15,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class AlchemistsCrown extends ModItem implements IRadialProvider {
 
@@ -32,9 +35,9 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.tooltip.alchemists_crown", KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()));
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
+        tooltip.accept(Component.translatable("ars_nouveau.tooltip.alchemists_crown", KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()));
     }
 
     @Override
@@ -46,10 +49,10 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
     @Override
     public void onRadialKeyPressed(ItemStack stack, Player player) {
         List<RadialMenuSlot<SlotData>> slots = new ArrayList<>();
-        for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             if (slots.size() >= 9)
                 break;
-            ItemStack item = player.inventory.getItem(i);
+            ItemStack item = player.getInventory().getItem(i);
             PotionContents contents = PotionUtil.getContents(item);
             if (contents == PotionContents.EMPTY || item.getItem() instanceof ArrowItem)
                 continue;

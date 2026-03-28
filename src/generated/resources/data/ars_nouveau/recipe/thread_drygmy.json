@@ -2,28 +2,14 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:drygmy_shard"
-    },
-    {
-      "item": "ars_nouveau:drygmy_shard"
-    },
-    {
-      "item": "ars_nouveau:drygmy_shard"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:rabbit_foot"
-    }
+    "ars_nouveau:drygmy_shard",
+    "ars_nouveau:drygmy_shard",
+    "ars_nouveau:drygmy_shard",
+    "ars_nouveau:earth_essence",
+    "ars_nouveau:earth_essence",
+    "minecraft:rabbit_foot"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_drygmy"

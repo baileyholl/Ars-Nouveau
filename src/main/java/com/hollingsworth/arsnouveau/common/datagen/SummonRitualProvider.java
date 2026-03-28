@@ -6,8 +6,9 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.SummonRitualRecipe;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -36,7 +37,7 @@ public class SummonRitualProvider extends SimpleDataProvider {
     protected void addEntries() {
         ArrayList<SummonRitualRecipe.WeightedMobType> bats = new ArrayList<>();
         bats.add(new SummonRitualRecipe.WeightedMobType(EntityType.getKey(EntityType.BAT)));
-        recipes.add(new SummonRitualRecipeWrapper(ArsNouveau.prefix("bats"), new SummonRitualRecipe(Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, WeightedRandomList.create(bats))));
+        recipes.add(new SummonRitualRecipeWrapper(ArsNouveau.prefix("bats"), new SummonRitualRecipe(Ingredient.of(Items.AMETHYST_SHARD), SummonRitualRecipe.MobSource.MOB_LIST, 5, WeightedList.of(bats.stream().map(m -> new Weighted<>(m, m.weight())).toList()))));
     }
 
     protected static Path getRecipePath(Path path, String id) {
@@ -53,9 +54,9 @@ public class SummonRitualProvider extends SimpleDataProvider {
 
     public static class SummonRitualRecipeWrapper {
         private final SummonRitualRecipe recipe;
-        private final ResourceLocation id;
+        private final Identifier id;
 
-        public SummonRitualRecipeWrapper(ResourceLocation id, SummonRitualRecipe recipe) {
+        public SummonRitualRecipeWrapper(Identifier id, SummonRitualRecipe recipe) {
             this.recipe = recipe;
             this.id = id;
         }
@@ -64,7 +65,7 @@ public class SummonRitualProvider extends SimpleDataProvider {
             return recipe;
         }
 
-        public ResourceLocation id() {
+        public Identifier id() {
             return id;
         }
     }

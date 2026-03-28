@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "minecraft:powered_rail"
-    },
-    {
-      "item": "minecraft:sugar"
-    },
-    {
-      "item": "minecraft:clock"
-    }
+    "minecraft:powered_rail",
+    "minecraft:sugar",
+    "minecraft:clock"
   ],
   "output": {
     "count": 1,

@@ -2,21 +2,11 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "minecraft:elytra"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    }
+    "ars_nouveau:air_essence",
+    "minecraft:elytra",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond"
   ],
   "output": {
     "count": 1,

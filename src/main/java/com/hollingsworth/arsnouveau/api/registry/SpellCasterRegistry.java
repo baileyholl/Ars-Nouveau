@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("deprecation")
 public class SpellCasterRegistry {
 
-    private static final ConcurrentHashMap<ResourceLocation, ItemCasterProvider> MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Identifier, ItemCasterProvider> MAP = new ConcurrentHashMap<>();
 
     static {
         register(ItemsRegistry.NOVICE_SPELLBOOK, (stack) -> stack.get(DataComponentRegistry.SPELL_CASTER));
@@ -27,18 +27,18 @@ public class SpellCasterRegistry {
     }
 
     public static @Nullable AbstractCaster<?> from(ItemStack stack) {
-        return MAP.getOrDefault(stack.getItem().builtInRegistryHolder().key().location(), (s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
+        return MAP.getOrDefault(stack.getItem().builtInRegistryHolder().key().identifier(), (s) -> s.get(DataComponentRegistry.SPELL_CASTER)).getSpellCaster(stack);
     }
 
     public static boolean hasCaster(ItemStack stack) {
-        return MAP.containsKey(stack.getItem().builtInRegistryHolder().key().location());
+        return MAP.containsKey(stack.getItem().builtInRegistryHolder().key().identifier());
     }
 
     public static void register(ItemLike itemLike, ItemCasterProvider provider) {
-        MAP.put(itemLike.asItem().builtInRegistryHolder().key().location(), provider);
+        MAP.put(itemLike.asItem().builtInRegistryHolder().key().identifier(), provider);
     }
 
-    public static void register(ResourceLocation location, ItemCasterProvider provider) {
+    public static void register(Identifier location, ItemCasterProvider provider) {
         MAP.put(location, provider);
     }
 }

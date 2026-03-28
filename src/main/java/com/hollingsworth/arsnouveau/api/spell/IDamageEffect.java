@@ -61,9 +61,7 @@ public interface IDamageEffect {
         if (totalDamage <= 0 || preDamage.isCanceled())
             return false;
 
-        if (!entity.hurt(source, totalDamage)) {
-            return false;
-        }
+        entity.hurt(source, totalDamage);
 
         shooter.setLastHurtMob(entity);
 

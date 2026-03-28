@@ -57,8 +57,8 @@ public class PropertyButton extends SelectableButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
 
         widgetProvider.renderIcon(graphics, x, y, pMouseX, pMouseY, pPartialTick);
         String titleString = widgetProvider.getButtonTitle().getString();

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -38,11 +39,14 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
         this.sprintSpeedModifier = sprintModifier;
         this.pathNav = carby.getNavigation();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        this.avoidEntityTargeting = (TargetingConditions.forCombat().range(maxDist).selector(selectPredicate.and(avoidPredicate)));
+        // In 1.21.11, Selector is (LivingEntity, @Nullable ServerLevel) -> boolean
+        Predicate<LivingEntity> combined = selectPredicate.and(avoidPredicate);
+        this.avoidEntityTargeting = TargetingConditions.forCombat().range(maxDist).selector((entity, sl) -> combined.test(entity));
     }
 
     public boolean canUse() {
-        this.toAvoid = this.mob.level.getNearestEntity(this.avoidClass, this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(this.maxDist, 3.0D, this.maxDist));
+        if (!(this.mob.level() instanceof ServerLevel serverLevel)) return false;
+        this.toAvoid = serverLevel.getNearestEntity(this.avoidClass, this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(this.maxDist, 3.0D, this.maxDist));
         if (this.toAvoid == null) {
             return false;
         } else {

@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -14,7 +14,7 @@ public class RepairingPerk extends Perk {
 
     public static final RepairingPerk INSTANCE = new RepairingPerk(ArsNouveau.prefix("thread_repairing"));
 
-    public RepairingPerk(ResourceLocation key) {
+    public RepairingPerk(Identifier key) {
         super(key);
     }
 
@@ -41,16 +41,16 @@ public class RepairingPerk extends Perk {
     public void onAdded(LivingEntity entity) {
         double repairLevel = PerkUtil.countForPerk(RepairingPerk.INSTANCE, entity);
         if (repairLevel >= 3) {
-            for (ItemStack slot : entity.getArmorSlots()) {
-                slot.set(DataComponentRegistry.UNBREAKING, true);
+            for (net.minecraft.world.entity.EquipmentSlot s : new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET}) {
+                entity.getItemBySlot(s).set(DataComponentRegistry.UNBREAKING, true);
             }
         }
     }
 
     @Override
     public void onRemoved(LivingEntity entity) {
-        for (ItemStack slot : entity.getArmorSlots()) {
-            slot.remove(DataComponentRegistry.UNBREAKING);
+        for (net.minecraft.world.entity.EquipmentSlot s : new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET}) {
+            entity.getItemBySlot(s).remove(DataComponentRegistry.UNBREAKING);
         }
     }
 

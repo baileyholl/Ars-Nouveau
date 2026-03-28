@@ -11,6 +11,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec2;
 
 import javax.annotation.Nullable;
@@ -43,7 +44,7 @@ public class JarDimData extends SavedData {
         return spawnPos;
     }
 
-    @Override
+    // save() is no longer an override of SavedData in 1.21.11; called by the Codec in SavedDataType
     public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
         if (!enteredFrom.isEmpty()) {
             compoundTag.put("enteredFrom", ANCodecs.encode(ENTERED_FROM_CODEC, enteredFrom));
@@ -55,7 +56,7 @@ public class JarDimData extends SavedData {
     public static JarDimData load(CompoundTag compoundTag, HolderLookup.Provider provider) {
         JarDimData data = new JarDimData();
         if (compoundTag.contains("enteredFrom")) {
-            data.enteredFrom = new HashMap<>(ANCodecs.decode(ENTERED_FROM_CODEC, compoundTag.getCompound("enteredFrom")));
+            data.enteredFrom = new HashMap<>(ANCodecs.decode(ENTERED_FROM_CODEC, compoundTag.getCompoundOrEmpty("enteredFrom")));
         }
         if (compoundTag.contains("spawnPos")) {
             data.spawnPos = ANCodecs.decode(BlockPos.CODEC, compoundTag.get("spawnPos"));
@@ -63,9 +64,19 @@ public class JarDimData extends SavedData {
         return data;
     }
 
+    // SavedDataType replaces SavedData.Factory in 1.21.11
+    public static final SavedDataType<JarDimData> TYPE = new SavedDataType<>(
+            "jar_data",
+            level -> new JarDimData(),
+            level -> net.minecraft.nbt.CompoundTag.CODEC.xmap(
+                    tag -> JarDimData.load(tag, level.registryAccess()),
+                    data -> data.save(new net.minecraft.nbt.CompoundTag(), level.registryAccess())
+            )
+    );
+
     public static JarDimData from(ServerLevel level) {
         return level.getDataStorage()
-                .computeIfAbsent(new SavedData.Factory<>(JarDimData::new, JarDimData::load, null), "jar_data");
+                .computeIfAbsent(TYPE);
     }
 
     public record RotPos(GlobalPos pos, Vec2 rot) {

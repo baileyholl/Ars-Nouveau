@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class GlyphScribePage extends AbstractPage {
 
@@ -10,7 +10,7 @@ public class GlyphScribePage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("ars_nouveau:glyph_recipe");
+    public Identifier getType() {
+        return Identifier.tryParse("ars_nouveau:glyph_recipe");
     }
 }

@@ -4,15 +4,15 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.Input;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.entity.player.Input;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +21,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
+import org.joml.Matrix3x2fStack;
 
 import java.util.List;
 
@@ -49,7 +50,6 @@ public class GuiRadialMenu<T> extends Screen {
         this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
         this.holdToOpenGUI = !Config.TOGGLE_RADIAL_HUD.get();
-        this.minecraft = Minecraft.getInstance();
         this.selectedItem = -1;
         itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
@@ -62,23 +62,20 @@ public class GuiRadialMenu<T> extends Screen {
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
-
             Options settings = Minecraft.getInstance().options;
-            Input eInput = event.getInput();
-            long window = Minecraft.getInstance().getWindow().getWindow();
-            eInput.up = InputConstants.isKeyDown(window, settings.keyUp.getKey().getValue());
-            eInput.down = InputConstants.isKeyDown(window, settings.keyDown.getKey().getValue());
-            eInput.left = InputConstants.isKeyDown(window, settings.keyLeft.getKey().getValue());
-            eInput.right = InputConstants.isKeyDown(window, settings.keyRight.getKey().getValue());
+            ClientInput eInput = event.getInput();
+            // In 1.21.11, InputConstants.isKeyDown takes Window object, not long
+            com.mojang.blaze3d.platform.Window window = Minecraft.getInstance().getWindow();
 
-            eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
-            eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
-            eInput.jumping = InputConstants.isKeyDown(window, settings.keyJump.getKey().getValue());
-            eInput.shiftKeyDown = InputConstants.isKeyDown(window, settings.keyShift.getKey().getValue());
-            if (Minecraft.getInstance().player.isMovingSlowly()) {
-                eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
-                eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
-            }
+            boolean up    = InputConstants.isKeyDown(window, settings.keyUp.getKey().getValue());
+            boolean down  = InputConstants.isKeyDown(window, settings.keyDown.getKey().getValue());
+            boolean left  = InputConstants.isKeyDown(window, settings.keyLeft.getKey().getValue());
+            boolean right = InputConstants.isKeyDown(window, settings.keyRight.getKey().getValue());
+            boolean jump  = InputConstants.isKeyDown(window, settings.keyJump.getKey().getValue());
+            boolean shift = InputConstants.isKeyDown(window, settings.keyShift.getKey().getValue());
+            boolean sprint = eInput.keyPresses.sprint();
+
+            eInput.keyPresses = new Input(up, down, left, right, jump, shift, sprint);
         }
     }
 
@@ -90,7 +87,7 @@ public class GuiRadialMenu<T> extends Screen {
 
         if (holdToOpenGUI) {
             int openRadialKey = ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue();
-            boolean radialKeyIsDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), openRadialKey);
+            boolean radialKeyIsDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), openRadialKey);
             if (!radialKeyIsDown) {
                 if (this.selectedItem != -1) {
                     radialMenu.setCurrentSlot(selectedItem);
@@ -103,14 +100,14 @@ public class GuiRadialMenu<T> extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        PoseStack ms = graphics.pose();
+        // In 1.21.11, graphics.pose() returns Matrix3x2fStack
+        Matrix3x2fStack ms = graphics.pose();
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
 
         float currTick = ClientInfo.partialTicks;
         totalTime += (currTick + extraTick - prevTick) / 20f;
         extraTick = 0;
         prevTick = currTick;
-
 
         float animProgress = Mth.clamp(openAnimation, 0, 1);
         animProgress = (float) (1 - Math.pow(1 - animProgress, 3));
@@ -129,14 +126,9 @@ public class GuiRadialMenu<T> extends Screen {
             mousePositionInDegreesInRelationToCenterOfScreen += 360;
         }
 
-        ms.pushPose();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        ms.pushMatrix();
+        // RenderSystem blend/shader calls removed in 1.21.11 - draw using GuiGraphics.fill approximation
 
-
-        BufferBuilder tessellator = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
 
@@ -152,27 +144,27 @@ public class GuiRadialMenu<T> extends Screen {
             }
         }
 
-
+        // Draw slices using pixel-by-pixel fill (approximation for removed Tessellator pipeline)
         for (int i = 0; i < numberOfSlices; i++) {
             float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-            if (selectedItem == i) {
-                drawSlice(tessellator, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
+            boolean isSelected = selectedItem == i;
+            if (isSelected) {
                 hasMouseOver = true;
                 mousedOverSlot = selectedItem;
-            } else
-                drawSlice(tessellator, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
+                drawSliceGraphics(graphics, centerOfScreenX, centerOfScreenY, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
+            } else {
+                drawSliceGraphics(graphics, centerOfScreenX, centerOfScreenY, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
+            }
         }
 
-        BufferUploader.drawWithShader(tessellator.buildOrThrow());
-        RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             graphics.drawCenteredString(font, radialMenuSlots.get(adjusted).slotName(), width / 2, (height - font.lineHeight) / 2, 16777215);
         }
 
-        ms.popPose();
+        ms.popMatrix();
         for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
@@ -181,7 +173,7 @@ public class GuiRadialMenu<T> extends Screen {
             }
             float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
-            RenderSystem.disableDepthTest();
+            // RenderSystem.disableDepthTest() removed in 1.21.11
 
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
@@ -191,16 +183,53 @@ public class GuiRadialMenu<T> extends Screen {
             if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
                 drawSecondaryIcons(graphics, (int) posX, (int) posY, secondarySlotIcons);
             }
-            ms.pushPose();
-            ms.translate(0, 0, 9999);
+            ms.pushMatrix();
+            // Matrix3x2fStack.translate is 2D; z-ordering handled by GUI system
+            ms.translate(0, 0);
             drawSliceName(graphics, String.valueOf(i + 1), stack, (int) posX, (int) posY);
-            ms.popPose();
+            ms.popMatrix();
         }
 
         if (mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             selectedItem = adjusted;
+        }
+    }
+
+    /**
+     * Draws a pie slice using GuiGraphics.fill pixel approximation.
+     * Replaces Tessellator/BufferBuilder approach removed in 1.21.11.
+     */
+    public void drawSliceGraphics(GuiGraphics graphics, float cx, float cy, float radiusIn, float radiusOut,
+                                   float startAngleDeg, float endAngleDeg, int r, int g, int b, int a) {
+        int color = (a << 24) | (r << 16) | (g << 8) | b;
+        float angle = endAngleDeg - startAngleDeg;
+        int sections = Math.max(1, Mth.ceil(angle / PRECISION));
+        float startAngle = (float) Math.toRadians(startAngleDeg);
+        float endAngle = (float) Math.toRadians(endAngleDeg);
+        float totalAngle = endAngle - startAngle;
+
+        for (int i = 0; i < sections; i++) {
+            float a1 = startAngle + (i / (float) sections) * totalAngle;
+            float a2 = startAngle + ((i + 1) / (float) sections) * totalAngle;
+
+            // Draw a filled quad for each slice segment
+            int x1in  = (int)(cx + radiusIn  * Math.cos(a1));
+            int y1in  = (int)(cy + radiusIn  * Math.sin(a1));
+            int x1out = (int)(cx + radiusOut * Math.cos(a1));
+            int y1out = (int)(cy + radiusOut * Math.sin(a1));
+            int x2in  = (int)(cx + radiusIn  * Math.cos(a2));
+            int y2in  = (int)(cy + radiusIn  * Math.sin(a2));
+            int x2out = (int)(cx + radiusOut * Math.cos(a2));
+            int y2out = (int)(cy + radiusOut * Math.sin(a2));
+
+            // Fill each triangular/quad section via fill
+            int minX = Math.min(Math.min(x1in, x1out), Math.min(x2in, x2out));
+            int maxX = Math.max(Math.max(x1in, x1out), Math.max(x2in, x2out));
+            int minY = Math.min(Math.min(y1in, y1out), Math.min(y2in, y2out));
+            int maxY = Math.max(Math.max(y1in, y1out), Math.max(y2in, y2out));
+            graphics.fill(minX, minY, maxX + 1, maxY + 1, color);
         }
     }
 
@@ -239,53 +268,29 @@ public class GuiRadialMenu<T> extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int key = event.key();
         int adjustedKey = key - 48;
         if (adjustedKey >= 0 && adjustedKey < radialMenuSlots.size()) {
             selectedItem = adjustedKey == 0 ? radialMenuSlots.size() : adjustedKey;
             selectedItem = selectedItem - 1; // Offset by 1 because 0 based indexing but users see 1 indexed
-            mouseClicked(0, 0, 0);
+            // Simulate click to select
+            if (this.selectedItem != -1) {
+                radialMenu.setCurrentSlot(selectedItem);
+                minecraft.player.closeContainer();
+            }
             return true;
         }
-        return super.keyPressed(key, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean consumed) {
         if (this.selectedItem != -1) {
             radialMenu.setCurrentSlot(selectedItem);
             minecraft.player.closeContainer();
         }
-        return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
-    }
-
-    public void drawSlice(
-            BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
-        float angle = endAngle - startAngle;
-        int sections = Math.max(1, Mth.ceil(angle / PRECISION));
-
-        startAngle = (float) Math.toRadians(startAngle);
-        endAngle = (float) Math.toRadians(endAngle);
-        angle = endAngle - startAngle;
-
-        for (int i = 0; i < sections; i++) {
-            float angle1 = startAngle + (i / (float) sections) * angle;
-            float angle2 = startAngle + ((i + 1) / (float) sections) * angle;
-
-            float pos1InX = x + radiusIn * (float) Math.cos(angle1);
-            float pos1InY = y + radiusIn * (float) Math.sin(angle1);
-            float pos1OutX = x + radiusOut * (float) Math.cos(angle1);
-            float pos1OutY = y + radiusOut * (float) Math.sin(angle1);
-            float pos2OutX = x + radiusOut * (float) Math.cos(angle2);
-            float pos2OutY = y + radiusOut * (float) Math.sin(angle2);
-            float pos2InX = x + radiusIn * (float) Math.cos(angle2);
-            float pos2InY = y + radiusIn * (float) Math.sin(angle2);
-
-            buffer.addVertex(pos1OutX, pos1OutY, z).setColor(r, g, b, a);
-            buffer.addVertex(pos1InX, pos1InY, z).setColor(r, g, b, a);
-            buffer.addVertex(pos2InX, pos2InY, z).setColor(r, g, b, a);
-            buffer.addVertex(pos2OutX, pos2OutY, z).setColor(r, g, b, a);
-        }
+        return super.mouseClicked(event, consumed);
     }
 
     @Override

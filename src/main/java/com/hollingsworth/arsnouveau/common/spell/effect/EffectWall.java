@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWallSpell;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -75,12 +75,12 @@ public class EffectWall extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    protected void addDefaultInvalidCombos(Set<Identifier> defaults) {
         defaults.add(EffectLinger.INSTANCE.getRegistryName());
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

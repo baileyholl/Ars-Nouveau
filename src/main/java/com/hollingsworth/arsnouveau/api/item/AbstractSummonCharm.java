@@ -25,7 +25,7 @@ public abstract class AbstractSummonCharm extends ModItem {
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
-        if (world.isClientSide) return InteractionResult.SUCCESS;
+        if (world.isClientSide()) return InteractionResult.SUCCESS;
         BlockPos pos = context.getClickedPos();
         InteractionResult result;
         if (world.getBlockEntity(pos) instanceof SummoningTile tile) {

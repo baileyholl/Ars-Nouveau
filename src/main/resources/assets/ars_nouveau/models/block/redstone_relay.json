@@ -1,6 +1,7 @@
 {
   "parent": "block/cube_all",
   "textures": {
+    "all": "ars_nouveau:block/redstone_relay",
     "particle": "ars_nouveau:block/redstone_relay"
   },
   "render_type": "cutout"

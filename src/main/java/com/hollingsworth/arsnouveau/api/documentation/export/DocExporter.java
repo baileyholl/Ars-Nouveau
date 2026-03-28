@@ -12,8 +12,8 @@ import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import org.apache.commons.io.FileUtils;
 
@@ -83,7 +83,7 @@ public class DocExporter {
         }
     }
 
-    public static CompletableFuture<Void> exportJson(JsonElement element, ResourceLocation id, Path basePath) {
+    public static CompletableFuture<Void> exportJson(JsonElement element, Identifier id, Path basePath) {
         return CompletableFuture.runAsync(() -> {
             try {
                 ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();

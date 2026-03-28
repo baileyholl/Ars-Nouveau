@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,7 +27,7 @@ public class RitualBinding extends AbstractRitual {
     @Override
     protected void tick() {
         Level world = getWorld();
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             BlockPos pos = getPos();
             for (int i = 0; i < 10; i++) {
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
@@ -37,7 +37,7 @@ public class RitualBinding extends AbstractRitual {
                         pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
             }
         }
-        if (!world.isClientSide && world.getGameTime() % 20 == 0) {
+        if (!world.isClientSide() && world.getGameTime() % 20 == 0) {
             incrementProgress();
             if (getProgress() >= 3) {
                 List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, new AABB(getPos()).inflate(5));
@@ -70,7 +70,7 @@ public class RitualBinding extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.BINDING);
     }
 }

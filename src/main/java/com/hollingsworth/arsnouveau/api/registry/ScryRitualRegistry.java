@@ -18,7 +18,8 @@ public class ScryRitualRegistry {
 
     public static void reloadScryRitualRecipes(RecipeManager recipeManager) {
         RECIPES = new ArrayList<>();
-        List<RecipeHolder<ScryRitualRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.SCRY_RITUAL_TYPE.get());
+        // 1.21.11: recipeMap().byType() returns Collection<RecipeHolder<T>>, not List
+        var recipes = recipeManager.recipeMap().byType(RecipeRegistry.SCRY_RITUAL_TYPE.get());
         RECIPES.addAll(recipes.stream().map(RecipeHolder::value).toList());
     }
 }

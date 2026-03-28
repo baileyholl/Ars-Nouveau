@@ -3,18 +3,10 @@
   "enchantment": "minecraft:sharpness",
   "level": 1,
   "pedestalItems": [
-    {
-      "item": "minecraft:quartz_block"
-    },
-    {
-      "item": "minecraft:quartz_block"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    }
+    "minecraft:quartz_block",
+    "minecraft:quartz_block",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/lapis"
   ],
   "sourceCost": 2000
 }

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.WildenChimera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -94,7 +95,7 @@ public class ChimeraRamGoal extends Goal {
     }
 
     public void breakBlocks() {
-        if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(this.boss.level, this.boss)) {
+        if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief((ServerLevel) this.boss.level(), this.boss)) {
             return;
         }
         Direction facing = boss.getDirection();
@@ -137,7 +138,7 @@ public class ChimeraRamGoal extends Goal {
         for (LivingEntity enemy : nearbyEntities) {
             if (enemy.equals(boss))
                 continue;
-            this.boss.doHurtTarget(enemy);
+            this.boss.doHurtTarget((ServerLevel) this.boss.level(), enemy);
             enemy.knockback(3.0f, Mth.sin(boss.yRot * ((float) Math.PI / 180F)), -Mth.cos(boss.yRot * ((float) Math.PI / 180F)));
             hasHit = true;
         }

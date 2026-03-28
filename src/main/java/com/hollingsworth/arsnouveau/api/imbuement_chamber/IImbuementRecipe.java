@@ -4,7 +4,10 @@ import com.hollingsworth.arsnouveau.api.registry.ImbuementRecipeRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
@@ -12,6 +15,16 @@ import javax.annotation.Nullable;
 
 public interface IImbuementRecipe extends Recipe<ImbuementTile> {
     int getSourceCost(ImbuementTile imbuementTile);
+
+    @Override
+    default PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    default RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
 
     default Component getCraftingStartedText(ImbuementTile imbuementTile) {
         return Component.translatable("ars_nouveau.imbuement.crafting_started", this.assemble(imbuementTile, imbuementTile.getLevel().registryAccess()).getHoverName());

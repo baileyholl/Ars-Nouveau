@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "ars_nouveau:relay_splitter"
-    },
-    {
-      "item": "ars_nouveau:wilden_spike"
-    },
-    {
-      "item": "minecraft:stonecutter"
-    }
+    "ars_nouveau:relay_splitter",
+    "ars_nouveau:wilden_spike",
+    "minecraft:stonecutter"
   ],
   "output": {
     "count": 1,

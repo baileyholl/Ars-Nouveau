@@ -38,8 +38,9 @@ public class DyeRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.DYE_RECIPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeSerializer<ShapelessRecipe> getSerializer() {
+        return (RecipeSerializer<ShapelessRecipe>) (RecipeSerializer<?>) RecipeRegistry.DYE_RECIPE.get();
     }
 
 }

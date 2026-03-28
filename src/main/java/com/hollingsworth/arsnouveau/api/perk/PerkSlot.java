@@ -4,19 +4,19 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public record PerkSlot(ResourceLocation id, int value, DocAssets.BlitInfo icon) {
+public record PerkSlot(Identifier id, int value, DocAssets.BlitInfo icon) {
 
-    public PerkSlot(ResourceLocation id, int value) {
+    public PerkSlot(Identifier id, int value) {
         this(id, value, DocAssets.ICON_THREAD_TIER3);
     }
 
     public static final Codec<PerkSlot> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter((PerkSlot::id)),
+            Identifier.CODEC.fieldOf("id").forGetter((PerkSlot::id)),
             Codec.INT.fieldOf("value").forGetter((PerkSlot::value))
     ).apply(instance, PerkSlot::new));
 
@@ -24,7 +24,7 @@ public record PerkSlot(ResourceLocation id, int value, DocAssets.BlitInfo icon) 
 
     public static Codec<List<List<PerkSlot>>> TIERED_LIST_CODEC = Codec.list(LIST_CODEC);
 
-    public static ConcurrentHashMap<ResourceLocation, PerkSlot> PERK_SLOTS = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Identifier, PerkSlot> PERK_SLOTS = new ConcurrentHashMap<>();
 
     public static final PerkSlot ONE = new PerkSlot(ArsNouveau.prefix("one"), 1, DocAssets.ICON_THREAD_TIER1);
     public static final PerkSlot TWO = new PerkSlot(ArsNouveau.prefix("two"), 2, DocAssets.ICON_THREAD_TIER2);

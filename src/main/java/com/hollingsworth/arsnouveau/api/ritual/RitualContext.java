@@ -34,11 +34,11 @@ public class RitualContext {
 
     public static RitualContext read(HolderLookup.Provider provider, CompoundTag tag) {
         RitualContext context = new RitualContext();
-        context.progress = tag.getInt("progress");
-        context.isDone = tag.getBoolean("complete");
-        context.isStarted = tag.getBoolean("started");
+        context.progress = tag.getIntOr("progress", 0);
+        context.isDone = tag.getBooleanOr("complete", false);
+        context.isStarted = tag.getBooleanOr("started", false);
         context.consumedItems = NBTUtil.readItems(provider, tag, "item_");
-        context.needsSourceToRun = tag.getBoolean("needsMana");
+        context.needsSourceToRun = tag.getBooleanOr("needsMana", false);
         return context;
     }
 }

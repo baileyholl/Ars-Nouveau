@@ -10,10 +10,13 @@ import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -102,16 +105,16 @@ public class EntityFollowProjectile extends ColoredProjectile {
 
         this.age++;
         if (age > maxAge) {
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
         Vec3 vec3d2 = this.getDeltaMovement();
         BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
         if (BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)) {
-            if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
+            if (level.isClientSide() && entityData.get(SPAWN_TOUCH)) {
                 ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
             }
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
         double posX = getX();
@@ -145,7 +148,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
 
         this.setDeltaMovement(motionX, motionY, motionZ);
 
-        if (level.isClientSide && this.age > 1) {
+        if (level.isClientSide() && this.age > 1) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;
@@ -163,21 +166,21 @@ public class EntityFollowProjectile extends ColoredProjectile {
     }
 
     @Override
-    public void setRemoved(RemovalReason reason) {
-        if (reason == RemovalReason.UNLOADED_TO_CHUNK)
-            reason = RemovalReason.DISCARDED;
+    public void setRemoved(Entity.RemovalReason reason) {
+        if (reason == Entity.RemovalReason.UNLOADED_TO_CHUNK)
+            reason = Entity.RemovalReason.DISCARDED;
         super.setRemoved(reason);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(EntityFollowProjectile.from, NBTUtil.getBlockPos(compound, "from"));
         this.entityData.set(EntityFollowProjectile.to, NBTUtil.getBlockPos(compound, "to"));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         if (from != null)
             NBTUtil.storeBlockPos(compound, "from", this.entityData.get(EntityFollowProjectile.from));

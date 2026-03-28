@@ -66,7 +66,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
         if (tile != null && !tile.isOff) {
             if (entity.timeSinceGen > 300) {
                 return true;
-            } else if (entity.getCommandSenderWorld().random.nextInt(100) <= 2) {
+            } else if (entity.level().random.nextInt(100) <= 2) {
                 return entity.level.getGameTime() % 10 == 0;
             }
         }

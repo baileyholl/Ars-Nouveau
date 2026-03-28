@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.advancement;
 
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.criterion.PlayerTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;

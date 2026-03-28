@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:ingots/gold"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    }
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:ingots/gold",
+    "#c:ingots/gold",
+    "#c:gems/source",
+    "#c:gems/source",
+    "#c:gems/source",
+    "#c:gems/source"
   ],
-  "reagent": {
-    "item": "ars_nouveau:dull_trinket"
-  },
+  "reagent": "ars_nouveau:dull_trinket",
   "result": {
     "count": 1,
     "id": "ars_nouveau:amulet_of_mana_regen"

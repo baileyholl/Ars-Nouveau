@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.entity.ArchwoodBoat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
@@ -28,12 +28,12 @@ public class ArchwoodBoatItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         HitResult hitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
 
         if (hitResult.getType() == HitResult.Type.MISS) {
-            return InteractionResultHolder.pass(itemStack);
+            return InteractionResult.PASS;
         }
 
         Vec3 viewVector = player.getViewVector(1.0F);
@@ -46,7 +46,7 @@ public class ArchwoodBoatItem extends Item {
             for (Entity entity : nearbyEntities) {
                 AABB aabb = entity.getBoundingBox().inflate(entity.getPickRadius());
                 if (aabb.contains(eyePosition)) {
-                    return InteractionResultHolder.pass(itemStack);
+                    return InteractionResult.PASS;
                 }
             }
         }
@@ -56,10 +56,10 @@ public class ArchwoodBoatItem extends Item {
             boat.setYRot(player.getYRot());
 
             if (!level.noCollision(boat, boat.getBoundingBox().inflate(-0.1D))) {
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
             }
 
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 level.addFreshEntity(boat);
                 level.gameEvent(player, GameEvent.ENTITY_PLACE, BlockPos.containing(hitResult.getLocation()));
                 if (!player.getAbilities().instabuild) {
@@ -68,9 +68,9 @@ public class ArchwoodBoatItem extends Item {
             }
 
             player.awardStat(Stats.ITEM_USED.get(this));
-            return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+            return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
         }
 
-        return InteractionResultHolder.pass(itemStack);
+        return InteractionResult.PASS;
     }
 }

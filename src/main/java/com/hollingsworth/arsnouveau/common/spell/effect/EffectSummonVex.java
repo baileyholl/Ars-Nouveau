@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
@@ -38,9 +38,9 @@ public class EffectSummonVex extends AbstractEffect {
         for (int i = 0; i < 3; ++i) {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
-            vexentity.moveTo(blockpos, 0.0F, 0.0F);
-            vexentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null);
-            vexentity.setOwner(shooter);
+            vexentity.snapTo(blockpos, 0.0F, 0.0F);
+            vexentity.finalizeSpawn((ServerLevelAccessor) world, ((ServerLevelAccessor) world).getCurrentDifficultyAt(blockpos), EntitySpawnReason.MOB_SUMMONED, null);
+            if (shooter instanceof net.minecraft.world.entity.Mob mob) { vexentity.setOwner(mob); }
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(ticks);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, vexentity);

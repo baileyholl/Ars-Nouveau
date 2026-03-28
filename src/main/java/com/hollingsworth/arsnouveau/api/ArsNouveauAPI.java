@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -38,7 +38,7 @@ public class ArsNouveauAPI {
     //This is intended as a dev debug tool, used in mana bars. Do not make into a config option with a PR. A Starkiller will be dispatched if you do.
     public static boolean ENABLE_DEBUG_NUMBERS;
 
-    private ConcurrentHashMap<ResourceLocation, IScryer> scryerMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Identifier, IScryer> scryerMap = new ConcurrentHashMap<>();
 
     private Set<RecipeType<? extends IEnchantingRecipe>> enchantingRecipeTypes = ConcurrentHashMap.newKeySet();
 
@@ -62,10 +62,10 @@ public class ArsNouveauAPI {
 
     public List<RecipeHolder<? extends IEnchantingRecipe>> getEnchantingApparatusRecipes(Level world) {
         List<RecipeHolder<? extends IEnchantingRecipe>> recipes = new ArrayList<>(enchantingApparatusRecipes);
-        RecipeManager manager = world.getRecipeManager();
+        RecipeManager manager = ((net.minecraft.world.item.crafting.RecipeManager)world.recipeAccess());
         List<RecipeHolder<? extends IEnchantingRecipe>> recipesByType = new ArrayList<>(); // todo lazy init enchanting types
         for (RecipeType<? extends IEnchantingRecipe> type : enchantingRecipeTypes) {
-            recipesByType.addAll(manager.getAllRecipesFor(type));
+            recipesByType.addAll(manager.recipeMap().byType(type));
         }
         recipes.addAll(recipesByType);
         return recipes;
@@ -81,7 +81,8 @@ public class ArsNouveauAPI {
                 brewingRecipes.add(new BrewingRecipe(
                         PotionIngredient.fromPotion(mix.from()),
                         mix.ingredient(),
-                        PotionIngredient.fromPotion(mix.to()).getItems()[0]
+                        // 1.21.11: Ingredient.getItems() removed; build the potion ItemStack directly
+                        PotionIngredient.potionItemStack(mix.to())
                 ));
             }
         }
@@ -109,7 +110,7 @@ public class ArsNouveauAPI {
         return castingSpellValidator;
     }
 
-    public @Nullable IScryer getScryer(ResourceLocation id) {
+    public @Nullable IScryer getScryer(Identifier id) {
         return this.scryerMap.get(id);
     }
 

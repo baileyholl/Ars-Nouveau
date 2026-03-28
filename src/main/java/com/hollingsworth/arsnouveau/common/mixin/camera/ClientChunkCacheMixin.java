@@ -8,12 +8,14 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.levelgen.Heightmap;
+
+import java.util.Map;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -95,7 +97,7 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
 
             if (chunk != null && chunk.getPos().x == x && chunk.getPos().z == z) {
                 NeoForge.EVENT_BUS.post(new ChunkEvent.Unload(chunk));
-                cameraStorage.replace(i, chunk, null);
+                cameraStorage.replace(i, null);
 
             }
         }
@@ -105,7 +107,7 @@ public abstract class ClientChunkCacheMixin implements ANIChunkStorageProvider {
      * checks if the camera storage should be used
      */
     @Inject(method = "replaceWithPacketData", at = @At("HEAD"))
-    private void as$useStorage(int x, int z, FriendlyByteBuf buffer, CompoundTag tag, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> consumer, CallbackInfoReturnable<LevelChunk> cir, @Share("as$useCamera") LocalBooleanRef ref) {
+    private void as$useStorage(int x, int z, FriendlyByteBuf buffer, Map<Heightmap.Types, long[]> heightmaps, Consumer<ClientboundLevelChunkPacketData.BlockEntityTagOutput> consumer, CallbackInfoReturnable<LevelChunk> cir, @Share("as$useCamera") LocalBooleanRef ref) {
         ref.set(CameraUtil.isPlayerMountedOnCamera(Minecraft.getInstance().player) && CameraController.getCameraStorage().inRange(x, z));
     }
 

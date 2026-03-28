@@ -10,18 +10,19 @@ import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.level.Level;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -120,7 +121,7 @@ public class BaseDocScreen extends BaseScreen {
     }
 
     public boolean isShiftDown() {
-        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
     }
 
     public void initBookmarks() {
@@ -129,9 +130,9 @@ public class BaseDocScreen extends BaseScreen {
         }
         bookmarkButtons.clear();
 
-        List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
+        List<Identifier> bookmarks = DocPlayerData.bookmarks;
         for (int i = 0; i < bookmarks.size(); i++) {
-            ResourceLocation entryId = bookmarks.get(i);
+            Identifier entryId = bookmarks.get(i);
             DocEntry entry = DocumentationRegistry.getEntry(entryId);
 
             BookmarkButton slot = addRenderableWidget(new BookmarkButton(screenLeft + 281, screenTop + 1 + 15 * (i + 1), entry, (b) -> {
@@ -165,25 +166,25 @@ public class BaseDocScreen extends BaseScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isHandled) {
         if (!searchBar.isHovered()) {
-            if (button == 1) {
+            if (event.button() == 1) {
                 goBack();
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isHandled);
     }
 
     @Override
-    public boolean charTyped(char c, int i) {
+    public boolean charTyped(CharacterEvent event) {
         if (!searchBar.isFocused()) {
             searchBar.setFocused(true);
         }
-        if (searchBar.charTyped(c, i)) {
+        if (searchBar.charTyped(event)) {
             return true;
         }
 
-        return super.charTyped(c, i);
+        return super.charTyped(event);
     }
 
     public void transition(BaseDocScreen screen) {
@@ -230,11 +231,8 @@ public class BaseDocScreen extends BaseScreen {
     }
 
     public RecipeManager recipeManager() {
-        Level level = ArsNouveau.proxy.getClientWorld();
-        return level.getRecipeManager();
+        return Minecraft.getInstance().getSingleplayerServer().getRecipeManager();
     }
 
-    public void setMinecraft(Minecraft minecraft) {
-        this.minecraft = minecraft;
-    }
+
 }

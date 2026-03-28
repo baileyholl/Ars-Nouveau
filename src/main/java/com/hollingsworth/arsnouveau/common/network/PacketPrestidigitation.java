@@ -37,9 +37,9 @@ public class PacketPrestidigitation extends AbstractPacket {
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if (player.level.getEntity(this.entityId) instanceof Entity entity) {
+        if (player.level().getEntity(this.entityId) instanceof Entity entity) {
             emitter.position = () -> entity.getBoundingBox().getCenter();
-            EventQueue.getClientQueue().addEvent(new ParticleTimelineEvent(player.level, emitter, ticks));
+            EventQueue.getClientQueue().addEvent(new ParticleTimelineEvent(player.level(), emitter, ticks));
         }
     }
 

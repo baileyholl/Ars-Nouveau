@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 
 public class EntityPage extends AbstractPage {
@@ -45,7 +45,7 @@ public class EntityPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.tryParse("patchouli:entity");
+    public Identifier getType() {
+        return Identifier.tryParse("patchouli:entity");
     }
 }

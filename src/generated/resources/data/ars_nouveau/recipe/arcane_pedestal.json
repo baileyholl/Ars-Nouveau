@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:sourcestone"
-    },
-    "y": {
-      "tag": "c:nuggets/gold"
-    },
-    "z": {
-      "tag": "c:gems/source"
-    }
+    "x": "ars_nouveau:sourcestone",
+    "y": "#c:nuggets/gold",
+    "z": "#c:gems/source"
   },
   "pattern": [
     "xzx",

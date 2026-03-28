@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.ritual.features.IPlaceableFeature;
 import com.hollingsworth.arsnouveau.api.ritual.features.PlaceBlockFeature;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -47,7 +47,7 @@ public class FloweringRitual extends FeaturePlacementRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.FLOWERING);
     }
 

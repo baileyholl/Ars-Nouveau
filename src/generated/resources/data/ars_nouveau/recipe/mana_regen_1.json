@@ -3,24 +3,12 @@
   "enchantment": "ars_nouveau:mana_regen",
   "level": 1,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "item": "ars_nouveau:sourceberry_bush"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    },
-    {
-      "tag": "c:storage_blocks/lapis"
-    }
+    "ars_nouveau:sourceberry_bush",
+    "ars_nouveau:sourceberry_bush",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/lapis",
+    "#c:storage_blocks/lapis"
   ],
   "sourceCost": 2000
 }

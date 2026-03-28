@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "tag": "c:stones"
-  },
+  "input": "#c:stones",
   "output": [
     {
       "chance": 1.0,

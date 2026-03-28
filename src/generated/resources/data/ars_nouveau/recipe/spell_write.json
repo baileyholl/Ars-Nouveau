@@ -1,9 +1,7 @@
 {
   "type": "ars_nouveau:spell_write",
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:spell_parchment"
-    }
+    "ars_nouveau:spell_parchment"
   ],
   "sourceCost": 3000
 }

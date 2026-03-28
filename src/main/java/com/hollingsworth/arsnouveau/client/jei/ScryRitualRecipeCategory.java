@@ -18,17 +18,18 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScryRitualRecipeCategory implements IRecipeCategory<RecipeHolder<ScryRitualRecipe>> {
-    public static final ResourceLocation SCRY_RITUAL = ArsNouveau.prefix(RitualLib.SCRYING);
+    public static final Identifier SCRY_RITUAL = ArsNouveau.prefix(RitualLib.SCRYING);
     private final IDrawableAnimated arrow;
     public IDrawable background;
     public IDrawable icon;
@@ -49,14 +50,21 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<RecipeHolder<Sc
         return Component.translatable("ars_nouveau.scry_ritual_recipe");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
+    // getBackground() removed from IRecipeCategory in JEI 27.4
 
     @Override
     public IDrawable getIcon() {
         return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return 120;
+    }
+
+    @Override
+    public int getHeight() {
+        return 24;
     }
 
     @Override
@@ -72,8 +80,15 @@ public class ScryRitualRecipeCategory implements IRecipeCategory<RecipeHolder<Sc
         for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(recipe.highlight())) {
             items.add(blockHolder.value().asItem().getDefaultInstance());
         }
-        ItemStack[] stacks = items.toArray(new ItemStack[]{});
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 120 - 16 - 6, 4).addIngredients(Ingredient.of(stacks));
-        builder.addSlot(RecipeIngredientRole.INPUT, 6, 4).addIngredients(Ingredient.of(recipe.augment()));
+        // 1.21.11: Ingredient.of(ItemStack[]) removed - add each item stack individually to the slot
+        var outputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT, 120 - 16 - 6, 4);
+        for (ItemStack stack : items) {
+            outputSlot.addItemStack(stack);
+        }
+        // 1.21.11: Ingredient.of(TagKey<Item>) removed - use tag lookup via BuiltInRegistries
+        var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 6, 4);
+        for (Holder<Item> itemHolder : BuiltInRegistries.ITEM.getTagOrEmpty(recipe.augment())) {
+            inputSlot.addItemStack(itemHolder.value().getDefaultInstance());
+        }
     }
 }

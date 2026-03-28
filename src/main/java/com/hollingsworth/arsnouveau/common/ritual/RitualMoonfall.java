@@ -7,10 +7,10 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 
 public class RitualMoonfall extends AbstractRitual {
     @Override
@@ -21,7 +21,7 @@ public class RitualMoonfall extends AbstractRitual {
             if (world.getDayTime() % 24000 < 13000 && world.getDayTime() % 24000 >= 0) {
                 world.setDayTime(world.getDayTime() + 100);
                 for (ServerPlayer player : world.players()) {
-                    player.connection.send(new ClientboundSetTimePacket(world.getGameTime(), world.getDayTime(), world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)));
+                    player.connection.send(new ClientboundSetTimePacket(world.getGameTime(), world.getDayTime(), world.getGameRules().get(GameRules.ADVANCE_TIME)));
                 }
             } else {
                 //speed up since the target is reached
@@ -32,7 +32,7 @@ public class RitualMoonfall extends AbstractRitual {
                 if (getProgress() >= 18) {
                     world.setDayTime(MathUtil.getNextDaysTime(world, MathUtil.NIGHT_TIME));
                     for (ServerPlayer player : world.players()) {
-                        player.connection.send(new ClientboundSetTimePacket(world.getGameTime(), world.getDayTime(), world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)));
+                        player.connection.send(new ClientboundSetTimePacket(world.getGameTime(), world.getDayTime(), world.getGameRules().get(GameRules.ADVANCE_TIME)));
                     }
                     setFinished();
                 }
@@ -52,7 +52,7 @@ public class RitualMoonfall extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.MOONFALL);
     }
 

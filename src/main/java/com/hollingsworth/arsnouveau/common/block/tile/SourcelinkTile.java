@@ -9,17 +9,18 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.Event;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -38,7 +39,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     @Override
     public void tick() {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return;
         if (level.getGameTime() % 120 == 0 && usesEventQueue()) {
             SourcelinkEventQueue.addPosition(level, this.worldPosition);
@@ -82,7 +83,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        data.add(new AnimationController<SourcelinkTile>("rotate_controller", 0, this::idlePredicate));
     }
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -93,10 +94,10 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        progress = tag.getInt("progress");
-        isDisabled = tag.getBoolean("disabled");
+    protected void loadAdditional(@NotNull ValueInput tag) {
+        super.loadAdditional(tag);
+        progress = tag.getIntOr("progress", 0);
+        isDisabled = tag.getBooleanOr("disabled", false);
     }
 
     @Override
@@ -110,16 +111,16 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
     }
 
-    private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {
+    private PlayState idlePredicate(AnimationTest<SourcelinkTile> event) {
         if (this.isDisabled)
             return PlayState.STOP;
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("rotation"));
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("rotation"));
         return PlayState.CONTINUE;
     }
 }

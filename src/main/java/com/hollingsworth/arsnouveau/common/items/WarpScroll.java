@@ -18,12 +18,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec2;
@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class WarpScroll extends ModItem implements AliasProvider {
     public WarpScroll() {
@@ -41,18 +42,18 @@ public class WarpScroll extends ModItem implements AliasProvider {
 
     @Override
     public boolean onEntityItemUpdate(@NotNull ItemStack stack, ItemEntity entity) {
-        if (entity.getCommandSenderWorld().isClientSide)
+        if (entity.level().isClientSide())
             return false;
 
         String displayName = stack.get(DataComponents.CUSTOM_NAME) != null ? stack.getHoverName().getString() : null;
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (data.isValid()
-                && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
-                && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
-                && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-                && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+                && data.canTeleportWithDim(entity.level().dimension().identifier().toString())
+                && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.level(), 10, 9000)
+                && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.level(), entity.blockPosition(), data, displayName)
+                && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.level(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
-            ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
+            ServerLevel world = (ServerLevel) entity.level();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),
                     10, (world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
             world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
@@ -65,19 +66,19 @@ public class WarpScroll extends ModItem implements AliasProvider {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         WarpScrollData data = stack.get(DataComponentRegistry.WARP_SCROLL);
         if (hand == InteractionHand.OFF_HAND)
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+            return InteractionResult.SUCCESS;
 
         if (!(world instanceof ServerLevel serverLevel))
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+            return InteractionResult.SUCCESS;
 
         if (data.isValid()) {
-            if (!data.canTeleportWithDim(player.getCommandSenderWorld().dimension().location().toString())) {
-                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"));
-                return InteractionResultHolder.fail(stack);
+            if (!data.canTeleportWithDim(player.level().dimension().identifier().toString())) {
+                player.displayClientMessage(Component.translatable("ars_nouveau.warp_scroll.wrong_dim"), false);
+                return InteractionResult.FAIL;
             }
             BlockPos pos = data.pos().get();
             Vec2 rotation = data.rotation();
@@ -94,14 +95,15 @@ public class WarpScroll extends ModItem implements AliasProvider {
             if (!player.hasInfiniteMaterials()) {
                 stack.shrink(1);
             }
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
         if (player.isShiftKeyDown()) {
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL.get());
-            newWarpStack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(Optional.of(player.blockPosition()), player.getCommandSenderWorld().dimension().location().toString(), player.getRotationVector(), false));
+            newWarpStack.set(DataComponentRegistry.WARP_SCROLL, new WarpScrollData(Optional.of(player.blockPosition()), player.level().dimension().identifier().toString(), player.getRotationVector(), false));
             boolean didAdd;
             if (stack.getCount() == 1) {
-                stack = newWarpStack;
+                // Replace held item with the newly recorded warp stack
+                player.setItemInHand(hand, newWarpStack);
                 didAdd = true;
             } else {
                 didAdd = player.addItem(newWarpStack);
@@ -110,19 +112,19 @@ public class WarpScroll extends ModItem implements AliasProvider {
                 }
             }
             if (!didAdd) {
-                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"));
-                return InteractionResultHolder.fail(stack);
+                player.displayClientMessage(Component.translatable("ars_nouveau.warp_scroll.inv_full"), false);
+                return InteractionResult.FAIL;
             } else {
-                player.sendSystemMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"));
+                player.displayClientMessage(Component.translatable("ars_nouveau.warp_scroll.recorded"), false);
             }
         }
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, display, tooltip2, flagIn);
     }
 
     @Override

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:red_archwood_log"
-    },
-    {
-      "item": "minecraft:sunflower"
-    }
+    "ars_nouveau:red_archwood_log",
+    "minecraft:sunflower"
   ],
   "result": {
     "count": 1,

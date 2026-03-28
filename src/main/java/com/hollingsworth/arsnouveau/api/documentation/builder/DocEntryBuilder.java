@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.setup.registry.Documentation;
 import com.hollingsworth.arsnouveau.setup.registry.RegistryHelper;
 import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
@@ -30,7 +30,7 @@ public class DocEntryBuilder {
     public DocCategory category;
     public ItemStack displayItem;
     public String titleKey;
-    public ResourceLocation entryId;
+    public Identifier entryId;
 
     public Component title;
     public List<ConnectedSearch> connectedSearches = new ArrayList<>();
@@ -40,7 +40,7 @@ public class DocEntryBuilder {
         this(category, name, ArsNouveau.prefix(name));
     }
 
-    public DocEntryBuilder(DocCategory category, String name, ResourceLocation entryId) {
+    public DocEntryBuilder(DocCategory category, String name, Identifier entryId) {
         this(ArsNouveau.MODID, category, name, entryId);
     }
 
@@ -50,10 +50,10 @@ public class DocEntryBuilder {
     }
 
     public DocEntryBuilder(String modid, DocCategory category, String name) {
-        this(modid, category, name, ResourceLocation.fromNamespaceAndPath(modid, name));
+        this(modid, category, name, Identifier.fromNamespaceAndPath(modid, name));
     }
 
-    public DocEntryBuilder(String modid, DocCategory category, String name, ResourceLocation entryId) {
+    public DocEntryBuilder(String modid, DocCategory category, String name, Identifier entryId) {
         this.namespace = modid;
         this.titleKey = name.contains(".") ? name : namespace + ".page." + name;
         this.textKey = name;
@@ -204,7 +204,7 @@ public class DocEntryBuilder {
         for (int i = 0; i < multiLines.size(); i++) {
             NuggetMultilLineLabel label = multiLines.get(i);
             if (i == 0) {
-                pages.add(TextEntry.create(label, itemLike.asItem().getDescription(), itemLike.asItem().getDefaultInstance()));
+                pages.add(TextEntry.create(label, Component.translatable(itemLike.asItem().getDescriptionId()), itemLike.asItem().getDefaultInstance()));
             } else {
                 pages.add(TextEntry.create(label));
             }
@@ -213,10 +213,10 @@ public class DocEntryBuilder {
     }
 
     public DocEntryBuilder withCraftingPages(String resourceLocation, ItemLike outputStack) {
-        return withCraftingPages(ResourceLocation.tryParse(resourceLocation), outputStack);
+        return withCraftingPages(Identifier.tryParse(resourceLocation), outputStack);
     }
 
-    public DocEntryBuilder withCraftingPages(ResourceLocation resourceLocation, @Nullable ItemLike outputStack) {
+    public DocEntryBuilder withCraftingPages(Identifier resourceLocation, @Nullable ItemLike outputStack) {
         var craftingPages = Documentation.getRecipePages(resourceLocation);
         this.withPage(Documentation.getRecipePages(resourceLocation));
         if (!craftingPages.isEmpty() && outputStack != null && !this.displayItem.is(outputStack.asItem())) {

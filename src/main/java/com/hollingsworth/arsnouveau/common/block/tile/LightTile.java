@@ -6,20 +6,18 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +36,7 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
 
     @Override
     public void tick(Level level, BlockState state, BlockPos pos) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (particleEmitter != null) {
                 particleEmitter.tick(level);
             }
@@ -46,27 +44,26 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        this.color = ParticleColorRegistry.from(compound.getCompound("color"));
-        if (compound.contains("timeline")) {
-            this.timeline = ANCodecs.decode(LightTimeline.CODEC.codec(), compound.getCompound("timeline"));
-        } else {
-            this.timeline = new LightTimeline();
+    protected void loadAdditional(@NotNull ValueInput compound) {
+        super.loadAdditional(compound);
+        this.color = compound.read("color", ParticleColor.CODEC.codec()).orElseGet(ParticleColor::defaultParticleColor);
+        this.timeline = compound.read("timeline", LightTimeline.CODEC.codec()).orElseGet(() -> {
+            LightTimeline newTimeline = new LightTimeline();
             PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
             ColorProperty colorProperty = new ColorProperty();
             colorProperty.particleColor = color;
             particleOptions.map.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), colorProperty);
-            timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
-        }
+            newTimeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
+            return newTimeline;
+        });
         particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
-        tag.put("color", color.serialize());
-        tag.put("timeline", ANCodecs.encode(LightTimeline.CODEC.codec(), timeline));
+    public void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
+        tag.store("color", ParticleColor.CODEC.codec(), color);
+        tag.store("timeline", LightTimeline.CODEC.codec(), timeline);
     }
 
     public void setTimeline(LightTimeline timeline) {

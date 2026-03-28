@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -25,12 +25,13 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock {
         super();
     }
 
+    // In 1.21.11, getOcclusionShape(BlockState) is the override — no BlockGetter/BlockPos params.
+    // BlockState.getOcclusionShape() also takes no params.
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof SkyBlockTile sbt && sbt.showFacade()) {
-            return sbt.mimicState.canOcclude() ? sbt.mimicState.getOcclusionShape(level, pos) : Shapes.empty();
-        }
-        return super.getOcclusionShape(state, level, pos);
+    protected VoxelShape getOcclusionShape(BlockState state) {
+        // We don't have a BlockGetter here; fall back to super which checks the tile dynamically.
+        // Tile-level logic is handled by the renderer / shouldRenderFace in MirrorWeaveTile.
+        return super.getOcclusionShape(state);
     }
 
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
@@ -38,14 +39,14 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide || pHand != InteractionHand.MAIN_HAND) {
-            return ItemInteractionResult.SUCCESS;
+    public InteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.isClientSide() || pHand != InteractionHand.MAIN_HAND) {
+            return InteractionResult.SUCCESS;
         }
 
         if (pLevel.getBlockEntity(pPos) instanceof SkyBlockTile tile) {
             if (!tile.showFacade() && !pPlayer.hasEffect(ModPotions.MAGIC_FIND_EFFECT)) {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);

@@ -132,6 +132,7 @@ Issue: `BaseScreen` has a mixin import that may fail compilation.
   - Drygmy missing texture — `DrygmyModel` now reads color from render state, returns `drygmy_brown.png` etc.
   - Armor `ClassCastException` (`AvatarRenderState → ArsHumanoidRenderState`) — moved dye color injection to `DyeableGeoModel.addAdditionalStateData`
 - [x] i18n audit — all `Component.literal(...)` user strings replaced with `Component.translatable(...)`; 12 new keys added to `en_us.json`
+- [x] Spellbook edit fields (SearchBar + EnterTextField) invisible text — rewrote to extend `EditBox` directly, use `textX`/`textY` + `EditBox.renderWidget` (MC 1.21.11 pipeline)
 - [ ] Test in-game: basic spell casting, familiars, rituals, doc screen, GeoItem rendering in inventory, armor dye colors
 
 ---

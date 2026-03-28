@@ -30,7 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -79,9 +78,9 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -123,7 +122,6 @@ public class WildenChimera extends Monster implements GeoEntity {
         FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, level);
         flyingpathnavigator.setCanOpenDoors(true);
         flyingpathnavigator.setCanFloat(false);
-        flyingpathnavigator.setCanPassDoors(true);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.flyingNavigator = flyingpathnavigator;
         this.waterNavigation = new WaterBoundPathNavigation(this, level);
@@ -194,85 +192,85 @@ public class WildenChimera extends Monster implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        animatableManager.add(new AnimationController<>(this, "walkController", 1, e -> {
+        animatableManager.add(new AnimationController<WildenChimera>("walkController", 1, e -> {
             if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && !isSwimming() && !isRamPrep() && !isRamming()) {
-                e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+                e.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
 
             return PlayState.STOP;
         }));
-        crouchController = new AnimationController<>(this, "crouchController", 1, event -> {
+        crouchController = new AnimationController<WildenChimera>("crouchController", 1, event -> {
             if (isDefensive() && !isFlying() && !this.isHowling()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("defending"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("defending"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         });
 
         animatableManager.add(crouchController);
-        animatableManager.add(new AnimationController<>(this, "idleController", 1, event -> {
+        animatableManager.add(new AnimationController<WildenChimera>("idleController", 1, event -> {
             if (!event.isMoving() && !isDefensive() && !isFlying() && !isHowling() && !isRamPrep() && !isRamming()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "flyController", 1, event -> {
+        animatableManager.add(new AnimationController<WildenChimera>("flyController", 1, event -> {
             if (isFlying() && !isDiving()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("fly_rising"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("fly_rising"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "diveController", 1, event -> {
+        animatableManager.add(new AnimationController<WildenChimera>("diveController", 1, event -> {
             if (isDiving()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("dive"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("dive"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "howlController", 1, e -> {
+        animatableManager.add(new AnimationController<WildenChimera>("howlController", 1, e -> {
             if (isHowling()) {
-                e.getController().setAnimation(RawAnimation.begin().thenPlay("roar"));
+                e.controller().setAnimation(RawAnimation.begin().thenPlay("roar"));
                 return PlayState.CONTINUE;
             }
-            e.getController().forceAnimationReset();
+            e.controller().reset();
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "swimController", 1, e -> {
+        animatableManager.add(new AnimationController<WildenChimera>("swimController", 1, e -> {
             if (!isDefensive() && e.isMoving() && !isFlying() && !isHowling() && isSwimming()) {
-                e.getController().setAnimation(RawAnimation.begin().thenPlay("swim"));
+                e.controller().setAnimation(RawAnimation.begin().thenPlay("swim"));
                 return PlayState.CONTINUE;
             }
 
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "ramController", 1, event -> {
+        animatableManager.add(new AnimationController<WildenChimera>("ramController", 1, event -> {
             if (isRamming() && !isRamPrep()) {
                 if (!this.hasWings()) {
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay("charge"));
+                    event.controller().setAnimation(RawAnimation.begin().thenPlay("charge"));
                 }
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        animatableManager.add(new AnimationController<>(this, "ramPrep", 1, event -> {
+        animatableManager.add(new AnimationController<WildenChimera>("ramPrep", 1, event -> {
             if (isRamPrep() && !isRamming()) {
                 if (this.hasWings()) {
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay("wing_charge_prep"));
+                    event.controller().setAnimation(RawAnimation.begin().thenPlay("wing_charge_prep"));
                 } else {
-                    event.getController().setAnimation(RawAnimation.begin().thenPlay("charge_prep"));
+                    event.controller().setAnimation(RawAnimation.begin().thenPlay("charge_prep"));
                 }
                 return PlayState.CONTINUE;
             }
-            event.getController().forceAnimationReset();
+            event.controller().reset();
             return PlayState.STOP;
         }));
     }
 
     public void updateSwimming() {
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             if (this.isEffectiveAi() && this.isInWater() && this.wantsToSwim() && (isUnderWater() || getBlockStateOn().isAir())) {
                 // if completely underwater it can swim fine, but it would stop moving in shallow water so we make sure it's in deeper water
                 this.navigation = this.waterNavigation;
@@ -288,7 +286,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (level.isClientSide && !initMusic) {
+        if (level.isClientSide() && !initMusic) {
             initMusic = true;
             ((Runnable) () -> ChimeraMusic.play(WildenChimera.this)).run();
         }
@@ -297,10 +295,10 @@ public class WildenChimera extends Monster implements GeoEntity {
         // this.goalSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).map(WrappedGoal::getGoal).forEach(System.out::println);
 
 
-        if (!level.isClientSide && isDefensive()) {
+        if (!level.isClientSide() && isDefensive()) {
             this.getNavigation().stop();
         }
-        if (level.isClientSide && isFlying() && random.nextInt(18) == 0) {
+        if (level.isClientSide() && isFlying() && random.nextInt(18) == 0) {
 
             this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.BAT_LOOP, this.getSoundSource(),
                     0.95F + this.random.nextFloat() * 0.05F,
@@ -309,9 +307,9 @@ public class WildenChimera extends Monster implements GeoEntity {
 
         }
 
-        if (!level.isClientSide && this.isInLava() && this.level.getGameTime() % 10 == 0) {
-            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 4));
-            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 3));
+        if (!level.isClientSide() && this.isInLava() && this.level.getGameTime() % 10 == 0) {
+            this.addEffect(new MobEffectInstance(MobEffects.SPEED, 20, 4));
+            this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20, 3));
             this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20));
             this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 3));
 
@@ -322,7 +320,7 @@ public class WildenChimera extends Monster implements GeoEntity {
             flyingNavigator.tick();
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             // Reduce skill cooldown
             if (diveCooldown > 0) {
                 diveCooldown--;
@@ -342,7 +340,7 @@ public class WildenChimera extends Monster implements GeoEntity {
 
         }
 
-        if (!level.isClientSide && getPhaseSwapping() && !this.dead) {
+        if (!level.isClientSide() && getPhaseSwapping() && !this.dead) {
             if (swapTicks < 60) {
                 swapTicks++;
                 this.navigation.stop();
@@ -367,13 +365,13 @@ public class WildenChimera extends Monster implements GeoEntity {
             }
         }
 
-        if (getPhaseSwapping() && level.isClientSide) {
+        if (getPhaseSwapping() && level.isClientSide()) {
             spawnPhaseParticles(blockPosition(), level, getPhase());
         }
     }
 
     public static void spawnPhaseParticles(BlockPos pos, Level level, int multiplier) {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
             return;
         int baseAge = 40;
         float scaleAge = (float) ParticleUtil.inRange(0.1, 0.2);
@@ -389,7 +387,8 @@ public class WildenChimera extends Monster implements GeoEntity {
     @Override
     protected void dropCustomDeathLoot(@NotNull ServerLevel p_348683_, @NotNull DamageSource p_21385_, boolean p_21387_) {
         super.dropCustomDeathLoot(p_348683_, p_21385_, p_21387_);
-        ItemEntity itementity = this.spawnAtLocation(ItemsRegistry.WILDEN_TRIBUTE.get());
+        // 1.21.11: spawnAtLocation(ItemStack) requires ServerLevel as first arg
+        ItemEntity itementity = this.spawnAtLocation(p_348683_, new ItemStack(ItemsRegistry.WILDEN_TRIBUTE.get()));
         if (itementity != null) {
             itementity.setExtendedLifetime();
         }
@@ -495,7 +494,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(net.minecraft.server.level.ServerLevel serverLevel, DamageSource source, float amount) {
         if (source.is(DamageTypes.CACTUS) || source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN))
             return false;
         if (source.is(DamageTypes.FREEZE))
@@ -513,7 +512,7 @@ public class WildenChimera extends Monster implements GeoEntity {
 
             // Omit our summoned sources that might aggro or accidentally hurt us
             if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
-                    || entity instanceof ISummon && ((ISummon) entity).getOwnerUUID() != null && ((ISummon) entity).getOwnerUUID().equals(this.getUUID())
+                    || entity instanceof ISummon summonEntity && summonEntity.getOwnerReference() != null && this.getUUID().equals(summonEntity.getOwnerReference().getUUID())
                     || entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon)
                 return false;
         }
@@ -522,8 +521,8 @@ public class WildenChimera extends Monster implements GeoEntity {
             return false;
         var threshold = this.getMaxHealth() / 4;
         var nextMin = this.getMaxHealth() - threshold * (1 + getPhase());
-        boolean res = super.hurt(source, amount);
-        if (!this.level.isClientSide && this.getHealth() <= nextMin && getPhase() < 3) {
+        boolean res = super.hurtServer(serverLevel, source, amount);
+        if (!this.level.isClientSide() && this.getHealth() <= nextMin && getPhase() < 3) {
             this.setPhaseSwapping(true);
             this.setPhase(this.getPhase() + 1);
             this.getNavigation().stop();
@@ -542,8 +541,8 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
+    protected void customServerAiStep(net.minecraft.server.level.ServerLevel pLevel) {
+        super.customServerAiStep(pLevel);
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
@@ -553,11 +552,8 @@ public class WildenChimera extends Monster implements GeoEntity {
 
     @Override
     public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
-            this.remove(RemovalReason.DISCARDED);
-        } else {
-            this.noActionTime = 0;
-        }
+        // 1.21.11: shouldDespawnInPeaceful() removed. This is a boss entity — never despawn.
+        this.noActionTime = 0;
     }
 
 
@@ -580,7 +576,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         if (instance.getEffect() instanceof SnareEffect)
             return false;
 
-        if (effect == MobEffects.MOVEMENT_SLOWDOWN)
+        if (effect == MobEffects.SLOWNESS)
             instance = new MobEffectInstance(instance.getEffect(), 1, 0);
 
         if (effect == ModPotions.GRAVITY_EFFECT.get())
@@ -704,24 +700,25 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        setHorns(tag.getBoolean("horns"));
-        setSpikes(tag.getBoolean("spikes"));
-        setWings(tag.getBoolean("wings"));
-        setPhase(tag.getInt("phase"));
-        setDefensiveMode(tag.getBoolean("defensive"));
-        setPhaseSwapping(tag.getBoolean("swapping"));
-        summonCooldown = tag.getInt("summonCooldown");
-        diveCooldown = tag.getInt("diveCooldown");
-        spikeCooldown = tag.getInt("spikeCooldown");
-        ramCooldown = tag.getInt("ramCooldown");
-        rageTimer = tag.getInt("rage");
-        swapTicks = tag.getInt("swapTicks");
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput tag) {
+        super.readAdditionalSaveData(tag);
+        setHorns(tag.getBooleanOr("horns", false));
+        setSpikes(tag.getBooleanOr("spikes", false));
+        setWings(tag.getBooleanOr("wings", false));
+        setPhase(tag.getIntOr("phase", 1));
+        setDefensiveMode(tag.getBooleanOr("defensive", false));
+        setPhaseSwapping(tag.getBooleanOr("swapping", false));
+        summonCooldown = tag.getIntOr("summonCooldown", 0);
+        diveCooldown = tag.getIntOr("diveCooldown", 0);
+        spikeCooldown = tag.getIntOr("spikeCooldown", 0);
+        ramCooldown = tag.getIntOr("ramCooldown", 0);
+        rageTimer = tag.getIntOr("rage", 300);
+        swapTicks = tag.getIntOr("swapTicks", 0);
     }
 
     @Override
-    public boolean save(CompoundTag tag) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput tag) {
+        super.addAdditionalSaveData(tag);
         tag.putBoolean("spikes", hasSpikes());
         tag.putBoolean("horns", hasHorns());
         tag.putBoolean("wings", hasWings());
@@ -734,7 +731,6 @@ public class WildenChimera extends Monster implements GeoEntity {
         tag.putBoolean("swapping", getPhaseSwapping());
         tag.putInt("rage", rageTimer);
         tag.putInt("swapTicks", swapTicks);
-        return super.save(tag);
     }
 
     @Override

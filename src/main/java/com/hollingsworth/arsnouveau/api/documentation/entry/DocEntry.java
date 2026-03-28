@@ -13,7 +13,7 @@ import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,15 +27,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * An entry in a chapter of the documentation.
  */
-public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor> pages,
+public record DocEntry(Identifier id, CopyOnWriteArrayList<SinglePageCtor> pages,
                        ItemStack renderStack, Component entryTitle, int order, Set<DocCategory> categories,
                        List<Component> searchTags) implements Comparable<DocEntry>, IJsonExportable {
 
-    public DocEntry(ResourceLocation id, ItemStack renderStack, Component component) {
+    public DocEntry(Identifier id, ItemStack renderStack, Component component) {
         this(id, new CopyOnWriteArrayList<>(), renderStack, component, 100, ConcurrentHashMap.newKeySet(), new CopyOnWriteArrayList<>());
     }
 
-    public DocEntry(ResourceLocation id, ItemStack renderStack, Component component, int order) {
+    public DocEntry(Identifier id, ItemStack renderStack, Component component, int order) {
         this(id, new CopyOnWriteArrayList<>(), renderStack, component, order, ConcurrentHashMap.newKeySet(), new CopyOnWriteArrayList<>());
     }
 
@@ -57,7 +57,7 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
         return withRelations(Arrays.stream(entries).map(DocEntry::id).toList());
     }
 
-    public DocEntry withRelations(List<ResourceLocation> ids) {
+    public DocEntry withRelations(List<Identifier> ids) {
         if (this.pages.isEmpty()) {
             return this;
         }
@@ -75,7 +75,7 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
         return withRelation(entry.id);
     }
 
-    public DocEntry withRelation(ResourceLocation id) {
+    public DocEntry withRelation(Identifier id) {
         if (this.pages.isEmpty()) {
             return this;
         }
@@ -126,7 +126,6 @@ public record DocEntry(ResourceLocation id, CopyOnWriteArrayList<SinglePageCtor>
         JsonArray pageJsons = new JsonArray();
         for (SinglePageCtor pageCtor : pages) {
             var screen = new BaseDocScreen();
-            screen.setMinecraft(ArsNouveau.proxy.getMinecraft());
             SinglePageWidget widget = pageCtor.create(screen, 0, 0, 0, 0);
             JsonObject pageObject = widget.toJson();
             if (pageObject.isEmpty()) {

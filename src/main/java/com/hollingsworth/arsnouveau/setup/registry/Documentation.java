@@ -26,7 +26,7 @@ import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,8 +41,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.crafting.Recipe;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
@@ -58,7 +61,7 @@ public class Documentation {
         DocPlayerData.previousScreen = null;
         pendingBuilders = new ArrayList<>();
         Level level = ArsNouveau.proxy.getClientWorld();
-        RecipeManager manager = level.getRecipeManager();
+        RecipeManager manager = getRecipeManager();
         Block SOURCESTONE = BlockRegistry.getBlock(LibBlockNames.SOURCESTONE);
         DocCategory MACHINES = DocumentationRegistry.CRAFTING;
         DocCategory GETTING_STARTED = DocumentationRegistry.GETTING_STARTED;
@@ -134,16 +137,16 @@ public class Documentation {
                 .withSortNum(1)
                 .withIntroPage()
                 .withCraftingPages()
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_lapis"), ItemsRegistry.SOURCE_GEM)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst"), ItemsRegistry.SOURCE_GEM)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_amethyst_block"), BlockRegistry.SOURCE_GEM_BLOCK)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName()), ItemsRegistry.FIRE_ESSENCE)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.EARTH_ESSENCE.getRegistryName()), ItemsRegistry.EARTH_ESSENCE)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.WATER_ESSENCE.getRegistryName()), ItemsRegistry.WATER_ESSENCE)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.AIR_ESSENCE.getRegistryName()), ItemsRegistry.AIR_ESSENCE)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.ABJURATION_ESSENCE.getRegistryName()), ItemsRegistry.ABJURATION_ESSENCE)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.CONJURATION_ESSENCE.getRegistryName()), ItemsRegistry.CONJURATION_ESSENCE)
-                .withCraftingPages(ResourceLocation.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName()), ItemsRegistry.MANIPULATION_ESSENCE));
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_lapis"), ItemsRegistry.SOURCE_GEM)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_amethyst"), ItemsRegistry.SOURCE_GEM)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_amethyst_block"), BlockRegistry.SOURCE_GEM_BLOCK)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName()), ItemsRegistry.FIRE_ESSENCE)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.EARTH_ESSENCE.getRegistryName()), ItemsRegistry.EARTH_ESSENCE)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.WATER_ESSENCE.getRegistryName()), ItemsRegistry.WATER_ESSENCE)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.AIR_ESSENCE.getRegistryName()), ItemsRegistry.AIR_ESSENCE)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.ABJURATION_ESSENCE.getRegistryName()), ItemsRegistry.ABJURATION_ESSENCE)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.CONJURATION_ESSENCE.getRegistryName()), ItemsRegistry.CONJURATION_ESSENCE)
+                .withCraftingPages(Identifier.tryParse("ars_nouveau:imbuement_" + ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName()), ItemsRegistry.MANIPULATION_ESSENCE));
 
         var enchantingApparatus = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withSortNum(2)
@@ -218,7 +221,7 @@ public class Documentation {
                 .withCraftingPages(ItemsRegistry.RING_OF_POTENTIAL));
 
         var magebloom = addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.MAGE_BLOOM_CROP)
-                .withIntroPageNoIncrement(Component.translatable("ars_nouveau.page.magebloom_crop"), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDescription(), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDefaultInstance())
+                .withIntroPageNoIncrement(Component.translatable("ars_nouveau.page.magebloom_crop"), Component.translatable(BlockRegistry.MAGE_BLOOM_CROP.asItem().getDescriptionId()), BlockRegistry.MAGE_BLOOM_CROP.asItem().getDefaultInstance())
                 .withCraftingPages(BlockRegistry.MAGE_BLOOM_CROP)
                 .withCraftingPages(ItemsRegistry.MAGE_FIBER, BlockRegistry.MAGEBLOOM_BLOCK));
 
@@ -231,7 +234,7 @@ public class Documentation {
                 .withCraftingPages(ItemsRegistry.POTION_FLASK_AMPLIFY));
 
 
-        RecipeHolder<ReactiveEnchantmentRecipe> enchantmentRecipeRecipeHolder = manager.byKeyTyped(RecipeRegistry.REACTIVE_TYPE.get(), ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1));
+        RecipeHolder<ReactiveEnchantmentRecipe> enchantmentRecipeRecipeHolder = byKeyTyped(manager, RecipeRegistry.REACTIVE_TYPE.get(), ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 1));
         var annotatedCodex = addBasicItem(ItemsRegistry.ANNOTATED_CODEX, SPELL_CASTING);
         addPage(new DocEntryBuilder(ENCHANTMENTS, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
@@ -239,9 +242,9 @@ public class Documentation {
                 .withIntroPage()
                 .withPage(EnchantmentEntry.create(enchantmentRecipeRecipeHolder))
                 .withLocalizedText()
-                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 2)))
-                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 3)))
-                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 4)))
+                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 2)))
+                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 3)))
+                .withPage(EnchantmentEntry.create(ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.identifier().getPath() + "_" + 4)))
                 .withLocalizedText()
                 .withPage(SpellWriteEntry.create(ArsNouveau.prefix(RecipeRegistry.SPELL_WRITE_RECIPE_ID))));
 
@@ -431,7 +434,7 @@ public class Documentation {
         var alchemical = addBasicItem(BlockRegistry.ALCHEMICAL_BLOCK, SOURCE).withRelation(wixie).withRelation(melder);
         var mycelial = addBasicItem(BlockRegistry.MYCELIAL_BLOCK, SOURCE);
 
-        var relay = addBasicItem(BlockRegistry.RELAY, SOURCE, CraftingEntry.create(manager.byKeyTyped(RecipeType.CRAFTING, getRegistryName(BlockRegistry.RELAY.get())), Component.translatable("ars_nouveau.page2.relay"))).withRelation(dominionWand);
+        var relay = addBasicItem(BlockRegistry.RELAY, SOURCE, CraftingEntry.create(byKeyTyped(manager, RecipeType.CRAFTING, getRegistryName(BlockRegistry.RELAY.get())), Component.translatable("ars_nouveau.page2.relay"))).withRelation(dominionWand);
 
         addBasicItem(BlockRegistry.RELAY_DEPOSIT, SOURCE);
         addBasicItem(BlockRegistry.RELAY_SPLITTER, SOURCE);
@@ -553,8 +556,8 @@ public class Documentation {
                 .withSortNum(3))
                 .withRelation(armorEntry);
 
-        var firstUpgrade = manager.byKeyTyped(RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("first_armor_upgrade"));
-        var secondUpgrade = manager.byKeyTyped(RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("second_armor_upgrade"));
+        var firstUpgrade = byKeyTyped(manager, RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("first_armor_upgrade"));
+        var secondUpgrade = byKeyTyped(manager, RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("second_armor_upgrade"));
         var armorUpgrade = addPage(new DocEntryBuilder(ARMOR, "armor_upgrading")
                 .withIcon(ItemsRegistry.ARCANIST_HOOD)
                 .withIntroPage()
@@ -761,7 +764,7 @@ public class Documentation {
                 .withRelations(turrets, starby, whirlisprig, drygmyCharm, wixie);
 
 
-        var enchantmentRecipes = new ArrayList<>(manager.getAllRecipesFor(RecipeRegistry.ENCHANTMENT_TYPE.get()));
+        var enchantmentRecipes = new ArrayList<>(getAllRecipesFor(manager, RecipeRegistry.ENCHANTMENT_TYPE.get()));
         enchantmentRecipes.sort(Comparator.comparingInt(a -> a.value() == null ? -1 : a.value().enchantLevel));
         Map<ResourceKey<Enchantment>, List<RecipeHolder<EnchantmentRecipe>>> enchantmentMap = new HashMap<>();
         for (RecipeHolder<EnchantmentRecipe> recipe : enchantmentRecipes) {
@@ -780,9 +783,9 @@ public class Documentation {
             var enchantment = entry.getKey();
             var minMax = entry.getValue();
             if (level.holder(enchantment).isEmpty()) break;
-            DocEntryBuilder builder = new DocEntryBuilder(ENCHANTMENTS, enchantment.location().getPath())
+            DocEntryBuilder builder = new DocEntryBuilder(ENCHANTMENTS, enchantment.identifier().getPath())
                     .withIcon(Items.ENCHANTED_BOOK);
-            builder.entryId = enchantment.location();
+            builder.entryId = enchantment.identifier();
             builder.title = level.holderOrThrow(enchantment).value().description();
             for (RecipeHolder<EnchantmentRecipe> max : minMax) {
                 builder.withPage(EnchantmentEntry.create(max));
@@ -803,6 +806,32 @@ public class Documentation {
         Log.getLogger().info("Documentation loaded in {}ms", (endTime - startTime) / 1000000);
     }
 
+    @Nullable
+    private static RecipeManager getRecipeManager() {
+        if (net.minecraft.client.Minecraft.getInstance().getSingleplayerServer() != null) {
+            return net.minecraft.client.Minecraft.getInstance().getSingleplayerServer().getRecipeManager();
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Recipe<?>> RecipeHolder<T> byKeyTyped(RecipeManager manager, net.minecraft.world.item.crafting.RecipeType<T> type, Identifier id) {
+        if (manager == null || id == null) return null;
+        return manager.byKey(ResourceKey.create(Registries.RECIPE, id))
+                .filter(h -> h.value() != null && type.equals(h.value().getType()))
+                .map(h -> (RecipeHolder<T>) h)
+                .orElse(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Recipe<?>> java.util.List<RecipeHolder<T>> getAllRecipesFor(RecipeManager manager, net.minecraft.world.item.crafting.RecipeType<T> type) {
+        if (manager == null) return java.util.List.of();
+        return manager.getRecipes().stream()
+                .filter(h -> h.value() != null && type.equals(h.value().getType()))
+                .map(h -> (RecipeHolder<T>) h)
+                .toList();
+    }
+
     public static DocEntry addPage(DocEntryBuilder builder) {
         DocEntry entry = DocumentationRegistry.registerEntry(builder.category, builder.build());
         if (Documentation.entries.contains(entry)) {
@@ -818,7 +847,7 @@ public class Documentation {
 
     public static DocEntryBuilder buildBasicItem(ItemLike item, DocCategory category) {
         Item asItem = item.asItem();
-        ResourceLocation registryName = getRegistryName(asItem);
+        Identifier registryName = getRegistryName(asItem);
         var builder = new DocEntryBuilder(category, asItem.getDescriptionId())
                 .withIcon(asItem)
                 .withTextPage(Component.translatable(registryName.getNamespace() + ".page." + registryName.getPath())).withCraftingPages(item);
@@ -833,15 +862,15 @@ public class Documentation {
 
     public static DocEntry addBasicItem(ItemLike item, DocCategory category, int order) {
         ItemStack stack = new ItemStack(item);
-        ResourceLocation registryName = getRegistryName(item.asItem());
-        return addPage(new DocEntryBuilder(category, stack.getDescriptionId())
+        Identifier registryName = getRegistryName(item.asItem());
+        return addPage(new DocEntryBuilder(category, stack.getItem().getDescriptionId())
                 .withIcon(item)
                 .withSortNum(order)
                 .withIntroPageNoIncrement(registryName.getNamespace() + ".page." + registryName.getPath()).withCraftingPages(item));
     }
 
-    public static DocEntry addBasicItem(ItemLike item, DocCategory category, ResourceLocation recipeId) {
-        ResourceLocation registryName = getRegistryName(item.asItem());
+    public static DocEntry addBasicItem(ItemLike item, DocCategory category, Identifier recipeId) {
+        Identifier registryName = getRegistryName(item.asItem());
         return addPage(new DocEntryBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
                 .withIntroPageNoIncrement(registryName.getNamespace() + ".page." + getRegistryName(item.asItem()).getPath())
@@ -850,10 +879,10 @@ public class Documentation {
 
     public static DocEntry addBasicItem(ItemLike item, DocCategory category, SinglePageCtor recipePage) {
         Item item1 = item.asItem();
-        ResourceLocation registryName = getRegistryName(item1);
+        Identifier registryName = getRegistryName(item1);
         return addPage(new DocEntryBuilder(category, item1.getDescriptionId())
                 .withIcon(item)
-                .withIntroPageNoIncrement(Component.translatable(registryName.getNamespace() + ".page." + registryName.getPath()), item1.getDescription(), new ItemStack(item1))
+                .withIntroPageNoIncrement(Component.translatable(registryName.getNamespace() + ".page." + registryName.getPath()), Component.translatable(item1.getDescriptionId()), new ItemStack(item1))
                 .withPage(recipePage));
     }
 
@@ -863,11 +892,10 @@ public class Documentation {
         return getRecipePages(key1, key2);
     }
 
-    public static List<SinglePageCtor> getRecipePages(ResourceLocation key1, ResourceLocation key2) {
-        Level level = ArsNouveau.proxy.getClientWorld();
-        RecipeManager manager = level.getRecipeManager();
-        RecipeHolder<CraftingRecipe> recipe1 = manager.byKeyTyped(RecipeType.CRAFTING, key1);
-        RecipeHolder<CraftingRecipe> recipe2 = manager.byKeyTyped(RecipeType.CRAFTING, key2);
+    public static List<SinglePageCtor> getRecipePages(Identifier key1, Identifier key2) {
+        RecipeManager manager = getRecipeManager();
+        RecipeHolder<CraftingRecipe> recipe1 = byKeyTyped(manager, RecipeType.CRAFTING, key1);
+        RecipeHolder<CraftingRecipe> recipe2 = byKeyTyped(manager, RecipeType.CRAFTING, key2);
         List<SinglePageCtor> pages = new ArrayList<>();
         if (recipe1 != null && recipe2 != null) {
             pages.add(CraftingEntry.create(recipe1, recipe2));
@@ -878,38 +906,37 @@ public class Documentation {
         return pages;
     }
 
-    public static List<SinglePageCtor> getRecipePages(ItemStack stack, ResourceLocation recipeId) {
+    public static List<SinglePageCtor> getRecipePages(ItemStack stack, Identifier recipeId) {
         return getRecipePages(recipeId);
     }
 
-    public static List<SinglePageCtor> getRecipePages(ResourceLocation recipeId) {
-        Level level = ArsNouveau.proxy.getClientWorld();
-        RecipeManager manager = level.getRecipeManager();
+    public static List<SinglePageCtor> getRecipePages(Identifier recipeId) {
+        RecipeManager manager = getRecipeManager();
 
         List<SinglePageCtor> pages = new ArrayList<>();
 
-        RecipeHolder<GlyphRecipe> glyphRecipe = manager.byKeyTyped(RecipeRegistry.GLYPH_TYPE.get(), recipeId);
+        RecipeHolder<GlyphRecipe> glyphRecipe = byKeyTyped(manager, RecipeRegistry.GLYPH_TYPE.get(), recipeId);
 
         if (glyphRecipe != null) {
             pages.add(GlyphRecipeEntry.create(glyphRecipe));
             return pages;
         }
 
-        RecipeHolder<CraftingRecipe> recipe = manager.byKeyTyped(RecipeType.CRAFTING, recipeId);
+        RecipeHolder<CraftingRecipe> recipe = byKeyTyped(manager, RecipeType.CRAFTING, recipeId);
 
         if (recipe != null) {
             pages.add(CraftingEntry.create(recipe));
             return pages;
         }
 
-        RecipeHolder<EnchantingApparatusRecipe> apparatusRecipe = manager.byKeyTyped(RecipeRegistry.APPARATUS_TYPE.get(), recipeId);
+        RecipeHolder<EnchantingApparatusRecipe> apparatusRecipe = byKeyTyped(manager, RecipeRegistry.APPARATUS_TYPE.get(), recipeId);
 
         if (apparatusRecipe != null) {
             pages.add(ApparatusEntry.create(apparatusRecipe));
             return pages;
         }
 
-        RecipeHolder<ImbuementRecipe> imbuementRecipe = manager.byKeyTyped(RecipeRegistry.IMBUEMENT_TYPE.get(), recipeId);
+        RecipeHolder<ImbuementRecipe> imbuementRecipe = byKeyTyped(manager, RecipeRegistry.IMBUEMENT_TYPE.get(), recipeId);
         if (imbuementRecipe != null) {
             pages.add(ImbuementRecipeEntry.create(imbuementRecipe));
             return pages;

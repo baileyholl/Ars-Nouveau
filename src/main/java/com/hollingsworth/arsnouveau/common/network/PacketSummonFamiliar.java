@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,20 +21,20 @@ public class PacketSummonFamiliar extends AbstractPacket {
     public static final StreamCodec<RegistryFriendlyByteBuf, PacketSummonFamiliar> CODEC = StreamCodec.ofMember(PacketSummonFamiliar::toBytes, PacketSummonFamiliar::new);
 
 
-    ResourceLocation familiarID;
+    Identifier familiarID;
 
-    public PacketSummonFamiliar(ResourceLocation id) {
+    public PacketSummonFamiliar(Identifier id) {
         this.familiarID = id;
     }
 
     //Decoder
     public PacketSummonFamiliar(RegistryFriendlyByteBuf buf) {
-        familiarID = buf.readResourceLocation();
+        familiarID = buf.readIdentifier();
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeResourceLocation(familiarID);
+        buf.writeIdentifier(familiarID);
     }
 
     @Override

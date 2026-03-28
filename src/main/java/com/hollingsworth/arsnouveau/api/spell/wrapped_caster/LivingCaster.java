@@ -37,9 +37,10 @@ public class LivingCaster implements IWrappedCaster {
     @Override
     public @NotNull List<FilterableItemHandler> getInventory() {
         List<FilterableItemHandler> filterableItemHandlers = new ArrayList<>();
-        var cap = livingEntity.getCapability(Capabilities.ItemHandler.ENTITY);
-        if (cap != null) {
-            filterableItemHandlers.add(new FilterableItemHandler(cap));
+        // 1.21.11: Capabilities.ItemHandler removed; use Capabilities.Item.ENTITY, wrap with IItemHandler.of()
+        var rawCap = livingEntity.getCapability(Capabilities.Item.ENTITY);
+        if (rawCap != null) {
+            filterableItemHandlers.add(new FilterableItemHandler(net.neoforged.neoforge.items.IItemHandler.of(rawCap)));
         }
         return filterableItemHandlers;
     }

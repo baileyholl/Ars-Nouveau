@@ -3,22 +3,28 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.neoforged.neoforge.client.RenderTypeHelper;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 
 
-public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> extends EntityRenderer<T> {
+// MC 1.21.11: EntityRenderer requires 2 type params <T, S extends EntityRenderState>
+// render() replaced by createRenderState() + extractRenderState() + submit()
+// ModelData moved from net.neoforged.neoforge.client.model.data to net.neoforged.neoforge.model.data
+// BakedModel replaced by BlockStateModel; tesselateBlock signature changed
+// TODO: Port falling block rendering to submit():
+// - BlockState must be captured from entity during extractRenderState into a custom render state.
+// - In submit(), use collector.submitBlock(poseStack, blockState, packedLight, packedOverlay, seed)
+//   or collector.submitBlockModel() for custom rendering.
+// - Old API: dispatcher.getModelRenderer().tesselateBlock(level, model, blockState, blockPos, poseStack, vertexConsumer, ...)
+// - New API: dispatcher.getModelRenderer().tesselateBlock(level, List<BlockModelPart>, blockState, blockPos, poseStack, vertexConsumer, false, packedOverlay)
+//   where parts come from: dispatcher.getBlockModel(blockState).collectParts(random, parts)
+public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> extends EntityRenderer<T, EntityRenderState> {
     private final BlockRenderDispatcher dispatcher;
 
     public EnchantedFallingBlockRenderer(EntityRendererProvider.Context p_174112_) {
@@ -27,30 +33,17 @@ public class EnchantedFallingBlockRenderer<T extends EnchantedFallingBlock> exte
         dispatcher = p_174112_.getBlockRenderDispatcher();
     }
 
-    public void render(T pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
-        try {
-            BlockState blockstate = pEntity.getBlockState();
-            Level level = pEntity.level();
-            if (blockstate != level.getBlockState(pEntity.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
-                pMatrixStack.pushPose();
-                BlockPos blockpos = BlockPos.containing(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
-                pMatrixStack.translate(-0.5D, 0.0D, -0.5D);
-                var model = this.dispatcher.getBlockModel(blockstate);
-                for (var renderType : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(pEntity.getStartPos())), ModelData.EMPTY))
-                    this.dispatcher.getModelRenderer().tesselateBlock(level, model, blockstate, blockpos, pMatrixStack, pBuffer.getBuffer(RenderTypeHelper.getMovingBlockRenderType(renderType)), false, RandomSource.create(), blockstate.getSeed(pEntity.getStartPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-                pMatrixStack.popPose();
-                super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
-            }
-        } catch (Exception e) {
-            // We typically don't render non-models like this, so catch our shenanigans.
-        }
-
+    @Override
+    public EntityRenderState createRenderState() {
+        return new EntityRenderState();
     }
 
-    /**
-     * Returns the location of an entity's texture.
-     */
-    public ResourceLocation getTextureLocation(EnchantedFallingBlock pEntity) {
-        return TextureAtlas.LOCATION_BLOCKS;
+    @Override
+    public void submit(EntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
+        super.submit(state, poseStack, collector, cameraState);
+        // TODO: Port falling block rendering. BlockState must come from custom render state.
+        // Use collector.submitBlock() or tesselateBlock with BlockModelParts.
     }
+
+    // 1.21.11: getTextureLocation(T entity) removed from EntityRenderer; no replacement needed here
 }

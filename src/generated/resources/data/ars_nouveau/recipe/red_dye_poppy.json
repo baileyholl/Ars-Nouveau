@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:poppy"
-  },
+  "input": "minecraft:poppy",
   "output": [
     {
       "chance": 1.0,

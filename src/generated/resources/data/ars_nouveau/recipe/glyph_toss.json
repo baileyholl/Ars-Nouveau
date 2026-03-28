@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:dropper"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:dropper"
   ],
   "output": {
     "count": 1,

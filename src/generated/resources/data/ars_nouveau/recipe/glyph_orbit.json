@@ -2,15 +2,9 @@
   "type": "ars_nouveau:glyph",
   "exp": 160,
   "inputs": [
-    {
-      "item": "minecraft:compass"
-    },
-    {
-      "item": "minecraft:ender_eye"
-    },
-    {
-      "tag": "c:rods/blaze"
-    }
+    "minecraft:compass",
+    "minecraft:ender_eye",
+    "#c:rods/blaze"
   ],
   "output": {
     "count": 1,

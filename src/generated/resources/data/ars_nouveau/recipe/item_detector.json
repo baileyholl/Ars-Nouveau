@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:glass_blocks"
-    },
-    "y": {
-      "item": "minecraft:observer"
-    },
-    "z": {
-      "item": "ars_nouveau:archwood_planks"
-    }
+    "x": "#c:glass_blocks",
+    "y": "minecraft:observer",
+    "z": "ars_nouveau:archwood_planks"
   },
   "pattern": [
     "xxx",

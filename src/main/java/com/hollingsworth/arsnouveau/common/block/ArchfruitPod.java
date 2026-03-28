@@ -4,24 +4,43 @@ import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.tags.TagKey;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.entity.LivingEntity;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.LevelReader;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.Block;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.CocoaBlock;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.SoundType;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.StateDefinition;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.MapColor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.PushReaction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.BlockHitResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.HitResult;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Supplier;
@@ -50,12 +69,12 @@ public class ArchfruitPod extends CocoaBlock implements ILightable {
 
     @Deprecated(since = "4.12.0", forRemoval = true)
     public ArchfruitPod(Supplier<Block> surviveBlock) {
-        this(BlockBehaviour.Properties.of().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
+        this(BlockRegistry.newBlockProperties().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
         this.surviveBlock = surviveBlock;
     }
 
     public ArchfruitPod(TagKey<Block> surviveBlocks) {
-        this(BlockBehaviour.Properties.of().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
+        this(BlockRegistry.newBlockProperties().randomTicks().strength(0.2F, 3.0F).sound(SoundType.WOOD).noOcclusion().lightLevel((b) -> b.getValue(LIGHT_LEVEL)).pushReaction(PushReaction.DESTROY).mapColor(MapColor.PLANT));
         this.surviveTag = surviveBlocks;
     }
 

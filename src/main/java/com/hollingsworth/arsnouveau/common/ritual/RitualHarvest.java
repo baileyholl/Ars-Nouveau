@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,7 +30,7 @@ public class RitualHarvest extends AbstractRitual {
     protected void tick() {
         Level world = getWorld();
         BlockPos pos = getPos();
-        if (world != null && world.isClientSide) {
+        if (world != null && world.isClientSide()) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 4);
             return;
         }
@@ -135,7 +135,7 @@ public class RitualHarvest extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.HARVEST);
     }
 

@@ -55,21 +55,22 @@ public class ManhattenTracker implements IBlockPosProvider {
     }
 
     public ManhattenTracker(CompoundTag tag) {
-        this.i = tag.getInt("i");
-        this.j = tag.getInt("j");
-        this.k = tag.getInt("k");
-        this.l = tag.getInt("l");
-        this.pXSize = tag.getInt("pXSize");
-        this.pYSize = tag.getInt("pYSize");
-        this.pZSize = tag.getInt("pZSize");
-        this.done = tag.getBoolean("done");
-        this.currentDepth = tag.getInt("currentDepth");
-        this.maxX = tag.getInt("maxX");
-        this.maxY = tag.getInt("maxY");
-        this.x = tag.getInt("x");
-        this.y = tag.getInt("y");
-        this.zMirror = tag.getBoolean("zMirror");
-        this.cursor.set(tag.getInt("cursorX"), tag.getInt("cursorY"), tag.getInt("cursorZ"));
+        // 1.21.11: CompoundTag.getInt/getBoolean return Optional; use getIntOr/getBooleanOr
+        this.i = tag.getIntOr("i", 0);
+        this.j = tag.getIntOr("j", 0);
+        this.k = tag.getIntOr("k", 0);
+        this.l = tag.getIntOr("l", 0);
+        this.pXSize = tag.getIntOr("pXSize", 0);
+        this.pYSize = tag.getIntOr("pYSize", 0);
+        this.pZSize = tag.getIntOr("pZSize", 0);
+        this.done = tag.getBooleanOr("done", false);
+        this.currentDepth = tag.getIntOr("currentDepth", 0);
+        this.maxX = tag.getIntOr("maxX", 0);
+        this.maxY = tag.getIntOr("maxY", 0);
+        this.x = tag.getIntOr("x", 0);
+        this.y = tag.getIntOr("y", 0);
+        this.zMirror = tag.getBooleanOr("zMirror", false);
+        this.cursor.set(tag.getIntOr("cursorX", 0), tag.getIntOr("cursorY", 0), tag.getIntOr("cursorZ", 0));
     }
 
     public BlockPos computeNext() {

@@ -32,4 +32,8 @@ public class DataSerializers {
                     )
             )
     );
+
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<net.minecraft.nbt.CompoundTag>> COMPOUND_TAG = DS.register("compound_tag",
+            () -> EntityDataSerializer.forValueType(net.minecraft.network.codec.ByteBufCodecs.COMPOUND_TAG)
+    );
 }

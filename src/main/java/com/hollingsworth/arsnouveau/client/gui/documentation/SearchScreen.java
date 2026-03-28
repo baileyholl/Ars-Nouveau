@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ public class SearchScreen extends BaseDocScreen {
         super.init();
         onSearchChanged(previousString);
         searchBar.setValue(previousString);
-        searchBar.mouseClicked(0, 0, 1);
+        // In 1.21.11, mouseClicked takes MouseButtonEvent; simulate focus via setFocused
+        searchBar.setFocused(true);
     }
 
     @Override
@@ -78,9 +81,9 @@ public class SearchScreen extends BaseDocScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         searchBar.setFocused(true);
-        searchBar.keyPressed(keyCode, scanCode, modifiers);
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        searchBar.keyPressed(event);
+        return super.keyPressed(event);
     }
 }

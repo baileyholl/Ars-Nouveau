@@ -17,8 +17,8 @@ public class SoundButton extends ANButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        pGuiGraphics.blit(sound.getTexturePath(), x, y, 0, 0, 16, 16, 16, 16);
+    protected void renderContents(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        pGuiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sound.getTexturePath(), x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProvider {
 
     public static final Codec<ItemScrollData> CODEC = ItemStack.CODEC.listOf().xmap(ItemScrollData::new, (i) -> i.items);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ItemScrollData> STREAM_CODEC = StreamCodec.composite(ItemStack.LIST_STREAM_CODEC, (i) -> i.items, ItemScrollData::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ItemScrollData> STREAM_CODEC = StreamCodec.composite(ItemStack.STREAM_CODEC.apply(net.minecraft.network.codec.ByteBufCodecs.list()), (i) -> i.items, ItemScrollData::new);
 
     private final List<ItemStack> items;
 
@@ -55,7 +55,7 @@ public class ItemScrollData implements NBTComponent<ItemScrollData>, TooltipProv
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag, net.minecraft.core.component.DataComponentGetter pComponents) {
         for (ItemStack s : items) {
             pTooltipAdder.accept(s.getHoverName());
         }

@@ -2,18 +2,10 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:sponge"
-    },
-    {
-      "item": "minecraft:sponge"
-    },
-    {
-      "item": "minecraft:sponge"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:sponge",
+    "minecraft:sponge",
+    "minecraft:sponge"
   ],
   "output": {
     "count": 1,

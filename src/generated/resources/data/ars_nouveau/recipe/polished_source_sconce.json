@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:polished_sconce"
-    }
+    "ars_nouveau:polished_sconce"
   ],
   "result": {
     "count": 1,

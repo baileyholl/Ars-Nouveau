@@ -9,10 +9,12 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -30,7 +32,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
     public final int source;
 
     public List<Ingredient> pedestalItems;
-    public ResourceLocation id;
+    public Identifier id;
 
     private NonNullList<Ingredient> ingredients;
 
@@ -48,7 +50,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
         this(ArsNouveau.prefix(id), ingredient, output, source);
     }
 
-    public ImbuementRecipe(ResourceLocation id, Ingredient ingredient, ItemStack output, int source) {
+    public ImbuementRecipe(Identifier id, Ingredient ingredient, ItemStack output, int source) {
         this(ingredient, output, source, new ArrayList<>());
         this.id = id;
     }
@@ -89,11 +91,6 @@ public class ImbuementRecipe implements IImbuementRecipe {
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    @Override
     public boolean matches(ImbuementTile pContainer, Level pLevel) {
         return this.input.test(pContainer.getItem(0)) && EnchantingApparatusRecipe.doItemsMatch(pContainer.getPedestalItems(), pedestalItems);
     }
@@ -104,23 +101,28 @@ public class ImbuementRecipe implements IImbuementRecipe {
     }
 
     @Override
-    public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
+    public boolean isSpecial() {
         return true;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return this.output.copy();
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
+
+    @Override
+    public RecipeSerializer<ImbuementRecipe> getSerializer() {
         return RecipeRegistry.IMBUEMENT_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return BuiltInRegistries.RECIPE_TYPE.get(ArsNouveau.prefix(RecipeRegistry.IMBUEMENT_RECIPE_ID));
+    public RecipeType<ImbuementRecipe> getType() {
+        return RecipeRegistry.IMBUEMENT_TYPE.get();
     }
 
     public static class Serializer implements RecipeSerializer<ImbuementRecipe> {

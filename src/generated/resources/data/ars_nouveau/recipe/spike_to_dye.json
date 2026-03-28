@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:wilden_spike"
-    }
+    "ars_nouveau:wilden_spike"
   ],
   "result": {
     "count": 5,

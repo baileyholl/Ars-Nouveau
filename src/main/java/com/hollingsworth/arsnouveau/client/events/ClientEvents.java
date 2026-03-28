@@ -11,41 +11,27 @@ import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
-import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
-import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
-import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -57,7 +43,10 @@ import java.util.function.Predicate;
 @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class ClientEvents {
 
-    @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = EventBusSubscriber.Bus.MOD)
+    /** Latest recipe map received from server via NeoForge RecipeContentPayload. Used by JEI. */
+    public static RecipeMap clientRecipeMap = RecipeMap.EMPTY;
+
+    @EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
     static class ClientModEvents {
         @SubscribeEvent
         public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
@@ -65,57 +54,38 @@ public class ClientEvents {
             event.register(SchoolTooltip.class, SchoolTooltip.SchoolTooltipRenderer::new);
         }
 
-
-        @SubscribeEvent
-        public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-            event.registerItem(new IClientItemExtensions() {
-                @Override
-                public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                    Minecraft mc = Minecraft.getInstance();
-
-                    return new BlockEntityWithoutLevelRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels()) {
-                        private final BlockEntity tile = new ArchwoodChestTile(BlockPos.ZERO, BlockRegistry.ARCHWOOD_CHEST.get().defaultBlockState());
-
-                        @Override
-                        public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext transformType, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int x, int y) {
-                            mc.getBlockEntityRenderDispatcher().renderItem(tile, pose, buffer, x, y);
-                        }
-
-                    };
-                }
-            }, BlockRegistry.ARCHWOOD_CHEST.get().asItem());
-        }
+        // TODO: 1.21.11 — IClientItemExtensions.getCustomRenderer() / BlockEntityWithoutLevelRenderer / renderByItem
+        // have been removed. Archwood chest item rendering must be ported to the new SpecialModelRenderer
+        // pipeline (NoDataSpecialModelRenderer + RegisterSpecialModelRendererEvent + item model JSON).
     }
 
     @SubscribeEvent
-    public static void onRecipesUpdate(RecipesUpdatedEvent event) {
-        GenericRecipeRegistry.reloadAll(event.getRecipeManager());
+    public static void onRecipesUpdate(RecipesReceivedEvent event) {
+        clientRecipeMap = event.getRecipeMap();
+        GenericRecipeRegistry.reloadAll(event.getRecipeMap());
     }
 
+    // 1.21.11: RenderLevelStageEvent.Stage enum removed — each stage is now its own concrete subclass.
+    // Subscribe to the specific AfterTripwireBlocks subclass instead of checking getStage().
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void renderWorldLastEvent(final RenderLevelStageEvent event) {
+    public static void renderWorldLastEvent(final RenderLevelStageEvent.AfterTripwireBlocks event) {
+        LightManager.updateAll(event.getLevelRenderer());
+        PantomimeRenderer.renderOutline(event.getPoseStack());
 
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-            LightManager.updateAll(event.getLevelRenderer());
-        }
-
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
-            PantomimeRenderer.renderOutline(event.getPoseStack());
-        }
         // Build then render so sorted transparency works correctly
         for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
-
             PlanariumTile tile = renderer.get();
             if (tile != null) {
                 PlanariumRenderer.buildRender(tile, event.getPoseStack(), Minecraft.getInstance().player);
             }
         }
 
+        // 1.21.11: getProjectionMatrix() removed from RenderLevelStageEvent; passing null as projection
+        // matrix is safe here because drawRender's rendering path is currently fully stubbed out.
         for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
-
             PlanariumTile tile = renderer.get();
             if (tile != null) {
-                PlanariumRenderer.drawRender(tile, event.getPoseStack(), event.getProjectionMatrix(), event.getModelViewMatrix(), Minecraft.getInstance().player);
+                PlanariumRenderer.drawRender(tile, event.getPoseStack(), null, event.getModelViewMatrix(), Minecraft.getInstance().player);
             }
         }
         PlanariumRenderer.deferredRenders = new ArrayList<>(8);
@@ -138,8 +108,9 @@ public class ClientEvents {
 
     private static Slot slotUnderMouse = null;
 
+    // ContainerScreenEvent.Render.Background removed in NeoForge 1.21.11 — Background no longer fired
     @SubscribeEvent
-    public static void containerRenderBackground(ContainerScreenEvent.Render.Background e) {
+    public static void containerRenderForegroundForSlotTracking(ContainerScreenEvent.Render.Foreground e) {
         var screen = e.getContainerScreen();
         slotUnderMouse = screen.getSlotUnderMouse();
     }
@@ -154,7 +125,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void addComponents(RenderTooltipEvent.GatherComponents event) {
-        if (!Screen.hasShiftDown() && event.getItemStack().isEnchanted() && event.getItemStack().has(DataComponentRegistry.REACTIVE_CASTER)) {
+        if (!Minecraft.getInstance().hasShiftDown() && event.getItemStack().isEnchanted() && event.getItemStack().has(DataComponentRegistry.REACTIVE_CASTER)) {
             var caster = event.getItemStack().get(DataComponentRegistry.REACTIVE_CASTER);
             if (caster != null && caster.getSpell().isValid()) {
                 event.getTooltipElements().add(Either.right(new SpellTooltip(caster)));
@@ -165,19 +136,8 @@ public class ClientEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void highlightBlockEvent(RenderHighlightEvent.Block e) {
-        Level level = Minecraft.getInstance().level;
-        if (level != null) {
-            BlockEntity be = level.getBlockEntity(e.getTarget().getBlockPos());
-            if (be instanceof SkyBlockTile skyTile && !skyTile.showFacade()) {
-                e.setCanceled(true);
-            }
-            if (be instanceof GhostWeaveTile ghostTile && ghostTile.isInvisible()) {
-                e.setCanceled(true);
-            }
-        }
-    }
+    // TODO: RenderHighlightEvent removed in NeoForge 1.21.11 — replace with ExtractBlockOutlineRenderStateEvent
+    // or CustomBlockOutlineRenderer to suppress the block outline for SkyBlockTile / GhostWeaveTile
 
     @SubscribeEvent
     public static void overlayEvent(RenderGuiLayerEvent.Pre event) {
@@ -205,10 +165,10 @@ public class ClientEvents {
         return Component.translatable(key, params);
     }
 
-    public static final List<Predicate<RecipesUpdatedEvent>> recipeChangeListeners = new ArrayList<>();
+    public static final List<Predicate<RecipesReceivedEvent>> recipeChangeListeners = new ArrayList<>();
 
     @SubscribeEvent
-    public static void onClientResourcesReload(RecipesUpdatedEvent event) {
+    public static void onClientResourcesReload(RecipesReceivedEvent event) {
         recipeChangeListeners.removeIf(p -> !p.test(event));
     }
 

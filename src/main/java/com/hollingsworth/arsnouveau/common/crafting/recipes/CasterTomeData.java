@@ -21,7 +21,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Optional;
 
 public record CasterTomeData(String flavorText, Spell spell,
-                             ResourceLocation tomeType) implements SpecialSingleInputRecipe {
+                             Identifier tomeType) implements SpecialSingleInputRecipe {
 
 
     @Deprecated(forRemoval = true)
-    public CasterTomeData(String name, List<ResourceLocation> spell, ResourceLocation tomeType, String flavorText,
+    public CasterTomeData(String name, List<Identifier> spell, Identifier tomeType, String flavorText,
                           ParticleColor particleColor,
                           ConfiguredSpellSound sound) {
         this(flavorText, new Spell()
@@ -50,16 +50,16 @@ public record CasterTomeData(String flavorText, Spell spell,
 
     @Deprecated(forRemoval = true)
     public CasterTomeData(String name,
-                          List<ResourceLocation> spell,
-                          ResourceLocation type,
+                          List<Identifier> spell,
+                          Identifier type,
                           String flavorText,
                           CompoundTag particleColor, ConfiguredSpellSound sound) {
         this(name, spell, type, flavorText, ParticleColorRegistry.from(particleColor), sound);
     }
 
     public static CasterTomeData deserialize(String name,
-                                             List<ResourceLocation> spellParts,
-                                             ResourceLocation type,
+                                             List<Identifier> spellParts,
+                                             Identifier type,
                                              String flavorText,
                                              ParticleColor particleColor, ConfiguredSpellSound sound, Optional<Spell> spell) {
         if (spell.isPresent()) {
@@ -87,28 +87,22 @@ public record CasterTomeData(String flavorText, Spell spell,
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider p_267052_) {
-        Item tomeType = BuiltInRegistries.ITEM.get(this.tomeType);
-        if (tomeType == Items.AIR)
-            tomeType = ItemsRegistry.CASTER_TOME.asItem();
-        return makeTome(tomeType, spell, flavorText);
+    @SuppressWarnings("unchecked")
+    public RecipeSerializer<CasterTomeData> getSerializer() {
+        return (RecipeSerializer<CasterTomeData>) RecipeRegistry.CASTER_TOME_SERIALIZER.get();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.CASTER_TOME_SERIALIZER.get();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return RecipeRegistry.CASTER_TOME_TYPE.get();
+    @SuppressWarnings("unchecked")
+    public RecipeType<CasterTomeData> getType() {
+        return (RecipeType<CasterTomeData>) RecipeRegistry.CASTER_TOME_TYPE.get();
     }
 
     public static class Serializer implements RecipeSerializer<CasterTomeData> {
         public static MapCodec<CasterTomeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.STRING.fieldOf("name").forGetter(tomeData -> tomeData.spell.name()),
-                Codec.list(ResourceLocation.CODEC).fieldOf("spell").forGetter(tomeData -> tomeData.spell.serializeRecipe()),
-                ResourceLocation.CODEC.fieldOf("tome_type").forGetter(CasterTomeData::tomeType),
+                Codec.list(Identifier.CODEC).fieldOf("spell").forGetter(tomeData -> tomeData.spell.serializeRecipe()),
+                Identifier.CODEC.fieldOf("tome_type").forGetter(CasterTomeData::tomeType),
                 Codec.STRING.fieldOf("flavour_text").forGetter(CasterTomeData::flavorText),
                 ParticleColor.CODEC.fieldOf("color").forGetter(tomeData -> tomeData.spell.color()),
                 ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(tomeData -> tomeData.spell.sound()),

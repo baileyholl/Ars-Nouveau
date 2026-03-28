@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:stones"
-    },
-    "y": {
-      "tag": "c:gems/source"
-    }
+    "x": "#c:stones",
+    "y": "#c:gems/source"
   },
   "pattern": [
     "xxx",

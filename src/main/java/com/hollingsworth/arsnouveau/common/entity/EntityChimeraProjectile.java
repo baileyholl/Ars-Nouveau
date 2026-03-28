@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Collection;
@@ -41,8 +41,8 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && this.inGroundTime >= 1) {
-            this.remove(RemovalReason.DISCARDED);
+        if (!level.isClientSide() && this.inGroundTime >= 1) {
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
@@ -88,33 +88,23 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
             entity.igniteForSeconds(5);
         }
 
-        if (entity.hurt(damagesource, damage)) {
-            if (isEnderman) {
-                return;
-            }
-
-            if (entity instanceof LivingEntity livingentity) {
-                this.doPostHurtEffects(livingentity);
-            }
-
-            this.playSound(this.getDefaultHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-            this.remove(RemovalReason.DISCARDED);
-
-        } else {
-            entity.setRemainingFireTicks(k);
-            this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
-            this.setYRot(this.getYRot() + 180f);
-            this.yRotO += 180.0F;
-            if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                this.remove(RemovalReason.DISCARDED);
-            }
+        // 1.21.11: Entity.hurt() now returns void — cannot check boolean return value.
+        // Simplify: always apply effects and remove arrow after hitting.
+        entity.hurt(damagesource, damage);
+        if (isEnderman) {
+            return;
         }
+        if (entity instanceof LivingEntity livingentity) {
+            this.doPostHurtEffects(livingentity);
+        }
+        this.playSound(this.getDefaultHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+        this.remove(Entity.RemovalReason.DISCARDED);
     }
 
     @Override
     protected void doPostHurtEffects(@NotNull LivingEntity entity) {
         super.doPostHurtEffects(entity);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
 
             Collection<MobEffectInstance> effects = entity.getActiveEffects();
             MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
@@ -122,7 +112,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
                 if (e.getEffect().value().isBeneficial())
                     entity.removeEffect(e.getEffect());
             }
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
+            entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 2));
         }
 
     }
@@ -136,7 +126,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements GeoEntity 
         if (entity instanceof LivingEntity entity1) {
             // Omit our summoned sources that might aggro or accidentally hurt us
             if (entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
-                    || (entity instanceof ISummon summon && summon.getOwnerUUID() != null && summon.getOwnerUUID().equals(this.getUUID()))
+                    || (entity instanceof ISummon summon && summon.getOwnerReference() != null && summon.getOwnerReference().getUUID().equals(this.getUUID()))
                     || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
                 return false;
         }

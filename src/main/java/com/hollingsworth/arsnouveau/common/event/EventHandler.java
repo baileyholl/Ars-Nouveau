@@ -54,7 +54,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
@@ -72,7 +72,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -92,9 +93,38 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
+
+    /**
+     * Request all Ars Nouveau custom recipe types to be synced to clients via NeoForge RecipeContentPayload.
+     * Without this, clientRecipeMap in ClientEvents is empty and JEI shows no AN recipes.
+     */
+    @SubscribeEvent
+    public static void onDatapackSync(OnDatapackSyncEvent event) {
+        event.sendRecipes(
+                RecipeRegistry.GLYPH_TYPE.get(),
+                RecipeRegistry.IMBUEMENT_TYPE.get(),
+                RecipeRegistry.APPARATUS_TYPE.get(),
+                RecipeRegistry.ENCHANTMENT_TYPE.get(),
+                RecipeRegistry.CRUSH_TYPE.get(),
+                RecipeRegistry.ARMOR_UPGRADE_TYPE.get(),
+                RecipeRegistry.BUDDING_CONVERSION_TYPE.get(),
+                RecipeRegistry.SCRY_RITUAL_TYPE.get(),
+                RecipeRegistry.ALAKARKINOS_RECIPE_TYPE.get(),
+                RecipeRegistry.SUMMON_RITUAL_TYPE.get(),
+                RecipeRegistry.DISPEL_ENTITY_TYPE.get(),
+                RecipeRegistry.REACTIVE_TYPE.get(),
+                RecipeRegistry.SPELL_WRITE_TYPE.get(),
+                RecipeRegistry.PRESTIDIGITATION_TYPE.get(),
+                RecipeRegistry.BOOK_UPGRADE_TYPE.get(),
+                RecipeRegistry.POTION_FLASK_TYPE.get(),
+                RecipeRegistry.DYE_TYPE.get(),
+                RecipeRegistry.CASTER_TOME_TYPE.get()
+        );
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void resourceLoadEvent(AddReloadListenerEvent event) {
-        event.addListener(new SimplePreparableReloadListener<>() {
+    public static void resourceLoadEvent(AddServerReloadListenersEvent event) {
+        event.addListener(ArsNouveau.prefix("resource_reload"), new SimplePreparableReloadListener<>() {
             @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
             @Override
             protected Object prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
@@ -149,7 +179,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void shieldEvent(LivingShieldBlockEvent e) {
-        if (!e.getEntity().level.isClientSide && e.getEntity() instanceof Player player && player.isBlocking()) {
+        if (!e.getEntity().level.isClientSide() && e.getEntity() instanceof Player player && player.isBlocking()) {
             if (player.getUseItem().getItem() == ItemsRegistry.ENCHANTERS_SHIELD.asItem()) {
                 player.addEffect(new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
                 player.addEffect(new MobEffectInstance(ModPotions.SPELL_DAMAGE_EFFECT, 200, 1));
@@ -159,7 +189,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void livingHurtEvent(LivingDamageEvent.Post e) {
-        if (e.getEntity().level.isClientSide)
+        if (e.getEntity().level.isClientSide())
             return;
         if (e.getSource().getEntity() instanceof LivingEntity livingUser) {
             if (livingUser instanceof Player)
@@ -172,14 +202,14 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void livingSpawnEvent(FinalizeSpawnEvent checkSpawn) {
-        if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
+        if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide()) {
             RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySpawn(checkSpawn));
         }
     }
 
     @SubscribeEvent
     public static void villageSiegeEvent(VillageSiegeEvent checkSpawn) {
-        if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide) {
+        if (checkSpawn.getLevel() instanceof Level level && !level.isClientSide()) {
             RitualEventQueue.getRitual(level, DenySpawnRitual.class, ritu -> ritu.denySiege(checkSpawn));
         }
     }
@@ -196,7 +226,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if (e.getEntity().getCommandSenderWorld().isClientSide)
+        if (e.getEntity().level().isClientSide())
             return;
         if (e.getEntity() instanceof ServerPlayer serverPlayer) {
             Networking.sendToPlayerClient(new PacketInitDocs(), serverPlayer);
@@ -205,9 +235,9 @@ public class EventHandler {
                 Networking.sendToPlayerClient(new PacketJoinedServer(true), serverPlayer);
             }
         }
-        CompoundTag tag = e.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+        CompoundTag tag = e.getEntity().getPersistentData().getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
-        if (!tag.getBoolean(book_tag) && Config.SPAWN_BOOK.get()) {
+        if (!tag.getBooleanOr(book_tag, false) && Config.SPAWN_BOOK.get()) {
             Player entity = e.getEntity();
             ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
             tag.putBoolean(book_tag, true);
@@ -223,23 +253,23 @@ public class EventHandler {
         }
 
         if (player.hasEffect(ModPotions.FLIGHT_EFFECT)
-                && player.level.getGameTime() % 20 == 0
+                && player.level().getGameTime() % 20 == 0
                 && player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20
                 && player instanceof ServerPlayer serverPlayer) {
-            RitualEventQueue.getRitual(player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
+            RitualEventQueue.getRitual(player.level(), RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
         }
 
-        if (player.level.getGameTime() % RitualGravity.renewInterval == 0 && player instanceof ServerPlayer serverPlayer) {
+        if (player.level().getGameTime() % RitualGravity.renewInterval == 0 && player instanceof ServerPlayer serverPlayer) {
             MobEffectInstance gravity = player.getEffect(ModPotions.GRAVITY_EFFECT);
             if (gravity == null || gravity.getDuration() <= RitualGravity.renewThreshold) {
-                RitualEventQueue.getRitual(player.level, RitualGravity.class, ritual -> !serverPlayer.isCreative() && ritual.attemptRefresh(serverPlayer));
+                RitualEventQueue.getRitual(player.level(), RitualGravity.class, ritual -> !serverPlayer.isCreative() && ritual.attemptRefresh(serverPlayer));
             }
         }
     }
 
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if (!event.getEntity().level.isClientSide && event.getEntity() instanceof Player entity) {
+        if (!event.getEntity().level.isClientSide() && event.getEntity() instanceof Player entity) {
             RitualEventQueue.getRitual(entity.level, RitualFlight.class, flight -> flight.onJumpEvent(event));
         }
     }
@@ -310,7 +340,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
-        if (!event.getEntity().level.isClientSide && event.getItem().getItem().getFoodProperties(event.getItem(), event.getEntity()) != null) {
+        if (!event.getEntity().level().isClientSide() && event.getItem().has(net.minecraft.core.component.DataComponents.FOOD)) {
             if (event.getEntity() instanceof Player player) {
                 FoodData stats = player.getFoodData();
                 stats.saturationLevel = (float) (stats.saturationLevel * PerkUtil.perkValue(player, PerkAttributes.WHIRLIESPRIG));
@@ -331,7 +361,7 @@ public class EventHandler {
         if (event.rayTraceResult instanceof EntityHitResult hit && event.world instanceof ServerLevel level) {
             Entity entity = hit.getEntity();
             if (!entity.isAlive()) return;
-            for (RecipeHolder<DispelEntityRecipe> holder : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
+            for (RecipeHolder<DispelEntityRecipe> holder : level.getServer().getRecipeManager().recipeMap().byType(RecipeRegistry.DISPEL_ENTITY_TYPE.get())) {
                 var recipe = holder.value();
                 if (recipe.matches(event.shooter, entity)) {
                     replaceEntityWithItems(level, entity, recipe.result(event.shooter, entity).toArray(ItemStack[]::new));
@@ -352,14 +382,14 @@ public class EventHandler {
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
         DebugNumberCommand.register(event.getDispatcher());
-        if (!FMLEnvironment.production) {
+        if (!FMLEnvironment.isProduction()) {
             ExportDocsCommand.register(event.getDispatcher());
         }
     }
 
     @SubscribeEvent
     public static void registerTrades(VillagerTradesEvent event) {
-        if (event.getType() == VillagerRegistry.SHARDS_TRADER.get()) {
+        if (event.getType() == VillagerRegistry.SHARDS_TRADER.getKey()) {
             Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
             List<VillagerTrades.ItemListing> level1 = trades.get(1);
             List<VillagerTrades.ItemListing> level2 = trades.get(2);
@@ -367,47 +397,59 @@ public class EventHandler {
             List<VillagerTrades.ItemListing> level4 = trades.get(4);
             List<VillagerTrades.ItemListing> level5 = trades.get(5);
 
-            level1.add((trader, rand) -> itemToEmer(trader, BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(trader, ItemsRegistry.MAGE_FIBER, 16, 16, 2));
+            level1.add((sl, trader, rand) -> itemToEmer(trader, BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
+            level1.add((sl, trader, rand) -> itemToEmer(trader, ItemsRegistry.MAGE_FIBER, 16, 16, 2));
 
-            for (ItemStack fruit : Ingredient.of(ItemTagProvider.SHADY_WIZARD_FRUITS).getItems()) {
-                level1.add((trader, rand) -> itemToEmer(trader, fruit.getItem(), 6, 16, 2));
-            }
+            // 1.21.11: Ingredient.getItems() removed; use registry tag lookup
+            event.getRegistries().lookupOrThrow(net.minecraft.core.registries.Registries.ITEM).get(ItemTagProvider.SHADY_WIZARD_FRUITS).ifPresent(holders -> {
+                for (Holder<net.minecraft.world.item.Item> fruitHolder : holders) {
+                    ItemStack fruit = new ItemStack(fruitHolder);
+                    level1.add((sl, trader, rand) -> itemToEmer(trader, fruit.getItem(), 6, 16, 2));
+                }
+            });
 
-            level1.add((trader, rand) -> itemToEmer(trader, Items.AMETHYST_SHARD, 32, 16, 2));
+            level1.add((sl, trader, rand) -> itemToEmer(trader, Items.AMETHYST_SHARD, 32, 16, 2));
 
-            level1.add((trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
+            level1.add((sl, trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
 
-            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.GHOST_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.FALSE_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader, ItemsRegistry.WARP_SCROLL, 1, 8, 2));
+            level2.add((sl, trader, rand) -> emerToItem(trader, BlockRegistry.GHOST_WEAVE, 1, 8, 2));
+            level2.add((sl, trader, rand) -> emerToItem(trader, BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
+            level2.add((sl, trader, rand) -> emerToItem(trader, BlockRegistry.FALSE_WEAVE, 1, 8, 2));
+            level2.add((sl, trader, rand) -> emerToItem(trader, ItemsRegistry.WARP_SCROLL, 1, 8, 2));
 
-            for (ItemStack wilden : Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG).getItems()) {
-                level2.add((trader, rand) -> itemToEmer(trader, wilden.getItem(), 4, 8, 12));
-            }
+            event.getRegistries().lookupOrThrow(net.minecraft.core.registries.Registries.ITEM).get(ItemTagProvider.WILDEN_DROP_TAG).ifPresent(holders -> {
+                for (Holder<net.minecraft.world.item.Item> wildenHolder : holders) {
+                    ItemStack wilden = new ItemStack(wildenHolder);
+                    level2.add((sl, trader, rand) -> itemToEmer(trader, wilden.getItem(), 4, 8, 12));
+                }
+            });
 
             List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
             for (RitualTablet tablet : tablets) {
                 if (tablet.getDefaultInstance().is(ItemTagProvider.RITUAL_TRADE_BLACKLIST)) continue;
-                level3.add((trader, rand) -> emerToItem(trader, tablet, 4, 1, 12));
+                level3.add((sl, trader, rand) -> emerToItem(trader, tablet, 4, 1, 12));
             }
 
-            for (ItemStack shard : Ingredient.of(ItemTagProvider.SUMMON_SHARDS_TAG).getItems()) {
-                level4.add((trader, rand) -> emerToItem(trader, shard.getItem(), 20, 1, 20));
-            }
-            level5.add((trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
-            level5.add((trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
+            event.getRegistries().lookupOrThrow(net.minecraft.core.registries.Registries.ITEM).get(ItemTagProvider.SUMMON_SHARDS_TAG).ifPresent(holders -> {
+                for (Holder<net.minecraft.world.item.Item> shardHolder : holders) {
+                    ItemStack shard = new ItemStack(shardHolder);
+                    level4.add((sl, trader, rand) -> emerToItem(trader, shard.getItem(), 20, 1, 20));
+                }
+            });
+            level5.add((sl, trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
+            level5.add((sl, trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
 
         }
     }
 
     public static MerchantOffer emerToItem(Entity trader, ItemLike itemLike, int cost, int uses, int exp) {
-        return new VillagerTrades.ItemsForEmeralds(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
+        ServerLevel sl = (ServerLevel) trader.level();
+        return new VillagerTrades.ItemsForEmeralds(itemLike.asItem(), cost, uses, exp).getOffer(sl, trader, trader.getRandom());
     }
 
     public static MerchantOffer itemToEmer(Entity trader, ItemLike itemLike, int cost, int uses, int exp) {
-        return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
+        ServerLevel sl = (ServerLevel) trader.level();
+        return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(sl, trader, trader.getRandom());
     }
 
 
@@ -415,7 +457,7 @@ public class EventHandler {
     public static void onPotionAdd(MobEffectEvent.Added event) {
         LivingEntity target = event.getEntity();
         Entity applier = event.getEffectSource();
-        if (target.level.isClientSide)
+        if (target.level.isClientSide())
             return;
         double bonus = 0.0;
         Holder<MobEffect> holder = event.getEffectInstance().getEffect();
@@ -446,7 +488,7 @@ public class EventHandler {
     }
 
     private static void syncPotionRemoval(MobEffectEvent event) {
-        if (event.getEntity() instanceof LivingEntity && event.getEffectInstance() != null && !event.getEntity().level.isClientSide) {
+        if (event.getEntity() instanceof LivingEntity && event.getEffectInstance() != null && !event.getEntity().level.isClientSide()) {
             LivingEntity target = event.getEntity();
             Holder<MobEffect> holder = event.getEffectInstance().getEffect();
             MobEffect effect = holder.value();

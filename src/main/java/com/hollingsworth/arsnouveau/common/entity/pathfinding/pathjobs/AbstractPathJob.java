@@ -148,7 +148,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         this.xzRestricted = false;
         this.hardXzRestriction = false;
 
-        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinBuildHeight(), minZ), new BlockPos(maxX, world.getMaxBuildHeight(), maxZ), range, world.dimensionType());
+        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinY(), minZ), new BlockPos(maxX, world.getMaxY(), maxZ), range, world.dimensionType());
 
         this.start = new BlockPos(start);
         this.maxRange = range;
@@ -229,7 +229,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         this.xzRestricted = true;
         this.hardXzRestriction = hardRestriction;
         this.restrictionType = restrictionType;
-        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinBuildHeight(), minZ), new BlockPos(maxX, world.getMaxBuildHeight(), maxZ), range, world.dimensionType());
+        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinY(), minZ), new BlockPos(maxX, world.getMaxY(), maxZ), range, world.dimensionType());
 
         this.start = start;
         this.maxRange = range;
@@ -292,7 +292,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
             bs = down;
             down = level.getBlockState(pos.below());
 
-            if (pos.getY() < entity.getCommandSenderWorld().getMinBuildHeight()) {
+            if (pos.getY() < entity.level().getMinY()) {
                 return entity.blockPosition();
             }
         }
@@ -806,7 +806,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         //  Can we traverse into this node?  Fix the y up
         final int newY = getGroundHeight(parent, pos);
 
-        if (newY < world.getMinBuildHeight()) {
+        if (newY < world.getMinY()) {
             return false;
         }
 
@@ -875,7 +875,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         nodesOpen.offer(node);
 
         if (world.getBlockEntity(pos) instanceof PortalTile portal) {
-            if (portal.dimID != null && portal.dimID.equals(portal.getLevel().dimension().location().toString())) {
+            if (portal.dimID != null && portal.dimID.equals(portal.getLevel().dimension().identifier().toString())) {
                 BlockPos warpPos = portal.warpPos;
                 double portalHeuristic = computeHeuristic(warpPos);
                 double portalCost = node.getCost();
@@ -1099,7 +1099,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
      */
     public static Direction getXZFacing(final BlockPos pos, final BlockPos neighbor) {
         final BlockPos vector = neighbor.subtract(pos);
-        return Direction.getNearest(vector.getX(), 0, vector.getZ());
+        return Direction.getNearest(new net.minecraft.core.Vec3i(vector.getX(), 0, vector.getZ()), Direction.NORTH);
     }
 
     private boolean checkHeadBlock(final ModNode parent, final BlockPos pos) {

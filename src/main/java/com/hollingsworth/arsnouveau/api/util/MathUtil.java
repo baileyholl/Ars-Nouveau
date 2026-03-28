@@ -11,9 +11,9 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static net.minecraft.world.level.Level.TICKS_PER_DAY;
-
 public class MathUtil {
+    // TICKS_PER_DAY was removed from Level in 1.21.11; hardcoded Minecraft day length
+    private static final long TICKS_PER_DAY = 24000L;
 // https://github.com/Mithion/ArsMagica2/tree/6d6b68002363b2569c2f2300c8f9146ad800bbc6#readme
 
     public static @Nullable EntityHitResult getLookedAtEntity(Entity entity, int range) {

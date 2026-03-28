@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -20,8 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 
@@ -33,7 +33,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
 
     @Override
     public @NotNull InteractionResult interactAt(@NotNull Player pPlayer, @NotNull Vec3 pVec, @NotNull InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND || pPlayer.getCommandSenderWorld().isClientSide)
+        if (hand != InteractionHand.MAIN_HAND || pPlayer.level().isClientSide())
             return InteractionResult.PASS;
 
         ItemStack stack = pPlayer.getItemInHand(hand);
@@ -69,8 +69,9 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         if (!isAlive())
             return;
 
-        if (!event.getEntity().level.isClientSide && getOwner() != null && getOwner().equals(event.getEntity())) {
-            FoodProperties food = event.getItem().getItem().getFoodProperties(event.getItem(), getOwner());
+        if (!event.getEntity().level().isClientSide() && getOwner() != null && getOwner().equals(event.getEntity())) {
+            // 1.21.11: Item.getFoodProperties(ItemStack, LivingEntity) removed; use DataComponents.FOOD on stack
+            FoodProperties food = event.getItem().get(net.minecraft.core.component.DataComponents.FOOD);
             if (food != null) {
                 float saturationModifier = food.saturation();
                 int nutrition = food.nutrition();
@@ -84,11 +85,11 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
     }
 
     @Override
-    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
+    public PlayState walkPredicate(AnimationTest<FamiliarEntity> event) {
         if (event.isMoving()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("fly"));
         } else {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
         }
         return PlayState.CONTINUE;
     }
@@ -98,7 +99,7 @@ public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellC
         return ModEntities.ENTITY_FAMILIAR_SYLPH.get();
     }
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         return ArsNouveau.prefix("textures/entity/whirlisprig_" + (getColor().isEmpty() ? "summer" : getColor().toLowerCase()) + ".png");
     }
 

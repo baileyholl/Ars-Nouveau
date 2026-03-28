@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:magebloom_fiber"
-    },
-    "y": {
-      "item": "minecraft:feather"
-    }
+    "x": "ars_nouveau:magebloom_fiber",
+    "y": "minecraft:feather"
   },
   "pattern": [
     "xxx",

@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.common.block.MagelightTorch;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -89,14 +89,14 @@ public class MagelightTorchTile extends SconceTile {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("horizontalFire", horizontalFire);
     }
 
     @Override
-    public void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(compound, pRegistries);
-        horizontalFire = compound.getBoolean("horizontalFire");
+    public void loadAdditional(ValueInput compound) {
+        super.loadAdditional(compound);
+        horizontalFire = compound.getBooleanOr("horizontalFire", false);
     }
 }

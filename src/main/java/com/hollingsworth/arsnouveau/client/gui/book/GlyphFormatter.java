@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -31,7 +31,7 @@ public class GlyphFormatter {
     List<ANButton> sortedWidgets = new ArrayList<>();
     public static List<Category> CATEGORIES = new ArrayList<>();
 
-    Set<ResourceLocation> addedCategories = new HashSet<>();
+    Set<Identifier> addedCategories = new HashSet<>();
 
     List<List<ANButton>> pages = new ArrayList<>();
 
@@ -115,7 +115,7 @@ public class GlyphFormatter {
         }
     }
 
-    public record Category(ResourceLocation id, Predicate<AbstractSpellPart> filter, Component tooltip,
+    public record Category(Identifier id, Predicate<AbstractSpellPart> filter, Component tooltip,
                            DocAssets.BlitInfo blitInfo) {
 
 

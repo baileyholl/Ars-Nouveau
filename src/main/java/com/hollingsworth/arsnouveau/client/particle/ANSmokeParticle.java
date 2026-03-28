@@ -4,11 +4,12 @@ import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.client.gui.Color;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ANSmokeParticle extends TextureSheetParticle {
+public class ANSmokeParticle extends SingleQuadParticle {
     public SpriteSet spriteSet;
     public static List<ColorPoint> gradients = new ArrayList<>() {
         {
@@ -34,7 +35,7 @@ public class ANSmokeParticle extends TextureSheetParticle {
     ColorGradientInterpolator gradient;
 
     protected ANSmokeParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet spriteSet) {
-        super(level, x, y, z, xSpeed, ySpeed, zSpeed);
+        super(level, x, y, z, xSpeed, ySpeed, zSpeed, spriteSet.first());
         this.spriteSet = spriteSet;
         this.setSpriteFromAge(spriteSet);
         this.gradient = new ColorGradientInterpolator(() -> (double) this.age / (double) this.lifetime, gradients);
@@ -69,8 +70,8 @@ public class ANSmokeParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
 
@@ -89,13 +90,12 @@ public class ANSmokeParticle extends TextureSheetParticle {
                 double pZ,
                 double pXSpeed,
                 double pYSpeed,
-                double pZSpeed
+                double pZSpeed,
+                RandomSource random
         ) {
-            ANSmokeParticle bubblecolumnupparticle = new ANSmokeParticle(
+            return new ANSmokeParticle(
                     pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, sprite
             );
-            bubblecolumnupparticle.pickSprite(this.sprite);
-            return bubblecolumnupparticle;
         }
     }
 }

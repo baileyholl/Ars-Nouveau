@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "hanging_sign",
   "key": {
-    "#": {
-      "tag": "c:logs/archwood_stripped"
-    },
-    "X": {
-      "item": "minecraft:chain"
-    }
+    "#": "#c:logs/archwood_stripped",
+    "X": "minecraft:iron_chain"
   },
   "pattern": [
     "X X",

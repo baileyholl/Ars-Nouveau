@@ -2,18 +2,10 @@
   "type": "ars_nouveau:glyph",
   "exp": 55,
   "inputs": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "minecraft:emerald_block"
-    },
-    {
-      "tag": "c:ender_pearls"
-    },
-    {
-      "tag": "c:ender_pearls"
-    }
+    "ars_nouveau:manipulation_essence",
+    "minecraft:emerald_block",
+    "#c:ender_pearls",
+    "#c:ender_pearls"
   ],
   "output": {
     "count": 1,

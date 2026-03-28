@@ -78,34 +78,38 @@ public class DocEntryButton extends SelectableButton implements NestedWidgets {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
 
         int xOffset = 14;
         if (renderStack.isEmpty() && icon == null) {
             xOffset = 2;
             DocClientUtils.blit(graphics, DocAssets.CHAPTER_BUTTON_NO_ITEM, x, y);
         } else {
-            super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+            super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
         }
         if (icon != null) {
-            graphics.blit(icon.location(), x + 1, y + 1, 0, 0, 12, 12, 12, 12);
+            graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, icon.location(), x + 1, y + 1, 0, 0, 12, 12, 12, 12);
         }
         RenderHelpers.drawItemAsIcon(renderStack, graphics, x - 1, y - 1, 10, false);
         DocClientUtils.drawStringScaled(graphics, title, x + xOffset, y + 3, 0, 0.8f, false);
     }
 
 
-    @Override
-    protected boolean isValidClickButton(int button) {
-        return super.isValidClickButton(button) || (onClickFunction != null && button == 1);
-    }
+    // TODO: isValidClickButton removed in 1.21.11 — right-click handling delegated to mouseClicked override below
+    // @Override
+    // protected boolean isValidClickButton(int button) {
+    //     return super.isValidClickButton(button) || (onClickFunction != null && button == 1);
+    // }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean consumed) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (GuiHelpers.isMouseInRelativeRange(mouseX, mouseY, this) && visible && active && onClickFunction != null && onClickFunction.apply(mouseX, mouseY, button)) {
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, consumed);
     }
 
     @Override

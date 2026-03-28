@@ -2,12 +2,8 @@
   "type": "ars_nouveau:dye",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dyes"
-    },
-    {
-      "item": "ars_nouveau:apprentice_spell_book"
-    }
+    "#c:dyes",
+    "ars_nouveau:apprentice_spell_book"
   ],
   "result": {
     "count": 1,

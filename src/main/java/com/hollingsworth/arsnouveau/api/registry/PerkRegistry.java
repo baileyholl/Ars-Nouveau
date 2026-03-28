@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.registry;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkSlot;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -17,17 +17,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PerkRegistry {
-    private static ConcurrentHashMap<ResourceLocation, IPerk> perkMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Identifier, IPerk> perkMap = new ConcurrentHashMap<>();
 
-    private static ConcurrentHashMap<ResourceLocation, PerkItem> perkItemMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Identifier, PerkItem> perkItemMap = new ConcurrentHashMap<>();
 
     private static ConcurrentHashMap<Item, List<List<PerkSlot>>> itemPerkProviderMap = new ConcurrentHashMap<>();
 
-    public static Map<ResourceLocation, IPerk> getPerkMap() {
+    public static Map<Identifier, IPerk> getPerkMap() {
         return perkMap;
     }
 
-    public static Map<ResourceLocation, PerkItem> getPerkItemMap() {
+    public static Map<Identifier, PerkItem> getPerkItemMap() {
         return perkItemMap;
     }
 

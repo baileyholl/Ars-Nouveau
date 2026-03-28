@@ -24,6 +24,8 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,6 +36,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -51,9 +54,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -105,21 +108,22 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     @Override
     public void tick() {
         super.tick();
-        if (!tamed && !beingTamed && level.getGameTime() % 40 == 0) {
+        // 1.21.11: pickUpItem now takes (ServerLevel, ItemEntity)
+        if (!tamed && !beingTamed && level.getGameTime() % 40 == 0 && level instanceof ServerLevel serverLvl) {
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
-                pickUpItem(itementity);
+                pickUpItem(serverLvl, itementity);
             }
         }
         if (!tamed && this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS)) {
             tamedTicks++;
         }
-        if (tamedTicks > 60 && !level.isClientSide && !isRemoved() && !isDeadOrDying()) {
+        if (tamedTicks > 60 && !level.isClientSide() && !isRemoved() && !isDeadOrDying()) {
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_SHARD);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             stateMachine.tick();
             SummonUtil.healOverTime(this);
             if (findBlockCooldown > 0) {
@@ -166,8 +170,9 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         }
     }
 
+    // 1.21.11: pickUpItem(ItemEntity) → pickUpItem(ServerLevel, ItemEntity)
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    protected void pickUpItem(ServerLevel level, ItemEntity itemEntity) {
         if (!tamed && !beingTamed && itemEntity.getItem().is(ItemTags.DECORATED_POT_SHERDS)) {
             beingTamed = true;
             ItemStack stack = itemEntity.getItem().copy();
@@ -181,7 +186,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
-        if (!level.isClientSide && tamed) {
+        if (!level.isClientSide() && tamed) {
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -276,7 +281,8 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (playerEntity.level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null) != null) {
+        // 1.21.11: Player.level field → Player.level() method
+        if (playerEntity.level().getCapability(Capabilities.Item.BLOCK, storedPos, null) != null) {
             this.entityData.set(HOME, Optional.ofNullable(storedPos));
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.alakarkinos.set_home"));
         }
@@ -286,12 +292,12 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public boolean onDispel(@NotNull LivingEntity caster) {
         if (this.isRemoved())
             return false;
-        if (!level.isClientSide && tamed) {
+        if (!level.isClientSide() && tamed) {
             ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
             stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-            this.remove(RemovalReason.DISCARDED);
+            this.remove(Entity.RemovalReason.DISCARDED);
         }
         return true;
     }
@@ -301,52 +307,53 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         return null;
     }
 
-    AnimationController placeHat;
+    AnimationController<Alakarkinos> placeHat;
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "walkController", 1, (event) -> {
+        // GeckoLib 5: AnimationController constructor no longer takes the entity as first arg
+        controllers.add(new AnimationController<Alakarkinos>("walkController", 1, (event) -> {
             if (blowingBubbles()) {
                 return PlayState.STOP;
             }
-            if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+            if (event.isMoving() || (level.isClientSide() && PatchouliHandler.isPatchouliWorld())) {
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        controllers.add(new AnimationController<>(this, "idleController", 1, (event) -> {
+        controllers.add(new AnimationController<Alakarkinos>("idleController", 1, (event) -> {
             if (blowingBubbles()) {
                 return PlayState.STOP;
             }
             if (!event.isMoving()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        controllers.add(new AnimationController<>(this, "danceController", 1, (event) -> {
+        controllers.add(new AnimationController<Alakarkinos>("danceController", 1, (event) -> {
             if (blowingBubbles()) {
                 return PlayState.STOP;
             }
-            if (this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS) || (this.partyCrab && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
+            if (this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS) || (this.partyCrab && this.jukeboxPos != null && BlockUtil.distanceFrom(position(), jukeboxPos) <= 8)) {
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        controllers.add(new AnimationController<>(this, "blowBubbles", 1, (event) -> {
+        controllers.add(new AnimationController<Alakarkinos>("blowBubbles", 1, (event) -> {
             if (blowingBubbles()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("bubble_blow"));
+                event.controller().setAnimation(RawAnimation.begin().thenPlay("bubble_blow"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
 
-        placeHat = new AnimationController<>(this, "placeHatController", 1, (event) -> PlayState.CONTINUE);
+        placeHat = new AnimationController<Alakarkinos>("placeHatController", 1, (event) -> PlayState.CONTINUE);
         controllers.add(placeHat);
     }
 
@@ -358,8 +365,10 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         return manager;
     }
 
+    // 1.21.11: Use addAdditionalSaveData(ValueOutput) instead of save(CompoundTag)
     @Override
-    public boolean save(CompoundTag pCompound) {
+    public void addAdditionalSaveData(ValueOutput pCompound) {
+        super.addAdditionalSaveData(pCompound);
         if (this.entityData.get(HOME).isPresent()) {
             pCompound.putLong("home", this.entityData.get(HOME).get().asLong());
         }
@@ -371,32 +380,28 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         pCompound.putBoolean("tamed", this.tamed);
         pCompound.putBoolean("beingTamed", this.beingTamed);
         pCompound.putBoolean("hasHat", this.hasHat());
-        return super.save(pCompound);
     }
 
     boolean setBehaviors = false;
 
+    // 1.21.11: readAdditionalSaveData(CompoundTag) → readAdditionalSaveData(ValueInput)
+    // ValueInput.getLong/getBoolean/getInt return Optional; use getLongOr/getBooleanOr/getIntOr
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(ValueInput pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if (pCompound.contains("home")) {
-            this.entityData.set(HOME, Optional.of(BlockPos.of(pCompound.getLong("home"))));
-        }
-        findBlockCooldown = pCompound.getInt("findBlockCooldown");
-        if (pCompound.contains("hatPos")) {
-            this.hatPos = BlockPos.of(pCompound.getLong("hatPos"));
-        }
-        this.tamed = pCompound.getBoolean("tamed");
-        this.setNeedSource(pCompound.getBoolean("needSource"));
-        this.beingTamed = pCompound.getBoolean("beingTamed");
+        pCompound.getLong("home").ifPresent(l -> this.entityData.set(HOME, Optional.of(BlockPos.of(l))));
+        findBlockCooldown = pCompound.getIntOr("findBlockCooldown", 0);
+        pCompound.getLong("hatPos").ifPresent(l -> this.hatPos = BlockPos.of(l));
+        this.tamed = pCompound.getBooleanOr("tamed", false);
+        this.setNeedSource(pCompound.getBooleanOr("needSource", false));
+        this.beingTamed = pCompound.getBooleanOr("beingTamed", false);
         if (!setBehaviors) {
             this.goalSelector.availableGoals = new LinkedHashSet<>();
             this.reloadGoals();
             setBehaviors = true;
         }
-        if (pCompound.contains("hasHat")) {
-            this.setHat(pCompound.getBoolean("hasHat"));
-        }
+        // hasHat: default true matches defineSynchedData
+        this.setHat(pCompound.getBooleanOr("hasHat", true));
     }
 
     public enum Animations {
@@ -411,19 +416,19 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             if (placeHat == null) {
                 return;
             }
-            placeHat.forceAnimationReset();
+            placeHat.reset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("place_hat"));
         } else if (arg == Animations.BUBBLE_BLOW.ordinal()) {
             if (placeHat == null) {
                 return;
             }
-            placeHat.forceAnimationReset();
+            placeHat.reset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("bubble_blow"));
         } else if (arg == Animations.PICKUP_HAT.ordinal()) {
             if (placeHat == null) {
                 return;
             }
-            placeHat.forceAnimationReset();
+            placeHat.reset();
             placeHat.setAnimation(RawAnimation.begin().thenPlay("pickup_hat"));
         }
     }
@@ -433,8 +438,10 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
         return false;
     }
 
+    // 1.21.11: Entity.hurt() is final void; override hurtServer(ServerLevel, DamageSource, float) instead
     @Override
-    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
+    public boolean hurtServer(@NotNull ServerLevel serverLevel, @NotNull DamageSource pSource, float pAmount) {
+        if (!SummonUtil.canSummonTakeDamage(pSource)) return false;
+        return super.hurtServer(serverLevel, pSource, pAmount);
     }
 }

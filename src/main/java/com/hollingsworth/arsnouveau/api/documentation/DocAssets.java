@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class DocAssets {
 
@@ -129,8 +129,8 @@ public class DocAssets {
     public static final BlitInfo INFO_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_info.png"), 14, 12);
 
 
-    public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
-        public BlitInfo(ResourceLocation location, int width, int height) {
+    public record BlitInfo(Identifier location, int u, int v, int width, int height) {
+        public BlitInfo(Identifier location, int width, int height) {
             this(location, 0, 0, width, height);
         }
     }

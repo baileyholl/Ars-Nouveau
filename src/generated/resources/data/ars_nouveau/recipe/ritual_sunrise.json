@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:red_archwood_log"
-    },
-    {
-      "item": "minecraft:dandelion"
-    },
-    {
-      "item": "minecraft:dandelion"
-    },
-    {
-      "item": "minecraft:dandelion"
-    },
-    {
-      "item": "minecraft:clock"
-    }
+    "ars_nouveau:red_archwood_log",
+    "minecraft:dandelion",
+    "minecraft:dandelion",
+    "minecraft:dandelion",
+    "minecraft:clock"
   ],
   "result": {
     "count": 1,

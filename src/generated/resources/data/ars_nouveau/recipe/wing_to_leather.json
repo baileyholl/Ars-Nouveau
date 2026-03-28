@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:wilden_wing"
-    }
+    "ars_nouveau:wilden_wing"
   ],
   "result": {
     "count": 1,

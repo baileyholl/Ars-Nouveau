@@ -26,10 +26,12 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
@@ -37,7 +39,7 @@ import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -309,7 +311,8 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        boolean isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
+        // In 1.21.11, InputConstants.isKeyDown takes Window object not long
+        boolean isShiftDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), Minecraft.getInstance().options.keyShift.getKey().getValue());
         if (getExtraGlyphSlots() > 0 && isShiftDown) {
             if (pScrollY < 0 && nextGlyphButton.active) {
                 updateWindowOffset(spellWindowOffset + 1);
@@ -331,12 +334,12 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     public void onFamiliarClick(Button button) {
-        Collection<ResourceLocation> familiarHolders = new ArrayList<>();
+        Collection<Identifier> familiarHolders = new ArrayList<>();
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer());
         if (cap != null) {
             familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.getRegistryName()).collect(Collectors.toList());
         }
-        Collection<ResourceLocation> finalFamiliarHolders = familiarHolders;
+        Collection<Identifier> finalFamiliarHolders = familiarHolders;
         Minecraft.getInstance().setScreen(new GuiFamiliarScreen(FamiliarRegistry.getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.getRegistryName())).collect(Collectors.toList()), this));
     }
 
@@ -391,7 +394,8 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     @Override
-    public boolean charTyped(char pCodePoint, int pModifiers) {
+    public boolean charTyped(CharacterEvent event) {
+        char pCodePoint = (char) event.codepoint();
         if (pCodePoint >= '0' && pCodePoint <= '9') {
             int idx = Integer.parseInt(String.valueOf(pCodePoint));
             if (idx == 0) {
@@ -455,7 +459,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             }
         }
 
-        if (super.charTyped(pCodePoint, pModifiers)) {
+        if (super.charTyped(event)) {
             return true;
         }
 
@@ -465,33 +469,34 @@ public class GuiSpellBook extends SpellSlottedScreen {
             searchBar.active = true;
             this.searchBar.setValue("");
             this.searchBar.onClear.apply("");
-            return searchBar.charTyped(pCodePoint, pModifiers);
+            return searchBar.charTyped(event);
         }
 
         return false;
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
 
-        // only react if ctrl is pressed
-        if (hasControlDown()
+        // only react if ctrl is pressed — in 1.21.11 these are instance methods on KeyEvent
+        if (event.hasControlDown()
                 && (!searchBar.isFocused() || searchBar.highlightPos == searchBar.value.length())
                 && (!spellNameBox.isFocused() || spellNameBox.highlightPos == spellNameBox.value.length())) {
-            if (isCopy(keyCode)) {
+            if (event.isCopy()) {
                 onCopyOrExport(null);
                 return true;
-            } else if (isPaste(keyCode)) {
+            } else if (event.isPaste()) {
                 onPasteOrImport(null);
                 return true;
-            } else if (isCut(keyCode)) {
+            } else if (event.isCut()) {
                 onCopyOrExport(null);
                 clear(null);
                 return true;
             }
         }
 
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+        if (super.keyPressed(event)) {
             return true;
         }
 
@@ -500,7 +505,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             this.clearFocus();
             this.setFocused(searchBar);
             searchBar.active = true;
-            if (!searchBar.keyPressed(keyCode, scanCode, modifiers)) {
+            if (!searchBar.keyPressed(event)) {
                 searchBar.active = false;
                 this.clearFocus();
                 this.setFocused(prevFocus);
@@ -513,7 +518,10 @@ public class GuiSpellBook extends SpellSlottedScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean consumed) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (button == GLFW.GLFW_MOUSE_BUTTON_3 && hoveredWidget instanceof CraftingButton craftingCell) {
             int idx = -1;
             int emptySpace = -1;
@@ -555,7 +563,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             validate();
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, consumed);
     }
 
     public void resetCraftingCells() {
@@ -660,33 +668,33 @@ public class GuiSpellBook extends SpellSlottedScreen {
         int offsetLeft = 89;
         int yOffset = 210;
 
-        //scale the manabar to fit the gui
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-        poseStack.scale(1.2F, 1.2F, 1.2F);
-        poseStack.translate(-25, -30, 0);
-        graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
+        //scale the manabar to fit the gui — in 1.21.11, pose() returns Matrix3x2fStack
+        org.joml.Matrix3x2fStack poseStack = graphics.pose();
+        poseStack.pushMatrix();
+        poseStack.scale(1.2F, 1.2F);
+        poseStack.translate(-25, -30);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) ((ClientInfo.ticksInGame + partialTicks) / 3 % 33) * 6;
 
         // default length is 96
         // rainbow effect for perfect match is currently disabled by the >=
         if (manaLength > 0) {
-            graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
+            graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/manabar_gui_mana.png"), offsetLeft + 9, yOffset - 9, 0, manaOffset, manaLength, 6, 256, 256);
         } else {
             //color rainbow if mana cost = max mana, red if mana cost > max mana
-            RenderSystem.setShaderTexture(0, ArsNouveau.prefix("textures/gui/manabar_gui_grayscale.png"));
-            RenderUtils.colorBlit(graphics.pose(), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
+            // MC 1.21.11: RenderSystem.setShaderTexture is gone — pass texture to colorBlit directly
+            RenderUtils.colorBlit(graphics, ArsNouveau.prefix("textures/gui/manabar_gui_grayscale.png"), offsetLeft + 8, yOffset - 10, 0, manaOffset, 100, 8, 256, 256, manaLength < 0 ? Color.RED : Color.rainbowColor(ClientInfo.ticksInGame));
         }
         if (ArsNouveauAPI.ENABLE_DEBUG_NUMBERS && minecraft != null) {
             String text = currentCostCache + "  /  " + maxManaCache;
             int maxWidth = minecraft.font.width(maxManaCache + "  /  " + maxManaCache);
             int offset = offsetLeft - maxWidth / 2 + maxWidth - minecraft.font.width(text);
 
-            graphics.drawString(minecraft.font, text, offset + 55, yOffset - 10, 0xFFFFFF, false);
+            graphics.drawString(minecraft.font, text, offset + 55, yOffset - 10, 0xFFFFFFFF, false);
         }
 
-        graphics.blit(ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
-        poseStack.popPose();
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/manabar_gui_border.png"), offsetLeft, yOffset - 17, 0, 18, 108, 20, 256, 256);
+        poseStack.popMatrix();
     }
 
     private int getCurrentManaCost() {

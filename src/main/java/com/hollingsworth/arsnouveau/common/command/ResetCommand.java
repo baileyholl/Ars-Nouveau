@@ -17,7 +17,7 @@ public class ResetCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-reset").
-                requires(sender -> sender.hasPermission(2))
+                requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(context -> resetPlayers(context.getSource(), ImmutableList.of(context.getSource().getEntityOrException())))
                 .then(Commands.argument("targets", EntityArgument.entities())
                         .executes(context -> resetPlayers(context.getSource(), EntityArgument.getEntities(context, "targets")))));

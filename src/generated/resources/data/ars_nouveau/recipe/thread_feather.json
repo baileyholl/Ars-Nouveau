@@ -2,28 +2,14 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "tag": "c:feathers"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    }
+    "#c:feathers",
+    "#c:feathers",
+    "#c:feathers",
+    "#c:feathers",
+    "ars_nouveau:abjuration_essence",
+    "ars_nouveau:abjuration_essence"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_feather"

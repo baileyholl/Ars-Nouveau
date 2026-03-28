@@ -2,15 +2,26 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.InteractionHand;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.InteractionResult;
+
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.LivingEntity;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.player.Player;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.Item;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.context.UseOnContext;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.level.Level;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 
@@ -24,12 +35,12 @@ public class Debug extends ModItem {
     public static final Path DEBUG_LOG = Paths.get("ars_nouveau", "augment_compatibility.csv");
 
     public Debug() {
-        super(new Item.Properties());
+        super(ItemsRegistry.newItemProperties());
     }
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if (!pPlayer.level.isClientSide && pInteractionTarget instanceof IDebuggerProvider iDebuggerProvider) {
+        if (!pPlayer.level.isClientSide() && pInteractionTarget instanceof IDebuggerProvider iDebuggerProvider) {
             try {
                 // Write the file
                 Path path = Paths.get("ars_nouveau", "entity_log_" + System.currentTimeMillis() + ".log");
@@ -52,8 +63,8 @@ public class Debug extends ModItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level world, Player playerIn, InteractionHand handIn) {
 
-        return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
+        return InteractionResult.SUCCESS;
     }
 }

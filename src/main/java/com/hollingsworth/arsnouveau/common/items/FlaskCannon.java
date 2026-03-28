@@ -17,18 +17,17 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -36,13 +35,15 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -61,11 +62,10 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         return InteractionResult.FAIL;
     }
 
+    // 1.21.11: inventoryTick changed to (ItemStack, ServerLevel, Entity, EquipmentSlot)
     @Override
-    public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity, int pSlotId, boolean pIsSelected) {
-        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-        if (pLevel.isClientSide)
-            return;
+    public void inventoryTick(@NotNull ItemStack pStack, @NotNull net.minecraft.server.level.ServerLevel pLevel, @NotNull Entity pEntity, @NotNull net.minecraft.world.entity.EquipmentSlot pSlot) {
+        super.inventoryTick(pStack, pLevel, pEntity, pSlot);
         if (!(pEntity instanceof ServerPlayer player)) {
             return;
         }
@@ -79,29 +79,30 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         }
     }
 
-    public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
+    public @NotNull InteractionResult use(Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         PotionLauncherData potionLauncherData = itemstack.get(DataComponentRegistry.POTION_LAUNCHER);
-        if (pLevel.isClientSide)
-            return InteractionResultHolder.consume(itemstack);
+        if (pLevel.isClientSide())
+            return InteractionResult.CONSUME;
         ItemStack selectedPotion = potionLauncherData.getSelectedStack(pPlayer);
         IPotionProvider potionData = potionLauncherData.getPotionDataFromSlot(pPlayer);
         if (potionData == null || PotionUtil.isEmpty(potionData.getPotionData(selectedPotion)) || potionData.usesRemaining(selectedPotion) <= 0) {
             PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.flask_cannon.no_potion"));
-            return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide());
+            return pLevel.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
         }
 
-        ThrownPotion thrownpotion = new ThrownPotion(pLevel, pPlayer);
         ItemStack stckToThrow = getThrownStack(pLevel, pPlayer, pHand, itemstack);
         PotionContents contents = stckToThrow.get(DataComponents.POTION_CONTENTS);
         if (contents == PotionContents.EMPTY)
-            return InteractionResultHolder.success(itemstack);
-        thrownpotion.setItem(stckToThrow);
+            return InteractionResult.SUCCESS;
+        // 1.21.11: ThrownSplashPotion constructor takes (Level, LivingEntity, ItemStack)
+        ThrownSplashPotion thrownpotion = new ThrownSplashPotion(pLevel, pPlayer, stckToThrow);
         thrownpotion.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), -20.0F, 0.5F, 1.0F);
         pLevel.addFreshEntity(thrownpotion);
-        pPlayer.getCooldowns().addCooldown(this, 10);
+        // 1.21.11: addCooldown now takes ItemStack instead of Item
+        pPlayer.getCooldowns().addCooldown(itemstack, 10);
         itemstack.set(DataComponentRegistry.POTION_LAUNCHER, new PotionLauncherData(contents, potionLauncherData.lastSlot()));
-        return new InteractionResultHolder<>(InteractionResult.CONSUME, itemstack);
+        return InteractionResult.CONSUME;
     }
 
     public abstract ItemStack getThrownStack(Level pLevel, Player pPlayer, InteractionHand pHand, ItemStack launcherStack);
@@ -174,9 +175,9 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         @Override
         public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
             consumer.accept(new GeoRenderProvider() {
-                private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new GenericModel<>("splash_flask_cannon", "item").withEmptyAnim());
+                private final GeoItemRenderer<?> renderer = new FlaskCannonRenderer(new GenericModel<>("splash_flask_cannon", "item").withEmptyAnim());
 
-                public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                public GeoItemRenderer<?> getGeoItemRenderer() {
                     return renderer;
                 }
             });
@@ -203,9 +204,9 @@ public abstract class FlaskCannon extends ModItem implements IRadialProvider, Ge
         @Override
         public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
             consumer.accept(new GeoRenderProvider() {
-                private final BlockEntityWithoutLevelRenderer renderer = new FlaskCannonRenderer(new GenericModel<>("lingering_flask_cannon", "item").withEmptyAnim());
+                private final GeoItemRenderer<?> renderer = new FlaskCannonRenderer(new GenericModel<>("lingering_flask_cannon", "item").withEmptyAnim());
 
-                public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                public GeoItemRenderer<?> getGeoItemRenderer() {
                     return renderer;
                 }
             });

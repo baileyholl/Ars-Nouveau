@@ -13,7 +13,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -86,7 +86,7 @@ public class EffectKnockback extends AbstractEffect {
         if (entity instanceof LivingEntity living)
             strength *= 1.0D - living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
         if (strength > 0.0D) {
-            entity.hasImpulse = true;
+            // 1.21.11: hasImpulse removed
             Vec3 vec3 = entity.getDeltaMovement();
             Vec3 vec31 = (new Vec3(xRatio, 0.0D, zRatio)).normalize().scale(strength);
             entity.setDeltaMovement(vec3.x / 2.0D - vec31.x, entity.onGround() ? Math.min(0.4D, vec3.y / 2.0D + strength) : vec3.y, vec3.z / 2.0D - vec31.z);
@@ -112,7 +112,7 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

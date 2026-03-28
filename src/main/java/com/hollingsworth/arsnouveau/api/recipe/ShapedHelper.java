@@ -1,16 +1,17 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ShapedHelper {
     int recipeWidth;
     int recipeHeight;
-    NonNullList<Ingredient> recipeItems;
+    // In MC 1.21.11 recipes store Optional<Ingredient> — Optional.empty() = empty slot
+    List<Optional<Ingredient>> recipeItems;
     public List<List<Ingredient>> possibleRecipes;
 
     public ShapedHelper(ShapedRecipe recipe) {
@@ -49,7 +50,7 @@ public class ShapedHelper {
             for (int j = 0; j < 3; ++j) {
                 int k = i - width;
                 int l = j - height;
-                Ingredient ingredient = Ingredient.EMPTY;
+                Optional<Ingredient> ingredient = Optional.empty();
                 if (k >= 0 && l >= 0 && k < this.recipeWidth && l < this.recipeHeight) {
                     if (p_77573_4_) {
                         ingredient = this.recipeItems.get(this.recipeWidth - k - 1 + l * this.recipeWidth);
@@ -57,8 +58,7 @@ public class ShapedHelper {
                         ingredient = this.recipeItems.get(k + l * this.recipeWidth);
                     }
                 }
-                if (ingredient.getItems().length != 0)
-                    ingredientList.add(ingredient);
+                ingredient.ifPresent(ingredientList::add);
             }
         }
 

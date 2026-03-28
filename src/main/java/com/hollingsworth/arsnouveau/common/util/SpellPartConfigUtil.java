@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.util;
 
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.setup.config.ConfigUtil;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.HashSet;
@@ -44,9 +44,9 @@ public class SpellPartConfigUtil {
         /**
          * Retrieves the maximum number of times the given augment may be applied, given the configuration.
          */
-        public int getAugmentLimit(ResourceLocation augmentTag) {
+        public int getAugmentLimit(Identifier augmentTag) {
             // No caching so /reload works
-            Map<ResourceLocation, Integer> limits = parseAugmentLimits();
+            Map<Identifier, Integer> limits = parseAugmentLimits();
             return limits.getOrDefault(augmentTag, Integer.MAX_VALUE);
         }
 
@@ -54,12 +54,12 @@ public class SpellPartConfigUtil {
         /**
          * Parse glyph_limits into a Map from augment glyph tags to limits.
          */
-        private Map<ResourceLocation, Integer> parseAugmentLimits() {
+        private Map<Identifier, Integer> parseAugmentLimits() {
             return configValue.get().stream()
                     .map(AUGMENT_LIMITS_PATTERN::matcher)
                     .filter(Matcher::matches)
                     .collect(Collectors.toMap(
-                            m -> ResourceLocation.tryParse(m.group(1)),
+                            m -> Identifier.tryParse(m.group(1)),
                             m -> Integer.valueOf(m.group(2))
                     ));
         }
@@ -75,7 +75,7 @@ public class SpellPartConfigUtil {
             this.configValue = configValue;
         }
 
-        public boolean contains(ResourceLocation glyphTag) {
+        public boolean contains(Identifier glyphTag) {
             return parseComboLimits().contains(glyphTag);
         }
 
@@ -83,12 +83,12 @@ public class SpellPartConfigUtil {
         /**
          * Parse glyph_limits into a Map from augment glyph tags to limits.
          */
-        public Set<ResourceLocation> parseComboLimits() {
+        public Set<Identifier> parseComboLimits() {
             if (configValue == null) {
                 return new HashSet<>();
             }
             return configValue.get().stream()
-                    .map(ResourceLocation::tryParse)
+                    .map(Identifier::tryParse)
                     .collect(Collectors.toSet());
         }
     }
@@ -98,7 +98,7 @@ public class SpellPartConfigUtil {
      * Builds a "augment_limits" configuration item using the provided {@link ModConfigSpec.Builder} and returns an
      * {@link AugmentLimits} instance to encapsulate it.
      */
-    public static AugmentLimits buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    public static AugmentLimits buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<Identifier, Integer> defaults) {
         ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Limits the number of times a given augment may be applied to a given effect", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=5\"")
                 .defineList("augment_limits", writeAugmentConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
@@ -106,10 +106,10 @@ public class SpellPartConfigUtil {
         return new AugmentLimits(configValue);
     }
 
-    public static ComboLimits buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+    public static ComboLimits buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<Identifier> defaults) {
         ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("Prevents the given glyph from being used in the same spell as the given glyph", "Example entry: \"" + GlyphLib.EffectBurstID + "\"")
-                .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s && ResourceLocation.read(s).isSuccess());
+                .defineList("invalid_combos", writeComboConfig(defaults), (o) -> o instanceof String s && Identifier.read(s).isSuccess());
 
         return new ComboLimits(configValue);
     }
@@ -117,9 +117,9 @@ public class SpellPartConfigUtil {
     /**
      * Produces a list of resourcelocation strings suitable for saving to the configuration.
      */
-    private static List<String> writeComboConfig(Set<ResourceLocation> augmentLimits) {
+    private static List<String> writeComboConfig(Set<Identifier> augmentLimits) {
         return augmentLimits.stream()
-                .map(ResourceLocation::toString)
+                .map(Identifier::toString)
                 .collect(Collectors.toList());
     }
 
@@ -127,7 +127,7 @@ public class SpellPartConfigUtil {
      * Builds a "augment_limits" configuration item using the provided {@link ModConfigSpec.Builder} and returns an
      * {@link AugmentLimits} instance to encapsulate it.
      */
-    public static AugmentCosts buildAugmentCosts(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    public static AugmentCosts buildAugmentCosts(ModConfigSpec.Builder builder, Map<Identifier, Integer> defaults) {
         ModConfigSpec.ConfigValue<List<? extends String>> configValue = builder
                 .comment("How much an augment should cost when used on this effect or form. This overrides the default cost in the augment config.", "Example entry: \"" + GlyphLib.AugmentAmplifyID + "=50\"")
                 .defineList("augment_cost_overrides", ConfigUtil.writeResConfig(defaults), SpellPartConfigUtil::validateAugmentLimits);
@@ -138,7 +138,7 @@ public class SpellPartConfigUtil {
     /**
      * Produces a list of tag=limit strings suitable for saving to the configuration.
      */
-    private static List<String> writeAugmentConfig(Map<ResourceLocation, Integer> augmentLimits) {
+    private static List<String> writeAugmentConfig(Map<Identifier, Integer> augmentLimits) {
         return augmentLimits.entrySet().stream()
                 .map(e -> e.getKey().toString() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());
@@ -161,7 +161,7 @@ public class SpellPartConfigUtil {
      * limitations.
      */
     public static class AugmentCosts {
-        private Map<ResourceLocation, Integer> costs = null;
+        private Map<Identifier, Integer> costs = null;
         private ModConfigSpec.ConfigValue<List<? extends String>> configValue;
 
         /**
@@ -174,7 +174,7 @@ public class SpellPartConfigUtil {
         /**
          * Retrieves the cost of the augment given an effect or form.
          */
-        public int getAugmentCost(ResourceLocation effectTag, int fallback) {
+        public int getAugmentCost(Identifier effectTag, int fallback) {
             // No caching so /reload works
             costs = parseAugmentCosts();
             return costs.getOrDefault(effectTag, fallback);
@@ -183,12 +183,12 @@ public class SpellPartConfigUtil {
         /**
          * Parse glyph_limits into a Map from augment glyph tags to limits.
          */
-        private Map<ResourceLocation, Integer> parseAugmentCosts() {
+        private Map<Identifier, Integer> parseAugmentCosts() {
             return configValue.get().stream()
                     .map(AUGMENT_LIMITS_PATTERN::matcher)
                     .filter(Matcher::matches)
                     .collect(Collectors.toMap(
-                            m -> ResourceLocation.tryParse(m.group(1)),
+                            m -> Identifier.tryParse(m.group(1)),
                             m -> Integer.valueOf(m.group(2))
                     ));
         }

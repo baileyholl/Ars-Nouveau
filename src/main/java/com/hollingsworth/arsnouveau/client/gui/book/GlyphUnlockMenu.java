@@ -15,8 +15,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+// RenderSystem import removed - methods not used in 1.21.11
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,8 +24,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+// GameRenderer import removed - getPositionColorShader removed in 1.21.11
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
@@ -37,7 +35,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +74,15 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public GlyphUnlockMenu(BlockPos pos) {
         super();
-        allParts = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.GLYPH_TYPE.get());
+        // In 1.21.11, ClientLevel.getRecipeManager() and getAllRecipesFor() are removed.
+        // Use integrated server recipe manager (works in singleplayer/LAN); filter by recipe type manually.
+        var server = Minecraft.getInstance().getSingleplayerServer();
+        if (server != null) {
+            allParts = server.getRecipeManager().getRecipes().stream()
+                    .filter(h -> h.value().getType() == RecipeRegistry.GLYPH_TYPE.get())
+                    .map(h -> (RecipeHolder<GlyphRecipe>) h)
+                    .toList();
+        }
         this.displayedGlyphs = new ArrayList<>(allParts);
         this.scribesPos = pos;
     }
@@ -99,7 +104,7 @@ public class GlyphUnlockMenu extends BaseBook {
         searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop + 2,
                 54, 12, null, Component.translatable("ars_nouveau.spell_book_gui.search"));
         searchBar.setBordered(false);
-        searchBar.setTextColor(12694931);
+        searchBar.setTextColor(0xFFC1CF93);
         searchBar.onClear = (val) -> {
             this.onSearchChanged("");
             return null;
@@ -177,7 +182,8 @@ public class GlyphUnlockMenu extends BaseBook {
 
     private void onSelectClick(Button button) {
         if (selectedRecipe != null) {
-            Networking.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id()));
+            // In 1.21.11, ResourceKey uses .identifier() not .location() to get the Identifier
+            Networking.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id().identifier()));
             Minecraft.getInstance().setScreen(null);
         }
     }
@@ -315,7 +321,8 @@ public class GlyphUnlockMenu extends BaseBook {
             return;
         for (ItemButton itemButton : itemButtons) {
             itemButton.visible = false;
-            itemButton.ingredient = Ingredient.EMPTY;
+            // In 1.21.11, Ingredient.EMPTY is removed; use empty ingredient
+        itemButton.ingredient = null;
         }
 
         for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
@@ -366,9 +373,9 @@ public class GlyphUnlockMenu extends BaseBook {
 
         graphics.drawString(font, orderingTitle, tier1Row > 7 ? 154 : 20, 5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712, false);
 
-        graphics.blit(ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/create_paper.png"), 216, 175, 0, 0, 56, 15, 56, 15);
 
-        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
+        graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15, 72, 15);
         graphics.drawString(font, Component.translatable("ars_nouveau.spell_book_gui.select"), 233, 179, -8355712, false);
     }
 
@@ -390,19 +397,20 @@ public class GlyphUnlockMenu extends BaseBook {
 
     public void renderTooltipInternal(GuiGraphics graphics, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
         if (!pClientTooltipComponents.isEmpty()) {
-            PoseStack pPoseStack = graphics.pose();
+            // In 1.21.11, graphics.pose() returns Matrix3x2fStack — no PoseStack, no last().pose()
+            var pPoseStack = graphics.pose();
             net.neoforged.neoforge.client.event.RenderTooltipEvent.Pre preEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipPre(ItemStack.EMPTY, graphics, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, DefaultTooltipPositioner.INSTANCE);
             if (preEvent.isCanceled()) return;
+
+            // Compute total width (i) and total height (j)
             int i = 0;
             int j = pClientTooltipComponents.size() == 1 ? -2 : 0;
-
-            for (ClientTooltipComponent clienttooltipcomponent : pClientTooltipComponents) {
-                int k = clienttooltipcomponent.getWidth(preEvent.getFont());
+            for (ClientTooltipComponent component : pClientTooltipComponents) {
+                int k = component.getWidth(preEvent.getFont());
                 if (k > i) {
                     i = k;
                 }
-
-                j += clienttooltipcomponent.getHeight();
+                j += component.getHeight(preEvent.getFont());
             }
 
             int j2 = preEvent.getX() + 12;
@@ -410,49 +418,46 @@ public class GlyphUnlockMenu extends BaseBook {
             if (j2 + i > this.width) {
                 j2 -= 28 + i;
             }
-
             if (k2 + j + 6 > this.height) {
                 k2 = this.height - j - 6;
             }
-            pPoseStack.pushPose();
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            Matrix4f matrix4f = pPoseStack.last().pose();
-            net.neoforged.neoforge.client.event.RenderTooltipEvent.Color colorEvent = net.neoforged.neoforge.client.ClientHooks.onRenderTooltipColor(ItemStack.EMPTY, graphics, j2, k2, preEvent.getFont(), pClientTooltipComponents);
 
-            graphics.fillGradient(j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
-            graphics.fillGradient(j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, 400, colorEvent.getBackgroundEnd(), colorEvent.getBackgroundEnd());
-            graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
-            graphics.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
-            graphics.fillGradient(j2 + i + 3, k2 - 3, j2 + i + 4, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
-            graphics.fillGradient(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + j + 3 - 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderEnd());
-            graphics.fillGradient(j2 + i + 2, k2 - 3 + 1, j2 + i + 3, k2 + j + 3 - 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderEnd());
-            graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 - 3 + 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderStart());
-            graphics.fillGradient(j2 - 3, k2 + j + 2, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBorderEnd(), colorEvent.getBorderEnd());
+            pPoseStack.pushMatrix();
+            // In 1.21.11: RenderSystem.setShader() removed; RenderTooltipEvent.Color removed.
+            // Use default vanilla tooltip colors directly.
+            int bgStart = 0xf0100010;
+            int bgEnd   = 0xf0100010;
+            int borderStart = 0x505000ff;
+            int borderEnd   = 0x5028007f;
 
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.disableBlend();
-            MultiBufferSource.BufferSource multibuffersource$buffersource = graphics.bufferSource();
-            pPoseStack.translate(0.0D, 0.0D, 400.0D);
+            // Draw tooltip background and border (1.21.11: fillGradient has no z param)
+            graphics.fillGradient(j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, bgStart, bgStart);
+            graphics.fillGradient(j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, bgEnd, bgEnd);
+            graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, bgStart, bgEnd);
+            graphics.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + j + 3, bgStart, bgEnd);
+            graphics.fillGradient(j2 + i + 3, k2 - 3, j2 + i + 4, k2 + j + 3, bgStart, bgEnd);
+            graphics.fillGradient(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + j + 3 - 1, borderStart, borderEnd);
+            graphics.fillGradient(j2 + i + 2, k2 - 3 + 1, j2 + i + 3, k2 + j + 3 - 1, borderStart, borderEnd);
+            graphics.fillGradient(j2 - 3, k2 - 3, j2 + i + 3, k2 - 3 + 1, borderStart, borderStart);
+            graphics.fillGradient(j2 - 3, k2 + j + 2, j2 + i + 3, k2 + j + 3, borderEnd, borderEnd);
+
+            // Render text components (uses GuiGraphics directly — no PoseStack/Matrix4f needed)
             int l1 = k2;
-
             for (int i2 = 0; i2 < pClientTooltipComponents.size(); ++i2) {
                 ClientTooltipComponent clienttooltipcomponent1 = pClientTooltipComponents.get(i2);
-                clienttooltipcomponent1.renderText(preEvent.getFont(), j2, l1, matrix4f, multibuffersource$buffersource);
-                l1 += clienttooltipcomponent1.getHeight() + (i2 == 0 ? 2 : 0);
+                clienttooltipcomponent1.renderText(graphics, preEvent.getFont(), j2, l1);
+                l1 += clienttooltipcomponent1.getHeight(preEvent.getFont()) + (i2 == 0 ? 2 : 0);
             }
-            l1 = k2;
 
-            pPoseStack.translate(0, 0, 600);
+            // Render image/icon components with updated 6-arg signature
+            l1 = k2;
             for (int l2 = 0; l2 < pClientTooltipComponents.size(); ++l2) {
                 ClientTooltipComponent clienttooltipcomponent2 = pClientTooltipComponents.get(l2);
-                clienttooltipcomponent2.renderImage(preEvent.getFont(), j2, l1, graphics);
-                l1 += clienttooltipcomponent2.getHeight() + (l2 == 0 ? 2 : 0);
+                clienttooltipcomponent2.renderImage(preEvent.getFont(), j2, l1, i, j, graphics);
+                l1 += clienttooltipcomponent2.getHeight(preEvent.getFont()) + (l2 == 0 ? 2 : 0);
             }
-            pPoseStack.popPose();
 
-//            this.itemRenderer.blitOffset = f;
+            pPoseStack.popMatrix();
         }
     }
 }

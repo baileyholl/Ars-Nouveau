@@ -1,58 +1,37 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.RenderUtil;
 
-
-public class AmethystGolemRenderer<T extends LivingEntity & GeoEntity> extends GeoEntityRenderer<T> {
+// GeckoLib 5.4.2 migration:
+// - GeoEntityRenderer requires R extends EntityRenderState & GeoRenderState
+// - LivingEntityRenderState does NOT extend GeoRenderState, so we use ArsEntityRenderState
+// - preRender() and renderRecursively() REMOVED
+// - Per-bone item rendering (item bone) needs to be ported to RenderPassInfo.addPerBoneRender
+// TODO: Port item-in-hand rendering for the "item" bone
+public class AmethystGolemRenderer<T extends LivingEntity & GeoEntity> extends GeoEntityRenderer<T, ArsEntityRenderState> {
     public AmethystGolemRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AmethystGolemModel<>());
     }
 
-    LivingEntity golem;
-    MultiBufferSource buffer;
-    ResourceLocation text;
-
+    // GeckoLib 5: createRenderState(T, Void) is the correct override (no-arg is final)
     @Override
-    public RenderType getRenderType(T animatable, ResourceLocation texture, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityCutoutNoCull(texture);
+    public ArsEntityRenderState createRenderState(T animatable, Void context) {
+        return new ArsEntityRenderState();
     }
 
+    // GeckoLib 5: getRenderType(R renderState, Identifier texture) - new signature
     @Override
-    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        this.golem = animatable;
-        this.buffer = bufferSource;
-        this.text = this.getTextureLocation(animatable);
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+    public RenderType getRenderType(ArsEntityRenderState renderState, Identifier texture) {
+        return RenderTypes.entityCutoutNoCull(texture);
     }
 
-    @Override
-    public void renderRecursively(PoseStack stack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        if (bone.getName().equals("item")) {
-            stack.pushPose();
-            RenderUtil.translateToPivotPoint(stack, bone);
-            stack.translate(0, -0.10, 0);
-            ItemStack itemstack = golem.getMainHandItem();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, stack, this.buffer, animatable.level, (int) golem.getOnPos().asLong());
-            stack.popPose();
-            bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
-        }
-        super.renderRecursively(stack, animatable, bone, renderType, bufferSource, bufferIn, isReRender, partialTick, packedLight, packedOverlay, colour);
-
-    }
-
+    // TODO: GeckoLib 5 - renderRecursively and preRender removed.
+    // Previously: on "item" bone, rendered the golem's mainhand item using stored bufferSource.
+    // Needs to be migrated to captureDefaultRenderState + addPerBoneRender pattern.
 }

@@ -20,7 +20,7 @@ public class ManaCapEvents {
     @SubscribeEvent
     public static void playerOnTick(PlayerTickEvent.Pre e) {
         Player player = e.getEntity();
-        if (!(player instanceof ServerPlayer serverPlayer) || player.getCommandSenderWorld().getGameTime() % ServerConfig.REGEN_INTERVAL.get() != 0)
+        if (!(player instanceof ServerPlayer serverPlayer) || player.level().getGameTime() % ServerConfig.REGEN_INTERVAL.get() != 0)
             return;
 
         ManaCap mana = CapabilityRegistry.getMana(player);
@@ -96,10 +96,10 @@ public class ManaCapEvents {
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Post e) {
         var player = e.getEntity();
-        if (player.level.isClientSide)
+        if (player.level().isClientSide())
             return;
-        if (player.level.getGameTime() % 600 == 0 && player.getServer() != null) {
-            long[] tickTimes = player.getServer().getTickTime(player.level.dimension());
+        if (player.level().getGameTime() % 600 == 0 && !player.level().isClientSide() && player.level().getServer() != null) {
+            long[] tickTimes = player.level().getServer().getTickTime(player.level().dimension());
             double meanTickTime = mean(tickTimes == null ? UNLOADED : tickTimes) * 1.0E-6D;
             double meanTPS = Math.min(1000.0 / meanTickTime, 20);
             ManaCapEvents.MEAN_TPS = Math.max(1, meanTPS);

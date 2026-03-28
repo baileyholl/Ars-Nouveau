@@ -3,30 +3,14 @@
   "enchantment": "minecraft:multishot",
   "level": 1,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    }
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:manipulation_essence",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source"
   ],
   "sourceCost": 9000
 }

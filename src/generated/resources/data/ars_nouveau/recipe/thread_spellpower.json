@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:fire_essence"
-    },
-    {
-      "item": "ars_nouveau:magebloom"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:water_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "ars_nouveau:conjuration_essence"
-    }
+    "ars_nouveau:fire_essence",
+    "ars_nouveau:magebloom",
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:water_essence",
+    "ars_nouveau:abjuration_essence",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:earth_essence",
+    "ars_nouveau:conjuration_essence"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_spellpower"

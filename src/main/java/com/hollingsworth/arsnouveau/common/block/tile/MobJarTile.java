@@ -12,18 +12,21 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +40,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class MobJarTile extends ModdedTile implements ITickable, IDispellable, ITooltipProvider {
     @Nullable
@@ -56,7 +58,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     @Override
     public void tick() {
         try {
-            if (level.isClientSide && this.cachedEntity != null) {
+            if (level.isClientSide() && this.cachedEntity != null) {
                 if (this.cachedEntity.isRemoved()) {
                     this.removeEntity();
                     return;
@@ -71,11 +73,11 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
                 if (entity != null) {
                     var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
 
-                    var startPos = camera.getPosition();
+                    var startPos = camera.position();
                     if (startPos.distanceToSqr(this.getBlockPos().getCenter()) <= 64 * 64) {
-                        var aabb = entity.getBoundingBoxForCulling();
+                        var aabb = entity.getBoundingBox();
                         for (var passenger : entity.getPassengers()) {
-                            aabb = aabb.minmax(passenger.getBoundingBoxForCulling());
+                            aabb = aabb.minmax(passenger.getBoundingBox());
                         }
 
                         if (Double.isFinite(aabb.minX) && Double.isFinite(aabb.minY) && Double.isFinite(aabb.minZ)
@@ -112,14 +114,15 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     public boolean setEntityData(@NotNull Entity entity) {
-        CompoundTag tag = new CompoundTag();
-        if (entity.shouldBeSaved() && entity.save(tag)) {
-            this.cachedEntity = EntityType.loadEntityRecursive(tag, level, Function.identity());
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        if (entity.shouldBeSaved() && entity.save(output)) {
+            CompoundTag tag = output.buildResult();
+            this.cachedEntity = EntityType.loadEntityRecursive(tag, level, EntitySpawnReason.LOAD, EntityProcessor.NOP);
             this.cachedEntity.setBoundingBox(new AABB(0, 0, 0, 0, 0, 0));
             this.cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
             this.extraDataTag = null;
             this.entityTag = tag;
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 this.invalidateCapabilities();
                 level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(MobJar.LIGHT_LEVEL, calculateLight()));
                 updateBlock();
@@ -149,13 +152,13 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         CompoundTag tag = new CompoundTag();
         tag.putString("id", EntityType.getKey(e.getType()).toString());
         if (level == null) return;
-        this.cachedEntity = e.getType().create(level);
+        this.cachedEntity = e.getType().create(level, EntitySpawnReason.LOAD);
         assert cachedEntity != null;
         this.cachedEntity.setBoundingBox(new AABB(0, 0, 0, 0, 0, 0));
         this.cachedEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
         this.extraDataTag = null;
         this.entityTag = tag;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(MobJar.LIGHT_LEVEL, calculateLight()));
             updateBlock();
         }
@@ -224,43 +227,42 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
 
         // Check both conditions because the entity may have never been loaded on the server side.
         if (entityTag != null || cachedEntity != null) {
             cachedEntity = getEntity();
             if (cachedEntity != null) {
                 try {
-                    tag.put("entityTag", saveEntityToTag(cachedEntity));
-                    if (tag.getCompound("entityTag").contains("id")) {
-                        tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
-                    }
+                    CompoundTag savedTag = saveEntityToTag(cachedEntity);
+                    output.store("entityTag", CompoundTag.CODEC, savedTag);
+                    savedTag.getString("id").ifPresent(id -> output.putString("entityId", id));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
         if (extraDataTag != null) {
-            tag.put("extraMobData", extraDataTag);
+            output.store("extraMobData", CompoundTag.CODEC, extraDataTag);
         }
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        if (pTag.contains("entityTag")) {
-            this.entityTag = pTag.getCompound("entityTag");
+    protected void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        input.read("entityTag", CompoundTag.CODEC).ifPresent(tag -> {
+            this.entityTag = tag;
             this.cachedEntity = null;
-        }
-        this.extraDataTag = pTag.getCompound("extraMobData");
+        });
+        this.extraDataTag = input.read("extraMobData", CompoundTag.CODEC).orElse(null);
     }
 
     @Override
-    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
+    public void onDataPacket(@NotNull Connection net, @NotNull ValueInput input) {
         this.cachedEntity = null;
         this.entityTag = null;
-        super.onDataPacket(net, pkt, lookupProvider);
+        super.onDataPacket(net, input);
     }
 
     public void dispatchBehavior(Consumer<JarBehavior<? extends Entity>> consumer) {
@@ -272,26 +274,30 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     public static Entity loadEntityFromTag(Level level, CompoundTag tag) {
-        Entity entity = EntityType.loadEntityRecursive(tag, level, Function.identity());
+        Entity entity = EntityType.loadEntityRecursive(tag, level, EntitySpawnReason.LOAD, EntityProcessor.NOP);
         if (entity == null) {
-            String id = tag.getString("id");
-            Optional<EntityType<?>> type = EntityType.byString(id);
-            if (type.isPresent()) {
-                entity = type.get().create(level);
+            String id = tag.getStringOr("id", "");
+            if (!id.isEmpty()) {
+                Optional<EntityType<?>> type = EntityType.byString(id);
+                if (type.isPresent()) {
+                    entity = type.get().create(level, EntitySpawnReason.LOAD);
+                }
             }
         }
         return entity;
     }
 
     public CompoundTag saveEntityToTag(Entity entity) {
-        CompoundTag tag = new CompoundTag();
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
         if (entity != null) {
-            entity.save(tag);
+            entity.save(output);
+            CompoundTag tag = output.buildResult();
             if (tag.isEmpty()) {
                 tag.putString("id", EntityType.getKey(entity.getType()).toString());
             }
+            return tag;
         }
-        return tag;
+        return new CompoundTag();
     }
 
     @Override
@@ -306,7 +312,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
 
     @Override
-    protected void applyImplicitComponents(@NotNull DataComponentInput pComponentInput) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
         var jar = pComponentInput.getOrDefault(DataComponentRegistry.MOB_JAR, new MobJarData(Optional.empty(), Optional.empty()));
         this.entityTag = jar.entityTag().orElse(null);

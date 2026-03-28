@@ -18,6 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -31,7 +32,7 @@ import static com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEncha
 public class SpellWriteRecipe extends EnchantingApparatusRecipe implements ITextOutput {
 
     public SpellWriteRecipe(List<Ingredient> pedestalItems, int cost) {
-        super(Ingredient.EMPTY, ItemStack.EMPTY, pedestalItems, cost, true);
+        super(Ingredient.of(Items.ENCHANTED_BOOK), ItemStack.EMPTY, pedestalItems, cost, true);
     }
 
     @Override
@@ -70,8 +71,9 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
-        return RecipeRegistry.SPELL_WRITE_TYPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeType<EnchantingApparatusRecipe> getType() {
+        return (RecipeType<EnchantingApparatusRecipe>) (RecipeType<?>) RecipeRegistry.SPELL_WRITE_TYPE.get();
     }
 
     @Override
@@ -81,8 +83,9 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe implements IText
 
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.SPELL_WRITE_RECIPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeSerializer<EnchantingApparatusRecipe> getSerializer() {
+        return (RecipeSerializer<EnchantingApparatusRecipe>) (RecipeSerializer<?>) RecipeRegistry.SPELL_WRITE_RECIPE.get();
     }
 
 

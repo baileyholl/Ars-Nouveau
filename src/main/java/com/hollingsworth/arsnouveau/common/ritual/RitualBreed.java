@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.AABB;
 
@@ -18,7 +18,7 @@ public class RitualBreed extends AbstractRitual {
 
     @Override
     protected void tick() {
-        if (getWorld().isClientSide) {
+        if (getWorld().isClientSide()) {
             ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         } else {
             if (getWorld().getGameTime() % 200 == 0) {
@@ -73,7 +73,7 @@ public class RitualBreed extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.FERTILITY);
     }
 }

@@ -9,7 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Random;
 public class ParticleColor implements IParticleColor, Cloneable {
 
     public static final MapCodec<ParticleColor> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(ParticleColor::getRegistryName),
+            Identifier.CODEC.fieldOf("id").forGetter(ParticleColor::getRegistryName),
             Codec.INT.fieldOf("r").forGetter(ParticleColor::getRedInt),
             Codec.INT.fieldOf("g").forGetter(ParticleColor::getGreenInt),
             Codec.INT.fieldOf("b").forGetter(ParticleColor::getBlueInt)
@@ -30,13 +30,13 @@ public class ParticleColor implements IParticleColor, Cloneable {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ParticleColor> STREAM = StreamCodec.of(
             (buf, val) -> {
-                buf.writeResourceLocation(val.getRegistryName());
+                buf.writeIdentifier(val.getRegistryName());
                 buf.writeInt(val.getRedInt());
                 buf.writeInt(val.getGreenInt());
                 buf.writeInt(val.getBlueInt());
             },
             buf -> {
-                ResourceLocation id = buf.readResourceLocation();
+                Identifier id = buf.readIdentifier();
                 int r = buf.readInt();
                 int g = buf.readInt();
                 int b = buf.readInt();
@@ -44,7 +44,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
             }
     );
 
-    public static final ResourceLocation ID = ArsNouveau.prefix("constant");
+    public static final Identifier ID = ArsNouveau.prefix("constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
     public static final ParticleColor WHITE = new ParticleColor(255, 255, 255);
@@ -100,7 +100,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
     }
 
     public ParticleColor(CompoundTag compoundTag) {
-        this(compoundTag.getInt("r"), compoundTag.getInt("g"), compoundTag.getInt("b"));
+        this(compoundTag.getIntOr("r", 0), compoundTag.getIntOr("g", 0), compoundTag.getIntOr("b", 0));
     }
 
     public static ParticleColor fromInt(int color) {
@@ -143,7 +143,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ID;
     }
 

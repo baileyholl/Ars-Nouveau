@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:glowstone"
-  },
+  "input": "minecraft:glowstone",
   "output": [
     {
       "chance": 1.0,

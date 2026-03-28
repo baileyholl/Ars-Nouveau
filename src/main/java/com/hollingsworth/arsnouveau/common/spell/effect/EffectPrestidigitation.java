@@ -80,16 +80,17 @@ public class EffectPrestidigitation extends AbstractEffect {
         }
     }
 
-    public static void onInventoryTick(ItemStack stack, Level level, Entity entity, int inventorySlot, boolean isCurrentItem) {
-        if (level.isClientSide || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
+    // 1.21.11: inventoryTick no longer passes slot index or isCurrentItem.
+    // EquipmentSlot non-null means the item is actively equipped (mainhand, offhand, armor).
+    public static void onInventoryTick(ItemStack stack, Level level, Entity entity, @org.jetbrains.annotations.Nullable net.minecraft.world.entity.EquipmentSlot equipmentSlot) {
+        if (level.isClientSide() || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
             return;
         }
         PrestidigitationData prestidigitationData = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());
         if (prestidigitationData == null) {
             return;
         }
-        // Current item, held in hand or armor slots.
-        if (isCurrentItem || (inventorySlot > 35 && inventorySlot < 41)) {
+        if (equipmentSlot != null) {
             ParticleEmitter emitter = prestidigitationData.getEmitter(entity, prestidigitationData.timeline().onTickEffect);
             emitter.tick(level);
         }

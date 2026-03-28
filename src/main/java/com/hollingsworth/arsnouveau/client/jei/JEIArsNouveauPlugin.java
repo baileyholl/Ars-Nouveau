@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
+import com.hollingsworth.arsnouveau.client.events.ClientEvents;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -18,13 +19,11 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +52,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     }
 
     @Override
-    public @NotNull ResourceLocation getPluginUid() {
+    public @NotNull Identifier getPluginUid() {
         return ArsNouveau.prefix("main");
     }
 
@@ -81,17 +80,21 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<RecipeHolder<CrushRecipe>> crushRecipes = new ArrayList<>();
         List<RecipeHolder<ArmorUpgradeRecipe>> armorUpgrades = new ArrayList<>();
 
-        List<RecipeHolder<ImbuementRecipe>> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE.get()).stream().toList();
-
+        // 1.21.11: ClientRecipeContainer doesn't expose all recipes.
+        // Custom AN recipes are synced via NeoForge RecipeContentPayload (requested in OnDatapackSyncEvent)
+        // and cached in ClientEvents.clientRecipeMap when RecipesReceivedEvent fires.
+        List<RecipeHolder<ImbuementRecipe>> imbuementRecipes = new ArrayList<>();
         List<RecipeHolder<BuddingConversionRecipe>> buddingConversionRecipes = new ArrayList<>();
         List<RecipeHolder<ScryRitualRecipe>> scryRitualRecipes = new ArrayList<>();
         List<RecipeHolder<AlakarkinosRecipe>> alakarkinosRecipes = new ArrayList<>();
 
-        RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (RecipeHolder<?> h : manager.getRecipes().stream().toList()) {
+        for (RecipeHolder<?> h : ClientEvents.clientRecipeMap.values()) {
             Recipe<?> i = h.value();
             if (i instanceof GlyphRecipe) {
                 recipeList.add((RecipeHolder<GlyphRecipe>) h);
+            }
+            if (i instanceof ImbuementRecipe) {
+                imbuementRecipes.add((RecipeHolder<ImbuementRecipe>) h);
             }
             if (i instanceof EnchantmentRecipe) {
                 enchantments.add((RecipeHolder<EnchantmentRecipe>) h);

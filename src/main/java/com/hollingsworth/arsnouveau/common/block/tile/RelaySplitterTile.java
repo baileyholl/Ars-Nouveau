@@ -11,8 +11,8 @@ import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -174,7 +174,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public void tick() {
-        if (level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
+        if (level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide() || disabled)
             return;
 
         processFromList();
@@ -188,8 +188,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
+    protected void loadAdditional(@NotNull ValueInput tag) {
+        super.loadAdditional(tag);
         fromList = new ArrayList<>();
         toList = new ArrayList<>();
         int counter = 0;
@@ -212,8 +212,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(@NotNull ValueOutput tag) {
+        super.saveAdditional(tag);
         int counter = 0;
         for (BlockPos p : this.fromList) {
             NBTUtil.storeBlockPos(tag, "from_" + counter, p);

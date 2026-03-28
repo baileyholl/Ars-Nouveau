@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemButton extends GuiImageButton {
-    public Ingredient ingredient = Ingredient.of();
+    public Ingredient ingredient = null;
     public GlyphUnlockMenu parent;
 
     public ItemButton(GlyphUnlockMenu parent, int x, int y) {
@@ -27,16 +27,19 @@ public class ItemButton extends GuiImageButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if (ingredient != null && ingredient.getItems().length != 0) {
-            ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];
-            if (GuiUtils.isMouseInRelativeRange(pMouseX, pMouseY, x, y, width, height)) {
-                Font font = Minecraft.getInstance().font;
-                List<ClientTooltipComponent> components = new ArrayList<>(ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, Screen.getTooltipFromItem(Minecraft.getInstance(), stack), pMouseX, width, height, font));
-                parent.renderTooltipInternal(graphics, components, pMouseX, pMouseY);
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        if (ingredient != null) {
+            java.util.List<ItemStack> stacks = ingredient.items().map(h -> h.value().getDefaultInstance()).toList();
+            if (!stacks.isEmpty()) {
+                ItemStack stack = stacks.get((ClientInfo.ticksInGame / 20) % stacks.size());
+                if (GuiUtils.isMouseInRelativeRange(pMouseX, pMouseY, x, y, width, height)) {
+                    Font font = Minecraft.getInstance().font;
+                    List<ClientTooltipComponent> components = new ArrayList<>(ClientHooks.gatherTooltipComponents(ItemStack.EMPTY, Screen.getTooltipFromItem(Minecraft.getInstance(), stack), pMouseX, width, height, font));
+                    parent.renderTooltipInternal(graphics, components, pMouseX, pMouseY);
+                }
+                RenderUtils.drawItemAsIcon(stack, graphics, x + 3, y + 2, 16, false);
             }
-            RenderUtils.drawItemAsIcon(stack, graphics, x + 3, y + 2, 16, false);
         }
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
     }
 }

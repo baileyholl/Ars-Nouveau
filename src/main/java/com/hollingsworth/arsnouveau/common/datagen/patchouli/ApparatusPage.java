@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -17,7 +17,7 @@ public class ApparatusPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
+    public Identifier getType() {
         return ArsNouveau.prefix("apparatus_recipe");
     }
 }

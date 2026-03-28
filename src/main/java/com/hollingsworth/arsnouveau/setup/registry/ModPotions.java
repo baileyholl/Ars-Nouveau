@@ -56,29 +56,29 @@ public class ModPotions {
     public static final DeferredHolder<MobEffect, FreezingEffect> FREEZING_EFFECT = EFFECTS.register(FREEZING, FreezingEffect::new);
     public static final DeferredHolder<MobEffect, PublicEffect> DEFENCE_EFFECT = EFFECTS.register(DEFENCE, () -> new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(150, 0, 150).getColor()));
 
-    public static final DeferredHolder<Potion, Potion> MANA_REGEN_POTION = POTIONS.register(potion(MANA_REGEN), () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600)));
-    public static final DeferredHolder<Potion, Potion> LONG_MANA_REGEN_POTION = POTIONS.register(longPotion(MANA_REGEN), () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 9600)));
-    public static final DeferredHolder<Potion, Potion> STRONG_MANA_REGEN_POTION = POTIONS.register(strongPotion(MANA_REGEN), () -> new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600, 1)));
+    public static final DeferredHolder<Potion, Potion> MANA_REGEN_POTION = POTIONS.register(potion(MANA_REGEN), () -> new Potion("", new MobEffectInstance(MANA_REGEN_EFFECT, 3600)));
+    public static final DeferredHolder<Potion, Potion> LONG_MANA_REGEN_POTION = POTIONS.register(longPotion(MANA_REGEN), () -> new Potion("", new MobEffectInstance(MANA_REGEN_EFFECT, 9600)));
+    public static final DeferredHolder<Potion, Potion> STRONG_MANA_REGEN_POTION = POTIONS.register(strongPotion(MANA_REGEN), () -> new Potion("", new MobEffectInstance(MANA_REGEN_EFFECT, 3600, 1)));
 
-    public static final DeferredHolder<Potion, Potion> SPELL_DAMAGE_POTION = POTIONS.register(potion(SPELL_DAMAGE), () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600)));
-    public static final DeferredHolder<Potion, Potion> SPELL_DAMAGE_POTION_LONG = POTIONS.register(longPotion(SPELL_DAMAGE), () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 9600)));
-    public static final DeferredHolder<Potion, Potion> SPELL_DAMAGE_POTION_STRONG = POTIONS.register(strongPotion(SPELL_DAMAGE), () -> new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600, 1)));
+    public static final DeferredHolder<Potion, Potion> SPELL_DAMAGE_POTION = POTIONS.register(potion(SPELL_DAMAGE), () -> new Potion("", new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600)));
+    public static final DeferredHolder<Potion, Potion> SPELL_DAMAGE_POTION_LONG = POTIONS.register(longPotion(SPELL_DAMAGE), () -> new Potion("", new MobEffectInstance(SPELL_DAMAGE_EFFECT, 9600)));
+    public static final DeferredHolder<Potion, Potion> SPELL_DAMAGE_POTION_STRONG = POTIONS.register(strongPotion(SPELL_DAMAGE), () -> new Potion("", new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600, 1)));
 
-    public static final DeferredHolder<Potion, Potion> RECOVERY_POTION = POTIONS.register(potion(RECOVERY), () -> new Potion(new MobEffectInstance(RECOVERY_EFFECT, 3600)));
-    public static final DeferredHolder<Potion, Potion> LONG_RECOVERY_POTION = POTIONS.register(longPotion(RECOVERY), () -> new Potion(new MobEffectInstance(RECOVERY_EFFECT, 9600)));
-    public static final DeferredHolder<Potion, Potion> STRONG_RECOVERY_POTION = POTIONS.register(strongPotion(RECOVERY), () -> new Potion(new MobEffectInstance(RECOVERY_EFFECT, 3600, 1)));
+    public static final DeferredHolder<Potion, Potion> RECOVERY_POTION = POTIONS.register(potion(RECOVERY), () -> new Potion("", new MobEffectInstance(RECOVERY_EFFECT, 3600)));
+    public static final DeferredHolder<Potion, Potion> LONG_RECOVERY_POTION = POTIONS.register(longPotion(RECOVERY), () -> new Potion("", new MobEffectInstance(RECOVERY_EFFECT, 9600)));
+    public static final DeferredHolder<Potion, Potion> STRONG_RECOVERY_POTION = POTIONS.register(strongPotion(RECOVERY), () -> new Potion("", new MobEffectInstance(RECOVERY_EFFECT, 3600, 1)));
 
-    public static final DeferredHolder<Potion, Potion> BLAST_POTION = POTIONS.register(potion(BLAST), () -> new Potion(new MobEffectInstance(BLAST_EFFECT, 200)));
-    public static final DeferredHolder<Potion, Potion> LONG_BLAST_POTION = POTIONS.register(longPotion(BLAST), () -> new Potion(new MobEffectInstance(BLAST_EFFECT, 400)));
-    public static final DeferredHolder<Potion, Potion> STRONG_BLAST_POTION = POTIONS.register(strongPotion(BLAST), () -> new Potion(new MobEffectInstance(BLAST_EFFECT, 140, 1)));
+    public static final DeferredHolder<Potion, Potion> BLAST_POTION = POTIONS.register(potion(BLAST), () -> new Potion("", new MobEffectInstance(BLAST_EFFECT, 200)));
+    public static final DeferredHolder<Potion, Potion> LONG_BLAST_POTION = POTIONS.register(longPotion(BLAST), () -> new Potion("", new MobEffectInstance(BLAST_EFFECT, 400)));
+    public static final DeferredHolder<Potion, Potion> STRONG_BLAST_POTION = POTIONS.register(strongPotion(BLAST), () -> new Potion("", new MobEffectInstance(BLAST_EFFECT, 140, 1)));
 
-    public static final DeferredHolder<Potion, Potion> FREEZING_POTION = POTIONS.register(potion(FREEZING), () -> new Potion(new MobEffectInstance(FREEZING_EFFECT, 1800)));
-    public static final DeferredHolder<Potion, Potion> LONG_FREEZING_POTION = POTIONS.register(longPotion(FREEZING), () -> new Potion(new MobEffectInstance(FREEZING_EFFECT, 3600)));
-    public static final DeferredHolder<Potion, Potion> STRONG_FREEZING_POTION = POTIONS.register(strongPotion(FREEZING), () -> new Potion(new MobEffectInstance(FREEZING_EFFECT, 1800, 1)));
+    public static final DeferredHolder<Potion, Potion> FREEZING_POTION = POTIONS.register(potion(FREEZING), () -> new Potion("", new MobEffectInstance(FREEZING_EFFECT, 1800)));
+    public static final DeferredHolder<Potion, Potion> LONG_FREEZING_POTION = POTIONS.register(longPotion(FREEZING), () -> new Potion("", new MobEffectInstance(FREEZING_EFFECT, 3600)));
+    public static final DeferredHolder<Potion, Potion> STRONG_FREEZING_POTION = POTIONS.register(strongPotion(FREEZING), () -> new Potion("", new MobEffectInstance(FREEZING_EFFECT, 1800, 1)));
 
-    public static final DeferredHolder<Potion, Potion> DEFENCE_POTION = POTIONS.register(potion(DEFENCE), () -> new Potion(new MobEffectInstance(DEFENCE_EFFECT, 3600)));
-    public static final DeferredHolder<Potion, Potion> LONG_DEFENCE_POTION = POTIONS.register(longPotion(DEFENCE), () -> new Potion(new MobEffectInstance(DEFENCE_EFFECT, 9600)));
-    public static final DeferredHolder<Potion, Potion> STRONG_DEFENCE_POTION = POTIONS.register(strongPotion(DEFENCE), () -> new Potion(new MobEffectInstance(DEFENCE_EFFECT, 3600, 1)));
+    public static final DeferredHolder<Potion, Potion> DEFENCE_POTION = POTIONS.register(potion(DEFENCE), () -> new Potion("", new MobEffectInstance(DEFENCE_EFFECT, 3600)));
+    public static final DeferredHolder<Potion, Potion> LONG_DEFENCE_POTION = POTIONS.register(longPotion(DEFENCE), () -> new Potion("", new MobEffectInstance(DEFENCE_EFFECT, 9600)));
+    public static final DeferredHolder<Potion, Potion> STRONG_DEFENCE_POTION = POTIONS.register(strongPotion(DEFENCE), () -> new Potion("", new MobEffectInstance(DEFENCE_EFFECT, 3600, 1)));
 
     @SubscribeEvent
     private static void addRecipes(final RegisterBrewingRecipesEvent event) {

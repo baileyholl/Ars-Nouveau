@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -54,16 +53,11 @@ public class CraftingButton extends GuiImageButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if (validationErrors.isEmpty()) {
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        } else {
-            RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
-        }
+    protected void renderContents(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.abstractSpellPart != null) {
             RenderUtils.drawSpellPart(this.abstractSpellPart, graphics, x + 3, y + 2, 16, !validationErrors.isEmpty(), 0);
         }
-        super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+        super.renderContents(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override
@@ -83,7 +77,7 @@ public class CraftingButton extends GuiImageButton {
                     tip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
                 }
             }
-            if (Screen.hasShiftDown()) {
+            if (Minecraft.getInstance().hasShiftDown()) {
                 tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", abstractSpellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                 tip.add(Component.translatable("ars_nouveau.schools"));
                 for (SpellSchool s : abstractSpellPart.spellSchools) {

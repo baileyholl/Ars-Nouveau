@@ -20,7 +20,7 @@ public class RelayCollectorTile extends RelayTile {
         super.tick();
         if (disabled)
             return;
-        if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
+        if (!level.isClientSide() && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
             List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
 
             for (ISpecialSourceProvider provider : takeList) {

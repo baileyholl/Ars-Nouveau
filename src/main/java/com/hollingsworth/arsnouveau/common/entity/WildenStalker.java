@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,11 +25,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animation.state.AnimationTest;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class WildenStalker extends Monster implements GeoEntity {
@@ -64,14 +66,15 @@ public class WildenStalker extends Monster implements GeoEntity {
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if (Config.STALKER_ATTACK_ANIMALS.get())
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
+            // 1.21.11: Explicit type arg required; TargetingConditions.Selector.test takes (LivingEntity, ServerLevel)
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Animal>(this, Animal.class, 10, true, false, (entity, serverLevel) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (leapCooldown > 0)
                 leapCooldown--;
 
@@ -85,15 +88,17 @@ public class WildenStalker extends Monster implements GeoEntity {
         }
     }
 
+    // 1.21.11: doHurtTarget(Entity) → doHurtTarget(ServerLevel, Entity)
     @Override
-    public boolean doHurtTarget(Entity entityIn) {
-        if (!level.isClientSide && entityIn instanceof LivingEntity && level.getDifficulty() == Difficulty.HARD)
+    public boolean doHurtTarget(ServerLevel serverLevel, Entity entityIn) {
+        if (entityIn instanceof LivingEntity && serverLevel.getDifficulty() == Difficulty.HARD)
             ((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0));
-        return super.doHurtTarget(entityIn);
+        return super.doHurtTarget(serverLevel, entityIn);
     }
 
+    // 1.21.11: calculateFallDamage signature changed from (float, float) to (double, float)
     @Override
-    protected int calculateFallDamage(float distance, float damageMultiplier) {
+    protected int calculateFallDamage(double distance, float damageMultiplier) {
         return 0;
     }
 
@@ -106,7 +111,7 @@ public class WildenStalker extends Monster implements GeoEntity {
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(net.minecraft.server.level.ServerLevel pLevel) {
         return 8;
     }
 
@@ -117,19 +122,20 @@ public class WildenStalker extends Monster implements GeoEntity {
         return 0.4F;
     }
 
-    private PlayState flyPredicate(software.bernie.geckolib.animation.AnimationState event) {
+    private PlayState flyPredicate(AnimationTest<WildenStalker> event) {
         if (isFlying()) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay("fly"));
+            // GeckoLib 5: getController() → controller() (record accessor)
+            event.controller().setAnimation(RawAnimation.begin().thenPlay("fly"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
 
-    private PlayState groundPredicate(software.bernie.geckolib.animation.AnimationState e) {
+    private PlayState groundPredicate(AnimationTest<WildenStalker> e) {
         if (isFlying()) {
             return PlayState.STOP;
         } else if (e.isMoving()) {
-            e.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+            e.controller().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -141,20 +147,21 @@ public class WildenStalker extends Monster implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
-        flyController = new AnimationController<>(this, "flyController", 1, this::flyPredicate);
+        // GeckoLib 5: AnimationController constructor no longer takes entity as first arg
+        flyController = new AnimationController<WildenStalker>("flyController", 1, this::flyPredicate);
         animatableManager.add(flyController);
-        groundController = new AnimationController<>(this, "groundController", 1, this::groundPredicate);
+        groundController = new AnimationController<WildenStalker>("groundController", 1, this::groundPredicate);
         animatableManager.add(groundController);
-        idleController = new AnimationController<>(this, "idleController", 1, this::idlePredicate);
+        idleController = new AnimationController<WildenStalker>("idleController", 1, this::idlePredicate);
 
         animatableManager.add(idleController);
     }
 
-    private <T extends GeoAnimatable> PlayState idlePredicate(AnimationState<T> tAnimationState) {
+    private PlayState idlePredicate(AnimationTest<WildenStalker> tAnimationState) {
         if (tAnimationState.isMoving() || isFlying()) {
             return PlayState.STOP;
         }
-        tAnimationState.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+        tAnimationState.controller().setAnimation(RawAnimation.begin().thenPlay("idle"));
         return PlayState.CONTINUE;
     }
 
@@ -229,16 +236,17 @@ public class WildenStalker extends Monster implements GeoEntity {
         this.entityData.set(isFlying, flying);
     }
 
+    // 1.21.11: save(CompoundTag)/load(CompoundTag) removed; use addAdditionalSaveData/readAdditionalSaveData
     @Override
-    public void load(CompoundTag pCompound) {
-        super.load(pCompound);
-        setFlying(pCompound.getBoolean("isFlying"));
+    public void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        setFlying(pCompound.getBooleanOr("isFlying", false));
     }
 
     @Override
-    public boolean save(CompoundTag pCompound) {
+    public void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput pCompound) {
+        super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isFlying", isFlying());
-        return super.save(pCompound);
     }
 
     public enum Animations {

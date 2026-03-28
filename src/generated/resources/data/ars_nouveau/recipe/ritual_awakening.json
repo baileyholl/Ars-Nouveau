@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:green_archwood_log"
-    },
-    {
-      "item": "ars_nouveau:red_archwood_sapling"
-    },
-    {
-      "item": "ars_nouveau:blue_archwood_sapling"
-    },
-    {
-      "item": "ars_nouveau:green_archwood_sapling"
-    },
-    {
-      "item": "ars_nouveau:purple_archwood_sapling"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    }
+    "ars_nouveau:green_archwood_log",
+    "ars_nouveau:red_archwood_sapling",
+    "ars_nouveau:blue_archwood_sapling",
+    "ars_nouveau:green_archwood_sapling",
+    "ars_nouveau:purple_archwood_sapling",
+    "#c:gems/source",
+    "#c:gems/source",
+    "#c:gems/source",
+    "#c:gems/source"
   ],
   "result": {
     "count": 1,

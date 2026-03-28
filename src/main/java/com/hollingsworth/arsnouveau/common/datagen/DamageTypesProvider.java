@@ -12,9 +12,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -45,34 +43,34 @@ public class DamageTypesProvider extends DatapackBuiltinEntriesProvider {
 
     public static class DamageTypesTagsProvider extends DamageTypeTagsProvider {
 
-        public DamageTypesTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
-            super(pPackOutput, provider, ArsNouveau.MODID, existingFileHelper);
+        public DamageTypesTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> provider) {
+            super(pPackOutput, provider, ArsNouveau.MODID);
         }
 
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
 
-            tag(DamageTypeTags.IS_FIRE).addOptional(DamageTypesRegistry.FLARE.location());
-            tag(DamageTypeTags.IS_FREEZING).addOptional(DamageTypesRegistry.COLD_SNAP.location());
+            tag(DamageTypeTags.IS_FIRE).addOptional(DamageTypesRegistry.FLARE);
+            tag(DamageTypeTags.IS_FREEZING).addOptional(DamageTypesRegistry.COLD_SNAP);
             tag(DamageTypeTags.BYPASSES_ARMOR)
-                    .addOptional(DamageTypesRegistry.CRUSH.location())
-                    .addOptional(DamageTypesRegistry.WINDSHEAR.location());
-            tag(DamageTypeTags.IS_FALL).addOptional(DamageTypesRegistry.WINDSHEAR.location());
+                    .addOptional(DamageTypesRegistry.CRUSH)
+                    .addOptional(DamageTypesRegistry.WINDSHEAR);
+            tag(DamageTypeTags.IS_FALL).addOptional(DamageTypesRegistry.WINDSHEAR);
             tag(Tags.DamageTypes.IS_MAGIC)
-                    .addOptional(DamageTypesRegistry.GENERIC_SPELL_DAMAGE.location())
-                    .addOptional(DamageTypesRegistry.COLD_SNAP.location())
-                    .addOptional(DamageTypesRegistry.FLARE.location())
-                    .addOptional(DamageTypesRegistry.CRUSH.location())
-                    .addOptional(DamageTypesRegistry.WINDSHEAR.location());
+                    .addOptional(DamageTypesRegistry.GENERIC_SPELL_DAMAGE)
+                    .addOptional(DamageTypesRegistry.COLD_SNAP)
+                    .addOptional(DamageTypesRegistry.FLARE)
+                    .addOptional(DamageTypesRegistry.CRUSH)
+                    .addOptional(DamageTypesRegistry.WINDSHEAR);
             tag(DamageTypeTags.ALWAYS_HURTS_ENDER_DRAGONS)
-                    .addOptional(DamageTypesRegistry.GENERIC_SPELL_DAMAGE.location())
-                    .addOptional(DamageTypesRegistry.COLD_SNAP.location())
-                    .addOptional(DamageTypesRegistry.FLARE.location())
-                    .addOptional(DamageTypesRegistry.CRUSH.location())
-                    .addOptional(DamageTypesRegistry.WINDSHEAR.location());
-            tag(DamageTypeTags.NO_KNOCKBACK).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH.location());
-            tag(Tags.DamageTypes.IS_ENVIRONMENT).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH.location());
-            tag(Tags.DamageTypes.IS_PHYSICAL).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH.location());
+                    .addOptional(DamageTypesRegistry.GENERIC_SPELL_DAMAGE)
+                    .addOptional(DamageTypesRegistry.COLD_SNAP)
+                    .addOptional(DamageTypesRegistry.FLARE)
+                    .addOptional(DamageTypesRegistry.CRUSH)
+                    .addOptional(DamageTypesRegistry.WINDSHEAR);
+            tag(DamageTypeTags.NO_KNOCKBACK).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH);
+            tag(Tags.DamageTypes.IS_ENVIRONMENT).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH);
+            tag(Tags.DamageTypes.IS_PHYSICAL).addOptional(DamageTypesRegistry.SOURCE_BERRY_BUSH);
         }
     }
 

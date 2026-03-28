@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -86,7 +86,7 @@ public class MagicFire extends BaseFireBlock {
             voxelshape = Shapes.or(voxelshape, WEST_AABB);
         }
 
-        return voxelshape.isEmpty() ? DOWN_AABB : voxelshape;
+        return voxelshape.isEmpty() ? SHAPE : voxelshape;
     }
 
     /**
@@ -138,7 +138,7 @@ public class MagicFire extends BaseFireBlock {
 
     public void tick(@NotNull BlockState pState, ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
         pLevel.scheduleTick(pPos, this, getFireTickDelay(pLevel.random));
-        if (pLevel.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+        if (pLevel.getGameRules().get(GameRules.FIRE_DAMAGE)) {
             BlockState blockstate = pLevel.getBlockState(pPos.below());
             boolean fireSourceBelow = blockstate.isFireSource(pLevel, pPos, Direction.UP);
             int age = pState.getValue(AGE);

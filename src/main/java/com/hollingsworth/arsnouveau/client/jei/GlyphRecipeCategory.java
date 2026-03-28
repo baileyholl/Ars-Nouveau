@@ -36,10 +36,7 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
         return Component.translatable("block.ars_nouveau.scribes_table");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        return background;
-    }
+    // getBackground() removed from IRecipeCategory in JEI 27.4; width/height defined in MultiInputCategory
 
     @Override
     public IDrawable getIcon() {
@@ -50,6 +47,6 @@ public class GlyphRecipeCategory extends MultiInputCategory<GlyphRecipe> {
     public void draw(RecipeHolder<GlyphRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         GlyphRecipe recipe = recipeHolder.value();
         Font renderer = Minecraft.getInstance().font;
-        guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 10, false);
+        guiGraphics.drawString(renderer, Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 0xFF000000, false);
     }
 }

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 
 import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
@@ -36,7 +36,7 @@ public class CraftingPage extends AbstractPage {
     }
 
     @Override
-    public ResourceLocation getType() {
-        return ResourceLocation.parse("patchouli:crafting");
+    public Identifier getType() {
+        return Identifier.parse("patchouli:crafting");
     }
 }

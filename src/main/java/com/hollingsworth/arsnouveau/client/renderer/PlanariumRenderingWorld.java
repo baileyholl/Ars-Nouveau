@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
 import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -12,13 +11,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
@@ -45,7 +42,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.LevelData;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.WritableLevelData;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
@@ -83,7 +82,7 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     public PlanariumRenderingWorld(Level world) {
         super((WritableLevelData) world.getLevelData(), world.dimension(), world.registryAccess(), world.dimensionTypeRegistration(),
-                world::getProfiler, world.isClientSide, world.isDebug(), 0, 0);
+                world.isClientSide(), world.isDebug(), 0, 0);
         this.realWorld = world;
         this.clientChunkCache = new ClientChunkCache(Minecraft.getInstance().level, 0);
     }
@@ -105,7 +104,8 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
             }
             blockEntity.setLevel(this.realWorld);
             blockEntity.onLoad();
-            blockEntity.loadWithComponents(tag, this.registryAccess());
+            blockEntity.loadWithComponents(TagValueInput.create(
+                ProblemReporter.DISCARDING, this.registryAccess(), tag));
             blockEntityMap.put(pos, blockEntity);
         }
     }
@@ -219,8 +219,8 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     }
 
     @Override
-    public int getMinBuildHeight() {
-        return realWorld.getMinBuildHeight();
+    public int getMinY() {
+        return realWorld.getMinY();
     }
 
     @Override
@@ -258,11 +258,6 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
         return null;
     }
 
-    @Override
-    public DifficultyInstance getCurrentDifficultyAt(BlockPos p_46800_) {
-        return null;
-    }
-
     @org.jetbrains.annotations.Nullable
     @Override
     public MinecraftServer getServer() {
@@ -280,7 +275,7 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     }
 
     @Override
-    public void playSound(@org.jetbrains.annotations.Nullable Player p_46775_, BlockPos p_46776_, SoundEvent p_46777_, SoundSource p_46778_, float p_46779_, float p_46780_) {
+    public void playSound(@org.jetbrains.annotations.Nullable Entity p_46775_, BlockPos p_46776_, SoundEvent p_46777_, SoundSource p_46778_, float p_46779_, float p_46780_) {
 
     }
 
@@ -290,7 +285,7 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     }
 
     @Override
-    public void levelEvent(@org.jetbrains.annotations.Nullable Player p_46771_, int p_46772_, BlockPos p_46773_, int p_46774_) {
+    public void levelEvent(@org.jetbrains.annotations.Nullable Entity p_46771_, int p_46772_, BlockPos p_46773_, int p_46774_) {
 
     }
 
@@ -301,26 +296,15 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public float getShade(Direction pDirection, boolean pShade) {
-        ClientLevel clientLevel = (ClientLevel) realWorld;
-        boolean flag = clientLevel.effects().constantAmbientLight();
         if (!pShade) {
-            return flag ? 0.9F : 1.0F;
-        } else {
-            switch (pDirection) {
-                case DOWN:
-                    return flag ? 0.9F : 0.5F;
-                case UP:
-                    return flag ? 0.9F : 1.0F;
-                case NORTH:
-                case SOUTH:
-                    return 0.8F;
-                case WEST:
-                case EAST:
-                    return 0.6F;
-                default:
-                    return 1.0F;
-            }
+            return 1.0F;
         }
+        return switch (pDirection) {
+            case DOWN -> 0.5F;
+            case NORTH, SOUTH -> 0.8F;
+            case WEST, EAST -> 0.6F;
+            default -> 1.0F;
+        };
     }
 
     @Override
@@ -378,27 +362,27 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     }
 
     @Override
-    public void playSeededSound(Player p_220363_, double p_220364_, double p_220365_, double p_220366_,
+    public void playSeededSound(@Nullable Entity p_220363_, double p_220364_, double p_220365_, double p_220366_,
                                 SoundEvent p_220367_, SoundSource p_220368_, float p_220369_, float p_220370_, long p_220371_) {
     }
 
     @Override
-    public void playSeededSound(Player pPlayer, double pX, double pY, double pZ, Holder<SoundEvent> pSound,
+    public void playSeededSound(@Nullable Entity pPlayer, double pX, double pY, double pZ, Holder<SoundEvent> pSound,
                                 SoundSource pSource, float pVolume, float pPitch, long pSeed) {
     }
 
     @Override
-    public void playSeededSound(Player pPlayer, Entity pEntity, Holder<SoundEvent> pSound, SoundSource pCategory,
+    public void playSeededSound(@Nullable Entity pPlayer, Entity pEntity, Holder<SoundEvent> pSound, SoundSource pCategory,
                                 float pVolume, float pPitch, long pSeed) {
     }
 
     @Override
-    public void playSound(@Nullable Player player, double x, double y, double z, SoundEvent soundIn,
+    public void playSound(@Nullable Entity player, double x, double y, double z, SoundEvent soundIn,
                           SoundSource category, float volume, float pitch) {
     }
 
     @Override
-    public void playSound(@Nullable Player p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
+    public void playSound(@Nullable Entity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
                           SoundSource p_217384_4_, float p_217384_5_, float p_217384_6_) {
     }
 
@@ -419,17 +403,6 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     }
 
     @Override
-    public void setMapData(MapId mapId, MapItemSavedData mapItemSavedData) {
-
-    }
-
-    @Override
-    public MapId getFreeMapId() {
-        return realWorld.getFreeMapId();
-    }
-
-
-    @Override
     public void destroyBlockProgress(int breakerId, BlockPos pos, int progress) {
     }
 
@@ -439,8 +412,8 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     }
 
     @Override
-    public RecipeManager getRecipeManager() {
-        return realWorld.getRecipeManager();
+    public net.minecraft.world.item.crafting.RecipeAccess recipeAccess() {
+        return realWorld.recipeAccess();
     }
 
     @Override
@@ -450,6 +423,45 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     @Override
     public void gameEvent(@org.jetbrains.annotations.Nullable Entity pEntity, Holder<GameEvent> pGameEvent, Vec3 pPos) {
 
+    }
+
+    @Override
+    public net.minecraft.world.attribute.EnvironmentAttributeSystem environmentAttributes() {
+        return realWorld.environmentAttributes();
+    }
+
+    @Override
+    public net.minecraft.world.level.block.entity.FuelValues fuelValues() {
+        return realWorld.fuelValues();
+    }
+
+    @Override
+    public void setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData p_451027_) {
+    }
+
+    @Override
+    public net.minecraft.world.level.storage.LevelData.RespawnData getRespawnData() {
+        return realWorld.getLevelData().getRespawnData();
+    }
+
+    @Override
+    public java.util.Collection<? extends net.neoforged.neoforge.entity.PartEntity<?>> dragonParts() {
+        return java.util.List.of();
+    }
+
+    @Override
+    public void explode(
+        @org.jetbrains.annotations.Nullable net.minecraft.world.entity.Entity p_255653_,
+        @org.jetbrains.annotations.Nullable net.minecraft.world.damagesource.DamageSource p_256558_,
+        @org.jetbrains.annotations.Nullable net.minecraft.world.level.ExplosionDamageCalculator p_255929_,
+        double p_365323_, double p_362972_, double p_364015_,
+        float p_255963_, boolean p_256099_,
+        net.minecraft.world.level.Level.ExplosionInteraction p_256371_,
+        net.minecraft.core.particles.ParticleOptions p_364907_,
+        net.minecraft.core.particles.ParticleOptions p_360946_,
+        net.minecraft.util.random.WeightedList<net.minecraft.core.particles.ExplosionParticleInfo> p_437262_,
+        net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> p_363757_
+    ) {
     }
 
     @Override
@@ -467,23 +479,18 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
     // from the defaults for their dimension.
 
     @Override
-    public int getMaxBuildHeight() {
-        return this.getMinBuildHeight() + this.getHeight();
-    }
-
-    @Override
     public int getSectionsCount() {
-        return this.getMaxSection() - this.getMinSection();
+        return this.getMaxSectionY() - this.getMinSectionY() + 1;
     }
 
     @Override
-    public int getMinSection() {
-        return SectionPos.blockToSectionCoord(this.getMinBuildHeight());
+    public int getMinSectionY() {
+        return SectionPos.blockToSectionCoord(this.getMinY());
     }
 
     @Override
-    public int getMaxSection() {
-        return SectionPos.blockToSectionCoord(this.getMaxBuildHeight() - 1) + 1;
+    public int getMaxSectionY() {
+        return SectionPos.blockToSectionCoord(this.getMaxY());
     }
 
     @Override
@@ -493,7 +500,8 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public boolean isOutsideBuildHeight(int y) {
-        return y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight();
+        // 1.21.11: getMaxBuildHeight() removed; getMaxY() is now inclusive upper bound
+        return y < this.getMinY() || y > this.getMaxY();
     }
 
     @Override
@@ -503,12 +511,13 @@ public class PlanariumRenderingWorld extends Level implements LevelAccessor {
 
     @Override
     public int getSectionIndexFromSectionY(int sectionY) {
-        return sectionY - this.getMinSection();
+        // 1.21.11: getMinSection() → getMinSectionY()
+        return sectionY - this.getMinSectionY();
     }
 
     @Override
     public int getSectionYFromSectionIndex(int sectionIndex) {
-        return sectionIndex + this.getMinSection();
+        return sectionIndex + this.getMinSectionY();
     }
 
     // Invisible overrides for neoforge compatibility

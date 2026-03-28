@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.*;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -166,13 +166,13 @@ public class DefaultTableProvider extends LootTableProvider {
             LootPool.Builder pedestal = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.ARCANE_PEDESTAL)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+                            .apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY)));
             add(BlockRegistry.ARCANE_PEDESTAL.get(), LootTable.lootTable().withPool(pedestal));
 
             LootPool.Builder platform = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.ARCANE_PLATFORM)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+                            .apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY)));
             add(BlockRegistry.ARCANE_PLATFORM.get(), LootTable.lootTable().withPool(platform));
 
             registerDropSelf(BlockRegistry.RELAY);
@@ -197,9 +197,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
                 registerDropSelf(BlockRegistry.getBlock(s));
-                Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs"));
+                Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs")).map(h -> h.value()).orElse(net.minecraft.world.level.block.Blocks.AIR);
                 registerDropSelf(block);
-                Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab"));
+                Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab")).map(h -> h.value()).orElse(net.minecraft.world.level.block.Blocks.AIR);
                 registerDropSelf(slab);
 
             }
@@ -220,8 +220,8 @@ public class DefaultTableProvider extends LootTableProvider {
             LootPool.Builder potionJarBuilder = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.POTION_JAR)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponentRegistry.POTION_JAR.get()))
+                            .apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY))
+                            .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY).include(DataComponentRegistry.POTION_JAR.get()))
                     );
             add(BlockRegistry.POTION_JAR.get(), LootTable.lootTable().withPool(potionJarBuilder));
             add(BlockRegistry.BASTION_POD.get(), LootTable.lootTable().withPool(POD_BUILDER(BlockRegistry.BASTION_POD.asItem(), BlockRegistry.BASTION_POD.get())));
@@ -232,15 +232,15 @@ public class DefaultTableProvider extends LootTableProvider {
             LootPool.Builder mobJarBuilder = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.MOB_JAR)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponentRegistry.MOB_JAR.get()))
+                            .apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY))
+                            .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY).include(DataComponentRegistry.MOB_JAR.get()))
                     );
             add(BlockRegistry.MOB_JAR.get(), LootTable.lootTable().withPool(mobJarBuilder));
             //CustomName
             LootPool.Builder repository = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(BlockRegistry.REPOSITORY)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+                            .apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY)));
             add(BlockRegistry.REPOSITORY.get(), LootTable.lootTable().withPool(repository));
             registerDropSelf(BlockRegistry.SOURCESTONE_SCONCE_BLOCK.get());
             registerDropSelf(BlockRegistry.POLISHED_SCONCE_BLOCK.get());
@@ -284,7 +284,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SOURCESTONE_GRATE);
             registerDropSelf(BlockRegistry.SOURCE_LAMP);
             registerDropSelf(BlockRegistry.REPOSITORY_CONTROLLER);
-            LootPool.Builder dimBlockBuilder = LootPool.lootPool().add(LootItem.lootTableItem(BlockRegistry.PLANARIUM).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY)));
+            LootPool.Builder dimBlockBuilder = LootPool.lootPool().add(LootItem.lootTableItem(BlockRegistry.PLANARIUM).apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY)));
             add(BlockRegistry.PLANARIUM.get(), LootTable.lootTable().withPool(dimBlockBuilder));
             registerDropSelf(BlockRegistry.DECOR_BLOSSOM);
         }
@@ -340,8 +340,8 @@ public class DefaultTableProvider extends LootTableProvider {
             LootPool.Builder builder = LootPool.lootPool()
                     .setRolls(ConstantValue.exactly(1))
                     .add(LootItem.lootTableItem(block)
-                            .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-                            .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY).include(DataComponentRegistry.BLOCK_FILL_CONTENTS.get()))
+                            .apply(CopyNameFunction.copyName(net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget.BLOCK_ENTITY))
+                            .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY).include(DataComponentRegistry.BLOCK_FILL_CONTENTS.get()))
                     );
             return LootTable.lootTable().withPool(builder);
         }
@@ -364,14 +364,16 @@ public class DefaultTableProvider extends LootTableProvider {
 
             for (Block block : list) {
                 if (block.isEnabled(this.enabledFeatures)) {
-                    ResourceKey<LootTable> resourcelocation = block.getLootTable();
-                    if (resourcelocation != BuiltInLootTables.EMPTY && set.add(resourcelocation)) {
-                        LootTable.Builder loottable$builder = this.map.remove(resourcelocation);
-                        if (loottable$builder == null) {
-                            continue;
+                    java.util.Optional<ResourceKey<LootTable>> optionalLootTable = block.getLootTable();
+                    if (optionalLootTable.isPresent()) {
+                        ResourceKey<LootTable> resourcelocation = optionalLootTable.get();
+                        if (set.add(resourcelocation)) {
+                            LootTable.Builder loottable$builder = this.map.remove(resourcelocation);
+                            if (loottable$builder == null) {
+                                continue;
+                            }
+                            pGenerator.accept(resourcelocation, loottable$builder);
                         }
-
-                        pGenerator.accept(resourcelocation, loottable$builder);
                     }
                 }
             }
@@ -447,7 +449,9 @@ public class DefaultTableProvider extends LootTableProvider {
         @Override
         protected void add(@NotNull EntityType<?> pEntityType, LootTable.@NotNull Builder pBuilder) {
             super.add(pEntityType, pBuilder);
-            this.map.put(pEntityType, ImmutableMap.of(pEntityType.getDefaultLootTable(), pBuilder));
+            pEntityType.getDefaultLootTable().ifPresent(lootTableKey ->
+                this.map.put(pEntityType, ImmutableMap.of(lootTableKey, pBuilder))
+            );
         }
 
         @Override
@@ -464,13 +468,13 @@ public class DefaultTableProvider extends LootTableProvider {
             Set<ResourceKey<LootTable>> set = Sets.newHashSet();
             this.getKnownEntityTypes().map(EntityType::builtInRegistryHolder).forEach((p_249003_) -> {
                 EntityType<?> entitytype = p_249003_.value();
-                if (canHaveLootTable(entitytype)) {
+                java.util.Optional<ResourceKey<LootTable>> defaultLootTable = entitytype.getDefaultLootTable();
+                if (defaultLootTable.isPresent()) {
                     Map<ResourceKey<LootTable>, LootTable.Builder> map = this.map.remove(entitytype);
-                    ResourceKey<LootTable> resourcelocation = entitytype.getDefaultLootTable();
                     if (map != null) {
                         map.forEach((p_250376_, p_250972_) -> {
                             if (!set.add(p_250376_)) {
-                                throw new IllegalStateException(String.format(Locale.ROOT, "Duplicate loottable '%s' for '%s'", p_250376_, p_249003_.key().location()));
+                                throw new IllegalStateException(String.format(Locale.ROOT, "Duplicate loottable '%s' for '%s'", p_250376_, p_249003_.key().identifier()));
                             } else {
                                 pGenerator.accept(p_250376_, p_250972_);
                             }
@@ -479,7 +483,7 @@ public class DefaultTableProvider extends LootTableProvider {
                 } else {
                     Map<ResourceKey<LootTable>, LootTable.Builder> map1 = this.map.remove(entitytype);
                     if (map1 != null) {
-                        throw new IllegalStateException(String.format(Locale.ROOT, "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot", map1.keySet().stream().map(ResourceKey::toString).collect(Collectors.joining(",")), p_249003_.key().location()));
+                        throw new IllegalStateException(String.format(Locale.ROOT, "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot", map1.keySet().stream().map(ResourceKey::toString).collect(Collectors.joining(",")), p_249003_.key().identifier()));
                     }
                 }
 

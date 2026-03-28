@@ -8,13 +8,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -38,7 +37,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(ArsNouveau.prefix("golem/cluster"));
     public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(ArsNouveau.prefix("break_with_pickaxe"));
     public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(ArsNouveau.prefix("storage/autopull_disabled"));
-    public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "relocation_not_supported"));
+    public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(Identifier.fromNamespaceAndPath("c", "relocation_not_supported"));
     public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(ArsNouveau.prefix("occludes_spell_sensor"));
     public static TagKey<Block> INTERACT_BLACKLIST = BlockTags.create(ArsNouveau.prefix("interact_blacklist"));
     public static TagKey<Block> CASCADING_LOGS = BlockTags.create(ArsNouveau.prefix("cascading_logs"));
@@ -46,20 +45,20 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> VEXING_LOGS = BlockTags.create(ArsNouveau.prefix("vexing_logs"));
     public static TagKey<Block> BLAZING_LOGS = BlockTags.create(ArsNouveau.prefix("blazing_logs"));
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(ArsNouveau.prefix("dowsing_rod"));
-    public static TagKey<Block> BUSHES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "bushes"));
-    public static TagKey<Block> STORAGE_GEMS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/source_gem"));
-    public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
+    public static TagKey<Block> BUSHES = BlockTags.create(Identifier.fromNamespaceAndPath("c", "bushes"));
+    public static TagKey<Block> STORAGE_GEMS = BlockTags.create(Identifier.fromNamespaceAndPath("c", "storage_blocks/source_gem"));
+    public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(Identifier.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
     public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(ArsNouveau.prefix("lectern_blacklist"));
     public static TagKey<Block> INTANGIBLE_BLACKLIST = BlockTags.create(ArsNouveau.prefix("intangible_blacklist"));
 
-    public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
-    public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
-    public static TagKey<Block> AUTUMN_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "autumn_crops"));
-    public static TagKey<Block> WINTER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "winter_crops"));
+    public static TagKey<Block> SPRING_CROPS = BlockTags.create(Identifier.fromNamespaceAndPath("sereneseasons", "spring_crops"));
+    public static TagKey<Block> SUMMER_CROPS = BlockTags.create(Identifier.fromNamespaceAndPath("sereneseasons", "summer_crops"));
+    public static TagKey<Block> AUTUMN_CROPS = BlockTags.create(Identifier.fromNamespaceAndPath("sereneseasons", "autumn_crops"));
+    public static TagKey<Block> WINTER_CROPS = BlockTags.create(Identifier.fromNamespaceAndPath("sereneseasons", "winter_crops"));
 
 
-    public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
-        super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
+    public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future) {
+        super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID);
     }
 
     @Override
@@ -157,9 +156,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.get());
         this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.get());
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s));
-            Block stair = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs"));
-            Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab"));
+            Block block = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s)).map(h -> h.value()).orElse(Blocks.AIR);
+            Block stair = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_stairs")).map(h -> h.value()).orElse(Blocks.AIR);
+            Block slab = BuiltInRegistries.BLOCK.get(ArsNouveau.prefix(s + "_slab")).map(h -> h.value()).orElse(Blocks.AIR);
             this.tag(DECORATIVE_AN).add(block, stair, slab);
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block, stair, slab);
             this.tag(BlockTags.STAIRS).add(stair);
@@ -258,7 +257,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
         this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
         this.tag(BlockTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
-        TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(ResourceLocation.fromNamespaceAndPath("minecraft", "leaves/archwood_leaves"));
+        TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(Identifier.fromNamespaceAndPath("minecraft", "leaves/archwood_leaves"));
         this.tag(ARCHWOOD_LEAVES)
                 .add(BlockRegistry.VEXING_LEAVES.get(),
                         BlockRegistry.CASCADING_LEAVE.get(),

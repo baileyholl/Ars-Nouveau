@@ -6,7 +6,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IParticleMotionType<T extends ParticleMotion> {
 
@@ -19,13 +19,13 @@ public interface IParticleMotionType<T extends ParticleMotion> {
     T create(PropMap propMap);
 
     default Component getName() {
-        ResourceLocation key = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);
+        Identifier key = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);
         return Component.translatable(key.getNamespace() + ".particle_config." + key.getPath());
     }
 
-    default ResourceLocation getIconLocation() {
-        ResourceLocation key = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);
-        return ResourceLocation.fromNamespaceAndPath(key.getNamespace(), "textures/particle_config/" + key.getPath() + ".png");
+    default Identifier getIconLocation() {
+        Identifier key = ParticleMotionRegistry.PARTICLE_CONFIG_REGISTRY.getKey(this);
+        return Identifier.fromNamespaceAndPath(key.getNamespace(), "textures/particle_config/" + key.getPath() + ".png");
     }
 
 }

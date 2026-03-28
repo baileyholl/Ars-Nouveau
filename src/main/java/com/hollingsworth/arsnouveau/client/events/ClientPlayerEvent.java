@@ -18,7 +18,7 @@ public class ClientPlayerEvent {
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
         Player entity = event.getEntity();
-        if (!event.getLevel().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getLevel().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
+        if (!event.getLevel().isClientSide() || event.getHand() != InteractionHand.MAIN_HAND || event.getLevel().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
             return;
         if (entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook) {
             event.setCanceled(true);

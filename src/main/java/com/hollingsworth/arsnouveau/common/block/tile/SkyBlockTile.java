@@ -8,11 +8,11 @@ import com.hollingsworth.arsnouveau.common.event.timed.SkyweaveVisibilityEvent;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -27,21 +27,22 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
 
     @Override
     public void tick() {
-        if (showFacade && !level.isClientSide) {
-            if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission(level, worldPosition)) {
-                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
+        if (showFacade && !level.isClientSide()) {
+            // getLightEmission() takes no params in 1.21.11
+            if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != this.mimicState.getLightEmission()) {
+                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission()));
             }
             return;
         }
-        if (!level.isClientSide && level.isDay()) {
+        if (!level.isClientSide() && level.isBrightOutside()) {
             if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != 15) {
                 previousLight = getBlockState().getValue(MirrorWeave.LIGHT_LEVEL);
                 level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, 15));
             }
         }
-        if (!level.isClientSide && !level.isDay()) {
+        if (!level.isClientSide() && !level.isBrightOutside()) {
             if (getBlockState().getValue(MirrorWeave.LIGHT_LEVEL) != previousLight) {
-                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission(level, worldPosition)));
+                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(MirrorWeave.LIGHT_LEVEL, this.mimicState.getLightEmission()));
             }
         }
     }
@@ -77,17 +78,17 @@ public class SkyBlockTile extends MirrorWeaveTile implements ITickable {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("showFacade", showFacade);
         tag.putInt("previousLight", previousLight);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        showFacade = pTag.getBoolean("showFacade");
-        previousLight = pTag.getInt("previousLight");
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
+        showFacade = pTag.getBooleanOr("showFacade", false);
+        previousLight = pTag.getIntOr("previousLight", 0);
     }
 
     public boolean showFacade() {

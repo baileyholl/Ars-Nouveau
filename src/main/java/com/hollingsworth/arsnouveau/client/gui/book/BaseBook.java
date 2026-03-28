@@ -10,16 +10,15 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.SaveButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.ITooltipRenderer;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class BaseBook extends BaseScreen {
     public static final int ONE_PAGE_WIDTH = 118;
     public static final int ONE_PAGE_HEIGHT = 146;
 
-    public static ResourceLocation background = ArsNouveau.prefix("textures/gui/spell_book_template.png");
+    public static Identifier background = ArsNouveau.prefix("textures/gui/spell_book_template.png");
     public int bookLeft;
     public int bookTop;
     public int bookRight;
@@ -80,15 +79,16 @@ public class BaseBook extends BaseScreen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        PoseStack matrixStack = graphics.pose();
-        matrixStack.pushPose();
+        // MC 1.21.11: graphics.pose() returns Matrix3x2fStack — use pushMatrix/popMatrix/scale(x,y).
+        var matrixStack = graphics.pose();
+        matrixStack.pushMatrix();
         if (scaleFactor != 1) {
-            matrixStack.scale(scaleFactor, scaleFactor, scaleFactor);
+            matrixStack.scale(scaleFactor, scaleFactor);
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
         drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
-        matrixStack.popPose();
+        matrixStack.popMatrix();
     }
 
     public void clearButtons(List<? extends AbstractWidget> buttons) {
@@ -100,22 +100,24 @@ public class BaseBook extends BaseScreen {
     }
 
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.blit(background, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT);
+        // MC 1.21.11: old blit(Identifier,x,y,u,v,w,h,tw,th) removed — use blit(RenderPipeline,...).
+        graphics.blit(RenderPipelines.GUI_TEXTURED, background, 0, 0, 0.0f, 0.0f, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT);
     }
 
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        // MC 1.21.11: RenderSystem.setShaderColor removed — no-op, color reset handled by GuiGraphics.
     }
 
     public void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         renderBackground(graphics, mouseX, mouseY, partialTicks);
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(bookLeft, bookTop, 0);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        // MC 1.21.11: graphics.pose() returns Matrix3x2fStack — use pushMatrix/popMatrix/translate(x,y).
+        var poseStack = graphics.pose();
+        poseStack.pushMatrix();
+        poseStack.translate(bookLeft, bookTop);
+        // MC 1.21.11: RenderSystem.setShaderColor removed — color reset handled by GuiGraphics.
         drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
-        poseStack.popPose();
+        poseStack.popMatrix();
         for (Renderable renderable : this.renderables) {
             renderable.render(graphics, mouseX, mouseY, partialTicks);
         }
@@ -154,7 +156,7 @@ public class BaseBook extends BaseScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(float pPartialTick) {
-
+    protected void renderBlurredBackground(GuiGraphics pGuiGraphics) {
+        // Intentionally suppressed — book screen does not render blurred background.
     }
 }

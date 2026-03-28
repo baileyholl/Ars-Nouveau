@@ -11,7 +11,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -27,10 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
-    public static final Codec<AbstractSpellPart> CODEC = ResourceLocation.CODEC.xmap(GlyphRegistry::getSpellPartOrDefault, AbstractSpellPart::getRegistryName);
+    public static final Codec<AbstractSpellPart> CODEC = Identifier.CODEC.xmap(GlyphRegistry::getSpellPartOrDefault, AbstractSpellPart::getRegistryName);
     public static final StreamCodec<RegistryFriendlyByteBuf, AbstractSpellPart> STREAM = StreamCodec.of(
-            (buf, val) -> buf.writeResourceLocation(val.getRegistryName()),
-            buf -> GlyphRegistry.getSpellPartOrDefault(buf.readResourceLocation())
+            (buf, val) -> buf.writeIdentifier(val.getRegistryName()),
+            buf -> GlyphRegistry.getSpellPartOrDefault(buf.readIdentifier())
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, List<AbstractSpellPart>> STREAM_LIST = StreamCodec.of(
@@ -50,7 +50,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
             }
     );
 
-    private final ResourceLocation registryName;
+    private final Identifier registryName;
     public String name;
     public Glyph glyphItem;
 
@@ -60,7 +60,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     public abstract Integer getTypeIndex();
 
     /*ID for NBT data and SpellManager#spellList*/
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return this.registryName;
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         this(ArsNouveau.prefix(registryName), name);
     }
 
-    public AbstractSpellPart(ResourceLocation registryName, String name) {
+    public AbstractSpellPart(Identifier registryName, String name) {
         this.registryName = registryName;
         this.name = name;
         for (SpellSchool spellSchool : getSchools()) {
@@ -99,7 +99,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         for (AbstractAugment augment : map.keySet()) {
             augmentDescriptions.put(augment, Component.translatable("ars_nouveau.augment_desc." + registryName.getPath() + "_" + augment.getRegistryName().getPath()));
         }
-        if (!FMLEnvironment.production) {
+        if (!FMLEnvironment.isProduction()) {
             for (AbstractAugment augment : compatibleAugments) {
                 if (!augmentDescriptions.containsKey(augment)) {
                     ArsNouveau.postLoadWarnings.add("Glyph " + registryName + " is missing a description for augment " + augment.getRegistryName());
@@ -247,7 +247,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Returns the number of times that this glyph may be modified by the given augment.
      */
-    public int getAugmentLimit(ResourceLocation augmentTag) {
+    public int getAugmentLimit(Identifier augmentTag) {
         if (augmentLimits == null) {
             return Integer.MAX_VALUE;
         } else {
@@ -264,25 +264,25 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Registers the glyph_limits configuration entry for augmentation limits.
      */
-    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentLimitsConfig(ModConfigSpec.Builder builder, Map<Identifier, Integer> defaults) {
         this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
     }
 
-    protected void buildAugmentCostOverrideConfig(ModConfigSpec.Builder builder, Map<ResourceLocation, Integer> defaults) {
+    protected void buildAugmentCostOverrideConfig(ModConfigSpec.Builder builder, Map<Identifier, Integer> defaults) {
         this.augmentCosts = SpellPartConfigUtil.buildAugmentCosts(builder, defaults);
     }
 
     /**
      * Registers the glyph_limits configuration entry for combo limits.
      */
-    protected void buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<ResourceLocation> defaults) {
+    protected void buildInvalidCombosConfig(ModConfigSpec.Builder builder, Set<Identifier> defaults) {
         this.invalidCombinations = SpellPartConfigUtil.buildInvalidCombosConfig(builder, defaults);
     }
 
     /**
      * Override this method to provide defaults for the augmentation limits configuration.
      */
-    protected Map<ResourceLocation, Integer> getDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected Map<Identifier, Integer> getDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         addDefaultAugmentLimits(defaults);
         return defaults;
     }
@@ -290,18 +290,18 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     /**
      * Adds default augment limits to the given map, used to generate the config.
      */
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
     }
 
-    protected void addAugmentCostOverrides(Map<ResourceLocation, Integer> defaults) {
+    protected void addAugmentCostOverrides(Map<Identifier, Integer> defaults) {
     }
 
-    protected Set<ResourceLocation> getDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    protected Set<Identifier> getDefaultInvalidCombos(Set<Identifier> defaults) {
         addDefaultInvalidCombos(defaults);
         return defaults;
     }
 
-    protected void addDefaultInvalidCombos(Set<ResourceLocation> defaults) {
+    protected void addDefaultInvalidCombos(Set<Identifier> defaults) {
     }
 
     // Default value for the starter spell config

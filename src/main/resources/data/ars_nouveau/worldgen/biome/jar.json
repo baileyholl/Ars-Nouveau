@@ -15,7 +15,7 @@
   "has_precipitation": false,
   "temperature": 0.8,
   "downfall": 0.4,
-  "carvers": {},
+  "carvers": [],
   "features": [],
   "spawners": {},
   "spawn_costs": {}

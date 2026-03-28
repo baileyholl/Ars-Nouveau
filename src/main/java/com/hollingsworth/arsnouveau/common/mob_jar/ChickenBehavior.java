@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.common.mob_jar;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ChickenBehavior extends JarBehavior<Chicken> {
     @Override
     public void tick(MobJarTile tile) {
-        if (tile.getLevel().isClientSide || isPowered(tile))
+        if (tile.getLevel().isClientSide() || isPowered(tile))
             return;
         Chicken chicken = this.entityFromJar(tile);
         if (isEntityBaby(chicken)) {

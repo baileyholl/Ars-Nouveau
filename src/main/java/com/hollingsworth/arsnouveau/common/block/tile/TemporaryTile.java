@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -26,7 +26,7 @@ public class TemporaryTile extends MirrorWeaveTile implements ITickable {
 
     @Override
     public void tick() {
-        if (level == null || level.isClientSide) return;
+        if (level == null || level.isClientSide()) return;
 
         if (gameTime == null) gameTime = level.getGameTime();
 
@@ -40,18 +40,19 @@ public class TemporaryTile extends MirrorWeaveTile implements ITickable {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (gameTime != null) tag.putLong("gameTime", gameTime);
         tag.putInt("tickDuration", tickDuration);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        tickDuration = pTag.getInt("tickDuration");
-        if (pTag.contains("gameTime")) {
-            gameTime = pTag.getLong("gameTime");
+    protected void loadAdditional(ValueInput pTag) {
+        super.loadAdditional(pTag);
+        tickDuration = pTag.getIntOr("tickDuration", 0);
+        long gt = pTag.getLongOr("gameTime", Long.MIN_VALUE);
+        if (gt != Long.MIN_VALUE) {
+            gameTime = gt;
         }
     }
 

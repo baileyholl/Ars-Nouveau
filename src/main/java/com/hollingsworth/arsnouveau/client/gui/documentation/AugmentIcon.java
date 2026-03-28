@@ -40,7 +40,9 @@ public class AugmentIcon extends ItemButton {
 
     @Override
     public void gatherTooltips(List<Component> tooltip) {
-        if (parent != null && this.ingredient.getItems()[0].getItem() instanceof Glyph glyph) {
+        // In 1.21.11 ingredient.getItems() is removed; use getDisplayStack() from ItemButton
+        ItemStack displayStack = getDisplayStack();
+        if (parent != null && !displayStack.isEmpty() && displayStack.getItem() instanceof Glyph glyph) {
             AbstractSpellPart spellPart = glyph.spellPart;
             tooltip.add(Component.translatable(spellPart.getLocalizationKey()));
 
@@ -50,7 +52,7 @@ public class AugmentIcon extends ItemButton {
                 tooltip.add(augmentDescription.copy().withStyle(ChatFormatting.GOLD));
             }
 
-            if (Screen.hasShiftDown()) {
+            if (Minecraft.getInstance().hasShiftDown()) {
                 tooltip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                 tooltip.add(spellPart.getBookDescLang());
             } else {

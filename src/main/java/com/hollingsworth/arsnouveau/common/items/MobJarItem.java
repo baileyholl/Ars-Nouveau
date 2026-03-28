@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,11 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.Item;
 
 public class MobJarItem extends BlockItem implements GeoItem {
     public MobJarItem(Block pBlock, Properties pProperties) {
@@ -38,7 +39,7 @@ public class MobJarItem extends BlockItem implements GeoItem {
             final MobJarItemRenderer renderer = new MobJarItemRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public software.bernie.geckolib.renderer.GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });
@@ -57,20 +58,20 @@ public class MobJarItem extends BlockItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext pLevel, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
-        super.appendHoverText(stack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext pLevel, @NotNull TooltipDisplay display, @NotNull Consumer<Component> pTooltip, @NotNull TooltipFlag pFlag) {
+        super.appendHoverText(stack, pLevel, display, pTooltip, pFlag);
         Entity entity = fromItem(stack, ArsNouveau.proxy.getClientWorld());
         if (entity == null)
             return;
-        pTooltip.add(entity.getDisplayName());
+        pTooltip.accept(entity.getDisplayName());
         if (entity.hasCustomName()) {
             MutableComponent name = entity.getType().getDescription().copy();
             name.withStyle(ChatFormatting.GRAY);
-            pTooltip.add(name);
+            pTooltip.accept(name);
         }
         if (entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
             Component blacklisted = Component.translatable("ars_nouveau.drygmy.blacklist").withStyle(ChatFormatting.DARK_RED);
-            pTooltip.add(blacklisted);
+            pTooltip.accept(blacklisted);
         }
     }
 

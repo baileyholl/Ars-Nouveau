@@ -8,14 +8,17 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.state.AnimationTest;
+import software.bernie.geckolib.animation.object.PlayState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 
 import java.util.List;
 
@@ -37,7 +40,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     @Override
     public void tick() {
         ticksElapsed++;
-        if (!level.isClientSide && ticksPerSignal > 0 && !isOff && ticksElapsed >= ticksPerSignal) {
+        if (!level.isClientSide() && ticksPerSignal > 0 && !isOff && ticksElapsed >= ticksPerSignal) {
             getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
             ticksElapsed = 0;
         }
@@ -58,12 +61,12 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         super.registerControllers(data);
-        data.add(new AnimationController<>(this, "spinController", 0, this::spinPredicate));
+        data.add(new AnimationController<TimerSpellTurretTile>("spinController", 0, this::spinPredicate));
     }
 
 
-    public PlayState spinPredicate(AnimationState<?> event) {
-        event.getController().setAnimation(RawAnimation.begin().thenPlay("key_rotation"));
+    public PlayState spinPredicate(AnimationTest<TimerSpellTurretTile> event) {
+        event.controller().setAnimation(RawAnimation.begin().thenPlay("key_rotation"));
         return PlayState.CONTINUE;
     }
 
@@ -96,17 +99,17 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
 
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(tag, pRegistries);
-        this.isLocked = tag.getBoolean("locked");
-        this.ticksPerSignal = tag.getInt("time");
-        this.isOff = tag.getBoolean("off");
-        this.ticksElapsed = tag.getInt("ticksElapsed");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        this.isLocked = tag.getBooleanOr("locked", false);
+        this.ticksPerSignal = tag.getIntOr("time", 20);
+        this.isOff = tag.getBooleanOr("off", false);
+        this.ticksElapsed = tag.getIntOr("ticksElapsed", 0);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(tag, pRegistries);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("locked", isLocked);
         tag.putInt("time", ticksPerSignal);
         tag.putBoolean("off", isOff);

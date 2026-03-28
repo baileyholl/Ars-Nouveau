@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
-import com.mojang.blaze3d.vertex.PoseStack;
+import org.joml.Matrix3x2fStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ import java.util.List;
 public class PedestalRecipeEntry extends SinglePageWidget {
     public List<Ingredient> ingredients;
     public ItemStack outputStack;
-    public Ingredient reagentStack = Ingredient.EMPTY;
+    public Ingredient reagentStack = null; // Ingredient.EMPTY removed in MC 1.21.11; null means no reagent
     public Component title;
     public DocAssets.BlitInfo image;
     public boolean spinning = false;
@@ -55,16 +55,17 @@ public class PedestalRecipeEntry extends SinglePageWidget {
             double itemX = (renderX + DocClientUtils.nextXAngle(currentDegree - 90, 41));
             double itemY = (renderY + DocClientUtils.nextYAngle(currentDegree - 90, 41));
             if (drawPedestals) {
-                PoseStack poseStack = guiGraphics.pose();
-                poseStack.pushPose();
-                poseStack.translate(itemX - 3, itemY - 3, 0);
+                // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack; use pushMatrix/popMatrix and translate(x,y)
+                Matrix3x2fStack poseStack = guiGraphics.pose();
+                poseStack.pushMatrix();
+                poseStack.translate((float)(itemX - 3), (float)(itemY - 3));
                 DocClientUtils.blit(guiGraphics, DocAssets.PEDESTAL_FRAME, 0, 0);
-                poseStack.popPose();
+                poseStack.popMatrix();
             }
             currentDegree += degreePerInput;
         }
 
-        if (!reagentStack.isEmpty()) {
+        if (reagentStack != null && !reagentStack.isEmpty()) {
             int itemX = x + width / 2 + 7;
             int itemY = y + yOffset + 33;
             setTooltipIfHovered(DocClientUtils.renderIngredient(guiGraphics, itemX, itemY, mouseX, mouseY, reagentStack));

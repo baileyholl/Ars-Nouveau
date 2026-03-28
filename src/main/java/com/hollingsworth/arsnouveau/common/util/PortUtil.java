@@ -10,7 +10,9 @@ public class PortUtil {
     public static void sendMessage(Entity playerEntity, Component component) {
         if (playerEntity == null)
             return;
-        playerEntity.sendSystemMessage(component);
+        if (playerEntity instanceof ServerPlayer sp) {
+            sp.sendSystemMessage(component);
+        }
     }
 
     public static void sendMessageNoSpam(Entity playerEntity, Component component) {

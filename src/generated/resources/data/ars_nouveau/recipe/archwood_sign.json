@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "sign",
   "key": {
-    "#": {
-      "item": "ars_nouveau:archwood_planks"
-    },
-    "X": {
-      "item": "minecraft:stick"
-    }
+    "#": "ars_nouveau:archwood_planks",
+    "X": "minecraft:stick"
   },
   "pattern": [
     "###",

@@ -2,18 +2,18 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class StorageSettingsButton extends StateButton {
-    public StorageSettingsButton(int x, int y, int width, int height, int imageWidth, int imageHeight, int tile, ResourceLocation texture, OnPress pressable) {
+    public StorageSettingsButton(int x, int y, int width, int height, int imageWidth, int imageHeight, int tile, Identifier texture, OnPress pressable) {
         super(x, y, width, height, imageWidth, imageHeight, tile, texture, pressable);
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float pt) {
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float pt) {
         if (this.visible) {
-            graphics.blit(ArsNouveau.prefix("textures/gui/storage_tab1.png"), x, y, 0, 0, 22, 13, 22, 13);
+            graphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ArsNouveau.prefix("textures/gui/storage_tab1.png"), x, y, 0, 0, 22, 13, 22, 13);
         }
-        super.renderWidget(graphics, mouseX, mouseY, pt);
+        super.renderContents(graphics, mouseX, mouseY, pt);
     }
 }

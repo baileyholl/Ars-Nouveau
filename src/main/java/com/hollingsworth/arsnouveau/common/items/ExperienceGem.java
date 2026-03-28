@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
@@ -20,8 +20,8 @@ public abstract class ExperienceGem extends ModItem {
     }
 
 
-    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
-        if (!world.isClientSide) {
+    public InteractionResult use(Level world, Player playerEntity, InteractionHand hand) {
+        if (!world.isClientSide()) {
             if (playerEntity.isCrouching()) {
                 int val = getValue() * playerEntity.getItemInHand(hand).getCount();
                 val = repairPlayerItems(playerEntity, val, val);
@@ -41,7 +41,7 @@ public abstract class ExperienceGem extends ModItem {
             }
 
         }
-        return InteractionResultHolder.pass(playerEntity.getItemInHand(hand));
+        return InteractionResult.PASS;
     }
 
     public int repairPlayerItems(Player p_147093_, int remainingExp, int initialValue) {

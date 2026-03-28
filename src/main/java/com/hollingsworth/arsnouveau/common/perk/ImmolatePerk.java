@@ -7,7 +7,7 @@ import com.hollingsworth.arsnouveau.api.perk.Perk;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
 import com.hollingsworth.arsnouveau.api.util.PerkUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class ImmolatePerk extends Perk implements IEffectResolvePerk {
     public static final ImmolatePerk INSTANCE = new ImmolatePerk(ArsNouveau.prefix("thread_immolation"));
 
-    public ImmolatePerk(ResourceLocation key) {
+    public ImmolatePerk(Identifier key) {
         super(key);
     }
 

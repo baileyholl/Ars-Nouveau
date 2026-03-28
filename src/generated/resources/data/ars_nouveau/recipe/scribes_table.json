@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:archwood_slab"
-    },
-    "y": {
-      "tag": "c:nuggets/gold"
-    },
-    "z": {
-      "tag": "c:logs/archwood"
-    }
+    "x": "ars_nouveau:archwood_slab",
+    "y": "#c:nuggets/gold",
+    "z": "#c:logs/archwood"
   },
   "pattern": [
     "xxx",

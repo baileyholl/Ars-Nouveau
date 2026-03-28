@@ -19,7 +19,7 @@ public class BuddingConversionRegistry {
 
     public static void reloadBuddingConversionRecipes(RecipeManager recipeManager) {
         RECIPES = new ArrayList<>();
-        List<BuddingConversionRecipe> recipes = recipeManager.getAllRecipesFor(RecipeRegistry.BUDDING_CONVERSION_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        List<BuddingConversionRecipe> recipes = recipeManager.recipeMap().byType(RecipeRegistry.BUDDING_CONVERSION_TYPE.get()).stream().map(RecipeHolder::value).toList();
         RECIPES.addAll(recipes);
     }
 }

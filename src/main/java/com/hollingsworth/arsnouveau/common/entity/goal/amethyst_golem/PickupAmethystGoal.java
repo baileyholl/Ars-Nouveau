@@ -56,7 +56,7 @@ public class PickupAmethystGoal extends Goal {
 
     public void collectStacks() {
         if (golem.getHome() == null) return;
-        for (ItemEntity i : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), i -> i.getItem().is(SHARD_TAG))) {
+        for (ItemEntity i : golem.level().getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), i -> i.getItem().is(SHARD_TAG))) {
             if (!golem.getMainHandItem().isEmpty() && i.getItem().getItem() != golem.getMainHandItem().getItem())
                 continue;
             int maxTake = golem.getMainHandItem().getMaxStackSize() - golem.getMainHandItem().getCount();
@@ -85,7 +85,7 @@ public class PickupAmethystGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 80;
-        for (ItemEntity entity : golem.level.getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), entity -> entity.getItem().is(SHARD_TAG))) {
+        for (ItemEntity entity : golem.level().getEntitiesOfClass(ItemEntity.class, new AABB(golem.getHome()).inflate(10), entity -> entity.getItem().is(SHARD_TAG))) {
             golem.getNavigation().tryMoveToBlockPos(entity.blockPosition(), 1f);
             targetEntity = entity;
             break;
@@ -104,6 +104,6 @@ public class PickupAmethystGoal extends Goal {
     public boolean canUse() {
         if (golem.getHome() == null)
             return false;
-        return canUse.get() && golem.pickupCooldown <= 0 && golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null) != null;
+        return canUse.get() && golem.pickupCooldown <= 0 && golem.level().getCapability(Capabilities.Item.BLOCK, golem.getHome(), null) != null;
     }
 }

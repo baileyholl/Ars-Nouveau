@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -65,7 +66,7 @@ public class RitualBrazierBlock extends TickableModBlock {
     public static final Property<Boolean> LIT = BooleanProperty.create("lit");
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile tile) || handIn != InteractionHand.MAIN_HAND)
             return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
         ItemStack heldStack = player.getMainHandItem();
@@ -79,7 +80,7 @@ public class RitualBrazierBlock extends TickableModBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, Orientation fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualBrazierTile tile) {
             boolean wasOff = tile.isOff;

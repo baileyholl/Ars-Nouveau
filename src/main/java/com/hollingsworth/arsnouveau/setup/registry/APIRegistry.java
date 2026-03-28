@@ -39,7 +39,7 @@ import java.util.List;
 public class APIRegistry {
 
     public static void setup() {
-        if (!FMLEnvironment.production) //only in dev
+        if (!FMLEnvironment.isProduction()) //only in dev
             registerWip();
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);

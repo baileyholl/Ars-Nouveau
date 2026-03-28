@@ -1,22 +1,42 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.Direction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.util.RandomSource;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.entity.LivingEntity;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.BlockGetter;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.LevelReader;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.world.level.ScheduledTickAccess;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.*;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.MapColor;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.material.PushReaction;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.Shapes;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
@@ -32,10 +52,10 @@ public abstract class TableBlock extends TickableModBlock {
     protected static final VoxelShape SOUTH_SHAPE = Shapes.or(BASE, LEG_SOUTH_WEST, LEG_SOUTH_EAST);
     protected static final VoxelShape WEST_SHAPE = Shapes.or(BASE, LEG_NORTH_WEST, LEG_SOUTH_WEST);
     protected static final VoxelShape EAST_SHAPE = Shapes.or(BASE, LEG_NORTH_EAST, LEG_SOUTH_EAST);
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public TableBlock() {
-        super(Block.Properties.of().ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD)
+        super(BlockRegistry.newBlockProperties().ignitedByLava().mapColor(MapColor.WOOD).sound(SoundType.WOOD)
                 .strength(2.0f, 3.0f).noOcclusion().pushReaction(PushReaction.BLOCK));
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, ThreePartBlock.FOOT));
 
@@ -43,10 +63,10 @@ public abstract class TableBlock extends TickableModBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             BlockPos blockpos = pos.relative(state.getValue(FACING));
             world.setBlock(blockpos, state.setValue(PART, ThreePartBlock.HEAD), 3);
-            world.blockUpdated(pos, Blocks.AIR);
+            world.updateNeighborsAt(pos, Blocks.AIR, null);
             state.updateNeighbourShapes(world, pos, 3);
         }
     }
@@ -60,15 +80,16 @@ public abstract class TableBlock extends TickableModBlock {
     }
 
     // If the user breaks the other side of the table, this side needs to drop its item
-    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelReader world, BlockPos pos, BlockPos pos2) {
         return Blocks.AIR.defaultBlockState();
     }
 
-    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader pLevel, ScheduledTickAccess pScheduledTick, BlockPos pos, Direction direction, BlockPos pos2, BlockState state2, RandomSource pRandom) {
         if (direction == getNeighbourDirection(state.getValue(PART), state.getValue(FACING))) {
-            return state2.is(this) && state2.getValue(PART) != state.getValue(PART) ? state : tearDown(state, direction, state2, world, pos, pos2);
+            return state2.is(this) && state2.getValue(PART) != state.getValue(PART) ? state : tearDown(state, direction, state2, pLevel, pos, pos2);
         } else {
-            return super.updateShape(state, direction, state2, world, pos, pos2);
+            return super.updateShape(state, pLevel, pScheduledTick, pos, direction, pos2, state2, pRandom);
         }
     }
 
@@ -106,7 +127,7 @@ public abstract class TableBlock extends TickableModBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
 }

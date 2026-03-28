@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -58,7 +58,7 @@ public class EffectPull extends AbstractEffect {
 
     public void setMotion(Entity entity, BlockHitResult blockHitResult, SpellStats spellStats) {
         double scalar = 0.5 + ParticleUtil.inRange(-0.05, 0.05) + spellStats.getAmpMultiplier() * .3;
-        Vec3i directionVec = blockHitResult.getDirection().getNormal();
+        Vec3i directionVec = blockHitResult.getDirection().getUnitVec3i();
         Vec3 deltaVec = new Vec3(directionVec.getX() * scalar, directionVec.getY() * scalar + 0.1, directionVec.getZ() * scalar);
         entity.setDeltaMovement(deltaVec);
     }
@@ -82,7 +82,7 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
-    protected void addDefaultAugmentLimits(Map<ResourceLocation, Integer> defaults) {
+    protected void addDefaultAugmentLimits(Map<Identifier, Integer> defaults) {
         super.addDefaultAugmentLimits(defaults);
         defaults.put(AugmentSensitive.INSTANCE.getRegistryName(), 1);
     }

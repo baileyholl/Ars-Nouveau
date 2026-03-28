@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +54,7 @@ public class RitualDig extends AbstractRitual {
     @Override
     public void tick() {
         Level world = tile.getLevel();
-        if (world.getGameTime() % 20 == 0 && !world.isClientSide) {
+        if (world.getGameTime() % 20 == 0 && !world.isClientSide()) {
             BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
             if (world.isOutsideBuildHeight(pos)) {
                 onEnd();
@@ -88,7 +88,7 @@ public class RitualDig extends AbstractRitual {
     }
 
     @Override
-    public ResourceLocation getRegistryName() {
+    public Identifier getRegistryName() {
         return ArsNouveau.prefix(RitualLib.DIG);
     }
 }

@@ -22,7 +22,7 @@ public class PotionEffectTags {
 
     public static ArrayList<Holder<MobEffect>> getEffects(Level level, TagKey<MobEffect> tag) {
         return potionEffects.computeIfAbsent(tag, (_key) -> {
-            Optional<HolderSet.Named<MobEffect>> effects = level.registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTag(tag);
+            Optional<HolderSet.Named<MobEffect>> effects = level.registryAccess().lookupOrThrow(Registries.MOB_EFFECT).get(tag);
             if (effects.isEmpty()) return null;
             ArrayList<Holder<MobEffect>> effectList = new ArrayList<>();
             for (Holder<MobEffect> mobEffectHolder : effects.get()) {

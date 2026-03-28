@@ -20,30 +20,48 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.ChatFormatting;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.component.DataComponents;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Style;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.server.level.ServerPlayer;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.InteractionResult;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.entity.player.Player;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.DyeColor;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.Item;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.ItemStack;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.item.TooltipFlag;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import net.minecraft.world.item.component.TooltipDisplay;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.level.Level;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -57,7 +75,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public SpellBook(SpellTier tier) {
-        this(new Item.Properties().stacksTo(1)
+        this(ItemsRegistry.newItemProperties().stacksTo(1)
                 .component(DataComponents.BASE_COLOR, DyeColor.PURPLE)
                 .component(DataComponentRegistry.SPELL_CASTER, new SpellCaster(10)), tier);
     }
@@ -68,7 +86,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
+    public @NotNull InteractionResult use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 //        var caster2 = SpellCasterRegistry.from(stack);
 //        caster2.getSpell().particleTimeline().debugPrintHash(caster2.getSpell(), worldIn);
@@ -96,16 +114,16 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
                 }
             }
 
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
 
         var caster = this.getSpellCaster(stack);
         if (caster == null) {
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
         caster.castOnServer(handIn, Component.translatable("ars_nouveau.invalid_spell"));
 
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -114,12 +132,12 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
     }
 
     @Override
-    public void appendHoverText(final @NotNull ItemStack stack, final @NotNull TooltipContext world, final @NotNull List<Component> tooltip, final @NotNull TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+    public void appendHoverText(final @NotNull ItemStack stack, final @NotNull Item.TooltipContext world, final @NotNull TooltipDisplay display, final @NotNull Consumer<Component> tooltip, final @NotNull TooltipFlag flag) {
+        super.appendHoverText(stack, world, display, tooltip, flag);
         if (ArsNouveau.proxy.isClientSide()) {
-            tooltip.add(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
-            tooltip.add(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
-            tooltip.add(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip.accept(Component.translatable("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
+            tooltip.accept(Component.translatable("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
+            tooltip.accept(Component.translatable("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
         }
     }
 
@@ -139,10 +157,10 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
-            private final BlockEntityWithoutLevelRenderer renderer = new SpellBookRenderer();
+            private final GeoItemRenderer<?> renderer = new SpellBookRenderer();
 
             @Override
-            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+            public GeoItemRenderer<?> getGeoItemRenderer() {
                 return renderer;
             }
         });
@@ -155,7 +173,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
         if (hand == null) {
             return;
         }
-        if (player.level.isClientSide) {
+        if (player.level().isClientSide()) {
             GuiSpellBook.open(hand);
         }
     }

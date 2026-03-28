@@ -6,14 +6,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -27,12 +30,12 @@ public class SconceBlock extends TickableModBlock {
                     Direction.WEST, Block.box(10.0D, 3.0D, 5D, 16.0D, 13.0D, 11D),
                     Direction.EAST, Block.box(0.0D, 3.0D, 5D, 6.0D, 13.0D, 11D)));
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public static final Property<Integer> LIGHT_LEVEL = IntegerProperty.create("level", 0, 15);
 
     public SconceBlock() {
-        super(BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollission().lightLevel((b) -> b.getValue(LIGHT_LEVEL)));
+        super(BlockRegistry.newBlockProperties().sound(SoundType.STONE).strength(2.0f, 3.0f).noOcclusion().noCollision().lightLevel((b) -> b.getValue(LIGHT_LEVEL)));
     }
 
     @Override
@@ -51,8 +54,8 @@ public class SconceBlock extends TickableModBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState p_196271_1_, Direction p_196271_2_, BlockState p_196271_3_, LevelAccessor p_196271_4_, BlockPos p_196271_5_, BlockPos p_196271_6_) {
-        return p_196271_2_.getOpposite() == p_196271_1_.getValue(FACING) && !p_196271_1_.canSurvive(p_196271_4_, p_196271_5_) ? Blocks.AIR.defaultBlockState() : p_196271_1_;
+    protected BlockState updateShape(BlockState p_196271_1_, LevelReader p_levelReader, ScheduledTickAccess p_scheduledTickAccess, BlockPos p_196271_5_, Direction p_196271_2_, BlockPos p_196271_6_, BlockState p_196271_3_, RandomSource p_random) {
+        return p_196271_2_.getOpposite() == p_196271_1_.getValue(FACING) && !p_196271_1_.canSurvive(p_levelReader, p_196271_5_) ? Blocks.AIR.defaultBlockState() : p_196271_1_;
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 
 import javax.annotation.Nullable;
@@ -59,9 +59,9 @@ public class DocumentationRegistry {
     public static final DocCategory FAMILIARS = new DocCategory(ArsNouveau.prefix("familiars"), FamiliarRegistry.getFamiliarScriptMap().get(ArsNouveau.prefix(LibEntityNames.FAMILIAR_STARBUNCLE)).asItem().getDefaultInstance(), 800);
 
 
-    private static final Map<ResourceLocation, DocCategory> mainCategoryMap = new ConcurrentHashMap<>();
+    private static final Map<Identifier, DocCategory> mainCategoryMap = new ConcurrentHashMap<>();
 
-    private static final Map<ResourceLocation, DocEntry> entryMap = new ConcurrentHashMap<>();
+    private static final Map<Identifier, DocEntry> entryMap = new ConcurrentHashMap<>();
     private static final Set<DocEntry> allEntries = ConcurrentHashMap.newKeySet();
     private static final Map<DocCategory, Set<DocEntry>> categoryToEntriesMap = new ConcurrentHashMap<>();
     private static final Map<DocEntry, DocCategory> entryToCategoryMap = new ConcurrentHashMap<>();
@@ -120,11 +120,11 @@ public class DocumentationRegistry {
     }
 
     @Nullable
-    public static DocEntry getEntry(ResourceLocation id) {
+    public static DocEntry getEntry(Identifier id) {
         return entryMap.get(id);
     }
 
-    public static DocCategory getCategory(ResourceLocation id) {
+    public static DocCategory getCategory(Identifier id) {
         return mainCategoryMap.get(id);
     }
 
@@ -132,7 +132,7 @@ public class DocumentationRegistry {
         return entryToCategoryMap.get(entry);
     }
 
-    public static Map<ResourceLocation, DocCategory> getMainCategoryMap() {
+    public static Map<Identifier, DocCategory> getMainCategoryMap() {
         return mainCategoryMap;
     }
 }

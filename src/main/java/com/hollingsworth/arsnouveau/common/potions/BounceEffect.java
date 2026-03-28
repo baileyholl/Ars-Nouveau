@@ -29,7 +29,7 @@ public class BounceEffect extends MobEffect {
             return;
         }
         boolean isPlayer = entity instanceof Player;
-        boolean isClient = entity.level.isClientSide;
+        boolean isClient = entity.level.isClientSide();
         if (isClient && !isPlayer) {
             return;
         }

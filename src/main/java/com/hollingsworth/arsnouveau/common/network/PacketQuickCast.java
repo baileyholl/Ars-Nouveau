@@ -20,7 +20,7 @@ public class PacketQuickCast extends AbstractPacket {
     float yRot;
 
     public PacketQuickCast(int slot) {
-        var cam = Minecraft.getInstance().cameraEntity;
+        var cam = Minecraft.getInstance().getCameraEntity();
         this.slot = slot;
         this.xRot = cam.xRot;
         this.yRot = cam.yRot;

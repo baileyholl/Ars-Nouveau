@@ -3,18 +3,10 @@
   "enchantment": "minecraft:efficiency",
   "level": 2,
   "pedestalItems": [
-    {
-      "tag": "c:storage_blocks/redstone"
-    },
-    {
-      "item": "minecraft:golden_pickaxe"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    }
+    "#c:storage_blocks/redstone",
+    "minecraft:golden_pickaxe",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/source"
   ],
   "sourceCost": 3500
 }

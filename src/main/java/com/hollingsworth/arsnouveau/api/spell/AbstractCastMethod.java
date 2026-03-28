@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +22,7 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
         super(tag, description);
     }
 
-    public AbstractCastMethod(ResourceLocation tag, String description) {
+    public AbstractCastMethod(Identifier tag, String description) {
         super(tag, description);
     }
 
@@ -55,11 +55,11 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
     @Override
     public void buildConfig(ModConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        Map<ResourceLocation, Integer> defaultAugmentLimits = new HashMap<>();
+        Map<Identifier, Integer> defaultAugmentLimits = new HashMap<>();
         addDefaultAugmentLimits(defaultAugmentLimits);
         buildAugmentLimitsConfig(builder, defaultAugmentLimits);
 
-        Map<ResourceLocation, Integer> defaultAugmentCosts = new HashMap<>();
+        Map<Identifier, Integer> defaultAugmentCosts = new HashMap<>();
         addAugmentCostOverrides(defaultAugmentCosts);
         buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
     }

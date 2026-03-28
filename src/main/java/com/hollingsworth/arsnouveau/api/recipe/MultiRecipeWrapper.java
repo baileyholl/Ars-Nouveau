@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.recipe;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,8 @@ public class MultiRecipeWrapper implements IRecipeWrapper {
             for (BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes(level)) {
                 if (ItemStack.matches(stack, r.getOutput())) {
                     List<Ingredient> list = new ArrayList<>();
-                    list.add(PotionIngredient.getIngredient(r.getInput().getItems()[0]));
+                    // getInput() returns an Ingredient; get first item holder to build PotionIngredient
+                    r.getInput().items().findFirst().ifPresent(h -> list.add(PotionIngredient.getIngredient(new ItemStack(h.value()))));
                     list.add(r.getIngredient());
                     wrapper.addRecipe(list, r.getOutput(), null);
                 }
@@ -47,18 +49,20 @@ public class MultiRecipeWrapper implements IRecipeWrapper {
             }
             for (RecipeHolder<?> rh : level.getServer().getRecipeManager().getRecipes()) {
                 Recipe<?> r = rh.value();
-                if (r.getResultItem(level.registryAccess()) == null || r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
+                // Get result via assemble with empty container - use display() for item check
+                ItemStack result = getRecipeResult(r, level);
+                if (result == null || result.isEmpty() || result.getItem() != stack.getItem())
                     continue;
 
-                if (r instanceof ShapedRecipe) {
-                    ShapedHelper helper = new ShapedHelper((ShapedRecipe) r);
+                if (r instanceof ShapedRecipe shaped) {
+                    ShapedHelper helper = new ShapedHelper(shaped);
                     for (List<Ingredient> iList : helper.getPossibleRecipes()) {
-                        wrapper.addRecipe(iList, r.getResultItem(level.registryAccess()), r);
+                        wrapper.addRecipe(iList, result, r);
                     }
                 }
 
-                if (r instanceof ShapelessRecipe)
-                    wrapper.addRecipe(r.getIngredients(), r.getResultItem(level.registryAccess()), r);
+                if (r instanceof ShapelessRecipe shapeless)
+                    wrapper.addRecipe(shapeless.placementInfo().ingredients(), result, r);
 
             }
             RECIPE_CACHE.put(stack.getItem(), wrapper);
@@ -89,9 +93,11 @@ public class MultiRecipeWrapper implements IRecipeWrapper {
         List<ItemStack> items = new ArrayList<>();
         for (Ingredient i : recipe.recipeIngredients) {
             boolean foundStack = false;
-            for (ItemStack stack : i.getItems()) {
+            for (Holder<Item> holder : i.items().toList()) {
+                Item itemType = holder.value();
+                ItemStack stack = new ItemStack(itemType);
                 // Return success if we could consume this potion as a liquid from a jar
-                if (stack.getItem() == Items.POTION) {
+                if (itemType == Items.POTION) {
                     PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
                     if (potionContents == null) continue;
 
@@ -101,10 +107,10 @@ public class MultiRecipeWrapper implements IRecipeWrapper {
                     }
                 }
                 // If our inventory has the item, decrease the effective count
-                if (inventory.containsKey(stack.getItem()) && map.get(stack.getItem()) > 0) {
-                    map.put(stack.getItem(), map.get(stack.getItem()) - 1);
+                if (inventory.containsKey(itemType) && map.get(itemType) > 0) {
+                    map.put(itemType, map.get(itemType) - 1);
                     foundStack = true;
-                    items.add(stack.copy());
+                    items.add(stack);
                     break;
                 }
             }
@@ -112,6 +118,24 @@ public class MultiRecipeWrapper implements IRecipeWrapper {
                 return null;
         }
         return items;
+    }
+
+    /** Get result ItemStack from a recipe, using display() API since getResultItem() was removed in 1.21.11 */
+    @Nullable
+    private static ItemStack getRecipeResult(Recipe<?> recipe, Level level) {
+        try {
+            var displays = recipe.display();
+            if (!displays.isEmpty()) {
+                var slotDisplay = displays.get(0).result();
+                if (slotDisplay instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay itemStackDisplay) {
+                    return itemStackDisplay.stack();
+                }
+                if (slotDisplay instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemSlotDisplay itemDisplay) {
+                    return new ItemStack(itemDisplay.item());
+                }
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 
 

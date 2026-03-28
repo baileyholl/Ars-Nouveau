@@ -5,18 +5,13 @@ import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -25,8 +20,11 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -34,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.UUID;
 
 public class EntityDummy extends PathfinderMob implements ISummon, IDispellable {
@@ -50,7 +47,13 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     public double xCloak;
     public double yCloak;
     public double zCloak;
-    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityDummy.class, EntityDataSerializers.OPTIONAL_UUID);
+
+    // 1.21.11: EntityDataSerializers.OPTIONAL_UUID removed; store owner UUID as a plain field
+    @Nullable
+    private UUID ownerUUID;
+    // Keep EntityReference for OwnableEntity interface
+    @Nullable
+    private EntityReference<LivingEntity> ownerRef;
 
     public EntityDummy(EntityType<? extends PathfinderMob> p_i48577_1_, Level p_i48577_2_) {
         super(p_i48577_1_, p_i48577_2_);
@@ -59,7 +62,6 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     public EntityDummy(Level world) {
         super(ModEntities.ENTITY_DUMMY.get(), world);
     }
-
 
     @Override
     protected void registerGoals() {
@@ -73,14 +75,12 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
         super.defineSynchedData(pBuilder);
-        pBuilder.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
-    @Override
+    // 1.21.11: getArmorSlots() removed from Entity supertype; no longer needed
     public Iterable<ItemStack> getArmorSlots() {
         return new ArrayList<>();
     }
-
 
     @Override
     public boolean isSpectator() {
@@ -91,10 +91,10 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     public void tick() {
         this.moveCloak();
         super.tick();
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerUUID()) == null) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
                 onSummonDeath(level, null, false);
                 return;
             }
@@ -102,7 +102,7 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
             ticksLeft--;
             if (ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }
@@ -123,7 +123,6 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         this.bob = this.bob + (f - this.bob) * 0.4F;
     }
 
-
     private void moveCloak() {
         this.xCloakO = this.xCloak;
         this.yCloakO = this.yCloak;
@@ -132,36 +131,12 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         double d1 = this.getY() - this.yCloak;
         double d2 = this.getZ() - this.zCloak;
         double d3 = 10.0;
-        if (d0 > 10.0) {
-            this.xCloak = this.getX();
-            this.xCloakO = this.xCloak;
-        }
-
-        if (d2 > 10.0) {
-            this.zCloak = this.getZ();
-            this.zCloakO = this.zCloak;
-        }
-
-        if (d1 > 10.0) {
-            this.yCloak = this.getY();
-            this.yCloakO = this.yCloak;
-        }
-
-        if (d0 < -10.0) {
-            this.xCloak = this.getX();
-            this.xCloakO = this.xCloak;
-        }
-
-        if (d2 < -10.0) {
-            this.zCloak = this.getZ();
-            this.zCloakO = this.zCloak;
-        }
-
-        if (d1 < -10.0) {
-            this.yCloak = this.getY();
-            this.yCloakO = this.yCloak;
-        }
-
+        if (d0 > 10.0) { this.xCloak = this.getX(); this.xCloakO = this.xCloak; }
+        if (d2 > 10.0) { this.zCloak = this.getZ(); this.zCloakO = this.zCloak; }
+        if (d1 > 10.0) { this.yCloak = this.getY(); this.yCloakO = this.yCloak; }
+        if (d0 < -10.0) { this.xCloak = this.getX(); this.xCloakO = this.xCloak; }
+        if (d2 < -10.0) { this.zCloak = this.getZ(); this.zCloakO = this.zCloak; }
+        if (d1 < -10.0) { this.yCloak = this.getY(); this.yCloakO = this.yCloak; }
         this.xCloak += d0 * 0.25;
         this.zCloak += d2 * 0.25;
         this.yCloak += d1 * 0.25;
@@ -182,7 +157,7 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
 
     @Override
     public ItemStack getItemBySlot(EquipmentSlot p_184582_1_) {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
             return ItemStack.EMPTY;
 
         ItemStack heldStack = level.getPlayerByUUID(getOwnerUUID()) != null ? level.getPlayerByUUID(getOwnerUUID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
@@ -197,9 +172,10 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
     public void setItemSlot(EquipmentSlot p_184201_1_, ItemStack p_184201_2_) {
     }
 
-    public ResourceLocation getSkinTextureLocation() {
+    public Identifier getSkinTextureLocation() {
         PlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultTexture() : networkplayerinfo.getSkin().texture();
+        // 1.21.11: PlayerSkin.texture() removed; body() returns ClientAsset.Texture with texturePath()
+        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultTexture() : networkplayerinfo.getSkin().body().texturePath();
     }
 
     @Nullable
@@ -221,26 +197,27 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         return iformattabletextcomponent;
     }
 
-
     @Override
     public HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;
     }
 
-
+    // 1.21.11: addAdditionalSaveData/readAdditionalSaveData changed to ValueOutput/ValueInput
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("left", ticksLeft);
-        writeOwner(tag);
+        EntityReference.store(ownerRef, tag, "owner");
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.ticksLeft = tag.getInt("left");
-        if (tag.contains("owner"))
-            setOwnerID(tag.getUUID("owner"));
+        this.ticksLeft = tag.getIntOr("left", 0);
+        this.ownerRef = EntityReference.read(tag, "owner");
+        if (ownerRef != null) {
+            this.ownerUUID = ownerRef.getUUID();
+        }
     }
 
     @Override
@@ -253,21 +230,29 @@ public class EntityDummy extends PathfinderMob implements ISummon, IDispellable 
         this.ticksLeft = ticks;
     }
 
+    // ISummon does not declare getOwnerUUID; this is a local helper
     @Nullable
-    @Override
     public UUID getOwnerUUID() {
-        return this.getEntityData().get(OWNER_UUID).isEmpty() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+        return ownerUUID != null ? ownerUUID : this.getUUID();
     }
 
     @Override
     public void setOwnerID(UUID uuid) {
-        this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
+        this.ownerUUID = uuid;
+        this.ownerRef = uuid != null ? EntityReference.of(uuid) : null;
+    }
+
+    // OwnableEntity interface: getOwnerReference()
+    @Override
+    public EntityReference<LivingEntity> getOwnerReference() {
+        return ownerRef;
     }
 
     @OnlyIn(Dist.CLIENT)
     public boolean isSlim() {
         if (this.playerInfo != null) {
-            return playerInfo.getSkin().model() == PlayerSkin.Model.SLIM;
+            // 1.21.11: PlayerSkin.Model removed; use PlayerModelType
+            return playerInfo.getSkin().model() == net.minecraft.world.entity.player.PlayerModelType.SLIM;
         } else return false;
     }
 

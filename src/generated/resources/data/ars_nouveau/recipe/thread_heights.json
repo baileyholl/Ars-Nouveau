@@ -2,28 +2,14 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "item": "minecraft:spider_eye"
-    },
-    {
-      "item": "minecraft:rabbit_hide"
-    },
-    {
-      "item": "minecraft:rabbit_hide"
-    },
-    {
-      "item": "minecraft:rabbit_hide"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    },
-    {
-      "item": "ars_nouveau:air_essence"
-    }
+    "minecraft:spider_eye",
+    "minecraft:rabbit_hide",
+    "minecraft:rabbit_hide",
+    "minecraft:rabbit_hide",
+    "ars_nouveau:air_essence",
+    "ars_nouveau:air_essence"
   ],
-  "reagent": {
-    "item": "ars_nouveau:blank_thread"
-  },
+  "reagent": "ars_nouveau:blank_thread",
   "result": {
     "count": 1,
     "id": "ars_nouveau:thread_heights"

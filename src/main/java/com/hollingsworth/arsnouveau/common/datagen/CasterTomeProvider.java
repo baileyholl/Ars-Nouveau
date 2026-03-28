@@ -18,7 +18,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -360,9 +360,9 @@ public class CasterTomeProvider extends SimpleDataProvider {
         return "Ars Nouveau Caster Tomes Datagen";
     }
 
-    public record UpdatedRecipeWrapper(ResourceLocation id, String name, String flavorText, Spell spell,
-                                       ResourceLocation type) {
-        public UpdatedRecipeWrapper(ResourceLocation id, String name, String flavorText, Spell spell) {
+    public record UpdatedRecipeWrapper(Identifier id, String name, String flavorText, Spell spell,
+                                       Identifier type) {
+        public UpdatedRecipeWrapper(Identifier id, String name, String flavorText, Spell spell) {
             this(id, name, flavorText, spell, ItemsRegistry.CASTER_TOME.registryObject.getId());
         }
 
@@ -371,8 +371,8 @@ public class CasterTomeProvider extends SimpleDataProvider {
         }
     }
 
-    public record CasterRecipeWrapper(ResourceLocation id, String name, List<ResourceLocation> spell,
-                                      ResourceLocation tomeType, String flavorText, CompoundTag particleColor,
+    public record CasterRecipeWrapper(Identifier id, String name, List<Identifier> spell,
+                                      Identifier tomeType, String flavorText, CompoundTag particleColor,
                                       ConfiguredSpellSound sound) {
         public CasterTomeData toData() {
             return new CasterTomeData(name, spell, tomeType, flavorText, particleColor, sound);

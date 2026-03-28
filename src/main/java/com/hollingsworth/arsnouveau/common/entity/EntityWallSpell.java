@@ -13,7 +13,8 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -65,7 +66,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
 
     @Override
     public void tick() {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (resolver() == null)
                 return;
             boolean isOnGround = level.getBlockState(blockPosition()).blocksMotion();
@@ -102,16 +103,16 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 return;
             for (BlockPos p : BlockPos.betweenClosed(start, end)) {
                 p = p.immutable();
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new
                             BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
                 resolveEmitter.setPositionOffset(p.subtract(blockPosition()).getCenter());
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     resolveEmitter.tick(level);
                 }
             }
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 resolveSound.playSound(level, getX(), getY(), getZ());
             }
         } else {
@@ -140,11 +141,11 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 if (skipEntity)
                     continue;
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     resolver().getNewResolver(resolver().spellContext.clone().makeChildContext()).onResolveEffect(level, new EntityHitResult(entity));
                 }
                 resolveEmitter.setPositionOffset(entity.position.subtract(position).add(0, entity.getBbHeight() / 2.0, 0));
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     resolveEmitter.tick(level);
                 }
                 i++;
@@ -153,13 +154,13 @@ public class EntityWallSpell extends EntityProjectileSpell {
                 }
                 if (i > 5)
                     break;
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     resolveSound.playSound(level, getX(), getY(), getZ());
                 }
             }
             totalProcs += i;
             if (totalProcs >= maxProcs)
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
@@ -194,10 +195,10 @@ public class EntityWallSpell extends EntityProjectileSpell {
 
     @Override
     protected void onHit(HitResult result) {
-        if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
+        if (!level.isClientSide() && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
             if (state.is(BlockTags.PORTALS)) {
-                state.entityInside(level, ((BlockHitResult) result).getBlockPos(), this);
+                state.entityInside(level, ((BlockHitResult) result).getBlockPos(), this, net.minecraft.world.entity.InsideBlockEffectApplier.NOOP, false);
                 return;
             }
             this.setLanded(true);
@@ -260,7 +261,7 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(ValueOutput tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sensitive", isSensitive());
         tag.putString("direction", getDirection().name());
@@ -268,11 +269,14 @@ public class EntityWallSpell extends EntityProjectileSpell {
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        setSensitive(compound.getBoolean("sensitive"));
-        setDirection(Direction.valueOf(compound.getString("direction")));
-        setShouldFall(compound.getBoolean("should_fall"));
+    public void readAdditionalSaveData(ValueInput compound) {
+        super.readAdditionalSaveData(compound);
+        setSensitive(compound.getBooleanOr("sensitive", false));
+        String dir = compound.getStringOr("direction", "");
+        if (!dir.isEmpty()) {
+            try { setDirection(Direction.valueOf(dir)); } catch (IllegalArgumentException ignored) {}
+        }
+        setShouldFall(compound.getBooleanOr("should_fall", true));
     }
 
     public static class EntityHit {

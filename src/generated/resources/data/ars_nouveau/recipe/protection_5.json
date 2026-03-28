@@ -3,30 +3,14 @@
   "enchantment": "minecraft:protection",
   "level": 5,
   "pedestalItems": [
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:manipulation_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "tag": "c:storage_blocks/source"
-    },
-    {
-      "tag": "c:storage_blocks/diamond"
-    }
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:manipulation_essence",
+    "ars_nouveau:abjuration_essence",
+    "ars_nouveau:abjuration_essence",
+    "ars_nouveau:abjuration_essence",
+    "#c:storage_blocks/source",
+    "#c:storage_blocks/diamond"
   ],
   "sourceCost": 8000
 }

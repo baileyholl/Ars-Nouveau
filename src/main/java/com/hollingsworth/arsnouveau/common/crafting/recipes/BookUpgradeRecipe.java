@@ -31,7 +31,8 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return RecipeRegistry.BOOK_UPGRADE_RECIPE.get();
+    @SuppressWarnings("unchecked")
+    public @NotNull RecipeSerializer<ShapelessRecipe> getSerializer() {
+        return (RecipeSerializer<ShapelessRecipe>) (RecipeSerializer<?>) RecipeRegistry.BOOK_UPGRADE_RECIPE.get();
     }
 }

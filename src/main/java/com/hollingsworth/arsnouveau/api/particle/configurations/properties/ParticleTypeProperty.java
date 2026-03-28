@@ -21,7 +21,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
@@ -149,13 +149,13 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         };
     }
 
-    private ResourceLocation getKey(ParticleType<?> type) {
+    private Identifier getKey(ParticleType<?> type) {
         return BuiltInRegistries.PARTICLE_TYPE.getKey(type);
     }
 
 
     private Component getTypeName(ParticleType<?> type) {
-        ResourceLocation location = getKey(type);
+        Identifier location = getKey(type);
         return Component.translatable(location.getNamespace() + ".particle." + location.getPath());
     }
 

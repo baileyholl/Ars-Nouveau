@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -16,14 +18,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent;
 
 import javax.annotation.Nullable;
@@ -47,7 +50,7 @@ public class LightningEntity extends LightningBolt {
 
     public LightningEntity(EntityType<? extends LightningBolt> p_i231491_1_, Level world) {
         super(p_i231491_1_, world);
-        this.noCulling = true;
+        // noCulling removed in 1.21.11
         this.lightningState = 2;
         this.boltVertex = this.random.nextLong();
         this.boltLivingTime = this.random.nextInt(3) + 1;
@@ -80,7 +83,7 @@ public class LightningEntity extends LightningBolt {
         --this.lightningState;
         if (this.lightningState < 0) {
             if (this.boltLivingTime == 0) {
-                this.remove(RemovalReason.DISCARDED);
+                this.remove(Entity.RemovalReason.DISCARDED);
             } else if (this.lightningState < -this.random.nextInt(10)) {
                 --this.boltLivingTime;
                 this.lightningState = 1;
@@ -103,12 +106,12 @@ public class LightningEntity extends LightningBolt {
                             continue;
                         entity.thunderHit((ServerLevel) this.level, this);
                         this.setDamage(origDamage);
-                        if (!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity) {
+                        if (!level.isClientSide() && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity) {
                             MobEffectInstance effectInstance = ((LivingEntity) entity).getEffect(ModPotions.SHOCKED_EFFECT);
                             int amp = effectInstance != null ? effectInstance.getAmplifier() : -1;
                             ((LivingEntity) entity).addEffect(new MobEffectInstance(ModPotions.SHOCKED_EFFECT, 200 + 10 * 20 * extendTimes, Math.min(2, amp + 1)));
                         }
-                        if (!level.isClientSide && !hitEntities.contains(entity.getId()))
+                        if (!level.isClientSide() && !hitEntities.contains(entity.getId()))
                             hitEntities.add(entity.getId());
 
                     }
@@ -122,7 +125,7 @@ public class LightningEntity extends LightningBolt {
     }
 
     private void igniteBlocks(int extraIgnitions) {
-        if (!this.effectOnly && !this.level.isClientSide && this.level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+        if (!this.effectOnly && !this.level.isClientSide() && this.level instanceof ServerLevel sl && sl.getGameRules().get(GameRules.FIRE_DAMAGE)) {
             BlockPos blockpos = this.blockPosition();
             BlockState blockstate = BaseFireBlock.getState(this.level, blockpos);
             if (this.level.getBlockState(blockpos).isAir() && blockstate.canSurvive(this.level, blockpos)) {
@@ -146,16 +149,19 @@ public class LightningEntity extends LightningBolt {
         int multiplier = 1;
 
         if (entity instanceof LivingEntity livingEntity) {
-            for (ItemStack i : livingEntity.getArmorSlots()) {
-                IEnergyStorage energyStorage = i.getCapability(Capabilities.EnergyStorage.ITEM);
+            for (net.minecraft.world.entity.EquipmentSlot _slot : new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET}) {
+                ItemStack i = livingEntity.getItemBySlot(_slot);
+                EnergyHandler energyStorage = Capabilities.Energy.ITEM.getCapability(i, ItemAccess.forStack(i));
                 if (energyStorage != null) {
                     multiplier++;
                 }
             }
-            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(Capabilities.EnergyStorage.ITEM);
+            ItemStack mainHand = ((LivingEntity) entity).getMainHandItem();
+            EnergyHandler energyStorage = Capabilities.Energy.ITEM.getCapability(mainHand, ItemAccess.forStack(mainHand));
             if (energyStorage != null)
                 multiplier++;
-            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(Capabilities.EnergyStorage.ITEM);
+            ItemStack offHand = ((LivingEntity) entity).getOffhandItem();
+            energyStorage = Capabilities.Energy.ITEM.getCapability(offHand, ItemAccess.forStack(offHand));
             if (energyStorage != null)
                 multiplier++;
         }
@@ -176,10 +182,10 @@ public class LightningEntity extends LightningBolt {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readAdditionalSaveData(CompoundTag compound) {
+    protected void readAdditionalSaveData(ValueInput compound) {
     }
 
-    protected void addAdditionalSaveData(CompoundTag compound) {
+    protected void addAdditionalSaveData(ValueOutput compound) {
     }
 
     @Override

@@ -8,11 +8,12 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ItemScroll extends ModItem implements IScribeable, AliasProvider {
 
@@ -34,13 +36,13 @@ public abstract class ItemScroll extends ModItem implements IScribeable, AliasPr
     public abstract SortPref getSortPref(ItemStack stackToStore, ItemStack scrollStack, IItemHandler inventory);
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        if (pUsedHand == InteractionHand.MAIN_HAND && !pLevel.isClientSide) {
+    public @NotNull InteractionResult use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
+        if (pUsedHand == InteractionHand.MAIN_HAND && !pLevel.isClientSide()) {
             ItemStack thisStack = pPlayer.getItemInHand(pUsedHand);
             ItemStack otherStack = pPlayer.getItemInHand(InteractionHand.OFF_HAND);
             if (!otherStack.isEmpty()) {
                 onScribe(pLevel, pPlayer.blockPosition(), pPlayer, InteractionHand.OFF_HAND, thisStack);
-                return InteractionResultHolder.success(thisStack);
+                return InteractionResult.SUCCESS;
             }
         }
         return super.use(pLevel, pPlayer, pUsedHand);
@@ -67,9 +69,9 @@ public abstract class ItemScroll extends ModItem implements IScribeable, AliasPr
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.ITEM_SCROLL_DATA, context, tooltip2::add, flagIn);
+    public void appendHoverText(@NotNull ItemStack stack, Item.TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> tooltip2, @NotNull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip2, flagIn);
+        stack.addToTooltip(DataComponentRegistry.ITEM_SCROLL_DATA, context, display, tooltip2, flagIn);
     }
 
     @Override

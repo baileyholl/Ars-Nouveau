@@ -2,13 +2,13 @@ package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 public class MagicFindEffect extends MobEffect {
@@ -18,9 +18,9 @@ public class MagicFindEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        Level level = pLivingEntity.level;
-        if (level.isClientSide || level.getGameTime() % 60 != 0)
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity pLivingEntity, int pAmplifier) {
+        ServerLevel level = serverLevel;
+        if (level.getGameTime() % 60 != 0)
             return true;
         for (Entity e : level.getEntities(pLivingEntity, new AABB(pLivingEntity.blockPosition()).inflate(75))) {
             if (e instanceof LivingEntity living && living.getType().is(EntityTags.MAGIC_FIND)) {

@@ -8,16 +8,12 @@ import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -33,7 +29,7 @@ public class EntityEntry extends SinglePageWidget {
         this.entityType = entityType;
         this.description = description;
         this.scale = scale;
-        this.entity = entityType.create(parent.getMinecraft().level);
+        this.entity = entityType.create(parent.getMinecraft().level, EntitySpawnReason.COMMAND);
         this.yOffset = yOffset;
     }
 
@@ -76,23 +72,20 @@ public class EntityEntry extends SinglePageWidget {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
-        PoseStack ms = graphics.pose();
-        ms.pushPose();
-        ms.translate(x, y, 50);
-        ms.scale(renderScale, renderScale, renderScale);
-        ms.translate(0, offset, 0);
-        ms.mulPose(Axis.ZP.rotationDegrees(180));
-        ms.mulPose(Axis.YP.rotationDegrees(rotation));
-        Lighting.setupForEntityInInventory();
-        EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
-        MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
-        erd.setRenderShadow(false);
-        erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
-        erd.setRenderShadow(true);
-        immediate.endBatch();
-        ms.popPose();
-        Lighting.setupFor3DItems();
+    // 1.21.11: GuiGraphics.pose() returns Matrix3x2fStack (2D only), cannot use PoseStack for entity rendering.
+    // Use InventoryScreen.renderEntityInInventoryFollowsAngle which takes a bounding box and handles the new API.
+    public static void renderEntity(GuiGraphics graphics, LivingEntity entity, float x, float y, float rotation, float renderScale, float offset) {
+        int scale = Math.max(1, (int) renderScale);
+        int half = scale / 2 + 5;
+        InventoryScreen.renderEntityInInventoryFollowsAngle(
+                graphics,
+                (int) x - half, (int) y - half,
+                (int) x + half, (int) y + half,
+                scale, offset,
+                (float) Math.cos(rotation * Math.PI / 180.0),
+                (float) Math.sin(rotation * Math.PI / 180.0),
+                entity
+        );
     }
 
     @Override

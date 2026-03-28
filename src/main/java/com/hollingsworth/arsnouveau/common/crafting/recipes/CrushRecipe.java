@@ -53,12 +53,12 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<CrushRecipe> getSerializer() {
         return RecipeRegistry.CRUSH_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<CrushRecipe> getType() {
         return RecipeRegistry.CRUSH_TYPE.get();
     }
 

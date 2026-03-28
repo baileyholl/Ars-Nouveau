@@ -12,6 +12,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,7 +44,7 @@ public class WitherBehavior extends JarBehavior<WitherBoss> {
     private void destroyBlocks(MobJarTile tile) {
         BlockPos pos = tile.getBlockPos();
         WitherBoss entity = entityFromJar(tile);
-        if (!EventHooks.canEntityGrief(tile.getLevel(), entity)) return;
+        if (!EventHooks.canEntityGrief((ServerLevel) tile.getLevel(), entity)) return;
         for (BlockPos block : BlockPos.betweenClosed(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))) {
             if (block.equals(pos)) continue;
             BlockState bs = tile.getLevel().getBlockState(block);

@@ -2,18 +2,10 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:abjuration_essence"
-    },
-    {
-      "item": "minecraft:milk_bucket"
-    },
-    {
-      "item": "minecraft:milk_bucket"
-    },
-    {
-      "item": "minecraft:milk_bucket"
-    }
+    "ars_nouveau:abjuration_essence",
+    "minecraft:milk_bucket",
+    "minecraft:milk_bucket",
+    "minecraft:milk_bucket"
   ],
   "output": {
     "count": 1,

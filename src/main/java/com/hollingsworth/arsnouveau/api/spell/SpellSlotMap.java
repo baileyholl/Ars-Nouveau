@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.serialization.Codec;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 

@@ -2,12 +2,8 @@
   "type": "ars_nouveau:dye",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dyes"
-    },
-    {
-      "item": "ars_nouveau:spell_crossbow"
-    }
+    "#c:dyes",
+    "ars_nouveau:spell_crossbow"
   ],
   "result": {
     "count": 1,

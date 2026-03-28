@@ -2,22 +2,12 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:chests"
-    },
-    {
-      "tag": "c:chests"
-    },
-    {
-      "tag": "c:chests"
-    },
-    {
-      "tag": "c:chests"
-    }
+    "#c:chests",
+    "#c:chests",
+    "#c:chests",
+    "#c:chests"
   ],
-  "reagent": {
-    "item": "ars_nouveau:relay"
-  },
+  "reagent": "ars_nouveau:relay",
   "result": {
     "count": 1,
     "id": "ars_nouveau:relay_collector"

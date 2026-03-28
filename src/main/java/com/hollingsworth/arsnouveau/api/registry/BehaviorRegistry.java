@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyPotionBehavior;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
@@ -13,13 +13,13 @@ import java.util.Map;
 
 public class BehaviorRegistry {
 
-    private static final Map<ResourceLocation, CreateFromTag> REGISTRY = new HashMap<>();
+    private static final Map<Identifier, CreateFromTag> REGISTRY = new HashMap<>();
 
-    public static void register(ResourceLocation name, CreateFromTag creator) {
+    public static void register(Identifier name, CreateFromTag creator) {
         REGISTRY.put(name, creator);
     }
 
-    public static ChangeableBehavior create(ResourceLocation id, Entity entity, CompoundTag tag) {
+    public static ChangeableBehavior create(Identifier id, Entity entity, CompoundTag tag) {
         CreateFromTag create = REGISTRY.get(id);
         return create == null ? null : create.create(entity, tag);
     }

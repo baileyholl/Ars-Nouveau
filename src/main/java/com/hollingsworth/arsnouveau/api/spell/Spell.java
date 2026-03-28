@@ -12,10 +12,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
@@ -323,7 +323,7 @@ public class Spell {
         return !this.isEmpty();
     }
 
-    public List<ResourceLocation> serializeRecipe() {
+    public List<Identifier> serializeRecipe() {
         return this.recipe.stream().map(AbstractSpellPart::getRegistryName).toList();
     }
 

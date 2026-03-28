@@ -5,11 +5,11 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DispelEntityRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.EntitySubPredicatesRegistry;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -37,7 +37,7 @@ public class DispelEntityProvider extends SimpleDataProvider {
     }
 
     protected void addEntries() {
-        recipes.add(new Wrapper(ArsNouveau.prefix("blaze_powder"), new DispelEntityRecipe(EntityType.BLAZE, EntityType.BLAZE.getDefaultLootTable().location(), new LootItemCondition[]{
+        recipes.add(new Wrapper(ArsNouveau.prefix("blaze_powder"), new DispelEntityRecipe(EntityType.BLAZE, EntityType.BLAZE.getDefaultLootTable().map(k -> k.identifier()).orElse(null), new LootItemCondition[]{
                 LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnFire(true))).build()
         })));
 
@@ -46,7 +46,7 @@ public class DispelEntityProvider extends SimpleDataProvider {
         })));
     }
 
-    public record Wrapper(ResourceLocation location, DispelEntityRecipe recipe) {
+    public record Wrapper(Identifier location, DispelEntityRecipe recipe) {
 
     }
 

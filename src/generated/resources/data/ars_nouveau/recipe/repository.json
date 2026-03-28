@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:logs/archwood"
-    },
-    "y": {
-      "tag": "c:nuggets/gold"
-    }
+    "x": "#c:logs/archwood",
+    "y": "#c:nuggets/gold"
   },
   "pattern": [
     "yxy",

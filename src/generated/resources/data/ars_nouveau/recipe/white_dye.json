@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:lily_of_the_valley"
-  },
+  "input": "minecraft:lily_of_the_valley",
   "output": [
     {
       "chance": 1.0,

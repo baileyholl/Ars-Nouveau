@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
 import com.hollingsworth.arsnouveau.api.documentation.export.IJsonExportable;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,11 +16,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public record DocCategory(ResourceLocation id, ItemStack renderIcon, int order, List<DocCategory> subCategories,
+public record DocCategory(Identifier id, ItemStack renderIcon, int order, List<DocCategory> subCategories,
                           Comparator<DocEntry> entryComparator,
                           Set<DocCategory> parents) implements Comparable<DocCategory>, IJsonExportable {
 
-    public DocCategory(ResourceLocation id, ItemStack renderIcon, int order) {
+    public DocCategory(Identifier id, ItemStack renderIcon, int order) {
         this(id, renderIcon, order, new CopyOnWriteArrayList<>(), Comparator.comparing(DocEntry::order).thenComparing((entry -> entry.entryTitle().getString())), ConcurrentHashMap.newKeySet());
     }
 

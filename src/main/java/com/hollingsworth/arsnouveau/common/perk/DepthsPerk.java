@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.perk;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.perk.Perk;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ public class DepthsPerk extends Perk {
 
     public static DepthsPerk INSTANCE = new DepthsPerk(ArsNouveau.prefix("thread_depths"));
 
-    public DepthsPerk(ResourceLocation key) {
+    public DepthsPerk(Identifier key) {
         super(key);
     }
 

@@ -2,34 +2,16 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "keepNbtOfReagent": false,
   "pedestalItems": [
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:gems/source"
-    },
-    {
-      "tag": "c:gems/source"
-    }
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:rods/blaze",
+    "#c:rods/blaze",
+    "#c:gems/source",
+    "#c:gems/source"
   ],
-  "reagent": {
-    "item": "ars_nouveau:ring_of_lesser_discount"
-  },
+  "reagent": "ars_nouveau:ring_of_lesser_discount",
   "result": {
     "count": 1,
     "id": "ars_nouveau:ring_of_greater_discount"

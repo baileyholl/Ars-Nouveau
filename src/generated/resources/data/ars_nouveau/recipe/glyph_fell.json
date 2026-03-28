@@ -2,12 +2,8 @@
   "type": "ars_nouveau:glyph",
   "exp": 27,
   "inputs": [
-    {
-      "item": "ars_nouveau:earth_essence"
-    },
-    {
-      "item": "minecraft:diamond_axe"
-    }
+    "ars_nouveau:earth_essence",
+    "minecraft:diamond_axe"
   ],
   "output": {
     "count": 1,

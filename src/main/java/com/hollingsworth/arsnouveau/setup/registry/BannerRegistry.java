@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class BannerRegistry {
@@ -19,7 +19,7 @@ public class BannerRegistry {
     public static final ResourceKey<BannerPattern> SPIRALS = create("spirals");
 
     private static ResourceKey<BannerPattern> create(String name) {
-        return ResourceKey.create(Registries.BANNER_PATTERN, ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, name));
+        return ResourceKey.create(Registries.BANNER_PATTERN, Identifier.fromNamespaceAndPath(ArsNouveau.MODID, name));
     }
 
     public static void bootstrapPatterns(BootstrapContext<BannerPattern> bannerPatternBootstrapContext) {
@@ -34,6 +34,6 @@ public class BannerRegistry {
     }
 
     public static void register(BootstrapContext<BannerPattern> context, ResourceKey<BannerPattern> resourceKey) {
-        context.register(resourceKey, new BannerPattern(resourceKey.location(), "block.ars_nouveau.banner." + resourceKey.location().toShortLanguageKey()));
+        context.register(resourceKey, new BannerPattern(resourceKey.identifier(), "block.ars_nouveau.banner." + resourceKey.identifier().toShortLanguageKey()));
     }
 }

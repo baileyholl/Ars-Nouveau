@@ -1,8 +1,6 @@
 {
   "type": "ars_nouveau:crush",
-  "input": {
-    "item": "minecraft:lilac"
-  },
+  "input": "minecraft:lilac",
   "output": [
     {
       "chance": 1.0,

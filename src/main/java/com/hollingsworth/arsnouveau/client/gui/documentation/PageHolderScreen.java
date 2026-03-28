@@ -6,16 +6,28 @@ import com.hollingsworth.arsnouveau.api.documentation.SinglePageCtor;
 import com.hollingsworth.arsnouveau.api.documentation.SinglePageWidget;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PageHolderScreen extends BaseDocScreen {
+
+    /**
+     * In 1.21.11 Screen.hasControlDown() was removed.
+     * Replicated here using InputConstants.isKeyDown on the Window object.
+     */
+    public static boolean hasControlDown() {
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_CONTROL)
+                || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_CONTROL);
+    }
 
     List<SinglePageWidget> allWidgets = new ArrayList<>();
 
@@ -47,7 +59,7 @@ public class PageHolderScreen extends BaseDocScreen {
     @Override
     public void initBookmarks() {
         super.initBookmarks();
-        List<ResourceLocation> bookmarks = DocPlayerData.bookmarks;
+        List<Identifier> bookmarks = DocPlayerData.bookmarks;
         if (bookmarks.size() < 10) {
             var addBookmark = addRenderableWidget(new NuggetImageButton(screenLeft + 281, screenTop + 1 + 15 * (bookmarks.size() + 1), DocAssets.BOOKMARK.width(), DocAssets.BOOKMARK.height(), DocAssets.BOOKMARK.location(), (b) -> {
                 bookmarks.add(this.entry.id());

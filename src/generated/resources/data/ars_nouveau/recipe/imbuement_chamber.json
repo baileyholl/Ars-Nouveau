@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "item": "ars_nouveau:archwood_planks"
-    },
-    "y": {
-      "tag": "c:ingots/gold"
-    }
+    "x": "ars_nouveau:archwood_planks",
+    "y": "#c:ingots/gold"
   },
   "pattern": [
     "xyx",

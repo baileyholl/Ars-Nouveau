@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.config;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class ConfigUtil {
     /**
      * Produces a list of tag=limit strings suitable for saving to the configuration.
      */
-    public static List<String> writeResConfig(Map<ResourceLocation, Integer> map) {
+    public static List<String> writeResConfig(Map<Identifier, Integer> map) {
         return map.entrySet().stream()
                 .map(e -> e.getKey().toString() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());

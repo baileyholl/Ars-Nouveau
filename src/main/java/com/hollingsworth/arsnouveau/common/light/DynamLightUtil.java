@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.light;
 
+import com.google.common.collect.Iterables;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -15,9 +15,8 @@ import net.minecraft.world.level.ItemLike;
 
 public class DynamLightUtil {
     public static int getJarOfLightLuminance(Player p) {
-        NonNullList<ItemStack> list = p.inventory.items;
         for (int i = 0; i < 9; i++) {
-            ItemStack jar = list.get(i);
+            ItemStack jar = p.getInventory().getItem(i);
             if (jar.is(ItemsRegistry.JAR_OF_LIGHT.asItem())) {
                 return 15;
             }
@@ -49,7 +48,11 @@ public class DynamLightUtil {
 
     public static int getPlayerLight(Player player) {
         int max = 0;
-        for (ItemStack item : player.getAllSlots()) {
+        // 1.21.11: getArmorSlots()/getHandSlots() removed from LivingEntity; iterate via EquipmentSlot directly
+        Iterable<ItemStack> armorItems = () -> java.util.Arrays.stream(net.minecraft.world.entity.EquipmentSlot.values())
+                .filter(s -> s.getType() == net.minecraft.world.entity.EquipmentSlot.Type.HUMANOID_ARMOR || s.getType() == net.minecraft.world.entity.EquipmentSlot.Type.HAND)
+                .map(player::getItemBySlot).iterator();
+        for (ItemStack item : Iterables.concat(player.getInventory().getNonEquipmentItems(), armorItems)) {
             if (item.isEmpty()) continue;
             max = Math.max(max, Config.ITEM_LIGHTMAP.getOrDefault(keyFor(item.getItem()), 0));
         }
@@ -76,11 +79,11 @@ public class DynamLightUtil {
         return Config.ITEM_LIGHTMAP.getOrDefault(keyFor(itemLike), 0);
     }
 
-    public static ResourceLocation keyFor(Entity entity) {
+    public static Identifier keyFor(Entity entity) {
         return BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
     }
 
-    public static ResourceLocation keyFor(ItemLike itemLike) {
+    public static Identifier keyFor(ItemLike itemLike) {
         return BuiltInRegistries.ITEM.getKey(itemLike.asItem());
     }
 

@@ -2,33 +2,15 @@
   "type": "ars_nouveau:book_upgrade",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "ars_nouveau:novice_spell_book"
-    },
-    {
-      "tag": "c:obsidians"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "tag": "c:gems/diamond"
-    },
-    {
-      "item": "minecraft:quartz_block"
-    },
-    {
-      "item": "minecraft:quartz_block"
-    },
-    {
-      "tag": "c:rods/blaze"
-    },
-    {
-      "tag": "c:rods/blaze"
-    }
+    "ars_nouveau:novice_spell_book",
+    "#c:obsidians",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "minecraft:quartz_block",
+    "minecraft:quartz_block",
+    "#c:rods/blaze",
+    "#c:rods/blaze"
   ],
   "result": {
     "count": 1,

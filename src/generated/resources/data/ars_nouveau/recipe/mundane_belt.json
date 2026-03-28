@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:leathers"
-    },
-    "y": {
-      "tag": "c:gems/source"
-    }
+    "x": "#c:leathers",
+    "y": "#c:gems/source"
   },
   "pattern": [
     "   ",

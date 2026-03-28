@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "x": {
-      "tag": "c:stones"
-    },
-    "y": {
-      "item": "ars_nouveau:fire_essence"
-    }
+    "x": "#c:stones",
+    "y": "ars_nouveau:fire_essence"
   },
   "pattern": [
     "xxx",
