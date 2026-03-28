@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.client.renderer.entity.BookwyrmModel;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
-// TODO: 1.21.11 - render(T, float, float, PoseStack, MultiBufferSource, int) removed.
-// Port 0.5x scale to 1.21.11 renderer pattern (extractRenderState + submit pipeline).
+// GeckoLib 5: withScale(0.5f) replaces the old 0.5x PoseStack scale in render()
 public class FamiliarBookwyrmRenderer extends GenericFamiliarRenderer<FamiliarBookwyrm> {
     public FamiliarBookwyrmRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BookwyrmModel<>());
+        withScale(0.5f);
     }
 }

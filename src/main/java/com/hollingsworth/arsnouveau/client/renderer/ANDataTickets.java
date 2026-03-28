@@ -12,4 +12,6 @@ public class ANDataTickets {
     // Projectile trajectory rotation, stored in extractRenderState for use in adjustRenderPose
     public static final DataTicket<Float> PROJ_Y_ROT = DataTicket.create("ars_nouveau_proj_y_rot", Float.class);
     public static final DataTicket<Float> PROJ_X_ROT = DataTicket.create("ars_nouveau_proj_x_rot", Float.class);
+    // Starbuncle display name — used for special shader lookup (e.g. "Splonk", "Bailey")
+    public static final DataTicket<String> ENTITY_NAME = DataTicket.create("ars_nouveau_entity_name", String.class);
 }
