@@ -23,6 +23,10 @@
 - `VanyLLa3d` — full modpack instance; primary test target
 
 ## Source submodules (deps/)
+
+use sources to understand what happens if you stuck or have no idea.
+
 - `deps/geckolib` — github.com/bernie-g/geckolib branch 1.21.11
 - `deps/curios`   — github.com/TheIllusiveC4/Curios branch 1.21.x
 - `deps/jei`      — github.com/mezz/JustEnoughItems branch 1.21.11
+- `deps/NeoForge` — neoforge

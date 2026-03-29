@@ -15,4 +15,3 @@
 
 ## environment
 - local software will be executed on macbook
-- server software is for linux and better to write in rust

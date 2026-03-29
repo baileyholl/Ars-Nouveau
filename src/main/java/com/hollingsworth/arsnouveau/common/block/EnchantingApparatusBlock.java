@@ -38,10 +38,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class EnchantingApparatusBlock extends TickableModBlock {
+    private static final Logger LOGGER = LogManager.getLogger(EnchantingApparatusBlock.class);
     public EnchantingApparatusBlock() {
         this(TickableModBlock.defaultProperties().noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP));
@@ -66,13 +70,22 @@ public class EnchantingApparatusBlock extends TickableModBlock {
 
 
         var facing = state.getValue(BlockStateProperties.FACING);
-        var maybeCore = world.getBlockState(pos.relative(facing.getOpposite()));
+        var corePos = pos.relative(facing.getOpposite());
+        var maybeCore = world.getBlockState(corePos);
+        LOGGER.info("Apparatus useItemOn: apparatusPos={} facing={} corePos={} coreBlock={} coreFacing={}",
+                pos, facing, corePos, maybeCore.getBlock().getDescriptionId(),
+                maybeCore.getBlock() instanceof ArcaneCore ? maybeCore.getValue(BlockStateProperties.FACING) : "N/A");
         if (!(maybeCore.getBlock() instanceof ArcaneCore)) {
+            LOGGER.info("Apparatus: no ArcaneCore at corePos — fail");
             PortUtil.sendMessage(player, Component.translatable("alert.core"));
             return InteractionResult.SUCCESS;
         }
 
-        if (!maybeCore.getValue(BlockStateProperties.FACING).getAxis().test(facing)) {
+        var coreFacing = maybeCore.getValue(BlockStateProperties.FACING);
+        boolean axisOk = coreFacing.getAxis().test(facing);
+        LOGGER.info("Apparatus: coreFacing={} coreAxis={} apparatusFacing={} axisTest={}", coreFacing, coreFacing.getAxis(), facing, axisOk);
+        if (!axisOk) {
+            LOGGER.info("Apparatus: axis mismatch — fail");
             PortUtil.sendMessage(player, Component.translatable("alert.core.wrong_axis"));
             return InteractionResult.SUCCESS;
         }
@@ -177,6 +190,8 @@ public class EnchantingApparatusBlock extends TickableModBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         context.getLevel().scheduleTick(context.getClickedPos(), this, 1);
-        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getClickedFace());
+        var facing = context.getClickedFace();
+        LOGGER.info("Apparatus getStateForPlacement: pos={} clickedFace={} nearestLook={}", context.getClickedPos(), facing, context.getNearestLookingDirection());
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, facing);
     }
 }

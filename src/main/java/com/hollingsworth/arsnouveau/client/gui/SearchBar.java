@@ -31,10 +31,14 @@ public class SearchBar extends EditBox {
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         DocClientUtils.blit(graphics, DocAssets.SEARCH_PAPER, x, y);
-        // Custom text position: matches original NoShadowTextField bordered(4) + 9px visual indent
-        this.textX = this.getX() + 13;
-        this.textY = this.getY() + (this.height - 8) / 2;
+        // MC 1.21.11 deferred text pipeline requires a non-identity pose matrix for text to render.
+        // Translate to widget origin, use local text offsets — same pattern as drawForegroundElements.
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(getX(), getY());
+        this.textX = 13;
+        this.textY = (this.height - 8) / 2;
         super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+        graphics.pose().popMatrix();
     }
 
     @Override

@@ -10,3 +10,7 @@
 	path = deps/jei
 	url = https://github.com/mezz/JustEnoughItems.git
 	branch = 1.21.11
+[submodule "deps/NeoForge"]
+	path = deps/NeoForge
+	url = https://github.com/neoforged/NeoForge.git
+	branch = 1.21.11

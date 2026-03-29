@@ -132,8 +132,13 @@ Issue: `BaseScreen` has a mixin import that may fail compilation.
   - Drygmy missing texture — `DrygmyModel` now reads color from render state, returns `drygmy_brown.png` etc.
   - Armor `ClassCastException` (`AvatarRenderState → ArsHumanoidRenderState`) — moved dye color injection to `DyeableGeoModel.addAdditionalStateData`
 - [x] i18n audit — all `Component.literal(...)` user strings replaced with `Component.translatable(...)`; 12 new keys added to `en_us.json`
-- [x] Spellbook edit fields (SearchBar + EnterTextField) invisible text — rewrote to extend `EditBox` directly, use `textX`/`textY` + `EditBox.renderWidget` (MC 1.21.11 pipeline)
-- [ ] Test in-game: basic spell casting, familiars, rituals, doc screen, GeoItem rendering in inventory, armor dye colors
+- [x] Spellbook edit fields (SearchBar + EnterTextField) invisible text — root cause: identity matrix context drops text in MC 1.21.11 deferred pipeline. Fix: wrap `super.renderWidget` in `pushMatrix/translate(getX,getY)/popMatrix`. Confirmed working.
+- [x] EnterTextField suggestion overlap — `EditBox` shows suggestion at cursor-end position even when value non-empty. Fix: null suggestion before super when `!value.isEmpty()`, restore after.
+- [x] EnchantingApparatus + ArcaneCore model flat/horizontal — GeckoLib 5 `tryRotateByBlockstate` misrotates 6-way FACING blocks placed UP. Fix: override `adjustRenderPose` (empty body) in EnchantingApparatusRenderer, ArcaneCoreRenderer, ImbuementRenderer.
+- [x] Corrupted jar crash (ZipException bad LOC header) — failed `cp` write; rebuild and reinstall fixes it.
+- [ ] LecternRenderer + RedstoneRelayRenderer: verify in-game (horizontal FACING — tryRotateByBlockstate may need suppressing)
+- [ ] Strip debug LOGGER calls from EnchantingApparatusBlock before release
+- [ ] Test in-game: basic spell casting, familiars, rituals, doc screen, GeoItem rendering in inventory, armor dye colors, apparatus crafting
 
 ---
 

@@ -200,30 +200,64 @@ New keys added to `en_us.json`:
 Existing keys already in lang, now correctly used: `ars_nouveau.hue`, `ars_nouveau.lightness`,
 `ars_nouveau.sat`, `ars_nouveau.learn_glyph` (%s form).
 
-## Spellbook EditBox text invisible fix (2026-03-28)
+## Spellbook EditBox text invisible fix (2026-03-29)
 
 SearchBar and EnterTextField (spell name field) in GuiSpellBook had invisible text after migration.
 
-**Root cause**: both classes extended `NoShadowTextField` (nuggets inline), which had its own
-`renderWidget` override that used `FormattedCharSequence` submission to `GuiRenderState`. Something
-in that chain failed silently in the MC 1.21.11 deferred rendering pipeline — text was submitted
-but never appeared. Exact failure point could not be isolated through static analysis.
+**Root cause**: MC 1.21.11 deferred text pipeline (`GuiRenderState.submitText`) calls
+`GuiTextRenderState.ensurePrepared()` which computes `bounds()` by applying the captured pose matrix
+(`Matrix3x2f`) to the text's screen-space rect via `transformMaxBounds`. When the pose is the
+**identity matrix**, the transformed bounds are effectively zero-area, so `findAppropriateNode()`
+returns false and the text is **silently dropped** — never rendered.
+`BaseBook.drawScreenAfterScale()` does `popMatrix()` before rendering widgets, leaving them in identity
+matrix context. All working `drawString` calls in the book are inside a `translate(bookLeft, bookTop)`
+context — widgets were the only callsite in identity space.
 
-**Fix**: rewrote both classes to extend `EditBox` directly.
+**Fix**: rewrote both classes to extend `EditBox` directly; `renderWidget` wraps `super.renderWidget`
+in `pushMatrix()`/`translate(getX(), getY())`/`popMatrix()` to inject a non-identity pose.
 - `setBordered(false)` — suppresses EditBox's own border sprite
 - `textShadow = false` — no shadow
 - `setTextColor(0xFFC1CF93)` — yellow-green color (alpha=255)
-- `renderWidget` draws custom background image, sets `textX`/`textY` manually, calls `super.renderWidget`
-- `super.renderWidget` = `EditBox.renderWidget` = MC 1.21.11 native pipeline (guaranteed to work)
-- Text offsets preserved: SearchBar `+13px`, EnterTextField `+15px` (matching original `bordered(4) + visual_indent`)
+- Background blit at absolute (x,y) BEFORE the matrix push; textX/textY use LOCAL coords (relative to widget origin): SearchBar `+13px`, EnterTextField `+15px`
+- `super.renderWidget` = `EditBox.renderWidget` = MC 1.21.11 native pipeline with correct pose
 
-**Key lesson**: MC 1.21.11 deferred text pipeline (`GuiRenderState.submitText` → `findAppropriateNode`)
-is strict: if `bounds() == null` (no glyphs) text is silently dropped. Custom EditBox subclasses
-that roll their own `renderWidget` may hit subtle issues. Prefer calling `EditBox.renderWidget`
-directly and controlling layout via `textX`/`textY` fields.
+**EnterTextField suggestion fix**: `EditBox.renderWidget` shows `suggestion` when `cursorPos == value.length()`,
+which means it appears alongside typed text (after the last character). Fix: temporarily null the
+suggestion when `!value.isEmpty()` before calling super, restore after. Suggestion shows only when
+field is empty (default/unset state), disappears as soon as the first character is typed.
+
+**Key lesson**: MC 1.21.11 deferred text pipeline drops text when pose matrix is identity at submission
+time. Any EditBox (or custom widget calling `drawString`) rendered outside a `pushMatrix/translate`
+block will silently produce no text. Always ensure a non-identity pose is active when submitting text.
+
+## GeoBlockRenderer tryRotateByBlockstate bug (2026-03-29)
+
+EnchantingApparatus model rendered flat/horizontal instead of upright. ArcaneCore same.
+
+**Root cause**: GeckoLib 5 `GeoBlockRenderer.adjustRenderPose` (base class) calls `tryRotateByBlockstate`,
+which reads the block's FACING property and applies an automatic yaw rotation. This works correctly for
+blocks with horizontal-only FACING (NSEW). For blocks with **6-way FACING** (UP/DOWN/NSEW via
+`context.getClickedFace()`), the UP-facing case is mis-handled — model is rotated flat.
+
+Affected: any block using `BlockStateProperties.FACING` (6-way) placed on the ground (FACING=UP).
+
+**Fix**: override `adjustRenderPose` with an empty body to suppress `tryRotateByBlockstate`.
+Applied to:
+- `EnchantingApparatusRenderer` — FACING=UP when placed on top of ArcaneCore ✅
+- `ArcaneCoreRenderer` — FACING defaults to UP (getNearestLookingDirection) ✅
+- `ImbuementRenderer` — same 6-way FACING via getClickedFace ✅
+
+Not applied (horizontal FACING only, auto-rotation likely correct — needs in-game test):
+- `LecternRenderer` (CraftingLecternBlock: HorizontalDirectionalBlock.FACING)
+- `RedstoneRelayRenderer` (RedstoneRelay: HorizontalDirectionalBlock.FACING)
+
+**Key lesson**: Always override `adjustRenderPose` without calling super in `ArsGeoBlockRenderer`
+subclasses for 6-way FACING blocks. `tryRotateByBlockstate` is only safe for horizontal FACING.
 
 ## What's Pending
 - [ ] Patchouli still commented out (no 1.21.11 version)
 - [ ] Caelus still commented out (no 1.21.11 version)
 - [ ] EMI, TerraBlender, LambDynamicLights — no 1.21.11 versions
-- [ ] In-game test: spell casting, familiars, rituals, doc screen, GeoItem rendering, armor dye colors
+- [ ] LecternRenderer + RedstoneRelayRenderer: test in-game (horizontal FACING, tryRotateByBlockstate may be correct or wrong)
+- [ ] EnchantingApparatusBlock: debug LOGGER calls still in useItemOn + getStateForPlacement — strip before release
+- [ ] In-game test: spell casting, familiars, rituals, doc screen, GeoItem rendering, armor dye colors, apparatus crafting
