@@ -147,7 +147,8 @@
     "2ab10392-33aa-476d-aaf2-c32cd3c7b360",
     "d6417972-585b-4091-862c-adc6e5e229d6",
     "b40962ea-0577-4198-a9bf-02ad4da12339",
-    "52737d1a-8a53-4179-ac2d-1726c9913876"
+    "52737d1a-8a53-4179-ac2d-1726c9913876",
+    "589da7a0-1ccb-4888-b260-e30d9589d75b"
   ],
   "starbuncleAdoptions": [
     {
@@ -995,6 +996,12 @@
       "adopter": "Gamingregory",
       "color": "blue",
       "bio": "I like carrot!"
+    },
+    {
+      "name": "Kamii",
+      "adopter": "KamiiHoney",
+      "color": "pink",
+      "bio": "This Starbuncle seems to love bees, despite being terribly afraid of them. Apparently, neither feeling is mutual."
     }
   ]
 }
