@@ -23,7 +23,8 @@ public class RitualCloudshaper extends AbstractRitual {
         if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
             if (getProgress() >= 18) {
-                ServerLevel world = (ServerLevel) getWorld();
+                // Weather is global and only changes when set in the Overworld Dimension.
+                ServerLevel world = getWorld().getServer().overworld();
                 if (!isStorm() && !isRain()) {
                     world.setWeatherParameters(RAIN_DELAY.sample(world.getRandom()), 0, false, false);
                     setFinished();

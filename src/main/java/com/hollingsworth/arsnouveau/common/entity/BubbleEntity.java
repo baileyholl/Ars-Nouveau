@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.EntityPreRemovalEvent;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.mixin.EntityAccessor;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -78,7 +79,13 @@ public class BubbleEntity extends Projectile implements GeoEntity {
 
             if (this.getPassengers().isEmpty()) {
                 for (Entity entity1 : level.getEntities(this, this.getBoundingBox().inflate(0.5f), this::canHitEntity)) {
-                    entity1.startRiding(this);
+                    // ignore boardingCooldown
+                    var accessor = (EntityAccessor) entity1;
+                    var cooldown = accessor.getBoardingCooldown();
+                    accessor.setBoardingCooldown(0);
+                    if (!entity1.startRiding(this)) {
+                        accessor.setBoardingCooldown(cooldown);
+                    }
                 }
             }
         }

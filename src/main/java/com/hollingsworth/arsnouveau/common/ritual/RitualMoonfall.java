@@ -17,6 +17,8 @@ public class RitualMoonfall extends AbstractRitual {
     protected void tick() {
         ParticleUtil.spawnRitualSkyEffect(this, tile, rand, new ParticleColor.IntWrapper(50 + rand.nextInt(50), 50 + rand.nextInt(50), 200 + rand.nextInt(55)));
         if (getWorld() instanceof ServerLevel world) {
+            // Time is global and only changes when set in the Overworld Dimension.
+            world = world.getServer().overworld();
             // credits to Elucent for this trick
             if (world.getDayTime() % 24000 < 13000 && world.getDayTime() % 24000 >= 0) {
                 world.setDayTime(world.getDayTime() + 100);

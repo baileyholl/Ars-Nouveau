@@ -2,8 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.renderer.PlanariumRenderingWorld;
 import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
+import com.hollingsworth.arsnouveau.common.block.DimBoundary;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -290,7 +292,16 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
 
         public static void onBlockBroken(BlockEvent.BreakEvent event) {
             if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
-                PlanariumTile.dimManager.markDirty(level.dimension());
+                boolean insideJar = PlanariumChunkGenerator.innerBox.contains(event.getPos().getBottomCenter());
+                if(insideJar) {
+                    PlanariumTile.dimManager.markDirty(level.dimension());
+                }
+                if(event.getState().getBlock() instanceof DimBoundary && !insideJar){
+                    if(event.getPlayer().canInteractWithBlock(event.getPos(), 4.0f)) {
+                        DimBoundary.playerAttemptedBreak(level, event.getPlayer());
+                    }
+                    event.setCanceled(true);
+                }
             }
         }
 

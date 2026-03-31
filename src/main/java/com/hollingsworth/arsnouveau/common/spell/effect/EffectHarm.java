@@ -2,7 +2,12 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
@@ -27,8 +32,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
     public void onResolveEntity(EntityHitResult rayTraceResult, Level level, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!(rayTraceResult.getEntity() instanceof ItemEntity)) {
             double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
-            int time = (int) spellStats.getDurationMultiplier();
-            if (time > 0 && rayTraceResult.getEntity() instanceof LivingEntity entity) {
+            if ((spellStats.hasBuff(AugmentExtendTime.INSTANCE) || spellStats.hasBuff(AugmentDurationDown.INSTANCE)) && rayTraceResult.getEntity() instanceof LivingEntity entity) {
                 this.applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
                 attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, getPlayer(shooter, (ServerLevel) level)), (float) damage);
@@ -69,7 +73,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         map.put(AugmentExtendTime.INSTANCE, "Applies Poison instead of dealing damage, increases the duration.");
-        map.put(AugmentDurationDown.INSTANCE, "Decreases the duration of Poison applied.");
+        map.put(AugmentDurationDown.INSTANCE, "Applies Poison instead of dealing damage, decreases the duration.");
         map.put(AugmentAmplify.INSTANCE, "Increases damage dealt, or the level of Poison applied.");
     }
 
@@ -80,7 +84,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
 
     @Override
     public String getBookDescription() {
-        return "Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
+        return "Damages a target. May be increased by Amplify, or applies the Poison debuff when using a Time augment. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
     }
 
     @NotNull

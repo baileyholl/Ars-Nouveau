@@ -41,7 +41,7 @@ public class DummyCapeLayer extends RenderLayer<EntityDummy, PlayerModel<EntityD
         }
         if (!livingEntity.isInvisible()) {
             PlayerSkin playerskin = livingEntity.getPlayerInfo().getSkin();
-            if (true) {
+            if (playerskin.capeTexture() != null) {
                 ItemStack itemstack = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
                 if (!itemstack.is(Items.ELYTRA)) {
                     poseStack.pushPose();
@@ -71,7 +71,7 @@ public class DummyCapeLayer extends RenderLayer<EntityDummy, PlayerModel<EntityD
                     poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + f2 / 2.0F + f1));
                     poseStack.mulPose(Axis.ZP.rotationDegrees(f3 / 2.0F));
                     poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - f3 / 2.0F));
-                    VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entitySolid(ResourceLocation.withDefaultNamespace("")));
+                    VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entitySolid(playerskin.capeTexture()));
                     this.getParentModel().renderCloak(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY);
                     poseStack.popPose();
                 }

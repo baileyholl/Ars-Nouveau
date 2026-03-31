@@ -172,6 +172,7 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
                 spellArrow.setResolver(resolver);
             }
 
+
             Vec3 vec31 = pShooter.getUpVector(1.0F);
             Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(pProjectileAngle * ((float) Math.PI / 180F), vec31.x, vec31.y, vec31.z);
             Vec3 vec3 = pShooter.getViewVector(1.0F);
@@ -232,9 +233,8 @@ public class SpellCrossbow extends CrossbowItem implements GeoItem, ICasterTool,
     }
 
     public EntitySpellArrow buildSpellArrow(Level worldIn, LivingEntity playerentity, AbstractCaster<?> caster, ItemStack bowStack, ItemStack arrowStack) {
-        EntitySpellArrow spellArrow = new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack);
-        spellArrow.setResolver(new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true));
-        return spellArrow;
+        SpellResolver resolver = new SpellResolver(new SpellContext(worldIn, caster.getSpell(), playerentity, LivingCaster.from(playerentity), playerentity.getMainHandItem())).withSilent(true);
+        return new EntitySpellArrow(worldIn, playerentity, arrowStack, bowStack, resolver);
     }
 
     @Override

@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.EmptyCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -69,6 +71,12 @@ public class SpellContext implements Cloneable {
 
     public static SpellContext dehydrated(Spell spell) {
         return new SpellContext(null, spell, null, null);
+    }
+
+    // TODO Convert caster and wrapped caster serialization to codecs
+    public void rehydrate(ServerLevel level){
+        this.level = level;
+        this.wrappedCaster = new EmptyCaster();
     }
 
     public SpellContext(Level level, @NotNull Spell spell, @Nullable LivingEntity caster, IWrappedCaster wrappedCaster) {
