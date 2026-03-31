@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockPosSet;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.IceShardEntity;
@@ -68,8 +69,8 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     public void spawnIce(LivingEntity shooter, Level level, BlockPos targetPos, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 middleVec = new Vec3(0.2, 0.3, 0.2);
         Vec3 cornerScaleVec = new Vec3(0.1, 0.2, 0.1);
-        Set<BlockPos> corners = new HashSet<>();
-        Set<BlockPos> sides = new HashSet<>();
+        Set<BlockPos> corners = BlockPosSet.newHashSet();
+        Set<BlockPos> sides = BlockPosSet.newHashSet();
 
         for (int i = 1; i < 2 + spellStats.getAoeMultiplier(); i++) {
             // Middle sides
@@ -118,7 +119,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     public Set<BlockPos> replaceableBetween(Level level, BlockPos pos1, BlockPos pos2) {
-        HashSet<BlockPos> set = new HashSet<>();
+        Set<BlockPos> set = BlockPosSet.newHashSet();
         for (BlockPos pos : BlockPos.betweenClosed(pos1, pos2)) {
             if (!level.getBlockState(pos).canBeReplaced()) {
                 continue;
