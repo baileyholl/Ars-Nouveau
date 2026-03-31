@@ -75,13 +75,17 @@ public abstract class FamiliarEntity extends PathfinderMob implements GeoEntity,
         return false;
     }
 
-    // Remove familiars when they are unloaded to prevent familiars becoming forgotten.
     @Override
     public void setRemoved(@NotNull RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK) {
             reason = RemovalReason.DISCARDED;
         }
         super.setRemoved(reason);
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
     }
 
     public double getManaReserveModifier() {
