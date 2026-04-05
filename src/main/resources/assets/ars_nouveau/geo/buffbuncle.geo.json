@@ -98,8 +98,13 @@
 					"parent": "body",
 					"pivot": [1.5, 8, 5],
 					"cubes": [
-						{"origin": [-2.5, 8, 4], "size": [5, 5, 5], "uv": [0, 45]}
+						{"origin": [-2.5, 8, 4], "size": [5, 5, 5], "inflate": 0.5, "uv": [0, 45]}
 					]
+				},
+				{
+					"name": "item",
+					"parent": "tail",
+					"pivot": [0, 14, 8]
 				},
 				{
 					"name": "torso",
