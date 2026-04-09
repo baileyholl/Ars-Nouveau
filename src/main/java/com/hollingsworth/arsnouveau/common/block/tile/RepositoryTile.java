@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -55,7 +55,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public SlotCache slotCache = new SlotCache(false);
     public FilterSet filterSet = new FilterSet.ListSet();
     FilterableItemHandler filterableItemHandler;
-    InvWrapper invWrapper = new InvWrapper(this);
 
     public void updateFill() {
         int i = 0;
@@ -81,7 +80,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    protected @NotNull NonNullList<ItemStack> getItems() {
         return items;
     }
 
@@ -102,7 +101,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    public ItemStack removeItem(int pIndex, int pCount) {
+    public @NotNull ItemStack removeItem(int pIndex, int pCount) {
         ItemStack extracted = super.removeItem(pIndex, pCount);
         Item newItem = getItem(pIndex).getItem();
         if (extracted.getItem() != newItem) {
@@ -113,7 +112,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int pIndex) {
+    public @NotNull ItemStack removeItemNoUpdate(int pIndex) {
         ItemStack extracted = super.removeItemNoUpdate(pIndex);
         Item newItem = getItem(pIndex).getItem();
         if (extracted.getItem() != newItem) {
@@ -134,6 +133,120 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     @Override
     public int getContainerSize() {
         return 54;
+    }
+
+    @Override
+    public int getSlots() {
+        return this.getContainerSize();
+    }
+
+    @Override
+    public @NotNull ItemStack getStackInSlot(int slot) {
+        return this.getItem(slot);
+    }
+
+    @Override
+    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        if (stack.isEmpty())
+            return ItemStack.EMPTY;
+
+        ItemStack stackInSlot = this.getItem(slot);
+
+        int m;
+        if (!stackInSlot.isEmpty()) {
+            if (stackInSlot.getCount() >= Math.min(stackInSlot.getMaxStackSize(), getSlotLimit(slot))) {
+                return stack;
+            }
+
+            if (!ItemStack.isSameItemSameComponents(stack, stackInSlot)) {
+                return stack;
+            }
+
+            m = Math.min(stack.getMaxStackSize(), getSlotLimit(slot)) - stackInSlot.getCount();
+
+            if (stack.getCount() <= m) {
+                if (!simulate) {
+                    ItemStack copy = stack.copy();
+                    copy.grow(stackInSlot.getCount());
+                    this.setItem(slot, copy);
+                    this.setChanged();
+                }
+
+                return ItemStack.EMPTY;
+            } else {
+                // copy the stack to not modify the original one
+                stack = stack.copy();
+                if (!simulate) {
+                    ItemStack copy = stack.split(m);
+                    copy.grow(stackInSlot.getCount());
+                    this.setItem(slot, copy);
+                    this.setChanged();
+                    return stack;
+                } else {
+                    stack.shrink(m);
+                    return stack;
+                }
+            }
+        } else {
+            m = Math.min(stack.getMaxStackSize(), getSlotLimit(slot));
+            if (m < stack.getCount()) {
+                // copy the stack to not modify the original one
+                stack = stack.copy();
+                if (!simulate) {
+                    this.setItem(slot, stack.split(m));
+                    this.setChanged();
+                    return stack;
+                } else {
+                    stack.shrink(m);
+                    return stack;
+                }
+            } else {
+                if (!simulate) {
+                    this.setItem(slot, stack);
+                    this.setChanged();
+                }
+                return ItemStack.EMPTY;
+            }
+        }
+    }
+
+    @Override
+    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (amount == 0) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack stackInSlot = this.getItem(slot);
+
+        if (stackInSlot.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        if (simulate) {
+            if (stackInSlot.getCount() < amount) {
+                return stackInSlot.copy();
+            } else {
+                ItemStack copy = stackInSlot.copy();
+                copy.setCount(amount);
+                return copy;
+            }
+        } else {
+            int m = Math.min(stackInSlot.getCount(), amount);
+
+            ItemStack decrStackSize = this.removeItem(slot, m);
+            this.setChanged();
+            return decrStackSize;
+        }
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return this.getMaxStackSize();
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        return true;
     }
 
     public void invalidateNetwork() {
@@ -170,13 +283,13 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
                 ItemStack stack = getItem(i);
                 slotCache.getOrCreateSlots(stack.getItem()).add(i);
             }
-            filterableItemHandler = new FilterableItemHandler(new InvWrapper(this), filterSet).withSlotCache(slotCache);
+            filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
         }
     }
 
     public void attachFilters() {
         this.filterSet = FilterSet.forPosition(level, worldPosition);
-        filterableItemHandler = new FilterableItemHandler(new InvWrapper(this), filterSet).withSlotCache(slotCache);
+        filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
     }
 
     @Override
@@ -282,7 +395,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             if (simulate) {
                 return stack.copy();
             } else {
-                return invWrapper.extractItem(slot, count, simulate);
+                return this.extractItem(slot, count, simulate);
             }
         }
         return ItemStack.EMPTY;

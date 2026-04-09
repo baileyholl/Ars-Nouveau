@@ -34,31 +34,37 @@ public interface IMapInventory extends IItemHandler {
 
     ItemScroll.SortPref getInsertionPreference(ItemStack stack);
 
+    // TODO!: Remove default implementation
     @Override
     default ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         return insertStack(stack, simulate);
     }
 
+    // TODO!: Remove default implementation
     @Override
     default ItemStack getStackInSlot(int slot) {
         return ItemStack.EMPTY;
     }
 
+    // TODO!: Remove default implementation
     @Override
     default int getSlotLimit(int slot) {
         return 0;
     }
 
+    // TODO!: Remove default implementation
     @Override
     default ItemStack extractItem(int slot, int amount, boolean simulate) {
         return ItemStack.EMPTY;
     }
 
+    // TODO!: Remove default implementation
     @Override
     default int getSlots() {
         return 0;
     }
 
+    // TODO!: Remove default implementation
     @Override
     default boolean isItemValid(int slot, ItemStack stack) {
         return true;
