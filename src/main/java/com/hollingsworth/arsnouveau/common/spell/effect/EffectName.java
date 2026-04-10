@@ -27,6 +27,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -43,20 +44,33 @@ public class EffectName extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component newName = getName(world, shooter, spellStats, spellContext, resolver);
         Entity entity = rayTraceResult.getEntity();
-        entity.setCustomName(newName);
+
+        ItemStack offhand = shooter.getOffhandItem();
+
+        if (shooter != entity || offhand.isEmpty()) {
+            entity.setCustomName(newName);
+        }
+
         if (entity instanceof Mob mob) {
             mob.setPersistenceRequired();
         } else if (entity instanceof ItemEntity item) {
-            item.getItem().set(DataComponents.CUSTOM_NAME, newName);
+            if (newName == null) {
+                item.getItem().remove(DataComponents.CUSTOM_NAME);
+            } else {
+                item.getItem().set(DataComponents.CUSTOM_NAME, newName);
+            }
         }
 
-        ItemStack offhand = shooter.getOffhandItem();
         if (!offhand.isEmpty()) {
-            offhand.set(DataComponents.CUSTOM_NAME, newName);
+            if (newName == null) {
+                offhand.remove(DataComponents.CUSTOM_NAME);
+            } else {
+                offhand.set(DataComponents.CUSTOM_NAME, newName);
+            }
         }
     }
 
-    public Component getName(Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+    public @Nullable Component getName(Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Component newName = null;
         InventoryManager manager = spellContext.getCaster().getInvManager();
         SlotReference slotRef = manager.findItem(i -> i.getItem() == Items.NAME_TAG, InteractType.EXTRACT);
@@ -68,7 +82,10 @@ public class EffectName extends AbstractEffect {
             ItemStack stack = StackUtil.getHeldCasterToolOrEmpty(shooter);
             if (stack != ItemStack.EMPTY) {
                 AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
-                newName = Component.literal(caster.getSpellName());
+                String spellName = caster.getSpellName();
+                if (spellName != null && !spellName.isEmpty()) {
+                    newName = Component.literal(spellName);
+                }
             }
         }
         return newName;
@@ -81,11 +98,7 @@ public class EffectName extends AbstractEffect {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SkullBlockEntity head) {
-            head.setOwner(new ResolvableProfile(Optional.of(name.getString()), Optional.empty(), new PropertyMap()));
-            // TODO AT this
-            // head.updateOwnerProfile();
-            world.sendBlockUpdated(pos, state, state, 3);
-            head.setChanged();
+            head.setOwner(name == null ? null : new ResolvableProfile(Optional.of(name.getString()), Optional.empty(), new PropertyMap()));
             return;
         }
         if (blockEntity instanceof BaseContainerBlockEntity nameable) {
@@ -97,10 +110,14 @@ public class EffectName extends AbstractEffect {
 
         for (Entity entity : world.getEntities(null, new AABB(pos).inflate(0.08))) {
             entity.setCustomName(name);
-            if (entity instanceof Mob mob) {
+            if (entity instanceof Mob mob && mob.hasCustomName()) {
                 mob.setPersistenceRequired();
             } else if (entity instanceof ItemEntity item) {
-                item.getItem().set(DataComponents.CUSTOM_NAME, name);
+                if (name == null) {
+                    item.getItem().remove(DataComponents.CUSTOM_NAME);
+                } else {
+                    item.getItem().set(DataComponents.CUSTOM_NAME, name);
+                }
             }
         }
     }
