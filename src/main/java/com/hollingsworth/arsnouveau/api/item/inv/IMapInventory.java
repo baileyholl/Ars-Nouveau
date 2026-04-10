@@ -3,11 +3,10 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.function.Predicate;
 
-public interface IMapInventory extends IItemHandler {
+public interface IMapInventory {
 
     /**
      * Inserts a stack anywhere in the inventory, with preference to existing matching stacks.
@@ -33,34 +32,4 @@ public interface IMapInventory extends IItemHandler {
     ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter);
 
     ItemScroll.SortPref getInsertionPreference(ItemStack stack);
-
-    @Override
-    default ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        return insertStack(stack, simulate);
-    }
-
-    @Override
-    default ItemStack getStackInSlot(int slot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    default int getSlotLimit(int slot) {
-        return 0;
-    }
-
-    @Override
-    default ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    default int getSlots() {
-        return 0;
-    }
-
-    @Override
-    default boolean isItemValid(int slot, ItemStack stack) {
-        return true;
-    }
 }
