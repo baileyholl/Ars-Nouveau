@@ -1,13 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.DimBoundary;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.saved_data.DimMappingData;
 import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.nuggets.common.util.WorldHelpers;
 import net.commoble.infiniverse.internal.DimensionManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -25,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -75,21 +72,6 @@ public class ArcanoJarTile extends ModdedTile implements ITickable {
     public static class DimManager {
         public Map<ResourceKey<Level>, PlanariumTile.DimManager.Entry> entries = new ConcurrentHashMap<>();
 
-        public static void onBlockBroken(BlockEvent.BreakEvent event) {
-            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.ARCANO_DIMENSION_TYPE_KEY)) {
-                boolean insideJar = PlanariumChunkGenerator.innerBox.contains(event.getPos().getBottomCenter());
-                if (event.getState().getBlock() instanceof DimBoundary && !insideJar) {
-                    if (event.getPlayer().canInteractWithBlock(event.getPos(), 4.0f)) {
-                        DimBoundary.playerAttemptedBreak(level, event.getPlayer());
-                    }
-                    event.setCanceled(true);
-                }
-            }
-        }
-
-        public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
-
-        }
 
         public ServerLevel getOrCreateLevel(String dimName, ServerLevel serverLevel, BlockPos ownerPos) {
             DimMappingData.Entry dimEntry = DimMappingData.from(serverLevel.getServer().overworld()).getOrCreateByName(dimName);

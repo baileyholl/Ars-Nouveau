@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.common.entity.ArcanoBoss;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.phys.Vec3;
@@ -32,4 +33,6 @@ public class DataSerializers {
                     )
             )
     );
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<ArcanoBoss.ArcanoBossState>> ARCANO_POSE = DS.register("arcano_pose",
+            () -> EntityDataSerializer.forValueType(ArcanoBoss.ArcanoBossState.STREAM_CODEC));
 }

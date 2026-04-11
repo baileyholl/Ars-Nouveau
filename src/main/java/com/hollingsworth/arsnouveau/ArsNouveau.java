@@ -5,10 +5,10 @@ import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.registry.ClientHandler;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.block.tile.ArcanoJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
+import com.hollingsworth.arsnouveau.common.event.ArcanoBossEvents;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
@@ -138,8 +138,10 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
-        NeoForge.EVENT_BUS.addListener(ArcanoJarTile.DimManager::onBlockPlaced);
-        NeoForge.EVENT_BUS.addListener(ArcanoJarTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onEntityTravel);
     }
 
     public void setup(final FMLCommonSetupEvent event) {
