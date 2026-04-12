@@ -63,9 +63,17 @@ public class ArcanoBoss extends Mob {
             stateMachine.tick();
         }
 //        System.out.println("set to idle");
-        if (level.getGameTime() % 200 == 0 && !level.isClientSide) {
-            setArcanoPose(ArcanoBossState.SWING);
-            System.out.println("playing idle");
+        if (level.getGameTime() % 60 == 0 && level.isClientSide) {
+//            setArcanoPose(ArcanoBossState.SWING);
+//            setArcanoPose(ArcanoBossState.FLIGHT);
+            this.swingStaff.stop();
+//            this.idle.stop();
+            this.flight.stop();
+
+            this.idle.startIfStopped(this.tickCount);
+            this.flight.startIfStopped(this.tickCount);
+            this.swingStaff.start(this.tickCount);
+            System.out.println("playing idle 2");
             System.out.println(this.tickCount);
         }
 //        setArcanoPose(ArcanoBossState.FLIGHT);
@@ -76,9 +84,9 @@ public class ArcanoBoss extends Mob {
         if (ARCANO_POSE.equals(key)) {
             ArcanoBossState pose = getArcanoPose();
             System.out.println("updating");
-            setAnimationState(pose, ArcanoBossState.IDLE, this.idle, this.tickCount);
-            setAnimationState(pose, ArcanoBossState.FLIGHT, this.flight, this.tickCount);
-            setAnimationState(pose, ArcanoBossState.SWING, this.swingStaff, this.tickCount);
+//            setAnimationState(pose, ArcanoBossState.IDLE, this.idle, this.tickCount);
+//            setAnimationState(pose, ArcanoBossState.FLIGHT, this.flight, this.tickCount);
+//            setAnimationState(pose, ArcanoBossState.SWING, this.swingStaff, this.tickCount);
             ;
 //            setAnimationState(pose, RootminState.ANGRY, this.angryAnimationState, BzParticles.ANGRY_PARTICLE.get(), 75, 1D);
 //            setAnimationState(pose, RootminState.CURIOUS, this.curiousAnimationState, BzParticles.CURIOUS_PARTICLE.get(), 23, 1D);
@@ -127,8 +135,9 @@ public class ArcanoBoss extends Mob {
                 }
             }
         } else {
-            animationState.stop();
+//            animationState.stop();
         }
+        this.flight.startIfStopped(3000);
     }
 
     public void setArcanoPose(ArcanoBossState rootminState) {

@@ -20,7 +20,7 @@ public class ArcanoBossModel extends HierarchicalModel<ArcanoBoss> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "arcano_boss"), "main");
     private final ModelPart root;
     private final Map<String, Optional<ModelPart>> descendantNameCache = new HashMap<>();
-
+    private final ModelPart base;
     private final ModelPart hip;
     private final ModelPart torso;
     private final ModelPart arm_right;
@@ -39,10 +39,10 @@ public class ArcanoBossModel extends HierarchicalModel<ArcanoBoss> {
     private final ModelPart tail;
 
     public ArcanoBossModel(ModelPart root) {
-        this.root = root.getChild("base");
-        getAllPartsFromRoot(this.root())
-                .forEach(entry -> this.descendantNameCache.put(entry.getKey(), Optional.of(entry.getValue())));
-        this.hip = this.root.getChild("hip");
+        this.root = root.getChild("root");
+        this.getAllPartsFromRoot(root).forEach(entry -> descendantNameCache.put(entry.getKey(), Optional.of(entry.getValue())));
+        this.base = this.root.getChild("base");
+        this.hip = this.base.getChild("hip");
         this.torso = this.hip.getChild("torso");
         this.arm_right = this.torso.getChild("arm_right");
         this.staff = this.arm_right.getChild("staff");
@@ -57,14 +57,16 @@ public class ArcanoBossModel extends HierarchicalModel<ArcanoBoss> {
         this.wing_bot_left = this.wings.getChild("wing_bot_left");
         this.head = this.torso.getChild("head");
         this.face = this.head.getChild("face");
-        this.tail = this.root.getChild("tail");
+        this.tail = this.base.getChild("tail");
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition base = partdefinition.addOrReplaceChild("base", CubeListBuilder.create(), PartPose.offset(0.0F, 5.0F, 0.0F));
+        PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 5.0F, 0.0F));
+
+        PartDefinition base = root.addOrReplaceChild("base", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         PartDefinition hip = base.addOrReplaceChild("hip", CubeListBuilder.create(), PartPose.offset(0.0F, -6.0F, 0.0F));
 
@@ -155,7 +157,7 @@ public class ArcanoBossModel extends HierarchicalModel<ArcanoBoss> {
 
     public Stream<Map.Entry<String, ModelPart>> getAllPartsFromRoot(ModelPart root) {
         return Stream.concat(
-                Stream.of(Map.entry("base", root)),
+                Stream.of(Map.entry("root", root)),
                 root.children.entrySet().stream().flatMap(this::getAllParts)
         );
     }
