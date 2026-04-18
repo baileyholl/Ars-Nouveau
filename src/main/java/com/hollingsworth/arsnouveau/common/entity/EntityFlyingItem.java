@@ -230,7 +230,7 @@ public class EntityFlyingItem extends ColoredProjectile {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (getStack() != null) {
-            Tag tag = getStack().save(level.registryAccess());
+            Tag tag = getStack().saveOptional(level.registryAccess());
             compound.put("item", tag);
         }
         compound.putInt("age", age);
