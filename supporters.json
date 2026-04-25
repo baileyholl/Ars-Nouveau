@@ -150,7 +150,8 @@
     "52737d1a-8a53-4179-ac2d-1726c9913876",
     "589da7a0-1ccb-4888-b260-e30d9589d75b",
     "582d9c17-ef60-4835-a564-5d8db38995a0",
-    "adbee1ca-9d8c-4efa-96b6-d59ed4e67a9f"
+    "adbee1ca-9d8c-4efa-96b6-d59ed4e67a9f",
+    "89cba33e-5a11-4d62-bdc0-5c7eeb6f8872"
   ],
   "starbuncleAdoptions": [
     {
@@ -1016,6 +1017,12 @@
       "adopter": "Hanson",
       "color": "white",
       "bio": "Small body, BIG attitude! Currently only accepting gold nuggets and compliments."
+    },
+    {
+      "name": "Duck",
+      "adopter": "KaiserBuncle",
+      "color": "light_gray",
+      "bio": "It’s a Duck!"
     }
   ]
 }
