@@ -166,8 +166,14 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if (!recipeWrapper.isEmpty() && instructions.recipe().recipeIngredients.get(0).getCustomIngredient() instanceof DataComponentIngredient custom) {
             Ingredient itemIngred = instructions.recipe().recipeIngredients.get(1);
             List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
+            if(needed.isEmpty()){
+                return;
+            }
             PotionContents potionNeeded = custom.getItems().toList().get(0).get(DataComponents.POTION_CONTENTS);
             PotionContents potionOutput = PotionUtil.getContents(instructions.recipe().outputStack);
+            if(potionNeeded == null){
+                return;
+            }
             boolean foundInput = potionNeeded.is(Potions.WATER) || findNeededPotion(potionNeeded, 300, level, worldPosition) != null;
             boolean foundRoomForOutput = findPotionStorage(level, worldPosition, potionOutput) != null;
             if (!foundRoomForOutput || !foundInput) {
