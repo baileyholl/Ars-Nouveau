@@ -99,6 +99,7 @@ public class EffectName extends AbstractEffect {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SkullBlockEntity head) {
             head.setOwner(name == null ? null : new ResolvableProfile(Optional.of(name.getString()), Optional.empty(), new PropertyMap()));
+            world.sendBlockUpdated(pos, state, state, 3);
             return;
         }
         if (blockEntity instanceof BaseContainerBlockEntity nameable) {
