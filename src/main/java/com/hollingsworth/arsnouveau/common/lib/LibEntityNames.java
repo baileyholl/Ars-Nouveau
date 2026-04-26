@@ -61,6 +61,7 @@ public class LibEntityNames {
     public static final String GIFT_STARBY = "gift_starby";
     public static final String WALL = "wall";
     public static final String ARCANO_BOSS = "arcano_boss";
+    public static final String ARCANO_LOB = "arcano_lob";
 
     public static String appendFamiliar(String fam) {
         return "familiar_" + fam;

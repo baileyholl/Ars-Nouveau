@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.*;
+import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoLob;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
@@ -51,6 +52,17 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(20)
                     .fireImmune());
+
+    public static final DeferredHolder<EntityType<?>, EntityType<ArcanoLob>> ARCANO_LOB = registerEntity(
+            LibEntityNames.ARCANO_LOB,
+            EntityType.Builder.<ArcanoLob>of(ArcanoLob::new, MobCategory.MISC)
+                    .noSave()
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20)
+                    .fireImmune());
+
     public static final DeferredHolder<EntityType<?>, EntityType<EntityProjectileSpell>> SPELL_PROJ_ARC = registerEntity(
             LibEntityNames.SPELL_PROJ_ARC,
             EntityType.Builder.<EntityProjectileSpell>of((entityType, world) -> new EntityProjectileSpell(entityType, world) {
