@@ -49,7 +49,7 @@ public class WixieCharm extends AbstractSummonCharm implements AliasProvider {
                 PortUtil.sendMessage(context.getPlayer(), Component.translatable("ars_nouveau.wixie.has_wixie"));
             } else {
                 EntityWixie wixie = new EntityWixie(world, pos);
-                wixie.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
+                wixie.setPos(pos.above().getBottomCenter());
                 wixie.fromCharmData(context.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
                 world.addFreshEntity(wixie);
                 cauldronTile.entityID = wixie.getId();
