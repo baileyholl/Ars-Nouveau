@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -31,15 +33,17 @@ public class EffectRune extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos pos = rayTraceResult.getBlockPos();
-        pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
+    public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        BlockPos pos = BlockPos.containing(rayTraceResult.getLocation());
+        if (rayTraceResult instanceof BlockHitResult blockHit && blockHit.isInside()) {
+            pos = pos.relative(blockHit.getDirection());
+        }
         SpellContext newContext = spellContext.makeChildContext();
         spellContext.setCanceled(true);
         if (world.getBlockState(pos).canBeReplaced()) {
             if (!world.isInWorldBounds(pos))
                 return;
-            BlockState placementState = BlockRegistry.RUNE_BLOCK.get().getStateForPlacement(new BlockPlaceContext(getPlayer(shooter, (ServerLevel) world), InteractionHand.MAIN_HAND, ItemStack.EMPTY, rayTraceResult));
+            BlockState placementState = BlockRegistry.RUNE_BLOCK.get().getStateForPlacement(new BlockPlaceContext(getPlayer(shooter, (ServerLevel) world), InteractionHand.MAIN_HAND, ItemStack.EMPTY, rayTraceResult instanceof BlockHitResult blockHit ? blockHit : new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, pos, false)));
             world.setBlockAndUpdate(pos, placementState);
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {
                 if (shooter instanceof Player) {
