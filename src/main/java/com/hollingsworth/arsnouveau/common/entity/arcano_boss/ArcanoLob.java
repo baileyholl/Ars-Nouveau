@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,8 +18,6 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 public class ArcanoLob extends EntityProjectileSpell {
 
@@ -33,6 +30,9 @@ public class ArcanoLob extends EntityProjectileSpell {
     private double targetDeltaX;
     private double targetDeltaY;
     private double targetDeltaZ;
+    public int maxDirectionalChanges = 10;
+    public int directionalChangeCount = 0;
+
     public ArcanoLob(EntityType<? extends EntityProjectileSpell> entityType, Level world) {
         super(ModEntities.ARCANO_LOB.get(), world);
     }
@@ -44,7 +44,20 @@ public class ArcanoLob extends EntityProjectileSpell {
         this.currentMoveDirection = Direction.UP;
         this.selectNextMoveDirection(axis);
         setResolver(new SpellResolver(new SpellContext(level, new Spell(), null, new EmptyCaster())));
+    }
 
+    public ArcanoLob(Level world, Vec3 position, Direction travelDirection) {
+        super(ModEntities.ARCANO_LOB.get(), world);
+        setPos(position);
+        this.finalTarget = null;
+        this.maxDirectionalChanges = 0;
+        this.currentMoveDirection = travelDirection;
+        this.targetDeltaX = travelDirection.getStepX() * SPEED;
+        this.targetDeltaY = travelDirection.getStepY() * SPEED;
+        this.targetDeltaZ = travelDirection.getStepZ() * SPEED;
+        this.setDeltaMovement(this.targetDeltaX, this.targetDeltaY, this.targetDeltaZ);
+        this.hasImpulse = true;
+        setResolver(new SpellResolver(new SpellContext(level, new Spell(), null, new EmptyCaster())));
     }
 
     @Override
@@ -53,16 +66,25 @@ public class ArcanoLob extends EntityProjectileSpell {
     }
 
     @Override
-    public void tickNextPosition() {
-        this.targetDeltaX = Mth.clamp(this.targetDeltaX * 1.025, -1.0, 1.0);
-        this.targetDeltaY = Mth.clamp(this.targetDeltaY * 1.025, -1.0, 1.0);
-        this.targetDeltaZ = Mth.clamp(this.targetDeltaZ * 1.025, -1.0, 1.0);
-        Vec3 vec3 = this.getDeltaMovement();
-        this.setDeltaMovement(vec3.add((this.targetDeltaX - vec3.x) * 0.2, (this.targetDeltaY - vec3.y) * 0.2, (this.targetDeltaZ - vec3.z) * 0.2));
+    public void playParticles() {
+        super.playParticles();
+    }
 
+    @Override
+    public void tickNextPosition() {
+        if (!this.level().isClientSide) {
+            this.targetDeltaX = Mth.clamp(this.targetDeltaX * 1.025, -1.0, 1.0);
+            this.targetDeltaY = Mth.clamp(this.targetDeltaY * 1.025, -1.0, 1.0);
+            this.targetDeltaZ = Mth.clamp(this.targetDeltaZ * 1.025, -1.0, 1.0);
+            Vec3 vec3 = this.getDeltaMovement();
+            this.setDeltaMovement(vec3.add((this.targetDeltaX - vec3.x) * 0.2, (this.targetDeltaY - vec3.y) * 0.2, (this.targetDeltaZ - vec3.z) * 0.2));
+        }
         Vec3 vec31 = this.getDeltaMovement();
         this.setPos(this.getX() + vec31.x, this.getY() + vec31.y, this.getZ() + vec31.z);
         ProjectileUtil.rotateTowardsMovement(this, 0.5F);
+        if (this.level.isClientSide) {
+//            this.level().addParticle(ParticleTypes.END_ROD, this.getX() - vec31.x, this.getY() - vec31.y + 0.15, this.getZ() - vec31.z, 0.0, 0.0, 0.0);
+        }
         if (this.finalTarget != null && !this.finalTarget.isRemoved()) {
             if (this.flightSteps > 0) {
                 this.flightSteps--;
@@ -94,22 +116,31 @@ public class ArcanoLob extends EntityProjectileSpell {
     }
 
     private void setMoveDirection(@Nullable Direction direction) {
+        if (directionalChangeCount >= maxDirectionalChanges) {
+            return;
+        }
+        if (currentMoveDirection != direction) {
+            directionalChangeCount++;
+        }
         this.currentMoveDirection = direction;
     }
 
     private void selectNextMoveDirection(@Nullable Direction.Axis axis) {
+        if (directionalChangeCount >= maxDirectionalChanges) {
+            return;
+        }
         double d0 = 0.5;
         BlockPos blockpos;
         if (this.finalTarget == null) {
             blockpos = this.blockPosition().below();
         } else {
-            d0 = (double)this.finalTarget.getBbHeight() * 0.5;
+            d0 = (double) this.finalTarget.getBbHeight() * 0.5;
             blockpos = BlockPos.containing(this.finalTarget.getX(), this.finalTarget.getY() + d0, this.finalTarget.getZ());
         }
 
-        double d1 = (double)blockpos.getX() + 0.5;
-        double d2 = (double)blockpos.getY() + d0;
-        double d3 = (double)blockpos.getZ() + 0.5;
+        double d1 = (double) blockpos.getX() + 0.5;
+        double d2 = (double) blockpos.getY() + d0;
+        double d3 = (double) blockpos.getZ() + 0.5;
         Direction direction = null;
         if (!blockpos.closerToCenterThan(this.position(), 2.0)) {
             BlockPos blockpos1 = this.blockPosition();
@@ -147,9 +178,9 @@ public class ArcanoLob extends EntityProjectileSpell {
                 direction = list.get(this.random.nextInt(list.size()));
             }
 
-            d1 = this.getX() + (double)direction.getStepX();
-            d2 = this.getY() + (double)direction.getStepY();
-            d3 = this.getZ() + (double)direction.getStepZ();
+            d1 = this.getX() + (double) direction.getStepX();
+            d2 = this.getY() + (double) direction.getStepY();
+            d3 = this.getZ() + (double) direction.getStepZ();
         }
 
         this.setMoveDirection(direction);
@@ -175,5 +206,10 @@ public class ArcanoLob extends EntityProjectileSpell {
     @Override
     public int getExpirationTime() {
         return 800;
+    }
+
+    @Override
+    public EntityType<?> getType() {
+        return ModEntities.ARCANO_LOB.get();
     }
 }

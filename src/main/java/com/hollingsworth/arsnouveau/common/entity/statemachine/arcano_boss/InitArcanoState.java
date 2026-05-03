@@ -23,7 +23,8 @@ public class InitArcanoState extends ArcanoState{
 
     @Override
     public @Nullable ArcanoState tick() {
-        return null;
+//        return new ArcanoBossBasicAttack(arcanoBoss);
+        return new ArcanoBossLineAttack(arcanoBoss);
     }
 
     @Override

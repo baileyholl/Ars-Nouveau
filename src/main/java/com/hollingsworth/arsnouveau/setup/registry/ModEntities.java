@@ -59,8 +59,7 @@ public class ModEntities {
                     .noSave()
                     .sized(0.5F, 0.5F)
                     .eyeHeight(0.13F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20)
+                    .clientTrackingRange(8)
                     .fireImmune());
 
     public static final DeferredHolder<EntityType<?>, EntityType<EntityProjectileSpell>> SPELL_PROJ_ARC = registerEntity(

@@ -1,12 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoLob;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss.InitArcanoState;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.nuggets.common.state_machine.SimpleStateMachine;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,7 +17,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.function.IntFunction;
@@ -63,51 +60,24 @@ public class ArcanoBoss extends Mob {
     public void tick() {
         super.tick();
         if (!this.isDeadOrDying() && this.isEffectiveAi() && level instanceof ServerLevel serverLevel) {
+            this.setPos(16, 1, 16);
             stateMachine.tick();
         }
-//        System.out.println("set to idle");
-        if (level.getGameTime() % 60 == 0 && level.isClientSide) {
-//            setArcanoPose(ArcanoBossState.SWING);
-//            setArcanoPose(ArcanoBossState.FLIGHT);
-            this.swingStaff.stop();
-//            this.idle.stop();
-            this.flight.stop();
-
+        if (level.isClientSide) {
             this.idle.startIfStopped(this.tickCount);
             this.flight.startIfStopped(this.tickCount);
-            this.swingStaff.start(this.tickCount);
-            System.out.println("playing idle 2");
-            System.out.println(this.tickCount);
         }
-        if(level.getGameTime() % 100 == 0 && !level.isClientSide){
-            Player player = level.getNearestPlayer(this, 50);
-            if(player != null){
-                level.addFreshEntity(new ArcanoLob(level, position.add(0, 1, 0), player, Direction.Axis.Y));
-            }
-        }
-//        setArcanoPose(ArcanoBossState.FLIGHT);
     }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         if (ARCANO_POSE.equals(key)) {
             ArcanoBossState pose = getArcanoPose();
-            System.out.println("updating");
-//            setAnimationState(pose, ArcanoBossState.IDLE, this.idle, this.tickCount);
-//            setAnimationState(pose, ArcanoBossState.FLIGHT, this.flight, this.tickCount);
-//            setAnimationState(pose, ArcanoBossState.SWING, this.swingStaff, this.tickCount);
-            ;
-//            setAnimationState(pose, RootminState.ANGRY, this.angryAnimationState, BzParticles.ANGRY_PARTICLE.get(), 75, 1D);
-//            setAnimationState(pose, RootminState.CURIOUS, this.curiousAnimationState, BzParticles.CURIOUS_PARTICLE.get(), 23, 1D);
-//            setAnimationState(pose, RootminState.CURSE, this.curseAnimationState, BzParticles.CURSING_PARTICLE.get(), 35, 1D);
-//            setAnimationState(pose, RootminState.EMBARRASSED, this.embarassedAnimationState, BzParticles.EMBARRASSED_PARTICLE.get(), 55, 1D);
-//            setAnimationState(pose, RootminState.SHOCK, this.shockAnimationState);
-//            setAnimationState(pose, RootminState.SHOOT, this.shootAnimationState);
-//            setAnimationState(pose, RootminState.RUN, this.runAnimationState);
-//            setAnimationState(pose, RootminState.WALK, this.walkAnimationState);
-//            setAnimationState(pose, RootminState.BLOCK_TO_ENTITY, this.blockToEntityAnimationState);
-//            setAnimationState(pose, RootminState.ENTITY_TO_BLOCK, this.entityToBlockAnimationState, this.tickCount <= 2 ? -100000 : this.tickCount);
-
+            if (pose == ArcanoBossState.SWING) {
+                this.swingStaff.start(this.tickCount);
+            } else {
+                this.swingStaff.stop();
+            }
         }
 
         super.onSyncedDataUpdated(key);
