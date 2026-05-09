@@ -1,12 +1,25 @@
 package com.hollingsworth.arsnouveau.common.entity.arcano_boss;
 
 import com.google.common.collect.Lists;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.NoneMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.SoundProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.EmptyCaster;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -43,7 +56,7 @@ public class ArcanoLob extends EntityProjectileSpell {
         this.finalTarget = targetEntity;
         this.currentMoveDirection = Direction.UP;
         this.selectNextMoveDirection(axis);
-        setResolver(new SpellResolver(new SpellContext(level, new Spell(), null, new EmptyCaster())));
+        setResolver(new SpellResolver(new SpellContext(level, new Spell().withTimeline(buildParticles()), null, new EmptyCaster())));
     }
 
     public ArcanoLob(Level world, Vec3 position, Direction travelDirection) {
@@ -57,7 +70,22 @@ public class ArcanoLob extends EntityProjectileSpell {
         this.targetDeltaZ = travelDirection.getStepZ() * SPEED;
         this.setDeltaMovement(this.targetDeltaX, this.targetDeltaY, this.targetDeltaZ);
         this.hasImpulse = true;
-        setResolver(new SpellResolver(new SpellContext(level, new Spell(), null, new EmptyCaster())));
+        setResolver(new SpellResolver(new SpellContext(level, new Spell().withTimeline(buildParticles()), null, new EmptyCaster())));
+    }
+
+    public TimelineMap buildParticles() {
+        TimelineMap.MutableTimelineMap timelineMap = new TimelineMap.MutableTimelineMap();
+        PropMap trailProps = new PropMap();
+        trailProps.set(ParticlePropertyRegistry.MODEL_PROPERTY.get(), new ModelProperty(ModelProperty.SPIKE_BODY.resourceLocation(), new PropMap()));
+        timelineMap.put(ParticleTimelineRegistry.PROJECTILE_TIMELINE, new ProjectileTimeline(
+                new TimelineEntryData(new NoneMotion(trailProps), new PropertyParticleOptions()),
+                new TimelineEntryData(new BurstMotion(), new PropertyParticleOptions()),
+                new TimelineEntryData(),
+                new TimelineEntryData(),
+                new SoundProperty(new ConfiguredSpellSound(SoundRegistry.DEFAULT_SPELL_SOUND, 0.1f, 1.0f)),
+                new SoundProperty(ConfiguredSpellSound.EMPTY)
+        ));
+        return timelineMap.immutable();
     }
 
     @Override
