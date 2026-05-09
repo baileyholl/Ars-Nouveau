@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectName;
 import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.saved_data.DimMappingData;
 import com.hollingsworth.arsnouveau.common.world.saved_data.JarDimData;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
@@ -60,7 +61,6 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
     public long lastUpdated = 0;
     boolean playersNearby = true;
     public Component name;
-    public boolean isDimModel = false;
 
 
     public PlanariumTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
@@ -89,15 +89,16 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
             if (!playersNearby) {
                 return;
             }
-            DimManager.Entry entry1 = dimManager.getOrCreateTemplate(serverLevel, worldPosition, key);
-            if (entry1 != null) {
-                // Eagerly sends a packet any time this dimension gets marked dirty.
-                // Consider adding a backoff period for batching template changes
-                if (entry1.lastUpdated > lastUpdated) {
-                    lastUpdated = entry1.lastUpdated;
-                    StructureTemplate template = dimManager.getTemplate(key);
-                    if (template != null) {
-                        Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
+            if (level.getGameTime() % ServerConfig.PLANARIUM_UPDATE_RATE.get() == 0) {
+                DimManager.Entry entry1 = dimManager.getOrCreateTemplate(serverLevel, worldPosition, key);
+                if (entry1 != null) {
+                    // Notifies nearby players if the dimension has changed
+                    if (entry1.lastUpdated > lastUpdated) {
+                        lastUpdated = entry1.lastUpdated;
+                        StructureTemplate template = dimManager.getTemplate(key);
+                        if (template != null) {
+                            Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
+                        }
                     }
                 }
             }

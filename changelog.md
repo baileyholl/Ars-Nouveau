@@ -1,24 +1,19 @@
 # Changelog
-Weather and time rituals can now operate in other dimensions (Marie)
 
-Adds config to disable the conversion of Shady Villagers (does not remove or disable existing ones)
+Fixes memory leak with Planarium
 
-Fixes non-textured capes always rendering on decoys
+Planarium updates are now batched with a configurable value, preventing frequently updated planariums from causing lag.
 
-Fixes sourcestone double-slabs only dropping one slab (Benjamin Herr)
+Casting rune on an entity will now resolve the spell on it directly (Qther)
 
-Harm now explicitly checks for Duration Down/Up for applying poison, rather than duration modifiers (Alexthw)
+Fixes Cut not respecting player UUIDs for claims (Qther)
 
-Bubbles now ignore boarding cooldown when picking up entities (Qther)
+Improves performance for inserting items with the storage lectern (Qther)
 
-Prevents jar dimension boundaries from being removed or replaced via modded methods
+Fixes crash with Wixie Cauldrons with misbehaving modded or custom recipes
 
-Fixes spell arrows with pierce deflecting off entities
+Name will now remove custom names if used on a target with an empty spell name. (Qther)
 
-Fixes spell arrows with pierce phasing through blocks and skipping targets
+Fixes warp portals loading the origin dimension instead of the destination when teleporting. (Qther)
 
-Fixes spell arrows casting spells twice
-
-Fixes spell arrows causing crashes when reloaded from a save
-
-
+Fixes rotating spell turrets using the wrong direction for glyphs (Alexthw)

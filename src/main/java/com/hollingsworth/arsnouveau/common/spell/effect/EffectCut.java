@@ -79,7 +79,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
     public void doStrip(BlockPos p, BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ItemStack axe = new ItemStack(Items.DIAMOND_AXE);
         applyEnchantments(world, spellStats, axe);
-        Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
+        Player entity = ANFakePlayer.getPlayer((ServerLevel) world, shooter.getUUID());
         entity.setItemInHand(InteractionHand.MAIN_HAND, axe);
         // TODO Replace with AN shears
         if (dupeCheck(world, p)) return;
@@ -96,7 +96,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
             List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p);
             items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(), p.getZ(), i)));
         }
-        Player entity = ANFakePlayer.getPlayer((ServerLevel) world);
+        Player entity = ANFakePlayer.getPlayer((ServerLevel) world, shooter.getUUID());
         entity.setItemInHand(InteractionHand.MAIN_HAND, shears);
         // TODO Replace with AN shears
         if (dupeCheck(world, p)) return;
