@@ -1,9 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss.ArcanoStateMachine;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss.InitArcanoState;
+import com.hollingsworth.arsnouveau.common.entity.statemachine.memory.MemoryMap;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import com.hollingsworth.nuggets.common.state_machine.SimpleStateMachine;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -38,7 +39,10 @@ public class ArcanoBoss extends Monster {
     private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setCreateWorldFog(true);
     private static final EntityDataAccessor<ArcanoBossState> ARCANO_POSE = SynchedEntityData.defineId(ArcanoBoss.class, DataSerializers.ARCANO_POSE.get());
 
-    private SimpleStateMachine stateMachine = new SimpleStateMachine(new InitArcanoState(this));
+    private ArcanoStateMachine stateMachine = new ArcanoStateMachine(this, new InitArcanoState(this));
+
+    public MemoryMap memoryMap = new MemoryMap();
+
     public AnimationState flight = new AnimationState();
     public AnimationState idle = new AnimationState();
     public AnimationState swingStaff = new AnimationState();

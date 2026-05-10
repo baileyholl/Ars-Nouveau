@@ -25,7 +25,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -69,6 +68,8 @@ public class ArcanoLob extends EntityProjectileSpell {
         this.targetDeltaY = travelDirection.getStepY() * SPEED;
         this.targetDeltaZ = travelDirection.getStepZ() * SPEED;
         this.setDeltaMovement(this.targetDeltaX, this.targetDeltaY, this.targetDeltaZ);
+        setYRot(travelDirection.toYRot());
+        setXRot(travelDirection == Direction.UP ? -90 : travelDirection == Direction.DOWN ? 90 : 0);
         this.hasImpulse = true;
         setResolver(new SpellResolver(new SpellContext(level, new Spell().withTimeline(buildParticles()), null, new EmptyCaster())));
     }
@@ -109,7 +110,7 @@ public class ArcanoLob extends EntityProjectileSpell {
         }
         Vec3 vec31 = this.getDeltaMovement();
         this.setPos(this.getX() + vec31.x, this.getY() + vec31.y, this.getZ() + vec31.z);
-        ProjectileUtil.rotateTowardsMovement(this, 0.5F);
+//        ProjectileUtil.rotateTowardsMovement(this, 0.5F);
         if (this.level.isClientSide) {
 //            this.level().addParticle(ParticleTypes.END_ROD, this.getX() - vec31.x, this.getY() - vec31.y + 0.15, this.getZ() - vec31.z, 0.0, 0.0, 0.0);
         }
