@@ -79,6 +79,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_SPLITTER_TILE.get(), (t) -> new GenericTileRenderer<>(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE.get(), BasicTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ROTATING_TURRET_TILE.get(), RotatingTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.TEMP_SPELL_TURRET_TILE.get(), RotatingTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE.get(), ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE.get(), TimerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE.get(), ArchwoodChestRenderer::new);
