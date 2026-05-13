@@ -738,7 +738,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
-        return TEXTURES.get(color);
+        return TEXTURES.getOrDefault(color, TEXTURES.get(DyeColor.ORANGE.getName()));
     }
 
     public ResourceLocation getModel() {
