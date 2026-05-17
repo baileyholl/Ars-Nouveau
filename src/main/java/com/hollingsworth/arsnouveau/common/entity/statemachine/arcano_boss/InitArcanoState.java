@@ -23,11 +23,12 @@ public class InitArcanoState extends ArcanoState {
 
     @Override
     public @Nullable ArcanoState tick() {
+//        return new ConjureTurretsState(arcanoBoss);
         var previousState = arcanoBoss.memoryMap.get(MemoryTypes.LAST_STATE);
         if (!(previousState instanceof ArcanoBossBasicAttack)) {
             return new ArcanoBossBasicAttack(arcanoBoss);
         }
-        return new ArcanoBossLineAttack(arcanoBoss);
+        return new ConjureTurretsState(arcanoBoss);
     }
 
     @Override

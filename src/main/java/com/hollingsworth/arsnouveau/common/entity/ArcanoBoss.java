@@ -119,7 +119,7 @@ public class ArcanoBoss extends Monster {
     protected void registerGoals() {
         super.registerGoals();
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, WildenGuardian.class, WildenStalker.class, WildenHunter.class));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
     @Override
