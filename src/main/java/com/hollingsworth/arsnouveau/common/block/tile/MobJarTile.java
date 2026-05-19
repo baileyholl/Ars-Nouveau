@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.items.data.MobJarData;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.client.Minecraft;
@@ -229,16 +230,17 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
         // Check both conditions because the entity may have never been loaded on the server side.
         if (entityTag != null || cachedEntity != null) {
-            cachedEntity = getEntity();
-            if (cachedEntity != null) {
-                try {
+            try {
+                cachedEntity = getEntity();
+                if (cachedEntity != null) {
                     tag.put("entityTag", saveEntityToTag(cachedEntity));
                     if (tag.getCompound("entityTag").contains("id")) {
                         tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                tag.put("entityTag", entityTag);
+                Log.getLogger().warn("Failed to save entity in MobJarTile", e);
             }
         }
         if (extraDataTag != null) {
