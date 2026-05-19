@@ -230,17 +230,24 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
         // Check both conditions because the entity may have never been loaded on the server side.
         if (entityTag != null || cachedEntity != null) {
-            try {
-                cachedEntity = getEntity();
-                if (cachedEntity != null) {
-                    tag.put("entityTag", saveEntityToTag(cachedEntity));
-                    if (tag.getCompound("entityTag").contains("id")) {
-                        tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
-                    }
+            // We cannot run getEntity when the level is null
+            if (level == null) {
+                if (entityTag != null) {
+                    tag.put("entityTag", entityTag);
                 }
-            } catch (Exception e) {
-                tag.put("entityTag", entityTag);
-                Log.getLogger().warn("Failed to save entity in MobJarTile", e);
+            } else {
+                cachedEntity = getEntity();
+                try {
+                    if (cachedEntity != null) {
+                        tag.put("entityTag", saveEntityToTag(cachedEntity));
+                        if (tag.getCompound("entityTag").contains("id")) {
+                            tag.putString("entityId", tag.getCompound("entityTag").getString("id"));
+                        }
+                    }
+                } catch (Exception e) {
+                    tag.put("entityTag", entityTag);
+                    Log.getLogger().warn("Failed to save entity in MobJarTile", e);
+                }
             }
         }
         if (extraDataTag != null) {
