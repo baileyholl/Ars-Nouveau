@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
 import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
+import com.hollingsworth.arsnouveau.api.util.BlockPosSet;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -140,7 +140,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         if (level.isClientSide) {
             return;
         }
-        Set<BlockPos> visited = new HashSet<>();
+        Set<BlockPos> visited = BlockPosSet.newHashSet();
         invalidateNetwork(visited);
     }
 

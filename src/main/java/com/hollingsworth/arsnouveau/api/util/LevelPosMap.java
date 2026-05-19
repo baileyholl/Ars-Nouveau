@@ -20,7 +20,7 @@ public class LevelPosMap {
     public void addPosition(Level world, BlockPos pos) {
         String key = world.dimension().location().toString();
         if (!posMap.containsKey(key))
-            posMap.put(key, new HashSet<>());
+            posMap.put(key, BlockPosSet.newHashSet());
 
         posMap.get(key).add(pos);
     }
@@ -31,23 +31,25 @@ public class LevelPosMap {
 
     public void applyForRange(Level level, Vec3 atPos, double distanceFrom, Function<BlockPos, Boolean> breakEarlyFunction) {
         String key = level.dimension().location().toString();
-        if (!posMap.containsKey(key))
+        if (!posMap.containsKey(key)) {
             return;
-        Set<BlockPos> worldList = posMap.getOrDefault(key, new HashSet<>());
-        List<BlockPos> stale = new ArrayList<>();
-        for (BlockPos p : worldList) {
-            if (!level.isLoaded(p))
+        }
+
+        Set<BlockPos> worldList = posMap.getOrDefault(key, BlockPosSet.newHashSet());
+        var iter = worldList.iterator();
+        while (iter.hasNext()) {
+            var p = iter.next();
+            if (!level.isLoaded(p)) {
                 continue;
-            if (BlockUtil.distanceFrom(atPos, new Vec3(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5)) <= distanceFrom) {
+            }
+
+            if (BlockUtil.distanceFrom(atPos, p.getCenter()) <= distanceFrom) {
                 if (removeFunction.apply(level, p)) {
-                    stale.add(p);
+                    iter.remove();
                 } else if (breakEarlyFunction.apply(p)) {
                     break;
                 }
             }
-        }
-        for (BlockPos pos : stale) {
-            posMap.get(key).remove(pos);
         }
     }
 }
