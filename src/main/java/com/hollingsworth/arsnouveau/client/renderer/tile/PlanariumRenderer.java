@@ -70,7 +70,6 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         if (blockEntity.getTemplate() == null)
             return;
         structureRenderData.computeIfAbsent(blockEntity.key, (be) -> {
-
             var data = new StructureRenderData(blockEntity.getTemplate(), blockEntity.lastUpdated);
             generateRender(data, blockEntity.getLevel(), blockEntity.getBlockPos(), Minecraft.getInstance().gameRenderer.getMainCamera().getPosition());
             return data;
@@ -380,12 +379,18 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         return data.lastUpdatedAt < planariumTile.lastUpdated;
     }
 
-    public static void clearByteBuffers(StructureRenderData data) { //Prevents leaks - Unused?
+    public static void clearByteBuffers(StructureRenderData data) {
         for (Map.Entry<RenderType, ByteBufferBuilder> entry : data.builders.entrySet()) {
             entry.getValue().clear();
+            entry.getValue().close();
         }
         data.bufferBuilders.clear();
         data.sortStates.clear();
+        for (var mesh : data.meshDatas.values()) {
+            if (mesh != null) {
+                mesh.close();
+            }
+        }
         data.meshDatas.clear();
     }
 
@@ -405,7 +410,6 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
         ModelBlockRenderer modelBlockRenderer = dispatcher.getModelRenderer();
         final RandomSource random = RandomSource.create();
-        clearByteBuffers(data);
 
         for (CulledStatePos pos : statePosCache) {
             BlockState renderState = data.fakeRenderingWorld.getBlockState(pos.pos);

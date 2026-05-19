@@ -108,7 +108,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir, BlockPos.containing(aimVec.x(), aimVec.y(), aimVec.z()), true));
+                    resolver.onCastOnBlock(new BlockHitResult(aimVec, facingDir.getOpposite(), BlockPos.containing(aimVec.x(), aimVec.y(), aimVec.z()), true));
                 }
             }
         });

@@ -725,7 +725,7 @@ public class Starbuncle extends MagicalBuddyMob implements GeoEntity, IDecoratab
         }
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
-        return TEXTURES.get(color);
+        return TEXTURES.getOrDefault(color, TEXTURES.get(DyeColor.ORANGE.getName()));
     }
 
     public ResourceLocation getModel() {

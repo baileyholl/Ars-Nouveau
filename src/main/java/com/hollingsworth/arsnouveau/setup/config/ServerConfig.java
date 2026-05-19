@@ -23,6 +23,7 @@ public class ServerConfig {
     public static ModConfigSpec.IntValue INF_SPELLS_LENGHT_MODIFIER;
     public static ModConfigSpec.IntValue LECTERN_LINK_RANGE;
     public static ModConfigSpec.IntValue DECOR_BLOSSOM_RANGE;
+    public static ModConfigSpec.IntValue PLANARIUM_UPDATE_RATE;
 
     static {
         ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
@@ -57,6 +58,8 @@ public class ServerConfig {
         SERVER_BUILDER.pop().comment("Infinite Spells Mode").push("spell_length");
         INFINITE_SPELLS = SERVER_BUILDER.comment("If Enabled, the value below will be added to the base glyph limit for spellbooks.").define("infiniteSpells", false);
         INF_SPELLS_LENGHT_MODIFIER = SERVER_BUILDER.comment("Only used if infinite spells is true, increases or decreases the spell length limit in spellbooks..").defineInRange("infiniteSpellLimit", 30, -9, 1000);
+        SERVER_BUILDER.pop().push("planarium");
+        PLANARIUM_UPDATE_RATE = SERVER_BUILDER.comment("The number of game ticks the planarium will batch notifying nearby players if the dimension was changed.").defineInRange("planariumUpdateRate", 5, 1, 200);
         SERVER_BUILDER.pop();
 
         SERVER_CONFIG = SERVER_BUILDER.build();

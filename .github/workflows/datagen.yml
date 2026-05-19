@@ -2,7 +2,7 @@ name: Run Datagen
 
 on:
   pull_request_target:
-    types: [opened, synchronize]
+    types: [ opened, synchronize ]
 
 concurrency:
   group: datagen-${{ github.event.pull_request.number }}
@@ -30,7 +30,6 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: "temurin"
-          cache: gradle
       - name: Run Datagen
         run: ./gradlew runData
       - name: Check for changes

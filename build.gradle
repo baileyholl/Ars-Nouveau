@@ -141,7 +141,7 @@ repositories {
         }
     }
     maven {
-        url='https://maven.uuid.gg/releases'
+        url = 'https://maven.uuid.gg/releases'
     }
 }
 
@@ -165,7 +165,7 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21.1-4.1.0.8'
     implementation "curse.maven:jade-324717:5444008"
-    jarJar(implementation "curse.maven:infiniverse-568341:5486311"){}
+    jarJar(implementation "curse.maven:infiniverse-568341:5486311") {}
 //    implementation 'dev.compactmods.gander:levels:0.2.31'
 //    implementation 'dev.compactmods.gander:core:0.2.31'
 //    implementation 'dev.compactmods.gander:ui:0.2.31'
@@ -218,7 +218,7 @@ dependencies {
     localRuntime "curse.maven:supplementaries-412082:7326712"
     localRuntime "curse.maven:selene-499980:7325079"
     localRuntime "curse.maven:bibliocraft-legacy-1122260:7055118"
-    localRuntime "curse.maven:sodium-394468:6382651"
+//    localRuntime "curse.maven:sodium-394468:6382651"
     localRuntime "curse.maven:building-gadgets-298187:6850515"
 }
 
