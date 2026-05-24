@@ -109,8 +109,8 @@ public class ScribesBlock extends TableBlock {
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         if (!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ScribesTile tile && tile.getStack() != null) {
-                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
+            if (entity instanceof ScribesTile tile && tile.getStack() != null && world instanceof Level level) {
+                world.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
                 tile.setStack(ItemStack.EMPTY);
                 tile.refundConsumed();
             }
