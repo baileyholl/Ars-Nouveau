@@ -51,12 +51,12 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
     public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(ArsNouveau.prefix("lectern_blacklist"));
     public static TagKey<Block> INTANGIBLE_BLACKLIST = BlockTags.create(ArsNouveau.prefix("intangible_blacklist"));
+    public static TagKey<Block> RITUAL_DIG_BREAKABLE = BlockTags.create(ArsNouveau.prefix("ritual_dig_breakable"));
 
     public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
     public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
     public static TagKey<Block> AUTUMN_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "autumn_crops"));
     public static TagKey<Block> WINTER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "winter_crops"));
-
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -341,6 +341,14 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.WITHER_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
         this.tag(BlockTags.DRAGON_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
         this.tag(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS).add(BlockRegistry.DIM_BOUNDARY.get());
+
+        this.tag(RITUAL_DIG_BREAKABLE)
+                .addTag(BlockTags.BASE_STONE_OVERWORLD)
+                .addTag(BlockTags.BASE_STONE_NETHER)
+                .addTag(BlockTags.DIRT)
+                .addTag(BlockTags.SAND)
+                .addTag(BlockTags.TERRACOTTA)
+                .add(Blocks.SANDSTONE, Blocks.RED_SANDSTONE, Blocks.GRAVEL, Blocks.TUFF, Blocks.CALCITE, Blocks.DEEPSLATE, Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.SNOW_BLOCK, Blocks.PACKED_ICE, Blocks.ICE, Blocks.PACKED_MUD, Blocks.SNOW, Blocks.POWDER_SNOW);
     }
 
     public @NotNull String getName() {
