@@ -27,9 +27,9 @@ public class RitualDig extends AbstractRitual {
     public static float VERTICAL_RADIUS = 2.0f;
     public static int MAX_STEPS = 256;
     public static int TICK_RATE = 5;
-    public static float MAX_PITCH = (float) Math.toRadians(25);
+    public static float MAX_PITCH = (float) Math.toRadians(40);
     public static float YAW_JITTER = (float) Math.toRadians(20);
-    public static float DESCEND_BIAS_PITCH = (float) Math.toRadians(-10);
+    public static float DESCEND_BIAS_PITCH = (float) Math.toRadians(-20);
 
     protected Carver carver;
 
@@ -84,7 +84,11 @@ public class RitualDig extends AbstractRitual {
 
         double cosPitch = Math.cos(c.pitch);
         c.x += cosPitch * Math.cos(c.yaw);
-        c.y += Math.sin(c.pitch);
+        if (c.step <= 4) {
+            c.y += Math.sin(Math.toRadians(-90));
+        } else {
+            c.y += Math.sin(c.pitch);
+        }
         c.z += cosPitch * Math.sin(c.yaw);
 
         BlockPos center = BlockPos.containing(c.x, c.y, c.z);
