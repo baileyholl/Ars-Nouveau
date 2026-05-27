@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -109,8 +110,8 @@ public class ScribesBlock extends TableBlock {
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         if (!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ScribesTile tile && tile.getStack() != null) {
-                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
+            if (entity instanceof ScribesTile tile && tile.getStack() != null && world instanceof ServerLevelAccessor levelAccessor) {
+                world.addFreshEntity(new ItemEntity(levelAccessor.getLevel(), pos.getX(), pos.getY(), pos.getZ(), tile.getStack()));
                 tile.setStack(ItemStack.EMPTY);
                 tile.refundConsumed();
             }
