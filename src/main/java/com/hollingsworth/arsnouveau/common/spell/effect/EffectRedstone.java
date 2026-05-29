@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -16,13 +17,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -60,12 +61,40 @@ public class EffectRedstone extends AbstractEffect {
                 boolean notReplaceable = !world.getBlockState(pos1).canBeReplaced();
                 if (notReplaceable)
                     continue;
-                var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
-                if (event.isCanceled()) {
-                    continue;
-                }
+                world.captureBlockSnapshots = true;
                 BlockState state1 = BlockRegistry.TEMPORARY_BLOCK.get().defaultBlockState().setValue(TemporaryBlock.POWER, signalModifier);
                 world.setBlockAndUpdate(pos1, state1);
+                world.captureBlockSnapshots = false;
+
+                @SuppressWarnings("unchecked")
+                List<BlockSnapshot> blockSnapshots = (List<BlockSnapshot>) world.capturedBlockSnapshots.clone();
+                world.capturedBlockSnapshots.clear();
+
+                boolean placeFailure = false;
+                if (blockSnapshots.size() > 1) {
+                    placeFailure = EventHooks.onMultiBlockPlace(fakePlayer, blockSnapshots, rayTraceResult.getDirection());
+                } else if (blockSnapshots.size() == 1) {
+                    placeFailure = EventHooks.onBlockPlace(fakePlayer, blockSnapshots.getFirst(), rayTraceResult.getDirection());
+                }
+
+                if (placeFailure) {
+                    for (BlockSnapshot blocksnapshot : Lists.reverse(blockSnapshots)) {
+                        world.restoringBlockSnapshots = true;
+                        blocksnapshot.restore(blocksnapshot.getFlags() | Block.UPDATE_CLIENTS);
+                        world.restoringBlockSnapshots = false;
+                    }
+                    continue;
+                }
+
+                for (BlockSnapshot snap : blockSnapshots) {
+                    int updateFlag = snap.getFlags();
+                    BlockState oldBlock = snap.getState();
+                    BlockState newBlock = world.getBlockState(snap.getPos());
+                    newBlock.onPlace(world, snap.getPos(), oldBlock, false);
+
+                    world.markAndNotifyBlock(snap.getPos(), world.getChunkAt(snap.getPos()), oldBlock, newBlock, updateFlag, 512);
+                }
+
                 if (world.getBlockEntity(pos1) instanceof TemporaryTile tile) {
                     tile.gameTime = world.getGameTime();
                     tile.tickDuration = delay;
