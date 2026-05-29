@@ -80,7 +80,7 @@ public class EffectBreak extends AbstractEffect {
                 continue;
             }
 
-            if (!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, stack, shooter.getUUID(), true)) {
+            if (!BlockUtil.breakExtraBlock(spellContext, (ServerLevel) world, pos1, stack, shooter.getUUID(), true)) {
                 continue;
             }
 

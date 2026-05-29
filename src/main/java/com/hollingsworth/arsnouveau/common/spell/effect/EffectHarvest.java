@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
@@ -63,12 +64,24 @@ public class EffectHarvest extends AbstractEffect {
                 }
             }
         final Vec3 center = pos.getBottomCenter();
-        cropDrops.forEach(d -> {
+
+
+        InventoryManager manager = null;
+        if (spellContext.getNextEffect() instanceof EffectPickup) {
+            manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+        }
+
+        for (ItemStack d : cropDrops) {
             if (d.isEmpty() || d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()) {
-                return;
+                continue;
             }
-            world.addFreshEntity(new ItemEntity(world, center.x, center.y, center.z, d));
-        });
+            if (manager != null) {
+                d = manager.insertStack(d);
+            }
+            if (!d.isEmpty()) {
+                world.addFreshEntity(new ItemEntity(world, center.x, center.y, center.z, d));
+            }
+        }
     }
 
     @Override

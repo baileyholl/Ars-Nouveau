@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -67,6 +69,12 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
+
+        InventoryManager manager = null;
+        if (spellContext.getNextEffect() instanceof EffectPickup) {
+            manager = spellContext.getCaster().getInvManager().extractSlotMax(-1);
+        }
+
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             BlockState state = world.getBlockState(p);
             Item item = state.getBlock().asItem();
@@ -95,7 +103,12 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
                     ), world, shooter, spellContext, resolver);
                 }
                 if (!i.isEmpty()) {
-                    world.addFreshEntity(new ItemEntity(world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, i));
+                    if (manager != null) {
+                        i = manager.insertStack(i);
+                    }
+                    if (!i.isEmpty()) {
+                        world.addFreshEntity(new ItemEntity(world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, i));
+                    }
                 }
             }
             if (!placedBlock) {
@@ -108,7 +121,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     }
 
 
-    public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
+    public static void crushItems(Level world, List<ItemEntity> itemEntities, @Nullable InventoryManager manager, int maxItemCrush) {
         List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
         int itemsCrushed = 0;
@@ -132,11 +145,25 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
                 stack.shrink(1);
                 itemsCrushed++;
                 for (ItemStack result : outputs) {
-                    world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), result.copy()));
+                    if (result.isEmpty()) {
+                        continue;
+                    }
+
+                    var copy = result.copy();
+                    if (manager != null) {
+                        copy = manager.insertStack(copy);
+                    }
+                    if (!copy.isEmpty()) {
+                        world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), copy));
+                    }
                 }
             }
 
         }
+    }
+
+    public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
+        crushItems(world, itemEntities, null, maxItemCrush);
     }
 
     @Override
