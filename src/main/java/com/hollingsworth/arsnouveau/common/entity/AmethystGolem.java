@@ -107,6 +107,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             this.pathNavigate.getPathingOptions().setEnterDoors(true);
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
             this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler());
+            this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
         }
         return pathNavigate;
     }
@@ -225,6 +226,15 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
         if (getHome() != null) {
             tooltip.add(Component.translatable("ars_nouveau.gathering_at", getHome().toShortString()));
         }
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    protected void pushEntities() {
     }
 
     @Override
