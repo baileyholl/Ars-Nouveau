@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.documentation.export.DocExporter;
@@ -61,6 +62,15 @@ public record DocCategory(ResourceLocation id, ItemStack renderIcon, int order, 
         object.addProperty(DocExporter.ID_PROPERTY, id.toString());
         object.addProperty(DocExporter.ORDER_PROPERTY, order);
         object.addProperty(DocExporter.TITLE_PROPERTY, getTitle().getString());
+
+        JsonArray parentJsons = new JsonArray();
+        parents.stream().sorted().forEach(category -> parentJsons.add(category.id().toString()));
+        object.add("parents", parentJsons);
+
+        JsonArray subCategoryJsons = new JsonArray();
+        subCategories.stream().sorted().forEach(category -> subCategoryJsons.add(category.id().toString()));
+        object.add("sub_categories", subCategoryJsons);
+
         return object;
     }
 }
