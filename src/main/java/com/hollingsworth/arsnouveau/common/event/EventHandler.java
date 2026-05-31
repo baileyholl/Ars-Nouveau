@@ -92,6 +92,12 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
+    // Re-entry guard for the EnchantersSword passive cast: when the scribed spell itself
+    // produces a LivingDamageEvent.Post (e.g. Touch>Wind Shear / Touch>Explosion held by
+    // a non-player wielder), it must not trigger another passive cast on the same thread,
+    // or we recurse until StackOverflowError.
+    private static final ThreadLocal<Boolean> SWORD_PASSIVE_CAST_REENTRY = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void resourceLoadEvent(AddReloadListenerEvent event) {
         event.addListener(new SimplePreparableReloadListener<>() {
@@ -164,8 +170,19 @@ public class EventHandler {
         if (e.getSource().getEntity() instanceof LivingEntity livingUser) {
             if (livingUser instanceof Player)
                 return;
-            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(livingUser.position, e.getEntity().position) < 3) {
-                livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem().hurtEnemy(livingUser.getMainHandItem(), e.getEntity(), livingUser);
+            ItemStack mainHand = livingUser.getMainHandItem();
+            if (mainHand.getItem() instanceof EnchantersSword sword && BlockUtil.distanceFrom(livingUser.position, e.getEntity().position) < 3) {
+                // Probe the re-entry guard only once we're in the sword branch: the recursive
+                // cast re-enters here as the same non-player wielder, so the check still catches
+                // it without paying a ThreadLocal lookup on every damage event.
+                if (SWORD_PASSIVE_CAST_REENTRY.get())
+                    return;
+                SWORD_PASSIVE_CAST_REENTRY.set(Boolean.TRUE);
+                try {
+                    sword.hurtEnemy(mainHand, e.getEntity(), livingUser);
+                } finally {
+                    SWORD_PASSIVE_CAST_REENTRY.set(Boolean.FALSE);
+                }
             }
         }
     }
