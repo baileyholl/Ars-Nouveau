@@ -62,10 +62,16 @@ neoForge {
             server()
             gameDirectory = project.file('server')
         }
+
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = project.file('runs/gameTestServer')
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        }
     }
 
     mods {
-        testproject {
+        ars_nouveau {
             sourceSet sourceSets.main
         }
     }
