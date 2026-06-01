@@ -83,7 +83,7 @@ public final class SlotCache {
         if (cache.length < capacity) {
             var bigger = new Item[capacity];
             System.arraycopy(cache, 0, bigger, 0, size);
-            for (int i = size; i <= slot; i++) {
+            for (int i = size; i < capacity; i++) {
                 bigger[i] = Items.AIR;
             }
 
