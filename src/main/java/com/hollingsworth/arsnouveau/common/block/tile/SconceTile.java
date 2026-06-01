@@ -146,4 +146,8 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     public ParticleColor getColor() {
         return color;
     }
+
+    public LightTimeline getTimeline() {
+        return timeline;
+    }
 }

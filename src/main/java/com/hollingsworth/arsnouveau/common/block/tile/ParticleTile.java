@@ -72,4 +72,8 @@ public class ParticleTile extends ModdedTile implements ITickable {
         this.particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
         updateBlock();
     }
+
+    public PrestidigitationTimeline getTimeline() {
+        return timeline;
+    }
 }

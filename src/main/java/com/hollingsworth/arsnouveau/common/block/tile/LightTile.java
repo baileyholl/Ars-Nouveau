@@ -85,4 +85,8 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     public ParticleColor getColor() {
         return color;
     }
+
+    public LightTimeline getTimeline() {
+        return timeline;
+    }
 }
