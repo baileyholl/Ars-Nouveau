@@ -89,7 +89,7 @@ public final class SlotCache {
 
             cache = bigger;
         }
-        size = Math.max(size, slot);
+        size = Math.max(size, slot + 1);
     }
 
     public boolean isEmpty(int slot) {
