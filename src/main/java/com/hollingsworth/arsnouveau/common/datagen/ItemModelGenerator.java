@@ -138,6 +138,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         spawnEgg(LibItemNames.WILDEN_GUARDIAN_SE);
         spawnEgg(LibItemNames.WILDEN_STALKER_SE);
         spawnEgg(LibItemNames.WILDEN_HUNTER_SE);
+        itemUnchecked(ItemsRegistry.SUMMONERS_BELL);
     }
 
 
