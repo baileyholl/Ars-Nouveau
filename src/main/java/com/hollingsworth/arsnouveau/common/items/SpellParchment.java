@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.particle.timelines.BaseTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
+import com.hollingsworth.arsnouveau.api.spell.ITimelined;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
-import com.hollingsworth.arsnouveau.common.block.tile.ParticleTile;
-import com.hollingsworth.arsnouveau.common.block.tile.SconceTile;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -71,27 +70,13 @@ public class SpellParchment extends ModItem implements ICasterTool {
     }
 
     public InteractionResult copyTimeline(ServerPlayer player, ServerLevel level, ItemStack hand, BlockEntity tile) {
-        //noinspection rawtypes
-        BaseTimeline timeline;
-        ParticleColor color;
-
-        switch (tile) {
-            case SconceTile sconce -> {
-                timeline = sconce.getTimeline();
-                color = sconce.getColor();
-            }
-            case LightTile light -> {
-                timeline = light.getTimeline();
-                color = light.getColor();
-            }
-            case ParticleTile particle -> {
-                timeline = particle.getTimeline();
-                color = ParticleColor.defaultParticleColor();
-            }
-            case null, default -> {
-                return InteractionResult.PASS;
-            }
+        if (!(tile instanceof ITimelined<?> timelined)) {
+            return InteractionResult.PASS;
         }
+
+        //noinspection rawtypes
+        IParticleTimeline timeline = timelined.getTimeline();
+        ParticleColor color = tile instanceof IWololoable wololoable ? wololoable.getColor() : ParticleColor.defaultParticleColor();
 
         ItemStack stack = hand.copyWithCount(1);
         AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
@@ -101,14 +86,14 @@ public class SpellParchment extends ModItem implements ICasterTool {
 
         //noinspection unchecked
         var newTimeline = caster.getSpell().particleTimeline().put(timeline.getType(), timeline);
-        caster.setSpell(caster.getSpell().withTimeline(newTimeline)).saveToStack(stack);
+        caster.setSpell(caster.getSpell().withColor(color).withTimeline(newTimeline)).saveToStack(stack);
+        
+        if (!player.hasInfiniteMaterials()) {
+            hand.shrink(1);
+        }
 
         if (!player.addItem(stack)) {
             level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), stack));
-        }
-
-        if (!player.hasInfiniteMaterials()) {
-            hand.shrink(1);
         }
 
         return InteractionResult.SUCCESS;
