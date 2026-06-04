@@ -114,6 +114,18 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    exclusiveContent { // Sable
+        forRepository {
+            maven {
+                url = "https://maven.ryanhcode.dev/releases"
+                name = "RyanHCode Maven"
+            }
+        }
+        filter {
+            includeGroup("dev.ryanhcode.sable")
+            includeGroup("dev.ryanhcode.sable-companion")
+        }
+    }
     maven {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
@@ -189,7 +201,7 @@ dependencies {
             attribute(mappingsAttribute, "mojmap")
         }
     }
-    localRuntime "curse.maven:create-328085:7178775"
+    localRuntime "curse.maven:create-328085:7963363"
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
@@ -226,6 +238,9 @@ dependencies {
     localRuntime "curse.maven:bibliocraft-legacy-1122260:7055118"
 //    localRuntime "curse.maven:sodium-394468:6382651"
     localRuntime "curse.maven:building-gadgets-298187:6850515"
+    // Create aeronautics
+    localRuntime "maven.modrinth:oWaK0Q19:YhZLrAFC"
+    localRuntime "dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}"
 }
 
 jar {
