@@ -66,7 +66,7 @@ public class DecorBlossomTile extends ModdedTile implements ITickable, IWandable
         if (storedPos == null) {
             return IWandable.super.onFirstConnection(storedPos, face, storedEntity, playerEntity);
         }
-        if (BlockUtil.distanceFrom(storedPos.pos(), this.worldPosition) > ServerConfig.DECOR_BLOSSOM_RANGE.get()) {
+        if (BlockUtil.distanceFrom(level, storedPos.pos(), this.worldPosition) > ServerConfig.DECOR_BLOSSOM_RANGE.get()) {
             playerEntity.sendSystemMessage(Component.translatable("ars_nouveau.connection.range", ServerConfig.DECOR_BLOSSOM_RANGE.get()));
             return Result.FAIL;
         }

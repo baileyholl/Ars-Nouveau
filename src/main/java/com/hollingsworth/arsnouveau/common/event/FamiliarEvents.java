@@ -137,7 +137,7 @@ public class FamiliarEvents {
             List<FamiliarEntity> golems = getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarAmethystGolem golem && golem.getOwner() != null && golem.getOwner().equals(event.getEntity())));
             if (!golems.isEmpty()) {
                 Entity entity = event.getSource().getEntity();
-                if (entity instanceof LivingEntity livingTarget && BlockUtil.distanceFrom(player.blockPosition(), entity.blockPosition()) < 3) {
+                if (entity instanceof LivingEntity livingTarget && BlockUtil.distanceFrom(player.level(), player.blockPosition(), entity.blockPosition()) < 3) {
                     livingTarget.knockback(0.5f, player.getX() - entity.getX(), player.getZ() - entity.getZ());
                 }
             }

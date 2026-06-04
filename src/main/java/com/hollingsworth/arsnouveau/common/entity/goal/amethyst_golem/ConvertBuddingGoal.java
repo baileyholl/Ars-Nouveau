@@ -40,7 +40,7 @@ public class ConvertBuddingGoal extends Goal {
             convert();
             return;
         }
-        if (BlockUtil.distanceFrom(golem.blockPosition(), targetCluster) <= 2) {
+        if (BlockUtil.distanceFrom(golem.level(), golem.blockPosition(), targetCluster) <= 2) {
             golem.setImbuePos(targetCluster);
             golem.setImbueing(true);
             usingTicks = Math.min(usingTicks, 40);

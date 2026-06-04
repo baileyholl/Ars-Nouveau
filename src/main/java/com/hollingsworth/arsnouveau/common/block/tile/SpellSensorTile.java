@@ -87,7 +87,7 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
             return;
         }
         Vec3 thisPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
-        if (BlockUtil.distanceFrom(pos, thisPos) > listenRange || isOccluded(level, thisPos, pos)) {
+        if (BlockUtil.distanceFrom(level, pos, thisPos) > listenRange || isOccluded(level, thisPos, pos)) {
             return;
         }
         var str = 0;

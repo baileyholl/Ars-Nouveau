@@ -506,7 +506,7 @@ public class WildenChimera extends Monster implements GeoEntity {
         Entity entity = source.getEntity();
         if (entity instanceof LivingEntity entity1 && !entity.equals(this)) {
             if (isDefensive() && !source.is(DamageTypes.THORNS)) {
-                if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && BlockUtil.distanceFrom(entity.position, position) <= 3) {
+                if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && BlockUtil.distanceFrom(level, entity.position, position) <= 3) {
                     entity.hurt(level.damageSources().thorns(this), 6.0f);
                 }
             }

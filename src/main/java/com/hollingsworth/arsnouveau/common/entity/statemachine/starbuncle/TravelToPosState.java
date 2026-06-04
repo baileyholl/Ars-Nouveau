@@ -33,7 +33,7 @@ public class TravelToPosState extends StarbyState {
             return nextState;
         }
 
-        if (BlockUtil.distanceFrom(starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D && isDestinationStillValid(targetPos)) {
+        if (BlockUtil.distanceFrom(starbuncle.level(), starbuncle.position().add(0, 0.5, 0), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= 2.5D && isDestinationStillValid(targetPos)) {
             return onDestinationReached();
         }
 

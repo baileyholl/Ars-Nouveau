@@ -87,7 +87,7 @@ public class WildenGuardian extends Monster implements GeoEntity {
         if (!level.isClientSide && isArmored() && !damageSrc.is(DamageTypeTags.BYPASSES_ARMOR)) {
             damageAmount *= 0.75;
 
-            if (damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.type().msgId().equals("thorns")) {
+            if (damageSrc.getEntity() != null && BlockUtil.distanceFrom(level, damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.type().msgId().equals("thorns")) {
                 damageSrc.getEntity().hurt(level.damageSources().thorns(this), 3.0f);
             }
 

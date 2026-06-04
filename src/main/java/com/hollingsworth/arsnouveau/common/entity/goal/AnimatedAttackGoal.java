@@ -145,7 +145,7 @@ public class AnimatedAttackGoal extends Goal {
 
         double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
         this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
-        if (BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= attackRange) {
+        if (BlockUtil.distanceFrom(this.mob.level(), this.mob.position, livingentity.position) <= attackRange) {
             onArrive();
         }
         if ((this.followingTargetEvenIfNotSeen || this.mob.getSensing().hasLineOfSight(livingentity)) && this.ticksUntilNextPathRecalculation <= 0 && (this.pathedTargetX == 0.0D && this.pathedTargetY == 0.0D && this.pathedTargetZ == 0.0D || livingentity.distanceToSqr(this.pathedTargetX, this.pathedTargetY, this.pathedTargetZ) >= 1.0D || this.mob.getRandom().nextFloat() < 0.05F)) {
@@ -180,7 +180,7 @@ public class AnimatedAttackGoal extends Goal {
     }
 
     protected void attack(LivingEntity target) {
-        if (BlockUtil.distanceFrom(target.position, this.mob.position) <= attackRange) {
+        if (BlockUtil.distanceFrom(this.mob.level(), target.position, this.mob.position) <= attackRange) {
             this.ticksUntilNextAttack = 20;
             this.mob.doHurtTarget(target);
         }

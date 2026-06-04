@@ -70,7 +70,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     public boolean eventInRange(BlockPos sourcePos, @Nullable Event event) {
-        return BlockUtil.distanceFrom(this.worldPosition, sourcePos) <= 15;
+        return BlockUtil.distanceFrom(level, this.worldPosition, sourcePos) <= 15;
     }
 
     public boolean usesEventQueue() {

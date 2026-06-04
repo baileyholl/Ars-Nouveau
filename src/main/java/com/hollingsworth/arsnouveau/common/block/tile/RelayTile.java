@@ -64,7 +64,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     public boolean disabled;
 
     public boolean setTakeFrom(BlockPos pos) {
-        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
+        if (BlockUtil.distanceFrom(level, pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
         }
         this.fromPos = pos;
@@ -73,7 +73,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     public boolean setSendTo(BlockPos pos) {
-        if (BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
+        if (BlockUtil.distanceFrom(level, pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())) {
             return false;
         }
         if (!(level.getBlockEntity(pos) instanceof AbstractSourceMachine) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, pos, null) == null) {
@@ -100,7 +100,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     public boolean closeEnough(BlockPos pos) {
-        return BlockUtil.distanceFrom(pos, this.worldPosition) <= getMaxDistance() && !pos.equals(getBlockPos());
+        return BlockUtil.distanceFrom(level, pos, this.worldPosition) <= getMaxDistance() && !pos.equals(getBlockPos());
     }
 
     @Override

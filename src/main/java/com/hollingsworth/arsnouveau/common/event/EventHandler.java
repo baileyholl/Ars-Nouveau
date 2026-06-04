@@ -164,7 +164,7 @@ public class EventHandler {
         if (e.getSource().getEntity() instanceof LivingEntity livingUser) {
             if (livingUser instanceof Player)
                 return;
-            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(livingUser.position, e.getEntity().position) < 3) {
+            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(e.getEntity().level, livingUser.position, e.getEntity().position) < 3) {
                 livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem().hurtEnemy(livingUser.getMainHandItem(), e.getEntity(), livingUser);
             }
         }
@@ -463,7 +463,7 @@ public class EventHandler {
 
         for (UUID uuid : sprigs) {
             if (event.level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
-                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
+                if (BlockUtil.distanceFrom(event.level, whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
                     whirlisprig.droppingShards = true;
                 }
             } else {

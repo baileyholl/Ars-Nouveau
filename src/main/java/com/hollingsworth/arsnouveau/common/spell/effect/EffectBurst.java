@@ -61,7 +61,7 @@ public class EffectBurst extends AbstractEffect {
 
         if (spellStats.isSensitive()) {
             for (BlockPos pos : BlockPos.withinManhattan(center, radius, radius, radius)) {
-                if (sphere.test(BlockUtil.distanceFromCenter(pos, center))) {
+                if (sphere.test(BlockUtil.distanceFromCenter(world, pos, center))) {
                     pos = pos.immutable();
                     SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     //TODO it needs a direction, UP as a dummy for now
@@ -72,7 +72,7 @@ public class EffectBurst extends AbstractEffect {
             }
         } else {
             for (Entity entity : world.getEntities(null, new AABB(center).inflate(radius, radius, radius))) {
-                if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && sphere.test(BlockUtil.distanceFromCenter(entity.blockPosition(), center))) {
+                if ((entity instanceof LivingEntity || entity.getType().is(EntityTags.BURST_WHITELIST)) && sphere.test(BlockUtil.distanceFromCenter(world, entity.blockPosition(), center))) {
                     SpellResolver resolver1 = resolver.getNewResolver(spellContext.clone().makeChildContext());
                     resolver1.onResolveEffect(world, new EntityHitResult(entity));
                     ParticleEmitter emitter = resolveEmitter(spellContext, entity.position.add(0, entity.getBbHeight() / 2.0, 0));

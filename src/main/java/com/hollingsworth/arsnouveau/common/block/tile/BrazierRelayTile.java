@@ -83,7 +83,7 @@ public class BrazierRelayTile extends RitualBrazierTile {
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos != null && level != null && level.getBlockEntity(storedPos) instanceof RitualBrazierTile brazierTile) {
-            if (BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16) {
+            if (BlockUtil.distanceFrom(level, getBlockPos(), storedPos) > 16) {
                 return;
             }
             brazierPos = storedPos;

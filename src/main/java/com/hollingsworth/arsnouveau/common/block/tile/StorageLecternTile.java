@@ -284,7 +284,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.no_tile"));
             return;
         }
-        if (BlockUtil.distanceFrom(storedPos, worldPosition) > ServerConfig.LECTERN_LINK_RANGE.get()) {
+        if (BlockUtil.distanceFrom(level, storedPos, worldPosition) > ServerConfig.LECTERN_LINK_RANGE.get()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far", ServerConfig.LECTERN_LINK_RANGE.get()));
             return;
         }
@@ -318,7 +318,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (!(tile instanceof StorageLecternTile)) {
             return;
         }
-        if (BlockUtil.distanceFrom(storedPos, worldPosition) > ServerConfig.LECTERN_LINK_RANGE.get()) {
+        if (BlockUtil.distanceFrom(level, storedPos, worldPosition) > ServerConfig.LECTERN_LINK_RANGE.get()) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.lectern_too_far", ServerConfig.LECTERN_LINK_RANGE.get()));
             return;
         }
@@ -363,7 +363,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             canCreateTasks = false;
             ServerLevel serverLevel = (ServerLevel) level;
             for (ServerPlayer serverPlayer : serverLevel.players()) {
-                if (BlockUtil.distanceFrom(serverPlayer.position(), this.getBlockPos()) < 40) {
+                if (BlockUtil.distanceFrom(level, serverPlayer.position(), this.getBlockPos()) < 40) {
                     canCreateTasks = true;
                     break;
                 }

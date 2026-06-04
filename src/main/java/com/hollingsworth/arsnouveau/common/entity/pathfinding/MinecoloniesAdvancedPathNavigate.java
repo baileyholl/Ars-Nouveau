@@ -265,7 +265,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     public boolean tryMoveToBlockPos(final BlockPos pos, final double speedFactor) {
-        if (BlockUtil.distanceFrom(pos, ourEntity.getOnPos()) > 1000000) {
+        if (BlockUtil.distanceFrom(ourEntity.level, pos, ourEntity.getOnPos()) > 1000000) {
             if (ourEntity instanceof IDebuggerProvider debuggerProvider) {
                 debuggerProvider.addDebugEvent(new DebugEvent("too_far", "Trying to path over 1000 blocks, doing nothing"));
                 return false;
@@ -332,7 +332,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
         if (x == 0 && y == 0 && z == 0) {
             return false;
         }
-        if (BlockUtil.distanceFrom(new Vec3(x, y, z), ourEntity.getOnPos()) > 1000000) {
+        if (BlockUtil.distanceFrom(ourEntity.level, new Vec3(x, y, z), ourEntity.getOnPos()) > 1000000) {
             if (ourEntity instanceof IDebuggerProvider debuggerProvider) {
                 debuggerProvider.addDebugEvent(new DebugEvent("too_far", "Trying to path over 1000 blocks, doing nothing"));
                 return false;
