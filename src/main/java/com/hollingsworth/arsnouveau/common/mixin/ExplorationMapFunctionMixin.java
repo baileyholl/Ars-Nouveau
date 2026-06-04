@@ -15,6 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class ExplorationMapFunctionMixin {
     @WrapWithCondition(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/MapItem;renderBiomePreviewMap(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;)V"))
     private boolean preventCallOnFakePlayer(ServerLevel serverLevel, ItemStack stack, @Local(argsOnly = true) LootContext context) {
-        return context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof ANFakePlayer;
+        return !(context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof ANFakePlayer);
     }
 }
