@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.registry;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.AlakarkinosRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -33,6 +35,7 @@ public class AlakarkinosConversionRegistry {
     private static List<AlakarkinosRecipe> RECIPES = new ArrayList<>();
     private static Set<Block> CONVERTABLE_BLOCKS = Set.of();
     private static Map<Block, WeightedRandomList<WeightedEntry.Wrapper<AlakarkinosRecipe>>> CONVERTABLE_BLOCKS_MAP = new HashMap<>();
+    public static final LootContextParam<Boolean> IS_KARKY = new LootContextParam<>(ArsNouveau.prefix("is_karky"));
 
     public static List<AlakarkinosRecipe> getRecipes() {
         return Collections.unmodifiableList(RECIPES);
@@ -131,6 +134,7 @@ public class AlakarkinosConversionRegistry {
                         .withParameter(LootContextParams.ORIGIN, BlockPos.ZERO.getCenter())
                         .withLuck(1.0f)
                         .withParameter(LootContextParams.THIS_ENTITY, player)
+                        .withParameter(IS_KARKY, true)
                         .create(LootContextParamSets.CHEST);
                 for (int i = 0; i < 600; i++) {
                     for (ItemStack random : lootTable.getRandomItems(lootParams)) {
