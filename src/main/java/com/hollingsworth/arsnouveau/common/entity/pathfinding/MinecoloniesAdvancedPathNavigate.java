@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
+import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveAwayFromLocation;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToLocation;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToPathable;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * Minecolonies async PathNavigate.
@@ -262,23 +263,14 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
                 desiredPos, speedFactor);
     }
 
-    public PathResult moveToClosestPosition(List<BlockPos> positions, double speedFactor) {
-        if (pathResult != null && pathResult.getJob() instanceof PathJobMoveToLocation && (
-                pathResult.isComputing()
-                        || (destination != null && positions.contains(destination)))
-                || (originalDestination != null && positions.contains(originalDestination)
-        )
-        ) {
-            return pathResult;
-        }
-        final BlockPos start = AbstractPathJob.prepareStart(ourEntity);
-        return setPathJob(new PathJobMoveToPathable(ourEntity.level, start, positions,
-                (int) ourEntity.getAttribute(Attributes.FOLLOW_RANGE).getValue(),
-                ourEntity), null, speedFactor);
-    }
-
     @Override
     public boolean tryMoveToBlockPos(final BlockPos pos, final double speedFactor) {
+        if (BlockUtil.distanceFrom(pos, ourEntity.getOnPos()) > 1000000) {
+            if (ourEntity instanceof IDebuggerProvider debuggerProvider) {
+                debuggerProvider.addDebugEvent(new DebugEvent("too_far", "Trying to path over 1000 blocks, doing nothing"));
+                return false;
+            }
+        }
         if (pos == null) {
             return false;
         }
@@ -339,6 +331,12 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     public boolean moveTo(final double x, final double y, final double z, final double speedFactor) {
         if (x == 0 && y == 0 && z == 0) {
             return false;
+        }
+        if (BlockUtil.distanceFrom(new Vec3(x, y, z), ourEntity.getOnPos()) > 1000000) {
+            if (ourEntity instanceof IDebuggerProvider debuggerProvider) {
+                debuggerProvider.addDebugEvent(new DebugEvent("too_far", "Trying to path over 1000 blocks, doing nothing"));
+                return false;
+            }
         }
 
         moveToXYZ(x, y, z, speedFactor);
@@ -433,19 +431,6 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
             }
         }
         return false;
-    }
-
-    /**
-     * Determine what block the entity stands on
-     *
-     * @param parEntity the entity that stands on the block
-     * @return the Blockstate.
-     */
-    private BlockPos findBlockUnderEntity(final Entity parEntity) {
-        int blockX = (int) Math.round(parEntity.getX());
-        int blockY = Mth.floor(parEntity.getY() - 0.2D);
-        int blockZ = (int) Math.round(parEntity.getZ());
-        return new BlockPos(blockX, blockY, blockZ);
     }
 
     /**
