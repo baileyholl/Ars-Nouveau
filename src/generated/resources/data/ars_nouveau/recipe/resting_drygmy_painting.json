@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:drygmy_shard"
+    }
+  ],
+  "reagent": {
+    "item": "minecraft:painting"
+  },
+  "result": {
+    "components": {
+      "minecraft:entity_data": {
+        "id": "minecraft:painting",
+        "variant": "ars_nouveau:resting_drygmy"
+      }
+    },
+    "count": 1,
+    "id": "minecraft:painting"
+  },
+  "sourceCost": 0
+}

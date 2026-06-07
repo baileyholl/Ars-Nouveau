@@ -3,13 +3,11 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.PaintingVariantTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.JsonCodecProvider;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
