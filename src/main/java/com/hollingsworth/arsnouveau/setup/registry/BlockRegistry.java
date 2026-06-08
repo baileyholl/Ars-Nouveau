@@ -322,6 +322,15 @@ public class BlockRegistry {
     }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
 
     public static final BlockEntityTypeRegistryWrapper<RotatingTurretTile> ROTATING_TURRET_TILE = registerTile(LibBlockNames.ROTATING_SPELL_TURRET, RotatingTurretTile::new, ROTATING_TURRET);
+
+    public static final BlockRegistryWrapper<TempSpellTurret> TEMP_SPELL_TURRET = registerBlockAndItem(LibBlockNames.TEMP_SPELL_TURRET, TempSpellTurret::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return BasicTurretRenderer::getISTER;
+        }
+    }.withTooltip(Component.translatable("ars_nouveau.turret.tooltip")));
+
+    public static final BlockEntityTypeRegistryWrapper<TempSpellTurretTile> TEMP_SPELL_TURRET_TILE = registerTile(LibBlockNames.TEMP_SPELL_TURRET, TempSpellTurretTile::new, TEMP_SPELL_TURRET);
     public static final BlockRegistryWrapper<ArcanePlatform> ARCANE_PLATFORM = registerBlockAndItem(LibBlockNames.MINI_PEDESTAL, ArcanePlatform::new, (reg) -> new ModBlockItem(reg.get(), defaultItemProperties()).withTooltip(Component.translatable("ars_nouveau.arcane_platform.tooltip")));
     public static final BlockRegistryWrapper<MagelightTorch> MAGELIGHT_TORCH = registerBlockAndItem(LibBlockNames.MAGELIGHT_TORCH, MagelightTorch::new);
     public static final BlockRegistryWrapper<BrazierRelay> BRAZIER_RELAY = registerBlockAndItem(LibBlockNames.BRAZIER_RELAY, BrazierRelay::new);
@@ -381,6 +390,8 @@ public class BlockRegistry {
 //    public static final BlockRegistryWrapper<ScryerPlanarium> SCRYER_PLANARIUM = registerBlockAndItem(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanarium::new);
 //    public static final BlockEntityTypeRegistryWrapper<ScryerPlanariumTile> SCRYER_PLANARIUM_TILE = registerTile(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanariumTile::new, SCRYER_PLANARIUM);
 
+    public static final BlockRegistryWrapper<ArcanoJar> ARCANO_JAR = registerBlockAndItem(LibBlockNames.ARCANO_JAR, ArcanoJar::new);
+    public static final BlockEntityTypeRegistryWrapper<ArcanoJarTile> ARCANO_JAR_TILE = registerTile(LibBlockNames.ARCANO_JAR, ArcanoJarTile::new, ARCANO_JAR);
 
     public static void onBlocksRegistry() {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {

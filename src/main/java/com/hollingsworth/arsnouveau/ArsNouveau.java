@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
+import com.hollingsworth.arsnouveau.common.event.ArcanoBossEvents;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
@@ -53,8 +54,10 @@ import java.util.function.Supplier;
 
 @Mod(ArsNouveau.MODID)
 public class ArsNouveau {
-    public static final ResourceKey<DimensionType> DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("jar"));
-    public static final ResourceKey<Biome> BIOME_KEY = ResourceKey.create(Registries.BIOME, ArsNouveau.prefix("jar"));
+    public static final ResourceKey<DimensionType> JAR_DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("jar"));
+    public static final ResourceKey<Biome> JAR_BIOME_KEY = ResourceKey.create(Registries.BIOME, ArsNouveau.prefix("jar"));
+    public static final ResourceKey<DimensionType> ARCANO_DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ArsNouveau.prefix("arcano_boss"));
+
     public static final String MODID = "ars_nouveau";
     @SuppressWarnings("deprecation") // Has to be runForDist, SafeRunForDist will throw a sided crash
     public static IProxy proxy;
@@ -135,6 +138,10 @@ public class ArsNouveau {
 
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onEntityTravel);
     }
 
     public void setup(final FMLCommonSetupEvent event) {
