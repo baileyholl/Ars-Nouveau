@@ -1,10 +1,15 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.util.ANEventBus;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -47,6 +52,19 @@ public class DepositAmethystGoal extends Goal {
     }
 
     public void deposit() {
+        if (!(golem.level instanceof ServerLevel level)) {
+            return;
+        }
+
+        BlockPos home = golem.getHome();
+        if (home == null) {
+            return;
+        }
+
+        if (!this.golem.canBreak(home)) {
+            return;
+        }
+
         IItemHandler iItemHandler = golem.level.getCapability(Capabilities.ItemHandler.BLOCK, golem.getHome(), null);
         if (iItemHandler != null) {
             ItemStack oldStack = new ItemStack(golem.getMainHandItem().getItem(), golem.getMainHandItem().getCount());
