@@ -237,6 +237,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(JAR_ITEM_BLACKLIST);
+        this.tag(JAR_ITEM_CAPTURE_BLACKLIST).addTag(JAR_ITEM_BLACKLIST);
         this.tag(RITUAL_LOOT_BLACKLIST);
         this.tag(RITUAL_TRADE_BLACKLIST);
 
