@@ -50,4 +50,51 @@ public interface IFilter {
         else return false;
     }
 
+
+    /*
+      Advanced versions, fallback to classic methods
+     */
+
+    /**
+     * Whether the filter should allow the block hit
+     */
+    default boolean shouldResolveOnBlock(BlockHitResult target, Level level, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver){
+        return shouldResolveOnBlock(target, level);
+    }
+
+    /**
+     * Default method that wraps the position/direction to call the actual method
+     */
+    default boolean shouldResolveOnBlock(BlockPos pos, Direction direction, Level level, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        return shouldResolveOnBlock(
+                new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), direction, pos, false)
+                , level, spellStats, spellContext, resolver);
+    }
+
+    /**
+     * Whether the filter should allow the entity hit
+     */
+    default boolean shouldResolveOnEntity(EntityHitResult target, Level level, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        return shouldResolveOnEntity(target, level);
+    }
+
+    /**
+     * Default method that wraps an entity to call the actual method
+     */
+    default boolean shouldResolveOnEntity(Entity entity, Level level, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        return shouldResolveOnEntity(new EntityHitResult(entity), level, spellStats, spellContext, resolver);
+    }
+
+    /**
+     * @param rayTraceResult block or entity about to be affected by the spell
+     * @return true if the glyph filter pass, false if the filter blocks
+     */
+    default boolean shouldAffect(HitResult rayTraceResult, Level level, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        if (rayTraceResult instanceof BlockHitResult block)
+            return shouldResolveOnBlock(block, level, spellStats, spellContext, resolver);
+        else if (rayTraceResult instanceof EntityHitResult entity)
+            return shouldResolveOnEntity(entity, level, spellStats, spellContext, resolver);
+        else return false;
+    }
+
 }
