@@ -1395,6 +1395,7 @@ public class LangDatagen extends LanguageProvider {
         add("tooltip.drygmy_shard2", "A tribute to what once was.");
         add("tooltip.wixie_shard2", "Knowledge for freedom.");
         add("block.ars_nouveau.alakarkinos_hat", "Alakarkinos Hat");
+        add("block.ars_nouveau.starbuncle_plush", "Starbuncle Plush");
         add("entity.ars_nouveau.bubble", "Bubble");
         add("entity.ars_nouveau.alakarkinos", "Alakarkinos");
         add("item.ars_nouveau.alakarkinos_charm", "Alakarkinos Charm");

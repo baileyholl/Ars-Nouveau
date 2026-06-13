@@ -13,6 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -803,6 +804,13 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("###")
                     .pattern("###")
                     .unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                    .save(consumer);
+            shapedBuilder(BlockRegistry.STARBUNCLE_PLUSH)
+                    .pattern(" x ")
+                    .pattern("xyx")
+                    .pattern(" x ")
+                    .define('x', ItemTags.WOOL)
+                    .define('y', ItemsRegistry.STARBUNCLE_SHARD)
                     .save(consumer);
         }
     }
