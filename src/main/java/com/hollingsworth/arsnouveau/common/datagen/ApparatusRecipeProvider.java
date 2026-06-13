@@ -10,13 +10,16 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
@@ -1120,6 +1123,30 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(ItemsRegistry.STABLE_WARP_SCROLL.asItem())
                 .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE.asItem())
                 .withPedestalItem(Items.DIAMOND).build());
+
+        addRecipe(builder()
+                .withResult(paintingOf("starbuncle"))
+                .withReagent(Items.PAINTING)
+                .withPedestalItem(ItemsRegistry.STARBUNCLE_SHARD)
+                .withId(ArsNouveau.prefix("starbuncle_painting"))
+                .build());
+
+        addRecipe(builder()
+                .withResult(paintingOf("resting_drygmy"))
+                .withReagent(Items.PAINTING)
+                .withPedestalItem(ItemsRegistry.DRYGMY_SHARD)
+                .withId(ArsNouveau.prefix("resting_drygmy_painting"))
+                .build());
+
+    }
+
+    private ItemStack paintingOf(String variant) {
+        ItemStack stack = new ItemStack(Items.PAINTING);
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", "minecraft:painting");
+        tag.putString("variant", ArsNouveau.MODID + ":" + variant);
+        stack.set(DataComponents.ENTITY_DATA, CustomData.of(tag));
+        return stack;
     }
 
     public void makeArmor(ItemLike outputItem, ItemLike armorItem) {
