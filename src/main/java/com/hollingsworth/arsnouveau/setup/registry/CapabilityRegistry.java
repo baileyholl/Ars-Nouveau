@@ -70,8 +70,7 @@ public class CapabilityRegistry {
                 BlockRegistry.IMBUEMENT_TILE,
                 BlockRegistry.SCRIBES_TABLE_TILE,
                 BlockRegistry.ARCANE_PEDESTAL_TILE,
-                BlockRegistry.ARCHWOOD_CHEST_TILE,
-                BlockRegistry.REPOSITORY_TILE);
+                BlockRegistry.ARCHWOOD_CHEST_TILE);
         for (var container : containers) {
             event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, container.get(), (c, side) -> new InvWrapper(c));
         }
@@ -80,6 +79,7 @@ public class CapabilityRegistry {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c.getControllerInv());
         event.registerBlockEntity(FILTERSET_CAPABILITY, BlockRegistry.REPOSITORY_CONTROLLER_TILE.get(), (c, side) -> c);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockRegistry.REPOSITORY_TILE.get(), (c, side) -> c);
         event.registerBlockEntity(MAP_INV_CAP, BlockRegistry.REPOSITORY_TILE.get(), (c, side) -> c);
 
         var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,

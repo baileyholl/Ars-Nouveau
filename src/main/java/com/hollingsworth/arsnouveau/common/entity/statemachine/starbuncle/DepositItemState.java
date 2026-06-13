@@ -12,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
+import java.util.ArrayDeque;
+
 public class DepositItemState extends TravelToPosState {
     public DepositItemState(Starbuncle starbuncle, StarbyTransportBehavior behavior, BlockPos target) {
         super(starbuncle, behavior, target, new DecideStarbyActionState(starbuncle, behavior));
@@ -38,17 +40,50 @@ public class DepositItemState extends TravelToPosState {
         event.open();
         EventQueue.getServerInstance().addEvent(event);
 
-        ItemStack left = starbuncle.getHeldStack();
-        starbuncle.addGoalDebug(this, new DebugEvent("stored_item", "successful at " + targetPos.toString() + "set stack to " + left.getCount() + "x " + left.getHoverName().getString()));
-        boolean fetchPassengerStack = left.isEmpty();
-        while (fetchPassengerStack) {
-            fetchPassengerStack = false;
-            starbuncle.getNextItemFromPassengers();
-            if (!starbuncle.getHeldStack().isEmpty()) {
-                fetchPassengerStack = depositStack(iItemHandler) && starbuncle.getHeldStack().isEmpty();
+        ItemStack current = starbuncle.getHeldStack();
+        var remainders = new ArrayDeque<ItemStack>();
+        starbuncle.addGoalDebug(this, new DebugEvent("stored_item", "successful at " + targetPos.toString() + "set stack to " + current.getCount() + "x " + current.getHoverName().getString()));
+
+        var top = starbuncle;
+        while (true) {
+            var remaining = depositStack(iItemHandler, current);
+            if (!remaining.isEmpty()) {
+                remainders.addLast(remaining);
+                while (top.getFirstPassenger() instanceof Starbuncle above) {
+                    remainders.addLast(above.getHeldStack());
+                    top = above;
+                }
+                break;
             }
+
+            if (!(top.getFirstPassenger() instanceof Starbuncle above)) {
+                break;
+            }
+
+            top = above;
+            current = top.getHeldStack();
         }
+
+        top = starbuncle;
+        while (true) {
+            top.setHeldStack(remainders.isEmpty() ? ItemStack.EMPTY : remainders.removeFirst());
+
+            if (!(top.getFirstPassenger() instanceof Starbuncle above)) {
+                break;
+            }
+
+            top = above;
+        }
+
+        for (var remainder : remainders) {
+            starbuncle.spawnAtLocation(remainder);
+        }
+
         return nextState;
+    }
+
+    public ItemStack depositStack(IItemHandler iItemHandler, ItemStack stack) {
+        return ItemHandlerHelper.insertItemStacked(iItemHandler, stack, false);
     }
 
     public boolean depositStack(IItemHandler iItemHandler) {
