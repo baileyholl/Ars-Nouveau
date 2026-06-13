@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
+import com.hollingsworth.arsnouveau.api.spell.ITimelined;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
-public class LightTile extends ModdedTile implements ITickable, IWololoable {
+public class LightTile extends ModdedTile implements ITickable, IWololoable, ITimelined<LightTimeline> {
     protected LightTimeline timeline = new LightTimeline();
     public ParticleColor color = ParticleColor.defaultParticleColor();
     public ParticleEmitter particleEmitter;
@@ -84,5 +85,10 @@ public class LightTile extends ModdedTile implements ITickable, IWololoable {
     @Override
     public ParticleColor getColor() {
         return color;
+    }
+
+    @Override
+    public LightTimeline getTimeline() {
+        return timeline;
     }
 }
