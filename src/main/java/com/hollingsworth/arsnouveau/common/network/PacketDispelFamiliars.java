@@ -13,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketDispelFamiliars extends AbstractPacket {
     public static final Type<PacketDispelFamiliars> TYPE = new Type<>(ArsNouveau.prefix("dispel_familiars"));
@@ -37,6 +38,9 @@ public class PacketDispelFamiliars extends AbstractPacket {
 
     public static boolean dispelForPlayer(Entity owner) {
         boolean removedFamiliar = false;
+        if (owner instanceof ServerPlayer p) {
+            p.removeEntitiesOnShoulder();
+        }
         for (FamiliarEntity familiarEntity : FamiliarEvents.getFamiliars(i -> i.getOwnerID() == null || i.getOwnerID().equals(owner.getUUID()))) {
             familiarEntity.remove(Entity.RemovalReason.DISCARDED);
             ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
@@ -49,7 +53,7 @@ public class PacketDispelFamiliars extends AbstractPacket {
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

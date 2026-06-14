@@ -1,9 +1,17 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.*;
+import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
+import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCostCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.entity.familiar.*;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarAmethystGolem;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWhirlisprig;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWixie;
+import com.hollingsworth.arsnouveau.common.entity.familiar.ISpellCastListener;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +22,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +38,11 @@ public class FamiliarEvents {
             if (familiarEntity.isRemoved() || familiarEntity.terminatedFamiliar || familiarEntity.getOwner() == null) {
                 stale.add(familiarEntity);
             } else if (predicate.test(familiarEntity)) {
+                matching.add(familiarEntity);
+            }
+        }
+        for (FamiliarEntity familiarEntity : FamiliarEntity.FAMILIAR_SHOULDER_SET) {
+            if (predicate.test(familiarEntity)) {
                 matching.add(familiarEntity);
             }
         }
@@ -56,10 +70,12 @@ public class FamiliarEvents {
 
     @SubscribeEvent
     public static void summonEvent(FamiliarSummonEvent event) {
-        for (FamiliarEntity entity : getFamiliars((f) -> true)) {
-            if (entity.getOwner() != null && entity.getOwner().equals(event.owner)) {
-                entity.onFamiliarSpawned(event);
-            }
+
+        if (event.owner instanceof Player player) {
+            player.removeEntitiesOnShoulder();
+        }
+        for (FamiliarEntity entity : getFamiliars((f) -> f.getOwner() != null && f.getOwner().equals(event.owner))) {
+            entity.onFamiliarSpawned(event);
         }
 
     }
@@ -67,7 +83,7 @@ public class FamiliarEvents {
     @SubscribeEvent
     public static void maxManaCalc(MaxManaCalcEvent event) {
         for (FamiliarEntity entity : getFamiliars(familiarEntity -> true)) {
-            if (!entity.isAlive())
+            if (!entity.isAlive() && !entity.isOnShoulder())
                 return;
             if (entity.getOwner() != null && entity.getOwner().equals(event.getEntity())) {
                 event.setReserve((float) (event.getReserve() + entity.getManaReserveModifier()));
@@ -93,16 +109,6 @@ public class FamiliarEvents {
             }
         }
     }
-
-    // TODO: restore drygmy fortune event
-//    @SubscribeEvent
-//    public static void fortuneEvent(LootingLevelEvent event) {
-//        for (FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarDrygmy))) {
-//            if (entity instanceof FamiliarDrygmy) {
-//                ((FamiliarDrygmy) entity).onLootingEvent(event);
-//            }
-//        }
-//    }
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
@@ -143,4 +149,18 @@ public class FamiliarEvents {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void tickShoulderFamiliars(PlayerTickEvent.Post playerTickEvent) {
+        Player player = playerTickEvent.getEntity();
+        if (player.getShoulderEntityLeft().contains("familiar") || player.getShoulderEntityRight().contains("familiar")) {
+            List<FamiliarEntity> familiars = getFamiliars(familiarEntity -> familiarEntity.getOwner() != null && familiarEntity.getOwner().equals(player) && familiarEntity.isOnShoulder());
+            for (FamiliarEntity familiar : familiars) {
+                familiar.applyTickEffects();
+            }
+        }
+    }
+
+
+
 }
