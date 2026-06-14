@@ -24,6 +24,7 @@ public class DenySpawnRitual extends RangeRitual {
         boolean shouldDeny = !this.tile.isOff
                 && checkSpawn.getSpawnType() == MobSpawnType.NATURAL
                 && (checkSpawn.getEntity() instanceof Enemy || checkSpawn.getEntity().getType().is(EntityTags.DENY_SPAWN_RITUAL_WHITELIST))
+                && !checkSpawn.getEntity().getType().is(EntityTags.DENY_SPAWN_RITUAL_BLACKLIST)
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if (shouldDeny) {
             checkSpawn.setSpawnCancelled(true);

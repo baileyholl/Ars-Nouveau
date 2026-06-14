@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +29,8 @@ public class RitualBreed extends AbstractRitual {
                 }
                 boolean didWorkOnce = false;
                 for (Animal a : animals) {
+                    if (a.getType().is(EntityTags.BREED_BLACKLIST))
+                        continue;
                     if (a.getAge() == 0 && a.canFallInLove()) {
                         didWorkOnce = true;
                         a.setInLove(null);

@@ -99,6 +99,13 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
 
         this.tag(EntityTags.ANIMAL_SUMMON_BLACKLIST).add(ModEntities.GIFT_STARBY.get());
         this.tag(EntityTags.BURST_WHITELIST).add(ModEntities.BUBBLE.get(), EntityType.ARROW);
+        this.tag(EntityTags.DENY_SPAWN_RITUAL_WHITELIST);
+        this.tag(EntityTags.DENY_SPAWN_RITUAL_BLACKLIST);
+        this.tag(EntityTags.BREED_BLACKLIST);
+        this.tag(EntityTags.OVERGROWTH_BLACKLIST);
+        this.tag(EntityTags.INTERACT_JAR_BLACKLIST);
+        this.tag(EntityTags.ITEM_GRATE_PASSABLE);
+        this.tag(EntityTags.ITEM_GRATE_COLLIDE);
 
         TagKey<EntityType<?>> RETAIN_IN_SUBLEVEL = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("sable", "retain_in_sub_level"));
         TagKey<EntityType<?>> DESTROY_LEAVING_PLOT = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("sable", "destroy_when_leaving_plot"));
