@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.RangeRitual;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +23,7 @@ public class DenySpawnRitual extends RangeRitual {
     public boolean denySpawn(FinalizeSpawnEvent checkSpawn) {
         boolean shouldDeny = !this.tile.isOff
                 && checkSpawn.getSpawnType() == MobSpawnType.NATURAL
-                && checkSpawn.getEntity() instanceof Enemy
+                && (checkSpawn.getEntity() instanceof Enemy || checkSpawn.getEntity().getType().is(EntityTags.DENY_SPAWN_RITUAL_WHITELIST))
                 && checkSpawn.getEntity().distanceToSqr(getPos().getX(), getPos().getY(), getPos().getZ()) <= radius * radius;
         if (shouldDeny) {
             checkSpawn.setSpawnCancelled(true);
