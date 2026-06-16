@@ -44,6 +44,7 @@ neoForge {
         client {
             client()
             gameDirectory = project.file('runs/client')
+            programArguments.addAll("--width", "1280", "--height", "720")
         }
 
         clientAlt {
