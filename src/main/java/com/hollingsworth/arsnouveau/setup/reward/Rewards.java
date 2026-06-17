@@ -19,6 +19,8 @@ import java.util.UUID;
 public class Rewards {
     public static List<ContributorStarby> starbuncles = new ArrayList<>();
     public static List<UUID> CONTRIBUTORS = new ArrayList<>();
+    public static String STARBUNCLE_PLUSH_MESSAGE = null;
+    public static boolean SEND_ONE_TIME_MESSAGE = false;
 
     public static void init() {
         try {
@@ -47,6 +49,22 @@ public class Rewards {
             if (!FMLEnvironment.production) {
                 throw new RuntimeException("Failed to load supporters.json");
             }
+        }
+        try {
+            JsonObject object = JsonParser.parseString(readUrl(new URL("https://raw.githubusercontent.com/baileyholl/Ars-Nouveau/main/starbuncle_plush.json"))).getAsJsonObject();
+            boolean isEnabled = object.get("enabled").getAsBoolean();
+            if (!isEnabled) {
+                STARBUNCLE_PLUSH_MESSAGE = null;
+            } else {
+                SEND_ONE_TIME_MESSAGE = object.get("send_chat").getAsBoolean();
+                STARBUNCLE_PLUSH_MESSAGE = object.get("message").getAsString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (!FMLEnvironment.production) {
+                throw new RuntimeException("Failed to load starbuncle_plush.json");
+            }
+            STARBUNCLE_PLUSH_MESSAGE = "Click here to order a Starbuncle Plush from Makeship!";
         }
     }
 
