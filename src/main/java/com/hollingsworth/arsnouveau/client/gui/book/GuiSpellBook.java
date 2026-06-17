@@ -24,6 +24,8 @@ import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidato
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.reward.Rewards;
+import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -198,6 +200,15 @@ public class GuiSpellBook extends SpellSlottedScreen {
         addRenderableWidget(new GuiImageButton(bookLeft + 113, bookTop - 3, DocAssets.INFO_ICON, (b) -> {
         }).withTooltip(Component.translatable("ars_nouveau.spell_book_info_tooltip")).disableSound());
 
+        if (Rewards.STARBUNCLE_PLUSH_MESSAGE != null) {
+            addRenderableWidget(new NuggetImageButton(bookLeft - 15, bookTop + 138, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/starbuncle_plush.png"), (b) -> {
+                try {
+                    Util.getPlatform().openUri(new URI("https://www.makeship.com/products/starbuncle"));
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            }).withTooltip(Component.literal(Rewards.STARBUNCLE_PLUSH_MESSAGE)));
+        }
 
         this.nextButton = addRenderableWidget(new PageButton(bookRight - 20, bookBottom - 6, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5, bookBottom - 6, false, this::onPageDec, true));

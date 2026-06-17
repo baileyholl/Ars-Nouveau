@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
+import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
@@ -267,7 +268,13 @@ public class BlockRegistry {
     public static BlockRegistryWrapper<SummonBed> YELLOW_SBED = registerBlockAndItem(LibBlockNames.YELLOW_SBED, SummonBed::new);
     public static BlockRegistryWrapper<SummonBed> PURPLE_SBED = registerBlockAndItem(LibBlockNames.PURPLE_SBED, SummonBed::new);
     public static BlockRegistryWrapper<CrabHat> CRAB_HAT = registerBlockAndItem(LibBlockNames.CRAB_HAT, CrabHat::new);
-    public static BlockRegistryWrapper<StarbunclePlush> STARBUNCLE_PLUSH = registerBlockAndItem(LibBlockNames.STARBUNCLE_PLUSH, StarbunclePlush::new);
+    public static BlockRegistryWrapper<StarbunclePlush> STARBUNCLE_PLUSH = registerBlockAndItem(LibBlockNames.STARBUNCLE_PLUSH, StarbunclePlush::new, (block) -> {
+        var item = new ModBlockItem(block.get(), defaultItemProperties());
+        if (Rewards.STARBUNCLE_PLUSH_MESSAGE != null) {
+            item = item.withTooltip(Component.translatable("ars_nouveau.starby_plush_campaign").withColor(ChatFormatting.GOLD.getColor()));
+        }
+        return item;
+    });
     public static BlockRegistryWrapper<RepositoryCatalog> REPOSITORY_CONTROLLER = registerBlockAndItem(LibBlockNames.REPOSITORY_CATALOG, RepositoryCatalog::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
         @Override
         public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {

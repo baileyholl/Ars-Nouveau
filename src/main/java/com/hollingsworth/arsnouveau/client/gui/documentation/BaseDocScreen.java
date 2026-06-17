@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.gui.SearchBar;
+import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import com.hollingsworth.nuggets.client.gui.BaseButton;
 import com.hollingsworth.nuggets.client.gui.BaseScreen;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
@@ -85,13 +86,22 @@ public class BaseDocScreen extends BaseScreen {
         if (!showRightArrow()) {
             rightArrow.visible = false;
         }
-        addRenderableWidget(new NuggetImageButton(screenLeft - 15, screenTop + 140, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/discord_tab.png"), (b) -> {
+        addRenderableWidget(new NuggetImageButton(screenLeft - 15, screenTop + 118, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/discord_tab.png"), (b) -> {
             try {
                 Util.getPlatform().openUri(new URI("https://discord.com/invite/y7TMXZu"));
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
         }).withTooltip(Component.translatable("ars_nouveau.gui.discord")));
+        if (Rewards.STARBUNCLE_PLUSH_MESSAGE != null) {
+            addRenderableWidget(new NuggetImageButton(screenLeft - 15, screenTop + 140, 0, 0, 23, 20, 23, 20, ArsNouveau.prefix("textures/gui/starbuncle_plush.png"), (b) -> {
+                try {
+                    Util.getPlatform().openUri(new URI("https://www.makeship.com/products/starbuncle"));
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            }).withTooltip(Component.literal(Rewards.STARBUNCLE_PLUSH_MESSAGE)));
+        }
         if (previousScreen == null && !(this instanceof IndexScreen)) {
             previousScreen = new IndexScreen();
         }
