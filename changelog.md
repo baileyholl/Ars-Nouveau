@@ -1,12 +1,13 @@
 # Changelog
 
-Amethyst Golems now have a smaller hitbox and no longer collide or can be pushed, similar to starbuncles. This should
-fix some common issues with them getting stuck trying to path around corners.
+Adds a Starbuncle Plush block to celebrate the Makeship starbuncle plush campaign!
 
-Fix starbuncles and golems causing out of memory crashes when trying to path from real world to blocks on sable levels
+Adds blacklist tags for overgrowth, breeding, and sanctuary rituals
 
-Fix hitboxes for Ritual Brazier and Planarium
+Adds whitelist tag to sanctuary ritual
 
-Fixes Runes not checking for player claims before being placed (Alexthw)
+Using spell parchment on a prestidigitation block, sconce, and light block will copy the spell style to it. (Qther)
 
-Fixes Shady Villager trades not editable by other mods like MoreJs (LLytho)
+Fixes shulkers losing inventory data when Wololo is cast on them (Alexthw)
+
+Adds containment jar item blacklist tag (qther)
