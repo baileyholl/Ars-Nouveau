@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
@@ -30,6 +32,8 @@ public class EffectSummonDecoy extends AbstractEffect {
             dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));
             dummy.setPos(pos.x, pos.y + 1, pos.z);
             summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, resolver, dummy);
+            // If the dummy failed to summon, don't try to aggro mobs to it
+            if (!dummy.isAddedToLevel()) return;
             world.getEntitiesOfClass(Mob.class, dummy.getBoundingBox().inflate(20, 10, 20)).forEach(l -> l.setTarget(dummy));
             applySummoningSickness(shooter, 1);
         }
@@ -55,14 +59,15 @@ public class EffectSummonDecoy extends AbstractEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        // SummonEvent captures augments, but no uses of that field were found
-        return getSummonAugments();
+        return getTimedSummonAugments();
     }
 
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
         addSummonAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
+        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
     }
 
     @Override
