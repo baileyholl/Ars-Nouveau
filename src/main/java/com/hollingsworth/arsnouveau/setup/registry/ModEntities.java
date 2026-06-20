@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.*;
+import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoBoss;
 import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoLob;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;

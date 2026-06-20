@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.DimBoundary;
-import com.hollingsworth.arsnouveau.common.entity.ArcanoBoss;
 import com.hollingsworth.arsnouveau.common.world.dimension.PlanariumChunkGenerator;
 import com.hollingsworth.arsnouveau.common.world.saved_data.ArcanoDimData;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
@@ -35,7 +34,6 @@ public class ArcanoBossEvents {
     }
 
     public static void onEntityTravel(EntityTravelToDimensionEvent event) {
-        System.out.println("entity entered");
         Level level = event.getEntity().level;
         if (!(level instanceof ServerLevel serverLevel) || !(event.getEntity() instanceof Player player)) {
             return;
@@ -47,16 +45,7 @@ public class ArcanoBossEvents {
         if (!WorldHelpers.isOfWorldType(targetLevel, ArsNouveau.ARCANO_DIMENSION_TYPE_KEY)) {
             return;
         }
-
         ArcanoDimData dimData = ArcanoDimData.from(serverLevel);
-        System.out.println("Player " + event.getEntity().getName().getString() + " is traveling to dimension " + event.getDimension());
-//        if (!dimData.isBossSpawned()) {
-        System.out.println("adding boss");
-        ArcanoBoss arcanoBoss = new ArcanoBoss(targetLevel);
-        arcanoBoss.setPos(15.5, 2, 15.5);
-        arcanoBoss.setTarget(player);
-        targetLevel.addFreshEntity(arcanoBoss);
-        dimData.setBossSpawned(true);
-//        }
+        dimData.onEntityEntered(serverLevel);
     }
 }

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss;
 
-import com.hollingsworth.arsnouveau.common.entity.ArcanoBoss;
+import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoBoss;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.memory.MemoryTypes;
 import com.hollingsworth.nuggets.common.state_machine.IStateEvent;
 import com.hollingsworth.nuggets.common.state_machine.SimpleStateMachine;

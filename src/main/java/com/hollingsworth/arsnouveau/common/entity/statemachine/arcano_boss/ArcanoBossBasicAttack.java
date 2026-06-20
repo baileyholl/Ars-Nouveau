@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss;
 
-import com.hollingsworth.arsnouveau.common.entity.ArcanoBoss;
+import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoBoss;
 import com.hollingsworth.arsnouveau.common.entity.arcano_boss.ArcanoLob;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;

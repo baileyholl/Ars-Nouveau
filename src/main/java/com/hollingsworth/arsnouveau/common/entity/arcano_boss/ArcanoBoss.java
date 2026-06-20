@@ -1,12 +1,18 @@
-package com.hollingsworth.arsnouveau.common.entity;
+package com.hollingsworth.arsnouveau.common.entity.arcano_boss;
 
 import com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss.ArcanoStateMachine;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.arcano_boss.InitArcanoState;
 import com.hollingsworth.arsnouveau.common.entity.statemachine.memory.MemoryMap;
+import com.hollingsworth.arsnouveau.common.world.saved_data.ArcanoDimData;
 import com.hollingsworth.arsnouveau.setup.registry.DataSerializers;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,8 +20,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -39,7 +47,7 @@ public class ArcanoBoss extends Monster {
     private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setCreateWorldFog(true);
     private static final EntityDataAccessor<ArcanoBossState> ARCANO_POSE = SynchedEntityData.defineId(ArcanoBoss.class, DataSerializers.ARCANO_POSE.get());
 
-    private ArcanoStateMachine stateMachine = new ArcanoStateMachine(this, new InitArcanoState(this));
+    private final ArcanoStateMachine stateMachine = new ArcanoStateMachine(this, new InitArcanoState(this));
 
     public MemoryMap memoryMap = new MemoryMap();
 
@@ -48,7 +56,11 @@ public class ArcanoBoss extends Monster {
     public AnimationState swingStaff = new AnimationState();
     public AnimationState spinStaff = new AnimationState();
     public AnimationState spinStaff2 = new AnimationState();
-
+    public boolean isSetupPhase = false;
+    public int setupTicks = 0;
+    public int maxSetupTicks = 100;
+    ArcanoDimData arcanoDimData;
+    boolean initMusic;
 
     public ArcanoBoss(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -92,7 +104,11 @@ public class ArcanoBoss extends Monster {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        if (!isSetupPhase) {
+            this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        } else {
+            this.bossEvent.setProgress((float) this.setupTicks / this.maxSetupTicks);
+        }
     }
 
     @Override
@@ -116,6 +132,26 @@ public class ArcanoBoss extends Monster {
     }
 
     @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.isCreativePlayer()) {
+            return super.hurt(source, amount);
+        }
+        if (isSetupPhase) {
+            return false;
+        }
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public void setRemoved(RemovalReason removalReason) {
+        super.setRemoved(removalReason);
+        if (removalReason.shouldDestroy() && level instanceof ServerLevel serverLevel) {
+            arcanoDimData.setBossDefeated(true);
+
+        }
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -131,8 +167,26 @@ public class ArcanoBoss extends Monster {
     @Override
     public void tick() {
         super.tick();
+        if (level.isClientSide && !initMusic) {
+            initMusic = true;
+            ((Runnable) () -> ArcanoBoss.ArcanoMusic.play(ArcanoBoss.this)).run();
+        }
+
+        if (isSetupPhase) {
+            setupTicks++;
+            if (setupTicks >= maxSetupTicks) {
+                isSetupPhase = false;
+            }
+        }
         if (!this.isDeadOrDying() && this.isEffectiveAi() && level instanceof ServerLevel serverLevel) {
-            this.setPos(16, 1, 16);
+            if (arcanoDimData == null) {
+                arcanoDimData = ArcanoDimData.from(serverLevel);
+            }
+            // The dimension spawned another boss and didn't remove this one, likely due to chunk loading.
+            if (arcanoDimData.bossUUID == null || !arcanoDimData.bossUUID.equals(this.getUUID())) {
+                this.remove(RemovalReason.DISCARDED);
+                return;
+            }
             stateMachine.tick();
         }
         if (level.isClientSide) {
@@ -207,6 +261,47 @@ public class ArcanoBoss extends Monster {
 
     public ArcanoBossState getArcanoPose() {
         return this.entityData.get(ARCANO_POSE);
+    }
+
+    @Override
+    public boolean save(CompoundTag compound) {
+        compound.putBoolean("setupPhase", isSetupPhase);
+
+        return super.save(compound);
+    }
+
+    @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        this.isSetupPhase = compound.getBoolean("setupPhase");
+    }
+
+    private static class ArcanoMusic extends AbstractTickableSoundInstance {
+        private final ArcanoBoss chimera;
+
+        private ArcanoMusic(ArcanoBoss chimera) {
+            super(SoundRegistry.WILD_HUNT.get(), SoundSource.RECORDS, SoundInstance.createUnseededRandom());
+            this.chimera = chimera;
+            this.x = chimera.getX();
+            this.y = chimera.getY();
+            this.z = chimera.getZ();
+            this.looping = true;
+        }
+
+        public static void play(ArcanoBoss chimera) {
+            Minecraft.getInstance().getSoundManager().play(new ArcanoBoss.ArcanoMusic(chimera));
+        }
+
+        @Override
+        public void tick() {
+            if (!chimera.isAlive()) {
+                stop();
+            } else {
+                this.x = chimera.getX();
+                this.y = chimera.getY();
+                this.z = chimera.getZ();
+            }
+        }
     }
 
     public enum ArcanoBossState {
