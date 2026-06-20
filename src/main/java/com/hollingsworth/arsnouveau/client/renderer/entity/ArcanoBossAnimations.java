@@ -369,7 +369,7 @@ public class ArcanoBossAnimations {
                 .build();
 
 
-    public static final AnimationDefinition swing_staff = AnimationDefinition.Builder.withLength(1.0F).looping()
+    public static final AnimationDefinition swing_staff = AnimationDefinition.Builder.withLength(1.0F)
             .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                     new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
                     new Keyframe(0.125F, KeyframeAnimations.degreeVec(7.5F, 42.5F, 0.0F), AnimationChannel.Interpolations.LINEAR),
