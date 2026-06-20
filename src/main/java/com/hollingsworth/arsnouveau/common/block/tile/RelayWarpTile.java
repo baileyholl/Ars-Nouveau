@@ -32,7 +32,7 @@ public class RelayWarpTile extends RelaySplitterTile {
 
     public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate) {
         if (to instanceof RelayWarpTile toWarp) {
-            double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
+            double adjustedDist = BlockUtil.distanceFrom(level, toWarp.worldPosition, this.worldPosition) - 30;
             double probLoss = adjustedDist / 100.0;
             if (adjustedDist > 0 && level.getRandom().nextFloat() < probLoss) {
                 int transferRate = getTransferRate(from, to, fromTransferRate);
@@ -50,7 +50,7 @@ public class RelayWarpTile extends RelaySplitterTile {
     @Override
     public int transferSource(ISourceCap from, ISourceCap to) {
         if (to instanceof RelayWarpTile toWarp) {
-            double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
+            double adjustedDist = BlockUtil.distanceFrom(level, toWarp.worldPosition, this.worldPosition) - 30;
             double probLoss = adjustedDist / 100.0;
             if (adjustedDist > 0 && level.getRandom().nextFloat() < probLoss) {
                 int transfer = to.receiveSource(from.getSource(), true);

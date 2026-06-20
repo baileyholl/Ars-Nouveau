@@ -43,7 +43,7 @@ public class JarOfLight extends ModItem {
             stack.set(DataComponentRegistry.LIGHT_JAR, new LightJarData(Optional.empty(), true));
         }
 
-        if (BlockUtil.distanceFrom(lightLocation, entityIn.blockPosition()) > 7) {
+        if (BlockUtil.distanceFrom(worldIn, lightLocation, entityIn.blockPosition()) > 7) {
             Direction opposite = entityIn.getDirection().getOpposite();
             BlockPos preferredLightPos = entityIn.blockPosition().relative(opposite, 1);
             if (worldIn.getBlockState(lightLocation).getBlock() instanceof LightBlock) {

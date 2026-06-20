@@ -121,9 +121,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                                 4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                     }
                 }
-                entityQueue.clear();
             }
         }
+        entityQueue.clear();
     }
 
     public static @Nullable ServerLevel getServerLevel(String dimID, ServerLevel level) {
@@ -168,7 +168,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
         }
         Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
         //Note: We grab the passengers here instead of in placeEntity as changeDimension starts by removing any passengers
-        List<Entity> passengers = entity.getPassengers();
         return entity.changeDimension(new DimensionTransition((ServerLevel) targetWorld, destination, new Vec3(0, 0, 0), rotationVec.y, rotationVec.x, false, DimensionTransition.DO_NOTHING));
     }
 

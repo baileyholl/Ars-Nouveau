@@ -265,7 +265,7 @@ public class ModEntities {
             }, MobCategory.CREATURE)
             .sized(1.4F, 3F).setTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<AmethystGolem>> AMETHYST_GOLEM = registerEntity(LibEntityNames.AMETHYST_GOLEM, EntityType.Builder.of(AmethystGolem::new, MobCategory.CREATURE)
-            .sized(1.0f, 1.0f).setTrackingRange(10));
+            .sized(0.7f, 0.93f).setTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<ScryerCamera>> SCRYER_CAMERA = registerEntity(LibEntityNames.SCRYER_CAMERA, EntityType.Builder.<ScryerCamera>of(ScryerCamera::new, MobCategory.MISC)
             .sized(1.0E-4F, 1.0E-4F).setTrackingRange(256).setUpdateInterval(20).setShouldReceiveVelocityUpdates(true));
 

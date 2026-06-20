@@ -41,7 +41,7 @@ public class ConvertBlockState extends CrabState {
             return null;
         }
 
-        if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), target) > 2 && ticksRunning < 200) {
+        if (BlockUtil.distanceFrom(alakarkinos.level(), alakarkinos.blockPosition(), target) > 2 && ticksRunning < 200) {
             alakarkinos.getNavigation().moveTo(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, 2, 1.0);
             return null;
         }

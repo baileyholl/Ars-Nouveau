@@ -92,7 +92,7 @@ public class CollectEssenceGoal extends Goal {
                 approached = true;
                 drygmy.getNavigation().stop();
             }
-            if (BlockUtil.distanceFrom(drygmy.position, target.position) <= 2.3) {
+            if (BlockUtil.distanceFrom(drygmy.level(), drygmy.position, target.position) <= 2.3) {
                 approached = true;
             } else {
                 timePathing++;

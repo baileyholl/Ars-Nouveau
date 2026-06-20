@@ -70,7 +70,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         // check if position is a BrazierRelayTile
         if (storedPos != null && level.getBlockEntity(storedPos) instanceof BrazierRelayTile relayTile) {
-            if (BlockUtil.distanceFrom(getBlockPos(), storedPos) > 16) {
+            if (BlockUtil.distanceFrom(level, getBlockPos(), storedPos) > 16) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.fail"));
                 return;
             }

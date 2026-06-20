@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
+import com.hollingsworth.arsnouveau.api.spell.ITimelined;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
@@ -37,7 +38,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class SconceTile extends ModdedTile implements ILightable, ITickable, IDispellable, IWololoable {
+public class SconceTile extends ModdedTile implements ILightable, ITickable, IDispellable, IWololoable, ITimelined<LightTimeline> {
     protected LightTimeline timeline = new LightTimeline();
     protected ParticleColor color = ParticleColor.defaultParticleColor();
     public boolean lit;
@@ -145,5 +146,10 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     @Override
     public ParticleColor getColor() {
         return color;
+    }
+
+    @Override
+    public LightTimeline getTimeline() {
+        return timeline;
     }
 }

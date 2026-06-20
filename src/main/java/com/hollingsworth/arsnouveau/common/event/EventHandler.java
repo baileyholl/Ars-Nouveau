@@ -37,9 +37,13 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -164,7 +168,7 @@ public class EventHandler {
         if (e.getSource().getEntity() instanceof LivingEntity livingUser) {
             if (livingUser instanceof Player)
                 return;
-            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(livingUser.position, e.getEntity().position) < 3) {
+            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(e.getEntity().level, livingUser.position, e.getEntity().position) < 3) {
                 livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem().hurtEnemy(livingUser.getMainHandItem(), e.getEntity(), livingUser);
             }
         }
@@ -212,6 +216,14 @@ public class EventHandler {
             ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
             tag.putBoolean(book_tag, true);
             e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+        }
+        String plush_tag = "an_plush";
+        if (!tag.getBoolean(plush_tag) && Rewards.SEND_ONE_TIME_MESSAGE && Rewards.STARBUNCLE_PLUSH_MESSAGE != null) {
+            Player entity = e.getEntity();
+            ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(BlockRegistry.STARBUNCLE_PLUSH.get()));
+            tag.putBoolean(plush_tag, true);
+            e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+            entity.sendSystemMessage(Component.literal(Rewards.STARBUNCLE_PLUSH_MESSAGE).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.makeship.com/products/starbuncle"))));
         }
     }
 
@@ -367,47 +379,47 @@ public class EventHandler {
             List<VillagerTrades.ItemListing> level4 = trades.get(4);
             List<VillagerTrades.ItemListing> level5 = trades.get(5);
 
-            level1.add((trader, rand) -> itemToEmer(trader, BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
-            level1.add((trader, rand) -> itemToEmer(trader, ItemsRegistry.MAGE_FIBER, 16, 16, 2));
+            level1.add(itemToEmer(BlockRegistry.SOURCEBERRY_BUSH, 16, 16, 2));
+            level1.add(itemToEmer(ItemsRegistry.MAGE_FIBER, 16, 16, 2));
 
             for (ItemStack fruit : Ingredient.of(ItemTagProvider.SHADY_WIZARD_FRUITS).getItems()) {
-                level1.add((trader, rand) -> itemToEmer(trader, fruit.getItem(), 6, 16, 2));
+                level1.add(itemToEmer(fruit.getItem(), 6, 16, 2));
             }
 
-            level1.add((trader, rand) -> itemToEmer(trader, Items.AMETHYST_SHARD, 32, 16, 2));
+            level1.add(itemToEmer(Items.AMETHYST_SHARD, 32, 16, 2));
 
-            level1.add((trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
+            level1.add(emerToItem(ItemsRegistry.SOURCE_BERRY_ROLL, 4, 16, 2));
 
-            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.GHOST_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader, BlockRegistry.FALSE_WEAVE, 1, 8, 2));
-            level2.add((trader, rand) -> emerToItem(trader, ItemsRegistry.WARP_SCROLL, 1, 8, 2));
+            level2.add(emerToItem(BlockRegistry.GHOST_WEAVE, 1, 8, 2));
+            level2.add(emerToItem(BlockRegistry.MIRROR_WEAVE, 1, 8, 2));
+            level2.add(emerToItem(BlockRegistry.FALSE_WEAVE, 1, 8, 2));
+            level2.add(emerToItem(ItemsRegistry.WARP_SCROLL, 1, 8, 2));
 
             for (ItemStack wilden : Ingredient.of(ItemTagProvider.WILDEN_DROP_TAG).getItems()) {
-                level2.add((trader, rand) -> itemToEmer(trader, wilden.getItem(), 4, 8, 12));
+                level2.add(itemToEmer(wilden.getItem(), 4, 8, 12));
             }
 
             List<RitualTablet> tablets = new ArrayList<>(RitualRegistry.getRitualItemMap().values());
             for (RitualTablet tablet : tablets) {
                 if (tablet.getDefaultInstance().is(ItemTagProvider.RITUAL_TRADE_BLACKLIST)) continue;
-                level3.add((trader, rand) -> emerToItem(trader, tablet, 4, 1, 12));
+                level3.add(emerToItem(tablet, 4, 1, 12));
             }
 
             for (ItemStack shard : Ingredient.of(ItemTagProvider.SUMMON_SHARDS_TAG).getItems()) {
-                level4.add((trader, rand) -> emerToItem(trader, shard.getItem(), 20, 1, 20));
+                level4.add(emerToItem(shard.getItem(), 20, 1, 20));
             }
-            level5.add((trader, rand) -> emerToItem(trader, ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
+            level5.add(emerToItem(ItemsRegistry.SOURCE_BERRY_PIE, 4, 8, 2));
             level5.add((trader, rand) -> new MerchantOffer(new ItemCost(Items.EMERALD, 48), DungeonLootTables.getRandomItem(DungeonLootTables.RARE_LOOT), 1, 20, 0.2F));
 
         }
     }
 
-    public static MerchantOffer emerToItem(Entity trader, ItemLike itemLike, int cost, int uses, int exp) {
-        return new VillagerTrades.ItemsForEmeralds(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
+    public static VillagerTrades.ItemListing emerToItem(ItemLike itemLike, int cost, int uses, int exp) {
+        return new VillagerTrades.ItemsForEmeralds(itemLike.asItem(), cost, uses, exp);
     }
 
-    public static MerchantOffer itemToEmer(Entity trader, ItemLike itemLike, int cost, int uses, int exp) {
-        return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp).getOffer(trader, trader.getRandom());
+    public static VillagerTrades.ItemListing itemToEmer(ItemLike itemLike, int cost, int uses, int exp) {
+        return new VillagerTrades.EmeraldForItems(itemLike.asItem(), cost, uses, exp);
     }
 
 
@@ -463,7 +475,7 @@ public class EventHandler {
 
         for (UUID uuid : sprigs) {
             if (event.level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
-                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
+                if (BlockUtil.distanceFrom(event.level, whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
                     whirlisprig.droppingShards = true;
                 }
             } else {

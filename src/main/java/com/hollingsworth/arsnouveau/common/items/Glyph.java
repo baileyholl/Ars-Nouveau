@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -53,6 +54,14 @@ public class Glyph extends ModItem {
                 return super.use(worldIn, playerIn, handIn);
             } else if (playerDataCap.unlockGlyph(spellPart)) {
                 CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
+                if (playerIn instanceof ServerPlayer serverPlayer) {
+                    var iMana = CapabilityRegistry.getMana(playerIn);
+                    IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn);
+                    if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                        iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                        iMana.syncToClient(serverPlayer);
+                    }
+                }
                 if (!playerIn.hasInfiniteMaterials()) {
                     playerIn.getItemInHand(handIn).shrink(1);
                 }

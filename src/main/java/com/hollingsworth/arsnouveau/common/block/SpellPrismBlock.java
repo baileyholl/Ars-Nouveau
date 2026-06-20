@@ -12,6 +12,7 @@ import net.minecraft.core.Position;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -60,14 +61,13 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-    @Override
-    public void onHit(ServerLevel world, BlockPos pos, EntityProjectileSpell spell) {
-        Direction direction = world.getBlockState(pos).getValue(FACING);
+    public void onHit(Level world, BlockState state, BlockPos pos, EntityProjectileSpell spell) {
+        Direction direction = state.getValue(FACING);
         Position iposition = getDispensePosition(pos, direction);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
         spell.prismRedirect++;
-        if (spell.prismRedirect >= 3) {
-            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), world, pos, 10);
+        if (spell.prismRedirect >= 3 && world instanceof ServerLevel serverLevel) {
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), serverLevel, pos, 10);
         }
         if (spell.resolver() == null) {
             spell.remove(Entity.RemovalReason.DISCARDED);

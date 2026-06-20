@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -43,7 +44,10 @@ public class EffectRune extends AbstractEffect {
         if (world.getBlockState(pos).canBeReplaced()) {
             if (!world.isInWorldBounds(pos))
                 return;
+            if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
+                return;
             BlockState placementState = BlockRegistry.RUNE_BLOCK.get().getStateForPlacement(new BlockPlaceContext(getPlayer(shooter, (ServerLevel) world), InteractionHand.MAIN_HAND, ItemStack.EMPTY, rayTraceResult instanceof BlockHitResult blockHit ? blockHit : new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, pos, false)));
+            if (placementState == null) return;
             world.setBlockAndUpdate(pos, placementState);
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {
                 if (shooter instanceof Player) {
@@ -52,7 +56,7 @@ public class EffectRune extends AbstractEffect {
                 runeTile.isTemporary = true;
                 Spell newSpell = newContext.getSpell();
                 var mutable = newSpell.mutable();
-                mutable.recipe.add(0, MethodTouch.INSTANCE);
+                mutable.recipe.addFirst(MethodTouch.INSTANCE);
                 runeTile.isSensitive = spellStats.isSensitive();
                 runeTile.setSpell(mutable.immutable());
             }

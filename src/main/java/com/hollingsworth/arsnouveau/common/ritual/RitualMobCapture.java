@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.block.MobJar;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -98,10 +99,16 @@ public class RitualMobCapture extends AbstractRitual {
         if (e.getType().is(EntityTags.JAR_BLACKLIST)) {
             return false;
         }
+
         if (e instanceof PartEntity) {
             return false;
         }
-        return e instanceof LivingEntity livingEntity && !(e instanceof Player) && !((LivingEntity) e).isDeadOrDying();
+
+        if (e instanceof ItemEntity item && item.getItem().is(ItemTagProvider.JAR_ITEM_CAPTURE_BLACKLIST)) {
+            return false;
+        }
+
+        return e instanceof LivingEntity livingEntity && !(e instanceof Player) && !livingEntity.isDeadOrDying();
     }
 
     @Override

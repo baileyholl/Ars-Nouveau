@@ -31,7 +31,7 @@ public class NearbyPlayerCache {
         long nextCheck = gameTime + 500 + level.random.nextInt(20);
 
         for (Player player : level.players()) {
-            if (BlockUtil.distanceFrom(player.blockPosition(), pos) < range) {
+            if (BlockUtil.distanceFrom(level, player.blockPosition(), pos) < range) {
                 positionCache.put(posLong, new CacheResult(true, nextCheck));
                 return true;
             }

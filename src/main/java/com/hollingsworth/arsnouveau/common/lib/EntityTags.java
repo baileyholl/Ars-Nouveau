@@ -30,5 +30,10 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> ITEM_GRATE_COLLIDE = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("item_grate_collide"));
 
     public static final TagKey<EntityType<?>> BURST_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("burst_whitelist"));
+    public static final TagKey<EntityType<?>> DENY_SPAWN_RITUAL_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("deny_spawn_ritual_whitelist"));
+    public static final TagKey<EntityType<?>> DENY_SPAWN_RITUAL_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("deny_spawn_ritual_blacklist"));
+
+    public static final TagKey<EntityType<?>> BREED_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("breed_blacklist"));
+    public static final TagKey<EntityType<?>> OVERGROWTH_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("overgrowth_blacklist"));
 
 }

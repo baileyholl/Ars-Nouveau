@@ -55,7 +55,7 @@ public abstract class ConjureBiomeRitual extends AbstractRitual {
             double x = nextPos.getX() + 0.5;
             double y = nextPos.getY() + 0.5;
             double z = nextPos.getZ() + 0.5;
-            double dist = BlockUtil.distanceFrom(new Vec3(x, y, z), new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+            double dist = BlockUtil.distanceFrom(getWorld(), new Vec3(x, y, z), new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
             if (dist <= radius && getWorld().getBlockState(nextPos).canBeReplaced()) {
                 BlockState state = stateForPos(nextPos);
                 setState(nextPos, state);

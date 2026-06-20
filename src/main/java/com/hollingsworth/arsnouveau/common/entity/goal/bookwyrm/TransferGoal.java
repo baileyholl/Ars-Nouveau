@@ -62,7 +62,7 @@ public class TransferGoal extends Goal {
             return;
         }
         if (!reachedFrom) {
-            if (BlockUtil.distanceFrom(bookwyrm.position(), new Vec3(task.from.x, task.from.y(), task.from.z())) <= 1.5) {
+            if (BlockUtil.distanceFrom(bookwyrm.level(), bookwyrm.position(), new Vec3(task.from.x, task.from.y(), task.from.z())) <= 1.5) {
                 reachedFrom = true;
                 if (task != null) {
                     bookwyrm.setHeldStack(task.stack);
@@ -84,7 +84,7 @@ public class TransferGoal extends Goal {
                 }
             }
         } else {
-            if (BlockUtil.distanceFrom(bookwyrm.position(), new Vec3(task.to.x(), task.to.y(), task.to.z())) <= 1.5) {
+            if (BlockUtil.distanceFrom(bookwyrm.level(), bookwyrm.position(), new Vec3(task.to.x(), task.to.y(), task.to.z())) <= 1.5) {
                 isDone = true;
                 bookwyrm.setHeldStack(ItemStack.EMPTY);
                 if (bookwyrm.level instanceof ServerLevel serverLevel) {

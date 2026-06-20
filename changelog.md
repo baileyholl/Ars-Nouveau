@@ -1,19 +1,13 @@
 # Changelog
 
-Fixes memory leak with Planarium
+Adds a Starbuncle Plush block to celebrate the Makeship starbuncle plush campaign!
 
-Planarium updates are now batched with a configurable value, preventing frequently updated planariums from causing lag.
+Adds blacklist tags for overgrowth, breeding, and sanctuary rituals
 
-Casting rune on an entity will now resolve the spell on it directly (Qther)
+Adds whitelist tag to sanctuary ritual
 
-Fixes Cut not respecting player UUIDs for claims (Qther)
+Using spell parchment on a prestidigitation block, sconce, and light block will copy the spell style to it. (Qther)
 
-Improves performance for inserting items with the storage lectern (Qther)
+Fixes shulkers losing inventory data when Wololo is cast on them (Alexthw)
 
-Fixes crash with Wixie Cauldrons with misbehaving modded or custom recipes
-
-Name will now remove custom names if used on a target with an empty spell name. (Qther)
-
-Fixes warp portals loading the origin dimension instead of the destination when teleporting. (Qther)
-
-Fixes rotating spell turrets using the wrong direction for glyphs (Alexthw)
+Adds containment jar item blacklist tag (qther)

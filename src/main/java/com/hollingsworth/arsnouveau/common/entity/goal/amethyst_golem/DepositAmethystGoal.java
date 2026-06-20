@@ -39,7 +39,7 @@ public class DepositAmethystGoal extends Goal {
         if (golem.getHome() == null)
             return;
 
-        if (BlockUtil.distanceFrom(golem.blockPosition(), golem.getHome()) <= 2) {
+        if (BlockUtil.distanceFrom(golem.level(), golem.blockPosition(), golem.getHome()) <= 2) {
             isDone = true;
             deposit();
         }

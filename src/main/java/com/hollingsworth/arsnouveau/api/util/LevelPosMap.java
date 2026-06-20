@@ -38,7 +38,7 @@ public class LevelPosMap {
         for (BlockPos p : worldList) {
             if (!level.isLoaded(p))
                 continue;
-            if (BlockUtil.distanceFrom(atPos, new Vec3(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5)) <= distanceFrom) {
+            if (BlockUtil.distanceFrom(level, atPos, new Vec3(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5)) <= distanceFrom) {
                 if (removeFunction.apply(level, p)) {
                     stale.add(p);
                 } else if (breakEarlyFunction.apply(p)) {

@@ -47,7 +47,7 @@ public class PickupAmethystGoal extends Goal {
         }
         golem.getNavigation().tryMoveToBlockPos(targetEntity.blockPosition(), 1.0f);
 
-        if (BlockUtil.distanceFrom(golem.blockPosition(), targetEntity.blockPosition()) <= 1.5) {
+        if (BlockUtil.distanceFrom(golem.level(), golem.blockPosition(), targetEntity.blockPosition()) <= 1.5) {
             collectStacks();
             isDone = true;
             golem.pickupCooldown = 60 + golem.getRandom().nextInt(10);

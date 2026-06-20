@@ -199,7 +199,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
             return PlayState.STOP;
         }));
         animatableManager.add(new AnimationController<>(this, "danceController", 1, (event) -> {
-            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
+            if ((!this.isTamed() && getHeldStack().is(Tags.Items.NUGGETS_GOLD)) || (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(this.level(), position, jukeboxPos) <= 8)) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }
@@ -738,7 +738,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
-        return TEXTURES.get(color);
+        return TEXTURES.getOrDefault(color, TEXTURES.get(DyeColor.ORANGE.getName()));
     }
 
     public ResourceLocation getModel() {

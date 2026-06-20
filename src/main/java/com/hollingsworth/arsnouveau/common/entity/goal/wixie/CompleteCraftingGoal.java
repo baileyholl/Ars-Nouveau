@@ -21,7 +21,7 @@ public class CompleteCraftingGoal extends ExtendedRangeGoal {
         super.start();
         ticksNearby = 0;
         hasCast = false;
-        this.startDistance = BlockUtil.distanceFrom(wixie.position, wixie.cauldronPos.above());
+        this.startDistance = BlockUtil.distanceFrom(wixie.level(), wixie.position, wixie.cauldronPos.above());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CompleteCraftingGoal extends ExtendedRangeGoal {
     @Override
     public void tick() {
         super.tick();
-        if (BlockUtil.distanceFrom(wixie.position(), wixie.cauldronPos.above()) < 1.5D + this.extendedRange) {
+        if (BlockUtil.distanceFrom(wixie.level(), wixie.position(), wixie.cauldronPos.above()) < 1.5D + this.extendedRange) {
             ticksNearby++;
             if (!hasCast) {
 //                Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));

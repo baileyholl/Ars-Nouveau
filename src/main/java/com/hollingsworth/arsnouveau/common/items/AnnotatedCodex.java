@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -92,6 +93,14 @@ public class AnnotatedCodex extends ModItem {
                 if (!known.contains(storedPart)) {
                     playerCap.unlockGlyph(storedPart);
                     numUnlocked++;
+                }
+            }
+            if (pPlayer instanceof ServerPlayer serverPlayer) {
+                var iMana = CapabilityRegistry.getMana(pPlayer);
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(pPlayer);
+                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                    iMana.syncToClient(serverPlayer);
                 }
             }
             if (numUnlocked > 0) {
