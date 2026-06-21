@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.client.container.ArcanoRewardScreen;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
@@ -224,6 +225,7 @@ public class ClientHandler {
     @SubscribeEvent
     public static void registerMenu(final RegisterMenuScreensEvent event) {
         event.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
+        event.register(MenuRegistry.ARCANO_REWARD.get(), ArcanoRewardScreen::new);
     }
 
     @SubscribeEvent

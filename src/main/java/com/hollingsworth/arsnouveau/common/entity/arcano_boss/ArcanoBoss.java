@@ -146,8 +146,7 @@ public class ArcanoBoss extends Monster {
     public void setRemoved(RemovalReason removalReason) {
         super.setRemoved(removalReason);
         if (removalReason.shouldDestroy() && level instanceof ServerLevel serverLevel) {
-            arcanoDimData.setBossDefeated(true);
-
+            ArcanoDimData.from(serverLevel).onBossDefeated(serverLevel);
         }
     }
 

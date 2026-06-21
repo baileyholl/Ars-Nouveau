@@ -45,7 +45,7 @@ public class ArcanoBossEvents {
         if (!WorldHelpers.isOfWorldType(targetLevel, ArsNouveau.ARCANO_DIMENSION_TYPE_KEY)) {
             return;
         }
-        ArcanoDimData dimData = ArcanoDimData.from(serverLevel);
-        dimData.onEntityEntered(serverLevel);
+        ArcanoDimData dimData = ArcanoDimData.from(targetLevel);
+        dimData.onEntityEntered(targetLevel);
     }
 }

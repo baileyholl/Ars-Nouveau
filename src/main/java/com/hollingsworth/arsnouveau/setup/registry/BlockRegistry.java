@@ -398,6 +398,8 @@ public class BlockRegistry {
 //    public static final BlockRegistryWrapper<ScryerPlanarium> SCRYER_PLANARIUM = registerBlockAndItem(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanarium::new);
 //    public static final BlockEntityTypeRegistryWrapper<ScryerPlanariumTile> SCRYER_PLANARIUM_TILE = registerTile(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanariumTile::new, SCRYER_PLANARIUM);
 
+    public static final BlockRegistryWrapper<ArcanoRewardBlock> ARCANO_REWARD = registerBlockAndItem(LibBlockNames.ARCANO_REWARD, ArcanoRewardBlock::new);
+    public static final BlockEntityTypeRegistryWrapper<ArcanoRewardTile> ARCANO_REWARD_TILE = registerTile(LibBlockNames.ARCANO_REWARD, ArcanoRewardTile::new, ARCANO_REWARD);
     public static final BlockRegistryWrapper<ArcanoJar> ARCANO_JAR = registerBlockAndItem(LibBlockNames.ARCANO_JAR, ArcanoJar::new);
     public static final BlockEntityTypeRegistryWrapper<ArcanoJarTile> ARCANO_JAR_TILE = registerTile(LibBlockNames.ARCANO_JAR, ArcanoJarTile::new, ARCANO_JAR);
 
