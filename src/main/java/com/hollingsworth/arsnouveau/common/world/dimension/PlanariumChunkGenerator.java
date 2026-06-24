@@ -58,7 +58,7 @@ public class PlanariumChunkGenerator extends ChunkGenerator {
 
     // create chunk generator at runtime when dynamic dimension is created
     public PlanariumChunkGenerator(MinecraftServer server) {
-        this(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(ArsNouveau.BIOME_KEY));
+        this(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(ArsNouveau.JAR_BIOME_KEY));
     }
 
     // create chunk generator when dimension is loaded from the dimension registry on server init

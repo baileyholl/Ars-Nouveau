@@ -364,6 +364,7 @@ public class EventHandler {
         AdoptCommand.register(event.getDispatcher());
         DroplessMobsCommand.register(event.getDispatcher());
         DebugNumberCommand.register(event.getDispatcher());
+        ArcanoResetCommand.register(event.getDispatcher());
         if (!FMLEnvironment.production) {
             ExportDocsCommand.register(event.getDispatcher());
         }

@@ -40,7 +40,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     public RotatingTurretTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ROTATING_TURRET_TILE.get(), pos, state);
+        this(BlockRegistry.ROTATING_TURRET_TILE.get(), pos, state);
     }
 
     public float rotationX;
@@ -138,6 +138,36 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         updateBlock();
         ParticleUtil.beam(blockPos, getBlockPos(), level);
         PortUtil.sendMessageNoSpam(playerEntity, Component.literal("Turret now aims to " + blockPos.toShortString()));
+    }
+
+    public void aim(Direction direction) {
+        neededRotationX = 0;
+        neededRotationY = 0;
+        switch (direction) {
+            case DOWN:
+                neededRotationY = -90F;
+                break;
+            case UP:
+                neededRotationY = 90F;
+                break;
+            case NORTH:
+                neededRotationX = 270F;
+                break;
+            case SOUTH:
+                neededRotationX = 90F;
+                break;
+            case WEST:
+                break;
+            case EAST:
+                neededRotationX = 180F;
+                break;
+        }
+    }
+
+    public void setDirection(Direction direction) {
+        aim(direction);
+        rotationX = neededRotationX;
+        rotationY = neededRotationY;
     }
 
     public static double angleBetween(Vec3 a, Vec3 b) {
