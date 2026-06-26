@@ -1,5 +1,5 @@
 {
   "enabled": true,
-  "send_chat": false,
+  "send_chat": true,
   "message": "Click here to order a Starbuncle Plush from Makeship!"
 }
