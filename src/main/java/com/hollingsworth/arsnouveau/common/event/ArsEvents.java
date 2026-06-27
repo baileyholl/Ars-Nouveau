@@ -29,8 +29,6 @@ public class ArsEvents {
             int maxMana = ManaUtil.getMaxMana(livingCaster.player);
             if (e.currentCost > maxMana) {
                 e.currentCost = maxMana;
-            } else {
-                e.currentCost /= 2;
             }
         }
     }
