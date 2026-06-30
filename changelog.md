@@ -1,13 +1,9 @@
 # Changelog
 
-Adds a Starbuncle Plush block to celebrate the Makeship starbuncle plush campaign!
+Improves repository and lectern caching performance (Qther)
 
-Adds blacklist tags for overgrowth, breeding, and sanctuary rituals
+Fixes dupe with interact and buckets (Qther)
 
-Adds whitelist tag to sanctuary ritual
+Fixes tomes having their discount applied multiple times (Qther)
 
-Using spell parchment on a prestidigitation block, sconce, and light block will copy the spell style to it. (Qther)
-
-Fixes shulkers losing inventory data when Wololo is cast on them (Alexthw)
-
-Adds containment jar item blacklist tag (qther)
+Fixes search bar in spellbook capturing inputs too quickly on linux (Qther)
