@@ -181,6 +181,15 @@ public class EntitySpellArrow extends Arrow {
         this.inGroundTime = 0;
         Vec3 vector3d2 = this.position();
         Vec3 vector3d3 = vector3d2.add(vec3);
+
+        if (!Double.isFinite(vector3d2.x) || !Double.isFinite(vector3d2.y) || !Double.isFinite(vector3d2.z)
+                || !Double.isFinite(vector3d3.x) || !Double.isFinite(vector3d3.y) || !Double.isFinite(vector3d3.z)
+                || Math.abs(vector3d2.x) > 1024 || Math.abs(vector3d2.y) > 1024 || Math.abs(vector3d2.z) > 1024
+                || Math.abs(vector3d3.x) > 1024 || Math.abs(vector3d3.y) > 1024 || Math.abs(vector3d3.z) > 1024) {
+            this.discard();
+            return;
+        }
+
         HitResult hitresult = this.level.clip(new ClipContext(vector3d2, vector3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
         if (hitresult.getType() != HitResult.Type.MISS) {
             vector3d3 = hitresult.getLocation();
