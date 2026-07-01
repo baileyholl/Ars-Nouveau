@@ -155,7 +155,8 @@
     "bd342a3d-056e-4a95-b86e-0ff970d43d3b",
     "00672791-a943-4ea6-93b1-d34e8a0563bf",
     "b04f1af3-7faf-4d42-9f36-fe5ee88a30d7",
-    "38b2c6e8-9b7a-4b01-b423-62a8a1a675c7"
+    "38b2c6e8-9b7a-4b01-b423-62a8a1a675c7",
+    "712643f9-c60e-4f54-a5c8-1acbb948d668"
   ],
   "starbuncleAdoptions": [
     {
@@ -1051,6 +1052,12 @@
       "adopter": "Sallyblex",
       "color": "black",
       "bio": "I'm Nora the Buncle, the playful spark, Trade me a gold nugget to win my heart!"
+    },
+    {
+      "name": "Iris",
+      "adopter": "kohlbowers",
+      "color": "purple",
+      "bio": "Iris likes to explore and find new things"
     }
   ]
 }
