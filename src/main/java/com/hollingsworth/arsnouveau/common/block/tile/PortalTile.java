@@ -63,7 +63,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 return;
             }
             Vec3 vec3 = e.position;
-            Networking.sendToNearbyClient(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX(), e.getY(), e.getZ(), rotationVec.x, rotationVec.y));
             var particlePos = warpPos.getCenter();
             serverLevel.sendParticles(ParticleTypes.PORTAL, particlePos.x, particlePos.y, particlePos.z,
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
