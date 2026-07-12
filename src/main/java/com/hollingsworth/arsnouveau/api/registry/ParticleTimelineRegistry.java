@@ -28,11 +28,11 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LingerTimeline>> LINGER_TIMELINE = TIMELINE_DF.register("linger", () -> new SimpleParticleTimelineType<>(EffectLinger.INSTANCE, LingerTimeline.CODEC, LingerTimeline.STREAM_CODEC, LingerTimeline::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<TouchTimeline>> TOUCH_TIMELINE = TIMELINE_DF.register("touch", () -> new SimpleParticleTimelineType<>(MethodTouch.INSTANCE, TouchTimeline.CODEC, TouchTimeline.STREAM_CODEC, TouchTimeline::new));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<TouchTimeline>> TOUCH_TIMELINE = TIMELINE_DF.register("touch", () -> new SimpleParticleTimelineType<>(MethodTouch.INSTANCE, TouchTimeline.CODEC, TouchTimeline.STREAM_CODEC, TouchTimeline::new, TouchTimelinePreview::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<BurstTimeline>> BURST_TIMELINE = TIMELINE_DF.register("burst", () -> new SimpleParticleTimelineType<>(EffectBurst.INSTANCE, BurstTimeline.CODEC, BurstTimeline.STREAM_CODEC, BurstTimeline::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LightTimeline>> LIGHT_TIMELINE = TIMELINE_DF.register("light", () -> new SimpleParticleTimelineType<>(EffectLight.INSTANCE, LightTimeline.CODEC, LightTimeline.STREAM_CODEC, LightTimeline::new));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LightTimeline>> LIGHT_TIMELINE = TIMELINE_DF.register("light", () -> new SimpleParticleTimelineType<>(EffectLight.INSTANCE, LightTimeline.CODEC, LightTimeline.STREAM_CODEC, LightTimeline::new, LightTimelinePreview::new));
 
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<RuneTimeline>> RUNE_TIMELINE = TIMELINE_DF.register("rune", () -> new SimpleParticleTimelineType<>(EffectRune.INSTANCE, RuneTimeline.CODEC, RuneTimeline.STREAM_CODEC, RuneTimeline::new));

@@ -34,6 +34,11 @@ public record SimpleParticleTimelineType<T extends IParticleTimeline<T>>(Abstrac
     }
 
     @Override
+    public boolean hasPreview() {
+        return previewFactory != null;
+    }
+
+    @Override
     public Optional<ParticleTimelinePreview> createPreview(T timeline, Vec3 origin) {
         return previewFactory == null ? Optional.empty() : Optional.of(previewFactory.apply(timeline, origin));
     }

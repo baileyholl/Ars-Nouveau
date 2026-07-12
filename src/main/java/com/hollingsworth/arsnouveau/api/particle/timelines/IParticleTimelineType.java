@@ -24,6 +24,10 @@ public interface IParticleTimelineType<T extends IParticleTimeline<T>> {
 
     T create();
 
+    default boolean hasPreview() {
+        return false;
+    }
+
     default Optional<ParticleTimelinePreview> createPreview(T timeline, Vec3 origin) {
         return Optional.empty();
     }

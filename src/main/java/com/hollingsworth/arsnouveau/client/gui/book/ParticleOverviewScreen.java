@@ -54,6 +54,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     GuiSpellBook previousScreen;
     GuiImageButton upButton;
     GuiImageButton downButton;
+    GuiImageButton previewButton;
     boolean allExpanded = false;
     PropWidgetList propWidgetList;
 
@@ -91,6 +92,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         this.timelineMap = caster.getParticles(selectedSpellSlot).mutable();
         selectedTimeline = findTimelineFromSlot();
         LAST_SELECTED_PART = selectedTimeline;
+        updatePreviewButton();
         rowOffset = 0;
         onTimelineSelectorHit();
     }
@@ -149,12 +151,13 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             previewWidget.y = bookTop + PAGE_TOP_OFFSET;
         }
 
-        GuiImageButton previewButton = new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 35, bookBottom - 31, DocAssets.TEST_ICON, (b) -> {
+        previewButton = new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 35, bookBottom - 31, DocAssets.TEST_ICON, (b) -> {
             if (selectedTimeline != null) {
                 previewWidget.play(timelineMap.getOrCreate(selectedTimeline));
             }
         }).withTooltip(Component.translatable("ars_nouveau.preview"));
         addRenderableWidget(previewButton);
+        updatePreviewButton();
 
         initSpellSlots((slotButton) -> {
             initSlotChange();
@@ -316,6 +319,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
                 selectedTimeline = entry.getValue();
                 rowOffset = 0;
                 LAST_SELECTED_PART = selectedTimeline;
+                updatePreviewButton();
                 AbstractSpellPart spellPart = selectedTimeline.getSpellPart();
                 timelineButton.title = Component.translatable(spellPart.getLocaleName());
                 timelineButton.renderStack = (spellPart.glyphItem.getDefaultInstance());
@@ -326,6 +330,15 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             rightPageWidgets.add(widget);
             addRenderableWidget(widget);
         }
+    }
+
+    private void updatePreviewButton() {
+        if (previewButton == null) {
+            return;
+        }
+        boolean hasPreview = selectedTimeline != null && selectedTimeline.hasPreview();
+        previewButton.visible = hasPreview;
+        previewButton.active = hasPreview;
     }
 
     private void clearRightPage() {

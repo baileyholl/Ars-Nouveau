@@ -35,6 +35,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
     private final PreviewCamera camera = new PreviewCamera();
     private ParticlePreviewLevel previewLevel;
     private ParticleTimelinePreview timelinePreview;
+    private ParticleTimelinePreview.Scene scene;
 
     public ParticlePreviewWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
@@ -56,6 +57,9 @@ public class ParticlePreviewWidget extends AbstractWidget {
         camera.moveTo(origin);
         camera.setAngles(180 + YAW, PITCH);
         timelinePreview = createPreview(timeline, origin);
+        if (timelinePreview != null) {
+            scene = timelinePreview.scene();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -93,7 +97,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
         Matrix4fStack modelView = RenderSystem.getModelViewStack();
         modelView.pushMatrix();
         modelView.translate(getX() + width / 2f, getY() + height / 2f, 50f);
-        modelView.scale(15f, -15f, 4f);
+        modelView.scale(scene.scale(), -scene.scale(), 4f);
         modelView.rotateX(PITCH * Mth.DEG_TO_RAD);
         modelView.rotateY(YAW * Mth.DEG_TO_RAD);
         RenderSystem.applyModelViewMatrix();
@@ -138,8 +142,8 @@ public class ParticlePreviewWidget extends AbstractWidget {
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
         PoseStack poseStack = new PoseStack();
         BlockState grass = Blocks.GRASS_BLOCK.defaultBlockState();
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -2; z <= 2; z++) {
+        for (int x = -scene.grassRadiusX(); x <= scene.grassRadiusX(); x++) {
+            for (int z = -scene.grassRadiusZ(); z <= scene.grassRadiusZ(); z++) {
                 poseStack.pushPose();
                 poseStack.translate(x - 0.5, -2, z - 0.5);
                 mc.getBlockRenderer().renderSingleBlock(grass, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
