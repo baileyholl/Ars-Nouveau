@@ -184,6 +184,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     public void onTimelineSelectorHit() {
+        previewWidget.dismiss();
         timelineButton.isSelected = true;
         propWidgetList.resetSelected();
         addTimelineSelectionWidgets();
@@ -295,6 +296,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     public void onPropertySelected(PropertyButton propertyButton) {
+        previewWidget.dismiss();
         clearRightPage();
         timelineButton.isSelected = false;
         propertyWidgetProvider = propertyButton.property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);

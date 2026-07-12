@@ -72,6 +72,13 @@ public class ParticlePreviewWidget extends AbstractWidget {
         return timelinePreview != null && (!timelineFinished || !particles.isEmpty());
     }
 
+    public void dismiss() {
+        particles.clear();
+        timelinePreview = null;
+        timelineFinished = true;
+        previewLevel = null;
+    }
+
     public void tick() {
         if (timelinePreview != null && !timelineFinished && !timelinePreview.tick(previewLevel)) {
             timelineFinished = true;
