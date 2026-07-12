@@ -20,7 +20,7 @@ public class ParticleTimelineRegistry {
     public static final Registry<IParticleTimelineType<? extends IParticleTimeline<?>>> PARTICLE_TIMELINE_REGISTRY = new RegistryBuilder<>(PARTICLE_TIMELINE_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<IParticleTimelineType<?>> TIMELINE_DF = DeferredRegister.create(PARTICLE_TIMELINE_REGISTRY, ArsNouveau.MODID);
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<ProjectileTimeline>> PROJECTILE_TIMELINE = TIMELINE_DF.register("projectile", () -> new SimpleParticleTimelineType<>(MethodProjectile.INSTANCE, ProjectileTimeline.CODEC, ProjectileTimeline.STREAM_CODEC, ProjectileTimeline::new));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<ProjectileTimeline>> PROJECTILE_TIMELINE = TIMELINE_DF.register("projectile", () -> new SimpleParticleTimelineType<>(MethodProjectile.INSTANCE, ProjectileTimeline.CODEC, ProjectileTimeline.STREAM_CODEC, ProjectileTimeline::new, ProjectileTimelinePreview::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<OrbitTimeline>> ORBIT_TIMELINE = TIMELINE_DF.register("orbit", () -> new SimpleParticleTimelineType<>(EffectOrbit.INSTANCE, OrbitTimeline.CODEC, OrbitTimeline.STREAM_CODEC, OrbitTimeline::new));
 

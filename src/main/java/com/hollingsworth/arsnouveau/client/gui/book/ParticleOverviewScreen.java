@@ -29,7 +29,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ParticleOverviewScreen extends SpellSlottedScreen {
@@ -37,8 +39,8 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
     public IParticleTimelineType<?> selectedTimeline = null;
 
-
     List<AbstractWidget> rightPageWidgets = new ArrayList<>();
+    private final Map<AbstractWidget, Boolean> previewWidgetVisibility = new IdentityHashMap<>();
 
     ParticleConfigWidgetProvider propertyWidgetProvider;
     DocEntryButton timelineButton;
@@ -54,6 +56,8 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     GuiImageButton downButton;
     boolean allExpanded = false;
     PropWidgetList propWidgetList;
+
+    ParticlePreviewWidget previewWidget;
 
     public ParticleOverviewScreen(GuiSpellBook previousScreen, int slot, InteractionHand stackHand) {
         super(stackHand);
@@ -138,6 +142,19 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
         addRenderableWidget(expandButton);
 
+        if (previewWidget == null) {
+            previewWidget = new ParticlePreviewWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
+        } else {
+            previewWidget.x = bookLeft + RIGHT_PAGE_OFFSET;
+            previewWidget.y = bookTop + PAGE_TOP_OFFSET;
+        }
+
+        GuiImageButton previewButton = new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 35, bookBottom - 31, DocAssets.TEST_ICON, (b) -> {
+            if (selectedTimeline != null) {
+                previewWidget.play(timelineMap.getOrCreate(selectedTimeline));
+            }
+        }).withTooltip(Component.translatable("ars_nouveau.preview"));
+        addRenderableWidget(previewButton);
 
         initSpellSlots((slotButton) -> {
             initSlotChange();
@@ -325,11 +342,32 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        boolean previewActive = updatePreviewVisibility();
         super.render(graphics, mouseX, mouseY, partialTicks);
+        previewWidget.render(graphics, mouseX, mouseY, partialTicks);
         DocClientUtils.drawHeader(Component.translatable("ars_nouveau.spell_styles"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
-        if (propertyWidgetProvider != null) {
+        if (propertyWidgetProvider != null && !previewActive) {
             propertyWidgetProvider.render(graphics, mouseX, mouseY, partialTicks);
         }
+    }
+
+    private boolean updatePreviewVisibility() {
+        boolean previewActive = previewWidget.isPlaying();
+        if (previewActive) {
+            for (AbstractWidget widget : rightPageWidgets) {
+                previewWidgetVisibility.putIfAbsent(widget, widget.visible);
+                widget.visible = false;
+            }
+        } else {
+            for (AbstractWidget widget : rightPageWidgets) {
+                Boolean visible = previewWidgetVisibility.get(widget);
+                if (visible != null) {
+                    widget.visible = visible;
+                }
+            }
+            previewWidgetVisibility.clear();
+        }
+        return previewActive;
     }
 
     @Override
@@ -340,7 +378,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        if (propertyWidgetProvider != null) {
+        if (propertyWidgetProvider != null && !previewWidget.isPlaying()) {
             propertyWidgetProvider.renderBg(graphics, mouseX, mouseY, partialTicks);
         }
     }
@@ -351,6 +389,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         if (propertyWidgetProvider != null) {
             propertyWidgetProvider.tick();
         }
+        previewWidget.tick();
     }
 
     public void addRightPageWidget(AbstractWidget widget) {
