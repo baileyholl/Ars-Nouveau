@@ -17,11 +17,14 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4fStack;
 
 import java.util.*;
@@ -35,7 +38,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
     private final PreviewCamera camera = new PreviewCamera();
     private ParticlePreviewLevel previewLevel;
     private ParticleTimelinePreview timelinePreview;
-    private ParticleTimelinePreview.Scene scene;
+    private boolean timelineFinished;
 
     public ParticlePreviewWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
@@ -57,9 +60,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
         camera.moveTo(origin);
         camera.setAngles(180 + YAW, PITCH);
         timelinePreview = createPreview(timeline, origin);
-        if (timelinePreview != null) {
-            scene = timelinePreview.scene();
-        }
+        timelineFinished = false;
     }
 
     @SuppressWarnings("unchecked")
@@ -68,12 +69,12 @@ public class ParticlePreviewWidget extends AbstractWidget {
     }
 
     public boolean isPlaying() {
-        return timelinePreview != null || !particles.isEmpty();
+        return timelinePreview != null && (!timelineFinished || !particles.isEmpty());
     }
 
     public void tick() {
-        if (timelinePreview != null && !timelinePreview.tick(previewLevel)) {
-            timelinePreview = null;
+        if (timelinePreview != null && !timelineFinished && !timelinePreview.tick(previewLevel)) {
+            timelineFinished = true;
         }
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
@@ -97,7 +98,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
         Matrix4fStack modelView = RenderSystem.getModelViewStack();
         modelView.pushMatrix();
         modelView.translate(getX() + width / 2f, getY() + height / 2f, 50f);
-        modelView.scale(scene.scale(), -scene.scale(), 4f);
+        modelView.scale(timelinePreview.scale(), -timelinePreview.scale(), 4f);
         modelView.rotateX(PITCH * Mth.DEG_TO_RAD);
         modelView.rotateY(YAW * Mth.DEG_TO_RAD);
         RenderSystem.applyModelViewMatrix();
@@ -105,7 +106,10 @@ public class ParticlePreviewWidget extends AbstractWidget {
         LightTexture lightTexture = mc.gameRenderer.lightTexture();
         lightTexture.turnOnLightLayer();
         RenderSystem.enableDepthTest();
-        renderGrassField();
+        renderPreviewBlocks();
+        lightTexture.turnOnLightLayer();
+        RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE2);
+        RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE0);
 
         Map<ParticleRenderType, List<Particle>> byRenderType = new LinkedHashMap<>();
         for (Particle particle : particles) {
@@ -136,23 +140,45 @@ public class ParticlePreviewWidget extends AbstractWidget {
         graphics.disableScissor();
     }
 
-    private void renderGrassField() {
+    private void renderPreviewBlocks() {
         mc.gameRenderer.overlayTexture().setupOverlayColor();
         Lighting.setupLevel();
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        PoseStack poseStack = new PoseStack();
-        BlockState grass = Blocks.GRASS_BLOCK.defaultBlockState();
-        for (int x = -scene.grassRadiusX(); x <= scene.grassRadiusX(); x++) {
-            for (int z = -scene.grassRadiusZ(); z <= scene.grassRadiusZ(); z++) {
-                poseStack.pushPose();
-                poseStack.translate(x - 0.5, -2, z - 0.5);
-                mc.getBlockRenderer().renderSingleBlock(grass, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                poseStack.popPose();
-            }
+        if (timelinePreview != null) {
+            ParticleTimelinePreview.BlockRenderCallback callback = new ParticleTimelinePreview.BlockRenderCallback() {
+                @Override
+                public void renderBlock(BlockState state, BlockPos pos) {
+                    PoseStack poseStack = new PoseStack();
+                    poseStack.translate(pos.getX() - 0.5, pos.getY() - 1, pos.getZ() - 0.5);
+                    mc.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                }
+
+                @Override
+                public void renderBlock(BlockState state, BlockPos pos, BlockEntity blockEntity) {
+                    previewLevel.setBlock(pos, state, 0);
+                    previewLevel.blockEntityMap.put(pos, blockEntity);
+                    PoseStack poseStack = new PoseStack();
+                    poseStack.translate(pos.getX() - 0.5, pos.getY() - 1, pos.getZ() - 0.5);
+                    var model = mc.getBlockRenderer().getBlockModel(state);
+                    for (var renderType : model.getRenderTypes(state, RandomSource.create(state.getSeed(pos)), ModelData.EMPTY)) {
+                        mc.getBlockRenderer().getModelRenderer().tesselateBlock(previewLevel, model, state, pos, poseStack,
+                                bufferSource.getBuffer(renderType), false, RandomSource.create(), state.getSeed(pos),
+                                OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
+                    }
+                }
+
+                @Override
+                public void renderBlockEntity(BlockEntity blockEntity) {
+                    PoseStack poseStack = new PoseStack();
+                    poseStack.translate(blockEntity.getBlockPos().getX() - 0.5, blockEntity.getBlockPos().getY() - 1, blockEntity.getBlockPos().getZ() - 0.5);
+                    mc.getBlockEntityRenderDispatcher().renderItem(blockEntity, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                }
+            };
+            timelinePreview.renderWorldBlocks(callback);
+            timelinePreview.renderBlocks(callback);
         }
         bufferSource.endBatch();
         Lighting.setupFor3DItems();
-        RenderSystem.enableDepthTest();
     }
 
     @Override
