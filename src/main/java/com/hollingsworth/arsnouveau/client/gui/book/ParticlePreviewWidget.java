@@ -24,6 +24,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4fStack;
 
@@ -32,6 +33,13 @@ import java.util.*;
 public class ParticlePreviewWidget extends AbstractWidget {
     private static final float PITCH = 30f;
     private static final float YAW = 45f;
+    // Duplicate from ParticleEngine
+    private static final Comparator<ParticleRenderType> RENDER_TYPE_ORDER = ClientHooks.makeParticleRenderTypeComparator(List.of(
+            ParticleRenderType.TERRAIN_SHEET,
+            ParticleRenderType.PARTICLE_SHEET_OPAQUE,
+            ParticleRenderType.PARTICLE_SHEET_LIT,
+            ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT,
+            ParticleRenderType.CUSTOM));
 
     private final Minecraft mc = Minecraft.getInstance();
     private final List<Particle> particles = new ArrayList<>();
@@ -110,16 +118,59 @@ public class ParticlePreviewWidget extends AbstractWidget {
         modelView.rotateY(YAW * Mth.DEG_TO_RAD);
         RenderSystem.applyModelViewMatrix();
 
+        renderScene(partialTicks);
+        renderParticles(partialTicks);
+
+        modelView.popMatrix();
+        RenderSystem.applyModelViewMatrix();
+        graphics.disableScissor();
+    }
+
+    private void renderScene(float partialTicks) {
+        Lighting.setupLevel();
+        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+        ParticleTimelinePreview.BlockRenderCallback callback = new ParticleTimelinePreview.BlockRenderCallback() {
+            @Override
+            public void renderBlock(BlockState state, BlockPos pos) {
+                mc.getBlockRenderer().renderSingleBlock(state, poseAt(pos), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            }
+
+            @Override
+            public void renderBlock(BlockState state, BlockPos pos, BlockEntity blockEntity) {
+                previewLevel.setBlock(pos, state, 0);
+                previewLevel.blockEntityMap.put(pos, blockEntity);
+                PoseStack poseStack = poseAt(pos);
+                var model = mc.getBlockRenderer().getBlockModel(state);
+                for (var renderType : model.getRenderTypes(state, RandomSource.create(state.getSeed(pos)), ModelData.EMPTY)) {
+                    mc.getBlockRenderer().getModelRenderer().tesselateBlock(previewLevel, model, state, pos, poseStack,
+                            bufferSource.getBuffer(renderType), false, RandomSource.create(), state.getSeed(pos),
+                            OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
+                }
+            }
+
+            @Override
+            public void renderBlockEntity(BlockEntity blockEntity) {
+                mc.getBlockEntityRenderDispatcher().renderItem(blockEntity, poseAt(blockEntity.getBlockPos()), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            }
+        };
+        timelinePreview.renderWorldBlocks(callback);
+        timelinePreview.renderBlocks(callback);
+        timelinePreview.renderEntities(entity -> {
+            double x = Mth.lerp(partialTicks, entity.xOld, entity.getX()) - camera.getPosition().x;
+            double y = Mth.lerp(partialTicks, entity.yOld, entity.getY()) - camera.getPosition().y;
+            double z = Mth.lerp(partialTicks, entity.zOld, entity.getZ()) - camera.getPosition().z;
+            float yaw = Mth.lerp(partialTicks, entity.yRotO, entity.getYRot());
+            mc.getEntityRenderDispatcher().render(entity, x, y, z, yaw, partialTicks, new PoseStack(), bufferSource, LightTexture.FULL_BRIGHT);
+        });
+        bufferSource.endBatch();
+        Lighting.setupFor3DItems();
+    }
+
+    private void renderParticles(float partialTicks) {
         LightTexture lightTexture = mc.gameRenderer.lightTexture();
         lightTexture.turnOnLightLayer();
         RenderSystem.enableDepthTest();
-        renderPreviewBlocks();
-        renderPreviewEntities(partialTicks);
-        lightTexture.turnOnLightLayer();
-        RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE2);
-        RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE0);
-
-        Map<ParticleRenderType, List<Particle>> byRenderType = new LinkedHashMap<>();
+        Map<ParticleRenderType, List<Particle>> byRenderType = new TreeMap<>(RENDER_TYPE_ORDER);
         for (Particle particle : particles) {
             byRenderType.computeIfAbsent(particle.getRenderType(), type -> new ArrayList<>()).add(particle);
         }
@@ -139,69 +190,13 @@ public class ParticlePreviewWidget extends AbstractWidget {
         }
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
         lightTexture.turnOffLightLayer();
-
-        modelView.popMatrix();
-        RenderSystem.applyModelViewMatrix();
-        graphics.disableScissor();
     }
 
-    private void renderPreviewBlocks() {
-        mc.gameRenderer.overlayTexture().setupOverlayColor();
-        Lighting.setupLevel();
-        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        if (timelinePreview != null) {
-            ParticleTimelinePreview.BlockRenderCallback callback = new ParticleTimelinePreview.BlockRenderCallback() {
-                @Override
-                public void renderBlock(BlockState state, BlockPos pos) {
-                    PoseStack poseStack = new PoseStack();
-                    poseStack.translate(pos.getX() - 0.5, pos.getY() - 1, pos.getZ() - 0.5);
-                    mc.getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                }
-
-                @Override
-                public void renderBlock(BlockState state, BlockPos pos, BlockEntity blockEntity) {
-                    previewLevel.setBlock(pos, state, 0);
-                    previewLevel.blockEntityMap.put(pos, blockEntity);
-                    PoseStack poseStack = new PoseStack();
-                    poseStack.translate(pos.getX() - 0.5, pos.getY() - 1, pos.getZ() - 0.5);
-                    var model = mc.getBlockRenderer().getBlockModel(state);
-                    for (var renderType : model.getRenderTypes(state, RandomSource.create(state.getSeed(pos)), ModelData.EMPTY)) {
-                        mc.getBlockRenderer().getModelRenderer().tesselateBlock(previewLevel, model, state, pos, poseStack,
-                                bufferSource.getBuffer(renderType), false, RandomSource.create(), state.getSeed(pos),
-                                OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-                    }
-                }
-
-                @Override
-                public void renderBlockEntity(BlockEntity blockEntity) {
-                    PoseStack poseStack = new PoseStack();
-                    poseStack.translate(blockEntity.getBlockPos().getX() - 0.5, blockEntity.getBlockPos().getY() - 1, blockEntity.getBlockPos().getZ() - 0.5);
-                    mc.getBlockEntityRenderDispatcher().renderItem(blockEntity, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                }
-            };
-            timelinePreview.renderWorldBlocks(callback);
-            timelinePreview.renderBlocks(callback);
-        }
-        bufferSource.endBatch();
-        Lighting.setupFor3DItems();
-    }
-
-    private void renderPreviewEntities(float partialTicks) {
-        mc.gameRenderer.overlayTexture().setupOverlayColor();
-        Lighting.setupLevel();
-        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        timelinePreview.renderEntities(entity -> {
-            double x = Mth.lerp(partialTicks, entity.xOld, entity.getX()) - camera.getPosition().x;
-            double y = Mth.lerp(partialTicks, entity.yOld, entity.getY()) - camera.getPosition().y;
-            double z = Mth.lerp(partialTicks, entity.zOld, entity.getZ()) - camera.getPosition().z;
-            float yaw = Mth.lerp(partialTicks, entity.yRotO, entity.getYRot());
-            mc.getEntityRenderDispatcher().render(entity, x, y, z, yaw, partialTicks, new PoseStack(), bufferSource, LightTexture.FULL_BRIGHT);
-        });
-        bufferSource.endBatch();
-        Lighting.setupFor3DItems();
+    private static PoseStack poseAt(BlockPos pos) {
+        PoseStack poseStack = new PoseStack();
+        poseStack.translate(pos.getX() - 0.5, pos.getY() - 1, pos.getZ() - 0.5);
+        return poseStack;
     }
 
     @Override
