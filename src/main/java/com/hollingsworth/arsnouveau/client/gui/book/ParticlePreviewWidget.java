@@ -59,13 +59,13 @@ public class ParticlePreviewWidget extends AbstractWidget {
         Vec3 origin = mc.player.getEyePosition();
         camera.moveTo(origin);
         camera.setAngles(180 + YAW, PITCH);
-        timelinePreview = createPreview(timeline, origin);
+        timelinePreview = createPreview(timeline, previewLevel, origin);
         timelineFinished = false;
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends IParticleTimeline<T>> ParticleTimelinePreview createPreview(IParticleTimeline<T> timeline, Vec3 origin) {
-        return timeline.getType().createPreview((T) timeline, origin).orElse(null);
+    private <T extends IParticleTimeline<T>> ParticleTimelinePreview createPreview(IParticleTimeline<T> timeline, ParticlePreviewLevel level, Vec3 origin) {
+        return timeline.getType().createPreview((T) timeline, level, origin).orElse(null);
     }
 
     public boolean isPlaying() {
@@ -114,6 +114,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
         lightTexture.turnOnLightLayer();
         RenderSystem.enableDepthTest();
         renderPreviewBlocks();
+        renderPreviewEntities(partialTicks);
         lightTexture.turnOnLightLayer();
         RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE2);
         RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE0);
@@ -184,6 +185,21 @@ public class ParticlePreviewWidget extends AbstractWidget {
             timelinePreview.renderWorldBlocks(callback);
             timelinePreview.renderBlocks(callback);
         }
+        bufferSource.endBatch();
+        Lighting.setupFor3DItems();
+    }
+
+    private void renderPreviewEntities(float partialTicks) {
+        mc.gameRenderer.overlayTexture().setupOverlayColor();
+        Lighting.setupLevel();
+        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+        timelinePreview.renderEntities(entity -> {
+            double x = Mth.lerp(partialTicks, entity.xOld, entity.getX()) - camera.getPosition().x;
+            double y = Mth.lerp(partialTicks, entity.yOld, entity.getY()) - camera.getPosition().y;
+            double z = Mth.lerp(partialTicks, entity.zOld, entity.getZ()) - camera.getPosition().z;
+            float yaw = Mth.lerp(partialTicks, entity.yRotO, entity.getYRot());
+            mc.getEntityRenderDispatcher().render(entity, x, y, z, yaw, partialTicks, new PoseStack(), bufferSource, LightTexture.FULL_BRIGHT);
+        });
         bufferSource.endBatch();
         Lighting.setupFor3DItems();
     }

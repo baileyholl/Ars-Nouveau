@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle.timelines;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +20,13 @@ public interface ParticleTimelinePreview {
     }
 
     default void renderBlocks(BlockRenderCallback callback) {
+    }
+
+    default void renderEntities(EntityRenderCallback callback) {
+    }
+
+    interface EntityRenderCallback {
+        void renderEntity(Entity entity);
     }
 
     interface BlockRenderCallback {

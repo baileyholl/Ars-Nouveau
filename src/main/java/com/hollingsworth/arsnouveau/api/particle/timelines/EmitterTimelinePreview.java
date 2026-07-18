@@ -14,11 +14,11 @@ public final class EmitterTimelinePreview implements ParticleTimelinePreview {
     private final int duration;
     private int age;
 
-    public EmitterTimelinePreview(TimelineEntryData effect, Vec3 position) {
-        this(effect, null, position, 1, 30f, 1, 1);
+    public EmitterTimelinePreview(TimelineEntryData effect, Level level, Vec3 position) {
+        this(effect, null, level, position, 1, 30f, 3, 3);
     }
 
-    public EmitterTimelinePreview(TimelineEntryData tickEffect, TimelineEntryData resolveEffect, Vec3 position, int duration, float scale, int grassRadiusX, int grassRadiusZ) {
+    public EmitterTimelinePreview(TimelineEntryData tickEffect, TimelineEntryData resolveEffect, Level level, Vec3 position, int duration, float scale, int grassRadiusX, int grassRadiusZ) {
         tickEmitter = new ParticleEmitter(() -> position, () -> new Vec2(0, 0), tickEffect);
         resolveEmitter = resolveEffect == null ? null : new ParticleEmitter(() -> position, () -> new Vec2(0, 0), resolveEffect);
         this.duration = duration;

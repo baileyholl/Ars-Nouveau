@@ -10,17 +10,13 @@ public final class MageBlockTimelinePreview implements ParticleTimelinePreview {
     private final MageBlockTile tile;
     private int ticks = 0;
 
-    public MageBlockTimelinePreview(MageBlockTimeline timeline, Vec3 origin) {
+    public MageBlockTimelinePreview(MageBlockTimeline timeline, Level level, Vec3 origin) {
         tile = new MageBlockTile(BlockPos.ZERO, BlockRegistry.MAGE_BLOCK.get().defaultBlockState());
         tile.setColor(timeline.getColor());
     }
 
     @Override
     public boolean tick(Level level) {
-        if (tile.getLevel() == null) {
-            tile.setLevel(level);
-            tile.onLoad();
-        }
         ticks++;
         return ticks < 40;
     }

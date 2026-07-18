@@ -24,7 +24,7 @@ public final class RuneTimelinePreview implements ParticleTimelinePreview {
     private boolean active = true;
     private int age;
 
-    public RuneTimelinePreview(RuneTimeline timeline, Vec3 origin) {
+    public RuneTimelinePreview(RuneTimeline timeline, Level level, Vec3 origin) {
         PropMap particleProperties = new PropMap();
         particleProperties.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(timeline.getColor(), false));
         PropMap properties = new PropMap();
@@ -37,15 +37,11 @@ public final class RuneTimelinePreview implements ParticleTimelinePreview {
 
     @Override
     public boolean tick(Level level) {
-        if (age == 0) {
-            rune.setLevel(level);
-            rune.onLoad();
-        }
-        if (age < 40) {
+        if (age < 30) {
             age++;
             return true;
         }
-        if (age == 40) {
+        if (age == 30) {
             active = false;
             resolveEmitter.tick(level);
             age++;
