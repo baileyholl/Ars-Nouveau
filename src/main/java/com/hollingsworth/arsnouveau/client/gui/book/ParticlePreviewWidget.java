@@ -31,8 +31,6 @@ import org.joml.Matrix4fStack;
 import java.util.*;
 
 public class ParticlePreviewWidget extends AbstractWidget {
-    private static final float PITCH = 30f;
-    private static final float YAW = 45f;
     // Duplicate from ParticleEngine
     private static final Comparator<ParticleRenderType> RENDER_TYPE_ORDER = ClientHooks.makeParticleRenderTypeComparator(List.of(
             ParticleRenderType.TERRAIN_SHEET,
@@ -47,6 +45,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
     private ParticlePreviewLevel previewLevel;
     private ParticleTimelinePreview timelinePreview;
     private boolean timelineFinished;
+    private int startDelay;
 
     public ParticlePreviewWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
@@ -66,9 +65,10 @@ public class ParticlePreviewWidget extends AbstractWidget {
         });
         Vec3 origin = mc.player.getEyePosition();
         camera.moveTo(origin);
-        camera.setAngles(180 + YAW, PITCH);
+        camera.setAngles(125f, 30f);
         timelinePreview = createPreview(timeline, previewLevel, origin);
         timelineFinished = false;
+        startDelay = 5;
     }
 
     @SuppressWarnings("unchecked")
@@ -85,9 +85,14 @@ public class ParticlePreviewWidget extends AbstractWidget {
         timelinePreview = null;
         timelineFinished = true;
         previewLevel = null;
+        startDelay = 0;
     }
 
     public void tick() {
+        if (startDelay > 0) {
+            startDelay--;
+            return;
+        }
         if (timelinePreview != null && !timelineFinished && !timelinePreview.tick(previewLevel)) {
             timelineFinished = true;
         }
@@ -114,8 +119,8 @@ public class ParticlePreviewWidget extends AbstractWidget {
         modelView.pushMatrix();
         modelView.translate(getX() + width / 2f, getY() + height / 2f, 50f);
         modelView.scale(timelinePreview.scale(), -timelinePreview.scale(), 4f);
-        modelView.rotateX(PITCH * Mth.DEG_TO_RAD);
-        modelView.rotateY(YAW * Mth.DEG_TO_RAD);
+        modelView.rotateX(30f * Mth.DEG_TO_RAD);
+        modelView.rotateY(45f * Mth.DEG_TO_RAD);
         RenderSystem.applyModelViewMatrix();
 
         renderScene(partialTicks);
