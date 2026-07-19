@@ -12,17 +12,15 @@ import java.util.List;
 public final class BurstTimelinePreview implements ParticleTimelinePreview {
     private final List<ParticleEmitter> emitters = new ArrayList<>();
     private final BurstTimeline timeline;
-    private final Vec3 center;
     private boolean emitted;
 
-    public BurstTimelinePreview(BurstTimeline timeline, Level level, Vec3 origin) {
+    public BurstTimelinePreview(BurstTimeline timeline, Level level) {
         this.timeline = timeline;
-        this.center = origin.add(0, 2, 0);
         int radius = 3;
         double maxDistanceSqr = (radius + 0.5) * (radius + 0.5);
         for (BlockPos offset : BlockPos.withinManhattan(BlockPos.ZERO, radius, radius, radius)) {
             if (offset.getX() * offset.getX() + offset.getY() * offset.getY() + offset.getZ() * offset.getZ() <= maxDistanceSqr) {
-                Vec3 position = center.add(offset.getX(), offset.getY(), offset.getZ());
+                Vec3 position = new Vec3(offset.getX(), offset.getY() + 2, offset.getZ());
                 emitters.add(new ParticleEmitter(() -> position, () -> new Vec2(0, 0), timeline.onResolvingEffect));
             }
         }
@@ -36,7 +34,7 @@ public final class BurstTimelinePreview implements ParticleTimelinePreview {
         for (ParticleEmitter emitter : emitters) {
             emitter.tick(level);
         }
-        timeline.resolveSound.sound.playSound(level, center);
+        timeline.resolveSound.sound.playSound(level, Vec3.ZERO);
         emitted = true;
         return true;
     }

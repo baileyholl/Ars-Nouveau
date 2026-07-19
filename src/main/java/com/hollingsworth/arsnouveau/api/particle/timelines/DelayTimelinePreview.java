@@ -6,8 +6,8 @@ import net.minecraft.world.phys.Vec3;
 public class DelayTimelinePreview extends EmitterTimelinePreview {
     private final DelayTimeline timeline;
 
-    public DelayTimelinePreview(DelayTimeline timeline, Level level, Vec3 origin) {
-        super(timeline.onTickEffect, timeline.onResolvingEffect, level, origin.add(0, -0.5, 0), 40, 30f, 3, 3);
+    public DelayTimelinePreview(DelayTimeline timeline, Level level) {
+        super(timeline.onTickEffect, timeline.onResolvingEffect, level, Vec3.ZERO, 40, 30f, 3, 3);
         this.timeline = timeline;
     }
 

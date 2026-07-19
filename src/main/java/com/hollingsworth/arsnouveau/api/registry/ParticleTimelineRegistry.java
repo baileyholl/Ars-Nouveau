@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -32,7 +33,7 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<BurstTimeline>> BURST_TIMELINE = TIMELINE_DF.register("burst", () -> new SimpleParticleTimelineType<>(EffectBurst.INSTANCE, BurstTimeline.CODEC, BurstTimeline.STREAM_CODEC, BurstTimeline::new, BurstTimelinePreview::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LightTimeline>> LIGHT_TIMELINE = TIMELINE_DF.register("light", () -> new SimpleParticleTimelineType<>(EffectLight.INSTANCE, LightTimeline.CODEC, LightTimeline.STREAM_CODEC, LightTimeline::new, (timeline, level, origin) -> new EmitterTimelinePreview(timeline.onTickEffect, null, level, origin.add(0, -0.5, 0), 40, 30f, 3, 3)));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LightTimeline>> LIGHT_TIMELINE = TIMELINE_DF.register("light", () -> new SimpleParticleTimelineType<>(EffectLight.INSTANCE, LightTimeline.CODEC, LightTimeline.STREAM_CODEC, LightTimeline::new, (timeline, level) -> new EmitterTimelinePreview(timeline.onTickEffect, null, level, new Vec3(0, -0.5, 0), 40, 30f, 3, 3)));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<RuneTimeline>> RUNE_TIMELINE = TIMELINE_DF.register("rune", () -> new SimpleParticleTimelineType<>(EffectRune.INSTANCE, RuneTimeline.CODEC, RuneTimeline.STREAM_CODEC, RuneTimeline::new, RuneTimelinePreview::new));
 

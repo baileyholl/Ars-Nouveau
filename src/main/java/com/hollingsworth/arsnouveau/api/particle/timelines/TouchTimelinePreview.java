@@ -6,8 +6,8 @@ import net.minecraft.world.phys.Vec3;
 public class TouchTimelinePreview extends EmitterTimelinePreview {
     private final TouchTimeline timeline;
 
-    public TouchTimelinePreview(TouchTimeline timeline, Level level, Vec3 origin) {
-        super(timeline.onResolvingEffect, level, origin.add(0, -0.5, 0));
+    public TouchTimelinePreview(TouchTimeline timeline, Level level) {
+        super(timeline.onResolvingEffect, level, Vec3.ZERO);
         this.timeline = timeline;
     }
 

@@ -8,7 +8,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ public interface IParticleTimelineType<T extends IParticleTimeline<T>> {
         return false;
     }
 
-    default Optional<ParticleTimelinePreview> createPreview(T timeline, Level level, Vec3 origin) {
+    default Optional<ParticleTimelinePreview> createPreview(T timeline, Level level) {
         return Optional.empty();
     }
 

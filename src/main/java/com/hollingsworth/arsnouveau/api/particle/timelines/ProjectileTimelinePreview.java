@@ -16,15 +16,16 @@ public final class ProjectileTimelinePreview implements ParticleTimelinePreview 
     private EntityProjectileSpell projectile;
     private int age;
 
-    public ProjectileTimelinePreview(ProjectileTimeline timeline, Level level, Vec3 origin) {
-        Vec3 position = origin.add(-3.5, 0, 1);
-        this.velocity = origin.add(1.5, 0, 1).subtract(position).scale(1f / flightTicks);
+    public ProjectileTimelinePreview(ProjectileTimeline timeline, Level level) {
+        Vec3 position = new Vec3(-3.5, 0, 1);
+        this.velocity = new Vec3(1.5, 0, 1).subtract(position).scale(1f / flightTicks);
         this.timeline = timeline;
         TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get(), timeline);
         Spell spell = new Spell().withTimeline(timelineMap);
         projectile = new EntityProjectileSpell(level, position.x, position.y, position.z);
         projectile.setResolver(new SpellResolver(new SpellContext(level, spell, null, null)));
         projectile.shoot(velocity.x, velocity.y, velocity.z, (float) velocity.length(), 0);
+        projectile.setOldPosAndRot();
     }
 
     @Override
@@ -33,12 +34,12 @@ public final class ProjectileTimelinePreview implements ParticleTimelinePreview 
             return false;
         }
         if (age == 0) {
-            timeline.castSound.sound.playSound(level, projectile.position());
+            timeline.castSound.sound.playSound(level, Vec3.ZERO);
         }
         projectile.setOldPosAndRot();
         if (age == flightTicks) {
             projectile.sendResolveParticles();
-            timeline.resolveSound.sound.playSound(level, projectile.position());
+            timeline.resolveSound.sound.playSound(level, Vec3.ZERO);
             projectile = null;
         } else {
             projectile.setPos(projectile.getPosition(0).add(velocity));
@@ -46,6 +47,11 @@ public final class ProjectileTimelinePreview implements ParticleTimelinePreview 
         }
         age++;
         return true;
+    }
+
+    @Override
+    public float scale() {
+        return 26f;
     }
 
     @Override

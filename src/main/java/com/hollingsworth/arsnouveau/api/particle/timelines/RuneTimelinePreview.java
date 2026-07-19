@@ -24,24 +24,25 @@ public final class RuneTimelinePreview implements ParticleTimelinePreview {
     private boolean active = true;
     private int age;
 
-    public RuneTimelinePreview(RuneTimeline timeline, Level level, Vec3 origin) {
+    public RuneTimelinePreview(RuneTimeline timeline, Level level) {
         PropMap particleProperties = new PropMap();
         particleProperties.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), new ColorProperty(timeline.getColor(), false));
         PropMap properties = new PropMap();
         properties.set(ParticlePropertyRegistry.TYPE_PROPERTY.get(), new ParticleTypeProperty(ModParticles.NEW_GLOW_TYPE.get(), particleProperties));
         PropertyParticleOptions options = new PropertyParticleOptions(properties);
-        resolveEmitter = new ParticleEmitter(() -> origin.add(0, -0.5, 0), () -> new Vec2(0, 0), new BurstMotion(), options);
+        resolveEmitter = new ParticleEmitter(() -> new Vec3(0, -0.5, 0), () -> new Vec2(0, 0), new BurstMotion(), options);
         rune = new RuneTile(BlockPos.ZERO, BlockRegistry.RUNE_BLOCK.get().defaultBlockState().setValue(RuneBlock.FACING, Direction.UP));
         rune.spell = new Spell().withTimeline(new TimelineMap().put(timeline.getType(), timeline));
     }
 
     @Override
     public boolean tick(Level level) {
-        if (age < 30) {
+        int maxTicks = 20;
+        if (age < maxTicks) {
             age++;
             return true;
         }
-        if (age == 30) {
+        if (age == maxTicks) {
             active = false;
             resolveEmitter.tick(level);
             age++;

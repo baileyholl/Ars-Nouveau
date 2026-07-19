@@ -6,8 +6,8 @@ import net.minecraft.world.phys.Vec3;
 public class PantomimeTimelinePreview extends EmitterTimelinePreview {
     private final PantomimeTimeline timeline;
 
-    public PantomimeTimelinePreview(PantomimeTimeline timeline, Level level, Vec3 origin) {
-        super(timeline.onResolvingEffect, level, origin.add(0, -0.5, 0));
+    public PantomimeTimelinePreview(PantomimeTimeline timeline, Level level) {
+        super(timeline.onResolvingEffect, level, Vec3.ZERO);
         this.timeline = timeline;
     }
 

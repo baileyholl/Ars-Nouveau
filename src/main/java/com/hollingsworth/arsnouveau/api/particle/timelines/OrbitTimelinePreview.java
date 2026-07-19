@@ -16,9 +16,9 @@ public final class OrbitTimelinePreview implements ParticleTimelinePreview {
     private final OrbitTimeline timeline;
     private int age;
 
-    public OrbitTimelinePreview(OrbitTimeline timeline, Level level, Vec3 origin) {
+    public OrbitTimelinePreview(OrbitTimeline timeline, Level level) {
         this.timeline = timeline;
-        Vec3 orbitCenter = origin.add(0, -1, 0);
+        Vec3 orbitCenter = new Vec3(0, -1, 0);
         for (int i = 0; i < 3; i++) {
             TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.ORBIT_TIMELINE.get(), timeline);
             Spell spell = new Spell().withTimeline(timelineMap);
@@ -38,10 +38,10 @@ public final class OrbitTimelinePreview implements ParticleTimelinePreview {
             return false;
         }
         if (age == 0) {
-            timeline.spawnSound.sound.playSound(level, projectiles.getFirst().position());
+            timeline.spawnSound.sound.playSound(level, Vec3.ZERO);
         }
         if (age == 60) {
-            timeline.resolveSound.sound.playSound(level, projectiles.getFirst().position());
+            timeline.resolveSound.sound.playSound(level, Vec3.ZERO);
         }
         for (EntityOrbitProjectile projectile : projectiles) {
             if (age == 60) {

@@ -12,12 +12,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -58,22 +61,27 @@ public class ParticlePreviewWidget extends AbstractWidget {
         }
         particles.clear();
         previewLevel = new ParticlePreviewLevel(mc.level, (options, x, y, z, xSpeed, ySpeed, zSpeed) -> {
-            Particle particle = mc.particleEngine.makeParticle(options, x, y, z, xSpeed, ySpeed, zSpeed);
+            Particle particle = makeParticle(options, x, y, z, xSpeed, ySpeed, zSpeed);
             if (particle != null) {
                 particles.add(particle);
             }
         });
-        Vec3 origin = mc.player.getEyePosition();
-        camera.moveTo(origin);
+        camera.moveTo(Vec3.ZERO);
         camera.setAngles(225f, 30f);
-        timelinePreview = createPreview(timeline, previewLevel, origin);
+        timelinePreview = createPreview(timeline, previewLevel);
         timelineFinished = false;
         startDelay = 5;
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends IParticleTimeline<T>> ParticleTimelinePreview createPreview(IParticleTimeline<T> timeline, ParticlePreviewLevel level, Vec3 origin) {
-        return timeline.getType().createPreview((T) timeline, level, origin).orElse(null);
+    private <T extends ParticleOptions> Particle makeParticle(T options, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        ParticleProvider<T> provider = (ParticleProvider<T>) mc.particleEngine.providers.get(BuiltInRegistries.PARTICLE_TYPE.getKey(options.getType()));
+        return provider == null ? null : provider.createParticle(options, previewLevel, x, y, z, xSpeed, ySpeed, zSpeed);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends IParticleTimeline<T>> ParticleTimelinePreview createPreview(IParticleTimeline<T> timeline, ParticlePreviewLevel level) {
+        return timeline.getType().createPreview((T) timeline, level).orElse(null);
     }
 
     public boolean isPlaying() {

@@ -6,8 +6,8 @@ import net.minecraft.world.phys.Vec3;
 public class PrestidigitationTimelinePreview extends EmitterTimelinePreview {
     private final PrestidigitationTimeline timeline;
 
-    public PrestidigitationTimelinePreview(PrestidigitationTimeline timeline, Level level, Vec3 origin) {
-        super(timeline.onTickEffect, null, level, origin.add(0, -0.5, 0), 40, 30f, 3, 3);
+    public PrestidigitationTimelinePreview(PrestidigitationTimeline timeline, Level level) {
+        super(timeline.onTickEffect, null, level, Vec3.ZERO, 40, 30f, 3, 3);
         this.timeline = timeline;
     }
 

@@ -6,15 +6,15 @@ import net.minecraft.world.phys.Vec3;
 public class SelfTimelinePreview extends EmitterTimelinePreview {
     private final SelfTimeline timeline;
 
-    public SelfTimelinePreview(SelfTimeline timeline, Level level, Vec3 origin) {
-        super(timeline.onResolvingEffect, level, origin.add(0, -0.5, 0));
+    public SelfTimelinePreview(SelfTimeline timeline, Level level) {
+        super(timeline.onResolvingEffect, level, new Vec3(0, -0.5, 0));
         this.timeline = timeline;
     }
 
     @Override
     public boolean tick(Level level) {
         if (age == 0) {
-            timeline.resolveSound.sound.playSound(level, position);
+            timeline.resolveSound.sound.playSound(level, Vec3.ZERO);
         }
         return super.tick(level);
     }

@@ -13,12 +13,11 @@ public final class LingerTimelinePreview implements ParticleTimelinePreview {
     private EntityLingeringSpell linger;
     private int age;
 
-    public LingerTimelinePreview(LingerTimeline timeline, Level level, Vec3 origin) {
+    public LingerTimelinePreview(LingerTimeline timeline, Level level) {
         this.timeline = timeline;
-        Vec3 position = origin.add(0, -1, 0);
         TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.LINGER_TIMELINE.get(), timeline);
         Spell spell = new Spell().withTimeline(timelineMap);
-        linger = new EntityLingeringSpell(level, position.x, position.y, position.z);
+        linger = new EntityLingeringSpell(level, 0, 0, 0);
         linger.setShouldFall(false);
         linger.setLanded(true);
         linger.setResolver(new SpellResolver(new SpellContext(level, spell, null, null)));
@@ -35,7 +34,7 @@ public final class LingerTimelinePreview implements ParticleTimelinePreview {
         age++;
         if (age == 30) {
             linger.sendResolveParticles();
-            timeline.resolveSound.sound.playSound(level, linger.position());
+            timeline.resolveSound.sound.playSound(level, Vec3.ZERO);
             linger = null;
         }
         return true;

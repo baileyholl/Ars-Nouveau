@@ -12,17 +12,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 public final class WallTimelinePreview implements ParticleTimelinePreview {
-    private final Vec3 position;
     private final WallTimeline timeline;
     private EntityWallSpell wall;
     private int age;
 
-    public WallTimelinePreview(WallTimeline timeline, Level level, Vec3 origin) {
+    public WallTimelinePreview(WallTimeline timeline, Level level) {
         this.timeline = timeline;
-        this.position = origin.add(0, -1, 0);
         TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.WALL_TIMELINE.get(), timeline);
         Spell spell = new Spell().withTimeline(timelineMap);
-        wall = new EntityWallSpell(level, position.x, position.y, position.z);
+        wall = new EntityWallSpell(level, 0, -1, 0);
         wall.setDirection(Direction.NORTH);
         wall.setShouldFall(false);
         wall.setLanded(true);
@@ -39,7 +37,7 @@ public final class WallTimelinePreview implements ParticleTimelinePreview {
         age++;
         if (age == 40) {
             wall.sendResolveParticles();
-            timeline.resolveSound.sound.playSound(level, position);
+            timeline.resolveSound.sound.playSound(level, Vec3.ZERO);
             wall = null;
         }
         return true;
