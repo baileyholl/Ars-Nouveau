@@ -65,7 +65,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
         });
         Vec3 origin = mc.player.getEyePosition();
         camera.moveTo(origin);
-        camera.setAngles(125f, 30f);
+        camera.setAngles(225f, 30f);
         timelinePreview = createPreview(timeline, previewLevel, origin);
         timelineFinished = false;
         startDelay = 5;

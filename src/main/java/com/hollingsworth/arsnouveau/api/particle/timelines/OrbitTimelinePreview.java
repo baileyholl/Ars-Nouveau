@@ -13,9 +13,11 @@ import java.util.List;
 
 public final class OrbitTimelinePreview implements ParticleTimelinePreview {
     private final List<EntityOrbitProjectile> projectiles = new ArrayList<>();
+    private final OrbitTimeline timeline;
     private int age;
 
     public OrbitTimelinePreview(OrbitTimeline timeline, Level level, Vec3 origin) {
+        this.timeline = timeline;
         Vec3 orbitCenter = origin.add(0, -1, 0);
         for (int i = 0; i < 3; i++) {
             TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.ORBIT_TIMELINE.get(), timeline);
@@ -34,6 +36,12 @@ public final class OrbitTimelinePreview implements ParticleTimelinePreview {
     public boolean tick(Level level) {
         if (age > 60) {
             return false;
+        }
+        if (age == 0) {
+            timeline.spawnSound.sound.playSound(level, projectiles.getFirst().position());
+        }
+        if (age == 60) {
+            timeline.resolveSound.sound.playSound(level, projectiles.getFirst().position());
         }
         for (EntityOrbitProjectile projectile : projectiles) {
             if (age == 60) {

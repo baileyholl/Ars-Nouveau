@@ -1,8 +1,15 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.client.renderer.PlanariumRenderingWorld;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
 
 public class ParticlePreviewLevel extends PlanariumRenderingWorld {
 
@@ -16,6 +23,11 @@ public class ParticlePreviewLevel extends PlanariumRenderingWorld {
     public ParticlePreviewLevel(Level realWorld, IParticleAdded particleAddedCallback) {
         super(realWorld);
         this.particleAddedCallback = particleAddedCallback;
+    }
+
+    @Override
+    public void playSound(@Nullable Player player, double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch) {
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, pitch, volume));
     }
 
     @Override

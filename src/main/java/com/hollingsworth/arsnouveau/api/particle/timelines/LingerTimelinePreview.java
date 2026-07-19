@@ -9,10 +9,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public final class LingerTimelinePreview implements ParticleTimelinePreview {
+    private final LingerTimeline timeline;
     private EntityLingeringSpell linger;
     private int age;
 
     public LingerTimelinePreview(LingerTimeline timeline, Level level, Vec3 origin) {
+        this.timeline = timeline;
         Vec3 position = origin.add(0, -1, 0);
         TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.LINGER_TIMELINE.get(), timeline);
         Spell spell = new Spell().withTimeline(timelineMap);
@@ -33,6 +35,7 @@ public final class LingerTimelinePreview implements ParticleTimelinePreview {
         age++;
         if (age == 30) {
             linger.sendResolveParticles();
+            timeline.resolveSound.sound.playSound(level, linger.position());
             linger = null;
         }
         return true;

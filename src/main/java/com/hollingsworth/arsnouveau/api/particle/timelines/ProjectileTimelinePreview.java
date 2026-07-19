@@ -12,12 +12,14 @@ public final class ProjectileTimelinePreview implements ParticleTimelinePreview 
     private final int flightTicks = 40;
 
     private final Vec3 velocity;
+    private final ProjectileTimeline timeline;
     private EntityProjectileSpell projectile;
     private int age;
 
     public ProjectileTimelinePreview(ProjectileTimeline timeline, Level level, Vec3 origin) {
         Vec3 position = origin.add(-3.5, 0, 1);
         this.velocity = origin.add(1.5, 0, 1).subtract(position).scale(1f / flightTicks);
+        this.timeline = timeline;
         TimelineMap timelineMap = new TimelineMap().put(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get(), timeline);
         Spell spell = new Spell().withTimeline(timelineMap);
         projectile = new EntityProjectileSpell(level, position.x, position.y, position.z);
@@ -30,9 +32,13 @@ public final class ProjectileTimelinePreview implements ParticleTimelinePreview 
         if (age > flightTicks) {
             return false;
         }
+        if (age == 0) {
+            timeline.castSound.sound.playSound(level, projectile.position());
+        }
         projectile.setOldPosAndRot();
         if (age == flightTicks) {
             projectile.sendResolveParticles();
+            timeline.resolveSound.sound.playSound(level, projectile.position());
             projectile = null;
         } else {
             projectile.setPos(projectile.getPosition(0).add(velocity));

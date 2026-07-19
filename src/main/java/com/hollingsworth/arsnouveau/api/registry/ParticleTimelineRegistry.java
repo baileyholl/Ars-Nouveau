@@ -28,7 +28,7 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LingerTimeline>> LINGER_TIMELINE = TIMELINE_DF.register("linger", () -> new SimpleParticleTimelineType<>(EffectLinger.INSTANCE, LingerTimeline.CODEC, LingerTimeline.STREAM_CODEC, LingerTimeline::new, LingerTimelinePreview::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<TouchTimeline>> TOUCH_TIMELINE = TIMELINE_DF.register("touch", () -> new SimpleParticleTimelineType<>(MethodTouch.INSTANCE, TouchTimeline.CODEC, TouchTimeline.STREAM_CODEC, TouchTimeline::new, (timeline, level, origin) -> new EmitterTimelinePreview(timeline.onResolvingEffect, level, origin.add(0, -0.5, 0))));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<TouchTimeline>> TOUCH_TIMELINE = TIMELINE_DF.register("touch", () -> new SimpleParticleTimelineType<>(MethodTouch.INSTANCE, TouchTimeline.CODEC, TouchTimeline.STREAM_CODEC, TouchTimeline::new, TouchTimelinePreview::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<BurstTimeline>> BURST_TIMELINE = TIMELINE_DF.register("burst", () -> new SimpleParticleTimelineType<>(EffectBurst.INSTANCE, BurstTimeline.CODEC, BurstTimeline.STREAM_CODEC, BurstTimeline::new, BurstTimelinePreview::new));
 
@@ -36,15 +36,15 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<RuneTimeline>> RUNE_TIMELINE = TIMELINE_DF.register("rune", () -> new SimpleParticleTimelineType<>(EffectRune.INSTANCE, RuneTimeline.CODEC, RuneTimeline.STREAM_CODEC, RuneTimeline::new, RuneTimelinePreview::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PantomimeTimeline>> PANTOMIME_TIMELINE = TIMELINE_DF.register("pantomime", () -> new SimpleParticleTimelineType<>(MethodPantomime.INSTANCE, PantomimeTimeline.CODEC, PantomimeTimeline.STREAM_CODEC, PantomimeTimeline::new, (timeline, level, origin) -> new EmitterTimelinePreview(timeline.onResolvingEffect, level, origin.add(0, -0.5, 0))));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PantomimeTimeline>> PANTOMIME_TIMELINE = TIMELINE_DF.register("pantomime", () -> new SimpleParticleTimelineType<>(MethodPantomime.INSTANCE, PantomimeTimeline.CODEC, PantomimeTimeline.STREAM_CODEC, PantomimeTimeline::new, PantomimeTimelinePreview::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<WololoTimeline>> WOLOLO_TIMELINE = TIMELINE_DF.register("wololo", () -> new SimpleParticleTimelineType<>(EffectWololo.INSTANCE, WololoTimeline.CODEC, WololoTimeline.STREAM_CODEC, WololoTimeline::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<MageBlockTimeline>> MAGEBLOCK_TIMELINE = TIMELINE_DF.register("mageblock", () -> new SimpleParticleTimelineType<>(EffectPhantomBlock.INSTANCE, MageBlockTimeline.CODEC, MageBlockTimeline.STREAM_CODEC, MageBlockTimeline::new, MageBlockTimelinePreview::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<SelfTimeline>> SELF_TIMELINE = TIMELINE_DF.register("self", () -> new SimpleParticleTimelineType<>(MethodSelf.INSTANCE, SelfTimeline.CODEC, SelfTimeline.STREAM_CODEC, SelfTimeline::new, (timeline, level, origin) -> new EmitterTimelinePreview(timeline.onResolvingEffect, level, origin.add(0, -0.5, 0))));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<SelfTimeline>> SELF_TIMELINE = TIMELINE_DF.register("self", () -> new SimpleParticleTimelineType<>(MethodSelf.INSTANCE, SelfTimeline.CODEC, SelfTimeline.STREAM_CODEC, SelfTimeline::new, SelfTimelinePreview::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PrestidigitationTimeline>> PRESTIDIGITATION_TIMELINE = TIMELINE_DF.register("prestidigitation", () -> new SimpleParticleTimelineType<>(EffectPrestidigitation.INSTANCE, PrestidigitationTimeline.CODEC, PrestidigitationTimeline.STREAM_CODEC, PrestidigitationTimeline::new, (timeline, level, origin) -> new EmitterTimelinePreview(timeline.onTickEffect, null, level, origin.add(0, -0.5, 0), 40, 30f, 3, 3)));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<PrestidigitationTimeline>> PRESTIDIGITATION_TIMELINE = TIMELINE_DF.register("prestidigitation", () -> new SimpleParticleTimelineType<>(EffectPrestidigitation.INSTANCE, PrestidigitationTimeline.CODEC, PrestidigitationTimeline.STREAM_CODEC, PrestidigitationTimeline::new, PrestidigitationTimelinePreview::new));
 
-    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<DelayTimeline>> DELAY_TIMELINE = TIMELINE_DF.register("delay", () -> new SimpleParticleTimelineType<>(EffectDelay.INSTANCE, DelayTimeline.CODEC, DelayTimeline.STREAM_CODEC, DelayTimeline::new, (timeline, level, origin) -> new EmitterTimelinePreview(timeline.onTickEffect, timeline.onResolvingEffect, level, origin.add(0, -0.5, 0), 40, 30f, 3, 3)));
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<DelayTimeline>> DELAY_TIMELINE = TIMELINE_DF.register("delay", () -> new SimpleParticleTimelineType<>(EffectDelay.INSTANCE, DelayTimeline.CODEC, DelayTimeline.STREAM_CODEC, DelayTimeline::new, DelayTimelinePreview::new));
 }
