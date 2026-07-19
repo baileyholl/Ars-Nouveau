@@ -134,6 +134,9 @@ public class AlakarkinosConversionRegistry {
                         .create(LootContextParamSets.CHEST);
                 for (int i = 0; i < 600; i++) {
                     for (ItemStack random : lootTable.getRandomItems(lootParams)) {
+                        if(random.isEmpty()){
+                            continue;
+                        }
                         drops.put(random, drops.getInt(random) + random.getCount());
                     }
                 }
