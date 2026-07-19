@@ -1,5 +1,7 @@
-package com.hollingsworth.arsnouveau.api.particle.timelines;
+package com.hollingsworth.arsnouveau.client.particle.timeline_previews;
 
+import com.hollingsworth.arsnouveau.api.particle.timelines.MageBlockTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimelinePreview;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;

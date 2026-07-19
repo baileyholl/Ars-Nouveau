@@ -1,5 +1,8 @@
-package com.hollingsworth.arsnouveau.api.particle.timelines;
+package com.hollingsworth.arsnouveau.client.particle.timeline_previews;
 
+import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimelinePreview;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.particle.timelines.WallTimeline;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;

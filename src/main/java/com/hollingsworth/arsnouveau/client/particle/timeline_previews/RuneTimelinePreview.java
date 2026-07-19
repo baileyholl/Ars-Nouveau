@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.particle.timelines;
+package com.hollingsworth.arsnouveau.client.particle.timeline_previews;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
@@ -6,6 +6,9 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.BurstMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.PropMap;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimelinePreview;
+import com.hollingsworth.arsnouveau.api.particle.timelines.RuneTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;

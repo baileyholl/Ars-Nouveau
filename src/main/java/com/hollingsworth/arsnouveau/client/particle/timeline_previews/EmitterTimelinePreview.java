@@ -1,6 +1,8 @@
-package com.hollingsworth.arsnouveau.api.particle.timelines;
+package com.hollingsworth.arsnouveau.client.particle.timeline_previews;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.timelines.ParticleTimelinePreview;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;

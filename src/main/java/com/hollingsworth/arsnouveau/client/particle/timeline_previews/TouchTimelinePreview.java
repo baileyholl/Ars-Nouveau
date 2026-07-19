@@ -1,12 +1,13 @@
-package com.hollingsworth.arsnouveau.api.particle.timelines;
+package com.hollingsworth.arsnouveau.client.particle.timeline_previews;
 
+import com.hollingsworth.arsnouveau.api.particle.timelines.TouchTimeline;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class PantomimeTimelinePreview extends EmitterTimelinePreview {
-    private final PantomimeTimeline timeline;
+public class TouchTimelinePreview extends EmitterTimelinePreview {
+    private final TouchTimeline timeline;
 
-    public PantomimeTimelinePreview(PantomimeTimeline timeline, Level level) {
+    public TouchTimelinePreview(TouchTimeline timeline, Level level) {
         super(timeline.onResolvingEffect, level, Vec3.ZERO);
         this.timeline = timeline;
     }

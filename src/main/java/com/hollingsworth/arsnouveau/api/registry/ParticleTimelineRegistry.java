@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.registry;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.timelines.*;
+import com.hollingsworth.arsnouveau.client.particle.timeline_previews.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodPantomime;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
