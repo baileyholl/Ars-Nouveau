@@ -59,7 +59,7 @@ public final class WallTimelinePreview implements ParticleTimelinePreview {
     }
 
     @Override
-    public void renderWorldBlocks(BlockRenderCallback callback) {
+    public void renderBlocks(BlockRenderCallback callback) {
         ParticleTimelinePreview.renderGrassField(callback, 1, 5);
         for (int y = -1; y <= 4; y++) {
             for (int z = -5; z <= 5; z++) {

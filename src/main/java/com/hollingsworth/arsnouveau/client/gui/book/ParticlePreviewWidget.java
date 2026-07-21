@@ -139,35 +139,38 @@ public class ParticlePreviewWidget extends AbstractWidget {
         graphics.disableScissor();
     }
 
+    ParticleTimelinePreview.BlockRenderCallback blockRenderCallback = new ParticleTimelinePreview.BlockRenderCallback() {
+        @Override
+        public void renderBlock(BlockState state, BlockPos pos) {
+            MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+            mc.getBlockRenderer().renderSingleBlock(state, poseAt(pos), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        }
+
+        @Override
+        public void renderBlock(BlockState state, BlockPos pos, BlockEntity blockEntity) {
+            MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+            previewLevel.setBlock(pos, state, 0);
+            previewLevel.blockEntityMap.put(pos, blockEntity);
+            PoseStack poseStack = poseAt(pos);
+            var model = mc.getBlockRenderer().getBlockModel(state);
+            for (var renderType : model.getRenderTypes(state, RandomSource.create(state.getSeed(pos)), ModelData.EMPTY)) {
+                mc.getBlockRenderer().getModelRenderer().tesselateBlock(previewLevel, model, state, pos, poseStack,
+                        bufferSource.getBuffer(renderType), false, RandomSource.create(), state.getSeed(pos),
+                        OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
+            }
+        }
+
+        @Override
+        public void renderBlockEntity(BlockEntity blockEntity) {
+            MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+            mc.getBlockEntityRenderDispatcher().renderItem(blockEntity, poseAt(blockEntity.getBlockPos()), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        }
+    };
+
     private void renderScene(float partialTicks) {
         Lighting.setupLevel();
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        ParticleTimelinePreview.BlockRenderCallback callback = new ParticleTimelinePreview.BlockRenderCallback() {
-            @Override
-            public void renderBlock(BlockState state, BlockPos pos) {
-                mc.getBlockRenderer().renderSingleBlock(state, poseAt(pos), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-            }
-
-            @Override
-            public void renderBlock(BlockState state, BlockPos pos, BlockEntity blockEntity) {
-                previewLevel.setBlock(pos, state, 0);
-                previewLevel.blockEntityMap.put(pos, blockEntity);
-                PoseStack poseStack = poseAt(pos);
-                var model = mc.getBlockRenderer().getBlockModel(state);
-                for (var renderType : model.getRenderTypes(state, RandomSource.create(state.getSeed(pos)), ModelData.EMPTY)) {
-                    mc.getBlockRenderer().getModelRenderer().tesselateBlock(previewLevel, model, state, pos, poseStack,
-                            bufferSource.getBuffer(renderType), false, RandomSource.create(), state.getSeed(pos),
-                            OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-                }
-            }
-
-            @Override
-            public void renderBlockEntity(BlockEntity blockEntity) {
-                mc.getBlockEntityRenderDispatcher().renderItem(blockEntity, poseAt(blockEntity.getBlockPos()), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-            }
-        };
-        timelinePreview.renderWorldBlocks(callback);
-        timelinePreview.renderBlocks(callback);
+        timelinePreview.renderBlocks(blockRenderCallback);
         timelinePreview.renderEntities(entity -> {
             double x = Mth.lerp(partialTicks, entity.xOld, entity.getX()) - camera.getPosition().x;
             double y = Mth.lerp(partialTicks, entity.yOld, entity.getY()) - camera.getPosition().y;

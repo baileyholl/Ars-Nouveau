@@ -47,7 +47,7 @@ public final class BurstTimelinePreview implements ParticleTimelinePreview {
     }
 
     @Override
-    public void renderWorldBlocks(BlockRenderCallback callback) {
+    public void renderBlocks(BlockRenderCallback callback) {
         ParticleTimelinePreview.renderGrassField(callback, 10, 10);
     }
 }

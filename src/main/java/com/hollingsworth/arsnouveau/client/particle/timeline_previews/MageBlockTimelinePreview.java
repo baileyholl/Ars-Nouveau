@@ -28,7 +28,7 @@ public final class MageBlockTimelinePreview implements ParticleTimelinePreview {
     }
 
     @Override
-    public void renderWorldBlocks(BlockRenderCallback callback) {
+    public void renderBlocks(BlockRenderCallback callback) {
         callback.renderBlock(tile.getBlockState(), tile.getBlockPos(), tile);
     }
 }

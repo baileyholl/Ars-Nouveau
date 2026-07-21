@@ -45,9 +45,7 @@ public final class LingerTimelinePreview implements ParticleTimelinePreview {
 
     @Override
     public void renderEntities(EntityRenderCallback callback) {
-        if (linger != null) {
-            callback.renderEntity(linger);
-        }
+        callback.renderEntity(linger);
     }
 
     @Override
@@ -56,7 +54,7 @@ public final class LingerTimelinePreview implements ParticleTimelinePreview {
     }
 
     @Override
-    public void renderWorldBlocks(BlockRenderCallback callback) {
+    public void renderBlocks(BlockRenderCallback callback) {
         ParticleTimelinePreview.renderGrassField(callback, 6, 6);
     }
 }

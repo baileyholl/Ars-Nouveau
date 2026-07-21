@@ -60,12 +60,8 @@ public final class RuneTimelinePreview implements ParticleTimelinePreview {
     }
 
     @Override
-    public void renderWorldBlocks(BlockRenderCallback callback) {
-        ParticleTimelinePreview.renderGrassField(callback, 1, 1);
-    }
-
-    @Override
     public void renderBlocks(BlockRenderCallback callback) {
+        ParticleTimelinePreview.renderGrassField(callback, 1, 1);
         if (active) {
             callback.renderBlockEntity(rune);
         }

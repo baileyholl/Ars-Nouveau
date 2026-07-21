@@ -15,11 +15,8 @@ public interface ParticleTimelinePreview {
         return 15f;
     }
 
-    default void renderWorldBlocks(BlockRenderCallback callback) {
-        renderGrassField(callback);
-    }
-
     default void renderBlocks(BlockRenderCallback callback) {
+        renderGrassField(callback);
     }
 
     default void renderEntities(EntityRenderCallback callback) {
