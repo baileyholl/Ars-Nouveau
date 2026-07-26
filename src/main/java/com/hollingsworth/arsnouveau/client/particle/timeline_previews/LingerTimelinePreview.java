@@ -45,7 +45,9 @@ public final class LingerTimelinePreview implements ParticleTimelinePreview {
 
     @Override
     public void renderEntities(EntityRenderCallback callback) {
-        callback.renderEntity(linger);
+        if (linger != null) {
+            callback.renderEntity(linger);
+        }
     }
 
     @Override
