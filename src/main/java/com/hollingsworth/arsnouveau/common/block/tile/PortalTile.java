@@ -63,10 +63,9 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 return;
             }
             Vec3 vec3 = e.position;
-            Networking.sendToNearbyClient(serverWorld, e, new PacketWarpPosition(e.getId(), e.getX() + 0.5, e.getY(), e.getZ() + 0.5, rotationVec.x, rotationVec.y));
-            serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+            var particlePos = warpPos.getCenter();
+            serverLevel.sendParticles(ParticleTypes.PORTAL, particlePos.x, particlePos.y, particlePos.z,
                     4, (serverWorld.random.nextDouble() - 0.5D) * 2.0D, -serverWorld.random.nextDouble(), (serverWorld.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
-            serverWorld.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(warpPos), 3, warpPos);
             e.level().gameEvent(GameEvent.TELEPORT, vec3, GameEvent.Context.of(e));
         }
     }
@@ -117,7 +116,8 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                         continue;
                     if (dimID != null && PortalTile.teleportEntityTo(e, getServerLevel(dimID, serverLevel), this.warpPos, rotationVec) != null) {
                         level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                        serverLevel.sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+                        var particlePos = warpPos.getCenter();
+                        serverLevel.sendParticles(ParticleTypes.PORTAL, particlePos.x, particlePos.y, particlePos.z,
                                 4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                     }
                 }
@@ -135,19 +135,23 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     @Nullable
-    public static Entity teleportEntityTo(Entity entity, @Nullable Level targetWorld, BlockPos target, Vec2 rotationVec) {
-        if (targetWorld == null) {
+    public static Entity teleportEntityTo(Entity entity, @Nullable Level world, BlockPos target, Vec2 rotationVec) {
+        if (!(world instanceof ServerLevel targetWorld)) {
             return entity;
         }
+
+        Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
         if (entity.getCommandSenderWorld().dimension() == targetWorld.dimension()) {
             // Check if the target block is a portal, if so, don't teleport
-            if ((targetWorld.getBlockState(target).getBlock() instanceof PortalBlock)) {
+            if (targetWorld.getBlockState(target).getBlock() instanceof PortalBlock) {
                 return entity;
             }
+
+            targetWorld.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(target), 3, target);
             var rotX = rotationVec != null ? rotationVec.x : entity.getXRot();
             var rotY = rotationVec != null ? rotationVec.y : entity.getYRot();
-            Networking.sendToNearbyClient(targetWorld, entity, new PacketWarpPosition(entity.getId(), target.getX() + 0.5, target.getY(), target.getZ() + 0.5, rotX, rotY));
-            entity.teleportTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+            Networking.sendToNearbyClient(targetWorld, entity, new PacketWarpPosition(entity.getId(), destination.x,destination.y, destination.z, rotX, rotY));
+            entity.teleportTo(destination.x, destination.y, destination.z);
             entity.setXRot(rotX);
             entity.setYRot(rotY);
 
@@ -156,6 +160,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
                 ((ServerChunkCache) entity.getCommandSenderWorld().getChunkSource()).broadcast(entity, new ClientboundSetPassengersPacket(entity));
                 Entity controller = entity.getControllingPassenger();
                 if (controller != entity && controller instanceof ServerPlayer player && !(controller instanceof FakePlayer)) {
+                    //noinspection ConstantValue
                     if (player.connection != null) {
                         //Force sync the fact that the vehicle moved to the client that is controlling it
                         // so that it makes sure to use the correct positions when sending move packets
@@ -166,9 +171,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             }
             return entity;
         }
-        Vec3 destination = new Vec3(target.getX() + 0.5, target.getY(), target.getZ() + 0.5);
+
+        targetWorld.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(target), 3, target);
         //Note: We grab the passengers here instead of in placeEntity as changeDimension starts by removing any passengers
-        return entity.changeDimension(new DimensionTransition((ServerLevel) targetWorld, destination, new Vec3(0, 0, 0), rotationVec.y, rotationVec.x, false, DimensionTransition.DO_NOTHING));
+        return entity.changeDimension(new DimensionTransition(targetWorld, destination, Vec3.ZERO, rotationVec.y, rotationVec.x, false, DimensionTransition.DO_NOTHING));
     }
 
     @Override
