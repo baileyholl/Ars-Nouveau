@@ -91,6 +91,7 @@ public class DocAssets {
     public static final BlitInfo TRIPLE_NESTED_ENTRY_BUTTON_SELECTED = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter4_selected.png"), 79, 14);
 
     public static final BlitInfo SAVE_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_save_bar.png"), 56, 15);
+    public static final BlitInfo TEST_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/test_icon.png"), 12, 12);
     public static final BlitInfo BUTTON_DOWN = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_down.png"), 15, 10);
     public static final BlitInfo BUTTON_DOWN_HOVER = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_down_hover.png"), 15, 10);
     public static final BlitInfo BUTTON_UP = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_spellstyle_button_up.png"), 15, 10);
