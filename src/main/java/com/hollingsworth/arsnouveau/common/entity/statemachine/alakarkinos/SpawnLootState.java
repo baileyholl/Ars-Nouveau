@@ -47,7 +47,7 @@ public class SpawnLootState extends CrabState {
             return null;
         }
         alakarkinos.lookAt = Vec3.atCenterOf(hatPos);
-        if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), hatPos) > 2) {
+        if (BlockUtil.distanceFrom(alakarkinos.level(), alakarkinos.blockPosition(), hatPos) > 2) {
             alakarkinos.getNavigation().moveTo(hatPos.getX() + 0.5, hatPos.getY() + 0.5, hatPos.getZ() + 0.5, 1.0);
             return null;
         }

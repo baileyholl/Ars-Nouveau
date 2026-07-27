@@ -1,11 +1,9 @@
 # Changelog
 
-Fix client memory leak with portals
+Improves repository and lectern caching performance (Qther)
 
-Fix crash with edge case using scribes tables in structures
+Fixes dupe with interact and buckets (Qther)
 
-Fix mana values after learning a new glyph not updating until using a spell book.
+Fixes tomes having their discount applied multiple times (Qther)
 
-Adds Starbuncles and Golems to the sable destroy_when_leaving_plot and retain_in_sub_level tags
-
-Interacting with a source jar in creative mode will now add source or remove it if crouching.
+Fixes search bar in spellbook capturing inputs too quickly on linux (Qther)

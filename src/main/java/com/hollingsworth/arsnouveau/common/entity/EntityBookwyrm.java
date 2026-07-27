@@ -123,7 +123,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             playerTooFar = true;
             ServerLevel serverLevel = (ServerLevel) level;
             for (ServerPlayer serverPlayer : serverLevel.players()) {
-                if (BlockUtil.distanceFrom(serverPlayer.position(), this.position()) < 40) {
+                if (BlockUtil.distanceFrom(level, serverPlayer.position(), this.position()) < 40) {
                     playerTooFar = false;
                     break;
                 }

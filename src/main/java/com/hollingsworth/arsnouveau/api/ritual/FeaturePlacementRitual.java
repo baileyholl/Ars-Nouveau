@@ -62,7 +62,7 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
             double x = nextPos.getX() + 0.5;
             double y = nextPos.getY() + 0.5;
             double z = nextPos.getZ() + 0.5;
-            double dist = BlockUtil.distanceFrom(new Vec3(x, y, z), new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+            double dist = BlockUtil.distanceFrom(getWorld(), new Vec3(x, y, z), new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
             if (dist <= checkRadius) {
                 positions.add(nextPos.immutable());
             }
@@ -103,7 +103,7 @@ public abstract class FeaturePlacementRitual extends AbstractRitual {
             return true;
         }
         for (BlockPos pos : featureMap.get(feature)) {
-            if (BlockUtil.distanceFrom(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= dist) {
+            if (BlockUtil.distanceFrom(getWorld(), new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5)) <= dist) {
                 return false;
             }
         }

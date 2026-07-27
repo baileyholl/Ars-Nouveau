@@ -37,7 +37,7 @@ public class Planarium extends TickableModBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(INVERTED, false));
     }
 
-    public static VoxelShape shape = Shapes.box(0, 0, 0, 1, 2, 1);
+    public static VoxelShape shape = Shapes.box(0, 0, 0, 1, 1.81, 1);
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {

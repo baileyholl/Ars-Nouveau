@@ -52,7 +52,7 @@ public class PlaceHatState extends CrabState {
         alakarkinos.lookAt = Vec3.atCenterOf(placeHatPos);
         if (!didHatAnimate) {
             alakarkinos.getNavigation().moveTo(placeHatPos.getX() + 0.5, placeHatPos.getY() + 0.5, placeHatPos.getZ(), 1.0);
-            if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), placeHatPos) <= 2 || ticksRunning > 200) {
+            if (BlockUtil.distanceFrom(alakarkinos.level(), alakarkinos.blockPosition(), placeHatPos) <= 2 || ticksRunning > 200) {
                 didHatAnimate = true;
                 alakarkinos.getNavigation().stop();
                 waitTicks = 20;

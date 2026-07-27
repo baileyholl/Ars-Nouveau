@@ -35,7 +35,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
         if (tileEntity instanceof WixieCauldronTile cauldronTile) {
             potionNeeded = cauldronTile.getNeededPotion();
             movePos = WixieCauldronTile.findNeededPotion(potionNeeded, 300, wixie.level, wixie.cauldronPos);
-            this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
+            this.startDistance = BlockUtil.distanceFrom(wixie.level(), wixie.position, movePos);
         } else {
             found = true;
         }
@@ -52,7 +52,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
         if (found)
             return;
 
-        if (movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange) {
+        if (movePos != null && BlockUtil.distanceFrom(wixie.level(), wixie.position(), movePos.above()) < 2.0 + this.extendedRange) {
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             ServerLevel world = (ServerLevel) wixie.getCommandSenderWorld();
             if (tile == null) {

@@ -331,7 +331,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             if (blowingBubbles()) {
                 return PlayState.STOP;
             }
-            if (this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS) || (this.partyCrab && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8)) {
+            if (this.getMainHandItem().is(ItemTags.DECORATED_POT_SHERDS) || (this.partyCrab && this.jukeboxPos != null && BlockUtil.distanceFrom(this.level(), position, jukeboxPos) <= 8)) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("dance"));
                 return PlayState.CONTINUE;
             }

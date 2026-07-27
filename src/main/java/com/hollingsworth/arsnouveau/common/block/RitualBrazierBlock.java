@@ -33,27 +33,27 @@ public class RitualBrazierBlock extends TickableModBlock {
             Block.box(6, 0, 6, 10, 12, 10),
             Stream.of(
                     Block.box(2, 14, 2, 11, 16, 5),
-                    Block.box(7, 11, 1, 9, 15, 6),
+                    Block.box(7, 8, 1, 9, 12, 6),
                     Block.box(7, 0, 0, 9, 5, 4),
-                    Block.box(7, 0, 4, 9, 11, 6)
+                    Block.box(7, 0, 4, 9, 8, 6)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
                     Block.box(2, 14, 5, 5, 16, 14),
-                    Block.box(1, 11, 7, 6, 15, 9),
+                    Block.box(1, 8, 7, 6, 12, 9),
                     Block.box(0, 0, 7, 4, 5, 9),
-                    Block.box(4, 0, 7, 6, 11, 9)
+                    Block.box(4, 0, 7, 6, 8, 9)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
                     Block.box(5, 14, 11, 14, 16, 14),
-                    Block.box(7, 11, 10, 9, 15, 15),
+                    Block.box(7, 8, 10, 9, 12, 15),
                     Block.box(7, 0, 12, 9, 5, 16),
-                    Block.box(7, 0, 10, 9, 11, 12)
+                    Block.box(7, 0, 10, 9, 8, 12)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(),
             Stream.of(
                     Block.box(11, 14, 2, 14, 16, 11),
-                    Block.box(10, 11, 7, 15, 15, 9),
+                    Block.box(10, 8, 7, 15, 12, 9),
                     Block.box(12, 0, 7, 16, 5, 9),
-                    Block.box(10, 0, 7, 12, 11, 9)
+                    Block.box(10, 0, 7, 12, 8, 9)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 

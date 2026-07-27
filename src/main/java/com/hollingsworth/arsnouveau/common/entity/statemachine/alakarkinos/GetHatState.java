@@ -33,7 +33,7 @@ public class GetHatState extends CrabState {
             alakarkinos.getEntityData().set(Alakarkinos.HAS_HAT, true);
             return new DecideCrabActionState(alakarkinos);
         } else {
-            if (BlockUtil.distanceFrom(alakarkinos.blockPosition(), alakarkinos.hatPos) <= 1.5) {
+            if (BlockUtil.distanceFrom(alakarkinos.level(), alakarkinos.blockPosition(), alakarkinos.hatPos) <= 1.5) {
                 if (!animHat) {
                     animHat = true;
                     Networking.sendToNearbyClient(alakarkinos.level, alakarkinos, new PacketAnimEntity(alakarkinos.getId(), Alakarkinos.Animations.PICKUP_HAT.ordinal()));

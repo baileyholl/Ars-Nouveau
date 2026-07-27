@@ -124,7 +124,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
             if (level.getBlockEntity(storedPos) == null || level.getCapability(Capabilities.ItemHandler.BLOCK, storedPos, null) == null) {
                 return;
             }
-            if (BlockUtil.distanceFrom(storedPos, worldPosition) > 30) {
+            if (BlockUtil.distanceFrom(level, storedPos, worldPosition) > 30) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far"));
                 return;
             }

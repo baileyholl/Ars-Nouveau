@@ -63,7 +63,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                 ItemStack stack = itemHandler.getStackInSlot(i);
                 if (stack.getItem() == getStack.getItem()) {
                     movePos = b.immutable();
-                    this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
+                    this.startDistance = BlockUtil.distanceFrom(wixie.level(), wixie.position, movePos);
                     break;
                 }
             }
@@ -99,7 +99,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
 
-        if (!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), Vec3.atCenterOf(movePos)) < 1.3 + this.extendedRange) {
+        if (!found && movePos != null && BlockUtil.distanceFrom(wixie.level(), wixie.position(), Vec3.atCenterOf(movePos)) < 1.3 + this.extendedRange) {
 
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             Level world = wixie.getCommandSenderWorld();

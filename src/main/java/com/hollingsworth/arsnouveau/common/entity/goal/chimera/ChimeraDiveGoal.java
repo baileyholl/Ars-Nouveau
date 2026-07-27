@@ -90,7 +90,7 @@ public class ChimeraDiveGoal extends Goal {
                 boss.orbitOffset = new Vec3(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
             }
         }
-        if ((isDiving && (boss.onGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) || (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
+        if ((isDiving && (boss.onGround() || BlockUtil.distanceFrom(boss.level(), boss.position, divePos) <= 1.0d) || (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.level(), boss.position, boss.orbitOffset) <= 1.7d))) {
             makeExplosion();
             endGoal();
             return;

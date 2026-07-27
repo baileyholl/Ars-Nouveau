@@ -71,7 +71,6 @@ public class Documentation {
         DocCategory RITUALS = DocumentationRegistry.RITUAL_INDEX;
         DocCategory ENCHANTMENTS = DocumentationRegistry.ENCHANTING;
         DocCategory FAMILIARS = DocumentationRegistry.FAMILIARS;
-        DocCategory MOD_NEWS = DocumentationRegistry.GETTING_STARTED;
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
@@ -497,6 +496,7 @@ public class Documentation {
         scryScroll.withRelation(scryCaster).withRelation(oculus).withRelation(scryCrystal);
         var starbyShades = addBasicItem(ItemsRegistry.STARBUNCLE_SHADES, AUTOMATION);
         var wixieHat = addBasicItem(ItemsRegistry.WIXIE_HAT, AUTOMATION);
+        var starbyPlush = addBasicItem(BlockRegistry.STARBUNCLE_PLUSH, EQUIPMENT).withRelation(starby);
 
 //        addPage(new DocEntryBuilder(MOD_NEWS, "support_mod")
 //                        .withIcon(ItemsRegistry.STARBUNCLE_CHARM)
@@ -527,10 +527,6 @@ public class Documentation {
                 .withPage(PerkDiagramEntry.create(ItemsRegistry.SORCERER_HOOD, ItemsRegistry.SORCERER_ROBES, ItemsRegistry.SORCERER_LEGGINGS, ItemsRegistry.SORCERER_BOOTS))
                 .withPage(PerkDiagramEntry.create(ItemsRegistry.ARCANIST_HOOD, ItemsRegistry.ARCANIST_ROBES, ItemsRegistry.ARCANIST_LEGGINGS, ItemsRegistry.ARCANIST_BOOTS))
                 .withPage(PerkDiagramEntry.create(ItemsRegistry.BATTLEMAGE_HOOD, ItemsRegistry.BATTLEMAGE_ROBES, ItemsRegistry.BATTLEMAGE_LEGGINGS, ItemsRegistry.BATTLEMAGE_BOOTS))
-//                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/arcanist_thread_diagram.png"))
-//                        .withEntry(ArsNouveau.prefix( "textures/gui/entries/battlemage_diagram.png"))
-//                        .withBorder().withTitle("ars_nouveau.thread_layout")
-//                        .withText("ars_nouveau.page.layout_desc"))
                 .withCraftingPages(ItemsRegistry.SORCERER_HOOD)
                 .withCraftingPages(ItemsRegistry.SORCERER_ROBES)
                 .withCraftingPages(ItemsRegistry.SORCERER_LEGGINGS)
@@ -644,7 +640,8 @@ public class Documentation {
                 .withRelation(storageLectern)
                 .withRelation(starbyShades)
                 .withRelation(wixieHat)
-                .withRelation(starbyBed);
+                .withRelation(starbyBed)
+                .withRelation(starbyPlush);
         denyScroll.withRelation(mimicScroll)
                 .withRelation(allowScroll)
                 .withRelation(dominionWand)

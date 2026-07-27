@@ -37,9 +37,13 @@ import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.*;
 import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -164,7 +168,7 @@ public class EventHandler {
         if (e.getSource().getEntity() instanceof LivingEntity livingUser) {
             if (livingUser instanceof Player)
                 return;
-            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(livingUser.position, e.getEntity().position) < 3) {
+            if (livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof EnchantersSword && BlockUtil.distanceFrom(e.getEntity().level, livingUser.position, e.getEntity().position) < 3) {
                 livingUser.getItemInHand(InteractionHand.MAIN_HAND).getItem().hurtEnemy(livingUser.getMainHandItem(), e.getEntity(), livingUser);
             }
         }
@@ -212,6 +216,14 @@ public class EventHandler {
             ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(ItemsRegistry.WORN_NOTEBOOK));
             tag.putBoolean(book_tag, true);
             e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+        }
+        String plush_tag = "an_plush";
+        if (!tag.getBoolean(plush_tag) && Rewards.SEND_ONE_TIME_MESSAGE && Rewards.STARBUNCLE_PLUSH_MESSAGE != null) {
+            Player entity = e.getEntity();
+            ItemHandlerHelper.giveItemToPlayer(entity, new ItemStack(BlockRegistry.STARBUNCLE_PLUSH.get()));
+            tag.putBoolean(plush_tag, true);
+            e.getEntity().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
+            entity.sendSystemMessage(Component.literal(Rewards.STARBUNCLE_PLUSH_MESSAGE).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.makeship.com/products/starbuncle"))));
         }
     }
 
@@ -463,7 +475,7 @@ public class EventHandler {
 
         for (UUID uuid : sprigs) {
             if (event.level.getEntity(uuid) instanceof Whirlisprig whirlisprig) {
-                if (BlockUtil.distanceFrom(whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
+                if (BlockUtil.distanceFrom(event.level, whirlisprig.blockPosition(), event.pos) <= 10 && !whirlisprig.isTamed()) {
                     whirlisprig.droppingShards = true;
                 }
             } else {

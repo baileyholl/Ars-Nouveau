@@ -151,7 +151,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof RedstoneRelayTile))
             return;
 
-        if (BlockUtil.distanceFrom(storedPos, this.worldPosition) <= getMaxDistance()) {
+        if (BlockUtil.distanceFrom(level, storedPos, this.worldPosition) <= getMaxDistance()) {
             storedPos = storedPos.immutable();
             if (this.poweredFrom.contains(storedPos)) {
                 this.poweredFrom.remove(storedPos);
@@ -172,7 +172,7 @@ public class RedstoneRelayTile extends ModdedTile implements IWandable, ITooltip
         if (storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()) || !(level.getBlockEntity(storedPos) instanceof RedstoneRelayTile))
             return;
 
-        if (BlockUtil.distanceFrom(storedPos, this.worldPosition) <= getMaxDistance()) {
+        if (BlockUtil.distanceFrom(level, storedPos, this.worldPosition) <= getMaxDistance()) {
             storedPos = storedPos.immutable();
             if (this.powering.contains(storedPos)) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.remove", DominionWand.getPosString(storedPos)));

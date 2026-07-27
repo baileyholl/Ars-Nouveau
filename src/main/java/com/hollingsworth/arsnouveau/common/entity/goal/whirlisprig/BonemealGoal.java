@@ -53,7 +53,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
         if (this.growPos == null) {
             return;
         }
-        if (BlockUtil.distanceFrom(sylph.blockPosition(), this.growPos) > 1.2) {
+        if (BlockUtil.distanceFrom(sylph.level(), sylph.blockPosition(), this.growPos) > 1.2) {
             sylph.getNavigation().moveTo(this.growPos.getX(), this.growPos.getY(), this.growPos.getZ(), 1.2);
         } else {
             ServerLevel world = (ServerLevel) sylph.level;
