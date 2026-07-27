@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.network.HighlightAreaPacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
+import com.hollingsworth.arsnouveau.common.util.Memoizer;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -41,6 +43,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class EnchantingApparatusTile extends SingleItemTile implements Container, IPedestalMachine, ITickable, GeoBlockEntity {
     private int counter;
@@ -140,8 +143,11 @@ public class EnchantingApparatusTile extends SingleItemTile implements Container
         return pedestalItems;
     }
 
+    record GetRecipeInput(Level level, ItemStack stack, ApparatusRecipeInput input) {};
+    Function<GetRecipeInput, RecipeHolder<? extends IEnchantingRecipe>> memo = Memoizer.memoize(input -> IEnchantingRecipe.getRecipe(input.level, input.input));
+
     public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
-        var recipe = IEnchantingRecipe.getRecipe(level, new ApparatusRecipeInput(stack, getPedestalItems(), playerEntity));
+        var recipe = memo.apply(new GetRecipeInput(level, stack, new ApparatusRecipeInput(stack, getPedestalItems(), playerEntity)));
         return recipe != null ? recipe.value() : null;
     }
 
