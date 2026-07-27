@@ -88,14 +88,13 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         if (!hasSource) return;
 
-        if (craftManager.isCraftInvalid()) {
-            this.stackBeingCrafted = ItemStack.EMPTY;
-            updateBlock();
-        }
-
         if (!level.isClientSide() && level.getGameTime() % 20 == 0) {
             if (craftManager.isCraftCompleted()) {
                 rotateCraft();
+            }
+            if (craftManager.isCraftInvalid()) {
+                this.stackBeingCrafted = ItemStack.EMPTY;
+                updateBlock();
             }
         }
     }
