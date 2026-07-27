@@ -1816,6 +1816,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.starby_plush_campaign", "Sign up for a Starbuncle plush from Makeship now! See the plush button on the left side of your spell book or tattered tome screen.");
         add("ars_nouveau.page.starbuncle_plush", "Soft and squishy, probably won't steal your items.");
         add("ars_nouveau.preview", "Preview");
+        add("painting.ars_nouveau.starbuncle.title", "Starbuncle");
+        add("painting.ars_nouveau.starbuncle.author", "Gootastic");
+        add("painting.ars_nouveau.resting_drygmy.title", "Resting Drygmy");
+        add("painting.ars_nouveau.resting_drygmy.author", "Gootastic");
     }
 
     public void addCategory(String key, String value) {

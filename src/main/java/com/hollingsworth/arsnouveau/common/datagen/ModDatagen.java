@@ -58,6 +58,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider(output, provider));
         event.getGenerator().addProvider(event.includeServer(), new DamageTypesProvider.DamageTypesTagsProvider(output, provider, fileHelper));
         event.getGenerator().addProvider(event.includeServer(), new CompostablesProvider(output, provider));
+        event.getGenerator().addProvider(event.includeServer(), new PaintingProvider(output, provider, fileHelper));
 
         event.getGenerator().addProvider(event.includeServer(), new ANCurioProvider(output, fileHelper, provider));
 
