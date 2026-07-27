@@ -1815,6 +1815,11 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_book_info_tooltip", "Tips and Tricks: \n• Middle-Click a glyph in the spell to add an empty space to the left of it.\n• Press 0-9 when hovering your mouse over a glyph to add it to that spell slot.\n• Ctrl + C to copy the spell and its particles.\n• Ctrl + V to paste a spell.");
         add("ars_nouveau.starby_plush_campaign", "Sign up for a Starbuncle plush from Makeship now! See the plush button on the left side of your spell book or tattered tome screen.");
         add("ars_nouveau.page.starbuncle_plush", "Soft and squishy, probably won't steal your items.");
+        add("ars_nouveau.preview", "Preview");
+        add("painting.ars_nouveau.starbuncle.title", "Starbuncle");
+        add("painting.ars_nouveau.starbuncle.author", "Gootastic");
+        add("painting.ars_nouveau.resting_drygmy.title", "Resting Drygmy");
+        add("painting.ars_nouveau.resting_drygmy.author", "Gootastic");
     }
 
     public void addCategory(String key, String value) {

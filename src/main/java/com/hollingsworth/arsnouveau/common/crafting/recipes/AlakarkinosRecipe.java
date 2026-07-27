@@ -68,7 +68,7 @@ public record AlakarkinosRecipe(Block input, ResourceKey<LootTable> table, int w
         }
 
         private static void toNetwork(RegistryFriendlyByteBuf buf, AlakarkinosRecipe karky) {
-            LootDrops drops = LootDrop.getLootDrops(karky.table);
+            LootDrops drops = LootDrop.getLootDrops(karky.table, karky.input);
             AlakarkinosRecipe recipe = new AlakarkinosRecipe(karky.input, karky.table, karky.weight, Optional.ofNullable(drops));
             STREAM_CODEC.encode(buf, recipe);
         }

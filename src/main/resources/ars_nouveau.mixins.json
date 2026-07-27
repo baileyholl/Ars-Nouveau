@@ -27,6 +27,7 @@
     "LivingAccessor",
     "LivingEntityMixin",
     "MobAccessor",
+    "PaintingMixin",
     "PlayerListMixin",
     "PufferfishAccessor",
     "TreeGrowerMixin",
