@@ -1,9 +1,13 @@
 # Changelog
 
-Improves repository and lectern caching performance (Qther)
+Adds a preview button to the spell particles screen for visualizing current selected effects and sounds
 
-Fixes dupe with interact and buckets (Qther)
+Adds Drygmy and Starbuncle painting blocks (Jarva)
 
-Fixes tomes having their discount applied multiple times (Qther)
+Improves performance with automated enchanting apparatus (Jarva)
 
-Fixes search bar in spellbook capturing inputs too quickly on linux (Qther)
+Fixes world loading with Biolith
+
+Fixes bubbles targeting create contraptions
+
+Fixes warp portal particles spawning in wrong location (Qther)
