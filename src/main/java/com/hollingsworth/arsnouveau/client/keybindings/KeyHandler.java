@@ -19,7 +19,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import static com.hollingsworth.arsnouveau.api.util.StackUtil.getHeldSpellbook;
@@ -123,16 +122,6 @@ public class KeyHandler {
                     }
                 }
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void mouseEvent(final InputEvent.MouseButton.Post event) {
-
-        if (MINECRAFT.player == null || event.getAction() != 1)
-            return;
-        if (MINECRAFT.screen instanceof GuiRadialMenu<?> screen) {
-            screen.mouseClicked(0, 0, 0);
         }
     }
 
