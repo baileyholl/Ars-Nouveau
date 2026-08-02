@@ -61,6 +61,10 @@ public class RuneTextureProperty extends BaseProperty<RuneTextureProperty> {
         this.runeTexture = TEXTURES.get(0);
     }
 
+    @Override
+    public boolean shouldSkipSerialization() {
+        return this.propertyHolder.size() == 0 && Objects.equals(this.runeTexture, TEXTURES.get(0));
+    }
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
