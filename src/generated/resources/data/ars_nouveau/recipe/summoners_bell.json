@@ -1,0 +1,29 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "tag": "c:storage_blocks/source"
+    },
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    },
+    {
+      "item": "ars_nouveau:conjuration_essence"
+    },
+    {
+      "tag": "c:storage_blocks/gold"
+    }
+  ],
+  "reagent": {
+    "item": "minecraft:bell"
+  },
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:summoners_bell"
+  },
+  "sourceCost": 0
+}

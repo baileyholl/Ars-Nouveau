@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.common.entity.AnimBlockSummon;
 import com.hollingsworth.arsnouveau.common.entity.AnimHeadSummon;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Set;
 
+import static com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry.ANIMATE_TIMELINE;
+
 public class EffectAnimate extends AbstractEffect {
 
     public static EffectAnimate INSTANCE = new EffectAnimate();
@@ -37,8 +41,8 @@ public class EffectAnimate extends AbstractEffect {
         BlockState state = world.getBlockState(pos);
         if (EnchantedFallingBlock.canFall(world, pos, shooter, spellStats)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            animateBlock(rayTraceResult, new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5), world, shooter, spellStats, spellContext, resolver, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata(world.registryAccess()));
-            world.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
+            if (animateBlock(rayTraceResult, new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5), world, shooter, spellStats, spellContext, resolver, state, blockEntity == null ? new CompoundTag() : blockEntity.saveWithoutMetadata(world.registryAccess())).isAddedToLevel())
+                world.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
         }
     }
 
@@ -55,7 +59,7 @@ public class EffectAnimate extends AbstractEffect {
 
     private AnimBlockSummon animateBlock(HitResult rayTraceResult, Vec3 pos, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, BlockState state, CompoundTag data) {
         AnimBlockSummon blockSummon = state.getBlock() instanceof AbstractSkullBlock ? new AnimHeadSummon(world, state, data) : new AnimBlockSummon(world, state, data);
-        blockSummon.setColor(spellContext.getColors().getColor());
+        blockSummon.setColor(spellContext.getParticleTimeline(ANIMATE_TIMELINE.get()).getColor().getColor());
         blockSummon.setPos(pos);
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         blockSummon.setTicksLeft(ticks);
@@ -77,7 +81,8 @@ public class EffectAnimate extends AbstractEffect {
     @Override
     public void addAugmentDescriptions(Map<AbstractAugment, String> map) {
         super.addAugmentDescriptions(map);
-        addSummonAugmentDescriptions(map);
+        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
+        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
     }
 
     @Override
@@ -97,7 +102,7 @@ public class EffectAnimate extends AbstractEffect {
 
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return getSummonAugments();
+        return getTimeAugments();
     }
 
     @Override
