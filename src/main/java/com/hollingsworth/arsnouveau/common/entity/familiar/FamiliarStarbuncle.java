@@ -38,8 +38,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void applyTickEffects() {
         if (!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null) {
             getOwner().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1, false, false, true));
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1, false, false, true));
