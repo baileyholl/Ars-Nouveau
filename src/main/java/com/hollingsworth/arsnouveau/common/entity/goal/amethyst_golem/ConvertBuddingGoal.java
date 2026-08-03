@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -48,12 +49,14 @@ public class ConvertBuddingGoal extends Goal {
     }
 
     public void convert() {
-        if (targetCluster != null) {
-            BlockState targetState = golem.level.getBlockState(targetCluster);
+        if (targetCluster != null && golem.level instanceof ServerLevel level) {
+            BlockState targetState = level.getBlockState(targetCluster);
             Optional<BuddingConversionRecipe> recipe = golem.recipes.stream().filter(r -> r.matches(targetState)).findFirst();
             recipe.ifPresent(r -> {
-                golem.level.setBlock(targetCluster, r.result().defaultBlockState(), 3);
-                ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleColor.defaultParticleColor());
+                if (golem.canBreak(targetCluster)) {
+                    golem.level.setBlock(targetCluster, r.result().defaultBlockState(), 3);
+                    ParticleUtil.spawnTouchPacket(level, targetCluster, ParticleColor.defaultParticleColor());
+                }
             });
         }
         golem.convertCooldown = 20 * 60 * 5;
