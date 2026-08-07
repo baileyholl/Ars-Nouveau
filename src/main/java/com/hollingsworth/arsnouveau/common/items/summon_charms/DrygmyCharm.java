@@ -37,7 +37,7 @@ public class DrygmyCharm extends AbstractSummonCharm implements AliasProvider {
     public InteractionResult useOnSummonTile(UseOnContext context, Level world, SummoningTile tile, BlockPos pos) {
         if (tile instanceof DrygmyTile) {
             EntityDrygmy drygmy = new EntityDrygmy(world, true);
-            drygmy.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
+            drygmy.setPos(pos.above().getBottomCenter());
             drygmy.fromCharmData(context.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
             world.addFreshEntity(drygmy);
             drygmy.homePos = new BlockPos(pos);

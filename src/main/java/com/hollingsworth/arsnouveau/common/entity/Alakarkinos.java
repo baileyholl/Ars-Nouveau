@@ -437,4 +437,17 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return SummonUtil.canSummonTakeDamage(pSource) && super.hurt(pSource, pAmount);
     }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        // FIXME: Doesn't work as client doesn't know the value of tamed
+        if (this.tamed) {
+            ItemStack stack = new ItemStack(ItemsRegistry.ALAKARKINOS_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+            return stack;
+        }
+
+        return super.getPickResult();
+    }
 }

@@ -259,4 +259,12 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         CAST,
         SUMMON_ITEM
     }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+        stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+        return stack;
+    }
 }

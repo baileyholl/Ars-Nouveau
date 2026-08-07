@@ -27,8 +27,10 @@ public class StarbuncleCharm extends AbstractSummonCharm implements AliasProvide
     public InteractionResult useOnBlock(UseOnContext context, Level world, BlockPos pos) {
         Starbuncle carbuncle = new Starbuncle(world, true);
         StarbuncleCharmData data = context.getItemInHand().getOrDefault(DataComponentRegistry.STARBUNCLE_DATA, new StarbuncleCharmData());
-        pos = pos.relative(context.getClickedFace());
-        carbuncle.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        if (!context.isInside()) {
+            pos = pos.relative(context.getClickedFace());
+        }
+        carbuncle.setPos(pos.getBottomCenter());
         carbuncle.data = data.mutable();
         world.addFreshEntity(carbuncle);
         carbuncle.restoreFromTag();
