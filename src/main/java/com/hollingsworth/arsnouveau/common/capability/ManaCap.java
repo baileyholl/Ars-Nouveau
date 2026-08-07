@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ManaCap implements IManaCap {
@@ -36,13 +37,14 @@ public class ManaCap implements IManaCap {
 
     @Override
     public double setMana(double mana) {
-        if (mana > getMaxMana()) {
-            this.manaData.setMana(getMaxMana());
-        } else if (mana < 0) {
-            this.manaData.setMana(0);
+        if (!Double.isFinite(mana)) {
+            if (!Double.isFinite(this.getCurrentMana())) {
+                this.manaData.setMana(0);
+            }
         } else {
-            this.manaData.setMana(mana);
+            this.manaData.setMana(Mth.clamp(0, getMaxMana(), mana));
         }
+
         entity.setData(AttachmentsRegistry.MANA_ATTACHMENT, manaData);
         return this.getCurrentMana();
     }
