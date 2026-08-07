@@ -7,6 +7,7 @@
   "client": [
     "ChatComponentAccessor",
     "GameRendererMixin",
+    "ItemInHandRendererMixin",
     "camera.ClientChunkCacheMixin",
     "camera.LevelRendererMixin",
     "camera.MinecraftMixin",
