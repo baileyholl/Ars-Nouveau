@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
+import com.hollingsworth.arsnouveau.api.util.MobJarPosMap;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -21,9 +22,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class WitherBehavior extends JarBehavior<WitherBoss> {
-    public static LevelPosMap WITHER_MAP = new LevelPosMap(
-            (level, pos) -> !(level.getBlockEntity(pos) instanceof MobJarTile mobJarTile) || !(mobJarTile.getEntity() instanceof WitherBoss)
-    );
+    public static LevelPosMap WITHER_MAP = new MobJarPosMap<>(WitherBoss.class);
 
     @Override
     public void tick(MobJarTile tile) {
