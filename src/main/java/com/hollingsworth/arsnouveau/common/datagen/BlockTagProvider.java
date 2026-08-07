@@ -187,7 +187,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(HARVEST_STEMS).add(
                 Blocks.BAMBOO,
                 Blocks.SUGAR_CANE,
-                Blocks.CACTUS);
+                Blocks.CACTUS,
+                Blocks.KELP,
+                Blocks.KELP_PLANT);
 
 
         this.tag(FELLABLE).add(Blocks.MUSHROOM_STEM).addTags(BlockTags.LOGS, HARVEST_FOLIAGE, HARVEST_STEMS);
