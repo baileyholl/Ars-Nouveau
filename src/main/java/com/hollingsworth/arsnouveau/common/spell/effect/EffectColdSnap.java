@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -113,7 +114,23 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         fallingBlock.hurtEntities = true;
         fallingBlock.baseDamage = ((float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier())) * 0.5f;
         fallingBlock.shooter = shooter;
-        level.addFreshEntity(fallingBlock);
+
+        boolean shouldSpawn = true;
+        if (resolver.hasFocus(ItemsRegistry.SHAPERS_FOCUS.get())) {
+            for (var glyph : resolver.spellContext.getRemainingSpell().unsafeList()) {
+                if (glyph instanceof AbstractEffect) {
+                    if (glyph instanceof EffectSnare) {
+                        shouldSpawn = false;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (shouldSpawn) {
+            level.addFreshEntity(fallingBlock);
+        }
         ShapersFocus.tryPropagateEntitySpell(fallingBlock, level, shooter, context, resolver);
     }
 
