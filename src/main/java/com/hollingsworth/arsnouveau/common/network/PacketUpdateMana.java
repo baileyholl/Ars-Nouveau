@@ -13,37 +13,48 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 
 public class PacketUpdateMana extends AbstractPacket {
-    CompoundTag tag;
+    ManaData mana;
 
+    @Deprecated(forRemoval = true)
     public PacketUpdateMana(CompoundTag tag) {
-        this.tag = tag;
+        this.mana = new ManaData();
+        this.mana.setMaxMana(tag.getInt("max"));
+        this.mana.setMana(tag.getDouble("current"));
+        this.mana.setBookTier(tag.getInt("book_tier"));
+        this.mana.setGlyphBonus(tag.getInt("glyph"));
+        this.mana.setReservedMana(tag.getFloat("reserved"));
+    }
+
+    public PacketUpdateMana(ManaData mana) {
+        this.mana = mana;
     }
 
     //Decoder
     public PacketUpdateMana(RegistryFriendlyByteBuf buf) {
-        this.tag = buf.readNbt();
+        this.mana = CODEC.decode(buf).mana;
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(this.tag);
+        CODEC.encode(buf, this);
     }
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        ManaData data = new ManaData();
-        data.deserializeNBT(player.registryAccess(), this.tag);
-        player.setData(AttachmentsRegistry.MANA_ATTACHMENT, data);
+        player.setData(AttachmentsRegistry.MANA_ATTACHMENT, mana);
         var cap = CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer());
         if (cap != null) {
-            cap.setManaData(data);
+            cap.setManaData(mana);
         }
         //sync the client cache of reserved mana
-        ClientInfo.reservedOverlayMana = data.getReservedMana();
+        ClientInfo.reservedOverlayMana = mana.getReservedMana();
     }
 
     public static final Type<PacketUpdateMana> TYPE = new Type<>(ArsNouveau.prefix("update_mana"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateMana> CODEC = StreamCodec.ofMember(PacketUpdateMana::toBytes, PacketUpdateMana::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketUpdateMana> CODEC = StreamCodec.composite(
+            ManaData.STREAM_CODEC, p -> p.mana,
+            PacketUpdateMana::new
+    );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
