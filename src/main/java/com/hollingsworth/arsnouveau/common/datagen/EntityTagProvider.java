@@ -70,6 +70,11 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 EntityType.SMALL_FIREBALL,
                 EntityType.DRAGON_FIREBALL
         );
+        this.tag(EntityTags.BUBBLE_BLACKLIST).addOptional(ResourceLocation.fromNamespaceAndPath("create", "contraption"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "carriage_contraption"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "stationary_contraption"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "seat"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "gantry_contraption"));
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), ModEntities.LILY.get());

@@ -1,13 +1,13 @@
 # Changelog
 
-Adds a Starbuncle Plush block to celebrate the Makeship starbuncle plush campaign!
+Adds a preview button to the spell particles screen for visualizing current selected effects and sounds
 
-Adds blacklist tags for overgrowth, breeding, and sanctuary rituals
+Adds Drygmy and Starbuncle painting blocks (Jarva)
 
-Adds whitelist tag to sanctuary ritual
+Improves performance with automated enchanting apparatus (Jarva)
 
-Using spell parchment on a prestidigitation block, sconce, and light block will copy the spell style to it. (Qther)
+Fixes world loading with Biolith
 
-Fixes shulkers losing inventory data when Wololo is cast on them (Alexthw)
+Fixes bubbles targeting create contraptions
 
-Adds containment jar item blacklist tag (qther)
+Fixes warp portal particles spawning in wrong location (Qther)

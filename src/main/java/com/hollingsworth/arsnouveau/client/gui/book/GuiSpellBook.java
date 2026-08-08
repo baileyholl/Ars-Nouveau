@@ -470,7 +470,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
             return true;
         }
 
-        if ((!searchBar.isFocused() || !searchBar.active) && System.currentTimeMillis() - timeOpened > 30) {
+        if ((!searchBar.isFocused() || !searchBar.active) && System.currentTimeMillis() - timeOpened > 100) {
             this.clearFocus();
             this.setFocused(searchBar);
             searchBar.active = true;
