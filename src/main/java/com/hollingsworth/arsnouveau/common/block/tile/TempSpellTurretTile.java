@@ -43,10 +43,11 @@ public class TempSpellTurretTile extends RotatingTurretTile {
         super.tick();
         if (!level.isClientSide) {
             duration--;
-            castCooldown--;
             if (duration <= 0) {
                 level.destroyBlock(worldPosition, false);
-            } else if (castCooldown <= 0) {
+                return;
+            }
+            if (castInterval > 0 && --castCooldown <= 0) {
                 this.shootSpell();
                 this.castCooldown = castInterval;
             }

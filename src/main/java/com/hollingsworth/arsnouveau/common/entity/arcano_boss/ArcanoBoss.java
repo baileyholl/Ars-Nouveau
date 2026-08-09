@@ -66,6 +66,7 @@ public class ArcanoBoss extends Monster {
         super(entityType, level);
         setArcanoPose(ArcanoBossState.IDLE);
         setPersistenceRequired();
+        setNoGravity(true);
 
         this.moveControl = new FlyingMoveControl(this, 10, true);
 
@@ -99,6 +100,17 @@ public class ArcanoBoss extends Monster {
 
     @Override
     public void push(Vec3 vector) {
+    }
+
+    public boolean hoverToward(double targetY, double speed) {
+        double diff = targetY - getY();
+        if (Math.abs(diff) <= speed) {
+            setPos(getX(), targetY, getZ());
+            setDeltaMovement(Vec3.ZERO);
+            return true;
+        }
+        setDeltaMovement(0, Math.copySign(speed, diff), 0);
+        return false;
     }
 
     @Override
