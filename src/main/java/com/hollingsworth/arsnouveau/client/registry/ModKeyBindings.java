@@ -39,9 +39,9 @@ public class ModKeyBindings {
     public static final KeyMapping QC_9 = new KeyMapping("key.ars_nouveau.qc9", -1, CATEGORY);
     public static final KeyMapping QC_10 = new KeyMapping("key.ars_nouveau.qc10", -1, CATEGORY);
 
-    public static int usedQuickSlot(int key) {
+    public static int usedQuickSlot() {
         for (QuickSlot q : QuickSlot.VALUES) {
-            if (q.key().getKey().getValue() == key) {
+            if (q.key().consumeClick()) {
                 return q.slot;
             }
         }
