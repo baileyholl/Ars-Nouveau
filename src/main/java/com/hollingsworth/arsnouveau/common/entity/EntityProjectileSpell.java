@@ -70,6 +70,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     public boolean isNoGravity = true;
     public boolean canTraversePortals = true;
     public int prismRedirect;
+    public boolean redirected;
     public ParticleEmitter tickEmitter;
     public ParticleEmitter resolveEmitter;
     public ParticleEmitter onSpawnEmitter;
@@ -155,7 +156,11 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         Vec3 thisPosition = this.position();
         Vec3 nextPosition = getNextHitPosition();
         traceAnyHit(getHitResult(), thisPosition, nextPosition);
-        tickNextPosition();
+        if (redirected) {
+            redirected = false;
+        } else {
+            tickNextPosition();
+        }
 
         if (level.isClientSide && this.age >= getParticleDelay()) {
             playParticles();
@@ -371,6 +376,19 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     protected void onHit(HitResult result) {
         result = transformHitResult(result);
 
+        if (result instanceof BlockHitResult blockHitResult && !this.isRemoved() && !hitList.contains(blockHitResult.getBlockPos())
+                && level.getBlockState(blockHitResult.getBlockPos()).getBlock() instanceof IPrismaticBlock prismaticBlock) {
+            if (!level.isClientSide) {
+                SpellProjectileHitEvent event = new SpellProjectileHitEvent(this, result);
+                NeoForge.EVENT_BUS.post(event);
+                if (event.isCanceled()) {
+                    return;
+                }
+            }
+            redirect(prismaticBlock, blockHitResult);
+            return;
+        }
+
         if (!level.isClientSide) {
 
             SpellProjectileHitEvent event = new SpellProjectileHitEvent(this, result);
@@ -391,11 +409,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
             if (result instanceof BlockHitResult blockraytraceresult && !this.isRemoved() && !hitList.contains(blockraytraceresult.getBlockPos())) {
 
                 BlockState state = level.getBlockState(blockraytraceresult.getBlockPos());
-
-                if (state.getBlock() instanceof IPrismaticBlock prismaticBlock) {
-                    prismaticBlock.onHit((ServerLevel) level, blockraytraceresult.getBlockPos(), this);
-                    return;
-                }
 
                 if (state.is(BlockTags.PORTALS)) {
                     state.entityInside(level, blockraytraceresult.getBlockPos(), this);
@@ -423,6 +436,22 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
                 attemptRemoval();
             }
         }
+    }
+
+    protected void redirect(IPrismaticBlock prismaticBlock, BlockHitResult hitResult) {
+        BlockPos hitPos = hitResult.getBlockPos();
+        if (level.isClientSide) {
+            Vec3 center = Vec3.atCenterOf(hitPos);
+            this.setPos(center.x, center.y, center.z);
+
+        }
+        Vec3 priorPosition = position();
+        prismaticBlock.onHit(level, level.getBlockState(hitPos), hitPos, this);
+
+        if (!this.isRemoved() && !position().equals(priorPosition)) {
+            this.redirected = true;
+        }
+        this.setOldPosAndRot();
     }
 
     public void sendResolveParticles() {

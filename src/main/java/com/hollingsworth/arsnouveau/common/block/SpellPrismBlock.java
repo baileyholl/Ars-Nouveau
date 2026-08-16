@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDecelerate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -42,9 +40,9 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
     }
 
     public Position getDispensePosition(BlockPos pos, Direction direction) {
-        double d0 = pos.getX() + 0.5 + 0.3D * direction.getStepX();
-        double d1 = pos.getY() + 0.5 + 0.3D * direction.getStepY();
-        double d2 = pos.getZ() + 0.5 + 0.3D * direction.getStepZ();
+        double d0 = pos.getX() + 0.5 + 0.505D * direction.getStepX();
+        double d1 = pos.getY() + 0.5 + 0.505D * direction.getStepY() + (direction.getAxis() != Direction.Axis.Y ? -0.2 : 0);
+        double d2 = pos.getZ() + 0.5 + 0.505D * direction.getStepZ();
         return new Vec3(d0, d1, d2);
     }
 
@@ -63,8 +61,6 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
 
     public void onHit(Level world, BlockState state, BlockPos pos, EntityProjectileSpell spell) {
         Direction direction = state.getValue(FACING);
-        Position iposition = getDispensePosition(pos, direction);
-        spell.setPos(iposition.x(), iposition.y(), iposition.z());
         spell.prismRedirect++;
         if (spell.prismRedirect >= 3 && world instanceof ServerLevel serverLevel) {
             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), serverLevel, pos, 10);
@@ -73,10 +69,10 @@ public class SpellPrismBlock extends ModBlock implements IPrismaticBlock {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
-        float acceleration = (spell.resolver().spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE) - spell.resolver().spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE) * 0.5F);
-        float velocity = Math.max(0.1f, 0.5f + 0.1f * Math.min(2, acceleration));
-
-        spell.shoot(direction.getStepX(), (direction.getStepY()), direction.getStepZ(), velocity, 0);
+        float velocity = Math.max(0.1f, (float) spell.getDeltaMovement().length());
+        Position iposition = getDispensePosition(pos, direction);
+        spell.setPos(iposition.x(), iposition.y(), iposition.z());
+        spell.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), velocity, 0);
         BlockUtil.updateObservers(world, pos);
     }
 }
