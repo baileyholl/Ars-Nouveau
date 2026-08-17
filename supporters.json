@@ -158,7 +158,8 @@
     "38b2c6e8-9b7a-4b01-b423-62a8a1a675c7",
     "712643f9-c60e-4f54-a5c8-1acbb948d668",
     "56afa4b5-448b-4022-84ed-ecfb3a4b0b06",
-    "f3fe9fba-37cd-4bde-8a23-04d4839c06fb"
+    "f3fe9fba-37cd-4bde-8a23-04d4839c06fb",
+    "33b0c5de-b0dd-409d-9da9-92f9ee0537d2"
   ],
   "starbuncleAdoptions": [
     {
@@ -1072,6 +1073,12 @@
       "adopter": "Winny",
       "color": "pink",
       "bio": "Named after it's appearance resembling strawberry and the name Bri. Strawbri is a very social and caring starbuncle."
+    },
+    {
+      "name": "Too Many Times",
+      "adopter": "0AKSA",
+      "color": "purple",
+      "bio": "Named after the warning message that appeared when his wizard tried to amplify one explosion five times. He doesn't know what it means, but he respects it. It's staring at you with confusion."
     }
   ]
 }
