@@ -303,6 +303,7 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.stripped_purple_archwood_wood", "Stripped Vexing Archwood Wood");
         add("block.ars_nouveau.archwood_stairs", "Archwood Stairs");
         add("block.ars_nouveau.archwood_button", "Archwood Button");
+        add("block.ars_nouveau.arcano_reward", "Arcano Reward");
         add("block.ars_nouveau.source_gem_block", "Source Gem Block");
         add("item.ars_nouveau.spell_bow", "Enchanter's Bow");
         add("item.ars_nouveau.split_arrow", "Augment Arrow: Split");
@@ -1286,6 +1287,10 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.storage_lectern", "Storage Lectern");
         add("ars_nouveau.page1.storage_lectern", "The Storage Lectern can used to view, manage, and craft from multiple connected inventories. The number of inventories that may be connected is determined by the number of Bookwyrms bound to the lectern. You can add more Bookwyrms to the lectern by using a Bookwyrm Charm. Use the Dominion Wand from an inventory to the lectern in order to bind or remove access. Inventories can be connected 30 blocks away.");
         add("ars_nouveau.storage", "Advanced Usage");
+        add("ars_nouveau.arcano_reward.continue", "Continue");
+        add("ars_nouveau.arcano_reward.leave", "Leave");
+        add("ars_nouveau.arcano_reward.loot", "Loot");
+        add("ars_nouveau.arcano_reward.title", "Arcano Reward");
         add("ars_nouveau.page2.storage", "Items can be automatically inserted into the lectern by placing them into an unbound inventory that is adjacent to the lectern. Automatic import may be disabled by providing a redstone signal. You may also link a lectern to the 'main' lectern in order to extend the view and access of the original lectern, these lecterns can be chained together within 30 blocks indefinitely. Once a lectern is linked to another lectern, it will no longer be able to connect to inventories or accept bookwyrms.");
         add("ars_nouveau.tooltip.bookwyrm", "Obtained by augmenting a Ritual of Awakening with Book and Quills.");
         add("ars_nouveau.item_detector.count", "Emit at %s");
@@ -1485,6 +1490,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.timeline.trail", "Trail");
         add("ars_nouveau.timeline.impact", "On Resolve");
         add("ars_nouveau.particle_timelines", "Configurable Particles");
+        add("ars_nouveau.particle_preview", "Preview Particles");
         add("ars_nouveau.particle.new_glow", "Glow");
         add("ars_nouveau.particle.snow", "Snow");
         add("ars_nouveau.particle.smoke", "Smoke");

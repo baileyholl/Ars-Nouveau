@@ -13,14 +13,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +34,7 @@ public class DimBoundary extends ModBlock implements IWandable {
                 .pushReaction(PushReaction.BLOCK));
     }
 
-    public static void playerAttemptedBreak(Level level, Player player){
+    public static void playerAttemptedBreak(Level level, Player player) {
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer instanceof FakePlayer) {
                 return;
@@ -78,7 +74,7 @@ public class DimBoundary extends ModBlock implements IWandable {
         if (storedPos == null
                 || !(level instanceof ServerLevel serverLevel)
                 || !level.dimension().equals(storedPos.dimension())
-                || !WorldUtil.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+                || !WorldUtil.isOfWorldType(level, ArsNouveau.JAR_DIMENSION_TYPE_KEY)) {
             return Result.FAIL;
         }
         JarDimData dimData = JarDimData.from(serverLevel);

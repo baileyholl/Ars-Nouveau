@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
+import com.hollingsworth.arsnouveau.client.container.ArcanoRewardScreen;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
@@ -79,6 +80,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_SPLITTER_TILE.get(), (t) -> new GenericTileRenderer<>(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE.get(), BasicTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ROTATING_TURRET_TILE.get(), RotatingTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.TEMP_SPELL_TURRET_TILE.get(), RotatingTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE.get(), ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE.get(), TimerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE.get(), ArchwoodChestRenderer::new);
@@ -196,6 +198,8 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENCHANTED_HOOK.get(), FishingHookRenderer::new);
 
         event.registerEntityRenderer(ModEntities.ARCHWOOD_BOAT.get(), context -> new ArchwoodBoatRenderer(context, false));
+        event.registerEntityRenderer(ModEntities.ARCANO_BOSS.get(), context -> new ArcanoBossRenderer(context));
+        event.registerEntityRenderer(ModEntities.ARCANO_LOB.get(), StyledSpellRender::new);
     }
 
     public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {
@@ -221,6 +225,7 @@ public class ClientHandler {
     @SubscribeEvent
     public static void registerMenu(final RegisterMenuScreensEvent event) {
         event.register(MenuRegistry.STORAGE.get(), CraftingTerminalScreen::new);
+        event.register(MenuRegistry.ARCANO_REWARD.get(), ArcanoRewardScreen::new);
     }
 
     @SubscribeEvent
@@ -229,9 +234,12 @@ public class ClientHandler {
         event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("tooltip"), GuiEntityInfoHUD.OVERLAY);
         event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("mana_hud"), GuiManaHUD.OVERLAY);
         event.registerAbove(VanillaGuiLayers.CROSSHAIR, ArsNouveau.prefix("spell_hud"), GuiSpellHUD.OVERLAY);
-
     }
 
+    @SubscribeEvent
+    public static void onEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ArcanoBossModel.LAYER_LOCATION, ArcanoBossModel::createBodyLayer);
+    }
 
     @SubscribeEvent
     public static void registerDimSpecialEffects(final RegisterDimensionSpecialEffectsEvent evt) {
