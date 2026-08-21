@@ -385,6 +385,6 @@ public abstract class AbstractCaster<T extends AbstractCaster<T>> implements Too
             pTooltipAdder.accept(Component.literal(spell.getDisplayString()));
         }
         if (!getFlavorText().isEmpty())
-            pTooltipAdder.accept(Component.literal(getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
+            pTooltipAdder.accept(Component.translatable(getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
     }
 }
