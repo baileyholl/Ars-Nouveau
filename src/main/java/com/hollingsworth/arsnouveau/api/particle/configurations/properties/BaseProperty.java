@@ -52,6 +52,13 @@ public abstract class BaseProperty<T extends BaseProperty<T>> {
         return true;
     }
 
+    /**
+     * Used for network optimizations (for example avoiding serializing default values)
+     */
+    public boolean shouldSkipSerialization() {
+        return false;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getId(), propertyHolder);

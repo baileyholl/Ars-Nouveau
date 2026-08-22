@@ -53,6 +53,11 @@ public class SoundProperty extends BaseProperty<SoundProperty> {
     }
 
     @Override
+    public boolean shouldSkipSerialization() {
+        return this.sound == ConfiguredSpellSound.DEFAULT && this.propertyHolder.size() == 0;
+    }
+
+    @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
         List<DocEntryButton> buttons = new ArrayList<>();
         List<SpellSound> spellSounds = new ArrayList<>(SpellSoundRegistry.getSpellSounds());
