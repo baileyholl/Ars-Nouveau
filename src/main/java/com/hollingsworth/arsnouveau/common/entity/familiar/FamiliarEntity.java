@@ -75,6 +75,19 @@ public abstract class FamiliarEntity extends PathfinderMob implements GeoEntity,
         return false;
     }
 
+    @Override
+    public void setRemoved(@NotNull RemovalReason reason) {
+        if (reason == RemovalReason.UNLOADED_TO_CHUNK) {
+            reason = RemovalReason.DISCARDED;
+        }
+        super.setRemoved(reason);
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
     public double getManaReserveModifier() {
         return manaReserveModifier;
     }
