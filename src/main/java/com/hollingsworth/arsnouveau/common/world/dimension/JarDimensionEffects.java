@@ -15,7 +15,7 @@ public class JarDimensionEffects extends DimensionSpecialEffects {
 
     @Override
     public Vec3 getBrightnessDependentFogColor(Vec3 vec3, float v) {
-        return vec3.scale((double) 0.15F);
+        return vec3.scale(0.15F);
     }
 
     @Override

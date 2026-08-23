@@ -61,7 +61,9 @@ public class Spell {
 
     private final List<AbstractSpellPart> recipe;
     private final String name;
+    @Deprecated(forRemoval = true)
     private final ParticleColor color;
+    @Deprecated(forRemoval = true)
     private final ConfiguredSpellSound sound;
     private final TimelineMap particleTimeline;
 
@@ -87,6 +89,7 @@ public class Spell {
         this(name, color, configuredSpellSound, abstractSpellParts, new TimelineMap());
     }
 
+    @Deprecated(forRemoval = true)
     public Spell(String name, ParticleColor color, ConfiguredSpellSound configuredSpellSound, List<AbstractSpellPart> abstractSpellParts, TimelineMap particleTimeline) {
         this.name = name;
         this.color = color;
@@ -207,10 +210,12 @@ public class Spell {
         return new Spell(name, color, sound, ImmutableList.copyOf(recipe), particleTimeline);
     }
 
+    @Deprecated(forRemoval = true)
     public Spell withColor(@NotNull ParticleColor color) {
         return new Spell(name, color, sound, recipe, particleTimeline);
     }
 
+    @Deprecated(forRemoval = true)
     public Spell withSound(@NotNull ConfiguredSpellSound sound) {
         return new Spell(name, color, sound, recipe, particleTimeline);
     }
