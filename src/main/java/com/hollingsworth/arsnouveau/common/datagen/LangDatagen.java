@@ -85,6 +85,10 @@ public class LangDatagen extends LanguageProvider {
                 add("item.ars_nouveau." + i.perk.getRegistryName().getPath(), i.perk.getLangName());
             }
         }
+        for (Map.Entry<String, String> entry : CasterTomeProvider.langEntries().entrySet()) {
+            add(entry.getKey(), entry.getValue());
+        }
+
         add("key.category.ars_nouveau.general", "Ars Nouveau");
         add("key.ars_nouveau.previous_slot", "(Spell Book) Previous Slot");
         add("key.ars_nouveau.next_slot", "(Spell Book) Next Slot");

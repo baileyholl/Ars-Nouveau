@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.event.ScribesTableInteractEvent;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
@@ -37,12 +38,14 @@ public class ScribesBlock extends TableBlock {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack heldStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
+        if (handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile tile)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()) {
-            Networking.sendToPlayerClient(new PacketOpenGlyphCraft(pos), (ServerPlayer) player);
-            return ItemInteractionResult.SUCCESS;
+            if (player instanceof ServerPlayer serverPlayer) {
+                Networking.sendToPlayerClient(new PacketOpenGlyphCraft(pos), serverPlayer);
+            }
+            return ItemInteractionResult.sidedSuccess(world.isClientSide);
         }
 
         if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD) {
@@ -55,44 +58,50 @@ public class ScribesBlock extends TableBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (!player.isShiftKeyDown()) {
-
-            if (tile.consumeStack(player.getItemInHand(handIn))) {
-                return ItemInteractionResult.SUCCESS;
-            }
-
-            if (!tile.getStack().isEmpty() && player.getItemInHand(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
-                world.addFreshEntity(item);
-                tile.setStack(ItemStack.EMPTY);
-            } else if (!player.getInventory().getSelected().isEmpty()) {
-                if (!tile.getStack().isEmpty()) {
-                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
-                    world.addFreshEntity(item);
-                }
-
-                tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
-
-            }
-            BlockState updateState = tile.getBlockState();
-            world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
+        var interactEvent = NeoForge.EVENT_BUS.post(new ScribesTableInteractEvent(world, pos, tile, player, handIn, heldStack));
+        if (interactEvent.isCanceled()) {
+            return interactEvent.result;
         }
-        if (player.isShiftKeyDown()) {
-            ItemStack stack = tile.getStack();
-            if (player.getItemInHand(handIn).getItem() instanceof DominionWand) {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            }
-            if (stack == null || stack.isEmpty())
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-            if (stack.getItem() instanceof IScribeable scribeable) {
+        if (!player.isShiftKeyDown()) {
+            if (!world.isClientSide) {
+                if (!tile.consumeStack(player.getItemInHand(handIn))) {
+                    if (!tile.getStack().isEmpty() && player.getItemInHand(handIn).isEmpty()) {
+                        ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
+                        world.addFreshEntity(item);
+                        tile.setStack(ItemStack.EMPTY);
+                    } else if (!player.getInventory().getSelected().isEmpty()) {
+                        if (!tile.getStack().isEmpty()) {
+                            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.getStack());
+                            world.addFreshEntity(item);
+                        }
+
+                        tile.setStack(player.getInventory().removeItem(player.getInventory().selected, 1));
+                    }
+                    BlockState updateState = tile.getBlockState();
+                    world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
+                }
+            }
+            return ItemInteractionResult.sidedSuccess(world.isClientSide);
+        }
+
+        ItemStack stack = tile.getStack();
+        if (player.getItemInHand(handIn).getItem() instanceof DominionWand) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (stack == null || stack.isEmpty())
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+        if (stack.getItem() instanceof IScribeable scribeable) {
+            if (!world.isClientSide) {
                 scribeable.onScribe(world, pos, player, handIn, stack);
                 BlockState updateState = tile.getBlockState();
                 world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
             }
+            return ItemInteractionResult.sidedSuccess(world.isClientSide);
         }
 
-        return ItemInteractionResult.SUCCESS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -132,7 +141,8 @@ public class ScribesBlock extends TableBlock {
             if (stack.getItem() instanceof DominionWand) {
                 return;
             }
-            BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, state, world, pos, event.getEntity(), event.getHand(), event.getHitVec());
+            ItemInteractionResult result = BlockRegistry.SCRIBES_BLOCK.get().useItemOn(stack, state, world, pos, event.getEntity(), event.getHand(), event.getHitVec());
+            event.setCancellationResult(result.result());
             event.setCanceled(true);
         }
     }

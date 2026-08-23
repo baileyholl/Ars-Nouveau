@@ -221,7 +221,7 @@ public class Documentation {
                 .withCraftingPages(BlockRegistry.MAGE_BLOOM_CROP)
                 .withCraftingPages(ItemsRegistry.MAGE_FIBER, BlockRegistry.MAGEBLOOM_BLOCK));
 
-        addPage(new DocEntryBuilder(EQUIPMENT, ItemsRegistry.POTION_FLASK)
+        var potionFlask = addPage(new DocEntryBuilder(EQUIPMENT, ItemsRegistry.POTION_FLASK)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.POTION_FLASK)
                 .withLocalizedText(ItemsRegistry.POTION_FLASK_EXTEND_TIME)
@@ -232,7 +232,7 @@ public class Documentation {
 
         RecipeHolder<ReactiveEnchantmentRecipe> enchantmentRecipeRecipeHolder = manager.byKeyTyped(RecipeRegistry.REACTIVE_TYPE.get(), ArsNouveau.prefix(EnchantmentRegistry.REACTIVE_ENCHANTMENT.location().getPath() + "_" + 1));
         var annotatedCodex = addBasicItem(ItemsRegistry.ANNOTATED_CODEX, SPELL_CASTING);
-        addPage(new DocEntryBuilder(ENCHANTMENTS, "reactive_enchantment")
+        var reactiveEnchantment = addPage(new DocEntryBuilder(ENCHANTMENTS, "reactive_enchantment")
                 .withIcon(Items.ENCHANTED_BOOK)
                 .withSortNum(2)
                 .withIntroPage()
@@ -262,7 +262,7 @@ public class Documentation {
 
         addBasicItem(ItemsRegistry.SUMMONING_FOCUS, SPELL_CASTING);
         addBasicItem(ItemsRegistry.VOID_JAR, EQUIPMENT);
-        addBasicItem(ItemsRegistry.WAND, SPELL_CASTING);
+        var wand = addBasicItem(ItemsRegistry.WAND, SPELL_CASTING);
         var whirlisprig = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.WHIRLISPRIG_CHARM)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.WHIRLISPRIG_CHARM)
@@ -320,7 +320,7 @@ public class Documentation {
                 .withCraftingPages(ItemsRegistry.SOURCE_BERRY_PIE, ItemsRegistry.SOURCE_BERRY_ROLL));
 
         int walkerOffset = -20;
-        addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
+        var wealdWalker = addPage(new DocEntryBuilder(RESOURCES, "weald_walker")
                 .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.prefix(RitualLib.AWAKENING)))
                 .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.ENTITY_BLAZING_WEALD.get(), getLangPath("weald_walker", 2)))
@@ -328,7 +328,7 @@ public class Documentation {
                 .withPage(EntityEntry.create(ModEntities.ENTITY_FLOURISHING_WEALD.get(), getLangPath("weald_walker", 4)))
                 .withPage(EntityEntry.create(ModEntities.ENTITY_VEXING_WEALD.get(), getLangPath("weald_walker", 5))));
 
-        addPage(new DocEntryBuilder(RESOURCES, "wilden")
+        var wilden = addPage(new DocEntryBuilder(RESOURCES, "wilden")
                 .withIcon(ItemsRegistry.WILDEN_SPIKE)
                 .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.WILDEN_HUNTER.get(), getLangPath("wilden", 3), 0.55f))
@@ -357,7 +357,7 @@ public class Documentation {
 
         var prisms = addBasicItem(BlockRegistry.SPELL_PRISM, AUTOMATION);
 
-        addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
+        var magelightTorch = addPage(new DocEntryBuilder(RESOURCES, BlockRegistry.MAGELIGHT_TORCH)
                 .withIntroPage()
                 .withPage(getRecipePages(BlockRegistry.GOLD_SCONCE_BLOCK, BlockRegistry.SOURCESTONE_SCONCE_BLOCK))
                 .withPage(getRecipePages(BlockRegistry.POLISHED_SCONCE_BLOCK, BlockRegistry.ARCHWOOD_SCONCE_BLOCK))
@@ -398,7 +398,7 @@ public class Documentation {
         diffuser.withRelation(potionJar).withRelation(melder).withRelation(wixie);
 
         var ritualBrazier = addBasicItem(BlockRegistry.RITUAL_BLOCK, MACHINES);
-        addBasicItem(BlockRegistry.BRAZIER_RELAY, MACHINES);
+        var brazierRelay = addBasicItem(BlockRegistry.BRAZIER_RELAY, MACHINES);
         var scribesTable = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.SCRIBES_BLOCK)
                 .withIntroPageNoIncrement(getLangPath("scribes_table", 1), Component.translatable("ars_nouveau.glyph_crafting"), BlockRegistry.SCRIBES_BLOCK.asItem().getDefaultInstance())
                 .withHeaderPage(getLangPath("scribes_table", 2), Component.translatable("ars_nouveau.scribing"))
@@ -432,16 +432,16 @@ public class Documentation {
 
         var relay = addBasicItem(BlockRegistry.RELAY, SOURCE, CraftingEntry.create(manager.byKeyTyped(RecipeType.CRAFTING, getRegistryName(BlockRegistry.RELAY.get())), Component.translatable("ars_nouveau.page2.relay"))).withRelation(dominionWand);
 
-        addBasicItem(BlockRegistry.RELAY_DEPOSIT, SOURCE);
-        addBasicItem(BlockRegistry.RELAY_SPLITTER, SOURCE);
-        addBasicItem(BlockRegistry.RELAY_WARP, SOURCE);
-        addBasicItem(BlockRegistry.RELAY_COLLECTOR, SOURCE);
-        addBasicItem(BlockRegistry.VITALIC_BLOCK, SOURCE);
+        var relayDeposit = addBasicItem(BlockRegistry.RELAY_DEPOSIT, SOURCE);
+        var relaySplitter = addBasicItem(BlockRegistry.RELAY_SPLITTER, SOURCE);
+        var relayWarp = addBasicItem(BlockRegistry.RELAY_WARP, SOURCE);
+        var relayCollector = addBasicItem(BlockRegistry.RELAY_COLLECTOR, SOURCE);
+        var vitalic = addBasicItem(BlockRegistry.VITALIC_BLOCK, SOURCE);
         var volcanic = addPage(new DocEntryBuilder(SOURCE, BlockRegistry.VOLCANIC_BLOCK)
                 .withIntroPage()
                 .withHeaderPage(getLangPath("volcanic_sourcelink", 2), Component.translatable("ars_nouveau.active_generation"))
                 .withCraftingPages(BlockRegistry.VOLCANIC_BLOCK));
-        addPage(new DocEntryBuilder(ENCHANTMENTS, "how_to_enchant")
+        var howToEnchant = addPage(new DocEntryBuilder(ENCHANTMENTS, "how_to_enchant")
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withSortNum(-1)
                 .withIntroPage()
@@ -451,7 +451,24 @@ public class Documentation {
                 .withRelation(agronomic)
                 .withRelation(volcanic);
 
-        addPage(new DocEntryBuilder(RITUALS, "performing_rituals")
+        relay.withRelation(sourceJar).withRelation(relayDeposit).withRelation(relaySplitter)
+                .withRelation(relayCollector).withRelation(relayWarp);
+        relayDeposit.withRelation(relay).withRelation(sourceJar).withRelation(dominionWand);
+        relaySplitter.withRelation(relay).withRelation(sourceJar).withRelation(dominionWand);
+        relayCollector.withRelation(relay).withRelation(sourceJar).withRelation(dominionWand);
+        relayWarp.withRelation(relay).withRelation(sourceJar).withRelation(dominionWand);
+        sourceJar.withRelation(mycelial).withRelation(vitalic).withRelation(alchemical);
+        agronomic.withRelation(sourceJar).withRelation(magebloom).withRelation(sourceberry).withRelation(archwood);
+        mycelial.withRelation(sourceJar).withRelation(sourceberry);
+        volcanic.withRelation(sourceJar).withRelation(archwood);
+        vitalic.withRelation(sourceJar);
+        alchemical.withRelation(potionJar).withRelation(sourceJar);
+        sourceberry.withRelation(agronomic).withRelation(mycelial).withRelation(starby);
+        magebloom.withRelation(agronomic);
+        archwood.withRelation(volcanic).withRelation(wealdWalker).withRelation(wand);
+        dominionWand.withRelation(relay).withRelation(sourceJar);
+
+        var performingRituals = addPage(new DocEntryBuilder(RITUALS, "performing_rituals")
                 .withSortNum(-1)
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withIntroPage()
@@ -472,12 +489,21 @@ public class Documentation {
 //                        .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community")));
 
 
-        addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.AMETHYST_GOLEM_CHARM)
+        var amethystGolem = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.AMETHYST_GOLEM_CHARM)
                 .withIntroPage()
                 .withPage(EntityEntry.create(ModEntities.AMETHYST_GOLEM.get(), getLangPath("amethyst_golem_charm", 2), 0.75f))
                 .withHeaderPage(getLangPath("amethyst_golem_charm", 3), Component.translatable("ars_nouveau.summoning"))
                 .withHeaderPage(getLangPath("amethyst_golem_charm", 4), Component.translatable("ars_nouveau.amethyst_farming"))
                 .withHeaderPage(getLangPath("amethyst_golem_charm", 5), Component.translatable("ars_nouveau.amethyst_storage")));
+
+        ritualBrazier.withRelation(performingRituals).withRelation(brazierRelay).withRelation(sourceJar);
+        brazierRelay.withRelation(ritualBrazier).withRelation(performingRituals).withRelation(dominionWand);
+        performingRituals.withRelation(brazierRelay).withRelation(sourceJar);
+        amethystGolem.withRelation(ArsNouveau.prefix(RitualLib.AWAKENING)).withRelation(dominionWand)
+                .withRelation(dowsingRod);
+        wealdWalker.withRelation(ArsNouveau.prefix(RitualLib.AWAKENING)).withRelation(archwood).withRelation(dominionWand);
+        wilden.withRelation(ArsNouveau.prefix(RitualLib.WILDEN_SUMMON)).withRelation(drygmyCharm);
+        drygmyCharm.withRelation(wilden).withRelation(sourceJar);
 
         var starbyBed = addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ORANGE_SBED)
                 .withName("ars_nouveau.summon_bed")
@@ -512,12 +538,21 @@ public class Documentation {
                 .withHeaderPage(getLangPath("shapers_focus", 2), Component.translatable("ars_nouveau.shapers_focus.blocks"))
                 .withHeaderPage(getLangPath("shapers_focus", 3), Component.translatable("ars_nouveau.shapers_focus.entities"))
                 .withHeaderPage(getLangPath("shapers_focus", 4), Component.translatable("ars_nouveau.shapers_focus.examples")));
-        addBasicItem(ItemsRegistry.ALCHEMISTS_CROWN, EQUIPMENT);
-        addPage(new DocEntryBuilder(EQUIPMENT, "flask_cannons")
+        var alchemistsCrown = addBasicItem(ItemsRegistry.ALCHEMISTS_CROWN, EQUIPMENT);
+        var flaskCannons = addPage(new DocEntryBuilder(EQUIPMENT, "flask_cannons")
                 .withIcon(ItemsRegistry.SPLASH_LAUNCHER)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.SPLASH_LAUNCHER)
                 .withCraftingPages(ItemsRegistry.LINGERING_LAUNCHER));
+
+        potionJar.withRelation(alchemical).withRelation(potionFlask).withRelation(wixieHat);
+        wixie.withRelation(alchemical).withRelation(sourceJar);
+        melder.withRelation(alchemical);
+        diffuser.withRelation(dominionWand);
+        wixieHat.withRelation(starby).withRelation(potionJar).withRelation(dominionWand);
+        potionFlask.withRelation(potionJar).withRelation(flaskCannons).withRelation(alchemistsCrown).withRelation(melder);
+        flaskCannons.withRelation(potionFlask).withRelation(potionJar).withRelation(alchemistsCrown);
+        alchemistsCrown.withRelation(potionFlask).withRelation(flaskCannons).withRelation(potionJar);
 
         DocEntryBuilder ARMOR_ENTRY = new DocEntryBuilder(ARMOR, "armor")
                 .withIcon(ItemsRegistry.SORCERER_ROBES)
@@ -541,12 +576,13 @@ public class Documentation {
                 .withCraftingPages(ItemsRegistry.BATTLEMAGE_BOOTS);
 
         var armorEntry = addPage(ARMOR_ENTRY.withCategory(ARMOR));
+        magebloom.withRelation(armorEntry);
 
         var alteraitonTable = addPage(new DocEntryBuilder(ARMOR, "alteration_table")
                 .withIcon(BlockRegistry.ALTERATION_TABLE)
                 .withIntroPage()
                 .withPage(getRecipePages(BlockRegistry.ALTERATION_TABLE, ItemsRegistry.BLANK_THREAD))
-                .withSortNum(3))
+                .withSortNum(2))
                 .withRelation(armorEntry);
 
         var firstUpgrade = manager.byKeyTyped(RecipeRegistry.ARMOR_UPGRADE_TYPE.get(), ArsNouveau.prefix("first_armor_upgrade"));
@@ -563,19 +599,17 @@ public class Documentation {
         armorEntry.withRelation(armorUpgrade);
         alteraitonTable.withRelation(armorUpgrade);
 
-        addPage(new DocEntryBuilder(ARMOR, "applying_perks")
+        var applyingPerks = addPage(new DocEntryBuilder(ARMOR, "applying_perks")
                 .withIcon(ItemsRegistry.BLANK_THREAD)
                 .withIntroPage()
                 .withLocalizedText()
                 .withSortNum(2))
                 .withRelations(armorEntry, alteraitonTable);
 
-        addPage(new DocEntryBuilder(ARMOR, "alteration_table")
-                .withIcon(BlockRegistry.ALTERATION_TABLE)
-                .withIntroPage()
-                .withPage(getRecipePages(BlockRegistry.ALTERATION_TABLE, ItemsRegistry.BLANK_THREAD))
-                .withSortNum(2))
-                .withRelations(armorEntry, armorUpgrade);
+        armorEntry.withRelation(applyingPerks).withRelation(alteraitonTable).withRelation(magebloom);
+        alteraitonTable.withRelation(applyingPerks);
+        applyingPerks.withRelation(armorUpgrade);
+        armorUpgrade.withRelation(enchantingApparatus).withRelation(sourceJar);
 
 
         var voidPrism = addBasicItem(BlockRegistry.VOID_PRISM, AUTOMATION);
@@ -583,7 +617,7 @@ public class Documentation {
         turrets.withRelation(prisms).withRelation(voidPrism);
         prisms.withRelation(turrets).withRelation(voidPrism);
         voidPrism.withRelation(turrets).withRelation(prisms);
-        addPage(new DocEntryBuilder(RESOURCES, "illusion_blocks").withIcon(BlockRegistry.GHOST_WEAVE)
+        var illusionBlocks = addPage(new DocEntryBuilder(RESOURCES, "illusion_blocks").withIcon(BlockRegistry.GHOST_WEAVE)
                 .withLocalizedText(BlockRegistry.MIRROR_WEAVE)
                 .withCraftingPages(BlockRegistry.MIRROR_WEAVE)
                 .withLocalizedText(BlockRegistry.FALSE_WEAVE)
@@ -603,7 +637,7 @@ public class Documentation {
                 .withHeaderPage(getLangPath("storage", 3), Component.translatable("ars_nouveau.storage_tabs"))
                 .withHeaderPage(getLangPath("storage", 4), Component.translatable("ars_nouveau.storage_performance"))
                 .withCraftingPages(BlockRegistry.CRAFTING_LECTERN));
-        bookwyrm.withRelation(storageLectern);
+        bookwyrm.withRelation(storageLectern).withRelation(ArsNouveau.prefix(RitualLib.AWAKENING));
 
         var displayCase = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.ITEM_DETECTOR)
                 .withIntroPage()
@@ -671,15 +705,25 @@ public class Documentation {
         addBasicItem(BlockRegistry.SPELL_SENSOR, AUTOMATION);
         addBasicItem(ItemsRegistry.JUMP_RING, EQUIPMENT);
         addBasicItem(BlockRegistry.REDSTONE_RELAY, AUTOMATION);
-        addBasicItem(BlockRegistry.DECOR_BLOSSOM, MACHINES);
+        var decorBlossom = addBasicItem(BlockRegistry.DECOR_BLOSSOM, MACHINES);
+
+        enchantingApparatus.withRelation(howToEnchant).withRelation(sourceJar)
+                .withRelation(armorUpgrade).withRelation(reactiveEnchantment);
+        imbuementChamber.withRelation(sourceJar);
+        howToEnchant.withRelation(sourceJar).withRelation(reactiveEnchantment);
+        reactiveEnchantment.withRelation(scribesTable).withRelation(enchantingApparatus)
+                .withRelation(howToEnchant).withRelation(sourceJar);
+        prestidigitation.withRelation(enchantingApparatus).withRelation(scribesTable).withRelation(decorBlossom);
+        decorBlossom.withRelation(prestidigitation).withRelation(dominionWand);
+        dowsingRod.withRelation(amethystGolem);
 
         addPage(new DocEntryBuilder(AUTOMATION, BlockRegistry.ARCHWOOD_GRATE)
                 .withIntroPage()
                 .withCraftingPages(BlockRegistry.ARCHWOOD_GRATE, BlockRegistry.GOLD_GRATE)
                 .withCraftingPages(BlockRegistry.SMOOTH_SOURCESTONE_GRATE, BlockRegistry.SOURCESTONE_GRATE));
-        addBasicItem(BlockRegistry.SOURCE_LAMP, AUTOMATION);
+        var sourceLamp = addBasicItem(BlockRegistry.SOURCE_LAMP, AUTOMATION);
 
-        addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
+        var alakarkinos = addPage(new DocEntryBuilder(AUTOMATION, ItemsRegistry.ALAKARKINOS_CHARM)
                 .withIntroPage()
                 .withCraftingPages(ItemsRegistry.ALAKARKINOS_CHARM)
                 .withPage(EntityEntry.create(ModEntities.ALAKARKINOS_TYPE.get(), getLangPath("alakarkinos_charm", 2), 0.5f, -10))
@@ -696,9 +740,26 @@ public class Documentation {
         storageLectern.withRelation(repoCatalog);
         repository.withRelation(repoCatalog);
 
-        addPage(new DocEntryBuilder(MACHINES, BlockRegistry.PLANARIUM)
+        starbyShades.withRelation(starby);
+        starbyBed.withRelation(starby).withRelation(dominionWand);
+        repository.withRelation(denyScroll).withRelation(allowScroll).withRelation(mimicScroll);
+        repoCatalog.withRelation(denyScroll).withRelation(allowScroll).withRelation(mimicScroll);
+        denyScroll.withRelation(repository);
+        mimicScroll.withRelation(repository);
+        allowScroll.withRelation(repository);
+        storageLectern.withRelation(dominionWand);
+        alakarkinos.withRelation(dominionWand).withRelation(sourceJar);
+        whirlisprig.withRelation(sourceJar);
+
+        var planarium = addPage(new DocEntryBuilder(MACHINES, BlockRegistry.PLANARIUM)
                 .withIntroPage()
                 .withCraftingPages(BlockRegistry.PLANARIUM));
+
+        portal.withRelation(sourceJar).withRelation(illusionBlocks).withRelation(dominionWand);
+        illusionBlocks.withRelation(portal);
+        planarium.withRelation(dominionWand);
+        magelightTorch.withRelation(sourceLamp);
+        sourceLamp.withRelation(magelightTorch);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "spell_casting")
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
@@ -727,11 +788,15 @@ public class Documentation {
                 .withIcon(ItemsRegistry.NOVICE_SPELLBOOK)
                 .withIntroPage());
 
-        addPage(new DocEntryBuilder(GETTING_STARTED, "learning_glyphs")
+        var learningGlyphs = addPage(new DocEntryBuilder(GETTING_STARTED, "learning_glyphs")
                 .withSortNum(6)
                 .withIcon(BlockRegistry.SCRIBES_BLOCK)
                 .withIntroPage())
                 .withRelations(scribesTable, annotatedCodex);
+
+        scribesTable.withRelation(learningGlyphs).withRelation(spellBooks).withRelation(annotatedCodex);
+        annotatedCodex.withRelation(scribesTable).withRelation(learningGlyphs);
+        spellBooks.withRelation(learningGlyphs).withRelation(scribesTable);
 
         addPage(new DocEntryBuilder(GETTING_STARTED, "important_resources")
                 .withSortNum(7)

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -69,6 +70,16 @@ public record CasterTomeData(String flavorText, Spell spell,
         }
     }
 
+    public static String nameKey(ResourceLocation id) {
+        String path = id.getPath();
+        return id.getNamespace() + ".tome_name." + path.substring(path.lastIndexOf('/') + 1);
+    }
+
+    public static String flavorKey(ResourceLocation id) {
+        String path = id.getPath();
+        return id.getNamespace() + ".tome_flavor." + path.substring(path.lastIndexOf('/') + 1);
+    }
+
     public static ItemStack makeTome(Item tome, String name, Spell spell, String flavorText) {
         return makeTome(tome, spell.withName(name), flavorText);
     }
@@ -92,6 +103,17 @@ public record CasterTomeData(String flavorText, Spell spell,
         if (tomeType == Items.AIR)
             tomeType = ItemsRegistry.CASTER_TOME.asItem();
         return makeTome(tomeType, spell, flavorText);
+    }
+
+    public ItemStack getResultItem(ResourceLocation id) {
+        Item tomeType = BuiltInRegistries.ITEM.get(this.tomeType);
+        if (tomeType == Items.AIR)
+            tomeType = ItemsRegistry.CASTER_TOME.asItem();
+        ItemStack stack = tomeType.getDefaultInstance();
+        AbstractCaster<?> spellCaster = SpellCasterRegistry.from(stack);
+        stack.set(DataComponents.CUSTOM_NAME, Component.translatableWithFallback(nameKey(id), spell.name()).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
+        spellCaster.setSpell(spell).setFlavorText(id.getNamespace().equals(ArsNouveau.MODID) ? flavorKey(id) : flavorText).saveToStack(stack);
+        return stack;
     }
 
     @Override

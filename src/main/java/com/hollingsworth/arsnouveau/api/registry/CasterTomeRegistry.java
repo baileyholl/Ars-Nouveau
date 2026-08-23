@@ -24,7 +24,7 @@ public class CasterTomeRegistry {
         DungeonLootTables.CASTER_TOMES = new ArrayList<>();
         TOME_DATA = new ArrayList<>();
         TOME_DATA.addAll(recipes);
-        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.value().getResultItem(access)));
+        recipes.forEach(tome -> DungeonLootTables.CASTER_TOMES.add(() -> tome.value().getResultItem(tome.id())));
         return TOME_DATA;
     }
 
