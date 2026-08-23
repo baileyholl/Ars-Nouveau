@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.client.registry.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetCasterSlot;
@@ -110,7 +111,7 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
 
     @Override
     public boolean doesSneakBypassUse(@NotNull ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
-        return true;
+        return world.getBlockEntity(pos) instanceof ScribesTile;
     }
 
     @Override
