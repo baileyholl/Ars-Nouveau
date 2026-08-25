@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.light.ISkyLightSource;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -9,13 +10,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SkyWeave extends MirrorWeave implements ITickableBlock {
+public class SkyWeave extends MirrorWeave implements ITickableBlock, ISkyLightSource {
+    public static final BooleanProperty SHOW_FACADE = BooleanProperty.create("show_facade");
 
     public SkyWeave(Properties properties) {
         super(properties);
@@ -23,6 +28,10 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock {
 
     public SkyWeave() {
         super();
+    }
+
+    {
+        registerDefaultState(defaultBlockState().setValue(SHOW_FACADE, false));
     }
 
     @Override
@@ -33,6 +42,7 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock {
         return super.getOcclusionShape(state, level, pos);
     }
 
+    @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
         return new SkyBlockTile(p_153215_, p_153216_);
     }
@@ -49,5 +59,16 @@ public class SkyWeave extends MirrorWeave implements ITickableBlock {
             }
         }
         return super.useItemOn(stack, pState, pLevel, pPos, pPlayer, pHand, pHit);
+    }
+
+    @Override
+    public boolean emitsDirectSkyLight(BlockState state, BlockGetter level, BlockPos pos) {
+        return !state.getValue(SHOW_FACADE);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(SHOW_FACADE);
     }
 }
