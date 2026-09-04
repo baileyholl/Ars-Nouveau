@@ -159,7 +159,8 @@
     "712643f9-c60e-4f54-a5c8-1acbb948d668",
     "56afa4b5-448b-4022-84ed-ecfb3a4b0b06",
     "f3fe9fba-37cd-4bde-8a23-04d4839c06fb",
-    "33b0c5de-b0dd-409d-9da9-92f9ee0537d2"
+    "33b0c5de-b0dd-409d-9da9-92f9ee0537d2",
+    "bd2097d2-bfe6-4cfa-b680-d153e18ecae3"
   ],
   "starbuncleAdoptions": [
     {
@@ -1079,6 +1080,12 @@
       "adopter": "0AKSA",
       "color": "purple",
       "bio": "Named after the warning message that appeared when his wizard tried to amplify one explosion five times. He doesn't know what it means, but he respects it. It's staring at you with confusion."
+    },
+    {
+      "name": "Briar Fae Companion",
+      "adopter": "Selene",
+      "color": "light_gray",
+      "bio": "Your new best friend! Tricksy as they are, they love to sneak away tasty gold nuggets from your pockets though... Prevent it with plenty of cuddles and snacks!"
     }
   ]
 }
