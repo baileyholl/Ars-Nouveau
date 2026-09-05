@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,7 +25,6 @@ import java.util.*;
 public class FindNextItemGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
-    ItemStack getStack;
     boolean found;
 
     public FindNextItemGoal(EntityWixie wixie) {
@@ -39,39 +37,50 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public void start() {
         super.start();
         movePos = null;
+        found = false;
+
         Level world = wixie.getCommandSenderWorld();
         WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
         if (tile == null || tile.getInventories() == null) {
             found = true;
             return;
         }
-        getStack = tile.craftManager.getNextItem();
-        if (getStack.isEmpty()) {
+
+        List<ItemStack> itemsNeeded = new ArrayList<>(tile.craftManager.neededItems);
+        if (itemsNeeded.isEmpty()) {
             found = true;
             return;
         }
-        Set<Item> itemSet = new HashSet<>();
-        itemSet.add(getStack.getItem());
-        for (BlockPos b : tile.getInventories()) {
-            BlockEntity blockEntity = world.getBlockEntity(b);
-            if (blockEntity == null)
-                continue;
-            IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
-            if (itemHandler == null)
-                continue;
-            for (int i = 0; i < itemHandler.getSlots(); i++) {
-                ItemStack stack = itemHandler.getStackInSlot(i);
-                if (stack.getItem() == getStack.getItem()) {
-                    movePos = b.immutable();
-                    this.startDistance = BlockUtil.distanceFrom(wixie.level(), wixie.position, movePos);
-                    break;
+
+        for (ItemStack neededItem : itemsNeeded) {
+            int neededCount = neededItem.getCount();
+            for (BlockPos b : tile.getInventories()) {
+                BlockEntity blockEntity = world.getBlockEntity(b);
+                if (blockEntity == null)
+                    continue;
+                IItemHandler itemHandler = world.getCapability(Capabilities.ItemHandler.BLOCK, b, null);
+                if (itemHandler == null)
+                    continue;
+                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                    ItemStack stack = itemHandler.getStackInSlot(i);
+                    if (stack.getItem() == neededItem.getItem()) {
+                        movePos = b.immutable();
+                        this.startDistance = BlockUtil.distanceFrom(wixie.level(), wixie.position, movePos);
+                        neededCount--;
+                        if (neededCount == 0)
+                            break;
+                    }
                 }
             }
-            if (movePos != null) {
-                break;
+            // Invalidate craft if any items could not be found.
+            if (neededCount > 0) {
+                tile.craftManager.outputStack = ItemStack.EMPTY;
+                tile.craftManager.neededItems.clear();
+                movePos = null;
+                found = true;
+                return;
             }
         }
-        found = false;
     }
 
     @Override
@@ -82,12 +91,11 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         if (!(tileEntity instanceof WixieCauldronTile cauldronTile))
             return false;
 
-        boolean canStart = wixie.inventoryBackoff == 0
+        return (wixie.inventoryBackoff == 0
                 && cauldronTile.hasSource
                 && !cauldronTile.isCraftingDone()
                 && !cauldronTile.isOff
-                && !cauldronTile.craftManager.getNextItem().isEmpty();
-        return canStart;
+                && !cauldronTile.craftManager.getNextItem().isEmpty());
     }
 
     @Override
@@ -99,8 +107,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
 
-        if (!found && movePos != null && BlockUtil.distanceFrom(wixie.level(), wixie.position(), Vec3.atCenterOf(movePos)) < 1.3 + this.extendedRange) {
-
+        if (!found) {
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             Level world = wixie.getCommandSenderWorld();
             if (tile == null) {
@@ -146,12 +153,14 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
                                     anyFound = true;
                                 }
                             }
+                            // Skip checking the rest of the inventory slots when we have already found the item.
+                            break;
                         }
                     }
                 }
             }
-            found = true;
-            return;
+            // Dont set found until all needed items are actually found.
+            if(tile.craftManager.neededItems.isEmpty()) found = true;
         }
 
         if (movePos != null && !found) {
