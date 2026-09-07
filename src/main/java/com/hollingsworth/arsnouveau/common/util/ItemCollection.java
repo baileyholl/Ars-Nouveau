@@ -37,6 +37,10 @@ public class ItemCollection {
         return map.computeInt(new ItemStackKey(stack, true), (k, v) -> v == null ? count : v.intValue() + count);
     }
 
+    public void clear() {
+        this.map.clear();
+    }
+
     public Iterator<ItemStack> iterator() {
         var iter = Object2IntMaps.fastIterator(map);
         return new Iterator<>() {

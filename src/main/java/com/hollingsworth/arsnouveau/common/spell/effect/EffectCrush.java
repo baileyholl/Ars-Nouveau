@@ -127,6 +127,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
     public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
         CrushRecipe lastHit = null; // Cache this for AOE hits
         int itemsCrushed = 0;
+        var outputs = new ItemCollection();
         for (ItemEntity IE : itemEntities) {
             if (itemsCrushed >= maxItemCrush) {
                 break;
@@ -143,7 +144,6 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
             if (lastHit == null) continue;
 
-            var outputs = new ItemCollection();
             if (!stack.isEmpty()) {
                 var rolls = maxItemCrush - itemsCrushed;
                 if (lastHit.isOutputDeterministic()) {
@@ -161,6 +161,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             while (resultIter.hasNext()) {
                 world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), resultIter.next()));
             }
+            outputs.clear();
 
             if (stack.isEmpty()) {
                 IE.discard();
