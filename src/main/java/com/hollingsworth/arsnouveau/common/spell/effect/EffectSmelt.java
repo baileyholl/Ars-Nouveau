@@ -69,20 +69,25 @@ public class EffectSmelt extends AbstractEffect {
         if (!canBlockBeHarvested(spellStats, world, pos)) return;
         BlockState state = world.getBlockState(pos);
         if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos)) return;
-        RecipeHolder<? extends Recipe<SingleRecipeInput>> optional = SMELT_CACHE.get(world, new SingleRecipeInput(new ItemStack(state.getBlock().asItem(), 1)));
-        if (optional != null) {
-            ItemStack itemstack = optional.value().getResultItem(world.registryAccess());
-            if (!itemstack.isEmpty()) {
-                if (itemstack.getItem() instanceof BlockItem) {
-                    world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
-                } else {
-                    BlockUtil.destroyBlockSafely(world, pos, false, shooter);
-                    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), itemstack.copy()));
-                    BlockUtil.safelyUpdateState(world, pos);
-                }
-                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
-            }
+
+        var optional = SMELT_CACHE.get(world, new SingleRecipeInput(new ItemStack(state.getBlock().asItem(), 1)));
+        if (optional == null) {
+            return;
         }
+
+        ItemStack itemstack = optional.value().getResultItem(world.registryAccess());
+        if (itemstack.isEmpty()) {
+            return;
+        }
+
+        if (itemstack.getItem() instanceof BlockItem) {
+            world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
+        } else {
+            BlockUtil.destroyBlockSafely(world, pos, false, shooter);
+            world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), itemstack.copy()));
+            BlockUtil.safelyUpdateState(world, pos);
+        }
+        ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
     }
 
 
@@ -100,14 +105,19 @@ public class EffectSmelt extends AbstractEffect {
                 optional = SMELT_CACHE.get(world, new SingleRecipeInput(itemEntity.getItem()));
             }
 
-            if (optional != null) {
-                ItemStack result = optional.value().getResultItem(world.registryAccess()).copy();
-                if (result.isEmpty()) continue;
-                while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
-                    itemEntity.getItem().shrink(1);
-                    world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
-                    numSmelted++;
-                }
+            if (optional == null) {
+                continue;
+            }
+
+            ItemStack result = optional.value().getResultItem(world.registryAccess());
+            if (result.isEmpty()) {
+                continue;
+            }
+
+            while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
+                itemEntity.getItem().shrink(1);
+                world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
+                numSmelted++;
             }
         }
     }

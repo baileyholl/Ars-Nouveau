@@ -23,7 +23,9 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     }
 
     protected void onDatapackReload(OnDatapackSyncEvent event) {
-        this.clear();
+        if (event.getPlayer() == null) {
+            this.clear();
+        }
     }
 
     @SuppressWarnings("unchecked")
