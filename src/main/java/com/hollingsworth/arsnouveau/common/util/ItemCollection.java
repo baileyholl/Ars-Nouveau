@@ -45,8 +45,7 @@ public class ItemCollection {
         var iter = Object2IntMaps.fastIterator(map);
         return new Iterator<>() {
             private final ObjectIterator<Object2IntMap.Entry<ItemStackKey>> inner = iter;
-            private Object2IntMap.Entry<ItemStackKey> current;
-            private ItemStack stack;
+            private ItemStackKey key;
             private int size;
             private int maxStackSize;
 
@@ -60,16 +59,16 @@ public class ItemCollection {
                 if (size > 0) {
                     var stackSize = Math.min(size, maxStackSize);
                     size -= stackSize;
-                    return stack.copyWithCount(stackSize);
+                    return key.getStack(stackSize);
                 }
 
-                current = inner.next();
-                size = current.getIntValue();
-                stack = current.getKey().getStack();
-                maxStackSize = stack.getMaxStackSize();
+                var next = inner.next();
+                size = next.getIntValue();
+                key = next.getKey();
+                maxStackSize = key.getStack().getMaxStackSize();
                 var stackSize = Math.min(size, maxStackSize);
                 size -= stackSize;
-                return stack.copyWithCount(stackSize);
+                return key.getStack(stackSize);
             }
         };
     }
