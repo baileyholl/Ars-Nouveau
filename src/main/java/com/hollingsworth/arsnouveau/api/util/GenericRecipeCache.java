@@ -1,24 +1,32 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import com.google.common.collect.EvictingQueue;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayDeque;
+
 public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     public final RecipeType<R> recipeType;
-    protected final EvictingQueue<RecipeHolder<? extends Recipe<I>>> cache;
+    protected final ArrayDeque<RecipeHolder<? extends Recipe<I>>> cache;
+    protected final int size;
 
     public GenericRecipeCache(RecipeType<R> recipeType, int size) {
         this.recipeType = recipeType;
-        this.cache = EvictingQueue.create(size);
+        this.size = size;
+        this.cache = new ArrayDeque<>(this.size);
         NeoForge.EVENT_BUS.addListener(this::onDatapackReload);
     }
 
@@ -30,6 +38,10 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
 
     @SuppressWarnings("unchecked")
     public @Nullable RecipeHolder<R> get(Level level, I input) {
+        if (input.isEmpty()) {
+            return null;
+        }
+
         for (var cached : this.cache) {
             if (cached.value() instanceof EmptyResultRecipe && cached.value().matches(input, level)) {
                 return null;
@@ -43,13 +55,20 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
 
         var holder = level.getRecipeManager().getRecipeFor(this.recipeType, input, level);
         if (holder.isEmpty()) {
-            this.cache.add(new RecipeHolder<>(EmptyResultRecipe.ID, new EmptyResultRecipe<>(input)));
+            this.add(new RecipeHolder<>(EmptyResultRecipe.ID, new EmptyResultRecipe<>(input)));
             return null;
         }
 
         var recipe = holder.get();
-        this.cache.add(recipe);
+        this.add(recipe);
         return recipe;
+    }
+
+    private void add(RecipeHolder<? extends Recipe<I>> holder) {
+        if (this.cache.size() == size) {
+            this.cache.removeLast();
+        }
+        this.cache.add(holder);
     }
 
     public void clear() {

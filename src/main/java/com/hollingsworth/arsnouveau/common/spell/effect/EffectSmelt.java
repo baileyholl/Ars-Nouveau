@@ -114,10 +114,16 @@ public class EffectSmelt extends AbstractEffect {
                 continue;
             }
 
-            while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
-                itemEntity.getItem().shrink(1);
-                world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
-                numSmelted++;
+            var stack = itemEntity.getItem();
+            while (numSmelted < maxItemSmelt && !stack.isEmpty()) {
+                var resultSize = Math.min(result.getMaxStackSize(), maxItemSmelt - numSmelted);
+                stack.shrink(resultSize);
+                world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copyWithCount(resultSize)));
+                numSmelted += resultSize;
+            }
+
+            if (stack.isEmpty()) {
+                itemEntity.discard();
             }
         }
     }
