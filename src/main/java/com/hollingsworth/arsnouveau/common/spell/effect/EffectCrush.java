@@ -163,6 +163,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             }
             outputs.clear();
 
+            // Remove item entity to prevent further actions (e.g. Pickup) in the same tick from doing unnecessary work
             if (stack.isEmpty()) {
                 IE.discard();
             }

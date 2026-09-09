@@ -118,10 +118,11 @@ public class EffectSmelt extends AbstractEffect {
             while (numSmelted < maxItemSmelt && !stack.isEmpty()) {
                 var resultSize = Math.min(result.getMaxStackSize(), maxItemSmelt - numSmelted);
                 stack.shrink(resultSize);
-                world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copyWithCount(resultSize)));
+                world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copyWithCount(result.getCount() * resultSize)));
                 numSmelted += resultSize;
             }
 
+            // Remove item entity to prevent further actions (e.g. Pickup) in the same tick from doing unnecessary work
             if (stack.isEmpty()) {
                 itemEntity.discard();
             }
