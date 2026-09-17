@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -29,18 +30,20 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine, RecipeInput {
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, GeoBlockEntity, ITooltipProvider, IPedestalMachine, RecipeInput, ICapabilityProvider<ImbuementTile, @Nullable Direction, IItemHandler> {
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
@@ -314,5 +317,85 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     public ItemStack getStack() {
         return stack;
+    }
+
+    @Nullable
+    @Override
+    public IItemHandler getCapability(@NotNull ImbuementTile tile, @Nullable Direction side) {
+        return new ItemHandler(tile, side);
+    }
+
+    public static class ItemHandler implements IItemHandler {
+        ImbuementTile tile;
+        @Nullable Direction side;
+
+        public ItemHandler(ImbuementTile tile, @Nullable Direction side) {
+            this.tile = tile;
+            this.side = side;
+        }
+
+        @Override
+        public int getSlots() {
+            return 1;
+        }
+
+        @Override
+        public @NotNull ItemStack getStackInSlot(int slot) {
+            return this.tile.stack;
+        }
+
+        @Override
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+            if (!this.isItemValid(slot ,stack)) {
+                return stack;
+            }
+
+            if (this.tile.stack.isEmpty()) {
+                if (!simulate) {
+                    this.tile.stack = stack;
+                }
+
+                return ItemStack.EMPTY;
+            }
+
+            if (this.tile.stack.isStackable() && this.tile.stack.getCount() < this.tile.stack.getMaxStackSize() && ItemStack.isSameItemSameComponents(stack, this.tile.stack)) {
+                int currentCount = this.tile.stack.getCount();
+                int newCount = Math.min(this.tile.stack.getMaxStackSize(), currentCount + stack.getCount());
+                int change = newCount - currentCount;
+                if (!simulate) {
+                    this.tile.stack.setCount(newCount);
+                }
+
+                stack.shrink(change);
+            }
+
+            return stack;
+        }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (this.tile.stack.isEmpty() || (this.side != null && this.tile.getRecipeNow() != null)) {
+                return ItemStack.EMPTY;
+            }
+
+            int currentCount = this.tile.stack.getCount();
+            int toExtract = Math.min(currentCount, amount);
+            ItemStack split = this.tile.stack.copyWithCount(toExtract);
+            if (!simulate) {
+                this.tile.stack.setCount(currentCount - toExtract);
+            }
+
+            return split;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return slot == 0 ? this.tile.stack.getMaxStackSize() : 0;
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return this.tile.canPlaceItem(slot, stack);
+        }
     }
 }
