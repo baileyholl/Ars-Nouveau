@@ -25,6 +25,10 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public ItemStack insertStack(ItemStack stack, boolean simulate) {
+        if (stack.isEmpty() || controllerTile.hasFailedInsertThisTick(stack)) {
+            return stack;
+        }
+        int startCount = stack.getCount();
         var validRepositories = preferredForStack(stack, false);
         // Prefer inserting into existing stacks first, splitting across as many inventories as needed
         for (SortResult connectedRepository : validRepositories) {
@@ -50,6 +54,11 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
             }
         }
 
+        // Only a complete failure proves the network has no room for this item; a partial insert must not
+        // poison the memo, or a simulated partial insert would block the real insert that follows it.
+        if (stack.getCount() == startCount) {
+            controllerTile.recordFailedInsert(stack);
+        }
         return stack;
     }
 

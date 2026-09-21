@@ -365,7 +365,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             var result = inner.insertItem(slot, stack, simulate);
-            if (!simulate) {
+            if (!simulate && result.getCount() != stack.getCount()) {
                 var entity = tile.getEntity();
                 if (entity != null) {
                     tile.entityTag = tile.saveEntityToTag(entity);
@@ -377,7 +377,7 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             var result = inner.extractItem(slot, amount, simulate);
-            if (!simulate) {
+            if (!simulate && !result.isEmpty()) {
                 var entity = tile.getEntity();
                 if (entity != null) {
                     tile.entityTag = tile.saveEntityToTag(entity);
