@@ -805,4 +805,15 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
         }
     }
 
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        if (this.isTamed()) {
+            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM.get());
+            stack.set(DataComponentRegistry.STARBUNCLE_DATA, data.immutable());
+            return stack;
+        }
+
+        return super.getPickResult();
+    }
 }

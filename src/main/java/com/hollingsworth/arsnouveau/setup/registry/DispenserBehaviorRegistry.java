@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
 import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
@@ -13,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -105,7 +107,7 @@ public class DispenserBehaviorRegistry {
 
                 ServerLevel level = blockSource.level();
                 Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-                BlockPos pos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
+                BlockPos pos = blockSource.pos().relative(direction);
                 Player player = ANFakePlayer.getPlayer(level);
                 player.setItemInHand(InteractionHand.MAIN_HAND, item);
 
@@ -127,6 +129,9 @@ public class DispenserBehaviorRegistry {
                 return item;
             }
         });
+
+        var dispenseCharmBehavior = new DispenseCharmBehavior();
+        BuiltInRegistries.ITEM.stream().filter(i -> i instanceof AbstractSummonCharm).forEach(i -> DispenserBlock.registerBehavior(i, dispenseCharmBehavior));
     }
 
     public static class UnbiasedDirectionalPlaceContext extends DirectionalPlaceContext {
@@ -158,6 +163,28 @@ public class DispenserBehaviorRegistry {
                 case EAST ->
                         new Direction[]{Direction.EAST, Direction.DOWN, Direction.SOUTH, Direction.UP, Direction.NORTH, Direction.WEST};
             };
+        }
+    }
+
+    private static class DispenseCharmBehavior extends OptionalDispenseItemBehavior {
+        @Override
+        protected @NotNull ItemStack execute(@NotNull BlockSource blockSource, @NotNull ItemStack item) {
+            if (!(item.getItem() instanceof AbstractSummonCharm charm)) {
+                this.setSuccess(false);
+                return item;
+            }
+
+            ServerLevel level = blockSource.level();
+            Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+            BlockPos pos = blockSource.pos().relative(direction);
+            Player player = ANFakePlayer.getPlayer(level);
+            player.setItemInHand(InteractionHand.MAIN_HAND, item);
+
+            BlockHitResult hit = new BlockHitResult(pos.getCenter(), direction, pos, true);
+            UseOnContext ctx = new UseOnContext(level, player, InteractionHand.MAIN_HAND, item, hit);
+
+            this.setSuccess(charm.useOn(ctx) != InteractionResult.PASS);
+            return item;
         }
     }
 }

@@ -379,4 +379,16 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     public String getColor() {
         return getEntityData().get(COLOR);
     }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        if (this.isTamed()) {
+            ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+            return stack;
+        }
+
+        return super.getPickResult();
+    }
 }

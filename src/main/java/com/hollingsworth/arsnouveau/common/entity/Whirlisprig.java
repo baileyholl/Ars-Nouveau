@@ -461,4 +461,16 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         String finalColor = color;
         return TEXTURES.computeIfAbsent(color, (key) -> ArsNouveau.prefix("textures/entity/whirlisprig_" + finalColor + ".png"));
     }
+
+    @Nullable
+    @Override
+    public ItemStack getPickResult() {
+        if (this.isTamed()) {
+            ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
+            stack.set(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, createCharmData());
+            return stack;
+        }
+
+        return super.getPickResult();
+    }
 }
