@@ -6,6 +6,9 @@ import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
@@ -58,31 +61,33 @@ public class CatBehavior extends JarBehavior<Cat> {
     }
 
     private static void updateOwnedJars(@NotNull Player player) {
-        var level = player.level;
-
-        var map = CAT_MAP.posMap.get(level.dimension().location().toString());
-        if (map == null) {
-            return;
-        }
-
-        List<BlockPos> stale = new ArrayList<>();
-        for (var pos : map) {
-            if (!level.isLoaded(pos)) {
+        for (var entry : CAT_MAP.posMap.entrySet()) {
+            var level = player.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(entry.getKey())));
+            if (level == null) {
                 continue;
             }
 
-            if (CAT_MAP.removeFunction.apply(level, pos)) {
-                stale.add(pos);
-                continue;
+            var map = entry.getValue();
+
+            List<BlockPos> stale = new ArrayList<>();
+            for (var pos : map) {
+                if (!level.isLoaded(pos)) {
+                    continue;
+                }
+
+                if (CAT_MAP.removeFunction.apply(level, pos)) {
+                    stale.add(pos);
+                    continue;
+                }
+
+                if (level.getBlockEntity(pos) instanceof MobJarTile jar && jar.getEntity() instanceof Cat cat && player.getUUID().equals(cat.getOwnerUUID())) {
+                    level.updateNeighborsAt(pos, jar.getBlockState().getBlock());
+                }
             }
 
-            if (level.getBlockEntity(pos) instanceof MobJarTile jar && jar.getEntity() instanceof Cat cat && player.getUUID().equals(cat.getOwnerUUID())) {
-                level.updateNeighborsAt(pos, jar.getBlockState().getBlock());
+            for (var pos : stale) {
+                map.remove(pos);
             }
-        }
-
-        for (var pos : stale) {
-            map.remove(pos);
         }
     }
 
@@ -140,7 +145,7 @@ public class CatBehavior extends JarBehavior<Cat> {
         }
 
         for (BlockPos pos : stale) {
-            CAT_MAP.posMap.get(key).remove(pos);
+            positions.remove(pos);
         }
     }
 }
