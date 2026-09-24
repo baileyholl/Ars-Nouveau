@@ -53,9 +53,23 @@ public class EffectBreak extends AbstractEffect {
         BlockPos pos = rayTraceResult.getBlockPos();
         BlockState state;
 
+        /* Balancing for mining fatigue:
+         * Mining fatigue reduces mining speed to ⅓ per level. Since Ars does not represent mining speed in any way,
+         * this is mapped to mana cost by requiring a large amount of amplify glyphs.
+         * Since extremely few blocks require anything but wooden tools (for pickaxes this list is limited to a handful
+         * of ores, and most importantly does not include the Prismarine blocks of ocean monuments for which the mining
+         * fatigue effect was introduced in the first place) this is implemented by reducing the spell amp multiplier
+         * by _3_ (= removing the inherent iron tools level) plus two additional for every level of mining fatigue.
+         *
+         * Thus, to get back to a tool level of 1 (= wooden tools) when afflicted with Mining Fatigue III requires
+         * 7 amplify glyphs; making repeated casting infeasible for anything but the best equipped of spell casters.
+         */
         MobEffectInstance miningFatigue = shooter.getEffect(MobEffects.DIG_SLOWDOWN);
-        if (miningFatigue != null)
-            spellStats.setAmpMultiplier(spellStats.getAmpMultiplier() - miningFatigue.getAmplifier());
+        if (miningFatigue != null) {
+             // MobEffect amplifiers are additive and not absolute, i.e. Mining Fatigue III has an `amplifier` value of 2 and not 3.
+            final int miningFatigueAmplifier = 3 + ((miningFatigue.getAmplifier() + 1) * 2);
+            spellStats.setAmpMultiplier(spellStats.getAmpMultiplier() - miningFatigueAmplifier);
+        }
 
         double aoeBuff = spellStats.getAoeMultiplier();
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
