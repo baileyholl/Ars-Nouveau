@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
@@ -15,6 +16,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DispenserBehaviorRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -24,12 +26,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -63,9 +66,6 @@ public class EffectPlaceBlock extends AbstractEffect {
             boolean notReplaceable = !world.getBlockState(pos1).canBeReplaced();
             if (notReplaceable)
                 continue;
-            var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
-            if (event.isCanceled())
-                continue;
             place(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false), world, shooter, spellStats, spellContext, resolver, fakePlayer);
         }
     }
@@ -89,10 +89,60 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer) {
+        int size = stack.getCount();
+        DataComponentMap components = stack.getComponents();
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         Direction nearestDirection = fakePlayer.getNearestViewDirection();
+        var copy = stack.copy();
         var context = new DispenserBehaviorRegistry.UnbiasedDirectionalPlaceContext(world, result.getBlockPos(), nearestDirection, stack, nearestDirection);
-        return item.place(context);
+        world.captureBlockSnapshots = true;
+        var ret = item.place(context);
+        if (stack.isEmpty()) {
+            EventHooks.onPlayerDestroyItem(fakePlayer, copy, context.getHand());
+        }
+        world.captureBlockSnapshots = false;
+
+        if (ret.consumesAction()) {
+            int newSize = stack.getCount();
+            DataComponentMap newComponents = stack.getComponents();
+
+            @SuppressWarnings("unchecked")
+            List<BlockSnapshot> blockSnapshots = (List<BlockSnapshot>) world.capturedBlockSnapshots.clone();
+            world.capturedBlockSnapshots.clear();
+
+            stack.setCount(size);
+            stack.applyComponents(components);
+
+            boolean placeFailure = false;
+            if (blockSnapshots.size() > 1) {
+                placeFailure = EventHooks.onMultiBlockPlace(fakePlayer, blockSnapshots, result.getDirection());
+            } else if (blockSnapshots.size() == 1) {
+                placeFailure = EventHooks.onBlockPlace(fakePlayer, blockSnapshots.getFirst(), result.getDirection());
+            }
+
+            if (placeFailure) {
+                ret = InteractionResult.FAIL;
+                for (BlockSnapshot blocksnapshot : Lists.reverse(blockSnapshots)) {
+                    world.restoringBlockSnapshots = true;
+                    blocksnapshot.restore(blocksnapshot.getFlags() | Block.UPDATE_CLIENTS);
+                    world.restoringBlockSnapshots = false;
+                }
+            } else {
+                stack.setCount(newSize);
+                stack.applyComponents(newComponents);
+
+                for (BlockSnapshot snap : blockSnapshots) {
+                    int updateFlag = snap.getFlags();
+                    BlockState oldBlock = snap.getState();
+                    BlockState newBlock = world.getBlockState(snap.getPos());
+                    newBlock.onPlace(world, snap.getPos(), oldBlock, false);
+
+                    world.markAndNotifyBlock(snap.getPos(), world.getChunkAt(snap.getPos()), oldBlock, newBlock, updateFlag, 512);
+                }
+            }
+        }
+
+        return ret;
     }
 
     @Override
