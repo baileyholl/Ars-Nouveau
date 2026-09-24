@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -105,7 +104,6 @@ public class ANPlayerDataCap implements IPlayerCap {
     }
 
     public void syncToClient(ServerPlayer player) {
-        CompoundTag tag = this.playerData.serializeNBT(player.registryAccess());
-        Networking.sendToPlayerClient(new PacketSyncPlayerCap(tag), player);
+        Networking.sendToPlayerClient(new PacketSyncPlayerCap(this.playerData), player);
     }
 }
