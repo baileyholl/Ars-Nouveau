@@ -10,12 +10,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalMeleeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraDiveGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraLeapRamGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraRageGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraRamGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSpikeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
 import com.hollingsworth.arsnouveau.common.potions.SnareEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
@@ -50,11 +45,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -571,10 +562,6 @@ public class WildenChimera extends Monster implements GeoEntity {
         this.bossEvent.removePlayer(p_184203_1_);
     }
 
-    public boolean canChangeDimensions() {
-        return false;
-    }
-
     public boolean canBeAffected(MobEffectInstance instance) {
         MobEffect effect = instance.getEffect().value();
         if (instance.getEffect() instanceof SnareEffect)
@@ -586,6 +573,11 @@ public class WildenChimera extends Monster implements GeoEntity {
         if (effect == ModPotions.GRAVITY_EFFECT.get())
             instance = new MobEffectInstance(instance.getEffect(), Math.min(instance.getDuration(), 100), 0);
         return super.canBeAffected(instance);
+    }
+
+    @Override
+    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+        return false;
     }
 
     public int getCooldownModifier() {
@@ -937,11 +929,6 @@ public class WildenChimera extends Monster implements GeoEntity {
                 .add(Attributes.FLYING_SPEED, 0.4f)
                 .add(Attributes.STEP_HEIGHT, 3.0f)
                 .add(Attributes.ENTITY_INTERACTION_RANGE, 10.0f);
-    }
-
-    @Override
-    public boolean isWithinMeleeAttackRange(@NotNull LivingEntity pEntity) {
-        return super.isWithinMeleeAttackRange(pEntity);
     }
 
     private static class ChimeraMusic extends AbstractTickableSoundInstance {
