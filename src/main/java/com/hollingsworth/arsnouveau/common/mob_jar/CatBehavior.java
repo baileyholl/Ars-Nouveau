@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.PlayerPostLogOutEvent;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
+import com.hollingsworth.arsnouveau.api.util.MobJarPosMap;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -28,9 +29,7 @@ import java.util.List;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
 public class CatBehavior extends JarBehavior<Cat> {
-    public static LevelPosMap CAT_MAP = new LevelPosMap(
-            (level, pos) -> !(level.getBlockEntity(pos) instanceof MobJarTile mobJarTile) || !(mobJarTile.getEntity() instanceof Cat)
-    );
+    public static LevelPosMap CAT_MAP = new MobJarPosMap<>(Cat.class);
 
     @Override
     public void tick(MobJarTile tile) {
