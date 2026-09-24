@@ -3,7 +3,11 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ArmorUpgradeRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.PrestidigitationRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ReactiveEnchantmentRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.common.perk.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -25,6 +29,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -1119,6 +1124,12 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
                 .withPedestalItem(1, Ingredient.of(ItemsRegistry.CONJURATION_ESSENCE))
                 .build());
 
+        addRecipe(builder().withResult(ItemsRegistry.SUMMONERS_BELL.asItem())
+                .withReagent(Items.BELL)
+                .withPedestalItem(2, RecipeDatagen.SOURCE_GEM_BLOCK)
+                .withPedestalItem(2, ItemsRegistry.CONJURATION_ESSENCE)
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .build());
         addRecipe(builder().withResult(BlockRegistry.PLANARIUM).withReagent(BlockRegistry.MOB_JAR)
                 .withPedestalItem(ItemsRegistry.STABLE_WARP_SCROLL.asItem())
                 .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE.asItem())
@@ -1174,7 +1185,7 @@ public class ApparatusRecipeProvider extends SimpleDataProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Apparatus";
     }
 }

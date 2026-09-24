@@ -77,13 +77,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void summonLivingEntity(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats augments, SpellContext spellContext, @Nullable SpellResolver resolver, ISummon summon) {
         summon.setOwnerID(shooter.getUUID());
         LivingEntity summonLivingEntity = summon.getLivingEntity();
-        if (summonLivingEntity != null) {
-            world.addFreshEntity(summon.getLivingEntity());
-            if (resolver != null && resolver.hasFocus(ItemsRegistry.SUMMONING_FOCUS.get())) {
-                SpellContext newContext = resolver.spellContext.makeChildContext();
-                EntitySpellResolver spellResolver = new EntitySpellResolver(newContext.withWrappedCaster(new LivingCaster(summonLivingEntity)));
-                spellResolver.onResolveEffect(world, new EntityHitResult(summonLivingEntity));
-            }
+        if (summonLivingEntity == null || NeoForge.EVENT_BUS.post(new SummonEvent.Pre(rayTraceResult, world, shooter, augments, spellContext, summon)).isCanceled())
+            return;
+
+        world.addFreshEntity(summon.getLivingEntity());
+        if (resolver != null && resolver.hasFocus(ItemsRegistry.SUMMONING_FOCUS.get())) {
+            SpellContext newContext = resolver.spellContext.makeChildContext();
+            EntitySpellResolver spellResolver = new EntitySpellResolver(newContext.withWrappedCaster(new LivingCaster(summonLivingEntity)));
+            spellResolver.onResolveEffect(world, new EntityHitResult(summonLivingEntity));
         }
 
         NeoForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
@@ -222,13 +223,22 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         map.put(AugmentAmplify.INSTANCE, "Increases the level of the effect.");
     }
 
+    @Deprecated(forRemoval = true)
     protected Set<AbstractAugment> getSummonAugments() {
+        return getTimeAugments();
+    }
+
+    protected Set<AbstractAugment> getTimedSummonAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSplit.INSTANCE);
+    }
+
+    protected Set<AbstractAugment> getTimeAugments() {
         return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
     protected void addSummonAugmentDescriptions(Map<AbstractAugment, String> map) {
-        map.put(AugmentExtendTime.INSTANCE, "Extends the duration of the summon.");
-        map.put(AugmentDurationDown.INSTANCE, "Reduces the duration of the summon.");
+        map.put(AugmentExtendTime.INSTANCE, "Makes the summon permanent.");
+        map.put(AugmentSplit.INSTANCE, "Increases the number of the summoned creatures.");
     }
 
     @Override
