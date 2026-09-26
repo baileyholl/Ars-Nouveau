@@ -42,10 +42,10 @@ public class EffectBreak extends AbstractEffect {
     public ItemStack getStack(LivingEntity shooter, BlockHitResult blockHitResult) {
         ItemStack stack = shooter.getMainHandItem().copy();
         boolean usePick = shooter.level.getBlockState(blockHitResult.getBlockPos()).is(BlockTagProvider.BREAK_WITH_PICKAXE);
-        if (usePick) {
+        if (usePick || stack.isEmpty() || !stack.isCorrectToolForDrops(shooter.level.getBlockState(blockHitResult.getBlockPos()))) {
             return new ItemStack(Items.DIAMOND_PICKAXE);
         }
-        return stack.isEmpty() ? new ItemStack(Items.DIAMOND_PICKAXE) : stack;
+        return stack;
     }
 
     @Override

@@ -223,6 +223,8 @@ dependencies {
     })
 
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
+//    localRuntime "maven.modrinth:waystones:21.1.46+neoforge-1.21.1"
+//    localRuntime "maven.modrinth:balm:21.0.66+neoforge-1.21.1"
 
     // Apotheosis
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
