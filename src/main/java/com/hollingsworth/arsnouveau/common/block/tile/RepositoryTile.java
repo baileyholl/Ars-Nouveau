@@ -22,7 +22,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -98,7 +97,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         ItemStack oldItem = getItem(pIndex);
         super.setItem(pIndex, pStack);
         if (pStack.getItem() != oldItem.getItem()) {
-            slotCache.replaceSlotWithItem(oldItem.getItem(), pStack.getItem(), pIndex);
+            slotCache.replaceSlotWithItem(pStack.getItem(), pIndex);
         }
         updateFill();
     }
@@ -108,7 +107,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         ItemStack extracted = super.removeItem(pIndex, pCount);
         Item newItem = getItem(pIndex).getItem();
         if (extracted.getItem() != newItem) {
-            slotCache.replaceSlotWithItem(extracted.getItem(), newItem, pIndex);
+            slotCache.replaceSlotWithItem(newItem, pIndex);
         }
         updateFill();
         return extracted;
@@ -119,8 +118,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         ItemStack extracted = super.removeItemNoUpdate(pIndex);
         Item newItem = getItem(pIndex).getItem();
         if (extracted.getItem() != newItem) {
-            slotCache.replaceSlotWithItem(extracted.getItem(), newItem, pIndex);
-            System.out.println("replacing slots!");
+            slotCache.replaceSlotWithItem(newItem, pIndex);
         }
         return extracted;
     }
@@ -171,7 +169,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             slotCache = new SlotCache(slots);
             for (int i = 0; i < slots; i++) {
                 ItemStack stack = getItem(i);
-                slotCache.replaceSlotWithItem(Items.AIR, stack.getItem(), i);
+                slotCache.replaceSlotWithItem(stack.getItem(), i);
             }
             filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
         }
@@ -316,7 +314,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         var remaining = invWrapper.insertItem(slot, stack, simulate);
         if (!simulate && stack.getCount() != remaining.getCount()) {
-            this.slotCache.replaceSlotWithItem(Items.AIR, stack.getItem(), slot);
+            this.slotCache.replaceSlotWithItem(stack.getItem(), slot);
         }
 
         return remaining;
@@ -324,21 +322,18 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (this.slotCache.isEmpty(slot)) {
+        var current = this.getItem(slot);
+        if (current.isEmpty()) {
+            this.slotCache.initEmpty(slot);
             return ItemStack.EMPTY;
         }
 
-        var remaining = invWrapper.extractItem(slot, amount, simulate);
-        if (!simulate && !remaining.isEmpty()) {
-            var current = this.getItem(slot);
-            if (current.isEmpty()) {
-                this.slotCache.replaceSlotWithItem(remaining.getItem(), Items.AIR, slot);
-            } else {
-                this.slotCache.replaceSlotWithItem(Items.AIR, current.getItem(), slot);
-            }
+        var extracted = invWrapper.extractItem(slot, amount, simulate);
+        if (!simulate) {
+            this.slotCache.replaceSlotWithItem(this.getItem(slot).getItem(), slot);
         }
 
-        return remaining;
+        return extracted;
     }
 
     @Override

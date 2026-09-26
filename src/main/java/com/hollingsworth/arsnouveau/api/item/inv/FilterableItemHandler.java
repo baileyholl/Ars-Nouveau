@@ -97,12 +97,12 @@ public class FilterableItemHandler {
         for (int i = 0; i < sizeInventory; i++) {
             ItemStack slot = inventory.getStackInSlot(i);
             if (slot.isEmpty()) {
-                slotCache.replaceSlotWithItem(Items.AIR, slot.getItem(), i);
+                slotCache.replaceSlotWithItem(slot.getItem(), i);
             } else {
                 int count = stack.getCount();
                 stack = inventory.insertItem(i, stack, simulate);
                 if (stack.getCount() != count) {
-                    slotCache.replaceSlotWithItem(slot.getItem(), stack.getItem(), i);
+                    slotCache.replaceSlotWithItem(inventory.getStackInSlot(i).getItem(), i);
                 }
                 if (stack.isEmpty()) {
                     return stack;
@@ -115,11 +115,12 @@ public class FilterableItemHandler {
             var slotStack = inventory.getStackInSlot(slot);
             if (slotStack.isEmpty()) {
                 stack = inventory.insertItem(slot, stack, simulate);
+                slotCache.replaceSlotWithItem(inventory.getStackInSlot(slot).getItem(), slot);
                 if (stack.isEmpty()) {
                     break;
                 }
             } else {
-                slotCache.replaceSlotWithItem(Items.AIR, slotStack.getItem(), slot);
+                slotCache.replaceSlotWithItem(slotStack.getItem(), slot);
             }
         }
 
@@ -153,7 +154,7 @@ public class FilterableItemHandler {
             int count = stack.getCount();
             stack = dest.insertItem(i, stack, simulate);
             if (stack.getCount() != count) {
-                slotCache.replaceSlotWithItem(targetStack.getItem(), item.asItem(), i);
+                slotCache.replaceSlotWithItem(item.asItem(), i);
             }
 
             if (stack.isEmpty()) {
@@ -213,7 +214,8 @@ public class FilterableItemHandler {
         }
 
         for (int slot : invalidSlots) {
-            slotCache.replaceSlotWithItem(stack.getItem(), Items.AIR, slot);
+            Item current = slot < maxSlots ? dest.getStackInSlot(slot).getItem() : Items.AIR;
+            slotCache.replaceSlotWithItem(current, slot);
         }
 
         return stack;
@@ -233,25 +235,16 @@ public class FilterableItemHandler {
                 invalidSlots.add(slot);
                 continue;
             }
-            int count = stack.getCount();
             var slotStack = dest.getStackInSlot(slot);
             stack = dest.insertItem(slot, stack, simulate);
-            if (stack.getCount() == count) {
-                invalidSlots.add(slot);
-            } else {
-                // If we successfully inserted into an empty slot, cache the inserted item slot and remove it from the empty slot list.
-                if (!dest.getStackInSlot(slot).isEmpty()) {
-                    slotCache.replaceSlotWithItem(slotStack.getItem(), stack.getItem(), slot);
-                    invalidSlots.add(slot);
-                }
-            }
+            slotCache.replaceSlotWithItem(dest.getStackInSlot(slot).getItem(), slot);
             if (stack.isEmpty()) {
                 break;
             }
         }
 
         for (int slot : invalidSlots) {
-            slotCache.replaceSlotWithItem(stack.getItem(), Items.AIR, slot);
+            slotCache.replaceSlotWithItem(Items.AIR, slot);
         }
 
         return stack;
