@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -141,7 +140,7 @@ public class GiftStarbuncle extends PathfinderMob implements GeoEntity {
     }
 
     private PlayState animationPredicate(AnimationState<?> event) {
-        if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+        if (event.isMoving()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
         }

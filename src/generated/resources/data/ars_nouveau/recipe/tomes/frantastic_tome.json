@@ -71,6 +71,10 @@
           }
         },
         "trailEffect": {
+          "motion": {
+            "type": "ars_nouveau:gravity_field",
+            "propMap": {}
+          },
           "particleOptions": {
             "type": "ars_nouveau:new_glow",
             "properties": {
