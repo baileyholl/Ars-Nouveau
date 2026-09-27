@@ -64,6 +64,8 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean immersivePortalsLoaded = false;
+    @Deprecated(forRemoval = true)
+    public static boolean patchouliLoaded = false;
 
     public static List<String> postLoadWarnings = new ArrayList<>();
 
