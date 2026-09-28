@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -22,13 +21,9 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +43,6 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
     private CompoundTag extraDataTag;
 
-    public boolean isVisible = true;
-
     public MobJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.MOB_JAR_TILE, pos, state);
     }
@@ -65,42 +58,6 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
 
                 if (cachedEntity instanceof Mob mob && !(mob instanceof Bee)) {
                     mob.getLookControl().tick();
-                }
-
-                this.isVisible = false;
-                var entity = this.getEntity();
-                if (entity != null) {
-                    var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-
-                    var startPos = camera.getPosition();
-                    if (startPos.distanceToSqr(this.getBlockPos().getCenter()) <= 64 * 64) {
-                        var aabb = entity.getBoundingBoxForCulling();
-                        for (var passenger : entity.getPassengers()) {
-                            aabb = aabb.minmax(passenger.getBoundingBoxForCulling());
-                        }
-
-                        if (Double.isFinite(aabb.minX) && Double.isFinite(aabb.minY) && Double.isFinite(aabb.minZ)
-                                && Double.isFinite(aabb.maxX) && Double.isFinite(aabb.maxY) && Double.isFinite(aabb.maxZ)) {
-                            for (var endPos : new Vec3[]{
-                                    new Vec3(aabb.minX, aabb.minY, aabb.minZ),
-                                    new Vec3(aabb.minX, aabb.minY, aabb.maxZ),
-                                    new Vec3(aabb.minX, aabb.maxY, aabb.minZ),
-                                    new Vec3(aabb.minX, aabb.maxY, aabb.maxZ),
-                                    new Vec3(aabb.maxX, aabb.minY, aabb.minZ),
-                                    new Vec3(aabb.maxX, aabb.minY, aabb.maxZ),
-                                    new Vec3(aabb.maxX, aabb.maxY, aabb.minZ),
-                                    new Vec3(aabb.maxX, aabb.maxY, aabb.maxZ),
-                            }) {
-                                var result = level.clip(new ClipContext(startPos, endPos, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, CollisionContext.empty()));
-                                if (result.getType() == HitResult.Type.MISS || this.getBlockPos() == result.getBlockPos()) {
-                                    this.isVisible = true;
-                                    break;
-                                }
-                            }
-                        } else {
-                            this.isVisible = true;
-                        }
-                    }
                 }
             }
             dispatchBehavior((behavior) -> {
