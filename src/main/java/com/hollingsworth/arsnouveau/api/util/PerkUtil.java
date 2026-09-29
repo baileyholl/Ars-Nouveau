@@ -64,7 +64,10 @@ public class PerkUtil {
     public static List<PerkInstance> getPerksFromLiving(LivingEntity player){
         List<PerkInstance> perkInstances = new ArrayList<>();
         for(ItemStack stack : player.getArmorSlots()){
-            perkInstances.addAll(getPerksFromItem(stack));
+            IPerkHolder<ItemStack> holder = getPerkHolder(stack);
+            if(holder == null)
+                continue;
+            perkInstances.addAll(holder.getPerkInstances());
         }
         return perkInstances;
     }

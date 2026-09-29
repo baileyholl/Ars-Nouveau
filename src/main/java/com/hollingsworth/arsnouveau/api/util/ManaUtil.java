@@ -13,30 +13,31 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
 
     public static int getPlayerDiscounts(LivingEntity e, Spell spell, ItemStack casterStack) {
         if (e == null) return 0;
-        AtomicInteger discounts = new AtomicInteger();
-        CuriosUtil.getAllWornItems(e).ifPresent(items -> {
+        int discounts = 0;
+        IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
+        if (items != null) {
             for (int i = 0; i < items.getSlots(); i++) {
                 ItemStack item = items.getStackInSlot(i);
                 if (item.getItem() instanceof IManaDiscountEquipment discountItem)
-                    discounts.addAndGet(discountItem.getManaDiscount(item, spell));
+                    discounts += discountItem.getManaDiscount(item, spell);
             }
-        });
+        }
         for (ItemStack armor : e.getArmorSlots()) {
             if (armor.getItem() instanceof IManaDiscountEquipment discountItem)
-                discounts.addAndGet(discountItem.getManaDiscount(armor, spell));
+                discounts += discountItem.getManaDiscount(armor, spell);
         }
         if (casterStack.getItem() instanceof IManaDiscountEquipment discountEquipment) {
-            discounts.addAndGet(discountEquipment.getManaDiscount(casterStack, spell));
+            discounts += discountEquipment.getManaDiscount(casterStack, spell);
         }
-        return discounts.get();
+        return discounts;
     }
 
     public static double getCurrentMana(LivingEntity e) {
