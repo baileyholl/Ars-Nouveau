@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
                           boolean skipBlockPlace) implements SpecialSingleInputRecipe {
@@ -26,21 +27,34 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
 
     public List<ItemStack> getRolledOutputs(RandomSource random) {
         List<ItemStack> finalOutputs = new ArrayList<>();
+        this.rollOutputs(finalOutputs::add, random);
+        return finalOutputs;
+    }
+
+    public void rollOutputs(Consumer<ItemStack> consumer, RandomSource random) {
         for (CrushOutput crushRoll : outputs) {
             if (random.nextDouble() <= crushRoll.chance) {
                 if (crushRoll.maxRange > 1) {
                     // get a number between 1 and max
                     int num = random.nextInt(crushRoll.maxRange) + 1;
                     for (int i = 0; i < num; i++) {
-                        finalOutputs.add(crushRoll.stack.copy());
+                        consumer.accept(crushRoll.stack.copy());
                     }
                 } else {
-                    finalOutputs.add(crushRoll.stack.copy());
+                    consumer.accept(crushRoll.stack.copy());
                 }
             }
         }
+    }
 
-        return finalOutputs;
+    public boolean isOutputDeterministic() {
+        for (var output : outputs) {
+            if (!output.isDeterministic()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean shouldSkipBlockPlace() {
@@ -73,6 +87,10 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
                 Codec.FLOAT.fieldOf("chance").forGetter(CrushOutput::chance),
                 Codec.INT.fieldOf("maxRange").forGetter(CrushOutput::maxRange)
         ).apply(instance, CrushOutput::new));
+
+        public boolean isDeterministic() {
+            return this.chance >= 1.0 && this.maxRange <= 1;
+        }
     }
 
     public static class Serializer implements RecipeSerializer<CrushRecipe> {

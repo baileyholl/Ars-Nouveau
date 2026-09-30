@@ -1,12 +1,27 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.IDamageEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
+import com.hollingsworth.arsnouveau.api.util.GenericRecipeCache;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.util.ItemCollection;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
@@ -17,11 +32,15 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +51,8 @@ import java.util.Set;
 public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
     public static EffectCrush INSTANCE = new EffectCrush();
+
+    private static GenericRecipeCache<CrushRecipe, SingleRecipeInput> CACHE;
 
     private EffectCrush() {
         super(GlyphLib.EffectCrushID, "Crush");
@@ -65,19 +86,14 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
         for (BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getAoeMultiplier(), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             BlockState state = world.getBlockState(p);
             Item item = state.getBlock().asItem();
-            if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
-                lastHit = null;
-                for (RecipeHolder<CrushRecipe> recipe : recipes) {
-                    if (recipe.value().matches(item.getDefaultInstance(), world)) {
-                        lastHit = recipe.value();
-                        break;
-                    }
-                }
+            var defaultInstance = lastHit == null ? item.getDefaultInstance() : null;
+            if (lastHit == null || !lastHit.matches(defaultInstance, world)) {
+                var holder = getCache().get(world, new SingleRecipeInput(defaultInstance));
+                lastHit = holder == null ? null : holder.value();
             }
 
             if (lastHit == null)
@@ -109,9 +125,9 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
 
 
     public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
-        List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
         CrushRecipe lastHit = null; // Cache this for AOE hits
         int itemsCrushed = 0;
+        var outputs = new ItemCollection();
         for (ItemEntity IE : itemEntities) {
             if (itemsCrushed >= maxItemCrush) {
                 break;
@@ -120,23 +136,46 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             ItemStack stack = IE.getItem();
             Item item = stack.getItem();
 
-            if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
-                var holder = recipes.stream().filter(recipe -> recipe.value().matches(item.getDefaultInstance(), world)).findFirst().orElse(null);
+            var defaultInstance = lastHit == null ? item.getDefaultInstance() : null;
+            if (lastHit == null || !lastHit.matches(defaultInstance, world)) {
+                var holder = getCache().get(world, new SingleRecipeInput(defaultInstance));
                 lastHit = holder == null ? null : holder.value();
             }
 
             if (lastHit == null) continue;
 
-            while (!stack.isEmpty() && itemsCrushed < maxItemCrush) {
-                List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
-                stack.shrink(1);
-                itemsCrushed++;
-                for (ItemStack result : outputs) {
-                    world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), result.copy()));
+            if (!stack.isEmpty()) {
+                var rolls = maxItemCrush - itemsCrushed;
+                if (lastHit.isOutputDeterministic()) {
+                    lastHit.rollOutputs(s -> outputs.add(s, s.getCount() * rolls), world.random);
+                } else {
+                    for (int roll = 0; roll < rolls; roll++) {
+                        lastHit.rollOutputs(outputs::add, world.random);
+                    }
                 }
+                stack.shrink(rolls);
+                itemsCrushed += rolls;
             }
 
+            var resultIter = outputs.iterator();
+            while (resultIter.hasNext()) {
+                world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), resultIter.next()));
+            }
+            outputs.clear();
+
+            // Remove item entity to prevent further actions (e.g. Pickup) in the same tick from doing unnecessary work
+            if (stack.isEmpty()) {
+                IE.discard();
+            }
         }
+    }
+
+    private static GenericRecipeCache<CrushRecipe, SingleRecipeInput> getCache() {
+        if (CACHE == null) {
+            CACHE = new GenericRecipeCache<>(RecipeRegistry.CRUSH_TYPE.get(), 8);
+        }
+
+        return CACHE;
     }
 
     @Override

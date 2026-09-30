@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.GenericRecipeCache;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
@@ -13,10 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -27,10 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-
-import static net.minecraft.world.item.crafting.RecipeType.SMOKING;
 
 public class EffectSmelt extends AbstractEffect {
     public static EffectSmelt INSTANCE = new EffectSmelt();
@@ -66,25 +61,33 @@ public class EffectSmelt extends AbstractEffect {
         }
     }
 
+    public static final GenericRecipeCache<SmokingRecipe, SingleRecipeInput> SMOKE_CACHE = new GenericRecipeCache<>(RecipeType.SMOKING, 8);
+    public static final GenericRecipeCache<BlastingRecipe, SingleRecipeInput> BLAST_CACHE = new GenericRecipeCache<>(RecipeType.BLASTING, 8);
+    public static final GenericRecipeCache<SmeltingRecipe, SingleRecipeInput> SMELT_CACHE = new GenericRecipeCache<>(RecipeType.SMELTING, 8);
 
     public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter, BlockHitResult hitResult, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (!canBlockBeHarvested(spellStats, world, pos)) return;
         BlockState state = world.getBlockState(pos);
         if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos)) return;
-        Optional<RecipeHolder<SmeltingRecipe>> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(new ItemStack(state.getBlock().asItem(), 1)), world);
-        if (optional.isPresent()) {
-            ItemStack itemstack = optional.get().value().getResultItem(world.registryAccess());
-            if (!itemstack.isEmpty()) {
-                if (itemstack.getItem() instanceof BlockItem) {
-                    world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
-                } else {
-                    BlockUtil.destroyBlockSafely(world, pos, false, shooter);
-                    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), itemstack.copy()));
-                    BlockUtil.safelyUpdateState(world, pos);
-                }
-                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
-            }
+
+        var optional = SMELT_CACHE.get(world, new SingleRecipeInput(new ItemStack(state.getBlock().asItem(), 1)));
+        if (optional == null) {
+            return;
         }
+
+        ItemStack itemstack = optional.value().getResultItem(world.registryAccess());
+        if (itemstack.isEmpty()) {
+            return;
+        }
+
+        if (itemstack.getItem() instanceof BlockItem) {
+            world.setBlockAndUpdate(pos, ((BlockItem) itemstack.getItem()).getBlock().defaultBlockState());
+        } else {
+            BlockUtil.destroyBlockSafely(world, pos, false, shooter);
+            world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), itemstack.copy()));
+            BlockUtil.safelyUpdateState(world, pos);
+        }
+        ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos.getX(), pos.getY(), pos.getZ()), hitResult.getDirection(), pos, false), world, shooter, spellContext, resolver);
     }
 
 
@@ -92,24 +95,36 @@ public class EffectSmelt extends AbstractEffect {
         int numSmelted = 0;
         for (ItemEntity itemEntity : itemEntities) {
             if (numSmelted >= maxItemSmelt) break;
-            Optional optional;
+            RecipeHolder<? extends Recipe<SingleRecipeInput>> optional;
 
             if (spellStats.hasBuff(AugmentDampen.INSTANCE)) {
-                optional = world.getRecipeManager().getRecipeFor(SMOKING, new SingleRecipeInput(itemEntity.getItem()), world);
+                optional = SMOKE_CACHE.get(world, new SingleRecipeInput(itemEntity.getItem()));
             } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
-                optional = world.getRecipeManager().getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(itemEntity.getItem()), world);
+                optional = BLAST_CACHE.get(world, new SingleRecipeInput(itemEntity.getItem()));
             } else {
-                optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(itemEntity.getItem()), world);
+                optional = SMELT_CACHE.get(world, new SingleRecipeInput(itemEntity.getItem()));
             }
 
-            if (optional.isPresent()) {
-                ItemStack result = ((RecipeHolder<?>) (optional.get())).value().getResultItem(world.registryAccess()).copy();
-                if (result.isEmpty()) continue;
-                while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
-                    itemEntity.getItem().shrink(1);
-                    world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
-                    numSmelted++;
-                }
+            if (optional == null) {
+                continue;
+            }
+
+            ItemStack result = optional.value().getResultItem(world.registryAccess());
+            if (result.isEmpty()) {
+                continue;
+            }
+
+            var stack = itemEntity.getItem();
+            while (numSmelted < maxItemSmelt && !stack.isEmpty()) {
+                var resultSize = Math.min(result.getMaxStackSize(), maxItemSmelt - numSmelted);
+                stack.shrink(resultSize);
+                world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copyWithCount(result.getCount() * resultSize)));
+                numSmelted += resultSize;
+            }
+
+            // Remove item entity to prevent further actions (e.g. Pickup) in the same tick from doing unnecessary work
+            if (stack.isEmpty()) {
+                itemEntity.discard();
             }
         }
     }
