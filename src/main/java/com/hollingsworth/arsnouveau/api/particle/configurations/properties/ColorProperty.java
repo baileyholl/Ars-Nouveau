@@ -270,6 +270,12 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
     }
 
     @Override
+    public boolean shouldSkipSerialization() {
+        // ParticleColor.defaultParticleColor().getColor() == 16718260
+        return this.tintDisabled && this.particleColor.getColor() == 16718260 && this.propertyHolder.size() == 0;
+    }
+
+    @Override
     public IPropertyType<ColorProperty> getType() {
         return ParticlePropertyRegistry.COLOR_PROPERTY.get();
     }

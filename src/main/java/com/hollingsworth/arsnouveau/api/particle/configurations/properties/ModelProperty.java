@@ -74,6 +74,10 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
         this.subPropMap = subPropMap;
     }
 
+    @Override
+    public boolean shouldSkipSerialization() {
+        return this.selectedResource == NONE && subPropMap.size() == 0;
+    }
 
     @Override
     public ParticleConfigWidgetProvider buildWidgets(int x, int y, int width, int height) {
