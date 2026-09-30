@@ -40,17 +40,19 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     }
 
     public RotatingTurretTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.ROTATING_TURRET_TILE.get(), pos, state);
+        this(BlockRegistry.ROTATING_TURRET_TILE.get(), pos, state);
     }
 
     public float rotationX;
     public float rotationY;
     public float neededRotationX;
     public float neededRotationY;
+    public float turnRate = 0.1f;
 
     // Step between current and needed rotation on the client each tick, smoothly animate with partials between
     public float clientNeededX;
     public float clientNeededY;
+    private boolean clientInitialized;
 
     @Override
     public void tick() {
@@ -62,7 +64,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
                 if (Math.abs(diff) < 0.1) {
                     clientNeededX = neededRotationX;
                 } else {
-                    clientNeededX += diff * 0.1f;
+                    clientNeededX += diff * turnRate;
                 }
             }
             if (clientNeededY != neededRotationY) {
@@ -70,7 +72,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
                 if (Math.abs(diff) < 0.1) {
                     clientNeededY = neededRotationY;
                 } else {
-                    clientNeededY += diff * 0.1f;
+                    clientNeededY += diff * turnRate;
                 }
             }
             if (rotationX != clientNeededX) {
@@ -78,7 +80,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
                 if (Math.abs(diff) < 0.1) {
                     rotationX = clientNeededX;
                 } else {
-                    rotationX += diff * 0.1f;
+                    rotationX += diff * turnRate;
                 }
             }
             if (rotationY != clientNeededY) {
@@ -86,7 +88,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
                 if (Math.abs(diff) < 0.1) {
                     rotationY = clientNeededY;
                 } else {
-                    rotationY += diff * 0.1f;
+                    rotationY += diff * turnRate;
                 }
             }
             return;
@@ -96,7 +98,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
             if (Math.abs(diff) < 0.1) {
                 setRotationX(neededRotationX);
             } else {
-                setRotationX(rotationX + diff * 0.1f);
+                setRotationX(rotationX + diff * turnRate);
             }
             setChanged();
         }
@@ -105,39 +107,74 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
             if (Math.abs(diff) < 0.1) {
                 setRotationY(neededRotationY);
             } else {
-                setRotationY(rotationY + diff * 0.1f);
+                setRotationY(rotationY + diff * turnRate);
             }
             setChanged();
         }
     }
 
-    public void aim(@Nullable BlockPos blockPos, Player playerEntity) {
-        if (blockPos == null) return;
+    public boolean isAimed() {
+        return rotationX == neededRotationX && rotationY == neededRotationY;
+    }
 
+    public void setNeededRotationX(float target) {
+        neededRotationX = rotationX + Mth.degreesDifference(rotationX, target);
+    }
+
+    public void setNeededRotationY(float target) {
+        neededRotationY = rotationY + Mth.degreesDifference(rotationY, target);
+    }
+
+    public void aimAt(Vec3 targetVec) {
         Vec3 thisVec = Vec3.atCenterOf(getBlockPos());
-        Vec3 blockVec = Vec3.atCenterOf(blockPos);
 
-        Vec3 diffVec = blockVec.subtract(thisVec);
+        Vec3 diffVec = targetVec.subtract(thisVec);
         Vec3 diffVec2D = new Vec3(diffVec.x, diffVec.z, 0);
         Vec3 rotVec = new Vec3(0, 1, 0);
         float angle = (float) (angleBetween(rotVec, diffVec2D) / Math.PI * 180.0f);
 
-        if (blockVec.x < thisVec.x) {
+        if (targetVec.x < thisVec.x) {
             angle = -angle;
         }
 
-        neededRotationX = angle + 90f;
+        setNeededRotationX(angle + 90f);
 
         rotVec = new Vec3(diffVec.x, 0, diffVec.z);
         angle = (float) (angleBetween(diffVec, rotVec) * 180F / (float) Math.PI);
-        if (blockVec.y < thisVec.y) {
+        if (targetVec.y < thisVec.y) {
             angle = -angle;
         }
-        neededRotationY = angle;
+        setNeededRotationY(angle);
 
         updateBlock();
+    }
+
+    public void aim(@Nullable BlockPos blockPos, Player playerEntity) {
+        if (blockPos == null) return;
+
+        aimAt(Vec3.atCenterOf(blockPos));
         ParticleUtil.beam(blockPos, getBlockPos(), level);
         PortUtil.sendMessageNoSpam(playerEntity, Component.literal("Turret now aims to " + blockPos.toShortString()));
+    }
+
+    public void aim(Direction direction) {
+        setNeededRotationX(switch (direction) {
+            case NORTH -> 270F;
+            case SOUTH -> 90F;
+            case EAST -> 180F;
+            default -> 0F;
+        });
+        setNeededRotationY(switch (direction) {
+            case DOWN -> -90F;
+            case UP -> 90F;
+            default -> 0F;
+        });
+    }
+
+    public void setDirection(Direction direction) {
+        aim(direction);
+        rotationX = neededRotationX;
+        rotationY = neededRotationY;
     }
 
     public static double angleBetween(Vec3 a, Vec3 b) {
@@ -231,6 +268,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         tag.putFloat("rotationX", rotationX);
         tag.putFloat("neededRotationY", neededRotationY);
         tag.putFloat("neededRotationX", neededRotationX);
+        tag.putFloat("turnRate", turnRate);
     }
 
     @Override
@@ -240,6 +278,14 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         rotationY = tag.getFloat("rotationY");
         neededRotationX = tag.getFloat("neededRotationX");
         neededRotationY = tag.getFloat("neededRotationY");
+        if (tag.contains("turnRate")) {
+            turnRate = tag.getFloat("turnRate");
+        }
+        if (!clientInitialized) {
+            clientInitialized = true;
+            clientNeededX = neededRotationX;
+            clientNeededY = neededRotationY;
+        }
     }
 
     public float getRotationX() {

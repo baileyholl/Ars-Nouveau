@@ -92,21 +92,36 @@ public record TimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<?>> ti
 
 
     public static class MutableTimelineMap {
-        private final Map<IParticleTimelineType<?>, IParticleTimeline<? extends IParticleTimeline<?>>> timelines;
+        private final Map<IParticleTimelineType<?>, IParticleTimeline<? extends IParticleTimeline<?>>> timelines = new HashMap<>();
+
+        public MutableTimelineMap() {
+        }
 
         public MutableTimelineMap(Map<IParticleTimelineType<?>, IParticleTimeline<? extends IParticleTimeline<?>>> map) {
-            timelines = new HashMap<>();
             for (var entry : map.entrySet()) {
                 timelines.put(entry.getKey(), entry.getValue());
             }
+        }
+
+        public <T extends IParticleTimeline<T>> T getOrCreate(Supplier<IParticleTimelineType<T>> type) {
+            return getOrCreate(type.get());
         }
 
         public <T extends IParticleTimeline<T>> T getOrCreate(IParticleTimelineType<T> type) {
             return (T) timelines.computeIfAbsent(type, (key) -> type.create());
         }
 
+        public <T extends IParticleTimeline<T>> IParticleTimeline put(Supplier<IParticleTimelineType<T>> type, T value) {
+            return put(type.get(), value);
+        }
+
         public <T extends IParticleTimeline<T>> IParticleTimeline put(IParticleTimelineType<T> type, T value) {
             return timelines.put(type, value);
+        }
+
+
+        public void remove(Supplier<IParticleTimelineType<?>> type) {
+            remove(type.get());
         }
 
         public void remove(IParticleTimelineType<?> type) {
