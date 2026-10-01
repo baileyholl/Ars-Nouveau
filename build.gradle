@@ -174,7 +174,6 @@ dependencies {
     compileOnly('org.jetbrains:annotations:26.0.2')
 
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
-    implementation('vazkii.patchouli:Patchouli:1.21-87-NEOFORGE')
 
     localRuntime "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
     compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
@@ -223,12 +222,14 @@ dependencies {
     })
 
     localRuntime "maven.modrinth:cloth-config:15.0.140+neoforge"
+//    localRuntime "maven.modrinth:waystones:21.1.46+neoforge-1.21.1"
+//    localRuntime "maven.modrinth:balm:21.0.66+neoforge-1.21.1"
 
     // Apotheosis
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
     localRuntime "curse.maven:placebo-283644:6446766"
     //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-    localRuntime "curse.maven:ars-elemental-561470:6419081"
+    localRuntime "curse.maven:ars-elemental-561470:8399862"
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-core:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))

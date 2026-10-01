@@ -1,14 +1,12 @@
 # Changelog
 
-Adds more relations in documentation
+Fixes being unable to remove non-stackable items from the lectern when connected through a repository catalog
 
-Makes caster tome names and flavor text translatable entries
+Fixes documentation searching for Chinese, Japanese, and Korean languages
 
-Projectiles now preserve momentum when interacting with spell prisms
+Fixes break not using a pickaxe as a fallback tool, causing blocks like waystones or iron doors to be deleted
 
-Fixes jagged animation on items floating above scribes table
+Fixes augment -> effect cost configs not applying correctly
 
-Fixes crash when glyph recipes have more than 10 items
-
-Fixes abjuration essence not clearing prestidigitation
+Fixes crash previewing lava particles in the spell styles preview screen
 

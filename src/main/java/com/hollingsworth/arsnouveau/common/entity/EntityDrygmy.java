@@ -11,7 +11,6 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.drygmy.CollectEssenceGoal;
@@ -190,7 +189,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
     }
 
     private PlayState animationPredicate(AnimationState<?> event) {
-        if (isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+        if (isChanneling() || this.entityData.get(BEING_TAMED)) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("channel"));
             return PlayState.CONTINUE;
         }

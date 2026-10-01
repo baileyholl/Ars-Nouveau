@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
@@ -309,7 +308,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
                 return PlayState.CONTINUE;
             }
 
-            if (isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+            if (isImbueing()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("tending_master"));
                 return PlayState.CONTINUE;
             }

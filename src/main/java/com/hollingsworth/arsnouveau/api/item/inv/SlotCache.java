@@ -59,17 +59,10 @@ public final class SlotCache {
         return slots.isEmpty() && empty.isEmpty() ? null : slots;
     }
 
-    public void replaceSlotWithItem(Item extracted, Item newItem, int slot) {
+    public void replaceSlotWithItem(Item newItem, int slot) {
         this.ensureSlot(slot);
-
-        if (extracted == Items.AIR) {
-            empty.clear(slot);
-        }
-
         cache[slot] = newItem;
-        if (newItem == Items.AIR) {
-            empty.set(slot);
-        }
+        empty.set(slot, newItem == Items.AIR);
     }
 
     public void initEmpty(int slot) {

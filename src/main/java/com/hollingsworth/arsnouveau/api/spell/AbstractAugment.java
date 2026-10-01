@@ -47,7 +47,7 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
         if (augmentCosts == null) {
             return this.getCastingCost();
         }
-        return augmentCosts.getAugmentCost(spellPart.getRegistryName(), this.getCastingCost());
+        return augmentCosts.getAugmentCost(this.getRegistryName(), this.getCastingCost());
     }
 
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, LivingEntity shooter, SpellContext spellContext) {

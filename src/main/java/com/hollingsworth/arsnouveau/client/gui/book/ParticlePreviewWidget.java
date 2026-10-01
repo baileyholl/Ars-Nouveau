@@ -44,6 +44,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
 
     private final Minecraft mc = Minecraft.getInstance();
     private final List<Particle> particles = new ArrayList<>();
+    private final Queue<Particle> particlesToAdd = new ArrayDeque<>();
     private final PreviewCamera camera = new PreviewCamera();
     private ParticlePreviewLevel previewLevel;
     private ParticleTimelinePreview timelinePreview;
@@ -60,10 +61,11 @@ public class ParticlePreviewWidget extends AbstractWidget {
             return;
         }
         particles.clear();
+        particlesToAdd.clear();
         previewLevel = new ParticlePreviewLevel(mc.level, (options, x, y, z, xSpeed, ySpeed, zSpeed) -> {
             Particle particle = makeParticle(options, x, y, z, xSpeed, ySpeed, zSpeed);
             if (particle != null) {
-                particles.add(particle);
+                particlesToAdd.add(particle);
             }
         });
         camera.moveTo(Vec3.ZERO);
@@ -85,11 +87,12 @@ public class ParticlePreviewWidget extends AbstractWidget {
     }
 
     public boolean isPlaying() {
-        return timelinePreview != null && (!timelineFinished || !particles.isEmpty());
+        return timelinePreview != null && (!timelineFinished || !particles.isEmpty() || !particlesToAdd.isEmpty());
     }
 
     public void dismiss() {
         particles.clear();
+        particlesToAdd.clear();
         timelinePreview = null;
         timelineFinished = true;
         previewLevel = null;
@@ -112,6 +115,8 @@ public class ParticlePreviewWidget extends AbstractWidget {
                 iterator.remove();
             }
         }
+        particles.addAll(particlesToAdd);
+        particlesToAdd.clear();
     }
 
     @Override

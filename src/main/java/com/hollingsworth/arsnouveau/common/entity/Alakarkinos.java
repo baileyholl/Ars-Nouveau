@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebugger;
 import com.hollingsworth.arsnouveau.common.entity.debug.IDebuggerProvider;
 import com.hollingsworth.arsnouveau.common.entity.goal.ConditionalLookAtMob;
@@ -309,7 +308,7 @@ public class Alakarkinos extends PathfinderMob implements GeoEntity, IDispellabl
             if (blowingBubbles()) {
                 return PlayState.STOP;
             }
-            if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+            if (event.isMoving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }

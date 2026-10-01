@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -30,6 +32,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -63,6 +66,15 @@ public class ClientEvents {
         public static void registerTooltipFactory(RegisterClientTooltipComponentFactoriesEvent event) {
             event.register(SpellTooltip.class, SpellTooltip.SpellTooltipRenderer::new);
             event.register(SchoolTooltip.class, SchoolTooltip.SchoolTooltipRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void registerReloadListeners(RegisterClientReloadListenersEvent event) {
+            event.registerReloadListener((ResourceManagerReloadListener) resourceManager -> {
+                if (!DocumentationRegistry.getEntries().isEmpty()) {
+                    Search.initSearchIndex();
+                }
+            });
         }
 
 

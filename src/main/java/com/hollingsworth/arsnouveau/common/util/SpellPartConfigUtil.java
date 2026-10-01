@@ -172,12 +172,12 @@ public class SpellPartConfigUtil {
         }
 
         /**
-         * Retrieves the cost of the augment given an effect or form.
+         * Retrieves the configured cost for the given augment.
          */
-        public int getAugmentCost(ResourceLocation effectTag, int fallback) {
+        public int getAugmentCost(ResourceLocation augmentTag, int fallback) {
             // No caching so /reload works
             costs = parseAugmentCosts();
-            return costs.getOrDefault(effectTag, fallback);
+            return costs.getOrDefault(augmentTag, fallback);
         }
 
         /**
