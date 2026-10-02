@@ -316,7 +316,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
             }
         }
 
-        return total.isEmpty() ? ItemStack.EMPTY : total;
+        return total == null ? ItemStack.EMPTY : total;
     }
 
     @Override
