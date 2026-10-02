@@ -94,9 +94,9 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public void setItem(int pIndex, ItemStack pStack) {
-        ItemStack oldItem = getItem(pIndex);
+        Item oldItem = getItem(pIndex).getItem();
         super.setItem(pIndex, pStack);
-        if (pStack.getItem() != oldItem.getItem()) {
+        if (pStack.getItem() != oldItem) {
             slotCache.replaceSlotWithItem(pStack.getItem(), pIndex);
         }
         updateFill();
@@ -167,17 +167,18 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         if (!this.level.isClientSide) {
             var slots = this.getContainerSize();
             slotCache = new SlotCache(slots);
+            slotCache.perfect = true;
             for (int i = 0; i < slots; i++) {
                 ItemStack stack = getItem(i);
                 slotCache.replaceSlotWithItem(stack.getItem(), i);
             }
-            filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
+            filterableItemHandler = new FilterableItemHandler(this, filterSet, slotCache);
         }
     }
 
     public void attachFilters() {
         this.filterSet = FilterSet.forPosition(level, worldPosition);
-        filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
+        filterableItemHandler = new FilterableItemHandler(this, filterSet, slotCache);
     }
 
     @Override
@@ -274,20 +275,48 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
-        var slots = slotCache.getIfPresent(item);
-        if (slots == null)
+        if (count == 0) {
             return ItemStack.EMPTY;
+        }
+
+        var slots = slotCache.getIfPresent(item);
+        if (slots == null) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack total = null;
         for (int slot : slots) {
-            ItemStack stack = getItem(slot);
-            if (!filter.test(stack))
+            int remaining = total == null ? count : count - total.getCount();
+            ItemStack stack = this.extractItem(slot, remaining, true);
+            if (total != null && !ItemStack.isSameItemSameComponents(total, stack)) {
                 continue;
+            }
+
+            if (!filter.test(stack)) {
+                continue;
+            }
+
             if (simulate) {
-                return stack.copy();
+                if (total == null) {
+                    total = stack.copy();
+                } else {
+                    total.grow(count - stack.getCount());
+                }
             } else {
-                return this.extractItem(slot, count, simulate);
+                var extracted = this.extractItem(slot, remaining, simulate);
+                if (total == null) {
+                    total = extracted;
+                } else {
+                    total.grow(extracted.getCount());
+                }
+            }
+
+            if (total.getCount() >= count) {
+                return total;
             }
         }
-        return ItemStack.EMPTY;
+
+        return total.isEmpty() ? ItemStack.EMPTY : total;
     }
 
     @Override
