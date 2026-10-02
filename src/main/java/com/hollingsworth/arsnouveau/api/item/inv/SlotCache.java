@@ -65,6 +65,10 @@ public final class SlotCache {
 
     public void replaceSlotWithItem(Item newItem, int slot) {
         this.ensureSlot(slot);
+        if (cache[slot] == newItem) {
+            return;
+        }
+
         cache[slot] = newItem;
         empty.set(slot, newItem == Items.AIR);
     }
@@ -76,12 +80,19 @@ public final class SlotCache {
     }
 
     public void ensureSlot(int slot) {
+        if (size > slot) {
+            return;
+        }
+
         var capacity = IntMath.ceilingPowerOfTwo(Math.max(4, slot + 1));
         if (cache.length < capacity) {
             var bigger = new Item[capacity];
             System.arraycopy(cache, 0, bigger, 0, size);
             for (int i = size; i < capacity; i++) {
                 bigger[i] = Items.AIR;
+                if (i <= slot) {
+                    empty.set(i);
+                }
             }
 
             cache = bigger;

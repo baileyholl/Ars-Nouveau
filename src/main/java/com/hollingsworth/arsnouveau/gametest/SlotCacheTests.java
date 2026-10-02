@@ -28,7 +28,7 @@ public class SlotCacheTests {
         cache.initEmpty(2);
         var collection = cache.getIfPresent(Items.AIR);
         helper.assertTrue(collection != null, "Expected non-null empty slot collection");
-        helper.assertTrue(collection.size() == 2, "Expected slot collection size 1," + " got: " + collection.size());
+        helper.assertValueEqual(collection.size(), 2, "slot collection size");
         helper.succeed();
     }
 
