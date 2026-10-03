@@ -1,0 +1,23 @@
+{
+  "values": [
+    "ars_nouveau:source_jar",
+    "ars_nouveau:creative_source_jar",
+    "ars_nouveau:potion_jar",
+    "ars_nouveau:mob_jar",
+    "ars_nouveau:repository",
+    "ars_nouveau:basic_spell_turret",
+    "ars_nouveau:timer_spell_turret",
+    "ars_nouveau:rotating_spell_turret",
+    "ars_nouveau:spell_turret",
+    "ars_nouveau:relay",
+    "ars_nouveau:relay_splitter",
+    "ars_nouveau:relay_collector",
+    "ars_nouveau:relay_deposit",
+    "ars_nouveau:relay_warp",
+    "ars_nouveau:item_detector",
+    "ars_nouveau:arcane_pedestal",
+    "ars_nouveau:arcane_platform",
+    "ars_nouveau:ritual_brazier",
+    "ars_nouveau:drygmy_stone"
+  ]
+}
