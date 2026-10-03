@@ -140,10 +140,6 @@ repositories {
         url = "https://maven.minecraftforge.net"
     }
     maven {
-        name = "OctoStudios"
-        url = uri("https://maven.octo-studios.com/releases")
-    }
-    maven {
         name = 'TerraformersMC'
         url = 'https://maven.terraformersmc.com/'
         content {
@@ -241,8 +237,8 @@ dependencies {
 //    localRuntime "curse.maven:sodium-394468:6382651"
 //    localRuntime "curse.maven:building-gadgets-298187:6850515"
     // Create aeronautics
-//    localRuntime "maven.modrinth:oWaK0Q19:YhZLrAFC"
-//    localRuntime "dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}"
+//    localRuntime "maven.modrinth:oWaK0Q19:Vzp221Un"
+//    localRuntime("dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}") { transitive = false }
 }
 
 jar {
