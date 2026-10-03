@@ -1,12 +1,7 @@
 # Changelog
 
-Fixes being unable to remove non-stackable items from the lectern when connected through a repository catalog
+Adds blocks to Sable weight and volume tags
 
-Fixes documentation searching for Chinese, Japanese, and Korean languages
+Fixes glyph recipe documentation items not spinning smoothly
 
-Fixes break not using a pickaxe as a fallback tool, causing blocks like waystones or iron doors to be deleted
-
-Fixes augment -> effect cost configs not applying correctly
-
-Fixes crash previewing lava particles in the spell styles preview screen
-
+Adds additional safeguard for mobs pathfinding near sable sublevels
