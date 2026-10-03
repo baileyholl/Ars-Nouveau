@@ -143,9 +143,9 @@ public class ClientEvents {
 //        }
 //    }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {
-        DocItemTooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
+        DocItemTooltipHandler.onTooltip(e);
     }
 
     private static Slot slotUnderMouse = null;
