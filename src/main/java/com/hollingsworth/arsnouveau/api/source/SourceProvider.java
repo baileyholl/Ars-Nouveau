@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.source;
 
-import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import net.minecraft.core.BlockPos;
 
 public class SourceProvider implements ISpecialSourceProvider {
@@ -15,7 +14,7 @@ public class SourceProvider implements ISpecialSourceProvider {
     }
 
     public SourceProvider(ISpecialSourceProvider specialSourceProvider) {
-        this.tile = specialSourceProvider.getSource();
+        this.capability = specialSourceProvider.getCapability();
         this.pos = specialSourceProvider.getCurrentPos();
         isValid = specialSourceProvider.isValid();
     }

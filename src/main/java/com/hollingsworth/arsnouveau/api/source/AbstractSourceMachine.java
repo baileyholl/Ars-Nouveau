@@ -39,9 +39,9 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        this.sourceStorage = createDefaultStorage();
+        this.sourceCap = createDefaultSourceCapability();
         if (tag.contains(SOURCE_TAG)) {
-            this.sourceStorage.setSource(tag.getInt(SOURCE_TAG));
+            this.sourceCap.setSource(tag.getInt(SOURCE_TAG));
         }
         color = ParticleColor.fromInt(tag.getInt(COLOR_TAG));
     }
@@ -53,7 +53,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         tag.putInt(COLOR_TAG, getColor().getColor());
     }
 
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull ISourceCap createDefaultSourceCapability() {
         return new SourceStorage(10000, 1000, 1000, 0) {
             public void onContentsChanged() {
                 AbstractSourceMachine.this.updateBlock();
@@ -204,7 +204,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     @Override
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        int source = this.getSourceStorage().getSource();
+        int source = this.getSourceCapability().getSource();
         if (source != 0) {
             pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(source));
         }

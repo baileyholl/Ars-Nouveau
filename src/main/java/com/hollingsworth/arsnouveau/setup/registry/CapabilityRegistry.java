@@ -24,6 +24,7 @@ import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class CapabilityRegistry {
 
     public static final EntityCapability<ManaCap, Void> MANA_CAPABILITY = EntityCapability.createVoid(ArsNouveau.prefix("mana"), ManaCap.class);
     public static final EntityCapability<ANPlayerDataCap, Void> PLAYER_DATA_CAP = EntityCapability.createVoid(ArsNouveau.prefix("player_data"), ANPlayerDataCap.class);
-    public static final BlockCapability<ISourceCap, Direction> SOURCE_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("source"), ISourceCap.class);
+    public static final BlockCapability<ISourceCap, @Nullable Direction> SOURCE_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("source"), ISourceCap.class);
     public static final BlockCapability<IMapInventory, Direction> MAP_INV_CAP = BlockCapability.createSided(ArsNouveau.prefix("map_inventory"), IMapInventory.class);
     public static final BlockCapability<IFiltersetProvider, Direction> FILTERSET_CAPABILITY = BlockCapability.createSided(ArsNouveau.prefix("filterset"), IFiltersetProvider.class);
     public static final BlockCapability<IResolveListener, Void> BLOCK_SPELL_RESOLVE_CAP = BlockCapability.createVoid(ArsNouveau.prefix("spell_listener"), IResolveListener.class);

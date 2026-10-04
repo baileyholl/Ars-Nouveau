@@ -25,7 +25,7 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
     }
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull SourceStorage createDefaultSourceCapability() {
         return new SourceStorage(10000, 10000) {
             @Override
             public void onContentsChanged() {
