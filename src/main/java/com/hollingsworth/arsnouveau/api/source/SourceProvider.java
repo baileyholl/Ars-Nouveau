@@ -14,13 +14,13 @@ public class SourceProvider implements ISpecialSourceProvider {
     }
 
     public SourceProvider(ISpecialSourceProvider specialSourceProvider) {
-        this.capability = specialSourceProvider.getCapability();
+        this.capability = specialSourceProvider.getSource();
         this.pos = specialSourceProvider.getCurrentPos();
         isValid = specialSourceProvider.isValid();
     }
 
     @Override
-    public ISourceCap getCapability() {
+    public ISourceCap getSource() {
         return capability;
     }
 

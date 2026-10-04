@@ -28,14 +28,14 @@ public class RelayCollectorTile extends RelayTile {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if (this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getCapability()) {
+                if (this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getSource()) {
                     continue;
                 }
-                if (this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getCapability()) {
+                if (this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getSource()) {
                     continue;
                 }
 
-                int transferred = transferSource(provider.getCapability(), this.getSourceCapability());
+                int transferred = transferSource(provider.getSource(), this.getSourceCapability());
                 if (transferred > 0) {
                     ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
                 }

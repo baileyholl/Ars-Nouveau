@@ -41,7 +41,7 @@ public class SourceManager {
     public ISpecialSourceProvider takeSourceNearby(BlockPos pos, Level world, int range, int amount) {
         for (ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)) {
             if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range)) {
-                sourceInterface.getCapability().extractSource(amount, true);
+                sourceInterface.getSource().extractSource(amount, true);
                 return sourceInterface;
             }
         }
@@ -51,7 +51,7 @@ public class SourceManager {
     @Nullable
     public ISpecialSourceProvider hasSourceNearby(BlockPos pos, Level world, int range, int amount) {
         for (ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)) {
-            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getCapability().getSource() >= amount) {
+            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().getSource() >= amount) {
                 return sourceInterface;
             }
         }
@@ -61,7 +61,7 @@ public class SourceManager {
     public List<ISpecialSourceProvider> canGiveSourceNearby(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> list = new ArrayList<>();
         for (ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)) {
-            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getCapability().canReceive()) {
+            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().canReceive()) {
                 list.add(sourceInterface);
             }
         }
@@ -71,7 +71,7 @@ public class SourceManager {
     public List<ISpecialSourceProvider> canTakeSourceNearby(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> list = new ArrayList<>();
         for (ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)) {
-            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getCapability().getSource() >= 0) {
+            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().getSource() >= 0) {
                 list.add(sourceInterface);
             }
         }

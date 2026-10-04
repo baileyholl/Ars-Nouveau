@@ -49,7 +49,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
         if (level.getGameTime() % 100 == 0 && getSource() > 0) {
             List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
             if (!providers.isEmpty()) {
-                transferSource(this.getSourceCapability(), providers.getFirst().getCapability());
+                transferSource(this.getSourceCapability(), providers.getFirst().getSource());
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.getFirst().getCurrentPos(), this.getColor());
             }
         }

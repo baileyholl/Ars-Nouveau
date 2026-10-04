@@ -27,15 +27,15 @@ public class RelayDepositTile extends RelayTile {
                 if (this.getSource() <= 0)
                     break;
 
-                if (this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getCapability()) {
+                if (this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getSource()) {
                     continue;
                 }
-                if (this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getCapability()) {
+                if (this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, this.getToPos(), null) == provider.getSource()) {
                     continue;
                 }
 
                 if (!(level.getBlockEntity(provider.getCurrentPos()) instanceof RelayTile)) {
-                    transferSource(this.getSourceCapability(), provider.getCapability());
+                    transferSource(this.getSourceCapability(), provider.getSource());
                     ParticleUtil.spawnFollowProjectile(level, this.worldPosition, provider.getCurrentPos(), this.getColor());
                 }
             }

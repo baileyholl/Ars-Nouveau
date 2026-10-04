@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 
 public interface ISpecialSourceProvider {
 
-    ISourceCap getCapability();
+    ISourceCap getSource();
 
     boolean isValid();
 

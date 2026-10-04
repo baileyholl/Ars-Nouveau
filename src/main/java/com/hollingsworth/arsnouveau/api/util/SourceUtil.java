@@ -91,7 +91,7 @@ public class SourceUtil {
     public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
         for (ISpecialSourceProvider provider : providers) {
-            var cap = provider.getCapability();
+            var cap = provider.getSource();
             if (cap.canProvideSource(source)) {
                 cap.extractSource(source, true);
                 return provider;
@@ -113,10 +113,10 @@ public class SourceUtil {
 
         int needed = source;
         for (ISpecialSourceProvider provider : providers) {
-            var cap = provider.getCapability();
+            var cap = provider.getSource();
             if (cap.isInfinite()) {
                 for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
-                    entry.getKey().getCapability().receiveSource(entry.getValue() , false);
+                    entry.getKey().getSource().receiveSource(entry.getValue() , false);
                 }
 
                 return List.of(provider);
@@ -140,7 +140,7 @@ public class SourceUtil {
 
         if (needed > 0) {
             for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
-                entry.getKey().getCapability().receiveSource(entry.getValue(), false);
+                entry.getKey().getSource().receiveSource(entry.getValue(), false);
             }
             return null;
         }
@@ -212,7 +212,7 @@ public class SourceUtil {
      */
     public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int source) {
         for (var provider : SourceUtil.canTakeSource(pos, world, range)) {
-            var cap = provider.getCapability();
+            var cap = provider.getSource();
             if (cap.isInfinite()) {
                 return true;
             }
