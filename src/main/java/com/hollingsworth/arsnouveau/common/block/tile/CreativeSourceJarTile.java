@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class CreativeSourceJarTile extends SourceJarTile {
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull SourceStorage createDefaultSourceCapability() {
         return new SourceStorage(1000000, 1000000, 1000000, 1000000) {
 
             // Acts as void or infinite source, overrides method without doing checks or changes
@@ -26,6 +26,21 @@ public class CreativeSourceJarTile extends SourceJarTile {
             @Override
             public int getSource() {
                 return 1000000;
+            }
+
+            @Override
+            public boolean providesAutomatically() {
+                return true;
+            }
+
+            @Override
+            public boolean acceptsAutomaticcally() {
+                return true;
+            }
+            
+            @Override
+            public boolean isInfinite() {
+                return true;
             }
         };
     }

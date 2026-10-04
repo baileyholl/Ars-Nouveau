@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -55,7 +56,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     }
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull SourceStorage createDefaultSourceCapability() {
         return new SourceStorage(10000000, 10000000, 0, 0) {
             @Override
             public boolean canProvideSource(int source) {

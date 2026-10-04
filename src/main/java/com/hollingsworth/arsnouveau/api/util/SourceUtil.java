@@ -2,14 +2,14 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.SourceManager;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
-import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
-import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
@@ -23,27 +23,59 @@ public class SourceUtil {
 
     public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
+
         for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
-            if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
-                posList.add(new SourceProvider(jar, b.immutable()));
+            if (world.isLoaded(b)) {
+                ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
+                if (cap == null || !cap.providesAutomatically() || !cap.canAcceptSource(1)) {
+                    for (var dir : Direction.values()) {
+                        cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
+                        if (cap != null && cap.canAcceptSource(1)) {
+                            break;
+                        }
+                    }
+                }
+
+                if (cap != null && cap.canAcceptSource(1)) {
+                    posList.add(new SourceProvider(cap, b.immutable()));
+                }
+            }
         }
+
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canGiveSourceNearby(pos, world, range);
         for (ISpecialSourceProvider p : provider) {
             posList.add(new SourceProvider(p));
         }
+
         return posList;
     }
 
     public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
+
         for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
-            if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0)
-                posList.add(new SourceProvider(jar, b.immutable()));
+            if (world.isLoaded(b)) {
+                ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
+                if (cap == null || !cap.providesAutomatically() || !cap.canProvideSource(1)) {
+                    for (var dir : Direction.values()) {
+                        cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
+                        if (cap != null && cap.canProvideSource(1)) {
+                            break;
+                        }
+                    }
+                }
+
+                if (cap != null && cap.canProvideSource(1)) {
+                    posList.add(new SourceProvider(cap, b.immutable()));
+                }
+            }
         }
+
         List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canTakeSourceNearby(pos, world, range);
         for (ISpecialSourceProvider p : provider) {
             posList.add(new SourceProvider(p));
         }
+
         return posList;
     }
 
@@ -59,8 +91,9 @@ public class SourceUtil {
     public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
         for (ISpecialSourceProvider provider : providers) {
-            if (provider.getSource().getSource() >= source) {
-                provider.getSource().removeSource(source);
+            var cap = provider.getSource();
+            if (cap.canProvideSource(source)) {
+                cap.extractSource(source, true);
                 return provider;
             }
         }
@@ -80,10 +113,10 @@ public class SourceUtil {
 
         int needed = source;
         for (ISpecialSourceProvider provider : providers) {
-            ISourceTile sourceTile = provider.getSource();
-            if (sourceTile instanceof CreativeSourceJarTile) {
+            var cap = provider.getSource();
+            if (cap.isInfinite()) {
                 for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
-                    entry.getKey().getSource().addSource(entry.getValue());
+                    entry.getKey().getSource().receiveSource(entry.getValue() , false);
                 }
 
                 return List.of(provider);
@@ -93,9 +126,9 @@ public class SourceUtil {
                 continue;
             }
 
-            int initial = sourceTile.getSource();
+            int initial = cap.getSource();
             int available = Math.min(needed, initial);
-            int after = sourceTile.removeSource(available);
+            int after = cap.extractSource(available, false);
             if (initial > after) {
                 int extracted = initial - after;
                 needed -= extracted;
@@ -107,7 +140,7 @@ public class SourceUtil {
 
         if (needed > 0) {
             for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
-                entry.getKey().getSource().addSource(entry.getValue());
+                entry.getKey().getSource().receiveSource(entry.getValue(), false);
             }
             return null;
         }
@@ -179,12 +212,12 @@ public class SourceUtil {
      */
     public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int source) {
         for (var provider : SourceUtil.canTakeSource(pos, world, range)) {
-            ISourceTile sourceTile = provider.getSource();
-            if (sourceTile instanceof CreativeSourceJarTile) {
+            var cap = provider.getSource();
+            if (cap.isInfinite()) {
                 return true;
             }
 
-            source -= sourceTile.removeSource(source, true);
+            source -= cap.extractSource(source, true);
             if (source <= 0) {
                 return true;
             }
