@@ -39,4 +39,17 @@ public interface ISourceCap {
 
     int extractSource(final int source, boolean simulate);
 
+    /**
+     * @return Whether this capability can be used to provide source automatically, like a Source Jar
+     */
+    default boolean providesAutomatically() {
+        return false;
+    }
+
+    /**
+     * @return Whether this capability can provide an infinite amount of source
+     */
+    default boolean isInfinite() {
+        return false;
+    }
 }
