@@ -27,7 +27,7 @@ public class SourceUtil {
         for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
             if (world.isLoaded(b)) {
                 ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
-                if (cap == null || !cap.canAcceptSource(1)) {
+                if (cap == null || !cap.providesAutomatically() || !cap.canAcceptSource(1)) {
                     for (var dir : Direction.values()) {
                         cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
                         if (cap != null && cap.canAcceptSource(1)) {
@@ -56,7 +56,7 @@ public class SourceUtil {
         for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
             if (world.isLoaded(b)) {
                 ISourceCap cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, null);
-                if (cap == null || !cap.canProvideSource(1)) {
+                if (cap == null || !cap.providesAutomatically() || !cap.canProvideSource(1)) {
                     for (var dir : Direction.values()) {
                         cap = world.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, b, dir);
                         if (cap != null && cap.canProvideSource(1)) {

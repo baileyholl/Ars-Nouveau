@@ -47,6 +47,13 @@ public interface ISourceCap {
     }
 
     /**
+     * @return Whether this capability can accept source automatically, like a Source Jar
+     */
+    default boolean acceptsAutomaticcally() {
+        return false;
+    }
+
+    /**
      * @return Whether this capability can provide an infinite amount of source
      */
     default boolean isInfinite() {

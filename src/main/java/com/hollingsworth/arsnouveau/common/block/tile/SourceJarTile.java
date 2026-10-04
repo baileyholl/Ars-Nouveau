@@ -36,6 +36,11 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
             public boolean providesAutomatically() {
                 return true;
             }
+
+            @Override
+            public boolean acceptsAutomaticcally() {
+                return true;
+            }
         };
     }
 

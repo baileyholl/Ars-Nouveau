@@ -29,6 +29,16 @@ public class CreativeSourceJarTile extends SourceJarTile {
             }
 
             @Override
+            public boolean providesAutomatically() {
+                return true;
+            }
+
+            @Override
+            public boolean acceptsAutomaticcally() {
+                return true;
+            }
+            
+            @Override
             public boolean isInfinite() {
                 return true;
             }
