@@ -30,11 +30,10 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         for (SortResult connectedRepository : validRepositories) {
             IMapInventory connected = connectedRepository.mapInventory();
             if (connected != null && connected.hasExistingSlotsForInsertion(stack)) {
-                ItemStack remainder = connected.insertStack(stack, simulate);
-                if (remainder.isEmpty()) {
-                    return ItemStack.EMPTY;
+                stack = connected.insertStack(stack, simulate);
+                if (stack.isEmpty()) {
+                    return stack;
                 }
-                stack = remainder;
             }
         }
 
@@ -42,11 +41,10 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         for (SortResult connectedRepository : validRepositories) {
             IMapInventory connected = connectedRepository.mapInventory();
             if (connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)) {
-                ItemStack remainder = connected.insertStack(stack, simulate);
-                if (remainder.isEmpty()) {
-                    return ItemStack.EMPTY;
+                stack = connected.insertStack(stack, simulate);
+                if (stack.isEmpty()) {
+                    return stack;
                 }
-                stack = remainder;
             }
         }
 
