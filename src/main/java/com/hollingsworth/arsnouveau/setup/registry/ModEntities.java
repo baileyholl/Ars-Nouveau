@@ -76,7 +76,8 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EntityAllyVex>> ALLY_VEX = registerEntity(
             LibEntityNames.ALLY_VEX,
             EntityType.Builder.<EntityAllyVex>of(EntityAllyVex::new, MobCategory.MISC)
-                    .sized(0.4F, 0.8F).fireImmune());
+                    .sized(0.4F, 0.8F).fireImmune().noSave()
+    );
     public static final DeferredHolder<EntityType<?>, EntityType<EntityEvokerFangs>> ENTITY_EVOKER_FANGS_ENTITY_TYPE = registerEntity(
             LibEntityNames.FANGS,
             EntityType.Builder.<EntityEvokerFangs>of(EntityEvokerFangs::new, MobCategory.MISC)
@@ -143,7 +144,8 @@ public class ModEntities {
                     .setTrackingRange(256));
     public static final DeferredHolder<EntityType<?>, EntityType<SummonWolf>> SUMMON_WOLF = registerEntity(
             LibEntityNames.SUMMONED_WOLF,
-            EntityType.Builder.of(SummonWolf::new, MobCategory.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
+            EntityType.Builder.of(SummonWolf::new, MobCategory.CREATURE).noSave()
+                    .sized(0.6F, 0.85F).clientTrackingRange(10));
 
     public static final DeferredHolder<EntityType<?>, EntityType<WildenStalker>> WILDEN_STALKER = registerEntity(
             LibEntityNames.WILDEN_STALKER,
@@ -153,9 +155,11 @@ public class ModEntities {
                     .setShouldReceiveVelocityUpdates(true));
     public static final DeferredHolder<EntityType<?>, EntityType<SummonHorse>> SUMMON_HORSE = registerEntity(
             LibEntityNames.SUMMONED_HORSE,
-            EntityType.Builder.of(SummonHorse::new, MobCategory.CREATURE).sized(1.3964844F, 1.6F).clientTrackingRange(10));
+            EntityType.Builder.of(SummonHorse::new, MobCategory.CREATURE).sized(1.3964844F, 1.6F)
+                    .noSave().clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSkeleton>> SUMMON_SKELETON = registerEntity(LibEntityNames.SUMMONED_SKELETON,
-            EntityType.Builder.<SummonSkeleton>of(SummonSkeleton::new, MobCategory.CREATURE).sized(1.0F, 1.8F).clientTrackingRange(10));
+            EntityType.Builder.<SummonSkeleton>of(SummonSkeleton::new, MobCategory.CREATURE).sized(1.0F, 1.8F)
+                    .noSave().clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<WildenGuardian>> WILDEN_GUARDIAN = registerEntity(
             LibEntityNames.WILDEN_GUARDIAN,
             EntityType.Builder.<WildenGuardian>of(WildenGuardian::new, MobCategory.MONSTER)
@@ -171,12 +175,14 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<LightningEntity>> LIGHTNING_ENTITY = registerEntity(LibEntityNames.AN_LIGHTNING, EntityType.Builder.of(LightningEntity::new, MobCategory.MISC)
             .sized(0.0F, 0.0F)
             .clientTrackingRange(16)
+            .noSave()
             .updateInterval(Integer.MAX_VALUE
             ).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
     public static final DeferredHolder<EntityType<?>, EntityType<EntityDummy>> ENTITY_DUMMY = registerEntity(
             LibEntityNames.DUMMY,
             EntityType.Builder.<EntityDummy>of(EntityDummy::new, MobCategory.MISC)
                     .sized(1.0f, 2.0f)
+                    .noSave()
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static final DeferredHolder<EntityType<?>, EntityType<EntityDrygmy>> ENTITY_DRYGMY = registerEntity(
