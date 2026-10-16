@@ -322,6 +322,12 @@ public class ModEntities {
                     .clientTrackingRange(10)
     );
 
+    public static final DeferredHolder<EntityType<?>, EntityType<BuilderGeist>> BUILDER_GEIST = registerEntity(
+            LibEntityNames.BUILDER_GEIST,
+            EntityType.Builder.<BuilderGeist>of(BuilderGeist::new, MobCategory.MISC)
+                    .sized(0.4F, 0.8F)
+                    .clientTrackingRange(8));
+
     @SubscribeEvent
     public static void registerPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(STARBUNCLE_TYPE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn, RegisterSpawnPlacementsEvent.Operation.AND);
@@ -385,6 +391,7 @@ public class ModEntities {
             event.put(LILY.get(), Lily.createAttributes().build());
             event.put(NOOK.get(), Nook.createAttributes().build());
             event.put(ALAKARKINOS_TYPE.get(), Starbuncle.attributes().build());
+            event.put(BUILDER_GEIST.get(), BuilderGeist.createAttributes().build());
         }
     }
 

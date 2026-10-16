@@ -185,6 +185,7 @@ public class LibBlockNames {
     public static final String DIM_BOUNDARY = "dim_boundary";
     public static final String PLANARIUM_PROJECTOR = "planarium_projector";
     public static final String SCRYER_PLANARIUM = "scryer_planarium";
+    public static final String BUILDER_GEIST_BLOCK = "builder_geist_block";
 
 
     public static final String[] DECORATIVE_SOURCESTONE = new String[]{

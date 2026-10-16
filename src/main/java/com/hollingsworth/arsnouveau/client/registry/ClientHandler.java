@@ -115,6 +115,7 @@ public class ClientHandler {
 
         event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE.get(), EvokerFangsRenderer::new);
         event.registerEntityRenderer(ModEntities.ALLY_VEX.get(), VexRenderer::new);
+        event.registerEntityRenderer(ModEntities.BUILDER_GEIST.get(), BuilderGeistRenderer::new);
 
         event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE.get(), StarbuncleRenderer::new);
         event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE.get(), (t) -> new GeoEntityRenderer<>(t, new WhirlisprigModel<>()) {
