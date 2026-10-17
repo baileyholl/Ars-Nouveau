@@ -9,7 +9,11 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -37,7 +41,7 @@ public class SourceManager {
     public ISpecialSourceProvider takeSourceNearby(BlockPos pos, Level world, int range, int amount) {
         for (ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)) {
             if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range)) {
-                sourceInterface.getSource().removeSource(amount);
+                sourceInterface.getSource().extractSource(amount, true);
                 return sourceInterface;
             }
         }
@@ -57,7 +61,7 @@ public class SourceManager {
     public List<ISpecialSourceProvider> canGiveSourceNearby(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> list = new ArrayList<>();
         for (ISpecialSourceProvider sourceInterface : getCopySetForLevel(world)) {
-            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().canAcceptSource()) {
+            if (sourceInterface.isValid() && sourceInterface.getCurrentPos().closerThan(pos, range) && sourceInterface.getSource().canReceive()) {
                 list.add(sourceInterface);
             }
         }

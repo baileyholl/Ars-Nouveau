@@ -95,7 +95,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
     }
 
     @Override
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull ISourceCap createDefaultSourceCapability() {
         return new SourceStorage(1000, 1000);
     }
 
@@ -168,7 +168,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
                 return;
             } else if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
                 // Transfer mana fromPos to this
-                if (transferSource(sourceHandler, getSourceStorage()) > 0) {
+                if (transferSource(sourceHandler, getSourceCapability()) > 0) {
                     ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition, this.getColor());
                 }
             } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
@@ -188,7 +188,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             }
             if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
                 // Transfer mana from this to toPos
-                if (transferSource(this.getSourceStorage(), sourceHandler) > 0) {
+                if (transferSource(this.getSourceCapability(), sourceHandler) > 0) {
                     ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos, this.getColor());
                 }
             } else if (level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile) {

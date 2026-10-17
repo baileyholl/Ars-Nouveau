@@ -26,22 +26,22 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         super(manaTile, pos, state);
     }
 
-    public @Nullable SourceStorage sourceStorage;
+    public @Nullable ISourceCap sourceCap;
 
-    public @NotNull SourceStorage getSourceStorage() {
-        if (sourceStorage == null) {
-            sourceStorage = createDefaultStorage();
+    public @NotNull ISourceCap getSourceCapability() {
+        if (sourceCap == null) {
+            sourceCap = createDefaultSourceCapability();
             if (level != null) level.invalidateCapabilities(worldPosition);
         }
-        return sourceStorage;
+        return sourceCap;
     }
 
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        this.sourceStorage = createDefaultStorage();
+        this.sourceCap = createDefaultSourceCapability();
         if (tag.contains(SOURCE_TAG)) {
-            this.sourceStorage.setSource(tag.getInt(SOURCE_TAG));
+            this.sourceCap.setSource(tag.getInt(SOURCE_TAG));
         }
         color = ParticleColor.fromInt(tag.getInt(COLOR_TAG));
     }
@@ -53,7 +53,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         tag.putInt(COLOR_TAG, getColor().getColor());
     }
 
-    protected @NotNull SourceStorage createDefaultStorage() {
+    protected @NotNull ISourceCap createDefaultSourceCapability() {
         return new SourceStorage(10000, 1000, 1000, 0) {
             public void onContentsChanged() {
                 AbstractSourceMachine.this.updateBlock();
@@ -63,9 +63,9 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int setSource(int source) {
-        this.getSourceStorage().setSource(Math.clamp(source, 0, this.getMaxSource()));
+        this.getSourceCapability().setSource(Math.clamp(source, 0, this.getMaxSource()));
         updateBlock();
-        return this.getSourceStorage().getSource();
+        return this.getSourceCapability().getSource();
     }
 
     public boolean updateBlock() {
@@ -81,7 +81,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int addSource(int source, boolean simulate) {
-        return getSourceStorage().receiveSource(source, simulate);
+        return getSourceCapability().receiveSource(source, simulate);
     }
 
     @Override
@@ -91,17 +91,17 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int getSource() {
-        return this.getSourceStorage().getSource();
+        return this.getSourceCapability().getSource();
     }
 
     @Override
     public int getTransferRate() {
-        return this.getSourceStorage().getMaxExtract();
+        return this.getSourceCapability().getMaxExtract();
     }
 
     @Override
     public int removeSource(int source, boolean simulate) {
-        return getSourceStorage().extractSource(source, simulate);
+        return getSourceCapability().extractSource(source, simulate);
     }
 
     @Override
@@ -115,7 +115,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     @Override
     public int getMaxSource() {
-        return this.getSourceStorage().getSourceCapacity();
+        return this.getSourceCapability().getSourceCapacity();
     }
 
     public boolean canAcceptSource() {
@@ -127,7 +127,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     }
 
     public boolean canAcceptSource(int source) {
-        return this.getSourceStorage().canAcceptSource(source);
+        return this.getSourceCapability().canAcceptSource(source);
     }
 
     /**
@@ -198,13 +198,13 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
     protected void applyImplicitComponents(@NotNull DataComponentInput pComponentInput) {
         super.applyImplicitComponents(pComponentInput);
         var fill = pComponentInput.getOrDefault(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(0));
-        this.getSourceStorage().setSource(fill.amount());
+        this.getSourceCapability().setSource(fill.amount());
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.@NotNull Builder pComponents) {
         super.collectImplicitComponents(pComponents);
-        int source = this.getSourceStorage().getSource();
+        int source = this.getSourceCapability().getSource();
         if (source != 0) {
             pComponents.set(DataComponentRegistry.BLOCK_FILL_CONTENTS, new BlockFillContents(source));
         }
