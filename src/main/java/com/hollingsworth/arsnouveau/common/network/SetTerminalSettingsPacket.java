@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
 import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import net.minecraft.client.Minecraft;
@@ -45,7 +45,7 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         super.onClientReceived(minecraft, player);
-        if (minecraft.screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
+        if (minecraft.screen instanceof CraftingTerminalScreen terminalScreen) {
             terminalScreen.receiveSettings(settings);
         }
     }
