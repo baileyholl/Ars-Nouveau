@@ -4,7 +4,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.gson.JsonElement;
+import com.ibm.icu.text.Collator;
+import com.ibm.icu.text.RuleBasedCollator;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -27,7 +30,10 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -170,11 +176,9 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             }
             // Set isAll tab visible
             tabButtons.get(0).visible = true;
-            List<String> names = new ArrayList<>(new HashSet<>(tabNames));
-            names.sort(String::compareToIgnoreCase);
-            for (int i = 0; i < names.size() && i < tabButtons.size(); i++) {
+            for (int i = 0; i < tabNames.size(); i++) {
                 tabButtons.get(i + 1).visible = true;
-                tabButtons.get(i + 1).highlightText = names.get(i);
+                tabButtons.get(i + 1).highlightText = tabNames.get(i);
             }
         }
 
@@ -182,11 +186,6 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             loadedSearch = true;
             searchField.setValue(menu.search);
             searchField.setFocused(true);
-            if (searchField.getValue().isEmpty()) {
-                searchField.setSuggestion(Component.translatable("ars_nouveau.spell_book_gui.search").getString());
-            } else {
-                searchField.setSuggestion("");
-            }
         }
     }
 
@@ -216,7 +215,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         this.recipeBookGui.init(this.width, this.height + 30, this.minecraft, this.widthTooNarrow, this.menu);
         this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
 
-        this.searchField = new NoShadowTextField(getFont(), this.leftPos + 115, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
+        this.searchField = new NoShadowTextField(font, this.leftPos + 115, this.topPos + 6, 60, font.lineHeight, Component.translatable("narrator.ars_nouveau.search"));
         this.searchField.setMaxLength(100);
         this.searchField.setBordered(false);
         this.searchField.setVisible(true);
@@ -231,19 +230,19 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             buttonSortingType.state = comparator.type();
             syncSortSettings();
             refreshItemList = true;
-        }));
+        }).withTooltip(state -> Component.translatable("tooltip.ars_nouveau.sorting_" + state)));
 
         buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 0, DocAssets.STORAGE_SORT_ORDER, b -> {
             comparator.setReversed(!comparator.isReversed());
             buttonDirection.state = comparator.isReversed() ? 1 : 0;
             syncSortSettings();
             refreshItemList = true;
-        }));
+        }).withTooltip(state -> Component.translatable("tooltip.ars_nouveau.direction_" + state, IAutoFillTerminal.getHandlerName())));
         buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 0, DocAssets.STORAGE_SEARCH_SYNC, b -> {
             searchType = searchType == 0 ? 1 : 0;
             buttonSearchType.state = searchType;
             syncSortSettings();
-        }));
+        }).withTooltip(state -> Component.translatable("tooltip.ars_nouveau.search_" + state, IAutoFillTerminal.getHandlerName())));
         buttonSortingType.state = comparator.type();
         buttonDirection.state = comparator.isReversed() ? 1 : 0;
         buttonSearchType.state = searchType;
@@ -285,21 +284,13 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             recipeBookSearch = recipeBookGui.searchBox;
 
             this.recipeBookGui.toggleVisibility();
+            int oldLeft = leftPos;
             this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
-            thisButton.setPosition(this.leftPos + 98, recipeButtonY);
-
-            this.searchField.setX(this.leftPos + 115);
-            btnClr.setX(this.leftPos + 86);
-            buttonSortingType.setX(leftPos - 17);
-            buttonDirection.setX(leftPos - 17);
-            buttonSearchType.setX(leftPos - 17);
-            for (StorageTabButton tabButton : tabButtons) {
-                tabButton.setX(leftPos - 13);
+            for (GuiEventListener child : children()) {
+                if (child instanceof AbstractWidget widget) {
+                    widget.setX(widget.getX() + leftPos - oldLeft);
+                }
             }
-            scrollSlider.setX(leftPos + 187);
-
-            btnCollapse.setX(leftPos + 86);
-            btnExpand.setX(leftPos + 86);
         }));
         if (recipeBookGui.isVisible()) {
             recipeBookSearch = recipeBookGui.searchBox;
@@ -377,7 +368,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
                 };
 
                 if (isMatch) {
-                    addStackToClientList(stored);
+                    itemsSorted.add(stored);
                 }
             }
 
@@ -409,18 +400,9 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         for (int k = 0; k < lines; ++k) {
             for (int l = 0; l < 9; ++l) {
                 int i1 = l + (k + j) * 9;
-
-                if (i1 >= 0 && i1 < this.itemsSorted.size()) {
-                    menu.setSlotContents(l + k * 9, this.itemsSorted.get(i1));
-                } else {
-                    menu.setSlotContents(l + k * 9, null);
-                }
+                menu.setSlotContents(l + k * 9, i1 < itemsSorted.size() ? itemsSorted.get(i1) : null);
             }
         }
-    }
-
-    private void addStackToClientList(StoredItemStack is) {
-        this.itemsSorted.add(is);
     }
 
     @Override
@@ -468,20 +450,12 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
                 }
             }
 
-            if (buttonSortingType.isHovered()) {
-                graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.sorting_" + buttonSortingType.state), mouseX, mouseY);
-            }
-            if (buttonSearchType.isHovered()) {
-                graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.search_" + buttonSearchType.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
-            }
-            if (buttonDirection.isHovered()) {
-                graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.direction_" + buttonDirection.state, IAutoFillTerminal.getHandlerName()), mouseX, mouseY);
-            }
-            for (StorageTabButton tabButton : tabButtons) {
-                if (tabButton.isHovered() && tabButton.isAll) {
-                    graphics.renderTooltip(font, Component.translatable("tooltip.ars_nouveau.master_tab"), mouseX, mouseY);
-                } else if (tabButton.isHovered() && tabButton.highlightText != null) {
-                    graphics.renderTooltip(font, Component.literal(tabButton.highlightText), mouseX, mouseY);
+            for (Renderable renderable : renderables) {
+                if (renderable instanceof AbstractWidget widget && widget.visible && widget.isHovered() && renderable instanceof ITooltipProvider provider) {
+                    List<Component> lines = new ArrayList<>();
+                    provider.getTooltip(lines);
+                    graphics.renderComponentTooltip(font, lines, mouseX, mouseY);
+                    break;
                 }
             }
             this.recipeBookGui.renderGhostRecipe(graphics, this.leftPos, this.topPos, true, partialTicks);
@@ -497,22 +471,14 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     }
 
     @Override
-    protected void renderLabels(GuiGraphics p_281635_, int mouseX, int mouseY) {
-        PoseStack st = p_281635_.pose();
-        st.pushPose();
-        slotIDUnderMouse = drawSlots(p_281635_, mouseX, mouseY);
-        st.popPose();
-    }
-
-    protected int drawSlots(GuiGraphics st, int mouseX, int mouseY) {
-        StorageTerminalMenu term = getMenu();
-        int slotHover = -1;
-        for (int i = 0; i < term.storageSlotList.size(); i++) {
-            if (drawSlot(st, term.storageSlotList.get(i), mouseX, mouseY)) {
-                slotHover = i;
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        List<SlotStorage> slots = getMenu().storageSlotList;
+        slotIDUnderMouse = -1;
+        for (int i = 0; i < slots.size(); i++) {
+            if (drawSlot(graphics, slots.get(i), mouseX, mouseY)) {
+                slotIDUnderMouse = i;
             }
         }
-        return slotHover;
     }
 
     protected boolean drawSlot(GuiGraphics st, SlotStorage slot, int mouseX, int mouseY) {
@@ -526,14 +492,11 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             st.renderItem(stack, i, j);
             st.renderItemDecorations(this.font, stack, i, j, null);
 
-            drawStackSize(st, getFont(), slot.stack().getQuantity(), i, j);
+            drawStackSize(st, font, slot.stack().getQuantity(), i, j);
         }
 
-        if (mouseX >= getGuiLeft() + slot.xPosition() - 1 && mouseY >= getGuiTop() + slot.yPosition() - 1 && mouseX < getGuiLeft() + slot.xPosition() + 17 && mouseY < getGuiTop() + slot.yPosition() + 17) {
-            int l = slot.xPosition();
-            int t = slot.yPosition();
-
-            renderSlotHighlight(st, l, t, 0);
+        if (isHovering(slot.xPosition(), slot.yPosition(), 16, 16, mouseX, mouseY)) {
+            renderSlotHighlight(st, slot.xPosition(), slot.yPosition(), 0);
             return true;
         }
         return false;
@@ -549,15 +512,11 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         st.scale(scaleFactor, scaleFactor, scaleFactor);
         st.translate(0, 0, 450);
         float inverseScaleFactor = 1.0f / scaleFactor;
-        int X = (int) (((float) x + 0 + 16.0f - fr.width(stackSize) * scaleFactor) * inverseScaleFactor);
-        int Y = (int) (((float) y + 0 + 16.0f - 7.0f * scaleFactor) * inverseScaleFactor);
+        int X = (int) (((float) x + 16.0f - fr.width(stackSize) * scaleFactor) * inverseScaleFactor);
+        int Y = (int) (((float) y + 16.0f - 7.0f * scaleFactor) * inverseScaleFactor);
         graphics.drawString(font, stackSize, X, Y, 16777215);
         st.popPose();
         RenderSystem.enableDepthTest();
-    }
-
-    protected boolean needsScrollBars() {
-        return itemsSorted.size() > (expanded ? 7 : 3) * 9;
     }
 
     @Override
@@ -571,30 +530,22 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         }
         this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
         if (slotIDUnderMouse > -1) {
-            SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
-            if (isPullOne(mouseButton)) {
-                storageSlotClick(slot.stack(), PULL_ONE, isTransferOne(mouseButton));
+            StoredItemStack stack = getMenu().getSlotByID(slotIDUnderMouse).stack();
+            boolean hasStack = stack != null && stack.getQuantity() > 0;
+            boolean carrying = !menu.getCarried().isEmpty();
+            if (mouseButton == 1 && hasShiftDown()) {
+                storageSlotClick(stack, PULL_ONE, hasControlDown());
                 return true;
-            } else if (pullHalf(mouseButton)) {
-                if (!menu.getCarried().isEmpty()) {
-                    storageSlotClick(slot.stack(), hasControlDown() ? GET_QUARTER : GET_HALF, false);
-                } else {
-                    if (slot.stack() != null && slot.stack().getQuantity() > 0) {
-                        storageSlotClick(slot.stack(), hasControlDown() ? GET_QUARTER : GET_HALF, false);
-                        return true;
-                    }
+            } else if (mouseButton == 1 && (carrying || hasStack)) {
+                storageSlotClick(stack, hasControlDown() ? GET_QUARTER : GET_HALF, false);
+                if (!carrying) {
+                    return true;
                 }
-            } else if (pullNormal(mouseButton)) {
-                if (!menu.getCarried().isEmpty()) {
-                    storageSlotClick(null, PULL_OR_PUSH_STACK, false);
-                } else {
-                    if (slot.stack() != null) {
-                        if (slot.stack().getQuantity() > 0) {
-                            storageSlotClick(slot.stack(), hasShiftDown() ? SHIFT_PULL : PULL_OR_PUSH_STACK, false);
-                            return true;
-                        }
-                    }
-                }
+            } else if (mouseButton == 0 && carrying) {
+                storageSlotClick(null, PULL_OR_PUSH_STACK, false);
+            } else if (mouseButton == 0 && hasStack) {
+                storageSlotClick(stack, hasShiftDown() ? SHIFT_PULL : PULL_OR_PUSH_STACK, false);
+                return true;
             }
         } else if (GLFW.glfwGetKey(mc.getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) != GLFW.GLFW_RELEASE) {
             storageSlotClick(null, SPACE_CLICK, false);
@@ -635,27 +586,6 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         Networking.sendToServer(new ClientSlotClick(pullOne, Optional.ofNullable(slotStack), act));
     }
 
-    public boolean isPullOne(int mouseButton) {
-        return mouseButton == 1 && hasShiftDown();
-    }
-
-    public boolean isTransferOne(int mouseButton) {
-        return hasShiftDown() && hasControlDown();
-    }
-
-    public boolean pullHalf(int mouseButton) {
-        return mouseButton == 1;
-    }
-
-    public boolean pullNormal(int mouseButton) {
-        return mouseButton == 0;
-    }
-
-
-    public Font getFont() {
-        return font;
-    }
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_S && hoveredSlot != null) {
@@ -676,7 +606,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             }
         }
 
-        if (keyCode == 256) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
             return true;
         }
@@ -720,7 +650,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (!this.needsScrollBars()) {
+        if (!scrollSlider.active) {
             return false;
         }
         return scrollSlider.mouseScrolled(mouseX, mouseY, scrollX, Config.INVERT_LECTERN_SCROLLING.getAsBoolean() ? scrollY : -scrollY);
@@ -735,9 +665,9 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     public void receiveServerSettings(String searchString, List<String> tabs) {
         menu.receiveServerSearchString(searchString);
         refreshItemList = true;
-        Set<String> nameSet = new HashSet<>(tabs);
-        tabNames = new ArrayList<>(nameSet).subList(0, Math.min(nameSet.size(), 11));
-        Collections.sort(tabNames);
+        RuleBasedCollator collator = (RuleBasedCollator) Collator.getInstance(Locale.ROOT);
+        collator.setNumericCollation(true);
+        tabNames = tabs.stream().distinct().sorted(collator).limit(11).toList();
         this.onPacket();
     }
 
