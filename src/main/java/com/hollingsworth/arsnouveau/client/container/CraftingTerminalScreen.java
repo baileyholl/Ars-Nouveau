@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
+import com.hollingsworth.arsnouveau.client.gui.TerminalScrollSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StorageSettingsButton;
@@ -31,12 +32,10 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -77,20 +76,9 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
 
     protected Minecraft mc = Minecraft.getInstance();
 
-    /**
-     * Amount scrolled in Creative mode inventory (0 = top, 1 = bottom)
-     */
-    protected float currentScroll;
-    /**
-     * True if the scrollbar is being dragged
-     */
-    protected boolean isScrolling;
-    /**
-     * True if the left mouse button was held down last time drawScreen was
-     * called.
-     */
+    protected TerminalScrollSlider scrollSlider;
+    protected boolean draggingScroll;
     private boolean refreshItemList;
-    protected boolean wasClicking;
     protected NoShadowTextField searchField;
     protected int slotIDUnderMouse = -1;
     protected int controllMode;
@@ -222,7 +210,6 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         imageWidth = 202;
         imageHeight = 248;
         clearWidgets();
-        scrollTo(0);
         inventoryLabelY = imageHeight - 92;
         super.init();
         this.widthTooNarrow = this.width < 379;
@@ -275,6 +262,12 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             }
             this.tabButtons.add(button);
         }
+        if (scrollSlider == null) {
+            scrollSlider = new TerminalScrollSlider(0, 0, 14, 3 * 18, DocAssets.STORAGE_SCROLL_BALL, this::scrollTo);
+        }
+        scrollSlider.setPosition(leftPos + 187, topPos + 18);
+        addRenderableWidget(scrollSlider);
+        scrollTo(scrollSlider.getValueInt());
         updateSearch();
 
         addRenderableWidget(recipeBookGui);
@@ -303,6 +296,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             for (StorageTabButton tabButton : tabButtons) {
                 tabButton.setX(leftPos - 13);
             }
+            scrollSlider.setX(leftPos + 187);
 
             btnCollapse.setX(leftPos + 86);
             btnExpand.setX(leftPos + 86);
@@ -388,9 +382,9 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             }
 
             Collections.sort(this.itemsSorted, noSort ? sortComp : comparator);
+            scrollSlider.setMaxRows((itemsSorted.size() + 8) / 9 - (expanded ? 7 : 3));
             if (!searchLast.equals(searchString)) {
-                this.scrollTo(0);
-                this.currentScroll = 0;
+                scrollSlider.setValue(0);
                 if (searchType == 1) {
                     IAutoFillTerminal.sync(searchString);
                 }
@@ -401,22 +395,16 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
                     }
                     recipeBookGui.recipesUpdated();
                 }
-            } else {
-                this.scrollTo(this.currentScroll);
             }
+            scrollTo(scrollSlider.getValueInt());
             refreshItemList = false;
             this.searchLast = searchString;
         }
     }
 
-    public final void scrollTo(float p_148329_1_) {
+    public final void scrollTo(int row) {
         int lines = expanded ? 7 : 3;
-        int i = (this.itemsSorted.size() + 9 - 1) / 9 - lines;
-        int j = (int) (p_148329_1_ * i + 0.5D);
-
-        if (j < 0) {
-            j = 0;
-        }
+        int j = Math.max(row, 0);
 
         for (int k = 0; k < lines; ++k) {
             for (int l = 0; l < 9; ++l) {
@@ -449,14 +437,6 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
         } else {
             this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
-            boolean flag = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_RELEASE;
-            int i = this.leftPos;
-            int j = this.topPos;
-            int k = i + 187;
-            int l = j + 18;
-            int i1 = k + 14;
-            int j1 = l + 3 * 18;
-
             if (hasShiftDown()) {
                 if (!noSort) {
                     List<StoredItemStack> list = this.itemsSorted;
@@ -475,29 +455,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
                 this.itemsUnsorted = new ArrayList<>(menu.itemList);
             }
 
-            if (!this.wasClicking && flag && mouseX >= k && mouseY >= l && mouseX < i1 && mouseY < j1) {
-                this.isScrolling = this.needsScrollBars();
-            }
-
-            if (!flag) {
-                this.isScrolling = false;
-            }
-            this.wasClicking = flag;
-
-            if (this.isScrolling) {
-                this.currentScroll = (mouseY - l - 7.5F) / (j1 - l - 15.0F);
-                this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
-                this.scrollTo(this.currentScroll);
-            }
             super.render(graphics, mouseX, mouseY, partialTicks);
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            i = k;
-            j = l;
-            k = j1;
-            DocClientUtils.blit(graphics, DocAssets.STORAGE_SCROLL_BALL, i, j + 3 + (int) ((k - j - 14) * this.currentScroll));
-
 
             if (this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
                 SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
@@ -607,6 +565,10 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         if (this.recipeBookGui.mouseClicked(mouseX, mouseY, mouseButton) || this.widthTooNarrow && this.recipeBookGui.isVisible()) {
             return true;
         }
+        if (scrollSlider.mouseClicked(mouseX, mouseY, mouseButton)) {
+            draggingScroll = true;
+            return true;
+        }
         this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
         if (slotIDUnderMouse > -1) {
             SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
@@ -638,6 +600,20 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             storageSlotClick(null, SPACE_CLICK, false);
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (draggingScroll) {
+            return scrollSlider.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        draggingScroll = false;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -743,16 +719,11 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     }
 
     @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_, double scrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (!this.needsScrollBars()) {
             return false;
-        } else {
-            int i = (itemsSorted.size() + 9 - 1) / 9 - (expanded ? 7 : 3);
-            this.currentScroll = (float) (this.currentScroll + (Config.INVERT_LECTERN_SCROLLING.getAsBoolean() ? -scrollY : scrollY) / i);
-            this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
-            this.scrollTo(this.currentScroll);
-            return true;
         }
+        return scrollSlider.mouseScrolled(mouseX, mouseY, scrollX, Config.INVERT_LECTERN_SCROLLING.getAsBoolean() ? scrollY : -scrollY);
     }
 
     @Override
