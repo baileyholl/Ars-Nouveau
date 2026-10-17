@@ -105,7 +105,7 @@ public class TileCaster implements IWrappedCaster {
                 return;
             }
 
-            SourceUtil.takeSourceMultipleWithParticles(tile.getBlockPos(), level, 10, manaCost);
+            SourceUtil.takeNearbyWithParticles(tile.getBlockPos(), level, 10, manaCost);
         }
     }
 }

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.imbuement_chamber.IImbuementRecipe;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
@@ -137,11 +137,11 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
-            List<ISpecialSourceProvider> takePos = SourceUtil.takeSourceMultiple(worldPosition, level, 2, Math.min(200, cost));
+            List<SourceAccess> takePos = SourceUtil.takeNearby(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
                 this.addSource(transferRate);
-                for (ISpecialSourceProvider provider : takePos) {
-                    EntityFlyingItem.spawn(worldPosition, serverLevel, provider.getCurrentPos().above(), worldPosition)
+                for (SourceAccess access : takePos) {
+                    EntityFlyingItem.spawn(worldPosition, serverLevel, access.pos().above(), worldPosition)
                             .withNoTouch().setDistanceAdjust(2f);
                 }
 

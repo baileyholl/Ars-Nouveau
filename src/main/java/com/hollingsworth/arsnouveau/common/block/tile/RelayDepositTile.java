@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -21,22 +21,22 @@ public class RelayDepositTile extends RelayTile {
         if (disabled)
             return;
         if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0) {
-            List<ISpecialSourceProvider> posList = SourceUtil.canGiveSource(worldPosition, level, 5);
-            for (ISpecialSourceProvider provider : posList) {
+            List<SourceAccess> posList = SourceUtil.findAcceptors(worldPosition, level, 5);
+            for (SourceAccess access : posList) {
                 if (this.getSource() <= 0)
                     break;
 
-                if (this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()) {
+                if (access.pos().equals(this.getToPos())) {
                     continue;
                 }
-                if (this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getBlockEntity(this.getFromPos()) == provider.getSource()) {
+                if (access.pos().equals(this.getFromPos())) {
                     continue;
                 }
 
-                if (!(provider.getSource() instanceof RelayTile)) {
-                    transferSource(this, provider.getSource());
-                    ParticleUtil.spawnFollowProjectile(level, this.worldPosition, provider.getCurrentPos(), this.getColor());
+                if (transferSource(this.getSourceStorage(), access.cap()) > 0) {
+                    updateBlock();
                 }
+                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, access.pos(), this.getColor());
             }
         }
     }

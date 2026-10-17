@@ -1,15 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.IMultiSourceTargetProvider;
-import com.hollingsworth.arsnouveau.api.source.ISourceCap;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.capability.SourceStorage;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -73,10 +71,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 continue;
             }
             boolean canReceive;
-            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
-                canReceive = sourceHandler.canExtract();
-            } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
-                canReceive = getTransferRate(fromTile, this) > 0;
+            if (SourceAccess.at(level, fromPos, null) instanceof SourceAccess from) {
+                canReceive = from.cap().canExtract();
             } else {
                 size--;
                 continue;
@@ -95,11 +91,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
             if (!level.isLoaded(fromPos))
                 continue;
             int transfer;
-            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, fromPos, null) instanceof ISourceCap sourceHandler) {
-                transfer = transferSource(sourceHandler, this.getSourceStorage(), ratePer);
-            } else if (level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile) {
-                int fromRate = Math.min(ratePer, getTransferRate(fromTile, this));
-                transfer = transferSource(fromTile, this, fromRate);
+            if (SourceAccess.at(level, fromPos, null) instanceof SourceAccess from) {
+                transfer = transferSource(from.cap(), this.getSourceStorage(), ratePer);
             } else {
                 stale.add(fromPos);
                 continue;
@@ -131,10 +124,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
                 continue;
             }
             boolean canReceive;
-            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
-                canReceive = sourceHandler.canReceive();
-            } else if (level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile) {
-                canReceive = getTransferRate(this, toTile) > 0;
+            if (SourceAccess.at(level, toPos, null) instanceof SourceAccess to) {
+                canReceive = to.cap().canReceive();
             } else {
                 size--;
                 continue;
@@ -153,10 +144,8 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
             if (!level.isLoaded(toPos))
                 continue;
             int transfer;
-            if (level.getCapability(CapabilityRegistry.SOURCE_CAPABILITY, toPos, null) instanceof ISourceCap sourceHandler) {
-                transfer = transferSource(this.getSourceStorage(), sourceHandler, ratePer);
-            } else if (level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile) {
-                transfer = transferSource(this, toTile, ratePer);
+            if (SourceAccess.at(level, toPos, null) instanceof SourceAccess to) {
+                transfer = transferSource(this.getSourceStorage(), to.cap(), ratePer);
             } else {
                 stale.add(toPos);
                 continue;

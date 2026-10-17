@@ -51,6 +51,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> STORAGE_MAGEBLOOM = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/mage_bloom"));
     public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(ArsNouveau.prefix("lectern_blacklist"));
     public static TagKey<Block> INTANGIBLE_BLACKLIST = BlockTags.create(ArsNouveau.prefix("intangible_blacklist"));
+    public static TagKey<Block> SOURCE_SCAN_EXCLUDED = BlockTags.create(ArsNouveau.prefix("source_scan_excluded"));
 
     public static TagKey<Block> SPRING_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "spring_crops"));
     public static TagKey<Block> SUMMER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "summer_crops"));
@@ -399,6 +400,15 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.WITHER_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
         this.tag(BlockTags.DRAGON_IMMUNE).add(BlockRegistry.DIM_BOUNDARY.get());
         this.tag(BlockTags.BLOCKS_WIND_CHARGE_EXPLOSIONS).add(BlockRegistry.DIM_BOUNDARY.get());
+
+        this.tag(SOURCE_SCAN_EXCLUDED).add(
+                BlockRegistry.RELAY.get(),
+                BlockRegistry.RELAY_SPLITTER.get(),
+                BlockRegistry.RELAY_COLLECTOR.get(),
+                BlockRegistry.RELAY_DEPOSIT.get(),
+                BlockRegistry.RELAY_WARP.get(),
+                BlockRegistry.IMBUEMENT_BLOCK.get()
+        );
     }
 
     public @NotNull String getName() {
