@@ -94,7 +94,6 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     protected NoShadowTextField searchField;
     protected int slotIDUnderMouse = -1;
     protected int controllMode;
-    protected int rowCount;
     protected int searchType;
     protected boolean expanded;
     private String searchLast = "";
@@ -158,17 +157,16 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         btnExpand.visible = !this.expanded;
         btnClr.visible = !this.expanded;
         btnRecipeBook.visible = !this.expanded && Config.SHOW_RECIPE_BOOK.get();
+        refreshItemList = true;
     }
 
     public void collapseScreen() {
-        rowCount = 3;
         this.expanded = false;
         onExpandedChanged(false);
         syncSortSettings();
     }
 
     public void expandScreen() {
-        rowCount = 7;
         this.expanded = true;
         if (this.recipeBookGui.isVisible()) {
             btnRecipeBook.onPress();
@@ -223,11 +221,13 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     protected void init() {
         imageWidth = 202;
         imageHeight = 248;
-        rowCount = 3;
         clearWidgets();
         scrollTo(0);
         inventoryLabelY = imageHeight - 92;
         super.init();
+        this.widthTooNarrow = this.width < 379;
+        this.recipeBookGui.init(this.width, this.height + 30, this.minecraft, this.widthTooNarrow, this.menu);
+        this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
 
         this.searchField = new NoShadowTextField(getFont(), this.leftPos + 115, this.topPos + 6, 60, this.getFont().lineHeight, Component.translatable("narrator.ars_nouveau.search"));
         this.searchField.setMaxLength(100);
@@ -257,6 +257,11 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             buttonSearchType.state = searchType;
             syncSortSettings();
         }));
+        buttonSortingType.state = comparator.type();
+        buttonDirection.state = comparator.isReversed() ? 1 : 0;
+        buttonSearchType.state = searchType;
+        int selectedTab = tabButtons.stream().filter(b -> b.isSelected).mapToInt(b -> b.state).findFirst().orElse(0);
+        tabButtons.clear();
         for (int i = 0; i < 12; i++) {
             var button = addRenderableWidget(new StorageTabButton(leftPos - 13, topPos + 59 + i * 15, 18, 12, i, 0, DocAssets.STORAGE_TAB_ICONS, b -> {
                 StorageTabButton tabButton = (StorageTabButton) b;
@@ -264,17 +269,14 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
                 syncSortSettings();
             }));
             button.visible = false;
+            button.isSelected = i == selectedTab;
             if (i == 0) {
                 button.isAll = true;
-                button.isSelected = true;
             }
             this.tabButtons.add(button);
         }
         updateSearch();
 
-        this.widthTooNarrow = this.width < 379;
-        this.recipeBookGui.init(this.width, this.height + 30, this.minecraft, this.widthTooNarrow, this.menu);
-        this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
         addRenderableWidget(recipeBookGui);
         this.setInitialFocus(this.recipeBookGui);
         int recipeButtonY = this.height / 2 - 34;
@@ -295,21 +297,18 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
 
             this.searchField.setX(this.leftPos + 115);
             btnClr.setX(this.leftPos + 86);
-            buttonSortingType.setX(leftPos - 18);
-            buttonDirection.setX(leftPos - 18);
-            buttonSearchType.setX(leftPos - 18);
+            buttonSortingType.setX(leftPos - 17);
+            buttonDirection.setX(leftPos - 17);
+            buttonSearchType.setX(leftPos - 17);
+            for (StorageTabButton tabButton : tabButtons) {
+                tabButton.setX(leftPos - 13);
+            }
 
             btnCollapse.setX(leftPos + 86);
             btnExpand.setX(leftPos + 86);
         }));
         if (recipeBookGui.isVisible()) {
-            buttonSortingType.setX(leftPos - 18);
-            buttonDirection.setX(leftPos - 18);
-            buttonSearchType.setX(leftPos - 18);
-            this.searchField.setX(this.leftPos + 115);
             recipeBookSearch = recipeBookGui.searchBox;
-            btnCollapse.setX(leftPos + 86);
-            btnExpand.setX(leftPos + 86);
         }
         btnRecipeBook.visible = Config.SHOW_RECIPE_BOOK.get();
         onExpandedChanged(expanded);
@@ -411,7 +410,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     }
 
     public final void scrollTo(float p_148329_1_) {
-        int lines = this.getSortSettings() == null || !this.getSortSettings().expanded() ? 3 : 7;
+        int lines = expanded ? 7 : 3;
         int i = (this.itemsSorted.size() + 9 - 1) / 9 - lines;
         int j = (int) (p_148329_1_ * i + 0.5D);
 
@@ -450,14 +449,13 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
             this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
         } else {
             this.recipeBookGui.render(graphics, mouseX, mouseY, partialTicks);
-            PoseStack st = graphics.pose();
             boolean flag = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_RELEASE;
             int i = this.leftPos;
             int j = this.topPos;
             int k = i + 187;
             int l = j + 18;
             int i1 = k + 14;
-            int j1 = l + rowCount * 18;
+            int j1 = l + 3 * 18;
 
             if (hasShiftDown()) {
                 if (!noSort) {
@@ -601,7 +599,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
     }
 
     protected boolean needsScrollBars() {
-        return itemsSorted.size() > rowCount * 9;
+        return itemsSorted.size() > (expanded ? 7 : 3) * 9;
     }
 
     @Override
@@ -749,7 +747,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         if (!this.needsScrollBars()) {
             return false;
         } else {
-            int i = (itemsSorted.size() + 9 - 1) / 9 - 5;
+            int i = (itemsSorted.size() + 9 - 1) / 9 - (expanded ? 7 : 3);
             this.currentScroll = (float) (this.currentScroll + (Config.INVERT_LECTERN_SCROLLING.getAsBoolean() ? -scrollY : scrollY) / i);
             this.currentScroll = Mth.clamp(this.currentScroll, 0.0F, 1.0F);
             this.scrollTo(this.currentScroll);
