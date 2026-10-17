@@ -6,11 +6,20 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 
 public class FamiliarData {
+    public static final StreamCodec<RegistryFriendlyByteBuf, FamiliarData> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC.map(r -> FamiliarRegistry.getFamiliarHolderMap().get(r), AbstractFamiliarHolder::getRegistryName), d -> d.familiarHolder,
+            ByteBufCodecs.COMPOUND_TAG, d -> d.entityTag,
+            FamiliarData::new
+    );
+
     public static final String ENTITY_TAG = "entityTag";
     public static final String FAMILIAR_ID = "familiarID";
     public AbstractFamiliarHolder familiarHolder;
@@ -25,6 +34,11 @@ public class FamiliarData {
         this.entityTag = tag.contains(ENTITY_TAG) ? tag.getCompound(ENTITY_TAG) : new CompoundTag();
         this.familiarHolder = FamiliarRegistry.getFamiliarHolderMap().getOrDefault(ResourceLocation.tryParse(tag.getString(FAMILIAR_ID)),
                 FamiliarRegistry.getFamiliarHolderMap().get(ArsNouveau.prefix(LibEntityNames.FAMILIAR_WIXIE)));
+    }
+
+    private FamiliarData(AbstractFamiliarHolder familiarHolder, CompoundTag entityTag) {
+        this.familiarHolder = familiarHolder;
+        this.entityTag = entityTag;
     }
 
     public CompoundTag toTag() {
