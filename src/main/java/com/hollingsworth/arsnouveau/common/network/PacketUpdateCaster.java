@@ -5,7 +5,13 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
+import com.hollingsworth.arsnouveau.common.util.Log;
+import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -48,18 +54,48 @@ public class PacketUpdateCaster extends AbstractPacket {
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
+        if (spellRecipe == null) {
+            return;
+        }
+
         InteractionHand hand = mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         ItemStack stack = player.getItemInHand(hand);
-        if (!(stack.getItem() instanceof ICasterTool))
+        if (!(stack.getItem() instanceof ICasterTool)) {
             return;
-        if (spellRecipe != null) {
-            AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
-            // Update just the recipe, don't overwrite the entire spell.
-            var spell = caster.getSpell(cast_slot).mutable().setRecipe(new ArrayList<>(spellRecipe.unsafeList()));
-            caster.setCurrentSlot(cast_slot).setSpell(spell.immutable(), cast_slot).setSpellName(spellName, cast_slot).saveToStack(stack);
-
-            Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
         }
+
+        AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
+        if (caster == null) {
+            return;
+        }
+
+        // ISpellValidator cannot do this validation as tomes may have more glyphs than the slot limit (especially if configured to be lower)
+        // or they may contain glyphs that the player has not learnt.
+        var maxSlots = 10 + (ServerConfig.INFINITE_SPELLS.getAsBoolean() ? ServerConfig.INF_SPELLS_LENGHT_MODIFIER.getAsInt() : 0) + caster.getBonusGlyphSlots();
+        if (spellRecipe.size() > maxSlots) {
+            Log.getLogger().warn("{} tried to write a spell with more glyphs than allowed", player.getName().getString());
+            return;
+        }
+
+        if (!player.isCreative() || (stack.getItem() instanceof SpellBook book && book.getTier().value >= SpellTier.CREATIVE.value)) {
+            var playerCap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player);
+            if (playerCap == null) {
+                return;
+            }
+
+            for (var glpyh : spellRecipe.unsafeList()) {
+                if (!glpyh.defaultedStarterGlyph() && !playerCap.knowsGlyph(glpyh)) {
+                    Log.getLogger().warn("{} tried to write a spell with glyphs that they do not know", player.getName().getString());
+                    return;
+                }
+            }
+        }
+
+        // Update just the recipe, don't overwrite the entire spell.
+        var spell = caster.getSpell(cast_slot).mutable().setRecipe(new ArrayList<>(spellRecipe.unsafeList()));
+        caster.setCurrentSlot(cast_slot).setSpell(spell.immutable(), cast_slot).setSpellName(spellName, cast_slot).saveToStack(stack);
+
+        Networking.sendToPlayerClient(new PacketUpdateBookGUI(stack), player);
     }
 
     public static final Type<PacketUpdateCaster> TYPE = new Type<>(ArsNouveau.prefix("update_caster"));
