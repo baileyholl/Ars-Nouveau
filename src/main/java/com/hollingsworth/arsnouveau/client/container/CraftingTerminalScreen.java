@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,10 +22,6 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
     private static final ResourceLocation gui_expanded = ArsNouveau.prefix("textures/gui/crafting_terminal_expanded.png");
     private final RecipeBookComponent recipeBookGui;
     private boolean widthTooNarrow;
-    private static final ResourceLocation RECIPE_BUTTON_TEXTURE = ArsNouveau.prefix("textures/gui/recipe_book.png");
-    private static final ResourceLocation CLEAR_CRAFT_TEXTURE = ArsNouveau.prefix("textures/gui/craft_clear.png");
-    private static final ResourceLocation EXPAND_TEXTURE = ArsNouveau.prefix("textures/gui/expand_inventory.png");
-    private static final ResourceLocation COLLAPSE_TEXTURE = ArsNouveau.prefix("textures/gui/collapse_inventory.png");
     private EditBox recipeBookSearch;
     private GhostRecipe ghostRecipe;
 
@@ -74,19 +71,19 @@ public class CraftingTerminalScreen extends AbstractStorageTerminalScreen<Crafti
         this.setInitialFocus(this.recipeBookGui);
         int recipeButtonY = this.height / 2 - 34;
         int collapseButtonY = this.height / 2 + 23;
-        btnClr = new GuiImageButton(leftPos + 86, recipeButtonY, 0, 0, 9, 9, 9, 9, CLEAR_CRAFT_TEXTURE, b -> clearGrid());
-        btnExpand = new GuiImageButton(leftPos + 86, recipeButtonY - 12, 0, 0, 14, 3, 14, 3, EXPAND_TEXTURE, b -> expandScreen());
-        btnCollapse = new GuiImageButton(leftPos + 86, collapseButtonY, 0, 0, 14, 3, 14, 3, COLLAPSE_TEXTURE, b -> collapseScreen());
+        btnClr = new GuiImageButton(leftPos + 86, recipeButtonY, DocAssets.CRAFT_CLEAR_BUTTON, b -> clearGrid());
+        btnExpand = new GuiImageButton(leftPos + 86, recipeButtonY - 12, DocAssets.EXPAND_INVENTORY_BUTTON, b -> expandScreen());
+        btnCollapse = new GuiImageButton(leftPos + 86, collapseButtonY, DocAssets.COLLAPSE_INVENTORY_BUTTON, b -> collapseScreen());
         addRenderableWidget(btnClr);
         addRenderableWidget(btnCollapse);
         addRenderableWidget(btnExpand);
-        btnRecipeBook = addRenderableWidget(new GuiImageButton(this.leftPos + 98, recipeButtonY, 0, 0, 9, 9, 9, 9, RECIPE_BUTTON_TEXTURE, (thisButton) -> {
+        btnRecipeBook = addRenderableWidget(new GuiImageButton(this.leftPos + 98, recipeButtonY, DocAssets.RECIPE_BOOK_BUTTON, (thisButton) -> {
             this.recipeBookGui.initVisuals();
             recipeBookSearch = recipeBookGui.searchBox;
 
             this.recipeBookGui.toggleVisibility();
             this.leftPos = this.recipeBookGui.updateScreenPosition(this.width, this.imageWidth);
-            ((GuiImageButton) thisButton).setPosition(this.leftPos + 98, recipeButtonY);
+            thisButton.setPosition(this.leftPos + 98, recipeButtonY);
 
             super.searchField.setX(this.leftPos + 115);
             btnClr.setX(this.leftPos + 86);

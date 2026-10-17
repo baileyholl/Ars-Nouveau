@@ -4,7 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.gson.JsonElement;
-import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.StateButton;
@@ -89,8 +90,6 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
     private String searchLast = "";
     protected boolean loadedSearch = false;
     private StoredItemStack.IStoredItemStackComparator comparator = new StoredItemStack.ComparatorAmount(false);
-    protected static final ResourceLocation scrollBall = ArsNouveau.prefix("textures/gui/scroll_ball.png");
-    protected static final ResourceLocation tabImages = ArsNouveau.prefix("textures/gui/bookwyrm_storage_tabs.png");
     protected StateButton buttonSortingType;
     protected StateButton buttonDirection;
     protected StateButton buttonSearchType;
@@ -186,26 +185,26 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         searchLast = "";
         addRenderableWidget(searchField);
 
-        buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 22, 12, 44, 13, 0, ArsNouveau.prefix("textures/gui/sort_type.png"), b -> {
+        buttonSortingType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 14, 22, 12, 0, DocAssets.STORAGE_SORT_TYPE, b -> {
             comparator = StoredItemStack.SortingTypes.VALUES[(comparator.type() + 1) % StoredItemStack.SortingTypes.VALUES.length].create(comparator.isReversed());
             buttonSortingType.state = comparator.type();
             syncSortSettings();
             refreshItemList = true;
         }));
 
-        buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 44, 13, 0, ArsNouveau.prefix("textures/gui/sort_order.png"), b -> {
+        buttonDirection = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 29, 22, 12, 0, DocAssets.STORAGE_SORT_ORDER, b -> {
             comparator.setReversed(!comparator.isReversed());
             buttonDirection.state = comparator.isReversed() ? 1 : 0;
             syncSortSettings();
             refreshItemList = true;
         }));
-        buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 44, 13, 0, ArsNouveau.prefix("textures/gui/search_sync.png"), b -> {
+        buttonSearchType = addRenderableWidget(new StorageSettingsButton(leftPos - 17, topPos + 44, 22, 12, 0, DocAssets.STORAGE_SEARCH_SYNC, b -> {
             searchType = searchType == 0 ? 1 : 0;
             buttonSearchType.state = searchType;
             syncSortSettings();
         }));
         for (int i = 0; i < 12; i++) {
-            var button = addRenderableWidget(new StorageTabButton(leftPos - 13, topPos + 59 + i * 15, 18, 12, 256, 13, i, 0, tabImages, b -> {
+            var button = addRenderableWidget(new StorageTabButton(leftPos - 13, topPos + 59 + i * 15, 18, 12, i, 0, DocAssets.STORAGE_TAB_ICONS, b -> {
                 StorageTabButton tabButton = (StorageTabButton) b;
                 setSelectedTab(tabButton.state);
                 syncSortSettings();
@@ -390,7 +389,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
         i = k;
         j = l;
         k = j1;
-        graphics.blit(scrollBall, i, j + 3 + (int) ((k - j - 14) * this.currentScroll), 0, 0, 12, 12, 12, 12);
+        DocClientUtils.blit(graphics, DocAssets.STORAGE_SCROLL_BALL, i, j + 3 + (int) ((k - j - 14) * this.currentScroll));
 
 
         if (this.menu.getCarried().isEmpty() && slotIDUnderMouse != -1) {
@@ -609,7 +608,7 @@ public abstract class AbstractStorageTerminalScreen<T extends StorageTerminalMen
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         graphics.blit(getGui(), this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        graphics.blit(ArsNouveau.prefix("textures/gui/search_paper.png"), this.leftPos + 102, this.topPos + 3, 0, 0, 72, 15, 72, 15);
+        DocClientUtils.blit(graphics, DocAssets.STORAGE_SEARCH_PAPER, this.leftPos + 102, this.topPos + 3);
     }
 
     protected void onUpdateSearch(String text) {
