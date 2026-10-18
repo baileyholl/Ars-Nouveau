@@ -10,14 +10,14 @@ import net.minecraft.core.Direction;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 @SuppressWarnings("rawtypes")
-public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTile> {
+public class RotatingTurretRenderer<T extends RotatingTurretTile> extends ArsGeoBlockRenderer<T> {
 
     public RotatingTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, BasicTurretRenderer.model);
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, RotatingTurretTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+    public void actuallyRender(PoseStack poseStack, T tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         super.actuallyRender(poseStack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
         float rotationX = tile.rotationX;
         float neededRotationX = tile.clientNeededX;
