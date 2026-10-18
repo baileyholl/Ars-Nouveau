@@ -54,7 +54,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu.SlotAction.*;
+import static com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu.SlotAction.*;
 
 public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerminalMenu> implements RecipeUpdateListener {
     private static final LoadingCache<StoredItemStack, List<String>> tooltipCache =
@@ -582,7 +582,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         this.recipeBookGui.slotClicked(slotIn);
     }
 
-    protected void storageSlotClick(StoredItemStack slotStack, StorageTerminalMenu.SlotAction act, boolean pullOne) {
+    protected void storageSlotClick(StoredItemStack slotStack, CraftingTerminalMenu.SlotAction act, boolean pullOne) {
         Networking.sendToServer(new ClientSlotClick(pullOne, Optional.ofNullable(slotStack), act));
     }
 

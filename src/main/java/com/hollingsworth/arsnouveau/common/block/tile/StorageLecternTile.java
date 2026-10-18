@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
-import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -34,9 +33,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -52,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 
-public class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider, ICapabilityProvider<CraftingLecternTile, Direction, IItemHandler> {
+public abstract class StorageLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider, ICapabilityProvider<CraftingLecternTile, Direction, IItemHandler> {
     public Map<String, List<HandlerPos>> tabManagerMap = new HashMap<>();
     public Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
     public Map<Item, Long> itemCounts = new HashMap<>();
@@ -106,11 +103,6 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             }
         }
         return new InventoryManager(itemHandlers);
-    }
-
-    @Override
-    public AbstractContainerMenu createMenu(int id, Inventory plInv, Player arg2) {
-        return new StorageTerminalMenu(id, plInv, this);
     }
 
     @Override

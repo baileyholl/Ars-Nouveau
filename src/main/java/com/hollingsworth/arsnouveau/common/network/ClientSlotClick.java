@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,15 +18,15 @@ public class ClientSlotClick extends AbstractPacket {
     public static StreamCodec<RegistryFriendlyByteBuf, ClientSlotClick> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, (clientSlotClick -> clientSlotClick.pullOne),
             ByteBufCodecs.optional(StoredItemStack.STREAM), (clientSlotClick -> clientSlotClick.stack),
-            ByteBufCodecs.VAR_INT.map(i -> StorageTerminalMenu.SlotAction.values()[i], StorageTerminalMenu.SlotAction::ordinal), (clientSlotClick -> clientSlotClick.action),
+            ByteBufCodecs.VAR_INT.map(i -> CraftingTerminalMenu.SlotAction.values()[i], CraftingTerminalMenu.SlotAction::ordinal), (clientSlotClick -> clientSlotClick.action),
             ClientSlotClick::new
     );
 
     public boolean pullOne;
     public Optional<StoredItemStack> stack;
-    public StorageTerminalMenu.SlotAction action;
+    public CraftingTerminalMenu.SlotAction action;
 
-    public ClientSlotClick(boolean pullOne, Optional<StoredItemStack> stack, StorageTerminalMenu.SlotAction action) {
+    public ClientSlotClick(boolean pullOne, Optional<StoredItemStack> stack, CraftingTerminalMenu.SlotAction action) {
         this.pullOne = pullOne;
         this.stack = stack;
         this.action = action;
@@ -38,7 +38,7 @@ public class ClientSlotClick extends AbstractPacket {
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
-        if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen) {
+        if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
             terminalScreen.onInteract(sender, this.stack.orElse(null), this.action, this.pullOne);
         }
     }
