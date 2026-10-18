@@ -72,6 +72,14 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
     IItemHandler lecternInvWrapper;
     public boolean powered;
 
+    // Automation mods call LecternInvWrapper#insertItem once per wrapper slot, and every call scans the
+    // entire storage network. When the network is full that is O(slots^2) per transfer attempt and can
+    // stall the tick thread, so remember stacks that failed to insert and fail them fast until next tick.
+    private long failedInsertGameTime = -1L;
+    private final List<ItemStack> failedInserts = new ArrayList<>();
+    private static final int MAX_FAILED_INSERT_CACHE = 64;
+    private boolean pushingStack;
+
 
     public StorageLecternTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.CRAFTING_LECTERN_TILE.get(), pos, state);
@@ -230,8 +238,22 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (stack == null) {
             return null;
         }
+        if (pushingStack) {
+            // A connected inventory routed this insertion back into the lectern; inserting again would recurse forever.
+            return stack;
+        }
+        boolean wholeNetwork = tab == null || tab.isEmpty();
+        if (wholeNetwork && hasFailedInsertThisTick(stack.getStack())) {
+            return stack;
+        }
         ItemStack copyStack = stack.getActualStack().copy();
-        MultiInsertReference reference = getInvManager(tab).insertStackWithReference(stack.getActualStack());
+        MultiInsertReference reference;
+        pushingStack = true;
+        try {
+            reference = getInvManager(tab).insertStackWithReference(stack.getActualStack());
+        } finally {
+            pushingStack = false;
+        }
         ItemStack remaining = reference.getRemainder();
         if (!reference.isEmpty()) {
             addInsertTasks(copyStack, reference);
@@ -239,7 +261,41 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         if (remaining.isEmpty()) {
             return null;
         }
+        if (wholeNetwork) {
+            recordFailedInsert(remaining);
+        }
         return new StoredItemStack(remaining);
+    }
+
+    /**
+     * Whether a whole-network insert of this item already failed during the current game tick.
+     * Inventories cannot gain space from an insert attempt, so retrying within the same tick is wasted work.
+     */
+    private boolean hasFailedInsertThisTick(ItemStack stack) {
+        if (level == null || failedInsertGameTime != level.getGameTime()) {
+            return false;
+        }
+        for (ItemStack failed : failedInserts) {
+            if (ItemStack.isSameItemSameComponents(failed, stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void recordFailedInsert(ItemStack remaining) {
+        if (level == null) {
+            return;
+        }
+        long gameTime = level.getGameTime();
+        if (failedInsertGameTime != gameTime) {
+            failedInsertGameTime = gameTime;
+            failedInserts.clear();
+        }
+        if (failedInserts.size() >= MAX_FAILED_INSERT_CACHE || hasFailedInsertThisTick(remaining)) {
+            return;
+        }
+        failedInserts.add(remaining.copyWithCount(1));
     }
 
     public ItemStack pushStack(ItemStack itemstack, @Nullable String tab) {
