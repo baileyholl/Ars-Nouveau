@@ -2,18 +2,24 @@ package com.hollingsworth.arsnouveau.gametest;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestSequence;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.util.UUID;
 
 @GameTestHolder(ArsNouveau.MODID)
 @PrefixGameTestTemplate(false)
@@ -75,6 +81,40 @@ public class StorageLecternTests {
     @GameTest(template = "empty10")
     public static void directExtractsFromStaleEmptySlot(GameTestHelper helper) {
         withdrawFromStaleEmptySlot(helper, createDirectRepositoryNetwork(helper));
+    }
+
+    @GameTest(template = "empty10")
+    public static void craftingRecipesArePerPlayer(GameTestHelper helper) {
+        StorageNetwork network = createChestNetwork(helper);
+        CraftingLecternTile lectern = helper.getBlockEntity(lecternPos);
+        ServerPlayer crafter = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "crafter"));
+        ItemStack log = new ItemStack(Items.OAK_LOG);
+        startLinked(helper, network)
+                .thenExecute(() -> lectern.pushStack(new StoredItemStack(log.copyWithCount(32)), null))
+                .thenWaitUntil(() -> helper.assertTrue(listedCount(lectern, log) == 32, "Expected the lectern to list 32 logs"))
+                .thenExecute(() -> {
+                    lectern.getCraftingInv(crafter).setItem(0, log.copy());
+                    lectern.getCraftingInv(UUID.randomUUID()).setItem(0, new ItemStack(Items.DIRT));
+                    helper.assertTrue(lectern.getCraftResult(crafter).getItem(0).is(Items.OAK_PLANKS), "Expected another player's grid to leave the crafter's result alone");
+                    lectern.craftShift(crafter, null);
+                    helper.assertTrue(crafter.getInventory().countItem(Items.OAK_PLANKS) == 64, "Expected a full stack of planks, got: " + crafter.getInventory().countItem(Items.OAK_PLANKS));
+                    helper.assertTrue(lectern.getCraftingInv(crafter).getItem(0).is(Items.OAK_LOG), "Expected the grid to be refilled from storage");
+                })
+                .thenWaitUntil(() -> helper.assertTrue(listedCount(lectern, log) == 16, "Expected crafting to use 16 logs from storage"))
+                .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void breakingLecternDropsEveryCraftingGrid(GameTestHelper helper) {
+        helper.setBlock(lecternPos, BlockRegistry.CRAFTING_LECTERN.get());
+        CraftingLecternTile lectern = helper.getBlockEntity(lecternPos);
+        lectern.getCraftingInv(UUID.randomUUID()).setItem(0, new ItemStack(Items.OAK_LOG, 5));
+        lectern.getCraftingInv(UUID.randomUUID()).setItem(0, new ItemStack(Items.COBBLESTONE, 7));
+        helper.destroyBlock(lecternPos);
+        helper.assertItemEntityCountIs(Items.OAK_LOG, lecternPos, 2, 5);
+        helper.assertItemEntityCountIs(Items.COBBLESTONE, lecternPos, 2, 7);
+        helper.assertItemEntityCountIs(Items.OAK_PLANKS, lecternPos, 2, 0);
+        helper.succeed();
     }
 
     private static void withdrawFromStaleEmptySlot(GameTestHelper helper, StorageNetwork network) {

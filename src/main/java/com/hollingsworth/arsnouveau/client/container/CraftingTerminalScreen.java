@@ -146,7 +146,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
 
     protected void onExpandedChanged(boolean expanded) {
         this.expanded = expanded;
-        menu.addStorageSlots(expanded);
+        menu.setExpanded(expanded);
         btnCollapse.visible = this.expanded;
         btnExpand.visible = !this.expanded;
         btnClr.visible = !this.expanded;
@@ -400,7 +400,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         for (int k = 0; k < lines; ++k) {
             for (int l = 0; l < 9; ++l) {
                 int i1 = l + (k + j) * 9;
-                menu.setSlotContents(l + k * 9, i1 < itemsSorted.size() ? itemsSorted.get(i1) : null);
+                menu.storageSlotList.get(l + k * 9).setStack(i1 < itemsSorted.size() ? itemsSorted.get(i1) : null);
             }
         }
     }
@@ -530,7 +530,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         }
         this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
         if (slotIDUnderMouse > -1) {
-            StoredItemStack stack = getMenu().getSlotByID(slotIDUnderMouse).stack();
+            StoredItemStack stack = getMenu().storageSlotList.get(slotIDUnderMouse).stack();
             boolean hasStack = stack != null && stack.getQuantity() > 0;
             boolean carrying = !menu.getCarried().isEmpty();
             if (mouseButton == 1 && hasShiftDown()) {
@@ -692,7 +692,7 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         Slot s = super.getSlotUnderMouse();
         if (s != null) return s;
         if (slotIDUnderMouse > -1) {
-            SlotStorage slot = getMenu().getSlotByID(slotIDUnderMouse);
+            SlotStorage slot = getMenu().storageSlotList.get(slotIDUnderMouse);
             if (slot.stack == null) {
                 return null;
             }

@@ -54,7 +54,7 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         super.onServerReceived(minecraftServer, player);
         if (player.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
-            terminalScreen.receiveSettings(player, settings, selectedTab);
+            terminalScreen.receiveSettings(settings, selectedTab);
         }
     }
 }

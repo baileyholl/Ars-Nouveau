@@ -11,7 +11,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -70,37 +69,21 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         GET_QUARTER
     }
 
+    protected static int playerSlotsStart = 10;
+
     protected CraftingLecternTile te;
-    protected int playerSlotsStart;
     protected List<SlotStorage> storageSlotList = new ArrayList<>();
     public List<StoredItemStack> itemList = new ArrayList<>();
     protected Inventory pinv;
     public String search;
     public Map<StoredItemStack, StoredItemStack> itemMap = new HashMap<>();
     boolean sentSettings = false;
-    public Map<UUID, String> tabs = new HashMap<>();
+    private String selectedTab;
     private Object2LongMap<StoredItemStack> itemLongMap = new Object2LongOpenHashMap<>();
     protected List<SlotCrafting> craftSlotList = new ArrayList<>();
     private final CraftingContainer craftMatrix;
     private final ResultContainer craftResult;
     private ActiveResultSlot craftingResultSlot;
-    private final List<ContainerListener> listeners = Lists.newArrayList();
-
-    @Override
-    public void addSlotListener(ContainerListener listener) {
-        super.addSlotListener(listener);
-        listeners.add(listener);
-    }
-
-    @Override
-    public void removeSlotListener(ContainerListener listener) {
-        super.removeSlotListener(listener);
-        listeners.remove(listener);
-    }
-
-    public List<ItemStack> getItemsInCraftingSlots() {
-        return this.craftMatrix.getItems();
-    }
 
     public CraftingTerminalMenu(int id, Inventory inv, CraftingLecternTile te) {
         super(MenuRegistry.STORAGE.get(), id);
@@ -109,7 +92,6 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         craftMatrix = te.getCraftingInv(inv.player);
         craftResult = te.getCraftResult(inv.player);
         init();
-        te.registerCrafting(this);
     }
 
     public CraftingTerminalMenu(int id, Inventory inv) {
@@ -120,39 +102,30 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         init();
     }
 
-    @Override
-    public void removed(Player playerIn) {
-        super.removed(playerIn);
-        if (te != null) {
-            te.unregisterCrafting(this);
-        }
-    }
-
     private void init() {
         int x = -4;
         int y = 70;
         this.addSlot(craftingResultSlot = new ActiveResultSlot(pinv.player, craftMatrix, craftResult, 0, x + 130, y + 37) {
             @Override
             public void onTake(Player thePlayer, ItemStack stack) {
-                if (thePlayer.level.isClientSide)
-                    return;
-                this.checkTakeAchievements(stack);
-                if (!pinv.player.getCommandSenderWorld().isClientSide) {
-                    te.craft((ServerPlayer) thePlayer, tabs.get(thePlayer.getUUID()));
+                if (thePlayer instanceof ServerPlayer serverPlayer) {
+                    this.checkTakeAchievements(stack);
+                    te.craft(serverPlayer, selectedTab);
                 }
             }
         });
-        if (craftMatrix != null) {
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    SlotCrafting slot = new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18, 89 + i * 18);
-                    this.addSlot(slot);
-                    this.craftSlotList.add(slot);
-                }
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                SlotCrafting slot = new SlotCrafting(craftMatrix, j + i * 3, x + 36 + j * 18, 89 + i * 18);
+                this.addSlot(slot);
+                this.craftSlotList.add(slot);
             }
         }
-        addStorageSlots(false);
-        this.playerSlotsStart = slots.size() - 1;
+        for (int i = 0; i < 7; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                storageSlotList.add(new SlotStorage(13 + j * 18, 21 + i * 18, i < 3));
+            }
+        }
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 addSlot(new Slot(pinv, j + i * 9 + 9, 13 + j * 18, 157 + i * 18));
@@ -164,18 +137,9 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         }
     }
 
-    public void addStorageSlots(boolean expanded) {
-        int lines = 7;
-        boolean shouldAdd = storageSlotList.isEmpty();
-        for (int i = 0; i < lines; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                int index = i * 9 + j;
-                if (shouldAdd) {
-                    storageSlotList.add(new SlotStorage(this.te, index, 13 + j * 18, 21 + i * 18, expanded || i < 3));
-                } else {
-                    storageSlotList.get(index).show = expanded || i < 3;
-                }
-            }
+    public void setExpanded(boolean expanded) {
+        for (int i = 0; i < storageSlotList.size(); i++) {
+            storageSlotList.get(i).show = expanded || i < 27;
         }
         for (SlotCrafting slot : craftSlotList) {
             slot.active = !expanded;
@@ -185,24 +149,16 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return te != null && te.canInteractWith(playerIn);
-    }
-
-    public final void setSlotContents(int id, StoredItemStack stack) {
-        storageSlotList.get(id).setStack(stack);
-    }
-
-    public final SlotStorage getSlotByID(int id) {
-        return storageSlotList.get(id);
+        return te != null && !te.isRemoved();
     }
 
     @Override
     public void broadcastChanges() {
-        if (te == null) {
+        if (!(pinv.player instanceof ServerPlayer player)) {
             return;
         }
 
-        Map<StoredItemStack, Long> itemsCount = te.getStacks(tabs.get(pinv.player.getUUID()));
+        Map<StoredItemStack, Long> itemsCount = te.getStacks(selectedTab);
         List<StoredItemStack> toWrite = new ArrayList<>();
         Set<StoredItemStack> found = new HashSet<>();
         itemsCount.forEach((s, c) -> {
@@ -219,12 +175,12 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         this.itemLongMap.clear();
         this.itemLongMap.putAll(itemsCount);
         if (!toWrite.isEmpty()) {
-            Networking.sendToPlayerClient(new UpdateStorageItemsPacket(toWrite), (ServerPlayer) pinv.player);
+            Networking.sendToPlayerClient(new UpdateStorageItemsPacket(toWrite), player);
         }
 
         if (!sentSettings) {
-            Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), (ServerPlayer) pinv.player);
-            Networking.sendToPlayerClient(new ServerToClientStoragePacket(te.getLastSearch(pinv.player), te.getTabNames()), (ServerPlayer) pinv.player);
+            Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), player);
+            Networking.sendToPlayerClient(new ServerToClientStoragePacket(te.getLastSearch(player), te.getTabNames()), player);
             sentSettings = true;
         }
 
@@ -233,41 +189,16 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
     @Override
     public final ItemStack quickMoveStack(Player playerIn, int index) {
-        if (slots.size() <= index)
+        if (!(playerIn instanceof ServerPlayer serverPlayer) || index >= slots.size() || !slots.get(index).hasItem())
             return ItemStack.EMPTY;
 
-        if (index > playerSlotsStart && te != null) {
-            if (slots.get(index) != null && slots.get(index).hasItem()) {
-                Slot slot = slots.get(index);
-                ItemStack slotStack = slot.getItem();
-                StoredItemStack c = te.pushStack(new StoredItemStack(slotStack, slotStack.getCount()), tabs.get(playerIn.getUUID()));
-                ItemStack itemstack = c != null ? c.getActualStack() : ItemStack.EMPTY;
-                slot.set(itemstack);
-                if (!playerIn.level.isClientSide)
-                    broadcastChanges();
-            }
-        } else if (playerIn instanceof ServerPlayer serverPlayer) {
-            Slot slot = this.slots.get(index);
-            if (slot != null && slot.hasItem()) {
-                ItemStack itemstack1 = slot.getItem();
-                ItemStack itemstack = itemstack1.copy();
-                if (index == 0) {
-                    if (te == null) return ItemStack.EMPTY;
-                    te.craftShift(serverPlayer, tabs.get(serverPlayer.getUUID()));
-                    if (!serverPlayer.level.isClientSide)
-                        broadcastChanges();
-                    return ItemStack.EMPTY;
-                } else if (index > 0 && index < 10) {
-                    if (te == null) return ItemStack.EMPTY;
-                    ItemStack stack = te.pushStack(itemstack, tabs.get(serverPlayer.getUUID()));
-                    slot.set(stack);
-                    if (!serverPlayer.level.isClientSide)
-                        broadcastChanges();
-                }
-                slot.onTake(serverPlayer, itemstack1);
-            }
+        if (index == getResultSlotIndex()) {
+            te.craftShift(serverPlayer, selectedTab);
+        } else {
+            Slot slot = slots.get(index);
+            slot.set(te.pushStack(slot.getItem(), selectedTab));
         }
-
+        broadcastChanges();
         return ItemStack.EMPTY;
     }
 
@@ -276,25 +207,10 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         return slotIn.container != craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
-    public void onCraftMatrixChanged() {
-        for (int i = 0; i < slots.size(); ++i) {
-            Slot slot = slots.get(i);
-
-            if (slot instanceof SlotCrafting || slot == craftingResultSlot) {
-                for (ContainerListener listener : listeners) {
-                    if (listener instanceof ServerPlayer) {
-                        ((ServerPlayer) listener).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), i, slot.getItem()));
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public boolean clickMenuButton(Player playerIn, int id) {
         if (te != null && id == 0)
-            te.clear(playerIn, tabs.get(playerIn.getUUID()));
-        else super.clickMenuButton(playerIn, id);
+            te.clear(playerIn, selectedTab);
         return false;
     }
 
@@ -371,12 +287,12 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
     }
 
 
-    public void receiveClientSearch(ServerPlayer sender, String search) {
-        te.setLastSearch(sender, search);
+    public void receiveClientSearch(String search) {
+        te.setLastSearch(pinv.player, search);
     }
 
-    public void receiveSettings(ServerPlayer sender, SortSettings settings, String selectedTab) {
-        this.tabs.put(sender.getUUID(), selectedTab);
+    public void receiveSettings(SortSettings settings, String selectedTab) {
+        this.selectedTab = selectedTab;
         te.setSorting(settings);
     }
 
@@ -387,7 +303,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
             if (pinv.player.level.isClientSide) {
                 itemList.forEach(stored -> accountStored(stored.getStack(), stored.getQuantity()));
             } else {
-                te.getStacks(tabs.get(pinv.player.getUUID())).forEach((stored, count) -> accountStored(stored.getStack(), count));
+                te.getStacks(selectedTab).forEach((stored, count) -> accountStored(stored.getStack(), count));
             }
         }
 
@@ -401,7 +317,6 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
     @Override
     public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
-        String tab = tabs.get(pPlayer.getUUID());
         new ServerPlaceRecipe<CraftingInput, CraftingRecipe>(this) {
             {
                 stackedContents = new TerminalRecipeItemHelper();
@@ -413,7 +328,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
                 if (remaining != -1) {
                     return remaining;
                 }
-                StoredItemStack pulled = te.pullStack(new StoredItemStack(stack), maxAmount, tab);
+                StoredItemStack pulled = te.pullStack(new StoredItemStack(stack), maxAmount, selectedTab);
                 if (pulled == null) {
                     return -1;
                 }
@@ -427,13 +342,13 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         }.recipeClicked(pPlayer, (RecipeHolder<CraftingRecipe>) pRecipe, pPlaceAll);
     }
 
-    public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList) {
+    public void onTransferHandler(List<List<ItemStack>> stacksList) {
         ItemStack[][] stacks = new ItemStack[9][];
         for (int i = 0; i < stacksList.size(); i++) {
             stacks[i] = stacksList.get(i).toArray(ItemStack[]::new);
         }
 
-        te.transferToGrid(pinv.player, stacks, tabs.get(sender.getUUID()));
+        te.transferToGrid(pinv.player, stacks, selectedTab);
     }
 
     @Override
@@ -444,17 +359,14 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
     public void onInteract(ServerPlayer player, @Nullable StoredItemStack clicked, SlotAction act, boolean pullOne) {
         player.resetLastActionTime();
         if (act == SlotAction.SPACE_CLICK) {
-            for (int i = playerSlotsStart + 1; i < playerSlotsStart + 28; i++) {
+            for (int i = playerSlotsStart; i < playerSlotsStart + 27; i++) {
                 quickMoveStack(player, i);
             }
         } else {
-            String selectedTab = tabs.get(player.getUUID());
             if (act == SlotAction.PULL_OR_PUSH_STACK) {
                 ItemStack stack = getCarried();
                 if (!stack.isEmpty()) {
-                    StoredItemStack rem = te.pushStack(new StoredItemStack(stack), selectedTab);
-                    ItemStack itemstack = rem == null ? ItemStack.EMPTY : rem.getActualStack();
-                    setCarried(itemstack);
+                    setCarried(te.pushStack(stack, selectedTab));
                 } else {
                     if (clicked == null) return;
                     StoredItemStack pulled = te.pullStack(clicked, clicked.getMaxStackSize(), selectedTab);
@@ -528,7 +440,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
                     StoredItemStack pulled = te.pullStack(clicked, 1, selectedTab);
                     if (pulled != null) {
                         ItemStack itemstack = pulled.getActualStack();
-                        this.moveItemStackTo(itemstack, playerSlotsStart + 1, this.slots.size(), true);
+                        this.moveItemStackTo(itemstack, playerSlotsStart, this.slots.size(), true);
                         if (itemstack.getCount() > 0)
                             te.pushOrDrop(itemstack, selectedTab);
                         player.getInventory().setChanged();
@@ -650,7 +562,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
                 StoredItemStack pulled = te.pullStack(clicked, clicked.getMaxStackSize(), selectedTab);
                 if (pulled != null) {
                     ItemStack itemstack = pulled.getActualStack();
-                    this.moveItemStackTo(itemstack, playerSlotsStart + 1, this.slots.size(), true);
+                    this.moveItemStackTo(itemstack, playerSlotsStart, this.slots.size(), true);
                     if (itemstack.getCount() > 0) {
                         te.pushOrDrop(itemstack, selectedTab);
                     }

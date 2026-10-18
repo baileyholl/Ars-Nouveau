@@ -476,10 +476,6 @@ public abstract class StorageLecternTile extends ModdedTile implements MenuProvi
         updateBlock();
     }
 
-    public boolean canInteractWith(Player player) {
-        return !this.isRemoved();
-    }
-
     public boolean openMenu(Player player) {
         StorageLecternTile mainLectern = getMainLectern();
         if (mainLectern == null)

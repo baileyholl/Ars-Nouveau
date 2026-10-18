@@ -31,7 +31,7 @@ public class ClientSearchPacket extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
         if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
-            terminalScreen.receiveClientSearch(sender, string);
+            terminalScreen.receiveClientSearch(string);
         }
     }
 
