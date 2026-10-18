@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.setup.registry.MenuRegistry;
 import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.recipebook.ServerPlaceRecipe;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
@@ -218,6 +222,11 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
     }
 
     @Override
+    public boolean shouldMoveToInventory(int slotIndex) {
+        return slotIndex != getResultSlotIndex();
+    }
+
+    @Override
     public List<RecipeBookCategories> getRecipeBookCategories() {
         return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH, RecipeBookCategories.CRAFTING_EQUIPMENT, RecipeBookCategories.CRAFTING_BUILDING_BLOCKS, RecipeBookCategories.CRAFTING_MISC, RecipeBookCategories.CRAFTING_REDSTONE);
     }
@@ -226,70 +235,47 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
         @Override
         public void clear() {
             super.clear();
-            itemList.forEach(e -> {
-                accountSimpleStack(e.getActualStack());
-            });
+            if (isClientSide()) {
+                itemList.forEach(stored -> accountStored(stored.getStack(), stored.getQuantity()));
+            } else {
+                te.getStacks(tabs.get(pinv.player.getUUID())).forEach((stored, count) -> accountStored(stored.getStack(), count));
+            }
+        }
+
+        private void accountStored(ItemStack stack, long count) {
+            if (!stack.isDamaged() && !stack.isEnchanted() && !stack.has(DataComponents.CUSTOM_NAME)) {
+                int amount = (int) Math.min(count, getGridWidth() * getGridHeight() * stack.getMaxStackSize());
+                accountStack(stack.copyWithCount(amount), amount);
+            }
         }
     }
 
     @Override
     public void handlePlacement(boolean pPlaceAll, RecipeHolder<?> pRecipe, ServerPlayer pPlayer) {
-        //todo: reenable recipe placement
-//		(new ServerPlaceRecipe<RecipeInput, Recipe>(this) {
-//			{
-//				stackedContents = new TerminalRecipeItemHelper();
-//			}
-//
-//
-//			@Override
-//			public void addItemToSlot(Object p_346420_, int pSlot, int pMaxAmount, int p_135418_, int p_135419_) {
-//				Slot slot = this.menu.getSlot(pSlot);
-//				ItemStack itemstack = StackedContents.fromStackingIndex((Integer) pIngredients.next());
-//				if (!itemstack.isEmpty()) {
-//					for(int i = 0; i < pMaxAmount; ++i) {
-//						this.moveItemToGrid(slot, itemstack);
-//					}
-//				}
-//			}
-//
-//			@Override
-//			protected void moveItemToGrid(Slot slotToFill, ItemStack ingredientIn) {
-//				int i = this.inventory.findSlotMatchingUnusedItem(ingredientIn);
-//				if (i != -1) {
-//					ItemStack itemstack = this.inventory.getItem(i).copy();
-//					if (!itemstack.isEmpty()) {
-//						if (itemstack.getCount() > 1) {
-//							this.inventory.removeItem(i, 1);
-//						} else {
-//							this.inventory.removeItemNoUpdate(i);
-//						}
-//
-//						itemstack.setCount(1);
-//						if (slotToFill.getItem().isEmpty()) {
-//							slotToFill.set(itemstack);
-//						} else {
-//							slotToFill.getItem().grow(1);
-//						}
-//
-//					}
-//				} else if(te != null) {
-//					StoredItemStack st = te.pullStack(new StoredItemStack(ingredientIn), 1, selectedTab);
-//					if(st != null) {
-//						if (slotToFill.getItem().isEmpty()) {
-//							slotToFill.set(st.getActualStack());
-//						} else {
-//							slotToFill.getItem().grow(1);
-//						}
-//					}
-//				}
-//			}
-//
-//			@Override
-//			protected void clearGrid() {
-//				((CraftingLecternTile) te).clear(selectedTab);
-//				this.menu.clearCraftingContent();
-//			}
-//		}).recipeClicked(pPlaceAll, pRecipe, pPlayer);
+        String tab = tabs.get(pPlayer.getUUID());
+        new ServerPlaceRecipe<CraftingInput, CraftingRecipe>(this) {
+            {
+                stackedContents = new TerminalRecipeItemHelper();
+            }
+
+            @Override
+            protected int moveItemToGrid(Slot slot, ItemStack stack, int maxAmount) {
+                int remaining = super.moveItemToGrid(slot, stack, maxAmount);
+                if (remaining != -1) {
+                    return remaining;
+                }
+                StoredItemStack pulled = te.pullStack(new StoredItemStack(stack), maxAmount, tab);
+                if (pulled == null) {
+                    return -1;
+                }
+                if (slot.getItem().isEmpty()) {
+                    slot.set(pulled.getActualStack());
+                } else {
+                    slot.getItem().grow((int) pulled.getQuantity());
+                }
+                return maxAmount - (int) pulled.getQuantity();
+            }
+        }.recipeClicked(pPlayer, (RecipeHolder<CraftingRecipe>) pRecipe, pPlaceAll);
     }
 
     public void onTransferHandler(ServerPlayer sender, List<List<ItemStack>> stacksList) {

@@ -90,6 +90,10 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingInput, CraftingR
         return te != null && te.canInteractWith(playerIn);
     }
 
+    protected boolean isClientSide() {
+        return pinv.player.level.isClientSide;
+    }
+
     public final void setSlotContents(int id, StoredItemStack stack) {
         storageSlotList.get(id).setStack(stack);
     }
