@@ -28,12 +28,12 @@ import java.util.Set;
 public class SourceUtil {
 
     /**
-     * Finds every block capable of accepting source within {@code range} of {@code pos}, excluding {@code pos} itself.
+     * Finds every block capable of providing source within {@code range} of {@code pos}, excluding {@code pos} itself.
      *
-     * @param pos   Position around which to find source stores
-     * @param level Level to find source stores in
+     * @param pos   Position around which to find source providers
+     * @param level Level to find source providers in
      * @param range Range to check around `pos`
-     * @return List of all the stores found, in order.
+     * @return List of all the providers found, in order.
      */
     public static List<SourceAccess> findProviders(BlockPos pos, Level level, int range) {
         List<SourceAccess> providers = new ArrayList<>();
@@ -134,7 +134,7 @@ public class SourceUtil {
     }
 
     /**
-     * Same as {@link SourceUtil#takeNearby}, plus a follow projectile from each store extracted from to {@code pos}.
+     * Same as {@link SourceUtil#takeNearby}, plus a follow projectile from each store extracted moving to {@code pos}.
      *
      * @param pos    Position around which to find source stores
      * @param level  Level to find source stores in
@@ -147,7 +147,7 @@ public class SourceUtil {
     }
 
     /**
-     * Same as {@link SourceUtil#takeNearby} and spawns a follow projectile from each store extracted from to {@code particlesTo}.
+     * Same as {@link SourceUtil#takeNearby} and spawns a follow projectile from each store extracted moving to {@code particlesTo}.
      *
      * @param pos         Position around which to find source stores
      * @param particlesTo Position the projectiles fly to
