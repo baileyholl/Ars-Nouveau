@@ -172,7 +172,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
             if (tile == null || playerTooFar) {
                 return null;
             }
-            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(CraftingLecternTile.HandlerPos::pos).toList());
+            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(handlerPos -> handlerPos.pos).toList());
             targets.add(tile.getBlockPos());
             return targets.get(level.random.nextInt(targets.size())).above();
         }));

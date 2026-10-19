@@ -180,7 +180,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
         if (!sentSettings) {
             Networking.sendToPlayerClient(new SetTerminalSettingsPacket(te.sortSettings, null), player);
-            Networking.sendToPlayerClient(new ServerToClientStoragePacket(te.getLastSearch(player), te.getTabNames()), player);
+            Networking.sendToPlayerClient(new ServerToClientStoragePacket(te.searches.getOrDefault(player.getUUID(), ""), te.getTabNames()), player);
             sentSettings = true;
         }
 
@@ -288,7 +288,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
 
     public void receiveClientSearch(String search) {
-        te.setLastSearch(pinv.player, search);
+        te.searches.put(pinv.player.getUUID(), search);
     }
 
     public void receiveSettings(SortSettings settings, String selectedTab) {

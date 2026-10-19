@@ -55,7 +55,7 @@ public class DebugLecternCommand {
             return 0;
         }
         for (RepositoryTile repository : repositories) {
-            lectern.addHandlerPos(lectern, repository.getBlockPos());
+            lectern.addHandlerPos(repository.getBlockPos());
         }
         lectern.updateItems = true;
         return 1;

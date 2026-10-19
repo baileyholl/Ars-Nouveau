@@ -14,11 +14,6 @@ public class LecternInvWrapper extends CombinedHandlerInv {
     }
 
     @Override
-    public @NotNull ItemStack getStackInSlot(int slot) {
-        return super.getStackInSlot(slot);
-    }
-
-    @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         return !simulate ? lecternTile.pushStack(stack, null) : super.insertItem(slot, stack, simulate);
     }

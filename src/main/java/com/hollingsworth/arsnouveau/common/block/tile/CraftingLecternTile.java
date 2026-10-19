@@ -54,6 +54,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
+import net.neoforged.neoforge.items.wrapper.ForwardingItemHandler;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -82,8 +84,19 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     public boolean canCreateTasks = false;
     public static final String TAB_ALL = "8f6fe318-4ca6-4b29-ab63-15ec5289f5c9";
     public boolean invalidateNextTick;
+    private @Nullable BlockCapabilityCache<IItemHandler, Direction> mainLecternHandler;
+    private final IItemHandler chainedHandler = new ForwardingItemHandler(() -> {
+        CraftingLecternTile mainLectern = getMainLectern();
+        if (mainLectern == null || mainLectern == this || isRemoved() || !(level instanceof ServerLevel serverLevel)) {
+            return EmptyItemHandler.INSTANCE;
+        }
+        if (mainLecternHandler == null || !mainLecternHandler.pos().equals(mainLectern.getBlockPos())) {
+            mainLecternHandler = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, mainLectern.getBlockPos(), null);
+        }
+        IItemHandler handler = mainLecternHandler.getCapability();
+        return handler == null ? EmptyItemHandler.INSTANCE : handler;
+    });
     public Queue<TransferTask> transferTasks = EvictingQueue.create(10);
-    IItemHandler lecternInvWrapper;
     public boolean powered;
     private Function<UUID, AbstractContainerMenu> craftingContainer = (uuid) -> new AbstractContainerMenu(MenuType.CRAFTING, 0) {
         @Override
@@ -112,12 +125,8 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     }
 
     public InventoryManager getInvManager(@Nullable String tab) {
-        List<HandlerPos> handlers;
-        if (tab == null || tab.isEmpty()) {
-            handlers = tabManagerMap.getOrDefault(TAB_ALL, new ArrayList<>());
-        } else {
-            handlers = tabManagerMap.getOrDefault(tab, new ArrayList<>());
-        }
+        boolean isAnyTab = tab == null || tab.isEmpty();
+        List<HandlerPos> handlers = tabManagerMap.getOrDefault(isAnyTab ? TAB_ALL : tab, List.of());
 
         List<FilterableItemHandler> itemHandlers = new ArrayList<>();
         for (HandlerPos handler : handlers) {
@@ -127,7 +136,6 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
                     || handler.handler.getCapability() == null) {
                 continue;
             }
-            boolean isAnyTab = tab == null || tab.isEmpty();
 
             if (isAnyTab || (level.getBlockEntity(handler.pos) instanceof Nameable nameable
                     && nameable.hasCustomName()
@@ -180,38 +188,19 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         if (stack == null || max <= 0) {
             return null;
         }
-        ItemStack st = stack.getStack();
-        MultiExtractedReference pulled = getInvManager(tabName).extractItemFromAll(st, max, true);
+        MultiExtractedReference pulled = getInvManager(tabName).extractItemFromAll(stack.getStack(), max, true);
         if (pulled.getExtracted().isEmpty()) {
             return null;
         }
-        addExtractTasks(pulled);
+        if (canCreateTasks) {
+            for (ExtractedStack extractedStack : pulled.getSlots()) {
+                BlockPos pos = posFromSlotRef(extractedStack);
+                if (pos != null) {
+                    transferTasks.add(new TransferTask(pos, getBlockPos(), extractedStack.stack, level.getGameTime()));
+                }
+            }
+        }
         return new StoredItemStack(pulled.getExtracted());
-    }
-
-    private void addExtractTasks(MultiExtractedReference multiSlotReference) {
-        if (multiSlotReference.getExtracted().isEmpty() || !canCreateTasks) {
-            return;
-        }
-
-        for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
-            BlockPos pos = posFromSlotRef(extractedStack);
-            if (pos != null) {
-                addTransferTask(new TransferTask(pos, getBlockPos(), extractedStack.stack, level.getGameTime()));
-            }
-        }
-    }
-
-    private void addInsertTasks(ItemStack stack, MultiInsertReference reference) {
-        if (reference.isEmpty() || stack.isEmpty() || !canCreateTasks) {
-            return;
-        }
-        for (SlotReference extractedStack : reference.getSlots()) {
-            BlockPos pos = posFromSlotRef(extractedStack);
-            if (pos != null) {
-                addTransferTask(new TransferTask(getBlockPos(), pos, stack, level.getGameTime()));
-            }
-        }
     }
 
     private BlockPos posFromSlotRef(SlotReference extractedStack) {
@@ -232,28 +221,8 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         return null;
     }
 
-    public void addTransferTask(TransferTask task) {
-        if (!canCreateTasks) {
-            return;
-        }
-        transferTasks.add(task);
-    }
-
-
     public @Nullable TransferTask getTransferTask() {
-        List<TransferTask> staleTasks = new ArrayList<>();
-        TransferTask task = null;
-        for (TransferTask transferTask : transferTasks) {
-            // Remove tasks older than 10 seconds
-            if (level.getGameTime() - transferTask.gameTime > 200) {
-                staleTasks.add(transferTask);
-            }
-            task = transferTask;
-            staleTasks.add(transferTask);
-            break;
-        }
-        transferTasks.removeAll(staleTasks);
-        return task;
+        return transferTasks.poll();
     }
 
 
@@ -261,12 +230,17 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         if (stack == null) {
             return null;
         }
-        ItemStack copyStack = stack.getActualStack().copy();
+        ItemStack copyStack = stack.getActualStack();
         MultiInsertReference reference = getInvManager(tab).insertStackWithReference(stack.getActualStack());
-        ItemStack remaining = reference.getRemainder();
-        if (!reference.isEmpty()) {
-            addInsertTasks(copyStack, reference);
+        if (canCreateTasks) {
+            for (SlotReference slotReference : reference.getSlots()) {
+                BlockPos pos = posFromSlotRef(slotReference);
+                if (pos != null) {
+                    transferTasks.add(new TransferTask(getBlockPos(), pos, copyStack, level.getGameTime()));
+                }
+            }
         }
+        ItemStack remaining = reference.getRemainder();
         if (remaining.isEmpty()) {
             return null;
         }
@@ -319,20 +293,16 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.inv_too_far", ServerConfig.LECTERN_LINK_RANGE.get()));
             return;
         }
-        if (this.getBlockPos().equals(storedPos)) {
-            return;
-        }
 
-        if (this.handlerPosList.stream().anyMatch(handlerPos -> handlerPos.pos.equals(storedPos))) {
+        if (handlerPosList.removeIf(handlerPos -> handlerPos.pos.equals(storedPos))) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.removed"));
-            handlerPosList.removeIf(handlerPos -> handlerPos.pos().equals(storedPos));
             this.invalidateCapabilities();
         } else {
-            if (!playerEntity.isCreative() && this.handlerPosList.size() >= this.getMaxConnectedInventories()) {
+            if (!playerEntity.isCreative() && this.handlerPosList.size() >= getBookwyrmEntities().size() * Config.BOOKWYRM_LIMIT.get()) {
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.too_many"));
                 return;
             }
-            this.addHandlerPos(this, storedPos);
+            this.addHandlerPos(storedPos);
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.storage.from_set"));
         }
         this.mainLecternPos = null;
@@ -388,7 +358,7 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         if (checkPlayerRangeTicks > 0) {
             checkPlayerRangeTicks--;
         }
-        if (checkPlayerRangeTicks <= 0) {
+        if (checkPlayerRangeTicks <= 0 && !bookwyrmUUIDs.isEmpty()) {
             // Turn off bookwyrm tasks if no player is nearby
             checkPlayerRangeTicks = 60 + level.random.nextInt(5);
             canCreateTasks = false;
@@ -415,8 +385,8 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     public void updateItems() {
         itemsByTab.clear();
         tabManagerMap.clear();
-        Map<String, List<FilterableItemHandler>> mappedFilterables = new HashMap<>();
-        itemsByTab.put(TAB_ALL, new HashMap<>());
+        Map<StoredItemStack, Long> allItems = new HashMap<>();
+        itemsByTab.put(TAB_ALL, allItems);
         for (HandlerPos handlerPos : handlerPosList) {
             BlockPos pos = handlerPos.pos;
             if (!isValidInv(pos) || handlerPos.handler == null) {
@@ -426,37 +396,28 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             if (handler == null) {
                 continue;
             }
-            StorageItemHandler storageItemHandler = new StorageItemHandler(handler, FilterSet.forPosition(level, pos), handlerPos.slotCache);
-            mappedFilterables.computeIfAbsent(TAB_ALL, s -> new ArrayList<>()).add(storageItemHandler);
+            Map<StoredItemStack, Long> tabItems = null;
             if (level.getBlockEntity(pos) instanceof Nameable nameable && nameable.hasCustomName()) {
                 String tabName = nameable.getCustomName().getString();
-                mappedFilterables.computeIfAbsent(tabName, s -> new ArrayList<>()).add(storageItemHandler);
+                tabItems = itemsByTab.computeIfAbsent(tabName, (key) -> new HashMap<>());
                 tabManagerMap.computeIfAbsent(tabName, (key) -> new ArrayList<>()).add(handlerPos);
             }
             tabManagerMap.computeIfAbsent(TAB_ALL, (key) -> new ArrayList<>()).add(handlerPos);
-        }
 
-        for (String tabName : mappedFilterables.keySet()) {
-            itemsByTab.computeIfAbsent(tabName, (key) -> new HashMap<>()).clear();
-            for (FilterableItemHandler filterableItemHandler : mappedFilterables.get(tabName)) {
-                IItemHandler handler = filterableItemHandler.getHandler();
-                if (handler == null)
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (stack.isEmpty())
                     continue;
-                for (int i = 0; i < handler.getSlots(); i++) {
-                    ItemStack stack = handler.getStackInSlot(i);
-                    if (stack.isEmpty())
-                        continue;
-                    StoredItemStack storedItemStack = new StoredItemStack(stack);
-                    itemsByTab.get(tabName).merge(storedItemStack, storedItemStack.getQuantity(), Long::sum);
+                StoredItemStack storedItemStack = new StoredItemStack(stack);
+                allItems.merge(storedItemStack, storedItemStack.getQuantity(), Long::sum);
+                if (tabItems != null) {
+                    tabItems.merge(storedItemStack, storedItemStack.getQuantity(), Long::sum);
                 }
             }
         }
 
         itemCounts = new HashMap<>();
-        Map<StoredItemStack, Long> allItems = itemsByTab.get(TAB_ALL);
-        for (StoredItemStack stack : allItems.keySet()) {
-            itemCounts.put(stack.getStack().getItem(), allItems.get(stack));
-        }
+        allItems.forEach((stack, count) -> itemCounts.put(stack.getStack().getItem(), count));
     }
 
     public List<EntityBookwyrm> getBookwyrmEntities() {
@@ -546,10 +507,6 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         updateBlock();
     }
 
-    public int getMaxConnectedInventories() {
-        return getBookwyrmEntities().size() * Config.BOOKWYRM_LIMIT.get();
-    }
-
     public @Nullable EntityBookwyrm addBookwyrm() {
         if (level.isClientSide)
             return null;
@@ -563,20 +520,6 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
 
     public boolean isValidInv(BlockPos pos) {
         return !(level.getBlockEntity(pos) instanceof CraftingLecternTile) && !level.getBlockState(pos).is(BlockTagProvider.LECTERN_BLACKLIST);
-    }
-
-    private ListTag getCraftMatrixTag(TransientCustomContainer craftingMatrix, HolderLookup.Provider pRegistries) {
-        ListTag listTag = new ListTag();
-        for (int i = 0; i < craftingMatrix.getContainerSize(); ++i) {
-            ItemStack itemstack = craftingMatrix.getItem(i);
-            if (!itemstack.isEmpty()) {
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putInt("Slot", i);
-                compoundTag.put("item", itemstack.save(pRegistries));
-                listTag.add(compoundTag);
-            }
-        }
-        return listTag;
     }
 
     @Override
@@ -605,11 +548,21 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
 
         ListTag matrices = new ListTag();
         for (Map.Entry<UUID, TransientCustomContainer> entry : craftingMatrices.entrySet()) {
-            UUID uuid = entry.getKey();
+            TransientCustomContainer craftingMatrix = entry.getValue();
+            ListTag table = new ListTag();
+            for (int i = 0; i < craftingMatrix.getContainerSize(); ++i) {
+                ItemStack itemstack = craftingMatrix.getItem(i);
+                if (!itemstack.isEmpty()) {
+                    CompoundTag itemSlot = new CompoundTag();
+                    itemSlot.putInt("Slot", i);
+                    itemSlot.put("item", itemstack.save(pRegistries));
+                    table.add(itemSlot);
+                }
+            }
             CompoundTag matrix = new CompoundTag();
 
-            matrix.putUUID("UUID", uuid);
-            matrix.put("CraftingTable", getCraftMatrixTag(entry.getValue(), pRegistries));
+            matrix.putUUID("UUID", entry.getKey());
+            matrix.put("CraftingTable", table);
             matrices.add(matrix);
         }
 
@@ -666,14 +619,6 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         this.initHandlerCache();
     }
 
-    public String getLastSearch(Player player) {
-        return searches.getOrDefault(player.getUUID(), "");
-    }
-
-    public void setLastSearch(Player sender, String string) {
-        searches.put(sender.getUUID(), string);
-    }
-
     @Override
     public void getTooltip(List<Component> tooltip) {
         if (mainLecternPos != null) {
@@ -701,13 +646,13 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         return handlers;
     }
 
-    public void addHandlerPos(CraftingLecternTile tile, BlockPos pos) {
-        BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !tile.isRemoved(), () -> {
+    public void addHandlerPos(BlockPos pos) {
+        BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !this.isRemoved(), () -> {
             this.invalidateNextTick = true;
         });
         if (capabilityCache.getCapability() != null) {
-            tile.handlerPosList.add(new HandlerPos(pos.immutable(), capabilityCache));
-            tile.invalidateCapabilities();
+            handlerPosList.add(new HandlerPos(pos.immutable(), capabilityCache));
+            invalidateCapabilities();
         }
     }
 
@@ -715,17 +660,13 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     public void initHandlerCache() {
         if (level.isClientSide)
             return;
-        CraftingLecternTile lecternTile = this.getMainLectern();
-        if (lecternTile == null) {
-            return;
-        }
-        for (HandlerPos handlerPos : lecternTile.handlerPosList) {
+        for (HandlerPos handlerPos : handlerPosList) {
             BlockPos pos = handlerPos.pos;
             if (pos.equals(this.getBlockPos())) {
                 continue;
             }
 
-            handlerPos.handler = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !lecternTile.isRemoved(), () -> {
+            handlerPos.handler = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !this.isRemoved(), () -> {
                 this.invalidateNextTick = true;
             });
 
@@ -735,13 +676,10 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
 
     @Override
     public @Nullable IItemHandler getCapability(CraftingLecternTile object, Direction context) {
-        CraftingLecternTile lecternTile = object.getMainLectern();
-        if (lecternTile == null) {
-            this.lecternInvWrapper = new LecternInvWrapper(this);
-            return this.lecternInvWrapper;
+        if (mainLecternPos == null) {
+            return new LecternInvWrapper(this, getConnectedHandlers().toArray(new IItemHandler[0]));
         }
-        lecternTile.lecternInvWrapper = new LecternInvWrapper(this, this.getConnectedHandlers().toArray(new IItemHandler[0]));
-        return lecternTile.lecternInvWrapper;
+        return chainedHandler;
     }
 
     public TransientCustomContainer getCraftingInv(Player player) {
@@ -775,7 +713,8 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         } while (ItemStack.isSameItem(crafted, craftResult.getItem(0)) && (amountCrafted + crafted.getCount()) <= crafted.getMaxStackSize());
 
         for (ItemStack craftedItem : craftedItemsList) {
-            if (!player.getInventory().add(craftedItem.copy())) {
+            player.getInventory().add(craftedItem);
+            if (!craftedItem.isEmpty()) {
                 ItemStack is = pushStack(craftedItem, tab);
                 if (!is.isEmpty()) {
                     Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), is);
@@ -809,16 +748,10 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
                 }
                 if (currentStack.isEmpty() && !oldItem.isEmpty()) {
                     StoredItemStack is = null;
-                    for (int j = 0; j < thePlayer.getInventory().items.size(); j++) {
-                        ItemStack st = thePlayer.getInventory().getItem(j);
-                        if (ItemStack.isSameItemSameComponents(oldItem, st)) {
-                            st = thePlayer.getInventory().removeItem(j, 1);
-                            if (!st.isEmpty()) {
-                                is = new StoredItemStack(st, 1);
-                                playerInvUpdate = true;
-                                break;
-                            }
-                        }
+                    int invSlot = thePlayer.getInventory().findSlotMatchingItem(oldItem);
+                    if (invSlot != -1) {
+                        is = new StoredItemStack(thePlayer.getInventory().removeItem(invSlot, 1), 1);
+                        playerInvUpdate = true;
                     }
 
                     if (is == null) {
@@ -860,7 +793,7 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             setSorting(sortSettings.setExpanded(false));
             Player player = level.getPlayerByUUID(uuid);
             if (player instanceof ServerPlayer serverPlayer) {
-                Networking.sendToPlayerClient(new SetTerminalSettingsPacket(sortSettings, searches.get(uuid)), serverPlayer);
+                Networking.sendToPlayerClient(new SetTerminalSettingsPacket(sortSettings, null), serverPlayer);
             }
         }
         updateCraftResult(uuid);
@@ -869,14 +802,14 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
 
     private void updateCraftResult(UUID uuid) {
         ResultContainer craftResult = getCraftResult(uuid);
-        TransientCustomContainer craftMatrix = getCraftingInv(uuid);
+        CraftingInput input = getCraftingInv(uuid).asCraftInput();
 
-        var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftMatrix.asCraftInput(), level).orElse(null);
+        var holder = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
         craftResult.setRecipeUsed(holder);
         if (holder == null) {
             craftResult.setItem(0, ItemStack.EMPTY);
         } else {
-            craftResult.setItem(0, holder.value().assemble(craftMatrix.asCraftInput(), level.registryAccess()));
+            craftResult.setItem(0, holder.value().assemble(input, level.registryAccess()));
         }
     }
 
@@ -918,31 +851,24 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             }
 
             if (stack.isEmpty()) {
-                Map<Item, Long> inv = itemCounts;
                 // sort ingredient by the amount of items in the inv map
-                ingredient = Arrays.stream(ingredient).filter(Objects::nonNull).sorted(Comparator.comparingLong(a -> inv.getOrDefault(((ItemStack) a).getItem(), 0L)).reversed()).toArray(ItemStack[]::new);
+                ingredient = Arrays.stream(ingredient).filter(Objects::nonNull).sorted(Comparator.comparingLong((ItemStack a) -> itemCounts.getOrDefault(a.getItem(), 0L)).reversed()).toArray(ItemStack[]::new);
 
                 // Sort ingredient by the amount of items in this inventory
                 for (ItemStack itemStack : ingredient) {
-                    ItemStack pulled = pullStack(itemStack, tab);
-                    if (!pulled.isEmpty()) {
-                        stack = pulled;
+                    StoredItemStack pulled = pullStack(new StoredItemStack(itemStack), 1, tab);
+                    if (pulled != null) {
+                        stack = pulled.getActualStack();
                         break;
                     }
                 }
             }
 
             if (!stack.isEmpty()) {
-                craftMatrix.setItem(i, stack);
+                craftMatrix.setItemNoUpdate(i, stack);
             }
         }
         onCraftingMatrixChanged(player.getUUID());
-    }
-
-    private ItemStack pullStack(ItemStack itemStack, @Nullable String tab) {
-        StoredItemStack is = pullStack(new StoredItemStack(itemStack), 1, tab);
-        if (is == null) return ItemStack.EMPTY;
-        else return is.getActualStack();
     }
 
     @Override
@@ -970,22 +896,6 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             this.pos = pos;
             this.handler = handler;
             this.slotCache = new SlotCache();
-        }
-
-        public BlockPos pos() {
-            return pos;
-        }
-
-        public BlockCapabilityCache<? extends IItemHandler, Direction> handler() {
-            return handler;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof HandlerPos handlerPos) {
-                return this.pos.equals(handlerPos.pos);
-            }
-            return false;
         }
     }
 }
