@@ -6,9 +6,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class LecternInvWrapper extends CombinedHandlerInv {
-    public StorageLecternTile lecternTile;
+    public CraftingLecternTile lecternTile;
 
-    public LecternInvWrapper(StorageLecternTile lecternTile, IItemHandler... itemHandler) {
+    public LecternInvWrapper(CraftingLecternTile lecternTile, IItemHandler... itemHandler) {
         super(itemHandler);
         this.lecternTile = lecternTile;
     }

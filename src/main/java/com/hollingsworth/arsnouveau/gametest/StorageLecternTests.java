@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -86,7 +85,7 @@ public class StorageLecternTests {
     @GameTest(template = "empty10")
     public static void craftingRecipesArePerPlayer(GameTestHelper helper) {
         StorageNetwork network = createChestNetwork(helper);
-        CraftingLecternTile lectern = helper.getBlockEntity(lecternPos);
+        CraftingLecternTile lectern = network.lectern();
         ServerPlayer crafter = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "crafter"));
         ItemStack log = new ItemStack(Items.OAK_LOG);
         startLinked(helper, network)
@@ -118,7 +117,7 @@ public class StorageLecternTests {
     }
 
     private static void withdrawFromStaleEmptySlot(GameTestHelper helper, StorageNetwork network) {
-        StorageLecternTile lectern = network.lectern();
+        CraftingLecternTile lectern = network.lectern();
         RepositoryTile repository = helper.getBlockEntity(storagePos);
         ItemStack sword = new ItemStack(Items.IRON_SWORD);
         startLinked(helper, network)
@@ -136,7 +135,7 @@ public class StorageLecternTests {
     }
 
     private static void depositAndWithdrawSword(GameTestHelper helper, StorageNetwork network) {
-        StorageLecternTile lectern = network.lectern();
+        CraftingLecternTile lectern = network.lectern();
         ItemStack sword = new ItemStack(Items.IRON_SWORD);
         startLinked(helper, network)
                 .thenExecute(() -> helper.assertTrue(lectern.pushStack(new StoredItemStack(sword.copy()), null) == null, "Expected sword to be inserted"))
@@ -150,7 +149,7 @@ public class StorageLecternTests {
     }
 
     private static void withdrawMatchingVariant(GameTestHelper helper, StorageNetwork network) {
-        StorageLecternTile lectern = network.lectern();
+        CraftingLecternTile lectern = network.lectern();
         ItemStack damaged = new ItemStack(Items.IRON_SWORD);
         damaged.setDamageValue(10);
         ItemStack fresh = new ItemStack(Items.IRON_SWORD);
@@ -174,7 +173,7 @@ public class StorageLecternTests {
     }
 
     private static void mergeAndWithdrawStack(GameTestHelper helper, StorageNetwork network) {
-        StorageLecternTile lectern = network.lectern();
+        CraftingLecternTile lectern = network.lectern();
         ItemStack cobblestone = new ItemStack(Items.COBBLESTONE, 16);
         startLinked(helper, network)
                 .thenExecute(() -> {
@@ -190,7 +189,7 @@ public class StorageLecternTests {
                 .thenSucceed();
     }
 
-    private record StorageNetwork(StorageLecternTile lectern, BlockPos linkedPos) {
+    private record StorageNetwork(CraftingLecternTile lectern, BlockPos linkedPos) {
     }
 
     private static StorageNetwork createRepositoryNetwork(GameTestHelper helper) {
@@ -222,7 +221,7 @@ public class StorageLecternTests {
                 .thenIdle(1);
     }
 
-    private static long listedCount(StorageLecternTile lectern, ItemStack stack) {
+    private static long listedCount(CraftingLecternTile lectern, ItemStack stack) {
         return lectern.getStacks(null).getOrDefault(new StoredItemStack(stack), 0L);
     }
 }

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.command;
 
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -51,7 +51,7 @@ public class DebugLecternCommand {
             index[0]++;
         });
 
-        if (!(level.getBlockEntity(lecternPos) instanceof StorageLecternTile lectern)) {
+        if (!(level.getBlockEntity(lecternPos) instanceof CraftingLecternTile lectern)) {
             return 0;
         }
         for (RepositoryTile repository : repositories) {
