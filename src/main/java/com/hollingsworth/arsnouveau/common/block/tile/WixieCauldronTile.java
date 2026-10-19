@@ -92,6 +92,10 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             if (craftManager.isCraftCompleted()) {
                 rotateCraft();
             }
+            if (craftManager.isCraftInvalid()) {
+                this.stackBeingCrafted = ItemStack.EMPTY;
+                updateBlock();
+            }
         }
     }
 
@@ -359,6 +363,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        tooltip.clear();
         if (this.craftCooldown > 0)
             return;
         if (stackBeingCrafted.isEmpty()) {
