@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
-import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -45,7 +45,7 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         super.onClientReceived(minecraft, player);
-        if (minecraft.screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
+        if (minecraft.screen instanceof CraftingTerminalScreen terminalScreen) {
             terminalScreen.receiveSettings(settings);
         }
     }
@@ -53,8 +53,8 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         super.onServerReceived(minecraftServer, player);
-        if (player.containerMenu instanceof StorageTerminalMenu terminalScreen) {
-            terminalScreen.receiveSettings(player, settings, selectedTab);
+        if (player.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
+            terminalScreen.receiveSettings(settings, selectedTab);
         }
     }
 }

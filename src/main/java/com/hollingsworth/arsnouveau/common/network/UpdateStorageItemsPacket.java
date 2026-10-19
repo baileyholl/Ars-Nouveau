@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -23,7 +23,7 @@ public class UpdateStorageItemsPacket extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         super.onClientReceived(minecraft, player);
-        if (minecraft.screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
+        if (minecraft.screen instanceof CraftingTerminalScreen terminalScreen) {
             terminalScreen.updateItems(stacks);
         }
     }

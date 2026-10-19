@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,8 +30,8 @@ public class ClientSearchPacket extends AbstractPacket {
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
-        if (sender.containerMenu instanceof StorageTerminalMenu terminalScreen) {
-            terminalScreen.receiveClientSearch(sender, string);
+        if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
+            terminalScreen.receiveClientSearch(string);
         }
     }
 
