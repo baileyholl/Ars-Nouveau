@@ -48,7 +48,6 @@ public class SpeedProperty extends BaseProperty<SpeedProperty> {
 
     public SpeedProperty() {
         super();
-
     }
 
     public SpeedProperty(double yMinSpeed, double yMaxSpeed, double minXZ, double xzMaxSpeed) {
@@ -69,6 +68,14 @@ public class SpeedProperty extends BaseProperty<SpeedProperty> {
         this.xzMinSpeed = xzMinSpeed;
         this.xzMaxSpeed = xzMaxSpeed;
         return this;
+    }
+
+    @Override
+    public boolean shouldSkipSerialization() {
+        return yMinSpeed == 0.0 &&
+               xzMinSpeed == 0.0 &&
+               yMaxSpeed == 0.0 &&
+               xzMaxSpeed == 0.0;
     }
 
     public double minY() {
