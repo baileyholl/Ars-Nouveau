@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -122,9 +123,12 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide && player.isCreative() && level.getBlockEntity(pos) instanceof SourceJarTile jarTile) {
-            int source = player.isCrouching() ? -1000 : 1000;
-            jarTile.addSource(source);
+        if (!level.isClientSide && player.isCreative() && SourceAccess.at(level, pos, null) instanceof SourceAccess access) {
+            if (player.isCrouching()) {
+                access.cap().extractSource(1000, false);
+            } else {
+                access.cap().receiveSource(1000, false);
+            }
         }
         return super.useWithoutItem(state, level, pos, player, hitResult);
     }

@@ -27,6 +27,11 @@ public class CreativeSourceJarTile extends SourceJarTile {
             public int getSource() {
                 return 1000000;
             }
+
+            @Override
+            public boolean isInfinite() {
+                return true;
+            }
         };
     }
 

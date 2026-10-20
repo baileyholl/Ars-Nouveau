@@ -2,12 +2,13 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.source.SourceManager;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
-import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
-import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -15,36 +16,188 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SourceUtil {
 
-    public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
-        List<ISpecialSourceProvider> posList = new ArrayList<>();
-        for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
-            if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.canAcceptSource())
-                posList.add(new SourceProvider(jar, b.immutable()));
+    /**
+     * Finds every block capable of providing source within {@code range} of {@code pos}, excluding {@code pos} itself.
+     *
+     * @param pos   Position around which to find source providers
+     * @param level Level to find source providers in
+     * @param range Range to check around `pos`
+     * @return List of all the providers found, in order.
+     */
+    public static List<SourceAccess> findProviders(BlockPos pos, Level level, int range) {
+        List<SourceAccess> providers = new ArrayList<>();
+        for (SourceAccess access : findNearby(pos, level, range, SourceManager.INSTANCE.canTakeSourceNearby(pos, level, range))) {
+            if (access.cap().canProvideSource(1)) {
+                providers.add(access);
+            }
         }
-        List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canGiveSourceNearby(pos, world, range);
-        for (ISpecialSourceProvider p : provider) {
-            posList.add(new SourceProvider(p));
-        }
-        return posList;
+        return providers;
     }
 
-    public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
-        List<ISpecialSourceProvider> posList = new ArrayList<>();
+    /**
+     * Finds every block capable of accepting source within {@code range} of {@code pos}, excluding {@code pos} itself.
+     *
+     * @param pos   Position around which to find source stores
+     * @param level Level to find source stores in
+     * @param range Range to check around `pos`
+     * @return List of all the stores found, in order.
+     */
+    public static List<SourceAccess> findAcceptors(BlockPos pos, Level level, int range) {
+        List<SourceAccess> acceptors = new ArrayList<>();
+        for (SourceAccess access : findNearby(pos, level, range, SourceManager.INSTANCE.canGiveSourceNearby(pos, level, range))) {
+            if (!access.cap().isInfinite() && access.cap().canAcceptSource(1)) {
+                acceptors.add(access);
+            }
+        }
+        return acceptors;
+    }
+
+    private static List<SourceAccess> findNearby(BlockPos pos, Level level, int range, List<ISpecialSourceProvider> providers) {
+        List<SourceAccess> found = new ArrayList<>();
+        Set<BlockPos> blockPositions = new HashSet<>();
+        Set<ISourceCap> caps = Collections.newSetFromMap(new IdentityHashMap<>());
         for (BlockPos b : BlockPos.withinManhattan(pos, range, range, range)) {
-            if (world.isLoaded(b) && world.getBlockEntity(b) instanceof SourceJarTile jar && jar.getSource() > 0)
-                posList.add(new SourceProvider(jar, b.immutable()));
+            if (b.equals(pos)) {
+                continue;
+            }
+            SourceAccess access = SourceAccess.at(level, b, null);
+            if (access == null || level.getBlockState(access.pos()).is(BlockTagProvider.SOURCE_SCAN_EXCLUDED)) {
+                continue;
+            }
+            blockPositions.add(access.pos());
+            if (caps.add(access.cap())) {
+                found.add(access);
+            }
         }
-        List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canTakeSourceNearby(pos, world, range);
-        for (ISpecialSourceProvider p : provider) {
-            posList.add(new SourceProvider(p));
+        for (ISpecialSourceProvider provider : providers) {
+            BlockPos providerPos = provider.getCurrentPos();
+            if (!providerPos.equals(pos) && !blockPositions.contains(providerPos)) {
+                found.add(new SourceAccess(providerPos, new TileSourceCap(provider.getSource())));
+            }
         }
-        return posList;
+        return found;
+    }
+
+    /**
+     * Takes exactly {@code amount} source from all stores found by {@link SourceUtil#findProviders}
+     * If any infinite provider is found, everything will be taken from that provider.
+     * If all stores together do not have enough source, nothing will be extracted.
+     *
+     * @param pos    Position around which to find source stores
+     * @param level  Level to find source stores in
+     * @param range  Range to check around `pos`
+     * @param amount How much source to extract
+     * @return List of all the stores extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<SourceAccess> takeNearby(BlockPos pos, Level level, int range, int amount) {
+        List<SourceAccess> providers = findProviders(pos, level, range);
+        for (SourceAccess access : providers) {
+            if (access.cap().isInfinite()) {
+                return List.of(access);
+            }
+        }
+
+        Map<SourceAccess, Integer> sourceAmounts = new LinkedHashMap<>();
+        int needed = amount;
+        for (SourceAccess access : providers) {
+            if (needed <= 0) {
+                break;
+            }
+            
+            int taken = access.cap().extractSource(needed, true);
+            if (taken > 0) {
+                sourceAmounts.put(access, taken);
+                needed -= taken;
+            }
+        }
+
+        if (needed > 0) {
+            return null;
+        }
+
+        for (Map.Entry<SourceAccess, Integer> charge : sourceAmounts.entrySet()) {
+            charge.getKey().cap().extractSource(charge.getValue(), false);
+        }
+        
+        return List.copyOf(sourceAmounts.keySet());
+    }
+
+    /**
+     * Same as {@link SourceUtil#takeNearby}, plus a follow projectile from each store extracted moving to {@code pos}.
+     *
+     * @param pos    Position around which to find source stores
+     * @param level  Level to find source stores in
+     * @param range  Range to check around `pos`
+     * @param amount How much source to extract
+     * @return List of all the stores extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<SourceAccess> takeNearbyWithParticles(BlockPos pos, Level level, int range, int amount) {
+        return takeNearbyWithParticles(pos, pos, level, range, amount);
+    }
+
+    /**
+     * Same as {@link SourceUtil#takeNearby} and spawns a follow projectile from each store extracted moving to {@code particlesTo}.
+     *
+     * @param pos         Position around which to find source stores
+     * @param particlesTo Position the projectiles fly to
+     * @param level       Level to find source stores in
+     * @param range       Range to check around {@code pos}
+     * @param amount      How much source to extract
+     * @return List of all the stores extracted from, or null if there was not enough total source.
+     */
+    public static @Nullable List<SourceAccess> takeNearbyWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int amount) {
+        List<SourceAccess> sources = takeNearby(pos, level, range, amount);
+        if (sources != null && level instanceof ServerLevel serverLevel) {
+            for (SourceAccess access : sources) {
+                EntityFollowProjectile.spawn(serverLevel, access.pos(), particlesTo);
+            }
+        }
+        return sources;
+    }
+
+    /**
+     * @deprecated Use {@link SourceUtil#findAcceptors(BlockPos, Level, int)}.
+     */
+    @Deprecated(forRemoval = true)
+    public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
+        List<ISpecialSourceProvider> providers = new ArrayList<>();
+        for (SourceAccess access : findAcceptors(pos, world, range)) {
+            providers.add(asProvider(access, world));
+        }
+        return providers;
+    }
+
+    /**
+     * @deprecated Use {@link SourceUtil#findProviders(BlockPos, Level, int)}.
+     */
+    @Deprecated(forRemoval = true)
+    public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
+        List<ISpecialSourceProvider> providers = new ArrayList<>();
+        for (SourceAccess access : findProviders(pos, world, range)) {
+            providers.add(asProvider(access, world));
+        }
+        return providers;
+    }
+
+    private static ISpecialSourceProvider asProvider(SourceAccess access, Level level) {
+        if (access.cap() instanceof TileSourceCap(ISourceTile tile)) {
+            return new SourceProvider(tile, access.pos());
+        }
+        if (level.getBlockEntity(access.pos()) instanceof ISourceTile tile) {
+            return new SourceProvider(tile, access.pos());
+        }
+        return new SourceProvider(new SourceTileCap(access.cap()), access.pos());
     }
 
     /**
@@ -53,7 +206,8 @@ public class SourceUtil {
      * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return Provider that was extracted from, or null if none had enough source.
-     * @deprecated Use {@link SourceUtil#takeSourceMultiple}
+     *
+     * @deprecated Use {@link SourceUtil#takeNearby(BlockPos, Level, int, int)}.
      */
     @Deprecated(forRemoval = true)
     public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, int source) {
@@ -73,7 +227,10 @@ public class SourceUtil {
      * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
+     *
+     * @deprecated Use {@link SourceUtil#takeNearby(BlockPos, Level, int, int)}.
      */
+    @Deprecated(forRemoval = true)
     public static @Nullable List<ISpecialSourceProvider> takeSourceMultiple(BlockPos pos, Level level, int range, int source) {
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
         Multimap<ISpecialSourceProvider, Integer> takenFrom = Multimaps.newMultimap(new HashMap<>(), ArrayList::new);
@@ -81,7 +238,7 @@ public class SourceUtil {
         int needed = source;
         for (ISpecialSourceProvider provider : providers) {
             ISourceTile sourceTile = provider.getSource();
-            if (sourceTile instanceof CreativeSourceJarTile) {
+            if (sourceTile.isInfinite()) {
                 for (Map.Entry<ISpecialSourceProvider, Integer> entry : takenFrom.entries()) {
                     entry.getKey().getSource().addSource(entry.getValue());
                 }
@@ -121,7 +278,8 @@ public class SourceUtil {
      * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return Provider that was extracted from, or null if none had enough source.
-     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, Level, int, int)}
+     *
+     * @deprecated Use {@link SourceUtil#takeNearbyWithParticles(BlockPos, Level, int, int)}.
      */
     @Deprecated(forRemoval = true)
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, int source) {
@@ -134,7 +292,10 @@ public class SourceUtil {
      * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
+     *
+     * @deprecated Use {@link SourceUtil#takeNearbyWithParticles(BlockPos, Level, int, int)}.
      */
+    @Deprecated(forRemoval = true)
     public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, Level level, int range, int source) {
         return takeSourceMultipleWithParticles(pos, pos, level, range, source);
     }
@@ -145,7 +306,8 @@ public class SourceUtil {
      * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return Provider that was extracted from, or null if none had enough source.
-     * @deprecated Use {@link SourceUtil#takeSourceMultipleWithParticles(BlockPos, BlockPos, Level, int, int)}
+     *
+     * @deprecated Use {@link SourceUtil#takeNearbyWithParticles(BlockPos, BlockPos, Level, int, int)}.
      */
     @Deprecated(forRemoval = true)
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source) {
@@ -162,7 +324,10 @@ public class SourceUtil {
      * @param range  Range to check around `pos`
      * @param source How much source to extract
      * @return List of all the providers extracted from, or null if there was not enough total source.
+     *
+     * @deprecated Use {@link SourceUtil#takeNearbyWithParticles(BlockPos, BlockPos, Level, int, int)}.
      */
+    @Deprecated(forRemoval = true)
     public static @Nullable List<ISpecialSourceProvider> takeSourceMultipleWithParticles(BlockPos pos, BlockPos particlesTo, Level level, int range, int source) {
         List<ISpecialSourceProvider> result = takeSourceMultiple(pos, level, range, source);
         if (result != null && level instanceof ServerLevel serverLevel) {
@@ -180,7 +345,7 @@ public class SourceUtil {
     public static boolean hasSourceNearby(BlockPos pos, Level world, int range, int source) {
         for (var provider : SourceUtil.canTakeSource(pos, world, range)) {
             ISourceTile sourceTile = provider.getSource();
-            if (sourceTile instanceof CreativeSourceJarTile) {
+            if (sourceTile.isInfinite()) {
                 return true;
             }
 
