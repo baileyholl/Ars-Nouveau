@@ -102,7 +102,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
             if (isAnyTab || (level.getBlockEntity(handler.pos) instanceof Nameable nameable
                     && nameable.hasCustomName()
                     && nameable.getCustomName().getString().trim().equals(tab.trim()))) {
-                itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos)).withSlotCache(handler.slotCache));
+                itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos), handler.slotCache));
             }
         }
         return new InventoryManager(itemHandlers);
