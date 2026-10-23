@@ -1,5 +1,5 @@
 {
-  "enabled": true,
-  "send_chat": true,
+  "enabled": false,
+  "send_chat": false,
   "message": "The Ars Nouveau Starbuncle plush is now available via Makeship until October 3rd, check it out here!"
 }

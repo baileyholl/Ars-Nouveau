@@ -68,7 +68,7 @@ public class EntityEntry extends SinglePageWidget {
 
         float renderScale = 100F / entitySize * 0.6F * scale;
         float offset = Math.max(entityHeight, entitySize) * 0.5F + yOffset;
-        renderEntity(guiGraphics, entity, x + (float) width / 2, y + offset + 80, (float) ClientInfo.ticksInGame + partialTick, renderScale, 0);
+        renderEntity(guiGraphics, entity, x + (float) width / 2, y + offset + 80, ClientInfo.ticksInGame + ClientInfo.partialTicks, renderScale, 0);
     }
 
     @Override

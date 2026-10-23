@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
@@ -85,12 +84,16 @@ public class DocClientUtils {
         int radius = 41;
         double xPos = x + nextXAngle(angle, radius);
         double yPos = y + nextYAngle(angle, radius);
+        ItemStack stack = displayedStack(ingredient);
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
         PoseStack ms = graphics.pose();
-        ms.pushPose(); // This translation makes it not stuttery. It does not affect the tooltip as that is drawn separately later.
+        ms.pushPose();
         ms.translate(xPos - (int) xPos, yPos - (int) yPos, 0);
-        ItemStack hovered = DocClientUtils.renderIngredient(graphics, (int) xPos, (int) yPos, mouseX, mouseY, ingredient);
+        drawItemStack(graphics, (int) xPos, (int) yPos, stack);
         ms.popPose();
-        return hovered;
+        return handleHover((int) xPos, (int) yPos, mouseX, mouseY, stack);
     }
 
     public static double nextXAngle(double angle, int radius) {
@@ -105,22 +108,29 @@ public class DocClientUtils {
      * @return returns the hovered stack
      */
     public static ItemStack renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
+        return DocClientUtils.renderItemStack(graphics, x, y, mouseX, mouseY, displayedStack(ingr));
+    }
+
+    private static ItemStack displayedStack(Ingredient ingr) {
         ItemStack[] stacks = ingr.getItems();
-        if (stacks.length > 0) {
-            return DocClientUtils.renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ClientInfo.ticksInGame / 20) % stacks.length]);
-        }
-        return ItemStack.EMPTY;
+        return stacks.length > 0 ? stacks[(ClientInfo.ticksInGame / 20) % stacks.length] : ItemStack.EMPTY;
     }
 
     public static ItemStack renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        Font font = Minecraft.getInstance().font;
+        drawItemStack(graphics, x, y, stack);
+        return handleHover(x, y, mouseX, mouseY, stack);
+    }
+
+    private static void drawItemStack(GuiGraphics graphics, int x, int y, ItemStack stack) {
         graphics.renderItem(stack, x, y);
-        graphics.renderItemDecorations(font, stack, x, y);
+        graphics.renderItemDecorations(Minecraft.getInstance().font, stack, x, y);
+    }
+
+    private static ItemStack handleHover(int x, int y, int mouseX, int mouseY, ItemStack stack) {
         if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
-            DocItemTooltipHandler.onTooltip(graphics, stack, mouseX, mouseY);
             return stack;
         }
         return ItemStack.EMPTY;

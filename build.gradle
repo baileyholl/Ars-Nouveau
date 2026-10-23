@@ -140,10 +140,6 @@ repositories {
         url = "https://maven.minecraftforge.net"
     }
     maven {
-        name = "OctoStudios"
-        url = uri("https://maven.octo-studios.com/releases")
-    }
-    maven {
         name = 'TerraformersMC'
         url = 'https://maven.terraformersmc.com/'
         content {
@@ -229,7 +225,8 @@ dependencies {
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
     localRuntime "curse.maven:placebo-283644:6446766"
     //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-    localRuntime "curse.maven:ars-elemental-561470:8399862"
+    localRuntime "curse.maven:ars-elemental-561470:8999174"
+//    localRuntime "curse.maven:not-enough-glyphs-1023517:8880291"
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-core:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))
@@ -241,8 +238,8 @@ dependencies {
 //    localRuntime "curse.maven:sodium-394468:6382651"
 //    localRuntime "curse.maven:building-gadgets-298187:6850515"
     // Create aeronautics
-//    localRuntime "maven.modrinth:oWaK0Q19:YhZLrAFC"
-//    localRuntime "dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}"
+//    localRuntime "maven.modrinth:oWaK0Q19:Vzp221Un"
+//    localRuntime("dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}") { transitive = false }
 }
 
 jar {

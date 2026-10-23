@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -24,13 +25,17 @@ public class MethodUnderfoot extends AbstractCastMethod {
         super(GlyphLib.MethodUnderfootID, "Underfoot");
     }
 
+    public static List<Entity> getEntitiesBeneath(LivingEntity caster, Level world) {
+        return world.getEntities(caster, caster.getBoundingBox().inflate(0.1, 1.5, 0.1), entity -> entity.isAlive() && !entity.getType().is(EntityTags.UNDERFOOT_BLACKLIST) && (entity instanceof LivingEntity || entity.getType().is(EntityTags.UNDERFOOD_WHITELIST)));
+    }
+
     @Override
     public CastResolveType onCast(@Nullable ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) {
         // check if the caster has an entity beneath them or is riding one
         if (caster.getVehicle() != null) {
             resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(caster.getVehicle()));
         } else {
-            List<Entity> nearbyEntities = world.getEntities(caster, caster.getBoundingBox().inflate(0.1, 1.5, 0.1));
+            List<Entity> nearbyEntities = getEntitiesBeneath(caster, world);
             if (!nearbyEntities.isEmpty()) {
                 resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(nearbyEntities.getFirst()));
             } else {
@@ -59,7 +64,7 @@ public class MethodUnderfoot extends AbstractCastMethod {
         if (caster.getVehicle() != null) {
             resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(caster.getVehicle()));
         } else {
-            List<Entity> nearbyEntities = caster.level().getEntities(caster, caster.getBoundingBox().inflate(0.1, 1.5, 0.1));
+            List<Entity> nearbyEntities = getEntitiesBeneath(caster, caster.getCommandSenderWorld());
             if (!nearbyEntities.isEmpty()) {
                 resolver.onResolveEffect(caster.getCommandSenderWorld(), new EntityHitResult(nearbyEntities.getFirst()));
             } else {

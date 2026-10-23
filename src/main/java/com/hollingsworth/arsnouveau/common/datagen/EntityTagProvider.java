@@ -116,5 +116,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         TagKey<EntityType<?>> DESTROY_LEAVING_PLOT = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("sable", "destroy_when_leaving_plot"));
         this.tag(RETAIN_IN_SUBLEVEL).add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.GIFT_STARBY.get(), ModEntities.AMETHYST_GOLEM.get());
         this.tag(DESTROY_LEAVING_PLOT).add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.GIFT_STARBY.get(), ModEntities.AMETHYST_GOLEM.get());
+        this.tag(EntityTags.UNDERFOOT_BLACKLIST).addOptional(ResourceLocation.parse("create:super_glue"));
+        this.tag(EntityTags.UNDERFOOD_WHITELIST).add(EntityType.ITEM);
     }
 }

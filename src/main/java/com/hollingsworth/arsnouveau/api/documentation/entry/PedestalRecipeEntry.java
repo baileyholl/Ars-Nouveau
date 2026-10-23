@@ -47,7 +47,7 @@ public class PedestalRecipeEntry extends SinglePageWidget {
         DocClientUtils.blit(guiGraphics, image, x + 13, y + yOffset);
 
         int degreePerInput = (int) (360F / ingredients.size());
-        float currentDegree = spinning ? ClientInfo.ticksInGame + partialTick : 0;
+        float currentDegree = spinning ? ClientInfo.ticksInGame + ClientInfo.partialTicks : 0;
         for (Ingredient input : ingredients) {
             int renderX = x + 19;
             int renderY = y + yOffset + 2;

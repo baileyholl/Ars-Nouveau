@@ -57,6 +57,10 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> AUTUMN_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "autumn_crops"));
     public static TagKey<Block> WINTER_CROPS = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sereneseasons", "winter_crops"));
 
+    public static TagKey<Block> SABLE_SUPER_LIGHT = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sable", "super_light"));
+    public static TagKey<Block> SABLE_LIGHT = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sable", "light"));
+    public static TagKey<Block> SABLE_QUARTER_VOLUME = BlockTags.create(ResourceLocation.fromNamespaceAndPath("sable", "quarter_volume"));
+
 
     public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -168,6 +172,60 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(DECORATIVE_AN).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.SKY_WEAVE.get(), BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(FALSE_OCCLUSION).add(BlockRegistry.FALSE_WEAVE.get(), BlockRegistry.MIRROR_WEAVE.get(), BlockRegistry.GHOST_WEAVE.get(), BlockRegistry.SKY_WEAVE.get());
+        this.tag(SABLE_LIGHT).add(
+                BlockRegistry.SOURCE_JAR.get(),
+                BlockRegistry.CREATIVE_SOURCE_JAR.get(),
+                BlockRegistry.POTION_JAR.get(),
+                BlockRegistry.MOB_JAR.get(),
+                BlockRegistry.REPOSITORY.get(),
+                BlockRegistry.BASIC_SPELL_TURRET.get(),
+                BlockRegistry.TIMER_SPELL_TURRET.get(),
+                BlockRegistry.ROTATING_TURRET.get(),
+                BlockRegistry.ENCHANTED_SPELL_TURRET.get(),
+                BlockRegistry.RELAY.get(),
+                BlockRegistry.RELAY_SPLITTER.get(),
+                BlockRegistry.RELAY_COLLECTOR.get(),
+                BlockRegistry.RELAY_DEPOSIT.get(),
+                BlockRegistry.RELAY_WARP.get(),
+                BlockRegistry.ITEM_DETECTOR.get(),
+                BlockRegistry.ARCANE_PEDESTAL.get(),
+                BlockRegistry.ARCANE_PLATFORM.get(),
+                BlockRegistry.RITUAL_BLOCK.get(),
+                BlockRegistry.DRYGMY_BLOCK.get()
+        );
+        this.tag(SABLE_SUPER_LIGHT).add(
+                BlockRegistry.ARCHWOOD_GRATE.get(),
+                BlockRegistry.GOLD_GRATE.get(),
+                BlockRegistry.SOURCESTONE_GRATE.get(),
+                BlockRegistry.SMOOTH_SOURCESTONE_GRATE.get(),
+                BlockRegistry.MENDOSTEEN_POD.get(),
+                BlockRegistry.BASTION_POD.get(),
+                BlockRegistry.FROSTAYA_POD.get(),
+                BlockRegistry.BOMBEGRANTE_POD.get(),
+                BlockRegistry.BRAZIER_RELAY.get(),
+                BlockRegistry.WHIRLISPRIG_FLOWER.get(),
+                BlockRegistry.STARBUNCLE_PLUSH.get(),
+                BlockRegistry.CRAB_HAT.get(),
+                BlockRegistry.SOURCEBERRY_SACK.get(),
+                BlockRegistry.MAGEBLOOM_BLOCK.get(),
+                BlockRegistry.MIRROR_WEAVE.get(),
+                BlockRegistry.GHOST_WEAVE.get(),
+                BlockRegistry.SKY_WEAVE.get(),
+                BlockRegistry.MAGE_BLOCK.get()
+        ).addTag(SUMMON_BED);
+        this.tag(SABLE_QUARTER_VOLUME).add(
+                BlockRegistry.ARCHWOOD_GRATE.get(),
+                BlockRegistry.GOLD_GRATE.get(),
+                BlockRegistry.SOURCESTONE_GRATE.get(),
+                BlockRegistry.SMOOTH_SOURCESTONE_GRATE.get(),
+                BlockRegistry.MENDOSTEEN_POD.get(),
+                BlockRegistry.BASTION_POD.get(),
+                BlockRegistry.FROSTAYA_POD.get(),
+                BlockRegistry.BOMBEGRANTE_POD.get(),
+                BlockRegistry.BRAZIER_RELAY.get(),
+                BlockRegistry.WHIRLISPRIG_FLOWER.get(),
+                BlockRegistry.STARBUNCLE_PLUSH.get()
+        ).addTag(SUMMON_BED);
 
 
         this.tag(HARVEST_FOLIAGE).addTag(BlockTags.LEAVES).add(
