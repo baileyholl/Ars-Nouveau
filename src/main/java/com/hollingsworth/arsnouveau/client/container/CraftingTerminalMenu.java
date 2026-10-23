@@ -149,7 +149,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return te != null && !te.isRemoved();
+        return te != null && !te.isRemoved() && te.getLevel().isLoaded(te.getBlockPos());
     }
 
     @Override
