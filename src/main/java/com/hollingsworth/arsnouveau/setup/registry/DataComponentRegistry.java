@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup.registry;
 
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.data.*;
 import com.mojang.serialization.Codec;
@@ -57,4 +58,6 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> UNBREAKING = DATA.register("unbreaking", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PrestidigitationData>> PRESTIDIGITATION = DATA.register("prestidigitation", () -> DataComponentType.<PrestidigitationData>builder().persistent(PrestidigitationData.CODEC).networkSynchronized(PrestidigitationData.STREAM).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ISummon.SummonBehavior>> SUMMON_BEHAVIOR = DATA.register("summon_behavior", () -> DataComponentType.<ISummon.SummonBehavior>builder().persistent(ISummon.SummonBehavior.CODEC).networkSynchronized(ISummon.SummonBehavior.STREAM_CODEC).build());
+
 }

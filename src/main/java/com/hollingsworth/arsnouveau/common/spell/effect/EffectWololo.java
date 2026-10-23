@@ -113,7 +113,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     @NotNull
-    private ItemStack getDye(@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public ItemStack getDye(@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
 
         if (spellContext.getCaster() instanceof TileCaster) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
@@ -233,7 +233,7 @@ public class EffectWololo extends AbstractEffect {
         return (DyeItem) vanillaColors.values().toArray()[random.nextInt(vanillaColors.size())];
     }
 
-    private static DyeItem getDyeItemFromSpell(SpellContext spellContext) {
+    public static DyeItem getDyeItemFromSpell(SpellContext spellContext) {
         ParticleColor spellColor = spellContext.getSpell().particleTimeline().get(ParticleTimelineRegistry.WOLOLO_TIMELINE).getColor();
 
         ParticleColor targetColor = vanillaColors.keySet().stream().min(Comparator.comparingDouble(d -> d.euclideanDistance(spellColor))).orElse(ParticleColor.WHITE);

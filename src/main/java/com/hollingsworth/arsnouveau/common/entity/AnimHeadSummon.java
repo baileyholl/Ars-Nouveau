@@ -12,6 +12,7 @@ import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class AnimHeadSummon extends AnimBlockSummon {
 
@@ -27,7 +28,7 @@ public class AnimHeadSummon extends AnimBlockSummon {
 
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.ANIMATED_HEAD.get();
     }
 
