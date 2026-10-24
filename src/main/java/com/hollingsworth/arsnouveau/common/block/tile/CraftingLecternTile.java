@@ -226,12 +226,12 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     }
 
 
-    public StoredItemStack pushStack(StoredItemStack stack, @Nullable String tab) {
+    public StoredItemStack pushStack(StoredItemStack stack, @Nullable String tab, boolean simulate) {
         if (stack == null) {
             return null;
         }
         ItemStack copyStack = stack.getActualStack();
-        MultiInsertReference reference = getInvManager(tab).insertStackWithReference(stack.getActualStack());
+        MultiInsertReference reference = getInvManager(tab).insertStackWithReference(stack.getActualStack(), simulate);
         if (canCreateTasks) {
             for (SlotReference slotReference : reference.getSlots()) {
                 BlockPos pos = posFromSlotRef(slotReference);
@@ -248,17 +248,21 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     }
 
     public ItemStack pushStack(ItemStack itemstack, @Nullable String tab) {
+        return pushStack(itemstack, tab, false);
+    }
+
+    public ItemStack pushStack(ItemStack itemstack, @Nullable String tab, boolean simulate) {
         CraftingLecternTile mainLectern = getMainLectern();
         if (mainLectern == null) {
             return itemstack;
         }
-        StoredItemStack is = mainLectern.pushStack(new StoredItemStack(itemstack), tab);
+        StoredItemStack is = mainLectern.pushStack(new StoredItemStack(itemstack), tab, simulate);
         return is == null ? ItemStack.EMPTY : is.getActualStack();
     }
 
     public void pushOrDrop(ItemStack st, @Nullable String tabName) {
         if (st.isEmpty()) return;
-        StoredItemStack st0 = pushStack(new StoredItemStack(st), tabName);
+        StoredItemStack st0 = pushStack(new StoredItemStack(st), tabName, false);
         if (st0 != null) {
             Containers.dropItemStack(level, worldPosition.getX() + .5f, worldPosition.getY() + .5f, worldPosition.getZ() + .5f, st0.getActualStack());
         }

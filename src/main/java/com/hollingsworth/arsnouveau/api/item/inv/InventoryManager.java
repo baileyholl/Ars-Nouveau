@@ -74,15 +74,20 @@ public class InventoryManager {
      * @return Remaining or empty stack.
      */
     public ItemStack insertStack(ItemStack stack) {
-        return insertStackWithReference(stack).getRemainder();
+        return insertStackWithReference(stack, false).getRemainder();
     }
 
+    @Deprecated(forRemoval = true)
     public MultiInsertReference insertStackWithReference(ItemStack stack) {
+        return insertStackWithReference(stack, false);
+    }
+
+    public MultiInsertReference insertStackWithReference(ItemStack stack, boolean simulate) {
         List<SlotReference> references = new ArrayList<>();
         for (var filterPref : preferredForStack(stack, false)) {
             FilterableItemHandler filterable = filterPref.handler;
             int count = stack.getCount();
-            stack = filterable.insertItemStacked(stack, false);
+            stack = filterable.insertItemStacked(stack, simulate);
             if (count != stack.getCount()) {
                 references.add(new SlotReference(filterable.getHandler(), filterable.getHandler().getSlots()));
             }
