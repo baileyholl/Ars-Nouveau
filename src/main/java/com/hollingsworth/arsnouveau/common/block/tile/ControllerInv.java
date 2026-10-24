@@ -26,31 +26,26 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public ItemStack insertStack(ItemStack stack, boolean simulate) {
-        var validRepositories = preferredForStack(stack, false);
+        record InsertionTarget(SortResult repository, boolean holdsStack) {
+        }
+        List<InsertionTarget> targets = new ArrayList<>();
+        
+        for (SortResult connectedRepository : preferredForStack(stack, false)) {
+            IMapInventory connected = connectedRepository.mapInventory();
+            boolean holdsStack = connected.hasExistingSlotsForInsertion(stack);
+            if (holdsStack || connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)) {
+                targets.add(new InsertionTarget(connectedRepository, holdsStack));
+            }
+        }
         // Prefer inserting into existing stacks first, splitting across as many inventories as needed
-        for (SortResult connectedRepository : validRepositories) {
-            IMapInventory connected = connectedRepository.mapInventory();
-            if (connected != null && connected.hasExistingSlotsForInsertion(stack)) {
-                ItemStack remainder = connected.insertStack(stack, simulate);
-                if (remainder.isEmpty()) {
-                    return ItemStack.EMPTY;
-                }
-                stack = remainder;
+        targets.sort(Comparator.comparing(InsertionTarget::repository, SortResult.comparator)
+                .thenComparing(InsertionTarget::holdsStack, Comparator.reverseOrder()));
+        for (InsertionTarget target : targets) {
+            stack = target.repository().mapInventory().insertStack(stack, simulate);
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
             }
         }
-
-        // Fall back to inserting into any empty slots.
-        for (SortResult connectedRepository : validRepositories) {
-            IMapInventory connected = connectedRepository.mapInventory();
-            if (connected != null && connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)) {
-                ItemStack remainder = connected.insertStack(stack, simulate);
-                if (remainder.isEmpty()) {
-                    return ItemStack.EMPTY;
-                }
-                stack = remainder;
-            }
-        }
-
         return stack;
     }
 
