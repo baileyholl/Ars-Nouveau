@@ -705,12 +705,14 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         List<ItemStack> craftedItemsList = new ArrayList<>();
         int amountCrafted = 0;
         ItemStack crafted = craftResult.getItem(0);
+        ItemStack result = crafted;
         craftResult.awardUsedRecipes(player, craftMatrix.getItems());
         do {
+            craftedItemsList.add(result.copy());
+            amountCrafted += result.getCount();
             craft(player, tab);
-            craftedItemsList.add(crafted.copy());
-            amountCrafted += crafted.getCount();
-        } while (ItemStack.isSameItem(crafted, craftResult.getItem(0)) && (amountCrafted + crafted.getCount()) <= crafted.getMaxStackSize());
+            result = craftResult.getItem(0);
+        } while (ItemStack.isSameItemSameComponents(crafted, result) && (amountCrafted + result.getCount()) <= crafted.getMaxStackSize());
 
         for (ItemStack craftedItem : craftedItemsList) {
             player.getInventory().add(craftedItem);
