@@ -19,18 +19,14 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
 
     public static final Type<SetTerminalSettingsPacket> TYPE = new Type<>(ArsNouveau.prefix("terminal_settings"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SetTerminalSettingsPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.optional(SortSettings.STREAM_CODEC),
-            s -> Optional.ofNullable(s.settings),
+            SortSettings.STREAM_CODEC,
+            s -> s.settings,
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
             s -> Optional.ofNullable(s.selectedTab),
-            SetTerminalSettingsPacket::new);
+            (settings, selectedTab) -> new SetTerminalSettingsPacket(settings, selectedTab.orElse(null)));
 
     public SortSettings settings;
     public String selectedTab;
-
-    public SetTerminalSettingsPacket(Optional<SortSettings> settings, Optional<String> selectedTab) {
-        this(settings.orElse(null), selectedTab.orElse(null));
-    }
 
     public SetTerminalSettingsPacket(SortSettings settings, String selectedTab) {
         this.settings = settings;
@@ -53,7 +49,7 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         super.onServerReceived(minecraftServer, player);
-        if (player.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
+        if (player.containerMenu instanceof CraftingTerminalMenu terminalScreen && terminalScreen.stillValid(player)) {
             terminalScreen.receiveSettings(settings, selectedTab);
         }
     }

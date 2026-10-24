@@ -34,7 +34,7 @@ public class ClientTransferHandlerPacket extends AbstractPacket {
 
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer sender) {
-        if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen) {
+        if (sender.containerMenu instanceof CraftingTerminalMenu terminalScreen && terminalScreen.stillValid(sender)) {
             terminalScreen.onTransferHandler(this.stacks);
         }
     }

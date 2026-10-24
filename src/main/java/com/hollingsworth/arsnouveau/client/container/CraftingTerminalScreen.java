@@ -132,9 +132,9 @@ public class CraftingTerminalScreen extends AbstractContainerScreen<CraftingTerm
         boolean wasExpanded = expanded;
         if (settings != null) {
             controllMode = settings.controlMode();
-            comparator = StoredItemStack.SortingTypes.VALUES[settings.sortType() % StoredItemStack.SortingTypes.VALUES.length].create(settings.reverseSort());
+            comparator = StoredItemStack.SortingTypes.VALUES[Math.floorMod(settings.sortType(), StoredItemStack.SortingTypes.VALUES.length)].create(settings.reverseSort());
             searchType = settings.searchType();
-            buttonSortingType.state = settings.sortType();
+            buttonSortingType.state = comparator.type();
             buttonDirection.state = settings.reverseSort() ? 1 : 0;
             buttonSearchType.state = searchType;
             expanded = settings.expanded();
