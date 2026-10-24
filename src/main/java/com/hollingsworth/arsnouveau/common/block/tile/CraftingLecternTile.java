@@ -232,7 +232,7 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         }
         ItemStack copyStack = stack.getActualStack();
         MultiInsertReference reference = getInvManager(tab).insertStackWithReference(stack.getActualStack(), simulate);
-        if (canCreateTasks) {
+        if (canCreateTasks && !simulate) {
             for (SlotReference slotReference : reference.getSlots()) {
                 BlockPos pos = posFromSlotRef(slotReference);
                 if (pos != null) {

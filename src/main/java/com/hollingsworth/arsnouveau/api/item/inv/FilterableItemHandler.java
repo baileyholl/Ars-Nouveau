@@ -89,7 +89,10 @@ public class FilterableItemHandler {
         }
 
         int sizeInventory = inventory.getSlots();
-        stack = insertUsingCache(stack, simulate);
+        // Allowing caching during a simulate will cause an item void bug with blocks that insert more than one item at a time like crafters.
+        if (!simulate) {
+            stack = insertUsingCache(stack, false);
+        }
         if (stack.isEmpty()) {
             return stack;
         }

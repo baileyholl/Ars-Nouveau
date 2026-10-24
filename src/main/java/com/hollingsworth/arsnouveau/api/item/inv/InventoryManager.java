@@ -237,17 +237,14 @@ public class InventoryManager {
      * @return The list of inventories sorted by highest preference.
      */
     public Collection<FilterablePreference> preferredForStack(ItemStack stack, boolean includeInvalid) {
-        PriorityQueue<FilterablePreference> filtered = new PriorityQueue<>((o1, o2) -> {
-            ItemScroll.SortPref pref1 = o1.pref();
-            ItemScroll.SortPref pref2 = o2.pref();
-            return pref2.ordinal() - pref1.ordinal();
-        });
+        List<FilterablePreference> filtered = new ArrayList<>();
         for (FilterableItemHandler filterableItemHandler : getInventory()) {
             ItemScroll.SortPref sortPref = filterableItemHandler.getHighestPreference(stack);
             if (includeInvalid || sortPref != ItemScroll.SortPref.INVALID) {
                 filtered.add(new FilterablePreference(filterableItemHandler, sortPref));
             }
         }
+        filtered.sort(FilterablePreference.comparator);
         return filtered;
     }
 
@@ -302,5 +299,6 @@ public class InventoryManager {
     }
 
     public record FilterablePreference(FilterableItemHandler handler, ItemScroll.SortPref pref) {
+        public static final Comparator<FilterablePreference> comparator = Comparator.comparing(FilterablePreference::pref, ItemScroll.sortPrefComparator.reversed());
     }
 }

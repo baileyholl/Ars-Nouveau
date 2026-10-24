@@ -11,8 +11,9 @@ import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
@@ -85,10 +86,10 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
-        PriorityQueue<SortResult> validRepositories = preferredForStack(stack, false);
+        List<SortResult> validRepositories = preferredForStack(stack, false);
         if (validRepositories.isEmpty())
             return ItemScroll.SortPref.INVALID;
-        return validRepositories.peek().mapInventory().getInsertionPreference(stack);
+        return validRepositories.getFirst().mapInventory().getInsertionPreference(stack);
     }
 
     @Override
@@ -96,8 +97,8 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
         return insertStack(stack, simulate);
     }
 
-    public PriorityQueue<SortResult> preferredForStack(ItemStack stack, boolean includeInvalid) {
-        PriorityQueue<SortResult> filtered = new PriorityQueue<>(SortResult.comparator);
+    public List<SortResult> preferredForStack(ItemStack stack, boolean includeInvalid) {
+        List<SortResult> filtered = new ArrayList<>();
         if (!allowedByFilter(stack))
             return filtered;
         for (var connectedRepository : controllerTile.connectedRepositories) {
@@ -109,6 +110,7 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
                 filtered.add(new SortResult(sortPref, connectedRepository));
             }
         }
+        filtered.sort(SortResult.comparator);
         return filtered;
     }
 
