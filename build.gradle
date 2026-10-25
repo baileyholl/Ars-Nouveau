@@ -127,6 +127,18 @@ repositories {
             includeGroup("dev.ryanhcode.sable-companion")
         }
     }
+    exclusiveContent { // Create
+        forRepository {
+            maven {
+                url = "https://maven.createmod.net"
+                name = "Create Maven"
+            }
+        }
+        filter {
+            includeGroup("com.simibubi.create")
+            includeGroup("net.createmod.ponder")
+        }
+    }
     maven {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
@@ -197,7 +209,9 @@ dependencies {
             attribute(mappingsAttribute, "mojmap")
         }
     }
-    localRuntime "curse.maven:create-328085:7963363"
+    localRuntime("com.simibubi.create:create-1.21.1:6.0.10-280") { transitive = false }
+    compileOnly("com.simibubi.create:create-1.21.1:6.0.10-280") { transitive = false }
+    compileOnly("net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1") { transitive = false }
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'

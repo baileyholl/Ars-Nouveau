@@ -57,4 +57,6 @@ public class DataComponentRegistry {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> UNBREAKING = DATA.register("unbreaking", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PrestidigitationData>> PRESTIDIGITATION = DATA.register("prestidigitation", () -> DataComponentType.<PrestidigitationData>builder().persistent(PrestidigitationData.CODEC).networkSynchronized(PrestidigitationData.STREAM).build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SchematicData>> SCHEMATIC = DATA.register("schematic", () -> DataComponentType.<SchematicData>builder().persistent(SchematicData.CODEC).networkSynchronized(SchematicData.STREAM_CODEC).build());
 }

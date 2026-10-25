@@ -24,6 +24,8 @@ public class ServerConfig {
     public static ModConfigSpec.IntValue LECTERN_LINK_RANGE;
     public static ModConfigSpec.IntValue DECOR_BLOSSOM_RANGE;
     public static ModConfigSpec.IntValue PLANARIUM_UPDATE_RATE;
+    public static ModConfigSpec.IntValue MAX_SCHEMATICS;
+    public static ModConfigSpec.IntValue MAX_SCHEMATIC_SIZE;
 
     static {
         ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
@@ -60,6 +62,9 @@ public class ServerConfig {
         INF_SPELLS_LENGHT_MODIFIER = SERVER_BUILDER.comment("Only used if infinite spells is true, increases or decreases the spell length limit in spellbooks..").defineInRange("infiniteSpellLimit", 30, -9, 1000);
         SERVER_BUILDER.pop().push("planarium");
         PLANARIUM_UPDATE_RATE = SERVER_BUILDER.comment("The number of game ticks the planarium will batch notifying nearby players if the dimension was changed.").defineInRange("planariumUpdateRate", 5, 1, 200);
+        SERVER_BUILDER.pop().push("schematics");
+        MAX_SCHEMATICS = SERVER_BUILDER.comment("Max schematics stored per player, shared with Create if present").defineInRange("maxSchematics", 10, 1, Integer.MAX_VALUE);
+        MAX_SCHEMATIC_SIZE = SERVER_BUILDER.comment("Max schematic upload size allowed in KB.").defineInRange("maxSchematicSize", 256, 16, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
 
         SERVER_CONFIG = SERVER_BUILDER.build();

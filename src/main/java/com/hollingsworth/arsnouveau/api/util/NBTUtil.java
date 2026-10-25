@@ -20,7 +20,12 @@ public class NBTUtil {
 
     public static int INT_LIST_TAG_TYPE = 11;
 
+    @Deprecated(forRemoval = true) // Use storeNullableBlockPos instead
     public static CompoundTag storeBlockPos(CompoundTag tag, String prefix, BlockPos pos) {
+        return storeNullableBlockPos(tag, prefix, pos);
+    }
+
+    public static CompoundTag storeNullableBlockPos(CompoundTag tag, String prefix, BlockPos pos) {
         if (pos == null)
             return tag;
         writePositional(tag, prefix, pos.getX(), pos.getY(), pos.getZ());

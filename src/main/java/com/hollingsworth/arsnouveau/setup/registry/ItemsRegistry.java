@@ -249,6 +249,7 @@ public class ItemsRegistry {
     public static final ItemRegistryWrapper<SignItem> ARCHWOOD_SIGN = register(LibBlockNames.ARCHWOOD_SIGN, () -> new SignItem(defaultItemProperties().stacksTo(16), BlockRegistry.ARCHWOOD_SIGN.get(), BlockRegistry.ARCHWOOD_WALL_SIGN.get()));
     public static final ItemRegistryWrapper<HangingSignItem> ARCHWOOD_HANGING_SIGN = register(LibBlockNames.ARCHWOOD_HANGING_SIGN, () -> new HangingSignItem(BlockRegistry.ARCHWOOD_HANGING_SIGN.get(), BlockRegistry.ARCHWOOD_HANGING_WALL_SIGN.get(), defaultItemProperties().stacksTo(16)));
     public static final ItemRegistryWrapper<ArchwoodBoatItem> ARCHWOOD_BOAT = register(LibItemNames.ARCHWOOD_BOAT, () -> new ArchwoodBoatItem(defaultItemProperties().stacksTo(1)));
+    public static final ItemRegistryWrapper<SchematicItem> SCHEMATIC = register(LibItemNames.SCHEMATIC, SchematicItem::new);
 
     public static <T extends Item> ItemRegistryWrapper<T> register(String name, Supplier<T> item) {
         return new ItemRegistryWrapper<>(ITEMS.register(name, item));

@@ -135,4 +135,5 @@ public class LibItemNames {
     public static final String ENCHANTERS_GAUNTLET = "enchanters_gauntlet";
     public static final String ENCHANTERS_ROD = "enchanters_fishing_rod";
     public static final String ARCHWOOD_BOAT = "archwood_boat";
+    public static final String SCHEMATIC = "schematic";
 }

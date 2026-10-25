@@ -64,6 +64,7 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean immersivePortalsLoaded = false;
+    public static boolean createLoaded = false;
     @Deprecated(forRemoval = true)
     public static boolean patchouliLoaded = false;
 
@@ -83,6 +84,7 @@ public class ArsNouveau {
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
+        createLoaded = ModList.get().isLoaded("create");
         APIRegistry.setup();
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);

@@ -38,6 +38,7 @@ public class ModKeyBindings {
     public static final KeyMapping QC_8 = new KeyMapping("key.ars_nouveau.qc8", -1, CATEGORY);
     public static final KeyMapping QC_9 = new KeyMapping("key.ars_nouveau.qc9", -1, CATEGORY);
     public static final KeyMapping QC_10 = new KeyMapping("key.ars_nouveau.qc10", -1, CATEGORY);
+    public static final KeyMapping TOOL_FOCUS = new KeyMapping("key.ars_nouveau.tool_focus", GLFW.GLFW_KEY_LEFT_ALT, CATEGORY);
 
     public static int usedQuickSlot(int key) {
         for (QuickSlot q : QuickSlot.VALUES) {
@@ -56,6 +57,7 @@ public class ModKeyBindings {
         event.register(PREVIOUS_SLOT);
         event.register(HEAD_CURIO_HOTKEY);
         event.register(OPEN_DOCUMENTATION);
+        event.register(TOOL_FOCUS);
         event.register(QC_1);
         event.register(QC_2);
         event.register(QC_3);
