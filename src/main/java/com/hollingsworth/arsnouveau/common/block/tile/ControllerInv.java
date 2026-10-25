@@ -26,26 +26,21 @@ public class ControllerInv extends CombinedHandlerInv implements IMapInventory {
 
     @Override
     public ItemStack insertStack(ItemStack stack, boolean simulate) {
-        record InsertionTarget(SortResult repository, boolean holdsStack) {
-        }
-        List<InsertionTarget> targets = new ArrayList<>();
-        
-        for (SortResult connectedRepository : preferredForStack(stack, false)) {
+        var validRepositories = preferredForStack(stack, false);
+        // Prefers filters, then existing stacks, then empty slots.
+        // Note: it is intended for simplicity that two filtered repositories
+        // will not be given any preference if one contains the stack while the other doesn't, that falls back to link order.
+        for (SortResult connectedRepository : validRepositories) {
             IMapInventory connected = connectedRepository.mapInventory();
-            boolean holdsStack = connected.hasExistingSlotsForInsertion(stack);
-            if (holdsStack || connected.hasExistingSlotsForInsertion(ItemStack.EMPTY)) {
-                targets.add(new InsertionTarget(connectedRepository, holdsStack));
+            if (connected != null && (connected.hasExistingSlotsForInsertion(stack) || connected.hasExistingSlotsForInsertion(ItemStack.EMPTY))) {
+                ItemStack remainder = connected.insertStack(stack, simulate);
+                if (remainder.isEmpty()) {
+                    return ItemStack.EMPTY;
+                }
+                stack = remainder;
             }
         }
-        // Prefer inserting into existing stacks first, splitting across as many inventories as needed
-        targets.sort(Comparator.comparing(InsertionTarget::repository, SortResult.comparator)
-                .thenComparing(InsertionTarget::holdsStack, Comparator.reverseOrder()));
-        for (InsertionTarget target : targets) {
-            stack = target.repository().mapInventory().insertStack(stack, simulate);
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-        }
+
         return stack;
     }
 
