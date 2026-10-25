@@ -104,8 +104,7 @@ public class RepositoryBlock extends ModBlock implements EntityBlock {
     @Override
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
-        // ItemFrames call this method with AIR when placed or updated nearby.
-        if (level.getBlockState(neighbor).isAir()) {
+        if (level.getBlockState(neighbor).getCollisionShape(level, neighbor).isEmpty()) {
             if (level.getBlockEntity(pos) instanceof RepositoryTile repositoryTile) {
                 repositoryTile.attachFilters();
             }

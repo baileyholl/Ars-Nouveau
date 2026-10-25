@@ -29,7 +29,8 @@ public class LecternInvWrapper extends CombinedHandlerInv {
         ItemStack remainder = lecternTile.pushStack(stack, null, true);
         simulatedAt = gameTime;
         simulatedStack = stack.copy();
-        simulatedRemainder = remainder.copy();
+        // Disables the cache if we could insert any items, it is otherwise not safe to cache partial remainders
+        simulatedRemainder = remainder.getCount() == stack.getCount() ? remainder.copy() : ItemStack.EMPTY;
         return remainder;
     }
 
