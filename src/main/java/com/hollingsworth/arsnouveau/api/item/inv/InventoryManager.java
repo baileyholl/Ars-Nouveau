@@ -86,10 +86,11 @@ public class InventoryManager {
         List<SlotReference> references = new ArrayList<>();
         for (var filterPref : preferredForStack(stack, false)) {
             FilterableItemHandler filterable = filterPref.handler;
+            IItemHandler handler = filterable.getHandler();
             int count = stack.getCount();
-            stack = filterable.insertItemStacked(stack, simulate);
+            stack = handler instanceof IMapInventory mapInventory ? mapInventory.insertStack(stack, simulate) : filterable.insertItemStacked(stack, simulate);
             if (count != stack.getCount()) {
-                references.add(new SlotReference(filterable.getHandler(), filterable.getHandler().getSlots()));
+                references.add(new SlotReference(handler, handler.getSlots()));
             }
             if (stack.isEmpty()) {
                 break;
