@@ -209,8 +209,10 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
 
     @Override
     public boolean clickMenuButton(Player playerIn, int id) {
-        if (te != null && id == 0)
+        if (te != null && id == 0) {
             te.clear(playerIn, selectedTab);
+            return true;
+        }
         return false;
     }
 
@@ -349,6 +351,7 @@ public class CraftingTerminalMenu extends RecipeBookMenu<CraftingInput, Crafting
         }
 
         te.transferToGrid(pinv.player, stacks, selectedTab);
+        broadcastChanges();
     }
 
     @Override
