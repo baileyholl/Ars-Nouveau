@@ -271,6 +271,7 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     @Override
     public void onWanded(Player playerEntity) {
         mainLecternPos = null;
+        invalidateCapabilities();
         updateBlock();
     }
 
@@ -495,7 +496,7 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     public @Nullable CraftingLecternTile getMainLectern(List<BlockPos> visitedPos) {
 
         if (mainLecternPos == null)
-            return this;
+            return isRemoved() ? null : this;
         if (visitedPos.contains(mainLecternPos))
             return null;
         visitedPos.add(mainLecternPos);

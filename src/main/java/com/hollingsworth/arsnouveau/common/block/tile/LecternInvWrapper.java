@@ -24,7 +24,11 @@ public class LecternInvWrapper extends CombinedHandlerInv {
         }
         long gameTime = lecternTile.getLevel().getGameTime();
         if (gameTime == simulatedAt && !simulatedRemainder.isEmpty() && ItemStack.matches(stack, simulatedStack)) {
-            return simulatedRemainder.copy();
+            return stack;
+        }
+        ItemStack inSlot = getStackInSlot(slot);
+        if (!inSlot.isEmpty() && !ItemStack.isSameItemSameComponents(inSlot, stack)) {
+            return stack;
         }
         ItemStack remainder = lecternTile.pushStack(stack, null, true);
         simulatedAt = gameTime;

@@ -7,12 +7,12 @@ import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
 import com.hollingsworth.arsnouveau.common.network.ClientTransferHandlerPacket;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -26,6 +26,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
@@ -46,13 +47,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.fml.util.ObfuscationReflectionHelper;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -61,15 +60,16 @@ import java.util.UUID;
 @GameTestHolder(ArsNouveau.MODID)
 @PrefixGameTestTemplate(false)
 public class StorageLecternTests {
-    private static BlockPos storagePos = new BlockPos(1, 1, 1);
-    private static final BlockPos catalogPos = new BlockPos(2, 1, 1);
-    private static final BlockPos lecternPos = new BlockPos(3, 1, 1);
-    private static final BlockPos chainedLecternPos = new BlockPos(5, 1, 1);
+    static BlockPos storagePos = new BlockPos(1, 1, 1);
+    static final BlockPos secondStoragePos = new BlockPos(0, 1, 1);
+    static final BlockPos catalogPos = new BlockPos(2, 1, 1);
+    static final BlockPos lecternPos = new BlockPos(3, 1, 1);
+    static final BlockPos chainedLecternPos = new BlockPos(5, 1, 1);
     private static final TicketType<ChunkPos> UNSAVED_CHUNK = TicketType.create("ars_nouveau_unsaved_chunk_test", Comparator.comparingLong(ChunkPos::toLong));
 
     @GameTest(template = "empty10")
     public static void extractsNonStackableItems(GameTestHelper helper) {
-        depositAndWithdrawSword(helper, createRepositoryNetwork(helper));
+        depositAndWithdrawSword(helper, createCatalogNetwork(helper));
     }
 
     @GameTest(template = "empty10")
@@ -79,7 +79,7 @@ public class StorageLecternTests {
 
     @GameTest(template = "empty10")
     public static void extractsBasedOnDataComponents(GameTestHelper helper) {
-        withdrawMatchingVariant(helper, createRepositoryNetwork(helper));
+        withdrawMatchingVariant(helper, createCatalogNetwork(helper));
     }
 
     @GameTest(template = "empty10")
@@ -89,7 +89,7 @@ public class StorageLecternTests {
 
     @GameTest(template = "empty10")
     public static void extractsMergedStacks(GameTestHelper helper) {
-        mergeAndWithdrawStack(helper, createRepositoryNetwork(helper));
+        mergeAndWithdrawStack(helper, createCatalogNetwork(helper));
     }
 
     @GameTest(template = "empty10")
@@ -114,7 +114,7 @@ public class StorageLecternTests {
 
     @GameTest(template = "empty10")
     public static void extractsFromStaleEmptySlot(GameTestHelper helper) {
-        withdrawFromStaleEmptySlot(helper, createRepositoryNetwork(helper));
+        withdrawFromStaleEmptySlot(helper, createCatalogNetwork(helper));
     }
 
     @GameTest(template = "empty10")
@@ -217,7 +217,7 @@ public class StorageLecternTests {
     }
 
     @GameTest(template = "empty10")
-    public static void menuRejectsChangesWhileLecternChunkIsNotSaving(GameTestHelper helper) {
+    public static void lecternUnloadDisablesMenus(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         ChunkPos chunk = new ChunkPos(helper.absolutePos(lecternPos).offset(4096, 0, 0));
         BlockPos pos = chunk.getMiddleBlockPosition(helper.absolutePos(lecternPos).getY());
@@ -290,10 +290,10 @@ public class StorageLecternTests {
     }
 
     @GameTest(template = "empty10")
-    public static void hopperKeepsItemNoLinkedInventoryAccepts(GameTestHelper helper) {
+    public static void filtersDoNotVoidItems(GameTestHelper helper) {
         StorageNetwork network = createChestNetwork(helper);
         helper.setBlock(lecternPos.east(), Blocks.REDSTONE_BLOCK);
-        hangCobblestoneFrame(helper, storagePos);
+        hangFrame(helper, storagePos, Direction.NORTH, new ItemStack(Items.COBBLESTONE));
         BlockPos hopperPos = lecternPos.above();
         helper.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN));
         HopperBlockEntity hopper = helper.getBlockEntity(hopperPos);
@@ -313,41 +313,25 @@ public class StorageLecternTests {
                 .thenSucceed();
     }
 
+    // Crafters behave differently than hoppers as they insert everything at once so this is a nice coverage
     @GameTest(template = "empty10")
-    public static void crafterDoesNotDestroyPlanksThatDontFit(GameTestHelper helper) {
+    public static void multiInsertsDoNotVoidItems(GameTestHelper helper) {
         StorageNetwork network = createChestNetwork(helper);
-        helper.setBlock(lecternPos.east(), Blocks.REDSTONE_BLOCK);
-        hangCobblestoneFrame(helper, storagePos);
+        hangFrame(helper, storagePos, Direction.NORTH, new ItemStack(Items.COBBLESTONE));
         BlockPos plankChestPos = new BlockPos(1, 1, 3);
         helper.setBlock(plankChestPos, Blocks.CHEST);
-        ChestBlockEntity plankChest = helper.getBlockEntity(plankChestPos);
-        plankChest.setItem(0, new ItemStack(Items.OAK_PLANKS, 62));
-        for (int i = 1; i < plankChest.getContainerSize(); i++) {
-            plankChest.setItem(i, new ItemStack(Items.DIRT, 64));
-        }
-        BlockPos crafterPos = lecternPos.above();
-        helper.setBlock(crafterPos, Blocks.CRAFTER.defaultBlockState().setValue(BlockStateProperties.ORIENTATION, FrontAndTop.DOWN_NORTH));
-        CrafterBlockEntity crafter = helper.getBlockEntity(crafterPos);
-        crafter.setItem(0, new ItemStack(Items.OAK_LOG));
-        startLinked(helper, network)
+        GameTestSequence linked = startLinked(helper, network)
                 .thenExecute(() -> {
                     network.lectern().addHandlerPos(helper.absolutePos(plankChestPos));
                     network.lectern().updateItems = true;
                 })
-                .thenIdle(1)
-                .thenExecute(() -> helper.setBlock(crafterPos.above(), Blocks.REDSTONE_BLOCK))
-                .thenWaitUntil(() -> helper.assertTrue(crafter.getItem(0).isEmpty(), "Expected the crafter to craft its oak log"))
-                .thenExecute(() -> {
-                    int inChest = plankChest.countItem(Items.OAK_PLANKS);
-                    int onGround = helper.getEntities(EntityType.ITEM).stream().filter(item -> item.getItem().is(Items.OAK_PLANKS)).mapToInt(item -> item.getItem().getCount()).sum();
-                    helper.assertTrue(inChest + onGround == 66, "Expected 66 planks between the chest and the ground, chest: " + inChest + ", ground: " + onGround);
-                })
-                .thenSucceed();
+                .thenIdle(1);
+        assertCrafterItemsNotVoided(helper, linked, helper.getBlockEntity(plankChestPos));
     }
 
     @GameTest(template = "empty10")
     public static void insertsByFilterPriority(GameTestHelper helper) {
-        StorageNetwork network = createRepositoryNetwork(helper);
+        StorageNetwork network = createCatalogNetwork(helper);
         BlockPos unframedPos = storagePos.south();
         BlockPos framedPos = unframedPos.west();
         helper.setBlock(unframedPos, BlockRegistry.REPOSITORY.get());
@@ -373,31 +357,151 @@ public class StorageLecternTests {
     }
 
     @GameTest(template = "empty10")
-    public static void stuckHopperDryRunCostStaysLinear(GameTestHelper helper) {
-        StorageNetwork network = createChestNetwork(helper);
-        helper.setBlock(lecternPos.east(), Blocks.REDSTONE_BLOCK);
-        ChestBlockEntity chest = helper.getBlockEntity(storagePos);
-        CountingItems items = new CountingItems(chest.getContainerSize());
-        ObfuscationReflectionHelper.setPrivateValue(ChestBlockEntity.class, chest, items, "items");
-        for (int i = 0; i < chest.getContainerSize(); i++) {
-            chest.setItem(i, new ItemStack(Items.DIRT, 64));
-        }
-        BlockPos hopperPos = lecternPos.above();
-        helper.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN));
-        HopperBlockEntity hopper = helper.getBlockEntity(hopperPos);
-        int ticks = 20;
+    public static void insertsIntoFrameBeforeExistingStack(GameTestHelper helper) {
+        StorageNetwork network = createCatalogNetwork(helper);
+        helper.setBlock(secondStoragePos, BlockRegistry.REPOSITORY.get());
+        preferFrameOverExistingStack(helper, network.lectern(), startLinked(helper, network));
+    }
+
+    @GameTest(template = "empty10")
+    public static void directInsertsIntoFrameBeforeExistingStack(GameTestHelper helper) {
+        StorageNetwork network = createDirectRepositoryNetwork(helper);
+        preferFrameOverExistingStack(helper, network.lectern(), startLinkedWithSecondRepository(helper, network));
+    }
+
+    @GameTest(template = "empty10")
+    public static void insertsRespectDenyScrolledRepository(GameTestHelper helper) {
+        StorageNetwork network = createCatalogNetwork(helper);
+        helper.setBlock(secondStoragePos, BlockRegistry.REPOSITORY.get());
+        assertDenyScrollIsRespected(helper, network.lectern(), startLinked(helper, network));
+    }
+
+    @GameTest(template = "empty10")
+    public static void directInsertsRespectDenyScrolledRepository(GameTestHelper helper) {
+        StorageNetwork network = createDirectRepositoryNetwork(helper);
+        assertDenyScrollIsRespected(helper, network.lectern(), startLinkedWithSecondRepository(helper, network));
+    }
+
+    @GameTest(template = "empty10")
+    public static void repositoryCacheSetsNewItem(GameTestHelper helper) {
+        StorageNetwork network = createCatalogNetwork(helper);
+        helper.setBlock(secondStoragePos, BlockRegistry.REPOSITORY.get());
+        Container first = helper.getBlockEntity(storagePos);
+        RepositoryTile emptied = helper.getBlockEntity(secondStoragePos);
+        emptied.setItem(0, new ItemStack(Items.REDSTONE, 16));
+        ServerPlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "taker"));
         startLinked(helper, network)
-                .thenExecute(() -> hopper.setItem(0, new ItemStack(Items.DIAMOND)))
-                .thenIdle(1)
-                .thenExecute(() -> items.reads = 0)
-                .thenIdle(ticks)
                 .thenExecute(() -> {
-                    int readsPerTick = items.reads / ticks;
-                    int slots = chest.getContainerSize();
-                    helper.assertTrue(hopper.countItem(Items.DIAMOND) == 1, "Expected the diamond to stay stuck in the hopper");
-                    helper.assertTrue(readsPerTick <= 8 * slots, "Expected a stuck hopper to read each chest slot at most 8 times per tick, got " + readsPerTick + " reads for " + slots + " slots");
+                    AbstractContainerMenu menu = emptied.createMenu(1, player.getInventory(), player);
+                    player.containerMenu = menu;
+                    menu.clicked(0, 0, ClickType.QUICK_MOVE, player);
+                    network.lectern().pushStack(new StoredItemStack(new ItemStack(Items.REDSTONE, 16)), null, false);
+                    int inFirst = first.countItem(Items.REDSTONE);
+                    int inEmptied = emptied.countItem(Items.REDSTONE);
+                    helper.assertTrue(inFirst == 16 && inEmptied == 0, "Expected the redstone in the first repository, not the one it was shift-clicked out of, first: " + inFirst + ", emptied: " + inEmptied);
                 })
                 .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void hopperInsertsAfterLecternExtract(GameTestHelper helper) {
+        StorageNetwork network = createCatalogNetwork(helper);
+        Container storage = fillWithDirt(helper, storagePos);
+        BlockPos abovePos = lecternPos.above();
+        BlockPos belowPos = lecternPos.below();
+        helper.setBlock(abovePos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN));
+        HopperBlockEntity above = helper.getBlockEntity(abovePos);
+        int expectedDirt = storage.getContainerSize() * 64 + 1;
+        startLinked(helper, network)
+                .thenExecute(() -> above.setItem(0, new ItemStack(Items.DIRT)))
+                .thenIdle(10)
+                .thenExecute(() -> {
+                    helper.assertTrue(above.countItem(Items.DIRT) == 1, "Expected the dirt to stay stuck in the hopper while the storage is full");
+                    helper.setBlock(belowPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN));
+                })
+                .thenWaitUntil(() -> helper.assertTrue(above.isEmpty(), "Expected the stuck hopper to insert once the hopper below took dirt out through the lectern"))
+                .thenExecute(() -> {
+                    HopperBlockEntity below = helper.getBlockEntity(belowPos);
+                    int dirt = storage.countItem(Items.DIRT) + below.countItem(Items.DIRT);
+                    helper.assertTrue(dirt == expectedDirt, "Expected " + expectedDirt + " dirt between the storage and the hopper below, got " + dirt);
+                })
+                .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void chainedHopperInsertsAfterMainLecternExtract(GameTestHelper helper) {
+        StorageNetwork network = createChestNetwork(helper);
+        helper.setBlock(chainedLecternPos, BlockRegistry.CRAFTING_LECTERN.get());
+        Container storage = fillWithDirt(helper, storagePos);
+        BlockPos abovePos = chainedLecternPos.above();
+        BlockPos belowPos = lecternPos.below();
+        helper.setBlock(abovePos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN));
+        HopperBlockEntity above = helper.getBlockEntity(abovePos);
+        int expectedDirt = storage.getContainerSize() * 64 + 1;
+        startLinked(helper, network)
+                .thenExecute(() -> {
+                    helper.<CraftingLecternTile>getBlockEntity(chainedLecternPos).onFinishedConnectionFirst(helper.absolutePos(lecternPos), null, null, FakePlayerFactory.getMinecraft(helper.getLevel()));
+                    above.setItem(0, new ItemStack(Items.DIRT));
+                })
+                .thenIdle(10)
+                .thenExecute(() -> {
+                    helper.assertTrue(above.countItem(Items.DIRT) == 1, "Expected the dirt to stay stuck in the hopper above the chained lectern while the storage is full");
+                    helper.setBlock(belowPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN));
+                })
+                .thenWaitUntil(() -> helper.assertTrue(above.isEmpty(), "Expected the stuck hopper above the chained lectern to insert once the hopper below the main lectern took dirt out"))
+                .thenExecute(() -> {
+                    HopperBlockEntity below = helper.getBlockEntity(belowPos);
+                    int dirt = storage.countItem(Items.DIRT) + below.countItem(Items.DIRT);
+                    helper.assertTrue(dirt == expectedDirt, "Expected " + expectedDirt + " dirt between the storage and the hopper below, got " + dirt);
+                })
+                .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void simulatedInsertReturnsCorrectRemainder(GameTestHelper helper) {
+        StorageNetwork network = createChestNetwork(helper);
+        Container chest = fillWithDirt(helper, storagePos);
+        chest.setItem(0, new ItemStack(Items.DIRT, 44));
+        startLinked(helper, network)
+                .thenExecute(() -> {
+                    IItemHandler handler = helper.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, helper.absolutePos(lecternPos), null);
+                    ItemStack dirt = new ItemStack(Items.DIRT, 64);
+                    int refused = handler.insertItem(0, dirt.copy(), true).getCount();
+                    helper.assertTrue(refused == 44, "Expected the dry run to fit 20 of the 64 dirt and return 44, got " + refused);
+                    chest.setItem(0, new ItemStack(Items.DIRT, 64));
+                    int refusedAfterFill = handler.insertItem(0, dirt.copy(), true).getCount();
+                    helper.assertTrue(refusedAfterFill == 64, "Expected the repeated dry run to see the slot filled since and return all 64 dirt, got " + refusedAfterFill);
+                })
+                .thenSucceed();
+    }
+
+    private static void assertCrafterItemsNotVoided(GameTestHelper helper, GameTestSequence linked, Container planks) {
+        helper.setBlock(lecternPos.east(), Blocks.REDSTONE_BLOCK);
+        planks.setItem(0, new ItemStack(Items.OAK_PLANKS, 62));
+        for (int i = 1; i < planks.getContainerSize(); i++) {
+            planks.setItem(i, new ItemStack(Items.DIRT, 64));
+        }
+        BlockPos crafterPos = lecternPos.above();
+        helper.setBlock(crafterPos, Blocks.CRAFTER.defaultBlockState().setValue(BlockStateProperties.ORIENTATION, FrontAndTop.DOWN_NORTH));
+        CrafterBlockEntity crafter = helper.getBlockEntity(crafterPos);
+        crafter.setItem(0, new ItemStack(Items.OAK_LOG));
+        linked.thenExecute(() -> helper.setBlock(crafterPos.above(), Blocks.REDSTONE_BLOCK))
+                .thenWaitUntil(() -> helper.assertTrue(crafter.getItem(0).isEmpty(), "Expected the crafter to craft its oak log"))
+                .thenExecute(() -> {
+                    int inStorage = planks.countItem(Items.OAK_PLANKS);
+                    int onGround = helper.getEntities(EntityType.ITEM).stream().filter(item -> item.getItem().is(Items.OAK_PLANKS)).mapToInt(item -> item.getItem().getCount()).sum();
+                    helper.assertTrue(inStorage + onGround == 66, "Expected 66 planks between the storage and the ground, storage: " + inStorage + ", ground: " + onGround);
+                })
+                .thenSucceed();
+    }
+
+    static Container fillWithDirt(GameTestHelper helper, BlockPos pos) {
+        helper.setBlock(lecternPos.east(), Blocks.REDSTONE_BLOCK);
+        Container storage = helper.getBlockEntity(pos);
+        for (int i = 0; i < storage.getContainerSize(); i++) {
+            storage.setItem(i, new ItemStack(Items.DIRT, 64));
+        }
+        return storage;
     }
 
     private static void withdrawFromStaleEmptySlot(GameTestHelper helper, StorageNetwork network) {
@@ -474,8 +578,8 @@ public class StorageLecternTests {
     }
 
     private static void overflowIntoSecondFramedInventory(GameTestHelper helper, CraftingLecternTile lectern, GameTestSequence linked, BlockPos unframedPos, BlockPos framedPos) {
-        hangCobblestoneFrame(helper, storagePos);
-        hangCobblestoneFrame(helper, framedPos);
+        hangFrame(helper, storagePos, Direction.NORTH, new ItemStack(Items.COBBLESTONE));
+        hangFrame(helper, framedPos, Direction.NORTH, new ItemStack(Items.COBBLESTONE));
         Container full = helper.getBlockEntity(storagePos);
         for (int i = 0; i < full.getContainerSize(); i++) {
             full.setItem(i, new ItemStack(Items.COBBLESTONE, 64));
@@ -487,6 +591,43 @@ public class StorageLecternTests {
                     int inFramed = framed.countItem(Items.COBBLESTONE);
                     int inUnframed = unframed.countItem(Items.COBBLESTONE);
                     helper.assertTrue(inFramed == 16 && inUnframed == 0, "Expected the cobblestone in the framed inventory with room, not the unframed one, framed: " + inFramed + ", unframed: " + inUnframed);
+                })
+                .thenSucceed();
+    }
+
+    private static void preferFrameOverExistingStack(GameTestHelper helper, CraftingLecternTile lectern, GameTestSequence linked) {
+        hangFrame(helper, secondStoragePos, Direction.NORTH, new ItemStack(Items.COBBLESTONE));
+        Container unframed = helper.getBlockEntity(storagePos);
+        Container framed = helper.getBlockEntity(secondStoragePos);
+        unframed.setItem(0, new ItemStack(Items.COBBLESTONE, 20));
+        linked.thenExecute(() -> {
+                    lectern.pushStack(new StoredItemStack(new ItemStack(Items.COBBLESTONE, 16)), null, false);
+                    int inFramed = framed.countItem(Items.COBBLESTONE);
+                    int inUnframed = unframed.countItem(Items.COBBLESTONE);
+                    helper.assertTrue(inFramed == 16 && inUnframed == 20, "Expected the cobblestone in the empty framed repository, not the unframed one already holding some, framed: " + inFramed + ", unframed: " + inUnframed);
+                })
+                .thenSucceed();
+    }
+
+    private static void assertDenyScrollIsRespected(GameTestHelper helper, CraftingLecternTile lectern, GameTestSequence linked) {
+        RepositoryTile denying = helper.getBlockEntity(storagePos);
+        Container open = helper.getBlockEntity(secondStoragePos);
+        denying.setItem(0, new ItemStack(Items.REDSTONE, 16));
+        ServerPlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "scribe"));
+        hangFrame(helper, storagePos, Direction.NORTH, denyRedstoneScroll(helper, player));
+        linked.thenExecute(() -> {
+                    AbstractContainerMenu menu = denying.createMenu(1, player.getInventory(), player);
+                    player.containerMenu = menu;
+                    menu.clicked(0, 0, ClickType.QUICK_MOVE, player);
+                    lectern.pushStack(new StoredItemStack(new ItemStack(Items.REDSTONE, 16)), null, false);
+                    int inDenying = denying.countItem(Items.REDSTONE);
+                    int inOpen = open.countItem(Items.REDSTONE);
+                    helper.assertTrue(inDenying == 0 && inOpen == 16, "Expected the redstone to skip the repository denying it after its redstone was taken out, denying: " + inDenying + ", open: " + inOpen);
+                    denying.setItem(0, new ItemStack(Items.REDSTONE, 16));
+                    lectern.pushStack(new StoredItemStack(new ItemStack(Items.REDSTONE, 16)), null, false);
+                    inDenying = denying.countItem(Items.REDSTONE);
+                    inOpen = open.countItem(Items.REDSTONE);
+                    helper.assertTrue(inDenying == 16 && inOpen == 32, "Expected the redstone to skip the repository denying it while it holds redstone, denying: " + inDenying + ", open: " + inOpen);
                 })
                 .thenSucceed();
     }
@@ -515,29 +656,31 @@ public class StorageLecternTests {
                 .thenSucceed();
     }
 
-    private record StorageNetwork(CraftingLecternTile lectern, BlockPos linkedPos) {
+    record StorageNetwork(CraftingLecternTile lectern, BlockPos linkedPos) {
     }
 
-    private static StorageNetwork createRepositoryNetwork(GameTestHelper helper) {
+    static StorageNetwork createCatalogNetwork(GameTestHelper helper) {
         helper.setBlock(storagePos, BlockRegistry.REPOSITORY.get());
         helper.setBlock(catalogPos, BlockRegistry.REPOSITORY_CONTROLLER.get());
         helper.setBlock(lecternPos, BlockRegistry.CRAFTING_LECTERN.get());
+        // The catalog touches the lectern, which pulls from unlinked neighbours every 20 ticks unless powered.
+        helper.setBlock(lecternPos.east(), Blocks.REDSTONE_BLOCK);
         return new StorageNetwork(helper.getBlockEntity(lecternPos), catalogPos);
     }
 
-    private static StorageNetwork createDirectRepositoryNetwork(GameTestHelper helper) {
+    static StorageNetwork createDirectRepositoryNetwork(GameTestHelper helper) {
         helper.setBlock(storagePos, BlockRegistry.REPOSITORY.get());
         helper.setBlock(lecternPos, BlockRegistry.CRAFTING_LECTERN.get());
         return new StorageNetwork(helper.getBlockEntity(lecternPos), storagePos);
     }
 
-    private static StorageNetwork createChestNetwork(GameTestHelper helper) {
+    static StorageNetwork createChestNetwork(GameTestHelper helper) {
         helper.setBlock(storagePos, Blocks.CHEST);
         helper.setBlock(lecternPos, BlockRegistry.CRAFTING_LECTERN.get());
         return new StorageNetwork(helper.getBlockEntity(lecternPos), storagePos);
     }
 
-    private static GameTestSequence startLinked(GameTestHelper helper, StorageNetwork network) {
+    static GameTestSequence startLinked(GameTestHelper helper, StorageNetwork network) {
         return helper.startSequence()
                 .thenIdle(1)
                 .thenExecute(() -> {
@@ -547,20 +690,38 @@ public class StorageLecternTests {
                 .thenIdle(1);
     }
 
+    private static GameTestSequence startLinkedWithSecondRepository(GameTestHelper helper, StorageNetwork network) {
+        helper.setBlock(secondStoragePos, BlockRegistry.REPOSITORY.get());
+        return startLinked(helper, network)
+                .thenExecute(() -> {
+                    network.lectern().addHandlerPos(helper.absolutePos(secondStoragePos));
+                    network.lectern().updateItems = true;
+                })
+                .thenIdle(1);
+    }
+
     private static long listedCount(CraftingLecternTile lectern, ItemStack stack) {
         return lectern.getStacks(null).getOrDefault(new StoredItemStack(stack), 0L);
     }
 
-    private static void hangCobblestoneFrame(GameTestHelper helper, BlockPos target) {
+    private static ItemFrame hangFrame(GameTestHelper helper, BlockPos target, Direction direction, ItemStack held) {
         ServerPlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "builder"));
         BlockPos targetPos = helper.absolutePos(target);
         player.setShiftKeyDown(true);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.ITEM_FRAME));
-        player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(targetPos), Direction.NORTH, targetPos, false));
-        ItemFrame frame = helper.getEntities(EntityType.ITEM_FRAME).stream().filter(entity -> entity.blockPosition().equals(targetPos.north())).findFirst().orElseThrow();
-        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.COBBLESTONE));
+        player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(targetPos), direction, targetPos, false));
+        ItemFrame frame = helper.getEntities(EntityType.ITEM_FRAME).stream().filter(entity -> entity.blockPosition().equals(targetPos.relative(direction))).findFirst().orElseThrow();
+        player.setItemInHand(InteractionHand.MAIN_HAND, held.copy());
         player.interactOn(frame, InteractionHand.MAIN_HAND);
-        helper.assertTrue(frame.getItem().is(Items.COBBLESTONE), "Expected the item frame on " + target + " to hold cobblestone");
+        helper.assertTrue(ItemStack.isSameItemSameComponents(frame.getItem(), held), "Expected the item frame on " + target + " to hold " + held);
+        return frame;
+    }
+
+    private static ItemStack denyRedstoneScroll(GameTestHelper helper, ServerPlayer player) {
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemsRegistry.DENY_ITEM_SCROLL.get()));
+        player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.REDSTONE));
+        player.gameMode.useItem(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND);
+        return player.getMainHandItem();
     }
 
     private static CraftingTerminalMenu openMenu(CraftingLecternTile lectern, ServerPlayer player) {
@@ -587,19 +748,5 @@ public class StorageLecternTests {
             }
         }
         return count;
-    }
-
-    private static class CountingItems extends NonNullList<ItemStack> {
-        private int reads;
-
-        private CountingItems(int size) {
-            super(new ArrayList<>(Collections.nCopies(size, ItemStack.EMPTY)), ItemStack.EMPTY);
-        }
-
-        @Override
-        public ItemStack get(int index) {
-            reads++;
-            return super.get(index);
-        }
     }
 }
