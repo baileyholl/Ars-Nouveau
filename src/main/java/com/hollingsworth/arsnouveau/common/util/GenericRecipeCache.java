@@ -39,7 +39,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     protected int size;
 
     protected int ticksAboveSize = 0b0000_0000_0000_0000_0000_0000_0000_0000;
-    protected int additionsThisTick = 0;
+    protected boolean addedThisTick = false;
 
     public GenericRecipeCache(RecipeType<R> recipeType, int size) {
         this.recipeType = recipeType;
@@ -56,15 +56,11 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     }
 
     protected void onServerTick(ServerTickEvent.Post event) {
-        if (this.additionsThisTick > this.size) {
+        if (this.addedThisTick) {
             this.ticksAboveSize = (this.ticksAboveSize << 1) + 1;
             if (Integer.bitCount(this.ticksAboveSize) >= 16) {
-                var highestBit = Integer.highestOneBit(this.additionsThisTick);
-                if (this.additionsThisTick == highestBit) {
-                    this.size = this.additionsThisTick;
-                } else {
-                    this.size = highestBit << 1;
-                }
+                var highestBit = Integer.highestOneBit(this.size);
+                this.size = highestBit << 1;
 
                 ArrayDeque<RecipeHolder<? extends Recipe<I>>> newCache = new ArrayDeque<>(this.size);
                 newCache.addAll(this.cache);
@@ -74,7 +70,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
             this.ticksAboveSize <<= 1;
         }
 
-        this.additionsThisTick = 0;
+        this.addedThisTick = false;
     }
 
     @SuppressWarnings("unchecked")
@@ -110,7 +106,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
             this.cache.removeFirst();
         }
         this.cache.add(holder);
-        additionsThisTick++;
+        this.addedThisTick = true;
     }
 
     public void clear() {
