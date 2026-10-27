@@ -26,7 +26,7 @@ public class MethodUnderfoot extends AbstractCastMethod {
     }
 
     public static List<Entity> getEntitiesBeneath(LivingEntity caster, Level world) {
-        return world.getEntities(caster, caster.getBoundingBox().inflate(0.1, 1.5, 0.1), entity -> entity.isAlive() && !entity.getType().is(EntityTags.UNDERFOOT_BLACKLIST) && (entity instanceof LivingEntity || entity.getType().is(EntityTags.UNDERFOOD_WHITELIST)));
+        return world.getEntities(caster, caster.getBoundingBox().inflate(0.1, 1.5, 0.1), entity -> entity.isAlive() && !entity.getType().is(EntityTags.UNDERFOOT_BLACKLIST) && (entity instanceof LivingEntity || entity.getType().is(EntityTags.UNDERFOOT_WHITELIST)));
     }
 
     @Override
