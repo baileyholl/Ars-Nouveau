@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
@@ -15,13 +16,15 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
                           boolean skipBlockPlace) implements SpecialSingleInputRecipe, IRandomOutputRecipe {
 
@@ -29,18 +32,18 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
         this(input, outputs, false);
     }
 
-    public List<ItemStack> getRolledOutputs(@NotNull RandomSource random) {
+    public List<ItemStack> getRolledOutputs(RandomSource random) {
         return this.getRolledOutputs(null, null, random);
     }
 
-    public List<ItemStack> getRolledOutputs(@Nullable SpellResolver resolver, @Nullable SpellStats spellStats, @NotNull RandomSource random) {
+    public List<ItemStack> getRolledOutputs(@Nullable SpellResolver resolver, @Nullable SpellStats spellStats, RandomSource random) {
         List<ItemStack> finalOutputs = new ArrayList<>();
         this.rollOutputs(finalOutputs::add, resolver, spellStats, random);
         return finalOutputs;
     }
 
     @Override
-    public void rollOutputs(@NotNull Consumer<ItemStack> consumer, @Nullable SpellResolver resolver, @Nullable SpellStats spellStats, @NotNull RandomSource random) {
+    public void rollOutputs(Consumer<ItemStack> consumer, @Nullable SpellResolver resolver, @Nullable SpellStats spellStats, RandomSource random) {
         for (CrushOutput crushRoll : outputs) {
             if (random.nextDouble() <= crushRoll.chance) {
                 if (crushRoll.maxRange > 1) {
