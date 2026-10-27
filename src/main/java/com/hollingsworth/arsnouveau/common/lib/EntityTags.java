@@ -36,6 +36,6 @@ public class EntityTags {
     public static final TagKey<EntityType<?>> BREED_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("breed_blacklist"));
     public static final TagKey<EntityType<?>> OVERGROWTH_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("overgrowth_blacklist"));
     public static final TagKey<EntityType<?>> UNDERFOOT_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("underfoot_blacklist"));
-    public static final TagKey<EntityType<?>> UNDERFOOD_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("underfoot_whitelist"));
+    public static final TagKey<EntityType<?>> UNDERFOOT_WHITELIST = TagKey.create(Registries.ENTITY_TYPE, ArsNouveau.prefix("underfoot_whitelist"));
 
 }
