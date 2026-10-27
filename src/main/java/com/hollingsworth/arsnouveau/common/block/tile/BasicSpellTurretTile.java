@@ -90,7 +90,7 @@ public class BasicSpellTurretTile extends ModdedTile implements ITooltipProvider
 
                 cap.extractSource(manaCost, false);
                 EntityFollowProjectile.spawn(serverLevel, sp.first(), this.worldPosition);
-            } else if (SourceUtil.takeSourceMultipleWithParticles(pos, level, 10, manaCost) == null) {
+            } else if (SourceUtil.takeNearbyWithParticles(pos, level, 10, manaCost) == null) {
                 return;
             }
         }

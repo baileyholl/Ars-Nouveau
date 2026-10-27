@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
@@ -46,10 +46,10 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
         }
 
         if (level.getGameTime() % 100 == 0 && getSource() > 0) {
-            List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
+            List<SourceAccess> providers = SourceUtil.findAcceptors(worldPosition, level, 5);
             if (!providers.isEmpty()) {
-                transferSource(this, providers.getFirst().getSource());
-                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.getFirst().getCurrentPos(), this.getColor());
+                transferSource(this.getSourceStorage(), providers.getFirst().cap());
+                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.getFirst().pos(), this.getColor());
             }
         }
     }
@@ -105,6 +105,11 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
             @Override
             public boolean canReceive() {
                 return false;
+            }
+
+            @Override
+            public void onContentsChanged() {
+                SourcelinkTile.this.updateBlock();
             }
         };
     }
