@@ -44,6 +44,7 @@ public class ItemUtil {
     }
 
     public static void replaceItemEntity(ItemEntity entity, ItemStack stack) {
+        //noinspection resource
         var level = entity.level();
         entity.setItem(stack);
         entity.setDeltaMovement(level.random.nextDouble() * 0.2 - 0.1, 0.2, level.random.nextDouble() * 0.2 - 0.1);
