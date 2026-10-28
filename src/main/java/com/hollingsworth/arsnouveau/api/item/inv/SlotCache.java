@@ -5,6 +5,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntCollections;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -14,12 +16,14 @@ import java.util.BitSet;
 public final class SlotCache {
     private Item[] cache;
     private final BitSet empty;
+    final Object2IntMap<Item> lastAccepting = new Object2IntOpenHashMap<>();
     private int size;
 
     public SlotCache(int slots) {
         this.cache = new Item[slots];
         this.empty = new BitSet(slots);
         this.size = slots;
+        this.lastAccepting.defaultReturnValue(-1);
     }
 
     public SlotCache() {
@@ -41,12 +45,16 @@ public final class SlotCache {
             return IntList.of();
         }
 
+        int lastHitSlot = lastAccepting.getInt(item);
         IntArrayList col = new IntArrayList(8);
+        if (lastHitSlot >= 0 && lastHitSlot < size && cache[lastHitSlot] == item) {
+            col.add(lastHitSlot);
+        }
         for (int i = 0; i < size; i++) {
             if (col.size() + emptyCount >= size) {
                 break;
             }
-            if (item == cache[i]) {
+            if (i != lastHitSlot && item == cache[i]) {
                 col.add(i);
             }
         }

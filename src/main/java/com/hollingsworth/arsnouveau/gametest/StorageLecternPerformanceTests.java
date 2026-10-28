@@ -153,13 +153,38 @@ public class StorageLecternPerformanceTests {
     }
 
     @GameTest(template = "empty10")
-    public static void insertIntoMixedStorageScansOnDryRun(GameTestHelper helper) {
-        assertMixedStorageInsertReads(helper, createCatalogNetwork(helper), RepositoryTile.class, 56, 56);
+    public static void insertIntoMixedStorageUsesCache(GameTestHelper helper) {
+        assertMixedStorageInsertReads(helper, createCatalogNetwork(helper), RepositoryTile.class, 3, 56);
     }
 
     @GameTest(template = "empty10")
     public static void chestInsertIntoMixedStorageScansOnDryRun(GameTestHelper helper) {
         assertMixedStorageInsertReads(helper, createChestNetwork(helper), ChestBlockEntity.class, 56, 2);
+    }
+
+    @GameTest(template = "empty10")
+    public static void chestInsertsUseLastAcceptingSlot(GameTestHelper helper) {
+        StorageNetwork network = createChestNetwork(helper);
+        CountingItems items = countReads(helper, storagePos, ChestBlockEntity.class);
+        Container chest = helper.getBlockEntity(storagePos);
+        startLinked(helper, network)
+                .thenExecute(() -> {
+                    for (int i = 0; i < 13; i++) {
+                        network.lectern().pushStack(new StoredItemStack(new ItemStack(Items.STONE, 64)), null, false);
+                    }
+                    network.lectern().pushStack(new StoredItemStack(new ItemStack(Items.STONE, 32)), null, false);
+                    helper.assertTrue(chest.getItem(13).getCount() == 32, "Expected the partial stack in slot 13, got " + chest.getItem(13));
+                    IItemHandler handler = helper.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, helper.absolutePos(lecternPos), null);
+                    ItemStack stone = new ItemStack(Items.STONE);
+                    items.reads = 0;
+                    helper.assertTrue(handler.insertItem(13, stone.copy(), true).isEmpty(), "Expected the dry run to fit the stone");
+                    helper.assertTrue(items.reads == 3, "Expected the warm dry run to read the chest 3 times, got " + items.reads);
+                    items.reads = 0;
+                    helper.assertTrue(handler.insertItem(13, stone.copy(), false).isEmpty(), "Expected the stone to be inserted");
+                    helper.assertTrue(items.reads == 2, "Expected the warm insert to read the chest 2 times, got " + items.reads);
+                    helper.assertTrue(chest.getItem(13).getCount() == 33, "Expected 33 stone in slot 13, got " + chest.getItem(13).getCount());
+                })
+                .thenSucceed();
     }
 
     @GameTest(template = "empty10")

@@ -67,4 +67,37 @@ public class SlotCacheTests {
         helper.assertTrue(filterable.getHandler().getStackInSlot(0).getCount() == 32, "Expected cobblestone stack to be 32, got: " + filterable.getHandler().getStackInSlot(0).getCount());
         helper.succeed();
     }
+
+    @GameTest(template = "empty10")
+    public static void listsLastAcceptingSlotFirst(GameTestHelper helper) {
+        SlotCache cache = createStoneFilledInv(helper);
+        var slots = cache.getIfPresent(Items.STONE);
+        helper.assertTrue(slots.equals(IntArrayList.of(3, 0, 1, 2)), "Expected the last accepting slot first and every slot once, got: " + slots);
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void ignoresStaleLastAcceptingSlot(GameTestHelper helper) {
+        SlotCache cache = createStoneFilledInv(helper);
+        cache.replaceSlotWithItem(Items.AIR, 3);
+        helper.assertTrue(cache.getIfPresent(Items.STONE).equals(IntArrayList.of(0, 1, 2)), "Expected an emptied hint slot to drop out, got: " + cache.getIfPresent(Items.STONE));
+        cache.replaceSlotWithItem(Items.DIRT, 3);
+        helper.assertTrue(cache.getIfPresent(Items.STONE).equals(IntArrayList.of(0, 1, 2)), "Expected a hint slot holding another item to drop out, got: " + cache.getIfPresent(Items.STONE));
+        cache.replaceSlotWithItem(Items.STONE, 3);
+        helper.assertTrue(cache.getIfPresent(Items.STONE).equals(IntArrayList.of(3, 0, 1, 2)), "Expected the hint to apply again once the slot holds stone, got: " + cache.getIfPresent(Items.STONE));
+        helper.succeed();
+    }
+
+    private static SlotCache createStoneFilledInv(GameTestHelper helper) {
+        ItemStackHandler handler = new ItemStackHandler(4);
+        for (int i = 0; i < 4; i++) {
+            handler.setStackInSlot(i, new ItemStack(Items.STONE, 63));
+        }
+        SlotCache cache = new SlotCache(4);
+        FilterableItemHandler filterable = new FilterableItemHandler(handler).withSlotCache(cache);
+        for (int i = 0; i < 4; i++) {
+            helper.assertTrue(filterable.insertItemStacked(new ItemStack(Items.STONE), false).isEmpty(), "Expected stone " + i + " to top up a stack");
+        }
+        return cache;
+    }
 }

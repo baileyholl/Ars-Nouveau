@@ -37,12 +37,14 @@ import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.CrafterBlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
@@ -471,6 +473,65 @@ public class StorageLecternTests {
                     chest.setItem(0, new ItemStack(Items.DIRT, 64));
                     int refusedAfterFill = handler.insertItem(0, dirt.copy(), true).getCount();
                     helper.assertTrue(refusedAfterFill == 64, "Expected the repeated dry run to see the slot filled since and return all 64 dirt, got " + refusedAfterFill);
+                })
+                .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void realInsertRetriesSlotRefusedForSmallerStack(GameTestHelper helper) {
+        BlockPos crafterPos = new BlockPos(1, 1, 3);
+        helper.setBlock(lecternPos, BlockRegistry.CRAFTING_LECTERN.get());
+        helper.setBlock(crafterPos, Blocks.CRAFTER);
+        CrafterBlockEntity crafter = helper.getBlockEntity(crafterPos);
+        crafter.setItem(0, new ItemStack(Items.STONE, 63));
+        crafter.setItem(1, new ItemStack(Items.STONE, 62));
+        for (int i = 2; i < 9; i++) {
+            crafter.setSlotState(i, false);
+        }
+        CraftingLecternTile lectern = helper.getBlockEntity(lecternPos);
+        startLinked(helper, new StorageNetwork(lectern, crafterPos))
+                .thenExecute(() -> {
+                    for (int i = 0; i < 3; i++) {
+                        helper.assertTrue(lectern.pushStack(new StoredItemStack(new ItemStack(Items.STONE)), null, false) == null, "Expected warm-up stone " + i + " to fit");
+                    }
+                    helper.assertTrue(crafter.getItem(0).getCount() == 64 && crafter.getItem(1).getCount() == 64, "Expected both crafter stacks to be full after the warm-up");
+                    crafter.setItem(0, new ItemStack(Items.STONE, 63));
+                    crafter.setItem(1, new ItemStack(Items.STONE, 62));
+                    StoredItemStack remainder = lectern.pushStack(new StoredItemStack(new ItemStack(Items.STONE, 3)), null, false);
+                    helper.assertTrue(remainder == null, "Expected the crafter to take all three stone once its first slot stopped being refused, got " + remainder + " back");
+                    helper.assertTrue(crafter.countItem(Items.STONE) == 128, "Expected 128 stone in the crafter, got " + crafter.countItem(Items.STONE));
+                })
+                .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void lecternRespectsSlotSizeChange(GameTestHelper helper) {
+        BlockPos removedHalf = storagePos.west();
+        helper.setBlock(lecternPos, BlockRegistry.CRAFTING_LECTERN.get());
+        helper.setBlock(storagePos, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.TYPE, ChestType.RIGHT));
+        helper.setBlock(removedHalf, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.TYPE, ChestType.LEFT));
+        CraftingLecternTile lectern = helper.getBlockEntity(lecternPos);
+        Container chest = helper.getBlockEntity(storagePos);
+        startLinked(helper, new StorageNetwork(lectern, storagePos))
+                .thenExecute(() -> {
+                    IItemHandler handler = helper.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, helper.absolutePos(lecternPos), null);
+                    helper.assertTrue(handler.getSlots() == 54, "Expected the double chest to expose 54 slots, got " + handler.getSlots());
+                    helper.assertTrue(lectern.pushStack(new StoredItemStack(new ItemStack(Items.DIRT)), null, true) == null, "Expected the dry run into the empty double chest to fit");
+                    helper.setBlock(removedHalf, Blocks.AIR);
+                })
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    IItemHandler handler = helper.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, helper.absolutePos(lecternPos), null);
+                    helper.assertTrue(handler.getSlots() == 27, "Expected the remaining chest to expose 27 slots, got " + handler.getSlots());
+                    for (int i = 0; i < chest.getContainerSize(); i++) {
+                        chest.setItem(i, new ItemStack(Items.DIRT, 64));
+                    }
+                    try {
+                        ItemStack remainder = handler.insertItem(0, new ItemStack(Items.DIRT), true);
+                        helper.assertTrue(remainder.getCount() == 1, "Expected the full chest to refuse the dirt, got " + remainder.getCount() + " back");
+                    } catch (IndexOutOfBoundsException e) {
+                        helper.fail("Expected the dry run to skip the cached slots of the removed half, got " + e);
+                    }
                 })
                 .thenSucceed();
     }
