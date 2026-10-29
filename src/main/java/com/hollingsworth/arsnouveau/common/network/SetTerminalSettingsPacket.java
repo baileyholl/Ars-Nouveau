@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import com.hollingsworth.arsnouveau.client.container.SortSettings;
-import com.hollingsworth.arsnouveau.client.container.StorageTerminalMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -19,18 +19,14 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
 
     public static final Type<SetTerminalSettingsPacket> TYPE = new Type<>(ArsNouveau.prefix("terminal_settings"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SetTerminalSettingsPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.optional(SortSettings.STREAM_CODEC),
-            s -> Optional.ofNullable(s.settings),
+            SortSettings.STREAM_CODEC,
+            s -> s.settings,
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
             s -> Optional.ofNullable(s.selectedTab),
-            SetTerminalSettingsPacket::new);
+            (settings, selectedTab) -> new SetTerminalSettingsPacket(settings, selectedTab.orElse(null)));
 
     public SortSettings settings;
     public String selectedTab;
-
-    public SetTerminalSettingsPacket(Optional<SortSettings> settings, Optional<String> selectedTab) {
-        this(settings.orElse(null), selectedTab.orElse(null));
-    }
 
     public SetTerminalSettingsPacket(SortSettings settings, String selectedTab) {
         this.settings = settings;
@@ -45,7 +41,7 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         super.onClientReceived(minecraft, player);
-        if (minecraft.screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
+        if (minecraft.screen instanceof CraftingTerminalScreen terminalScreen) {
             terminalScreen.receiveSettings(settings);
         }
     }
@@ -53,8 +49,8 @@ public class SetTerminalSettingsPacket extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         super.onServerReceived(minecraftServer, player);
-        if (player.containerMenu instanceof StorageTerminalMenu terminalScreen) {
-            terminalScreen.receiveSettings(player, settings, selectedTab);
+        if (player.containerMenu instanceof CraftingTerminalMenu terminalScreen && terminalScreen.stillValid(player)) {
+            terminalScreen.receiveSettings(settings, selectedTab);
         }
     }
 }
