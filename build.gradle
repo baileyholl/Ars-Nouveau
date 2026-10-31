@@ -212,6 +212,8 @@ dependencies {
     localRuntime("com.simibubi.create:create-1.21.1:6.0.10-280") { transitive = false }
     compileOnly("com.simibubi.create:create-1.21.1:6.0.10-280") { transitive = false }
     compileOnly("net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1") { transitive = false }
+//    localRuntime "maven.modrinth:spark:1.10.124-neoforge-1.21.1"
+
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'
@@ -239,7 +241,8 @@ dependencies {
     localRuntime "curse.maven:apothic-attributes-898963:6430300"
     localRuntime "curse.maven:placebo-283644:6446766"
     //localRuntime "curse.maven:immersive-portals-for-forge-355440:6013197"
-    localRuntime "curse.maven:ars-elemental-561470:8399862"
+    localRuntime "curse.maven:ars-elemental-561470:8999174"
+//    localRuntime "curse.maven:not-enough-glyphs-1023517:8880291"
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-core:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-analysis-common:10.1.0'))
     additionalRuntimeClasspath(shade('org.apache.lucene:lucene-queryparser:10.1.0'))

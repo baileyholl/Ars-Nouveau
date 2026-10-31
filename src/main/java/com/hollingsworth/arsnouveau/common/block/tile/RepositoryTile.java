@@ -94,21 +94,15 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     @Override
     public void setItem(int pIndex, ItemStack pStack) {
-        ItemStack oldItem = getItem(pIndex);
         super.setItem(pIndex, pStack);
-        if (pStack.getItem() != oldItem.getItem()) {
-            slotCache.replaceSlotWithItem(pStack.getItem(), pIndex);
-        }
+        slotCache.replaceSlotWithItem(pStack.getItem(), pIndex);
         updateFill();
     }
 
     @Override
     public ItemStack removeItem(int pIndex, int pCount) {
         ItemStack extracted = super.removeItem(pIndex, pCount);
-        Item newItem = getItem(pIndex).getItem();
-        if (extracted.getItem() != newItem) {
-            slotCache.replaceSlotWithItem(newItem, pIndex);
-        }
+        slotCache.replaceSlotWithItem(getItem(pIndex).getItem(), pIndex);
         updateFill();
         return extracted;
     }
@@ -116,10 +110,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     @Override
     public ItemStack removeItemNoUpdate(int pIndex) {
         ItemStack extracted = super.removeItemNoUpdate(pIndex);
-        Item newItem = getItem(pIndex).getItem();
-        if (extracted.getItem() != newItem) {
-            slotCache.replaceSlotWithItem(newItem, pIndex);
-        }
+        slotCache.replaceSlotWithItem(getItem(pIndex).getItem(), pIndex);
         return extracted;
     }
 

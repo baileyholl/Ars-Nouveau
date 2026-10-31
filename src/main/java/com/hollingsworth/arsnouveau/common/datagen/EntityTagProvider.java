@@ -117,6 +117,6 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(RETAIN_IN_SUBLEVEL).add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.GIFT_STARBY.get(), ModEntities.AMETHYST_GOLEM.get());
         this.tag(DESTROY_LEAVING_PLOT).add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.GIFT_STARBY.get(), ModEntities.AMETHYST_GOLEM.get());
         this.tag(EntityTags.UNDERFOOT_BLACKLIST).addOptional(ResourceLocation.parse("create:super_glue"));
-        this.tag(EntityTags.UNDERFOOD_WHITELIST).add(EntityType.ITEM);
+        this.tag(EntityTags.UNDERFOOT_WHITELIST).add(EntityType.ITEM);
     }
 }

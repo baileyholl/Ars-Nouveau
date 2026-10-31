@@ -366,6 +366,7 @@ public class EventHandler {
         DebugNumberCommand.register(event.getDispatcher());
         if (!FMLEnvironment.production) {
             ExportDocsCommand.register(event.getDispatcher());
+            DebugLecternCommand.register(event.getDispatcher());
         }
     }
 
