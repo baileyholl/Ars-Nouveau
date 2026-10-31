@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
@@ -13,34 +16,58 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
-                          boolean skipBlockPlace) implements SpecialSingleInputRecipe {
+                          boolean skipBlockPlace) implements SpecialSingleInputRecipe, IRandomOutputRecipe {
 
     public CrushRecipe(Ingredient input, List<CrushOutput> outputs) {
         this(input, outputs, false);
     }
 
     public List<ItemStack> getRolledOutputs(RandomSource random) {
+        return this.getRolledOutputs(null, null, random);
+    }
+
+    public List<ItemStack> getRolledOutputs(@Nullable SpellResolver resolver, @Nullable SpellStats spellStats, RandomSource random) {
         List<ItemStack> finalOutputs = new ArrayList<>();
+        this.rollOutputs(finalOutputs::add, resolver, spellStats, random);
+        return finalOutputs;
+    }
+
+    @Override
+    public void rollOutputs(Consumer<ItemStack> consumer, @Nullable SpellResolver resolver, @Nullable SpellStats spellStats, RandomSource random) {
         for (CrushOutput crushRoll : outputs) {
             if (random.nextDouble() <= crushRoll.chance) {
                 if (crushRoll.maxRange > 1) {
                     // get a number between 1 and max
                     int num = random.nextInt(crushRoll.maxRange) + 1;
                     for (int i = 0; i < num; i++) {
-                        finalOutputs.add(crushRoll.stack.copy());
+                        consumer.accept(crushRoll.stack.copy());
                     }
                 } else {
-                    finalOutputs.add(crushRoll.stack.copy());
+                    consumer.accept(crushRoll.stack.copy());
                 }
             }
         }
+    }
 
-        return finalOutputs;
+    @Override
+    public boolean isOutputDeterministic() {
+        for (var output : outputs) {
+            if (!output.isDeterministic()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean shouldSkipBlockPlace() {
@@ -73,6 +100,10 @@ public record CrushRecipe(Ingredient input, List<CrushOutput> outputs,
                 Codec.FLOAT.fieldOf("chance").forGetter(CrushOutput::chance),
                 Codec.INT.fieldOf("maxRange").forGetter(CrushOutput::maxRange)
         ).apply(instance, CrushOutput::new));
+
+        public boolean isDeterministic() {
+            return this.chance >= 1.0 && this.maxRange <= 1;
+        }
     }
 
     public static class Serializer implements RecipeSerializer<CrushRecipe> {

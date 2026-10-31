@@ -1,11 +1,24 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.util.GenericRecipeCache;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -24,13 +37,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import static net.minecraft.world.item.crafting.RecipeType.SMOKING;
 
 public class EffectSmelt extends AbstractEffect {
     public static EffectSmelt INSTANCE = new EffectSmelt();
@@ -46,7 +58,7 @@ public class EffectSmelt extends AbstractEffect {
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
 
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getEntity().blockPosition()).inflate(aoeBuff + 1.0));
-        smeltItems(world, itemEntities, maxItemSmelt, spellStats);
+        smeltItems(world, itemEntities, maxItemSmelt, resolver, spellStats);
     }
 
     @Override
@@ -56,7 +68,7 @@ public class EffectSmelt extends AbstractEffect {
         int maxItemSmelt = (int) Math.round(4 * (1 + aoeBuff + pierceBuff));
         if (spellStats.isSensitive()) {
             List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
-            smeltItems(world, itemEntities, maxItemSmelt, spellStats);
+            smeltItems(world, itemEntities, maxItemSmelt, resolver, spellStats);
         } else {
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
 
@@ -87,30 +99,23 @@ public class EffectSmelt extends AbstractEffect {
         }
     }
 
-
+    @Deprecated(forRemoval = true)
     public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt, SpellStats spellStats) {
-        int numSmelted = 0;
-        for (ItemEntity itemEntity : itemEntities) {
-            if (numSmelted >= maxItemSmelt) break;
-            Optional optional;
+        smeltItems(world, itemEntities, maxItemSmelt, null, spellStats);
+    }
 
-            if (spellStats.hasBuff(AugmentDampen.INSTANCE)) {
-                optional = world.getRecipeManager().getRecipeFor(SMOKING, new SingleRecipeInput(itemEntity.getItem()), world);
-            } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
-                optional = world.getRecipeManager().getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(itemEntity.getItem()), world);
-            } else {
-                optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(itemEntity.getItem()), world);
-            }
-
-            if (optional.isPresent()) {
-                ItemStack result = ((RecipeHolder<?>) (optional.get())).value().getResultItem(world.registryAccess()).copy();
-                if (result.isEmpty()) continue;
-                while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
-                    itemEntity.getItem().shrink(1);
-                    world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
-                    numSmelted++;
+    public static void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt, @Nullable SpellResolver resolver, @Nullable SpellStats spellStats) {
+        if (world instanceof ServerLevel level) {
+            GenericRecipeCache<?, SingleRecipeInput> cache = GenericRecipeCache.SMELTING_CACHE;
+            if (spellStats != null) {
+                if (spellStats.hasBuff(AugmentDampen.INSTANCE)) {
+                    cache = GenericRecipeCache.SMOKING_CACHE;
+                } else if (spellStats.hasBuff(AugmentAmplify.INSTANCE)) {
+                    cache = GenericRecipeCache.BLASTING_CACHE;
                 }
             }
+
+            ItemUtil.processItems(level, SingleRecipeInput::new, itemEntities, maxItemSmelt, cache, resolver, spellStats);
         }
     }
 

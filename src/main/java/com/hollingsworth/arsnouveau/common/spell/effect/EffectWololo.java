@@ -13,10 +13,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.entity.debug.FixedStack;
 import com.hollingsworth.arsnouveau.common.mixin.MobAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.util.GenericRecipeCache;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +40,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
@@ -55,7 +56,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public class EffectWololo extends AbstractEffect {
@@ -66,7 +66,7 @@ public class EffectWololo extends AbstractEffect {
     }
 
     public static int MAX_RECIPE_CACHE = 16;
-    public static FixedStack<CraftingRecipe> recipeCache = new FixedStack<>(MAX_RECIPE_CACHE);
+    public static GenericRecipeCache<CraftingRecipe, CraftingInput> recipeCache = new GenericRecipeCache<>(RecipeType.CRAFTING, MAX_RECIPE_CACHE);
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
@@ -176,12 +176,12 @@ public class EffectWololo extends AbstractEffect {
 
     @NotNull
     private ItemStack getDyedResult(ServerLevel world, CraftingContainer craftingcontainer) {
-        Optional<CraftingRecipe> recipe = recipeCache.stream().filter(craftingRecipe -> craftingRecipe.matches(craftingcontainer.asCraftInput(), world)).findFirst();
-        if (recipe.isPresent()) {
-            recipeCache.add(recipe.get());
-            return recipe.get().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
+        var recipe = recipeCache.get(world, craftingcontainer.asCraftInput());
+        if (recipe != null) {
+            return recipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess());
         }
-        return world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer.asCraftInput(), world).map(craftingRecipe -> craftingRecipe.value().assemble(craftingcontainer.asCraftInput(), world.registryAccess())).orElse(ItemStack.EMPTY);
+
+        return ItemStack.EMPTY;
     }
 
     private static CraftingContainer makeContainer(DyeItem targetColor, ItemLike blockToDye) {
