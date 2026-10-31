@@ -3,8 +3,11 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterSet;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
+import com.hollingsworth.arsnouveau.api.item.inv.IHasSlotCache;
 import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
-import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
+import com.hollingsworth.arsnouveau.api.item.inv.ISlotCache;
+import com.hollingsworth.arsnouveau.api.item.inv.ImperfectSlotCache;
+import com.hollingsworth.arsnouveau.api.item.inv.PerfectSlotCache;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -28,18 +31,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider, IMapInventory, IItemHandler {
+public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider, IMapInventory, IItemHandler, IHasSlotCache {
     public static String[][] CONFIGURATIONS = new String[][]{
             {"1", "2_3", "4_6", "7_9", "10_12", "13_15", "16_18", "19_21", "22_24", "25_27"},
             {"1", "2_3", "25_27", "22_24", "19_21", "10_12", "7_9", "4_6", "13_15", "16_18"},
@@ -53,7 +56,7 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     private NonNullList<ItemStack> items = NonNullList.withSize(54, ItemStack.EMPTY);
     public int fillLevel;
     public int configuration;
-    public SlotCache slotCache = new SlotCache(this.getContainerSize());
+    public ISlotCache slotCache = new ImperfectSlotCache(this.getContainerSize());
     public FilterSet filterSet = new FilterSet.ListSet();
     FilterableItemHandler filterableItemHandler;
     InvWrapper invWrapper = new InvWrapper(this);
@@ -156,19 +159,20 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
 
     public void initCache() {
         if (!this.level.isClientSide) {
-            var slots = this.getContainerSize();
-            slotCache = new SlotCache(slots);
-            for (int i = 0; i < slots; i++) {
-                ItemStack stack = getItem(i);
-                slotCache.replaceSlotWithItem(stack.getItem(), i);
+            var size = this.getContainerSize();
+            var slots = new Item[size];
+            this.unpackLootTable(null);
+            for (int i = 0; i < size; i++) {
+                slots[i] = this.items.get(i).getItem();
             }
-            filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
+            slotCache = new PerfectSlotCache(size, slots);
+            filterableItemHandler = new FilterableItemHandler(this, filterSet, slotCache);
         }
     }
 
     public void attachFilters() {
         this.filterSet = FilterSet.forPosition(level, worldPosition);
-        filterableItemHandler = new FilterableItemHandler(this, filterSet).withSlotCache(slotCache);
+        filterableItemHandler = new FilterableItemHandler(this, filterSet, slotCache);
     }
 
     @Override
@@ -315,7 +319,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
         var current = this.getItem(slot);
         if (current.isEmpty()) {
-            this.slotCache.initEmpty(slot);
             return ItemStack.EMPTY;
         }
 
@@ -335,5 +338,10 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         return this.canPlaceItem(slot, stack);
+    }
+
+    @Override
+    public @Nullable ISlotCache getSlotCache() {
+        return this.slotCache;
     }
 }

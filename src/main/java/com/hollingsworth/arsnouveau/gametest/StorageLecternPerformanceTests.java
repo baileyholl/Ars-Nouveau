@@ -51,7 +51,7 @@ public class StorageLecternPerformanceTests {
         StorageNetwork network = createCatalogNetwork(helper);
         List<CountingItems> itemLists = List.of(countReads(helper, storagePos, RepositoryTile.class));
         fillWithDirt(helper, storagePos);
-        assertHopperReadsPerTick(helper, startLinked(helper, network), lecternPos.above(), itemLists, 164, Items.DIRT);
+        assertHopperReadsPerTick(helper, startLinked(helper, network), lecternPos.above(), itemLists, 56, Items.DIRT);
     }
 
     @GameTest(template = "empty10")
@@ -59,7 +59,7 @@ public class StorageLecternPerformanceTests {
         StorageNetwork network = createDirectRepositoryNetwork(helper);
         List<CountingItems> itemLists = List.of(countReads(helper, storagePos, RepositoryTile.class));
         fillWithDirt(helper, storagePos);
-        assertHopperReadsPerTick(helper, startLinked(helper, network), lecternPos.above(), itemLists, 164, Items.DIRT);
+        assertHopperReadsPerTick(helper, startLinked(helper, network), lecternPos.above(), itemLists, 56, Items.DIRT);
     }
 
     @GameTest(template = "empty10")
@@ -67,7 +67,7 @@ public class StorageLecternPerformanceTests {
         StorageNetwork network = createCatalogNetwork(helper);
         List<CountingItems> itemLists = List.of(countReads(helper, storagePos, RepositoryTile.class));
         fillWithDirt(helper, storagePos);
-        assertHopperReadsPerTick(helper, startLinked(helper, network), lecternPos.above(), itemLists, 542, Items.DIRT, Items.STONE, Items.DIRT, Items.SAND, Items.GRAVEL);
+        assertHopperReadsPerTick(helper, startLinked(helper, network), lecternPos.above(), itemLists, 434, Items.DIRT, Items.STONE, Items.DIRT, Items.SAND, Items.GRAVEL);
     }
 
     @GameTest(template = "empty10")
@@ -94,7 +94,7 @@ public class StorageLecternPerformanceTests {
                     int connected = helper.<RepositoryCatalogTile>getBlockEntity(catalogPos).connectedRepositories.size();
                     helper.assertTrue(connected == 3, "Expected the catalog to connect all three repositories, got " + connected);
                 });
-        assertHopperReadsPerTick(helper, linked, lecternPos.above(), itemLists, 488, Items.DIRT);
+        assertHopperReadsPerTick(helper, linked, lecternPos.above(), itemLists, 164, Items.DIRT);
     }
 
     @GameTest(template = "empty10")
@@ -141,7 +141,7 @@ public class StorageLecternPerformanceTests {
         StorageNetwork network = createCatalogNetwork(helper);
         CountingItems items = countReads(helper, storagePos, RepositoryTile.class);
         fillWithDirt(helper, storagePos);
-        int expectedReads = 216;
+        int expectedReads = 54;
         startLinked(helper, network)
                 .thenExecute(() -> {
                     items.reads = 0;
@@ -154,7 +154,7 @@ public class StorageLecternPerformanceTests {
 
     @GameTest(template = "empty10")
     public static void insertIntoMixedStorageUsesCache(GameTestHelper helper) {
-        assertMixedStorageInsertReads(helper, createCatalogNetwork(helper), RepositoryTile.class, 3, 56);
+        assertMixedStorageInsertReads(helper, createCatalogNetwork(helper), RepositoryTile.class, 2, 55);
     }
 
     @GameTest(template = "empty10")
