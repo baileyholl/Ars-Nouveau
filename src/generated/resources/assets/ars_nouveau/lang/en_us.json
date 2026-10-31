@@ -1168,6 +1168,7 @@
   "ars_nouveau.rune.setperm": "This rune is now permanent.",
   "ars_nouveau.rune.touch": "Runes must have Touch as their first glyph.",
   "ars_nouveau.sat": "Saturation",
+  "ars_nouveau.schematic.size": "Schematic Size: X: %s Y: %s Z: %s",
   "ars_nouveau.school.abjuration": "Abjuration",
   "ars_nouveau.school.air": "Elemental Air",
   "ars_nouveau.school.conjuration": "Conjuration",

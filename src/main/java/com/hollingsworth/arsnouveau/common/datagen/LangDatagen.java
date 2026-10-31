@@ -1678,6 +1678,7 @@ public class LangDatagen extends LanguageProvider {
         add("painting.ars_nouveau.starbuncle.author", "Gootastic");
         add("painting.ars_nouveau.resting_drygmy.title", "Resting Drygmy");
         add("painting.ars_nouveau.resting_drygmy.author", "Gootastic");
+        add("ars_nouveau.schematic.size", "Schematic Size: X: %s Y: %s Z: %s");
     }
 
     public void addCategory(String key, String value) {

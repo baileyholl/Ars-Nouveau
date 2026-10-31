@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class BuilderGeistTile extends ModdedTile implements ITickable {
-    StructureTemplate structureTemplate;
+    protected StructureTemplate structureTemplate;
     public int progress = 0;
     public BlockPos targetPos;
 
@@ -23,6 +23,11 @@ public class BuilderGeistTile extends ModdedTile implements ITickable {
     @Override
     public void tick() {
         System.out.println("hi");
+    }
+
+    public void setStructure(StructureTemplate structureTemplate) {
+        this.structureTemplate = structureTemplate;
+        updateBlock();
     }
 
     @Override
