@@ -42,6 +42,7 @@ public class RitualMobCapture extends AbstractRitual {
             boolean didWorkOnce = false;
             Level level = getWorld();
             BlockPos pos = getPos();
+            AABB captureBox = new AABB(pos).inflate(radius);
             //Get nearby source jars
             for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))) {
                 if (level.getBlockState(blockPos).getBlock() instanceof MobJar) {
@@ -49,7 +50,7 @@ public class RitualMobCapture extends AbstractRitual {
                     if (tile == null || tile.getEntity() != null) {
                         continue;
                     }
-                    for (Entity e : level.getEntities((Entity) null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)) {
+                    for (Entity e : level.getEntities((Entity) null, captureBox, this::canJar)) {
                         for (var passenger : e.getPassengers()) {
                             passenger.stopRiding();
                         }
