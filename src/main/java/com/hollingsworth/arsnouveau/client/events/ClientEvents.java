@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
+import com.hollingsworth.arsnouveau.client.gui.book.ParticleOverviewScreen;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
@@ -242,5 +244,9 @@ public class ClientEvents {
         PlanariumTile.dimManager.entries.clear();
         PlanariumRenderer.structureRenderData = new HashMap<>();
         PlanariumRenderer.deferredRenders = new ArrayList<>();
+        BaseBook.lastOpenedScreen = null;
+        ParticleOverviewScreen.lastScreen = null;
+        ParticleOverviewScreen.LAST_SELECTED_PART = null;
+        ParticleOverviewScreen.lastOpenedHash = 0;
     }
 }
