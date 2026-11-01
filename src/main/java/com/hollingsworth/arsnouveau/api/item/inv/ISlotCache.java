@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
-import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,10 +12,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public interface ISlotCache {
-    IntCollection getOrCreateSlots(Item item);
+    IntList getOrCreateSlots(Item item);
 
     @Nullable
-    IntCollection getIfPresent(Item item);
+    IntList getIfPresent(Item item);
 
     void replaceSlotWithItem(Item newItem, int slot);
 

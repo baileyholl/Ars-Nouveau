@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntCollection;
-import it.unimi.dsi.fastutil.ints.IntCollections;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntLists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.Item;
@@ -32,18 +32,18 @@ public class PerfectSlotCache implements ISlotCache {
     }
 
     @Override
-    public IntCollection getOrCreateSlots(Item item) {
-        return IntCollections.unmodifiable(cache.computeIfAbsent(item, ignored -> new IntArrayList()));
+    public IntList getOrCreateSlots(Item item) {
+        return IntLists.unmodifiable(cache.computeIfAbsent(item, ignored -> new IntArrayList()));
     }
 
     @Override
-    public @Nullable IntCollection getIfPresent(Item item) {
+    public @Nullable IntList getIfPresent(Item item) {
         var list = cache.get(item);
         if (list == null) {
             return null;
         }
 
-        return IntCollections.unmodifiable(list);
+        return IntLists.unmodifiable(list);
     }
 
     @Override

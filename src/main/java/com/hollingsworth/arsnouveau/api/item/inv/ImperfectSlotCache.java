@@ -2,9 +2,8 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.google.common.math.IntMath;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntCollection;
-import it.unimi.dsi.fastutil.ints.IntCollections;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntLists;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -38,7 +37,7 @@ public final class ImperfectSlotCache implements ISlotCache {
     }
 
     @Override
-    public IntCollection getOrCreateSlots(Item item) {
+    public IntList getOrCreateSlots(Item item) {
         var emptyCount = this.emptyCount();
         if (item == Items.AIR) {
             IntArrayList col = new IntArrayList(emptyCount);
@@ -46,7 +45,7 @@ public final class ImperfectSlotCache implements ISlotCache {
                 col.add(i);
             }
 
-            return IntCollections.unmodifiable(col);
+            return IntLists.unmodifiable(col);
         }
 
         if (emptyCount >= size) {
@@ -67,11 +66,11 @@ public final class ImperfectSlotCache implements ISlotCache {
             }
         }
 
-        return IntCollections.unmodifiable(col);
+        return IntLists.unmodifiable(col);
     }
 
     @Override
-    public @Nullable IntCollection getIfPresent(Item item) {
+    public @Nullable IntList getIfPresent(Item item) {
         var slots = this.getOrCreateSlots(item);
         return slots.isEmpty() && empty.isEmpty() ? null : slots;
     }
