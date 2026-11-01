@@ -63,7 +63,7 @@ public class SchematicItem extends ModItem {
         ItemStack stack = context.getItemInHand();
         SchematicData schematicData = stack.get(DataComponentRegistry.SCHEMATIC);
         if(level.getBlockEntity(clickedPos) instanceof BuilderGeistTile builderGeistTile && schematicData.size().isPresent()){
-            builderGeistTile.structureTemplate = loadSchematic(level, schematicData);
+            builderGeistTile.setStructure(loadSchematic(level, schematicData));
             return InteractionResult.SUCCESS;
         }
         return super.useOn(context);

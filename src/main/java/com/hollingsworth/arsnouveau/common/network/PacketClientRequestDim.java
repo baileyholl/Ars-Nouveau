@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumRenderingTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -38,7 +39,7 @@ public class PacketClientRequestDim extends AbstractPacket {
     @Override
     public void onServerReceived(MinecraftServer minecraftServer, ServerPlayer player) {
         super.onServerReceived(minecraftServer, player);
-        if (player.level.getBlockEntity(pos) instanceof PlanariumTile planariumTile && planariumTile.key != null) {
+        if (player.level.getBlockEntity(pos) instanceof PlanariumRenderingTile planariumTile && planariumTile.key != null) {
             StructureTemplate template = PlanariumTile.dimManager.getTemplate(planariumTile.key);
             if (template != null) {
                 Networking.sendToPlayerClient(new PacketUpdateDimTile(pos, template), player);

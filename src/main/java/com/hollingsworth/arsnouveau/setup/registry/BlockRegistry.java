@@ -388,6 +388,8 @@ public class BlockRegistry {
     public static final BlockEntityTypeRegistryWrapper<PlanariumProjectorTile> PLANARIUM_PROJECTOR_TILE = registerTile(LibBlockNames.PLANARIUM_PROJECTOR, PlanariumProjectorTile::new, PLANARIUM_PROJECTOR);
     public static final BlockRegistryWrapper<BuilderGeistBlock> BUILDER_GEIST_BLOCK = registerBlockAndItem(LibBlockNames.BUILDER_GEIST_BLOCK, BuilderGeistBlock::new);
     public static final BlockEntityTypeRegistryWrapper<BuilderGeistTile> BUILDER_GEIST_TILE = registerTile(LibBlockNames.BUILDER_GEIST_BLOCK, BuilderGeistTile::new, BUILDER_GEIST_BLOCK);
+    public static final BlockRegistryWrapper<StructureProjectorBlock> STRUCTURE_PROJECTOR = registerBlockAndItem(LibBlockNames.STRUCTURE_PROJECTOR, StructureProjectorBlock::new);
+    public static final BlockEntityTypeRegistryWrapper<StructureProjectorTile> STRUCTURE_PROJECTOR_TILE = registerTile(LibBlockNames.STRUCTURE_PROJECTOR, StructureProjectorTile::new, STRUCTURE_PROJECTOR);
 //    public static final BlockRegistryWrapper<ScryerPlanarium> SCRYER_PLANARIUM = registerBlockAndItem(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanarium::new);
 //    public static final BlockEntityTypeRegistryWrapper<ScryerPlanariumTile> SCRYER_PLANARIUM_TILE = registerTile(LibBlockNames.SCRYER_PLANARIUM, ScryerPlanariumTile::new, SCRYER_PLANARIUM);
 

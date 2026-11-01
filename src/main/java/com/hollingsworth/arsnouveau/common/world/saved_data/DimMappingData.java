@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.common.world.saved_data;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class DimMappingData extends SavedData {
 
     private final Map<String, Entry> DIMENSIONS_BY_NAME = new HashMap<>();
     private final Map<ResourceLocation, Entry> DIMENSIONS_BY_KEY = new HashMap<>();
+    private static final String STORAGE_NAME = "an_dimensions";
 
     public static SavedData.Factory<DimMappingData> factory() {
         return new SavedData.Factory<>(DimMappingData::new, DimMappingData::load, null);
@@ -27,14 +30,19 @@ public class DimMappingData extends SavedData {
         if (DIMENSIONS_BY_NAME.containsKey(name)) {
             return DIMENSIONS_BY_NAME.get(name);
         } else {
-            Entry entry = new Entry(name, ResourceLocation.fromNamespaceAndPath("ars_nouveau", UUID.randomUUID().toString().toLowerCase()));
+            Entry entry = new Entry(name, ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, UUID.randomUUID().toString().toLowerCase()));
             DIMENSIONS_BY_NAME.put(name, entry);
             DIMENSIONS_BY_KEY.put(entry.key, entry);
             return entry;
         }
     }
 
-    public Entry getByKey(ResourceLocation key) {
+    public static @Nullable Entry getExistingByName(ServerLevel level, String name) {
+        DimMappingData data = level.getServer().overworld().getDataStorage().get(factory(), STORAGE_NAME);
+        return data == null ? null : data.DIMENSIONS_BY_NAME.get(name);
+    }
+
+    public @Nullable Entry getByKey(ResourceLocation key) {
         return DIMENSIONS_BY_KEY.get(key);
     }
 
@@ -67,7 +75,7 @@ public class DimMappingData extends SavedData {
 
     public static DimMappingData from(ServerLevel level) {
         return level.getServer().overworld().getDataStorage()
-                .computeIfAbsent(factory(), "an_dimensions");
+                .computeIfAbsent(factory(), STORAGE_NAME);
     }
 
     public record Entry(String name, ResourceLocation key) {

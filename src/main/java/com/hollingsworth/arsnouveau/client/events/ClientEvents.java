@@ -13,10 +13,7 @@ import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
-import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
-import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
-import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
-import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -115,33 +112,22 @@ public class ClientEvents {
             PantomimeRenderer.renderOutline(event.getPoseStack());
         }
         // Build then render so sorted transparency works correctly
-        for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
+        for (WeakReference<PlanariumRenderingTile> renderer : PlanariumRenderer.deferredRenders) {
 
-            PlanariumTile tile = renderer.get();
+            PlanariumRenderingTile tile = renderer.get();
             if (tile != null) {
                 PlanariumRenderer.buildRender(tile, event.getPoseStack(), Minecraft.getInstance().player);
             }
         }
 
-        for (WeakReference<PlanariumTile> renderer : PlanariumRenderer.deferredRenders) {
-
-            PlanariumTile tile = renderer.get();
+        for (WeakReference<PlanariumRenderingTile> renderer : PlanariumRenderer.deferredRenders) {
+            PlanariumRenderingTile tile = renderer.get();
             if (tile != null) {
                 PlanariumRenderer.drawRender(tile, event.getPoseStack(), event.getProjectionMatrix(), event.getModelViewMatrix(), Minecraft.getInstance().player);
             }
         }
         PlanariumRenderer.deferredRenders = new ArrayList<>(8);
-//        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
-//            renderer.onRenderStage(event);
-//        }
     }
-
-//    @SubscribeEvent
-//    public static void onClientTick(ClientTickEvent.Post event) {
-//        for (LevelInLevelRenderer renderer : LevelInLevelRenderer.renderers.values()) {
-//            renderer.onClientTick(event);
-//        }
-//    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void TooltipEvent(RenderTooltipEvent.Pre e) {

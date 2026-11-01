@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.renderer.PlanariumRenderingWorld;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
 import com.hollingsworth.arsnouveau.common.block.tile.MirrorWeaveTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumRenderingTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.mixin.structure.StructureTemplateAccessor;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -52,9 +53,9 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
+public class PlanariumRenderer<T extends PlanariumRenderingTile> implements BlockEntityRenderer<T> {
 
-    public static List<WeakReference<PlanariumTile>> deferredRenders = new ArrayList<>();
+    public static List<WeakReference<PlanariumRenderingTile>> deferredRenders = new ArrayList<>();
     public static Map<ResourceKey<Level>, StructureRenderData> structureRenderData = new WeakHashMap<>();
     public static Direction[] DIRECTIONS = Direction.values();
     public static float pad = 0.0025f;
@@ -66,7 +67,7 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
     }
 
     @Override
-    public void render(PlanariumTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    public void render(T blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         if (blockEntity.getTemplate() == null)
             return;
         structureRenderData.computeIfAbsent(blockEntity.key, (be) -> {
@@ -357,8 +358,8 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         return new GenericItemBlockRenderer(new PlanariumModel(false));
     }
 
-    //    //Start rendering - this is the most expensive part, so we render it, then cache it, and draw it over and over (much cheaper)
-    public static void buildRender(PlanariumTile tile, PoseStack poseStack, Player player) {
+    // Start rendering - this is the most expensive part, so we render it, then cache it, and draw it over and over (much cheaper)
+    public static void buildRender(PlanariumRenderingTile tile, PoseStack poseStack, Player player) {
         if (tile == null) {
             return;
         }
@@ -375,7 +376,7 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         }
     }
 
-    public static boolean shouldUpdateRender(StructureRenderData data, PlanariumTile planariumTile) {
+    public static boolean shouldUpdateRender(StructureRenderData data, PlanariumRenderingTile planariumTile) {
         return data.lastUpdatedAt < planariumTile.lastUpdated;
     }
 
@@ -492,7 +493,7 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
     }
 
     //Draw what we've cached
-    public static void drawRender(PlanariumTile tile, PoseStack poseStack, Matrix4f projectionMatrix, Matrix4f modelViewMatrix, Player player) {
+    public static void drawRender(PlanariumRenderingTile tile, PoseStack poseStack, Matrix4f projectionMatrix, Matrix4f modelViewMatrix, Player player) {
 
 
         if (tile == null) {

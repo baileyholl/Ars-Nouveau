@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.PlanariumRenderingTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -46,7 +47,7 @@ public class PacketUpdateDimTile extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         ClientLevel world = minecraft.level;
-        if (world.getBlockEntity(pos) instanceof PlanariumTile planariumTile) {
+        if (world.getBlockEntity(pos) instanceof PlanariumRenderingTile planariumTile) {
             planariumTile.setTemplateClientSide(structureTemplate);
         }
     }

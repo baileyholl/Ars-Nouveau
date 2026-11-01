@@ -52,16 +52,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
+public class PlanariumTile extends PlanariumRenderingTile {
 
+    // TODO breaking change: move to PlanariumRenderingTile
     public static DimManager dimManager = new DimManager();
     public static Map<ResourceKey<Level>, ClientDimEntry> clientTemplates = new ConcurrentHashMap<>();
-
-    public ResourceKey<Level> key;
-    public long lastUpdated = 0;
-    boolean playersNearby = true;
-    public Component name;
-
 
     public PlanariumTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -71,143 +66,6 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         super(BlockRegistry.PLANARIUM_TILE.get(), pos, state);
     }
 
-    @Override
-    public void tick() {
-        if (key == null)
-            return;
-
-        if (level instanceof ServerLevel serverLevel) {
-            if (level.getGameTime() % 200 == 0) {
-                playersNearby = false;
-                for (ServerPlayer serverPlayer : serverLevel.players()) {
-                    if (BlockPosHelpers.distanceBetween(worldPosition, serverPlayer.blockPosition()) < 64) {
-                        playersNearby = true;
-                        break;
-                    }
-                }
-            }
-            if (!playersNearby) {
-                return;
-            }
-            if (level.getGameTime() % ServerConfig.PLANARIUM_UPDATE_RATE.get() == 0) {
-                DimManager.Entry entry1 = dimManager.getOrCreateTemplate(serverLevel, worldPosition, key);
-                if (entry1 != null) {
-                    // Notifies nearby players if the dimension has changed
-                    if (entry1.lastUpdated > lastUpdated) {
-                        lastUpdated = entry1.lastUpdated;
-                        StructureTemplate template = dimManager.getTemplate(key);
-                        if (template != null) {
-                            Networking.sendToNearbyClient(level, worldPosition, new PacketUpdateDimTile(worldPosition, template));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void setTemplateClientSide(StructureTemplate template) {
-        if (level.isClientSide && key != null) {
-            ArrayList<CulledStatePos> statePos = new ArrayList<>();
-            var palette = ((StructureTemplateAccessor) template).getPalettes().get(0);
-            for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
-                statePos.add(new CulledStatePos(blockInfo.state(), blockInfo.pos(), blockInfo.nbt()));
-            }
-            PlanariumTile.clientTemplates.put(key, new ClientDimEntry(template, statePos, level.getGameTime(), new PlanariumRenderingWorld(this.level, statePos)));
-            this.lastUpdated = level.getGameTime();
-        }
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        updateBlock();
-    }
-
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.handleUpdateTag(tag, lookupProvider);
-        // Checks if the client is up to date with this template compared to
-        if (level.isClientSide) {
-            if (key != null && (!clientTemplates.containsKey(key) || clientTemplates.get(key).lastUpdated < lastUpdated)) {
-                Networking.sendToServer(new PacketClientRequestDim(worldPosition));
-            }
-        }
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        if (key != null) {
-            tag.putString("key", key.location().toString());
-        }
-        if (name != null) {
-            tag.putString("name", name.getString());
-        }
-
-        tag.putLong("lastUpdated", lastUpdated);
-    }
-
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains("key"))
-            key = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("key")));
-        if (tag.contains("name")) {
-            this.name = Component.literal(tag.getString("name"));
-        }
-        lastUpdated = tag.getLong("lastUpdated");
-    }
-
-    public @Nullable StructureTemplate getTemplate() {
-        if (key == null) {
-            return null;
-        }
-        if (level.isClientSide) {
-            var entry = PlanariumTile.clientTemplates.get(key);
-            return entry == null ? null : entry.template();
-        } else {
-            return PlanariumTile.dimManager.getTemplate(key);
-        }
-    }
-
-    @Override
-    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
-        super.applyImplicitComponents(componentInput);
-        this.name = componentInput.get(DataComponents.CUSTOM_NAME);
-        if (name != null && level instanceof ServerLevel serverLevel) {
-            this.setDimension(name.getString(), serverLevel);
-        }
-    }
-
-    public void setName(Component name) {
-        this.name = name;
-        if (level instanceof ServerLevel serverLevel) {
-            if (name == null) {
-                this.key = null;
-            } else {
-                this.setDimension(name.getString(), serverLevel);
-            }
-        }
-    }
-
-    @Override
-    public @Nullable Component getCustomName() {
-        return name;
-    }
-
-
-    public IResolveListener onResolve() {
-        return new IResolveListener() {
-            @Override
-            public void onPostResolve(Level world, @NotNull LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext, AbstractEffect resolveEffect, SpellStats spellStats, SpellResolver spellResolver) {
-                if (world instanceof ServerLevel serverLevel && resolveEffect instanceof EffectName && spell.name() != null) {
-                    name = Component.literal(spell.name());
-                    setDimension(spell.name(), serverLevel);
-                }
-            }
-        };
-    }
 
     public ServerLevel setDimension(String dimName, ServerLevel serverLevel) {
         Tuple<ServerLevel, DimManager.Entry> dimension = dimManager.getOrCreateLevel(dimName, serverLevel, worldPosition);
@@ -240,24 +98,14 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         }
     }
 
-    @Override
-    public Component getName() {
-        return name;
-    }
-
+    // TODO breaking change: move to PlanariumRenderingTile
     public static class ClientDimEntry {
         private final StructureTemplate template;
-        private List<CulledStatePos> statePosList;
         private final long lastUpdated;
-        private final PlanariumRenderingWorld fakeRenderingWorld;
-        private boolean needsCulled;
 
-        public ClientDimEntry(StructureTemplate template, List<CulledStatePos> statePosList, long lastUpdated, PlanariumRenderingWorld fakeRenderingWorld) {
+        public ClientDimEntry(StructureTemplate template, long lastUpdated) {
             this.template = template;
-            this.statePosList = statePosList == null ? null : List.copyOf(statePosList);
             this.lastUpdated = lastUpdated;
-            this.fakeRenderingWorld = fakeRenderingWorld;
-            needsCulled = true;
         }
 
         // Record-like accessors for compatibility
@@ -265,28 +113,13 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
             return template;
         }
 
-        public List<CulledStatePos> statePosList() {
-            return statePosList;
-        }
-
         public long lastUpdated() {
             return lastUpdated;
         }
 
-        public PlanariumRenderingWorld fakeRenderingWorld() {
-            return fakeRenderingWorld;
-        }
-
-        public boolean needsCulled() {
-            return needsCulled;
-        }
-
-        public void setCulledStates(List<CulledStatePos> culledStates) {
-            needsCulled = false;
-            this.statePosList = culledStates;
-        }
     }
 
+    // TODO breaking change: move to PlanariumRenderingTile
     public static class DimManager {
         public Map<ResourceKey<Level>, Entry> entries = new ConcurrentHashMap<>();
 
@@ -311,21 +144,29 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
             }
         }
 
+        public @Nullable Tuple<ServerLevel, Entry> getExistingPlanarium(String dimName, ServerLevel serverLevel, BlockPos ownerPos) {
+            DimMappingData.Entry dimEntry = DimMappingData.getExistingByName(serverLevel, dimName);
+            if (dimEntry == null) {
+                return null;
+            }
+            var dimKey = ResourceKey.create(Registries.DIMENSION, dimEntry.key());
+            ServerLevel dimLevel = serverLevel.getServer().getLevel(dimKey);
+            if (dimLevel == null) {
+                return null;
+            }
+            return new Tuple<>(dimLevel, getOrCreateTemplate(serverLevel, ownerPos, dimKey));
+        }
+
         public Tuple<ServerLevel, Entry> getOrCreateLevel(String dimName, ServerLevel serverLevel, BlockPos ownerPos) {
             DimMappingData.Entry dimEntry = DimMappingData.from(serverLevel.getServer().overworld()).getOrCreateByName(dimName);
             var dimKey = ResourceKey.create(Registries.DIMENSION, dimEntry.key());
-            return getOrCreateLevel(serverLevel, dimKey, ownerPos);
-        }
 
-        public Tuple<ServerLevel, Entry> getOrCreateLevel(ServerLevel serverLevel, ResourceKey<Level> key, BlockPos ownerPos) {
-            var newLevel = DimensionManager.INSTANCE.getOrCreateLevel(serverLevel.getServer(), key, () -> {
-                return createDimension(serverLevel.getServer());
-            });
-            var entry = getOrCreateTemplate(serverLevel, ownerPos, key);
+
+            var newLevel = DimensionManager.INSTANCE.getOrCreateLevel(serverLevel.getServer(), dimKey, () -> createDimension(serverLevel.getServer()));
+            var entry = getOrCreateTemplate(serverLevel, ownerPos, dimKey);
 
             return new Tuple<>(newLevel, entry);
         }
-
         public static LevelStem createDimension(MinecraftServer server) {
             return new LevelStem(getDimensionTypeHolder(server), new PlanariumChunkGenerator(server));
         }
