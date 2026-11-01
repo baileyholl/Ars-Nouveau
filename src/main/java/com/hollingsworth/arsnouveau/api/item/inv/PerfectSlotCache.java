@@ -106,12 +106,15 @@ public class PerfectSlotCache implements ISlotCache {
                     lastCount = newCount;
                 }
 
+                var inSlot = inventory.getStackInSlot(slot);
+                if (inSlot.getCount() >= inSlot.getMaxStackSize()) {
+                    // Bitwise NOT to indicate fullness
+                    availableSlots.set(i, ~slot);
+                }
+
                 if (stack.isEmpty()) {
                     return stack;
                 }
-
-                // Bitwise NOT to indicate fullness
-                availableSlots.set(i, ~slot);
             }
         }
 

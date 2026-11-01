@@ -23,6 +23,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -122,7 +123,21 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
     }
 
     protected AbstractContainerMenu createMenu(int pId, Inventory pPlayer) {
-        return ChestMenu.sixRows(pId, pPlayer, this);
+        var menu = ChestMenu.sixRows(pId, pPlayer, this);
+        for (int i = 0; i < menu.slots.size(); i++) {
+            var slot = menu.slots.get(i);
+            if (slot.container instanceof RepositoryTile) {
+                menu.slots.set(i, new Slot(slot.container, slot.getSlotIndex(), slot.x, slot.y) {
+                    @Override
+                    public void setChanged() {
+                        slotCache.replaceSlotWithItem(slot.getItem().getItem(), slot.getSlotIndex());
+                        super.setChanged();
+                    }
+                });
+            }
+        }
+
+        return menu;
     }
 
     @Override

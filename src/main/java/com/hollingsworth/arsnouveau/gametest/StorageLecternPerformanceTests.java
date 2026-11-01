@@ -141,7 +141,7 @@ public class StorageLecternPerformanceTests {
         StorageNetwork network = createCatalogNetwork(helper);
         CountingItems items = countReads(helper, storagePos, RepositoryTile.class);
         fillWithDirt(helper, storagePos);
-        int expectedReads = 54;
+        int expectedReads = 108;
         startLinked(helper, network)
                 .thenExecute(() -> {
                     items.reads = 0;
@@ -154,7 +154,7 @@ public class StorageLecternPerformanceTests {
 
     @GameTest(template = "empty10")
     public static void insertIntoMixedStorageUsesCache(GameTestHelper helper) {
-        assertMixedStorageInsertReads(helper, createCatalogNetwork(helper), RepositoryTile.class, 2, 55);
+        assertMixedStorageInsertReads(helper, createCatalogNetwork(helper), RepositoryTile.class, 3, 56);
     }
 
     @GameTest(template = "empty10")
