@@ -1,22 +1,18 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.BitSet;
 import java.util.List;
 import java.util.function.Function;
 
 /**
  * Represents an ItemHandler and its list of filters.
  */
-public class FilterableItemHandler {
-    private SlotCache slotCache;
+public class FilterableItemHandler implements IHasSlotCache {
+    private ISlotCache slotCache;
     private IItemHandler handler;
     public FilterSet filters;
 
@@ -31,10 +27,16 @@ public class FilterableItemHandler {
     public FilterableItemHandler(IItemHandler handler, FilterSet filters) {
         this.handler = handler;
         this.filters = filters;
-        this.slotCache = new SlotCache(handler.getSlots());
+        this.slotCache = new ImperfectSlotCache(handler.getSlots());
     }
 
-    public FilterableItemHandler withSlotCache(SlotCache cache) {
+    public FilterableItemHandler(IItemHandler handler, FilterSet filters, @Nullable ISlotCache slotCache) {
+        this.handler = handler;
+        this.filters = filters;
+        this.slotCache = slotCache != null ? slotCache : new ImperfectSlotCache(handler.getSlots());
+    }
+
+    public FilterableItemHandler withSlotCache(ISlotCache cache) {
         this.slotCache = cache;
         return this;
     }
@@ -80,195 +82,11 @@ public class FilterableItemHandler {
      * Note: This function stacks items without subtypes with different metadata together.
      */
     public ItemStack insertItemStacked(ItemStack stack, boolean simulate) {
-        IItemHandler inventory = handler;
-        if (inventory == null || stack.isEmpty())
-            return stack;
-
-        // not stackable -> just insert into a new slot
-        if (!stack.isStackable()) {
-            return insertItem(stack, simulate);
-        }
-
-        int sizeInventory = inventory.getSlots();
-        Item item = stack.getItem();
-        BitSet examined = new BitSet(sizeInventory);
-        stack = insertUsingCache(stack, simulate, examined);
-        if (stack.isEmpty()) {
-            return stack;
-        }
-        // Iterate all slots until our stack is empty, caching along the way
-        for (int i = 0; i < sizeInventory; i++) {
-            // Prevents simulated slots from getting counted twice since the cache was updated above but not the actual contents.
-            if (simulate && examined.get(i)) {
-                continue;
-            }
-            ItemStack slot = inventory.getStackInSlot(i);
-            if (slot.isEmpty()) {
-                slotCache.replaceSlotWithItem(slot.getItem(), i);
-            } else {
-                int count = stack.getCount();
-                stack = inventory.insertItem(i, stack, simulate);
-                if (stack.getCount() != count) {
-                    slotCache.replaceSlotWithItem(inventory.getStackInSlot(i).getItem(), i);
-                    slotCache.lastAccepting.put(item, i);
-                }
-                if (stack.isEmpty()) {
-                    return stack;
-                }
-            }
-        }
-
-        // If we have exhausted inserting
-        for (int slot : slotCache.getOrCreateSlots(Items.AIR)) {
-            if (slot >= sizeInventory) {
-                continue;
-            }
-            var slotStack = inventory.getStackInSlot(slot);
-            if (slotStack.isEmpty()) {
-                int count = stack.getCount();
-                stack = inventory.insertItem(slot, stack, simulate);
-                slotCache.replaceSlotWithItem(inventory.getStackInSlot(slot).getItem(), slot);
-                if (stack.getCount() != count) {
-                    slotCache.lastAccepting.put(item, slot);
-                }
-                if (stack.isEmpty()) {
-                    break;
-                }
-            } else {
-                slotCache.replaceSlotWithItem(slotStack.getItem(), slot);
-            }
-        }
-
-        return stack;
+        return this.slotCache.insertItemStacked(handler, stack, simulate);
     }
 
-    /**
-     * Inserts into any valid cached slots, then inserts into any empty cached slots.
-     * If no cached slots are available, it will insert into any empty slots.
-     * Optimizes non-stackable item insertion.
-     */
-    private ItemStack insertItem(ItemStack stack, boolean simulate) {
-        IItemHandler dest = handler;
-        if (dest == null || stack.isEmpty())
-            return stack;
-
-        BitSet examined = new BitSet(dest.getSlots());
-        stack = insertUsingCache(stack, simulate, examined);
-        if (stack.isEmpty()) {
-            return stack;
-        }
-
-        stack = insertInCachedEmptySlots(stack, simulate, examined);
-
-        if (stack.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
-        Item item = stack.getItem();
-        // Iterate all slots until our stack is empty, caching along the way
-        for (int i = 0; i < dest.getSlots(); i++) {
-            if (simulate && examined.get(i)) {
-                continue;
-            }
-            ItemStack targetStack = dest.getStackInSlot(i);
-            int count = stack.getCount();
-            stack = dest.insertItem(i, stack, simulate);
-            if (stack.getCount() != count) {
-                slotCache.replaceSlotWithItem(item.asItem(), i);
-            }
-
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-
-            if (targetStack.isEmpty()) {
-                slotCache.initEmpty(i);
-            }
-        }
-
-        return stack;
-    }
-
-    /**
-     * Inserts into cached slots if any and invalidates slots.
-     * If there are no cached slots, this does nothing.
-     */
-    private ItemStack insertUsingCache(ItemStack stack, boolean simulate, BitSet examined) {
-        IItemHandler dest = handler;
-        Item item = stack.getItem();
-        var slots = slotCache.getIfPresent(item);
-
-        if (slots == null || stack.isEmpty()) {
-            return stack;
-        }
-
-        boolean stackIsStackable = stack.isStackable();
-        IntList invalidSlots = new IntArrayList();
-        int maxSlots = dest.getSlots();
-        for (int slot : slots) {
-            if (slot >= maxSlots) {
-                invalidSlots.add(slot);
-                continue;
-            }
-
-            examined.set(slot);
-            int count = stack.getCount();
-            ItemStack targetStack = dest.getStackInSlot(slot);
-            // If this stack wants to stack and our cached slot is air but the slot is not, this means our item has moved locations.
-            // If we blindly insert here, we can create partial stacks instead of combining.
-            // If this is a non-stackable, ignore this and insert anywhere because our slot list is air.
-            if (stackIsStackable && targetStack.isEmpty()) {
-                invalidSlots.add(slot);
-                continue;
-            }
-
-            stack = dest.insertItem(slot, stack, simulate);
-            if (stack.getCount() == count) {
-                if (!ItemStack.isSameItemSameComponents(targetStack, stack)) {
-                    invalidSlots.add(slot);
-                }
-            } else if (stackIsStackable) {
-                slotCache.lastAccepting.put(item, slot);
-            }
-
-            if (stack.isEmpty()) {
-                break;
-            }
-        }
-
-        for (int slot : invalidSlots) {
-            Item current = slot < maxSlots ? dest.getStackInSlot(slot).getItem() : Items.AIR;
-            slotCache.replaceSlotWithItem(current, slot);
-        }
-
-        return stack;
-    }
-
-    private ItemStack insertInCachedEmptySlots(ItemStack stack, boolean simulate, BitSet examined) {
-        IItemHandler dest = handler;
-        var slots = slotCache.getIfPresent(Items.AIR);
-        if (slots == null) {
-            return stack;
-        }
-
-        IntList invalidSlots = new IntArrayList();
-        int maxSlots = dest.getSlots();
-        for (int slot : slots) {
-            if (slot >= maxSlots) {
-                invalidSlots.add(slot);
-                continue;
-            }
-            examined.set(slot);
-            stack = dest.insertItem(slot, stack, simulate);
-            slotCache.replaceSlotWithItem(dest.getStackInSlot(slot).getItem(), slot);
-            if (stack.isEmpty()) {
-                break;
-            }
-        }
-
-        for (int slot : invalidSlots) {
-            slotCache.replaceSlotWithItem(Items.AIR, slot);
-        }
-
-        return stack;
+    @Override
+    public @Nullable ISlotCache getSlotCache() {
+        return this.slotCache;
     }
 }

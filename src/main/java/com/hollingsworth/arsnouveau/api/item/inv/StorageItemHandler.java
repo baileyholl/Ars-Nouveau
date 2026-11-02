@@ -6,9 +6,8 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 public class StorageItemHandler extends FilterableItemHandler {
 
-    public StorageItemHandler(IItemHandler handler, FilterSet filters, SlotCache slotCache) {
-        super(handler, filters);
-        withSlotCache(slotCache);
+    public StorageItemHandler(IItemHandler handler, FilterSet filters, ISlotCache slotCache) {
+        super(handler, filters, slotCache);
     }
 
     @Override

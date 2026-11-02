@@ -2,7 +2,8 @@ package com.hollingsworth.arsnouveau.gametest;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
-import com.hollingsworth.arsnouveau.api.item.inv.SlotCache;
+import com.hollingsworth.arsnouveau.api.item.inv.ISlotCache;
+import com.hollingsworth.arsnouveau.api.item.inv.ImperfectSlotCache;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -17,7 +18,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 public class SlotCacheTests {
     @GameTest(template = "empty10")
     public static void cachesEmptySlots(GameTestHelper helper) {
-        SlotCache cache = new SlotCache();
+        var cache = new ImperfectSlotCache();
         cache.initEmpty(0);
         cache.initEmpty(2);
         var collection = cache.getIfPresent(Items.AIR);
@@ -28,7 +29,7 @@ public class SlotCacheTests {
 
     @GameTest(template = "empty10")
     public static void cachesItems(GameTestHelper helper) {
-        SlotCache cache = new SlotCache(10);
+        ISlotCache cache = new ImperfectSlotCache(10);
         // Edge case with empty -> item -> empty -> item
         cache.replaceSlotWithItem(Items.AIR, 3);
         cache.replaceSlotWithItem(Items.STICK, 3);
@@ -44,7 +45,7 @@ public class SlotCacheTests {
 
     @GameTest(template = "empty10")
     public static void dynamicallyGrowsCache(GameTestHelper helper) {
-        SlotCache cache = new SlotCache();
+        ISlotCache cache = new ImperfectSlotCache();
         cache.replaceSlotWithItem(Items.STICK, 3);
         cache.replaceSlotWithItem(Items.STICK, 9);
         var collection = cache.getIfPresent(Items.STICK);
@@ -58,7 +59,7 @@ public class SlotCacheTests {
     public static void mergesStacks(GameTestHelper helper) {
         ItemStackHandler handler = new ItemStackHandler(3);
         handler.setStackInSlot(0, new ItemStack(Items.COBBLESTONE, 16));
-        SlotCache cache = new SlotCache(1);
+        ISlotCache cache = new ImperfectSlotCache(1);
         FilterableItemHandler filterable = new FilterableItemHandler(handler).withSlotCache(cache);
         helper.assertTrue(filterable.insertItemStacked(new ItemStack(Items.COBBLESTONE, 16), false).isEmpty(), "Expected cobblestone to merge");
         helper.assertTrue(!cache.isEmpty(0), "Expected merged slot to stay occupied");
@@ -70,7 +71,7 @@ public class SlotCacheTests {
 
     @GameTest(template = "empty10")
     public static void listsLastAcceptingSlotFirst(GameTestHelper helper) {
-        SlotCache cache = createStoneFilledInv(helper);
+        ISlotCache cache = createStoneFilledInv(helper);
         var slots = cache.getIfPresent(Items.STONE);
         helper.assertTrue(slots.equals(IntArrayList.of(3, 0, 1, 2)), "Expected the last accepting slot first and every slot once, got: " + slots);
         helper.succeed();
@@ -78,7 +79,7 @@ public class SlotCacheTests {
 
     @GameTest(template = "empty10")
     public static void ignoresStaleLastAcceptingSlot(GameTestHelper helper) {
-        SlotCache cache = createStoneFilledInv(helper);
+        ISlotCache cache = createStoneFilledInv(helper);
         cache.replaceSlotWithItem(Items.AIR, 3);
         helper.assertTrue(cache.getIfPresent(Items.STONE).equals(IntArrayList.of(0, 1, 2)), "Expected an emptied hint slot to drop out, got: " + cache.getIfPresent(Items.STONE));
         cache.replaceSlotWithItem(Items.DIRT, 3);
@@ -88,12 +89,12 @@ public class SlotCacheTests {
         helper.succeed();
     }
 
-    private static SlotCache createStoneFilledInv(GameTestHelper helper) {
+    private static ISlotCache createStoneFilledInv(GameTestHelper helper) {
         ItemStackHandler handler = new ItemStackHandler(4);
         for (int i = 0; i < 4; i++) {
             handler.setStackInSlot(i, new ItemStack(Items.STONE, 63));
         }
-        SlotCache cache = new SlotCache(4);
+        ISlotCache cache = new ImperfectSlotCache(4);
         FilterableItemHandler filterable = new FilterableItemHandler(handler).withSlotCache(cache);
         for (int i = 0; i < 4; i++) {
             helper.assertTrue(filterable.insertItemStacked(new ItemStack(Items.STONE), false).isEmpty(), "Expected stone " + i + " to top up a stack");
