@@ -58,7 +58,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -245,7 +244,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
         EventQueue.getClientQueue().clear();
-        PlanariumRenderer.structureRenderData = new HashMap<>();
+        for (var data : PlanariumRenderer.structureRenderData.values()) {
+            data.close();
+        }
+        PlanariumRenderer.structureRenderData.clear();
         PlanariumRenderer.deferredRenders = new ArrayList<>();
         BaseBook.lastOpenedScreen = null;
         ParticleOverviewScreen.LAST_SELECTED_PART = null;
