@@ -130,6 +130,11 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         return this.getSourceStorage().canAcceptSource(source);
     }
 
+    @Override
+    public boolean isInfinite() {
+        return this.getSourceStorage().isInfinite();
+    }
+
     /**
      * Transfers the maximum possible amount of source from one tile to another.
      * Takes the maximum transfer rate of the two tiles into account, and the space remaining.
