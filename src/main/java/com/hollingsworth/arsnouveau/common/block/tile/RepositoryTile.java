@@ -127,13 +127,16 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         for (int i = 0; i < menu.slots.size(); i++) {
             var slot = menu.slots.get(i);
             if (slot.container instanceof RepositoryTile) {
-                menu.slots.set(i, new Slot(slot.container, slot.getSlotIndex(), slot.x, slot.y) {
+                var wrapped = new Slot(slot.container, slot.getSlotIndex(), slot.x, slot.y) {
                     @Override
                     public void setChanged() {
                         slotCache.replaceSlotWithItem(slot.getItem().getItem(), slot.getSlotIndex());
                         super.setChanged();
                     }
-                });
+                };
+                wrapped.index = slot.index;
+
+                menu.slots.set(i, wrapped);
             }
         }
 
