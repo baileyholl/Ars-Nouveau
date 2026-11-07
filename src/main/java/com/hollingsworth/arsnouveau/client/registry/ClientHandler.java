@@ -102,6 +102,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.DECOR_BLOSSOM_TILE.get(), BlossomRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PLANARIUM_PROJECTOR_TILE.get(), PlanariumProjectorRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.STRUCTURE_PROJECTOR_TILE.get(), StructureProjectorRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.BUILDER_GEIST_TILE.get(), (t) -> new GenericTileRenderer<>(t, "buildergeist_plinth"));
 //        event.registerBlockEntityRenderer(BlockRegistry.SCRYER_PLANARIUM_TILE.get(), ScryerPlanariumRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(), StyledSpellRender::new);

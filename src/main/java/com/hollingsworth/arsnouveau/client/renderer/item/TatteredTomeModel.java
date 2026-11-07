@@ -16,7 +16,7 @@ public class TatteredTomeModel extends TransformAnimatedModel<WornNotebook> {
 
     @Override
     public ResourceLocation getModelResource(WornNotebook object) {
-        return getModelResource(object, null);
+        return getModelResource(object, (ItemDisplayContext) null);
     }
 
     @Override

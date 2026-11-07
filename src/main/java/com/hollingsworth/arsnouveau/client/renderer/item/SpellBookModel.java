@@ -19,7 +19,7 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getModelResource(SpellBook object) {
-        return getModelResource(object, null);
+        return getModelResource(object, (ItemDisplayContext) null);
     }
 
     @Override

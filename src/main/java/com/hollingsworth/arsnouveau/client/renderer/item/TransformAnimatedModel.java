@@ -11,7 +11,7 @@ public abstract class TransformAnimatedModel<T extends GeoAnimatable> extends Ge
 
 
     public ResourceLocation getModelResource(T object) {
-        return getModelResource(object, null);
+        return getModelResource(object, (ItemDisplayContext) null);
     }
 
 

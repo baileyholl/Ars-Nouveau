@@ -386,7 +386,12 @@ public class BlockRegistry {
 
     public static final BlockRegistryWrapper<PlanariumProjector> PLANARIUM_PROJECTOR = registerBlockAndItem(LibBlockNames.PLANARIUM_PROJECTOR, PlanariumProjector::new);
     public static final BlockEntityTypeRegistryWrapper<PlanariumProjectorTile> PLANARIUM_PROJECTOR_TILE = registerTile(LibBlockNames.PLANARIUM_PROJECTOR, PlanariumProjectorTile::new, PLANARIUM_PROJECTOR);
-    public static final BlockRegistryWrapper<BuilderGeistBlock> BUILDER_GEIST_BLOCK = registerBlockAndItem(LibBlockNames.BUILDER_GEIST_BLOCK, BuilderGeistBlock::new);
+    public static final BlockRegistryWrapper<BuilderGeistBlock> BUILDER_GEIST_BLOCK = registerBlockAndItem(LibBlockNames.BUILDER_GEIST_BLOCK, BuilderGeistBlock::new, (reg) -> new RendererBlockItem(reg, defaultItemProperties()) {
+        @Override
+        public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+            return GenericTileRenderer.getISTER("buildergeist_plinth");
+        }
+    });
     public static final BlockEntityTypeRegistryWrapper<BuilderGeistTile> BUILDER_GEIST_TILE = registerTile(LibBlockNames.BUILDER_GEIST_BLOCK, BuilderGeistTile::new, BUILDER_GEIST_BLOCK);
     public static final BlockRegistryWrapper<StructureProjectorBlock> STRUCTURE_PROJECTOR = registerBlockAndItem(LibBlockNames.STRUCTURE_PROJECTOR, StructureProjectorBlock::new);
     public static final BlockEntityTypeRegistryWrapper<StructureProjectorTile> STRUCTURE_PROJECTOR_TILE = registerTile(LibBlockNames.STRUCTURE_PROJECTOR, StructureProjectorTile::new, STRUCTURE_PROJECTOR);
