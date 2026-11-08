@@ -182,7 +182,7 @@ public class ModParticles {
             evt.registerSpriteSet(EXPLOSION.get(), (spites) -> new WrappedProvider(ParticleTypes.EXPLOSION, HugeExplosionParticle.Provider::new));
             evt.registerSpriteSet(BREAKING_CIRCLE.get(), BreakingCircleParticle.Provider::new);
             evt.registerSpriteSet(CLOUD.get(), (spites) -> new WrappedProvider(ParticleTypes.CLOUD, PlayerCloudParticle.Provider::new));
-            evt.registerSpriteSet(SCULK_CHARGE.get(), SculkChargeParticle.Provider::new);
+            evt.registerSpriteSet(SCULK_CHARGE.get(), (spites) -> new WrappedProvider(ParticleTypes.SCULK_CHARGE, new SculkChargeParticle.Provider(spites)));
         }
     }
 }
