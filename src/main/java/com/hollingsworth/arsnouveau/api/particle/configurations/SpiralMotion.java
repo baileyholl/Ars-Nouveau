@@ -53,12 +53,12 @@ public class SpiralMotion extends ParticleMotion {
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of(
                 propMap.createIfMissing(new ParticleTypeProperty()),
-                propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
+                propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE))
                         .maxDensity(200)
                         .minDensity(20)
                         .densityStepSize(5)
                         .supportsShapes(false)
-                        .supportsRadius(true)),
+                        .supportsRadius(true),
                 propMap.createIfMissing(new SpeedProperty().yRange(-0.05, 0.05).xzRange(-0.05, 0.05)));
     }
 }

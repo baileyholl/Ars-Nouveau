@@ -74,10 +74,10 @@ public class WispMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE))
                         .minDensity(1)
                         .maxDensity(200)
-                        .densityStepSize(1)),
+                        .densityStepSize(1),
                 propMap.createIfMissing(new SpeedProperty().yRange(0.01, 0.02)));
     }
 }
