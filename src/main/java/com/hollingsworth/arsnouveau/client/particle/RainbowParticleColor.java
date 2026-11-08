@@ -31,10 +31,14 @@ public class RainbowParticleColor extends ParticleColor {
 
     @Override
     public ParticleColor transition(int ticks) {
-        Color color = Color.rainbowColor(ticks);
-        RainbowParticleColor color1 = new RainbowParticleColor(color.getRed(), color.getGreen(), color.getBlue());
-        color1.tickOffset = this.tickOffset;
-        return color1;
+        return Color.rainbowColor(tickOffset + ticks).toParticle();
+    }
+
+    @Override
+    public CompoundTag serialize() {
+        CompoundTag tag = super.serialize();
+        tag.putInt("tickOffset", tickOffset);
+        return tag;
     }
 
     @Override

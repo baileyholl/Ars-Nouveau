@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.EmitterProperty;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ParticleTypeProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -43,7 +45,8 @@ public class WrappedProvider implements ParticleProvider<PropertyParticleOptions
         if (particleData != null && particleData.acceptsColor()) {
             ColorProperty colorProperty = data.colorProp();
             if (!colorProperty.isTintDisabled()) {
-                ParticleColor color = colorProperty.particleColor;
+                EmitterProperty emitterProp = data.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get());
+                ParticleColor color = colorProperty.particleColor.transition((emitterProp != null ? emitterProp.age : (int) level.getGameTime()) * 20);
                 particle.setColor(color.getRed(), color.getGreen(), color.getBlue());
             }
         }
