@@ -3,14 +3,18 @@ package com.hollingsworth.arsnouveau.setup.registry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerData;
 import com.hollingsworth.arsnouveau.common.capability.ManaData;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectPrestidigitation;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,4 +42,8 @@ public class AttachmentsRegistry {
                             .serialize(ANCodecs.BLOCKPOS_DIRECTION_PAIR_CODEC)
                             .sync(ANCodecs.BLOCKPOS_DIRECTION_PAIR_STREAM_CDOEC)
                             .build());
+
+    public static final Supplier<AttachmentType<Map<EquipmentSlot, EffectPrestidigitation.ItemEmitter>>> PRESTIDIGITATION_EMITTERS =
+            ATTACHMENT_TYPES.register("prestidigitation_emitters",
+                    () -> AttachmentType.<Map<EquipmentSlot, EffectPrestidigitation.ItemEmitter>>builder(() -> new EnumMap<>(EquipmentSlot.class)).build());
 }

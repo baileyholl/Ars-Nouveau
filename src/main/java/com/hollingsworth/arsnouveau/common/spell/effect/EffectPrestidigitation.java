@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.items.data.PrestidigitationData;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketPrestidigitation;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -18,6 +19,7 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -80,18 +82,23 @@ public class EffectPrestidigitation extends AbstractEffect {
         }
     }
 
-    public static void onInventoryTick(ItemStack stack, Level level, Entity entity, int inventorySlot, boolean isCurrentItem) {
-        if (level.isClientSide || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
-            return;
-        }
-        PrestidigitationData prestidigitationData = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());
-        if (prestidigitationData == null) {
-            return;
-        }
-        // Current item, held in hand or armor slots.
-        if (isCurrentItem || (inventorySlot > 35 && inventorySlot < 41)) {
-            ParticleEmitter emitter = prestidigitationData.getEmitter(entity, prestidigitationData.timeline().onTickEffect);
-            emitter.tick(level);
+    public record ItemEmitter(PrestidigitationData data, ParticleEmitter emitter) {
+    }
+
+    public static void tickEquipmentEmitters(Player player) {
+        Map<EquipmentSlot, ItemEmitter> emitters = player.getData(AttachmentsRegistry.PRESTIDIGITATION_EMITTERS);
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            PrestidigitationData data = player.getItemBySlot(slot).get(DataComponentRegistry.PRESTIDIGITATION.get());
+            if (data == null) {
+                emitters.remove(slot);
+                continue;
+            }
+            ItemEmitter itemEmitter = emitters.get(slot);
+            if (itemEmitter == null || (itemEmitter.data != data && !itemEmitter.data.equals(data))) {
+                itemEmitter = new ItemEmitter(data, new ParticleEmitter(player, data.timeline().onTickEffect));
+                emitters.put(slot, itemEmitter);
+            }
+            itemEmitter.emitter.tick(player.level());
         }
     }
 
