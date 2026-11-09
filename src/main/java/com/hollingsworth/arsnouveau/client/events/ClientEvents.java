@@ -54,7 +54,8 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.minecraft.world.entity.LivingEntity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectPrestidigitation;
 import org.jetbrains.annotations.NotNull;
 
@@ -185,9 +186,9 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Post event) {
-        if (event.getEntity().level.isClientSide) {
-            EffectPrestidigitation.tickEquipmentEmitters(event.getEntity());
+    public static void onEntityTick(EntityTickEvent.Post event) {
+        if (event.getEntity().level.isClientSide && event.getEntity() instanceof LivingEntity living) {
+            EffectPrestidigitation.tickEquipmentEmitters(living);
         }
     }
 
