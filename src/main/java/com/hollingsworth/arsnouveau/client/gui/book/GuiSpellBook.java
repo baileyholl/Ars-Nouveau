@@ -799,7 +799,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
 
-            if (renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+            if (renderable instanceof AbstractWidget widget && (!widget.visible || !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget))) {
                 continue;
             }
 
