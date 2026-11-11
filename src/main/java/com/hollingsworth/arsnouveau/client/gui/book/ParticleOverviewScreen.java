@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
@@ -167,8 +168,11 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
         previewButton = new GuiImageButton(bookLeft + LEFT_PAGE_OFFSET + 35, bookBottom - 31, DocAssets.TEST_ICON, (b) -> {
             if (selectedTimeline != null) {
-                // TODO: fix to play all timelines
-                previewWidget.play(timelineMap.getOrCreate(selectedTimeline.get(0)));
+                List<IParticleTimeline<?>> timelinesToPreview = selectedTimeline.stream()
+                        .filter(IParticleTimelineType::hasPreview)
+                        .map(timelineMap::getOrCreate)
+                        .collect(Collectors.toList());
+                previewWidget.playAll(timelinesToPreview);
             }
         }).withTooltip(Component.translatable("ars_nouveau.preview"));
         addRenderableWidget(previewButton);
@@ -182,17 +186,10 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         for (PropWidgetList propList : propLists) {
             PropertyButton lastClickedButton = propList.getSelectedButton();
             if (lastClickedButton != null) {
-                System.out.println("clicking previous");
                 lastClickedButton.onPress();
                 break;
             }
         }
-//        PropertyButton lastClickedButton = propLists.getSelectedButton();
-//        if (lastClickedButton != null) {
-//            lastClickedButton.onPress();
-//        } else {
-////            addTimelineSelectionWidgets();
-//        }
     }
 
     public void reset(Button button) {
@@ -331,7 +328,6 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     public void onPropertySelected(PropertyButton propertyButton) {
         previewWidget.dismiss();
         clearRightPage();
-//        timelineButton.isSelected = false;
         propertyWidgetProvider = propertyButton.property.buildWidgets(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, ONE_PAGE_HEIGHT);
 
         List<AbstractWidget> propertyWidgets = new ArrayList<>();
@@ -343,36 +339,11 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         layoutLeftPage();
     }
 
-//    public void addTimelineSelectionWidgets() {
-//        clearRightPage();
-//        rightPageWidgets.add(addRenderableWidget(new HeaderWidget(bookLeft + RIGHT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, 20, Component.translatable("ars_nouveau.particle_timelines"))));
-//        var timelineList = new ArrayList<>(ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY.entrySet());
-//        timelineList.sort((o1, o2) -> CreativeTabRegistry.COMPARE_SPELL_TYPE_NAME.compare(o1.getValue().getSpellPart(), o2.getValue().getSpellPart()));
-//        for (int i = 0; i < timelineList.size(); i++) {
-//            var entry = timelineList.get(i);
-//            var widget = new GlyphButton(bookLeft + RIGHT_PAGE_OFFSET + 2 + 20 * (i % 6), bookTop + 40 + 20 * (i / 6), entry.getValue().getSpellPart(), (button) -> {
-//                selectedTimeline = entry.getValue();
-//                rowOffset = 0;
-//                LAST_SELECTED_PART = selectedTimeline;
-//                updatePreviewButton();
-//                AbstractSpellPart spellPart = selectedTimeline.getSpellPart();
-
-    /// /                timelineButton.title = Component.translatable(spellPart.getLocaleName());
-    /// /                timelineButton.renderStack = (spellPart.glyphItem.getDefaultInstance());
-//                clearList(propWidgetList.allButtons);
-//                propWidgetList.resetSelected();
-//                initLeftSideButtons();
-//            });
-//            rightPageWidgets.add(widget);
-//            addRenderableWidget(widget);
-//        }
-//    }
     private void updatePreviewButton() {
         if (previewButton == null) {
             return;
         }
-        // TODO: fix preview
-        boolean hasPreview = false;//selectedTimeline != null && selectedTimeline.hasPreview();
+        boolean hasPreview = selectedTimeline != null && selectedTimeline.stream().anyMatch(IParticleTimelineType::hasPreview);
         previewButton.visible = hasPreview;
         previewButton.active = hasPreview;
     }

@@ -50,10 +50,19 @@ public class ParticlePreviewWidget extends AbstractWidget {
     private ParticleTimelinePreview timelinePreview;
     private boolean timelineFinished;
     private int startDelay;
+    private Queue<IParticleTimeline<?>> allTimelines = new ArrayDeque<>();
 
     public ParticlePreviewWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
         this.active = false;
+    }
+
+    public void playAll(List<IParticleTimeline<?>> timelines) {
+        this.allTimelines = new ArrayDeque<>(timelines);
+        if (!allTimelines.isEmpty()) {
+            IParticleTimeline<?> nextTimeline = allTimelines.poll();
+            play(nextTimeline);
+        }
     }
 
     public void play(IParticleTimeline<?> timeline) {
@@ -96,6 +105,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
         timelinePreview = null;
         timelineFinished = true;
         previewLevel = null;
+        allTimelines.clear();
         startDelay = 0;
     }
 
@@ -106,6 +116,10 @@ public class ParticlePreviewWidget extends AbstractWidget {
         }
         if (timelinePreview != null && !timelineFinished && !timelinePreview.tick(previewLevel)) {
             timelineFinished = true;
+            if (!allTimelines.isEmpty()) {
+                IParticleTimeline<?> nextTimeline = allTimelines.poll();
+                play(nextTimeline);
+            }
         }
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
