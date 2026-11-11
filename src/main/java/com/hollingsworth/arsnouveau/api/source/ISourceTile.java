@@ -47,4 +47,8 @@ public interface ISourceTile {
         return removeSource(source);
     }
 
+    default boolean isInfinite() {
+        return false;
+    }
+
 }
