@@ -135,6 +135,7 @@ public class ArsNouveau {
         }
 
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
     }
 
