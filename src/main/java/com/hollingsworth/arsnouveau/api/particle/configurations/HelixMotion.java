@@ -36,6 +36,9 @@ public class HelixMotion extends ParticleMotion {
         ParticleDensityProperty densityProperty = getDensity(particleOptions, 100, 0.3f);
         double radius = densityProperty.radius();
         int totalParticles = getNumParticles(densityProperty.density());
+        if (totalParticles == 0) {
+            return;
+        }
         PropertyParticleOptions particle2;
         var secondType = propertyMap.get(ParticlePropertyRegistry.TYPE_PROPERTY.get());
         if (secondType != null) {
@@ -59,7 +62,7 @@ public class HelixMotion extends ParticleMotion {
             Vector3f spiralOne = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, localX, localY, localZ);
             Vector3f opposite = toEmitterSpace((float) interpolatedX, (float) interpolatedY, (float) interpolatedZ, -localX, -localY, -localZ);
             Vec3 speedOne = randomSpeed(particleOptions);
-            Vec3 speedTwo = randomSpeed(particle2);
+            Vec3 speedTwo = randomSpeed(particleOptions);
             Vector3f realSpeed = toEmitterSpace((float) 0, (float) 0, (float) 0, (float) speedOne.x, (float) speedOne.y, 0);
             Vector3f realSpeed2 = toEmitterSpace((float) 0, (float) 0, (float) 0, (float) speedTwo.x, (float) speedTwo.y, 0);
             level.addAlwaysVisibleParticle(particleOptions, true, spiralOne.x, spiralOne.y, spiralOne.z,
@@ -73,7 +76,8 @@ public class HelixMotion extends ParticleMotion {
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
                 propertyMap.createIfMissing(new ParticleTypeProperty()), // intentional here, this is the second particle type for the helix
-                propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)),
+                propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE))
+                        .supportsShapes(false),
                 propMap.createIfMissing(new SpeedProperty()));
     }
 }

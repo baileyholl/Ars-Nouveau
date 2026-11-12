@@ -42,14 +42,13 @@ public class WispMotion extends ParticleMotion {
         ParticleDensityProperty density = getDensity(particleOptions, 20, 0.1f);
         int numParticles = getNumParticles(density.density());
         double flicker = 0.65;
-        double randomScale = density.radius() * 0.03;
         double yDrift = 1.0; // Can be between 0, 1
         double xzDrift = 0.1f;
         for (int i = 0; i < numParticles; i++) {
             double t = (double) i / numParticles;
-            double interpX = prevX + x * t;
-            double interpY = prevY + y * t;
-            double interpZ = prevZ + z * t;
+            double interpX = prevX + (x - prevX) * t;
+            double interpY = prevY + (y - prevY) * t;
+            double interpZ = prevZ + (z - prevZ) * t;
 
             double flameBaseT = (emitter.age + t) * xzDrift;
             double flickerX = noise.noise(flameBaseT, 100, 0) * flicker;
@@ -77,7 +76,9 @@ public class WispMotion extends ParticleMotion {
         return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE))
                         .minDensity(1)
                         .maxDensity(200)
-                        .densityStepSize(1),
+                        .densityStepSize(1)
+                        .supportsShapes(false)
+                        .supportsRadius(false),
                 propMap.createIfMissing(new SpeedProperty().yRange(0.01, 0.02)));
     }
 }
