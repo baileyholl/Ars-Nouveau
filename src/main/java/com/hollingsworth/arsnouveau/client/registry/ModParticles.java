@@ -111,7 +111,7 @@ public class ModParticles {
             evt.registerSpriteSet(HELIX_TYPE.get(), HelixParticleData::new);
             evt.registerSpriteSet(ALAKARK_BUBBLE_TYPE.get(), BubbleParticle.Provider::new);
             evt.registerSpriteSet(SMOKE_TYPE.get(), ANSmokeParticle.Provider::new);
-            evt.registerSpriteSet(SNOW_TYPE.get(), SnowParticle.Provider::new);
+            evt.registerSpriteSet(SNOW_TYPE.get(), (sprites -> new PropParticle.Provider(SnowParticle::new, sprites)));
             evt.registerSpriteSet(NEW_GLOW_TYPE.get(), NewGlowParticleProvider::new);
             evt.registerSpriteSet(BUBBLE_CLONE_TYPE.get(), ANBubbleParticle.Provider::new);
             evt.registerSpriteSet(LEAF_TYPE.get(), (sprites -> new PropParticle.Provider(LeafParticle::new, sprites)));
@@ -169,7 +169,7 @@ public class ModParticles {
             evt.registerSpriteSet(ASH.get(), (spites) -> new WrappedProvider(ParticleTypes.ASH, AshParticle.Provider::new));
             evt.registerSpriteSet(CRIMSON_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.CRIMSON_SPORE, SuspendedParticle.CrimsonSporeProvider::new));
             evt.registerSpriteSet(WARPED_SPORE.get(), (spites) -> new WrappedProvider(ParticleTypes.WARPED_SPORE, SuspendedParticle.WarpedSporeProvider::new));
-            evt.registerSpriteSet(REVERSE_PORTAL.get(), (spites) -> new WrappedProvider(ParticleTypes.REVERSE_PORTAL, ReversePortalParticle.Provider::new));
+            evt.registerSpriteSet(REVERSE_PORTAL.get(), (spites) -> new WrappedProvider(ParticleTypes.REVERSE_PORTAL, ReversePortalParticle.ReversePortalProvider::new));
             evt.registerSpriteSet(WHITE_ASH.get(), (spites) -> new WrappedProvider(ParticleTypes.WHITE_ASH, WhiteAshParticle.Provider::new));
             evt.registerSpriteSet(SMALL_FLAME.get(), (spites) -> new WrappedProvider(ParticleTypes.SMALL_FLAME, FlameParticle.SmallFlameProvider::new));
             evt.registerSpriteSet(SNOWFLAKE.get(), (spites) -> new WrappedProvider(ParticleTypes.SNOWFLAKE, SnowflakeParticle.Provider::new));
