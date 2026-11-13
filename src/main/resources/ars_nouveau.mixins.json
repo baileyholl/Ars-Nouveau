@@ -23,7 +23,6 @@
     "DamageSourceMixin",
     "EntityAccessor",
     "EntityMixin",
-    "ItemStackMixin",
     "LivingAccessor",
     "LivingEntityMixin",
     "MobAccessor",

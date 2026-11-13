@@ -13,11 +13,12 @@ import com.hollingsworth.arsnouveau.common.network.PacketPrestidigitation;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.setup.registry.AttachmentsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -80,19 +81,31 @@ public class EffectPrestidigitation extends AbstractEffect {
         }
     }
 
-    public static void onInventoryTick(ItemStack stack, Level level, Entity entity, int inventorySlot, boolean isCurrentItem) {
-        if (level.isClientSide || !stack.has(DataComponentRegistry.PRESTIDIGITATION)) {
+    public record ItemEmitter(PrestidigitationData data, ParticleEmitter emitter) {
+    }
+
+    public static void tickEquipmentEmitters(LivingEntity entity) {
+        Int2ObjectMap<ItemEmitter> emitters = entity.getData(AttachmentsRegistry.PRESTIDIGITATION_EMITTERS);
+        tickSlot(entity, emitters, 0, entity.getMainHandItem());
+        tickSlot(entity, emitters, 1, entity.getOffhandItem());
+        int index = 2;
+        for (ItemStack stack : entity.getArmorSlots()) {
+            tickSlot(entity, emitters, index++, stack);
+        }
+    }
+
+    private static void tickSlot(LivingEntity entity, Int2ObjectMap<ItemEmitter> emitters, int index, ItemStack stack) {
+        PrestidigitationData data = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());
+        if (data == null) {
+            emitters.remove(index);
             return;
         }
-        PrestidigitationData prestidigitationData = stack.get(DataComponentRegistry.PRESTIDIGITATION.get());
-        if (prestidigitationData == null) {
-            return;
+        ItemEmitter itemEmitter = emitters.get(index);
+        if (itemEmitter == null || (itemEmitter.data != data && !itemEmitter.data.equals(data))) {
+            itemEmitter = new ItemEmitter(data, new ParticleEmitter(entity, data.timeline().onTickEffect));
+            emitters.put(index, itemEmitter);
         }
-        // Current item, held in hand or armor slots.
-        if (isCurrentItem || (inventorySlot > 35 && inventorySlot < 41)) {
-            ParticleEmitter emitter = prestidigitationData.getEmitter(entity, prestidigitationData.timeline().onTickEffect);
-            emitter.tick(level);
-        }
+        itemEmitter.emitter.tick(entity.level());
     }
 
     @Override

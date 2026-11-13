@@ -1,12 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items.data;
 
-import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.timelines.PrestidigitationTimeline;
-import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.entity.Entity;
 
 import java.util.Objects;
 
@@ -23,14 +20,6 @@ public class PrestidigitationData {
     }
 
     PrestidigitationTimeline timeline;
-    ParticleEmitter emitter;
-
-    public ParticleEmitter getEmitter(Entity entity, TimelineEntryData data) {
-        if (emitter == null) {
-            this.emitter = new ParticleEmitter(entity, data);
-        }
-        return emitter;
-    }
 
     public PrestidigitationTimeline timeline() {
         return timeline;

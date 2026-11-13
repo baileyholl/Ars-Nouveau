@@ -198,6 +198,7 @@ dependencies {
         }
     }
     localRuntime "curse.maven:create-328085:7963363"
+//    localRuntime "maven.modrinth:spark:1.10.124-neoforge-1.21.1"
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime 'curse.maven:ftb-teams-forge-404468:5631446'
     localRuntime 'curse.maven:ftb-chunks-forge-314906:5710609'

@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.EmitterProperty;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.gui.Color;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -33,11 +36,18 @@ public class ANSmokeParticle extends TextureSheetParticle {
     };
     ColorGradientInterpolator gradient;
 
-    protected ANSmokeParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet spriteSet) {
+    protected ANSmokeParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet spriteSet) {
         super(level, x, y, z, xSpeed, ySpeed, zSpeed);
         this.spriteSet = spriteSet;
         this.setSpriteFromAge(spriteSet);
-        this.gradient = new ColorGradientInterpolator(() -> (double) this.age / (double) this.lifetime, gradients);
+        List<ColorPoint> points = gradients;
+        ColorProperty colorProperty = options.colorProp();
+        if (!colorProperty.isTintDisabled()) {
+            EmitterProperty emitterProp = options.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get());
+            ParticleColor tint = colorProperty.particleColor.transition((emitterProp != null ? emitterProp.age : (int) level.getGameTime()) * 20);
+            points = List.of(new ColorPoint(0, new Color(tint.getRedInt(), tint.getGreenInt(), tint.getBlueInt())), gradients.getLast());
+        }
+        this.gradient = new ColorGradientInterpolator(() -> (double) this.age / (double) this.lifetime, points);
         this.lifetime = this.random.nextInt(40) + 20;
         this.gravity = 3.0E-6F;
         this.xd = xSpeed;
@@ -92,7 +102,7 @@ public class ANSmokeParticle extends TextureSheetParticle {
                 double pZSpeed
         ) {
             ANSmokeParticle bubblecolumnupparticle = new ANSmokeParticle(
-                    pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, sprite
+                    pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, sprite
             );
             bubblecolumnupparticle.pickSprite(this.sprite);
             return bubblecolumnupparticle;

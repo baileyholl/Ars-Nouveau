@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TransientCustomContainer;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.BookwyrmCharm;
@@ -92,7 +91,7 @@ public class CraftingLecternBlock extends TickableModBlock {
         }
 
         BlockEntity blockEntity_1 = world.getBlockEntity(pos);
-        if (blockEntity_1 instanceof StorageLecternTile term) {
+        if (blockEntity_1 instanceof CraftingLecternTile term) {
             if (!term.openMenu(player)) {
                 player.displayClientMessage(Component.translatable("ars_nouveau.invalid_lectern"), true);
             }
@@ -108,7 +107,7 @@ public class CraftingLecternBlock extends TickableModBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof CraftingLecternTile tile) {
             tile.powered = world.hasNeighborSignal(pos);
             BlockUtil.safelyUpdateState(world, pos);
         }

@@ -54,11 +54,7 @@ public abstract class PropParticle extends TextureSheetParticle {
             return;
         }
         EmitterProperty emitterProp = options.map.get(ParticlePropertyRegistry.EMITTER_PROPERTY.get());
-        if (emitterProp != null) {
-            color = color.transition(emitterProp.age + age * 50);
-        } else {
-            color = color.transition((int) (level.getGameTime() % 20 + age * 50));
-        }
+        color = color.transition((emitterProp != null ? emitterProp.age : (int) level.getGameTime()) * 20 + age * 50);
         float colorR = color.getRed();
         float colorG = color.getGreen();
         float colorB = color.getBlue();

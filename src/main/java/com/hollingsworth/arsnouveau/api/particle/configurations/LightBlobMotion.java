@@ -45,10 +45,10 @@ public class LightBlobMotion extends ParticleMotion {
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
-                propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE)
+                propMap.createIfMissing(new ParticleDensityProperty(20, 0.1, SpawnType.SPHERE))
                         .minDensity(1)
                         .maxDensity(200)
-                        .densityStepSize(1)),
+                        .densityStepSize(1),
                 propMap.createIfMissing(new SpeedProperty(0, 0.01, 0, 0)));
     }
 }

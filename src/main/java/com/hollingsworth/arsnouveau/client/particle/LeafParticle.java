@@ -12,9 +12,9 @@ public class LeafParticle extends PropParticle {
     public LeafParticle(PropertyParticleOptions propertyParticleOptions, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         super(propertyParticleOptions, level, x, y, z, xSpeed, ySpeed, zSpeed);
         this.lifetime = 40 + this.random.nextInt(20); // shorter lifespan
-        this.yd = yd * 0.7 - 0.015; // slightly down from projectile
-        this.xd = xd + (this.random.nextDouble() - 0.5) * 0.005;
-        this.zd = zd + (this.random.nextDouble() - 0.5) * 0.005;
+        this.yd = ySpeed * 0.7 - 0.015; // slightly down from projectile
+        this.xd = xSpeed + (this.random.nextDouble() - 0.5) * 0.005;
+        this.zd = zSpeed + (this.random.nextDouble() - 0.5) * 0.005;
         this.rotSpeed = ((float) Math.random() - 0.5F) * 0.1F;
         this.roll = (float) Math.random() * (float) (Math.PI * 2);
     }

@@ -128,6 +128,19 @@ public class DocAssets {
     public static final BlitInfo SETTINGS_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/settings_tab.png"), 23, 20);
     public static final BlitInfo DISCORD_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/discord_tab.png"), 23, 20);
     public static final BlitInfo INFO_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_info.png"), 14, 12);
+    public static final BlitInfo RECIPE_BOOK_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/recipe_book.png"), 9, 9);
+    public static final BlitInfo CRAFT_CLEAR_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/craft_clear.png"), 9, 9);
+    public static final BlitInfo EXPAND_INVENTORY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/expand_inventory.png"), 14, 3);
+    public static final BlitInfo COLLAPSE_INVENTORY_BUTTON = new BlitInfo(ArsNouveau.prefix("textures/gui/collapse_inventory.png"), 14, 3);
+    public static final BlitInfo STORAGE_SCROLL_BALL = new BlitInfo(ArsNouveau.prefix("textures/gui/scroll_ball.png"), 12, 12);
+    public static final BlitInfo STORAGE_SEARCH_PAPER = new BlitInfo(ArsNouveau.prefix("textures/gui/search_paper.png"), 72, 15);
+    public static final BlitInfo STORAGE_SORT_TYPE = new BlitInfo(ArsNouveau.prefix("textures/gui/sort_type.png"), 44, 13);
+    public static final BlitInfo STORAGE_SORT_ORDER = new BlitInfo(ArsNouveau.prefix("textures/gui/sort_order.png"), 44, 13);
+    public static final BlitInfo STORAGE_SEARCH_SYNC = new BlitInfo(ArsNouveau.prefix("textures/gui/search_sync.png"), 44, 13);
+    public static final BlitInfo STORAGE_TAB_ICONS = new BlitInfo(ArsNouveau.prefix("textures/gui/bookwyrm_storage_tabs.png"), 256, 13);
+    public static final BlitInfo STORAGE_SETTINGS_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/storage_tab1.png"), 22, 13);
+    public static final BlitInfo STORAGE_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/storage_tab2.png"), 18, 13);
+    public static final BlitInfo STORAGE_TAB_SELECTED = new BlitInfo(ArsNouveau.prefix("textures/gui/storage_tab2_selected.png"), 18, 13);
 
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {

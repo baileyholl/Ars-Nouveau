@@ -80,6 +80,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
             SelectedParticleButton noneButton;
             List<SelectedParticleButton> selectableButtons = new ArrayList<>();
             NoShadowTextField textField;
+            boolean syncingSliders;
 
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -104,7 +105,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
             @Override
             public void renderBg(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 super.renderBg(graphics, mouseX, mouseY, partialTicks);
-                Color color = new Color(displayColor.getColor(), false);
+                Color color = new Color(displayColor.transition(ClientInfo.ticksInGame * 20).getColor(), false);
 
                 int xOffset = 160;
                 int yOffset = 35;
@@ -115,16 +116,11 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
             }
 
             @Override
-            public void tick() {
-                super.tick();
-                if (displayColor != null) {
-                    displayColor = displayColor.transition(ClientInfo.ticksInGame);
-                }
-            }
-
-            @Override
             public void addWidgets(List<AbstractWidget> widgets) {
                 Consumer<Double> colorChanged = (value) -> {
+                    if (syncingSliders) {
+                        return;
+                    }
                     ParticleColor color = new ParticleColor((int) redW.getValue(), (int) greenW.getValue(), (int) blueW.getValue());
                     particleColor = color;
                     displayColor = particleColor;
@@ -147,13 +143,6 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 });
 
                 textField = new NoShadowTextField(Minecraft.getInstance().font, x + xOffset, y + 17, 100, 20, Component.empty());
-                textField.setResponder((val) -> {
-                    if (val.length() == 7) {
-                        ParticleColor color = ParticleColor.fromHex(val);
-                        setFromPreset(color);
-                        updateParticleColor();
-                    }
-                });
                 setFromPreset(particleColor);
                 int numPerRow = 6;
                 int size = ParticleColor.PRESET_COLORS.size();
@@ -171,6 +160,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     displayColor = particleColor;
                     tintDisabled = false;
                     propertyHolder.set(getType(), property);
+                    select(rainbowButton);
                 }) {
                     @Override
                     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
@@ -184,13 +174,22 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     particleColor = ParticleColor.WHITE;
                     displayColor = particleColor;
                     propertyHolder.set(getType(), property);
+                    select(noneButton);
                 });
                 rainbowButton.withTooltip(Component.translatable("ars_nouveau.color_rainbow"));
                 noneButton.withTooltip(Component.translatable("ars_nouveau.color_none"));
                 selectableButtons.add(noneButton);
                 selectableButtons.add(rainbowButton);
+                select(tintDisabled ? noneButton : particleColor instanceof RainbowParticleColor ? rainbowButton : null);
                 textField.setValue(displayColor.toHex());
                 textField.textColor = displayColor.getOppositeColor().getColor();
+                textField.setResponder((val) -> {
+                    if (val.length() == 7) {
+                        ParticleColor color = ParticleColor.fromHex(val);
+                        setFromPreset(color);
+                        updateParticleColor();
+                    }
+                });
                 textField.setMaxLength(7);
                 textField.setFilter((s) -> {
                     if (!s.startsWith("#")) {
@@ -225,17 +224,28 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
             }
 
             public void updateParticleColor() {
+                if (syncingSliders) {
+                    return;
+                }
                 tintDisabled = false;
                 particleColor = HSLColor.hsl(hueSlider.getValueInt(), saturation.getValue(), lightness.getValue()).toColor().toParticle();
                 displayColor = particleColor;
                 propertyHolder.set(getType(), property);
+                select(null);
                 textField.setTextColor(displayColor.getOppositeColor().getColor());
                 if (!textField.value.equals(displayColor.toHex())) {
                     textField.value = displayColor.toHex();
                 }
             }
 
+            public void select(SelectedParticleButton active) {
+                for (SelectedParticleButton button : selectableButtons) {
+                    button.selected = button == active;
+                }
+            }
+
             public void setFromPreset(ParticleColor preset) {
+                syncingSliders = true;
                 redW.setValue(Mth.clamp(preset.getRed() * 255.0, 1, 255));
                 greenW.setValue(Mth.clamp(preset.getGreen() * 255.0, 1, 255));
                 blueW.setValue(Mth.clamp(preset.getBlue() * 255.0, 1, 255));
@@ -243,7 +253,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 hueSlider.setValue(color.getHue());
                 saturation.setValue(color.getSaturation());
                 lightness.setValue(color.getLightness());
-                tintDisabled = false;
+                syncingSliders = false;
             }
 
             public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal, Consumer<Double> onValueChange) {
@@ -256,7 +266,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     DocClientUtils.blit(graphics, DocAssets.STYLE_ICON_NONE, x, y);
                     return;
                 }
-                Color color = new Color(displayColor.getColor(), false);
+                Color color = new Color(displayColor.transition(ClientInfo.ticksInGame * 20).getColor(), false);
                 graphics.fill(x + 3, y + 2, x + 11, y + 3, color.getRGB());
                 graphics.fill(x + 2, y + 3, x + 12, y + 11, color.getRGB());
                 graphics.fill(x + 3, y + 11, x + 11, y + 12, color.getRGB());

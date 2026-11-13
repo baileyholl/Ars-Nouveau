@@ -286,7 +286,7 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
             if (preferencedStacks.isEmpty()) {
                 return ItemScroll.SortPref.INVALID;
             }
-            return preferencedStacks.peek().sortPref();
+            return preferencedStacks.getFirst().sortPref();
         }
     }
 

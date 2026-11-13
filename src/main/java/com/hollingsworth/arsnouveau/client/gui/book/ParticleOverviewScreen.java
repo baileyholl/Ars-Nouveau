@@ -199,6 +199,9 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             Minecraft.getInstance().setScreen(new ParticleOverviewScreen(parentScreen, slot, stackHand));
         } else {
             ParticleOverviewScreen screen = ParticleOverviewScreen.lastScreen;
+            screen.previousScreen = parentScreen;
+            screen.hand = stackHand;
+            screen.onBookstackUpdated(stack);
             if (screen.selectedSpellSlot != slot) {
                 screen.selectedSpellSlot = slot;
                 screen.initSlotChange();

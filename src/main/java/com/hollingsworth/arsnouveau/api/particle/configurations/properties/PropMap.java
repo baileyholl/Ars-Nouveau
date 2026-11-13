@@ -72,6 +72,10 @@ public class PropMap {
         this.properties = new Reference2ObjectOpenHashMap<>(map);
     }
 
+    public PropMap copy() {
+        return new PropMap(properties);
+    }
+
     public <T extends BaseProperty> T get(IPropertyType<T> type) {
         return (T) properties.get(type);
     }

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -18,6 +18,13 @@ public class StateButton extends ANButton {
     public int imageWidth;
     public int imageHeight;
 
+    public StateButton(int x, int y, int width, int height, int tile, DocAssets.BlitInfo texture, OnPress pressable) {
+        this(x, y, width, height, texture.width(), texture.height(), tile, texture.location(), pressable);
+        this.texX = texture.u();
+        this.texY = texture.v();
+    }
+
+    @Deprecated(forRemoval = true)
     public StateButton(int x, int y, int width, int height, int imageWidth, int imageHeight, int tile, ResourceLocation texture, OnPress pressable) {
         super(x, y, width, height, Component.empty(), pressable);
         this.tile = tile;
@@ -32,7 +39,6 @@ public class StateButton extends ANButton {
     @Override
     public void renderWidget(GuiGraphics p_281670_, int mouseX, int mouseY, float pt) {
         if (this.visible) {
-            PoseStack st = p_281670_.pose();
             int x = getX();
             int y = getY();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);

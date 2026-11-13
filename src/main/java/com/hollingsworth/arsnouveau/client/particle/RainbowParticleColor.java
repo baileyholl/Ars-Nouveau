@@ -12,6 +12,14 @@ public class RainbowParticleColor extends ParticleColor {
 
     public static final ResourceLocation ID = ArsNouveau.prefix("rainbow");
 
+    private static final ParticleColor[] RAINBOW_FRAMES = new ParticleColor[1536];
+
+    static {
+        for (int i = 0; i < RAINBOW_FRAMES.length; i++) {
+            RAINBOW_FRAMES[i] = Color.rainbowColor(i).toParticle();
+        }
+    }
+
     public int tickOffset;
 
     public RainbowParticleColor(int r, int g, int b) {
@@ -31,45 +39,49 @@ public class RainbowParticleColor extends ParticleColor {
 
     @Override
     public ParticleColor transition(int ticks) {
-        Color color = Color.rainbowColor(ticks);
-        RainbowParticleColor color1 = new RainbowParticleColor(color.getRed(), color.getGreen(), color.getBlue());
-        color1.tickOffset = this.tickOffset;
-        return color1;
+        return RAINBOW_FRAMES[Math.abs((tickOffset + ticks) % RAINBOW_FRAMES.length)];
+    }
+
+    @Override
+    public CompoundTag serialize() {
+        CompoundTag tag = super.serialize();
+        tag.putInt("tickOffset", tickOffset);
+        return tag;
     }
 
     @Override
     public float getRed() {
-        return Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getRedAsFloat();
+        return transition(ClientInfo.ticksInGame).getRed();
     }
 
     @Override
     public int getRedInt() {
-        return Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getRed();
+        return transition(ClientInfo.ticksInGame).getRedInt();
     }
 
     @Override
     public float getBlue() {
-        return Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getBlueAsFloat();
+        return transition(ClientInfo.ticksInGame).getBlue();
     }
 
     @Override
     public int getBlueInt() {
-        return Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getBlue();
+        return transition(ClientInfo.ticksInGame).getBlueInt();
     }
 
     @Override
     public int getGreenInt() {
-        return Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getGreen();
+        return transition(ClientInfo.ticksInGame).getGreenInt();
     }
 
     @Override
     public float getGreen() {
-        return Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getGreenAsFloat();
+        return transition(ClientInfo.ticksInGame).getGreen();
     }
 
     @Override
     public int getColor() {
-        return fromInt(Color.rainbowColor(tickOffset + ClientInfo.ticksInGame).getRGB()).getColor();
+        return transition(ClientInfo.ticksInGame).getColor();
     }
 
     @Override
