@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -49,6 +51,8 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -544,8 +548,13 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         return changed;
     }
 
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        ProjectileTimeline timeline = this.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+        if (modelProperty.selectedResource.getAnimation() != null)
+            controllers.add(new AnimationController<>(this, "loopController", 20, (event) -> event.setAndContinue(RawAnimation.begin().thenPlay("run"))));
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

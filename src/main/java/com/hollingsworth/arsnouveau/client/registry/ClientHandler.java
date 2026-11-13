@@ -104,10 +104,8 @@ public class ClientHandler {
 //        event.registerBlockEntityRenderer(BlockRegistry.SCRYER_PLANARIUM_TILE.get(), ScryerPlanariumRenderer::new);
 
         event.registerEntityRenderer(ModEntities.SPELL_PROJ.get(), StyledSpellRender::new);
-        event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(),
-                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
-        event.registerEntityRenderer(ModEntities.SPELL_PROJ_HOM.get(),
-                renderManager -> new RenderSpell(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ_ARC.get(), StyledSpellRender::new);
+        event.registerEntityRenderer(ModEntities.SPELL_PROJ_HOM.get(), StyledSpellRender::new);
 
         event.registerEntityRenderer(ModEntities.ENTITY_FOLLOW_PROJ.get(),
                 renderManager -> new RenderBlank(renderManager, ArsNouveau.prefix("textures/entity/spell_proj.png")));

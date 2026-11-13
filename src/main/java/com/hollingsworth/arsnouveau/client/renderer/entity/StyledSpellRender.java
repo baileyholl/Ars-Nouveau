@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
@@ -28,7 +29,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
     }
 
     @Override
-    public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
         ProjectileTimeline timeline = entity.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
         if (modelProperty == null || modelProperty.selectedResource == ModelProperty.NONE) {
@@ -47,7 +48,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 //            poseStack.translate(0, -0.25, 0);
 //            poseStack.scale(0.5f, 0.5f, 0.5f);
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot())));
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
 //        }
