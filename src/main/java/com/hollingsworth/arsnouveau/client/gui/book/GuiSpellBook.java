@@ -631,7 +631,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (validationErrors.isEmpty()) {
             Spell spell = getSpell();
             Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
-            ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
     }
 
@@ -800,7 +799,7 @@ public class GuiSpellBook extends SpellSlottedScreen {
     protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
 
-            if (renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+            if (renderable instanceof AbstractWidget widget && (!widget.visible || !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget))) {
                 continue;
             }
 

@@ -2,8 +2,12 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.BaseProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.client.gui.buttons.PropertyButton;
+import com.hollingsworth.arsnouveau.client.gui.documentation.DocEntryButton;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -17,13 +21,18 @@ public class PropWidgetList {
     List<PropertyButton> allButtons = new ArrayList<>();
     Consumer<PropertyButton> onPropertySelected;
     Consumer<PropertyButton> onDepenciesChanged;
+    DocEntryButton timelineButton;
 
     int propLeftPageOffset;
     int propRightPageOffset;
     int propTopOffset;
     private int topSelectedIndex = -1;
+    IParticleTimelineType<?> forTimeline;
 
-    public PropWidgetList(int propLeftPageOffset, int propRightPageOffset, int propTopOffset, Consumer<PropertyButton> onPropertySelected, Consumer<PropertyButton> onDepenciesChanged, @Nullable PropWidgetList oldTree) {
+    public PropWidgetList(IParticleTimelineType<?> forTimeline, int propLeftPageOffset, int propRightPageOffset, int propTopOffset, Consumer<PropertyButton> onPropertySelected, Consumer<PropertyButton> onDepenciesChanged, @Nullable PropWidgetList oldTree) {
+        this.forTimeline = forTimeline;
+        timelineButton = new DocEntryButton(propLeftPageOffset - 13, 0, forTimeline.getSpellPart().glyphItem.getDefaultInstance(), Component.translatable(forTimeline.getSpellPart().getLocaleName()), b -> {
+        });
         this.propLeftPageOffset = propLeftPageOffset;
         this.propRightPageOffset = propRightPageOffset;
         this.propTopOffset = propTopOffset;
@@ -38,7 +47,8 @@ public class PropWidgetList {
         this.topSelectedIndex = -1;
     }
 
-    public void init(List<BaseProperty<?>> props) {
+    public void init(TimelineMap.MutableTimelineMap timelineMap) {
+        List<BaseProperty<?>> props = timelineMap.getOrCreate(forTimeline).getProperties();
         this.allButtons = getPropButtons(props, 0);
         if (topSelectedIndex != -1 && topSelectedIndex < allButtons.size()) {
             PropertyButton selectedButton = allButtons.get(topSelectedIndex);

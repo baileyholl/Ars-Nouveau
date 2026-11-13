@@ -12,6 +12,7 @@ import com.hollingsworth.nuggets.client.gui.ITooltipRenderer;
 import com.hollingsworth.nuggets.client.gui.NuggetImageButton;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -19,7 +20,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -120,6 +124,24 @@ public class BaseBook extends BaseScreen {
             renderable.render(graphics, mouseX, mouseY, partialTicks);
         }
         drawTooltip(graphics, mouseX, mouseY);
+    }
+
+    @Override
+    public void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        // Override to fix spell slot tooltips only displaying when name has a value
+        List<Component> tooltip = new ArrayList<>();
+        collectTooltips(graphics, mouseX, mouseY, tooltip);
+        List<Either<FormattedText, TooltipComponent>> elements = new ArrayList<>();
+        for (Component line : tooltip) {
+            elements.add(Either.left(line));
+        }
+        TooltipComponent image = getClientImageTooltip(mouseX, mouseY);
+        if (image != null) {
+            elements.add(Math.min(1, elements.size()), Either.right(image));
+        }
+        if (!elements.isEmpty()) {
+            graphics.renderComponentTooltipFromElements(font, elements, mouseX, mouseY, ItemStack.EMPTY);
+        }
     }
 
     @Override
