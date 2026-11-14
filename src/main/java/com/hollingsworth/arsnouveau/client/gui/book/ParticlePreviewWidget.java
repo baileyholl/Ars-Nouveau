@@ -80,6 +80,16 @@ public class ParticlePreviewWidget extends AbstractWidget {
         camera.moveTo(Vec3.ZERO);
         camera.setAngles(225f, 30f);
         timelinePreview = createPreview(timeline, previewLevel);
+        // This should never happen but guards against misbehaving addons
+        if (timelinePreview == null) {
+            IParticleTimeline<?> nextTimeline = allTimelines.poll();
+            if (nextTimeline != null) {
+                play(nextTimeline);
+            } else {
+                dismiss();
+            }
+            return;
+        }
         timelineFinished = false;
         startDelay = 5;
     }
@@ -95,8 +105,12 @@ public class ParticlePreviewWidget extends AbstractWidget {
         return timeline.getType().createPreview((T) timeline, level).orElse(null);
     }
 
-    public boolean isPlaying() {
+    public boolean currentTimelinePlaying() {
         return timelinePreview != null && (!timelineFinished || !particles.isEmpty() || !particlesToAdd.isEmpty());
+    }
+
+    public boolean isCompletelyFinished() {
+        return startDelay == 0 && !currentTimelinePlaying() && allTimelines.isEmpty();
     }
 
     public void dismiss() {
@@ -116,10 +130,11 @@ public class ParticlePreviewWidget extends AbstractWidget {
         }
         if (timelinePreview != null && !timelineFinished && !timelinePreview.tick(previewLevel)) {
             timelineFinished = true;
-            if (!allTimelines.isEmpty()) {
-                IParticleTimeline<?> nextTimeline = allTimelines.poll();
-                play(nextTimeline);
-            }
+        }
+
+        if (timelinePreview != null && timelineFinished && !allTimelines.isEmpty() && !currentTimelinePlaying()) {
+            IParticleTimeline<?> nextTimeline = allTimelines.poll();
+            play(nextTimeline);
         }
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
@@ -135,7 +150,7 @@ public class ParticlePreviewWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (!isPlaying()) {
+        if (isCompletelyFinished() || timelinePreview == null) {
             return;
         }
 

@@ -199,7 +199,8 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         for (IParticleTimelineType<?> timeline : selectedTimeline) {
             timelineMap.remove(timeline);
         }
-        initSlotChange();
+        initLeftSideButtons();
+        clearRightPage();
     }
 
     public void onDependenciesChanged(PropertyButton propButton) {
@@ -373,7 +374,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     private boolean updatePreviewVisibility() {
-        boolean previewActive = previewWidget.isPlaying();
+        boolean previewActive = !previewWidget.isCompletelyFinished();
         if (previewActive) {
             for (AbstractWidget widget : rightPageWidgets) {
                 previewWidgetVisibility.putIfAbsent(widget, widget.visible);
@@ -394,7 +395,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     @Override
     public void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
-        if (propertyWidgetProvider != null && !previewWidget.isPlaying()) {
+        if (propertyWidgetProvider != null && previewWidget.isCompletelyFinished()) {
             propertyWidgetProvider.renderBg(graphics, mouseX, mouseY, partialTicks);
         }
     }
