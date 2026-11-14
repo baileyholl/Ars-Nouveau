@@ -150,8 +150,7 @@ public class CameraController {
     }
 
     public static void setCameraStorage(ClientChunkCache.Storage cameraStorage) {
-        if (cameraStorage != null)
-            CameraController.cameraStorage = cameraStorage;
+        CameraController.cameraStorage = cameraStorage;
     }
 
     public static void setRenderPosition(Entity entity) {

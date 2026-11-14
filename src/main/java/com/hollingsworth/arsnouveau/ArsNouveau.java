@@ -198,6 +198,7 @@ public class ArsNouveau {
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
         EventQueue.getServerInstance().clear();
+        PlanariumTile.dimManager.entries.clear();
     }
 
     public static ResourceLocation prefix(String str) {

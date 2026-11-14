@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.events;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.documentation.search.Search;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
@@ -8,8 +9,11 @@ import com.hollingsworth.arsnouveau.api.registry.DynamicTooltipRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GenericRecipeRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
+import com.hollingsworth.arsnouveau.client.gui.GuiEntityInfoHUD;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.client.gui.SpellTooltip;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
+import com.hollingsworth.arsnouveau.client.gui.book.ParticleOverviewScreen;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.renderer.tile.PlanariumRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.world.PantomimeRenderer;
@@ -17,6 +21,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GhostWeaveTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import com.hollingsworth.arsnouveau.common.camera.CameraController;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.config.Config;
@@ -48,11 +53,14 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.minecraft.world.entity.LivingEntity;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectPrestidigitation;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -178,6 +186,13 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void onEntityTick(EntityTickEvent.Post event) {
+        if (event.getEntity().level.isClientSide && event.getEntity() instanceof LivingEntity living) {
+            EffectPrestidigitation.tickEquipmentEmitters(living);
+        }
+    }
+
+    @SubscribeEvent
     public static void highlightBlockEvent(RenderHighlightEvent.Block e) {
         Level level = Minecraft.getInstance().level;
         if (level != null) {
@@ -239,8 +254,26 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut loggingOut) {
         EventQueue.getClientQueue().clear();
-        PlanariumTile.dimManager.entries.clear();
-        PlanariumRenderer.structureRenderData = new HashMap<>();
+        for (var data : PlanariumRenderer.structureRenderData.values()) {
+            data.close();
+        }
+        PlanariumRenderer.structureRenderData.clear();
         PlanariumRenderer.deferredRenders = new ArrayList<>();
+        BaseBook.lastOpenedScreen = null;
+        ParticleOverviewScreen.LAST_SELECTED_PART = null;
+        ParticleOverviewScreen.lastOpenedHash = 0;
+        PlanariumTile.clientTemplates.clear();
+        slotUnderMouse = null;
+        DocPlayerData.previousScreen = null;
+        GuiEntityInfoHUD.lastHovered = null;
+        CameraController.setCameraStorage(null);
+    }
+
+    @SubscribeEvent
+    public static void onLevelUnload(final LevelEvent.Unload event) {
+        // Minecraft.disconnect fires LoggingOut before removed() on the open screen, which would re-cache it
+        if (event.getLevel().isClientSide()) {
+            ParticleOverviewScreen.lastScreen = null;
+        }
     }
 }
