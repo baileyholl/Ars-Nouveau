@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.block.tile.RepositoryTile;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.ReportedException;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -106,6 +109,57 @@ public class RepositoryCacheTests {
                     ItemStack remainder = pushThroughTerminal(network.lectern(), filler, dirtSlot);
                     helper.assertTrue(remainder.isEmpty(), "Expected the 4 dirt to fit the capacity the shift-click freed, got " + remainder.getCount() + " back");
                     helper.assertTrue(repository.countItem(Items.DIRT) == 54 * 64, "Expected the repository full again, got " + repository.countItem(Items.DIRT) + " dirt");
+                })
+                .thenSucceed();
+    }
+
+    // Place repository
+    // Connect lectern to repository, make sure cache is initialized with repository slot count
+    // Replace repository with chest
+    // Insert via lectern, error is thrown accessint out of bounds slots
+    @GameTest(template = "empty10")
+    public static void chestReplacingLinkedRepositoryAcceptsItems(GameTestHelper helper) {
+        StorageNetwork network = createDirectRepositoryNetwork(helper);
+        ServerPlayer filler = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "filler"));
+        startLinked(helper, network)
+                .thenExecute(() -> helper.setBlock(storagePos, Blocks.CHEST))
+                .thenIdle(3)
+                .thenExecute(() -> {
+                    for (int i = 0; i < 27; i++) {
+                        ItemStack remainder = pushThroughTerminal(network.lectern(), filler, pickUp(helper, filler, new ItemStack(Items.DIRT, 64)));
+                        helper.assertTrue(remainder.isEmpty(), "Expected the chest to accept stack " + i + ", got " + remainder.getCount() + " back");
+                    }
+                    int lastSlot = pickUp(helper, filler, new ItemStack(Items.DIRT, 64));
+                    ItemStack remainder;
+                    try {
+                        remainder = pushThroughTerminal(network.lectern(), filler, lastSlot);
+                    } catch (ReportedException e) {
+                        helper.fail("Expected the full chest to refuse the stack, got " + e.getCause());
+                        return;
+                    }
+                    helper.assertTrue(remainder.getCount() == 64, "Expected the full chest to refuse the stack, got " + remainder.getCount() + " back");
+                })
+                .thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void extractByItemAfterSlotFilled(GameTestHelper helper) {
+        StorageNetwork network = createDirectRepositoryNetwork(helper);
+        RepositoryTile repository = helper.getBlockEntity(storagePos);
+        ServerPlayer filler = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), "filler"));
+        depositThroughChestMenu(helper, repository, filler, new ItemStack(Items.DIRT, 64));
+        startLinked(helper, network)
+                .thenExecute(() -> {
+                    helper.assertTrue(pushThroughTerminal(network.lectern(), filler, pickUp(helper, filler, new ItemStack(Items.DIRT, 1))).isEmpty(), "Expected the single dirt to be inserted");
+                    ItemStack extracted;
+                    try {
+                        extracted = helper.getLevel().getCapability(CapabilityRegistry.MAP_INV_CAP, helper.absolutePos(storagePos), null).extractByItem(Items.DIRT, 1, false);
+                    } catch (IndexOutOfBoundsException e) {
+                        helper.fail("Expected one dirt extracted, got " + e);
+                        return;
+                    }
+                    helper.assertTrue(extracted.is(Items.DIRT) && extracted.getCount() == 1, "Expected one dirt extracted, got " + extracted);
+                    helper.assertTrue(repository.countItem(Items.DIRT) == 64, "Expected 64 dirt left, got " + repository.countItem(Items.DIRT));
                 })
                 .thenSucceed();
     }
