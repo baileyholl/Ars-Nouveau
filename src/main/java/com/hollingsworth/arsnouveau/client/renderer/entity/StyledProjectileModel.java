@@ -12,7 +12,7 @@ import software.bernie.geckolib.model.GeoModel;
 public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
     private static final ResourceLocation TEXTURE = ArsNouveau.prefix("textures/entity/projectile.png");
     public static final ResourceLocation NORMAL_MODEL = ArsNouveau.prefix("geo/cube.geo.json");
-    public static final ResourceLocation ANIMATIONS = ArsNouveau.prefix("animations/empty.json");
+    public static final ResourceLocation NO_ANIMATION = ArsNouveau.prefix("animations/empty.json");
 
     @Override
     public ResourceLocation getModelResource(EntityProjectileSpell animatable) {
@@ -27,19 +27,18 @@ public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
 
     @Override
     public ResourceLocation getAnimationResource(EntityProjectileSpell animatable) {
-        return ANIMATIONS;
+        ModelProperty.Model resource = getModelProp(animatable).selectedResource;
+        return resource.getAnimation() != null ? resource.getAnimation().apply(animatable) : NO_ANIMATION;
     }
 
     public ModelProperty getModelProp(EntityProjectileSpell projectileSpell) {
         ProjectileTimeline timeline = projectileSpell.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
-        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
-        return modelProperty;
+        return timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
     }
 
     public ResourceLocation getModelRes(EntityProjectileSpell projectileSpell) {
         ProjectileTimeline timeline = projectileSpell.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
-        ResourceLocation resourceLocation = modelProperty.selectedResource.resourceLocation();
-        return resourceLocation;
+        return modelProperty.selectedResource.resourceLocation();
     }
 }

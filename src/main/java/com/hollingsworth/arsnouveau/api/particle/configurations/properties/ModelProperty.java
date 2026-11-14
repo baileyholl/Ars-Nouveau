@@ -37,10 +37,9 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
     public static final Model NONE = new Model(ArsNouveau.prefix("empty"), DocAssets.STYLE_ICON_NONE, false);
     public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, (spell) -> {
         return ArsNouveau.prefix("textures/particle/" + "projectile_" + (spell.age / 5) % 4 + ".png");
-    });
+    }, (spell) -> null);
 
     public static final Model SPIKE_BODY = new Model(ArsNouveau.prefix("spike"), DocAssets.STYLE_ICON_SPIKE, true);
-
 
     public static final List<Model> resources = new CopyOnWriteArrayList<>();
 
@@ -166,11 +165,16 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
     }
 
     public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor,
-                        Function<EntityProjectileSpell, ResourceLocation> getTexture) {
+                        Function<EntityProjectileSpell, ResourceLocation> getTexture,
+                        Function<EntityProjectileSpell, ResourceLocation> getAnimation) {
+
         public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor) {
-            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"));
+            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"), null);
         }
 
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, Function<EntityProjectileSpell, ResourceLocation> getAnimation) {
+            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"), getAnimation);
+        }
 
         @Override
         public boolean equals(Object o) {
