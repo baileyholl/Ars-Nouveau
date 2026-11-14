@@ -13,14 +13,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
@@ -30,15 +26,16 @@ import java.util.HashSet;
 public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F)
+        super(BlockBehaviour.Properties.of()
                 .noLootTable()
                 .sound(SoundType.GLASS)
                 .noOcclusion()
                 .isValidSpawn(Blocks::never)
+                .strength(-1.0F, 3600000.0F)
                 .pushReaction(PushReaction.BLOCK));
     }
 
-    public static void playerAttemptedBreak(Level level, Player player){
+    public static void playerAttemptedBreak(Level level, Player player) {
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer instanceof FakePlayer) {
                 return;
