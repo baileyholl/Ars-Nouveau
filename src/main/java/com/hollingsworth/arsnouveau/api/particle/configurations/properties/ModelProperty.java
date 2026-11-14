@@ -37,7 +37,7 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
     public static final Model NONE = new Model(ArsNouveau.prefix("empty"), DocAssets.STYLE_ICON_NONE, false);
     public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, (spell) -> {
         return ArsNouveau.prefix("textures/particle/" + "projectile_" + (spell.age / 5) % 4 + ".png");
-    }, (spell) -> null);
+    }, null);
 
     public static final Model SPIKE_BODY = new Model(ArsNouveau.prefix("spike"), DocAssets.STYLE_ICON_SPIKE, true);
 
