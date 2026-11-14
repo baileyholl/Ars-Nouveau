@@ -26,7 +26,7 @@ import java.util.HashSet;
 public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F)
+        super(BlockBehaviour.Properties.of()
                 .noLootTable()
                 .sound(SoundType.GLASS)
                 .noOcclusion()
@@ -35,7 +35,7 @@ public class DimBoundary extends ModBlock implements IWandable {
                 .pushReaction(PushReaction.BLOCK));
     }
 
-    public static void playerAttemptedBreak(Level level, Player player){
+    public static void playerAttemptedBreak(Level level, Player player) {
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer instanceof FakePlayer) {
                 return;
