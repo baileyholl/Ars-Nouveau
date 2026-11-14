@@ -72,9 +72,10 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             for (var entry : allTimelines) {
                 if (entry.getValue().getSpellPart() == spellPart) {
                     timeline = entry.getValue();
+                    break;
                 }
             }
-            if (timeline != null) {
+            if (timeline != null && !timelines.contains(timeline)) {
                 timelines.add(timeline);
             }
         }
@@ -198,7 +199,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         for (IParticleTimelineType<?> timeline : selectedTimeline) {
             timelineMap.remove(timeline);
         }
-        initLeftSideButtons();
+        initSlotChange();
     }
 
     public void onDependenciesChanged(PropertyButton propButton) {
