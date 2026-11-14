@@ -67,6 +67,9 @@ public class EffectToss extends AbstractEffect {
                 }
                 return shooter instanceof Player && !ItemStack.matches(shooter.getMainHandItem(), i);
             }, size, spellStats.isRandomized());
+            if (casterStack.stack.isEmpty()) {
+                break;
+            }
             consumer.accept(casterStack);
             amount -= size;
         }
