@@ -199,6 +199,10 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
         for (IParticleTimelineType<?> timeline : selectedTimeline) {
             timelineMap.remove(timeline);
         }
+        previewWidget.dismiss();
+        for (PropWidgetList propWidgetList : propLists) {
+            propWidgetList.resetSelected();
+        }
         initLeftSideButtons();
         clearRightPage();
     }
