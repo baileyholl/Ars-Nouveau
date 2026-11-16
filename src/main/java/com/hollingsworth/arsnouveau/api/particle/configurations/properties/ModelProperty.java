@@ -15,10 +15,14 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class ModelProperty extends BaseProperty<ModelProperty> {
@@ -166,14 +170,14 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
 
     public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor,
                         Function<EntityProjectileSpell, ResourceLocation> getTexture,
-                        Function<EntityProjectileSpell, ResourceLocation> getAnimation) {
+                        AnimationConfig animationConfig) {
 
         public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor) {
             this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"), null);
         }
 
-        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, Function<EntityProjectileSpell, ResourceLocation> getAnimation) {
-            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"), getAnimation);
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, AnimationConfig animationConfig) {
+            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"), animationConfig);
         }
 
         @Override
@@ -188,4 +192,25 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
             return Objects.hashCode(resourceLocation);
         }
     }
+
+
+    public record AnimationConfig(ResourceLocation resourceLocation,
+                                  BiConsumer<AnimatableManager.ControllerRegistrar, EntityProjectileSpell> animationRegistrar) {
+        //Default loop
+        public AnimationConfig(ResourceLocation resourceLocation) {
+            this(resourceLocation, (controllers, spell) -> controllers.add(new AnimationController<>(spell, "loopController", 0, (event) -> event.setAndContinue(RawAnimation.begin().thenPlay("run")))));
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            AnimationConfig config = (AnimationConfig) o;
+            return Objects.equals(resourceLocation, config.resourceLocation);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(resourceLocation);
+        }
+    }
+
 }

@@ -28,7 +28,7 @@ public class StyledProjectileModel extends GeoModel<EntityProjectileSpell> {
     @Override
     public ResourceLocation getAnimationResource(EntityProjectileSpell animatable) {
         ModelProperty.Model resource = getModelProp(animatable).selectedResource;
-        return resource.getAnimation() != null ? resource.getAnimation().apply(animatable) : NO_ANIMATION;
+        return resource.animationConfig() != null ? resource.animationConfig().resourceLocation() : NO_ANIMATION;
     }
 
     public ModelProperty getModelProp(EntityProjectileSpell projectileSpell) {

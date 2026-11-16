@@ -51,8 +51,6 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -553,8 +551,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         ProjectileTimeline timeline = this.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
-        if (modelProperty.selectedResource.getAnimation() != null)
-            controllers.add(new AnimationController<>(this, "loopController", 0, (event) -> event.setAndContinue(RawAnimation.begin().thenPlay("run"))));
+        ModelProperty.AnimationConfig animationConfig = modelProperty.selectedResource.animationConfig();
+        if (animationConfig != null)
+            animationConfig.animationRegistrar().accept(controllers, this);
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
