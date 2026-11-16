@@ -1,16 +1,32 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.IDamageEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchools;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.api.util.DamageUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.util.GenericRecipeCache;
+import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DamageTypesRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -18,12 +34,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +67,7 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
             int maxItemCrush = (int) (4 + (4 * aoeBuff) + (4 * pierceBuff));
             List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(BlockPos.containing(rayTraceResult.getLocation())).inflate(aoeBuff + 1.0));
             if (!itemEntities.isEmpty()) {
-                crushItems(world, itemEntities, maxItemCrush);
+                crushItems(world, itemEntities, maxItemCrush, resolver, spellStats);
             }
         } else {
             super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
@@ -107,35 +129,14 @@ public class EffectCrush extends AbstractEffect implements IDamageEffect {
         }
     }
 
-
+    @Deprecated(forRemoval = true)
     public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush) {
-        List<RecipeHolder<CrushRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.CRUSH_TYPE.get());
-        CrushRecipe lastHit = null; // Cache this for AOE hits
-        int itemsCrushed = 0;
-        for (ItemEntity IE : itemEntities) {
-            if (itemsCrushed >= maxItemCrush) {
-                break;
-            }
+        crushItems(world, itemEntities, maxItemCrush, null, null);
+    }
 
-            ItemStack stack = IE.getItem();
-            Item item = stack.getItem();
-
-            if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
-                var holder = recipes.stream().filter(recipe -> recipe.value().matches(item.getDefaultInstance(), world)).findFirst().orElse(null);
-                lastHit = holder == null ? null : holder.value();
-            }
-
-            if (lastHit == null) continue;
-
-            while (!stack.isEmpty() && itemsCrushed < maxItemCrush) {
-                List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
-                stack.shrink(1);
-                itemsCrushed++;
-                for (ItemStack result : outputs) {
-                    world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), result.copy()));
-                }
-            }
-
+    public static void crushItems(Level world, List<ItemEntity> itemEntities, int maxItemCrush, @Nullable SpellResolver resolver, @Nullable SpellStats spellStats) {
+        if (world instanceof ServerLevel level) {
+            ItemUtil.processItems(level, SingleRecipeInput::new, itemEntities, maxItemCrush, GenericRecipeCache.CRUSH_CACHE.get(), resolver, spellStats);
         }
     }
 
