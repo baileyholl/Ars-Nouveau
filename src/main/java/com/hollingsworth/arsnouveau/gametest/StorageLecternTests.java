@@ -572,7 +572,7 @@ public class StorageLecternTests {
         startLinked(helper, network)
                 .thenExecute(() -> {
                     repository.setItem(0, sword.copy());
-                    repository.slotCache.initEmpty(0);
+                    repository.slotCache.replaceSlotWithItem(Items.AIR, 0);
                 })
                 .thenWaitUntil(() -> helper.assertTrue(listedCount(lectern, sword) == 1, "Expected the lectern to list the sword"))
                 .thenExecute(() -> {

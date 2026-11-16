@@ -141,7 +141,7 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             if (isAnyTab || (level.getBlockEntity(handler.pos) instanceof Nameable nameable
                     && nameable.hasCustomName()
                     && nameable.getCustomName().getString().trim().equals(tab.trim()))) {
-                itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos)).withSlotCache(handler.slotCache));
+                itemHandlers.add(new FilterableItemHandler(handler.handler.getCapability(), FilterSet.forPosition(level, handler.pos), handler.slotCache));
             }
         }
         return new InventoryManager(itemHandlers);
@@ -655,9 +655,21 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     public void addHandlerPos(BlockPos pos) {
         BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !this.isRemoved(), () -> {
             this.invalidateNextTick = true;
+            for (var handlerPos : this.handlerPosList) {
+                if (handlerPos.handler.level() == level && handlerPos.pos == pos) {
+                    handlerPos.slotCache = new ImperfectSlotCache();
+                    break;
+                }
+            }
         });
-        if (capabilityCache.getCapability() != null) {
-            handlerPosList.add(new HandlerPos(pos.immutable(), capabilityCache));
+        var capability = capabilityCache.getCapability();
+        if (capability != null) {
+            ISlotCache existingCache = null;
+            if (capability instanceof IHasSlotCache hasSlotCache) {
+                existingCache = hasSlotCache.getSlotCache();
+            }
+            handlerPosList.add(new HandlerPos(pos.immutable(), capabilityCache, existingCache));
+
             invalidateCapabilities();
         }
     }
@@ -899,16 +911,25 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
         return AnimatableInstanceCache;
     }
 
-    public static class HandlerPos {
+    public static class HandlerPos implements IHasSlotCache {
 
         public BlockPos pos;
         public BlockCapabilityCache<? extends IItemHandler, Direction> handler;
-        public SlotCache slotCache;
+        public ISlotCache slotCache;
 
-        public HandlerPos(BlockPos pos, BlockCapabilityCache<? extends IItemHandler, Direction> handler) {
+        public HandlerPos(BlockPos pos, BlockCapabilityCache<? extends IItemHandler, Direction> handler, @Nullable ISlotCache slotCache) {
             this.pos = pos;
             this.handler = handler;
-            this.slotCache = new SlotCache();
+            this.slotCache = slotCache != null ? slotCache : new ImperfectSlotCache();
+        }
+
+        public HandlerPos(BlockPos pos, BlockCapabilityCache<? extends IItemHandler, Direction> handler) {
+            this(pos, handler, new ImperfectSlotCache());
+        }
+
+        @Override
+        public @Nullable ISlotCache getSlotCache() {
+            return this.slotCache;
         }
     }
 }
