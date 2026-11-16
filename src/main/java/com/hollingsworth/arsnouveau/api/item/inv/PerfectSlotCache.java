@@ -33,7 +33,7 @@ public class PerfectSlotCache implements ISlotCache {
 
     @Override
     public IntList getOrCreateSlots(Item item) {
-        return IntLists.unmodifiable(cache.computeIfAbsent(item, ignored -> new IntArrayList()));
+        return processInternalList(cache.computeIfAbsent(item, ignored -> new IntArrayList()));
     }
 
     @Override
@@ -41,6 +41,28 @@ public class PerfectSlotCache implements ISlotCache {
         var list = cache.get(item);
         if (list == null) {
             return null;
+        }
+
+        return processInternalList(list);
+    }
+
+    private IntList processInternalList(IntArrayList list) {
+        if (list.isEmpty()) {
+            return IntLists.emptyList();
+        }
+
+        if (list.getInt(0) < 0) {
+            var copy = new IntArrayList(list);
+            for (int i = 0, size = copy.size(); i < size; i++) {
+                var val = copy.getInt(i);
+                if (val >= 0) {
+                    break;
+                }
+                copy.set(i, ~val);
+            }
+
+            copy.unstableSort(null);
+            return IntLists.unmodifiable(copy);
         }
 
         return IntLists.unmodifiable(list);

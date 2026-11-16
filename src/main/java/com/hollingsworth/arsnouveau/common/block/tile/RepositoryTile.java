@@ -291,9 +291,6 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         if (slots == null)
             return ItemStack.EMPTY;
         for (int slot : slots) {
-            if (slot < 0) {
-                slot = ~slot;
-            }
             ItemStack stack = getItem(slot);
             if (!filter.test(stack))
                 continue;
