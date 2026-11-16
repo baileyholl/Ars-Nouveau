@@ -45,7 +45,7 @@ public class RecipeCacheTests {
         BlockPos target = helper.absolutePos(floor);
         BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(target), Direction.UP, target, false);
         int maxCapacity = 64;
-        int ticks = 24;
+        int ticks = 64;
         int limit = Math.max(maxCapacity, capacity(GenericRecipeCache.SMELTING_CACHE));
 
         for (int tick = 0; tick < ticks; tick++) {

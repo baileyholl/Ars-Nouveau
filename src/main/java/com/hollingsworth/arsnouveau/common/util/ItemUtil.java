@@ -89,7 +89,7 @@ public class ItemUtil {
                     }
                 }
             } else {
-                var singleOutput = recipe.value().assemble(toInput.apply(stack), level.registryAccess());
+                var singleOutput = recipe.value().assemble(toInput.apply(stack.copy()), level.registryAccess());
                 output.add(singleOutput, singleOutput.getCount() * rolls);
             }
 

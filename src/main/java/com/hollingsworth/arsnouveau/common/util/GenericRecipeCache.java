@@ -104,9 +104,9 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     private void add(RecipeHolder<? extends Recipe<I>> holder) {
         if (this.cache.size() == size) {
             this.cache.removeFirst();
+            this.addedThisTick = true;
         }
         this.cache.add(holder);
-        this.addedThisTick = true;
     }
 
     public void clear() {
