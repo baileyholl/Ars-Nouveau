@@ -48,7 +48,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 //            poseStack.translate(0, -0.25, 0);
 //            poseStack.scale(0.5f, 0.5f, 0.5f);
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot() - 90f)));
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
 //        }
