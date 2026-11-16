@@ -30,7 +30,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         this.tag(EntityTags.REWIND_BLACKLIST).addTags(Tags.EntityTypes.BOSSES);
         this.tag(EntityTags.DISINTEGRATION_BLACKLIST);
         this.tag(EntityTags.DISINTEGRATION_WHITELIST);
-        this.tag(EntityTags.DRYGMY_BLACKLIST).add(EntityType.IRON_GOLEM);
+        this.tag(EntityTags.DRYGMY_BLACKLIST);
         this.tag(EntityTags.MAGIC_FIND)
                 .add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.ENTITY_DRYGMY.get(),
                         ModEntities.WHIRLISPRIG_TYPE.get(),
