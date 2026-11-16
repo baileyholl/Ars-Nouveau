@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,7 +56,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider, IAnimationListener {
+public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvider, ITickable, Nameable, GeoBlockEntity, IFiltersetProvider, IAnimationListener, Clearable {
 
     public List<ConnectedRepository> connectedRepositories = new ArrayList<>();
     public ItemStack scrollStack = ItemStack.EMPTY;
@@ -76,6 +77,11 @@ public class RepositoryCatalogTile extends ModdedTile implements ITooltipProvide
         this.scrollStack = stack.copy();
         updateBlock();
         return oldStack;
+    }
+
+    @Override
+    public void clearContent() {
+        setNewScroll(ItemStack.EMPTY);
     }
 
     public FilterSet proxyFilters = new ProxyFilterSet(this);
