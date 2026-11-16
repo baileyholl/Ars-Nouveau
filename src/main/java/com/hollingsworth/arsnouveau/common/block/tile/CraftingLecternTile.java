@@ -654,6 +654,12 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
     public void addHandlerPos(BlockPos pos) {
         BlockCapabilityCache<IItemHandler, Direction> capabilityCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) level, pos, null, () -> !this.isRemoved(), () -> {
             this.invalidateNextTick = true;
+            for (var handlerPos : this.handlerPosList) {
+                if (handlerPos.handler.level() == level && handlerPos.pos == pos) {
+                    handlerPos.slotCache = new ImperfectSlotCache();
+                    break;
+                }
+            }
         });
         var capability = capabilityCache.getCapability();
         if (capability != null) {
