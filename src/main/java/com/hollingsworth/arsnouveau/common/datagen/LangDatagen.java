@@ -528,6 +528,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.familiar.unlocked", "Familiar unlocked.");
         add("ars_nouveau.familiar.script", "Used for obtaining familiars. Obtained from the Ritual of Binding.");
         add("ars_nouveau.schools", "Schools: ");
+        add("ars_nouveau.tooltip.can_be_styled", "Can be Styled");
         add("entity.ars_nouveau.familiar_bookwyrm", "Bookwyrm Familiar");
         add("entity.ars_nouveau.familiar_starbuncle", "Starbuncle Familiar");
         add("entity.ars_nouveau.familiar_whirlisprig", "Whirlisprig Familiar");

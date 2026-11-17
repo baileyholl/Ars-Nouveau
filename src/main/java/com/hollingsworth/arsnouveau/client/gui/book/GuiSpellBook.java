@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
@@ -803,11 +805,19 @@ public class GuiSpellBook extends SpellSlottedScreen {
                 continue;
             }
 
-            if (renderable instanceof GlyphButton widget) {
-                return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
-            } else if (renderable instanceof CraftingButton widget) {
-                AbstractSpellPart part = widget.getAbstractSpellPart();
-                return part == null || part.spellSchools.isEmpty() ? null : new SchoolTooltip(part);
+            if (renderable instanceof GlyphButton || renderable instanceof CraftingButton) {
+                AbstractSpellPart part = renderable instanceof GlyphButton glyphButton ? glyphButton.abstractSpellPart : ((CraftingButton) renderable).getAbstractSpellPart();
+                if (part == null) {
+                    return null;
+                }
+                boolean hasStyle = false;
+                for (IParticleTimelineType<?> type : ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY) {
+                    if (type.getSpellPart() == part) {
+                        hasStyle = true;
+                        break;
+                    }
+                }
+                return part.spellSchools.isEmpty() && !hasStyle ? null : new SchoolTooltip(part, false, hasStyle);
             } else if (renderable instanceof GuiSpellSlot spellSlot) {
                 if (spellSlot.isSelected) {
                     if (spell.isEmpty()) {
