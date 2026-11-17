@@ -42,7 +42,7 @@ public class RandomStorageVisitGoal extends Goal {
         }
         ticksRunning++;
         if (!arrived) {
-            if (BlockUtil.distanceFrom(bookwyrm.position, new Vec3(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5)) < 1.5) {
+            if (BlockUtil.distanceFrom(bookwyrm.level(), bookwyrm.position, new Vec3(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5)) < 1.5) {
                 arrived = true;
             }
             bookwyrm.getNavigation().moveTo(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, 1.2d);

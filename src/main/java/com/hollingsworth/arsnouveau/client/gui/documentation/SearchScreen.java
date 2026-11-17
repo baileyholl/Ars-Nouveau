@@ -21,9 +21,9 @@ public class SearchScreen extends BaseDocScreen {
     @Override
     public void init() {
         super.init();
-        onSearchChanged(previousString);
         searchBar.setValue(previousString);
-        searchBar.mouseClicked(0, 0, 1);
+        refreshSearchResults();
+        searchBar.setFocused(true);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SearchScreen extends BaseDocScreen {
         var slicedDocs = docs.subList(from, Math.min(to, docs.size()));
         for (int i = 0; i < Math.min(slicedDocs.size(), to); i++) {
             var entry = slicedDocs.get(i);
-            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + (16 * i), entry.entry(), (b) -> {
+            var button = new DocEntryButton(screenLeft + RIGHT_PAGE_OFFSET, screenTop + PAGE_TOP_OFFSET + (16 * i), entry.icon(), entry.displayTitle(), (b) -> {
                 previousScreen.transition(new PageHolderScreen(entry.entry()));
             });
             addRenderableWidget(button);
@@ -72,9 +72,15 @@ public class SearchScreen extends BaseDocScreen {
             previousScreen.previousString = "";
             goBack();
         } else {
-            resultDocs = Search.search(previousString);
-            onArrowIndexChange();
+            arrowIndex = 0;
+            refreshSearchResults();
         }
+    }
+
+    private void refreshSearchResults() {
+        resultDocs = Search.search(previousString);
+        arrowIndex = Math.min(arrowIndex, (resultDocs.size() - 1) / 9);
+        onArrowIndexChange();
     }
 
     @Override

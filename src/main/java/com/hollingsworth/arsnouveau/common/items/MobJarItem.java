@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.client.renderer.item.MobJarItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
@@ -62,15 +63,15 @@ public class MobJarItem extends BlockItem implements GeoItem {
         Entity entity = fromItem(stack, ArsNouveau.proxy.getClientWorld());
         if (entity == null)
             return;
-        pTooltip.add(entity.getDisplayName());
+        pTooltip.addAll(DocClientUtils.splitTooltip(entity.getDisplayName(), pLevel));
         if (entity.hasCustomName()) {
             MutableComponent name = entity.getType().getDescription().copy();
             name.withStyle(ChatFormatting.GRAY);
-            pTooltip.add(name);
+            pTooltip.addAll(DocClientUtils.splitTooltip(name, pLevel));
         }
         if (entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
             Component blacklisted = Component.translatable("ars_nouveau.drygmy.blacklist").withStyle(ChatFormatting.DARK_RED);
-            pTooltip.add(blacklisted);
+            pTooltip.addAll(DocClientUtils.splitTooltip(blacklisted, pLevel));
         }
     }
 

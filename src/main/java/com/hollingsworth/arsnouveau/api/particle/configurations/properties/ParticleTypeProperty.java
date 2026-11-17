@@ -94,7 +94,8 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
     }
 
     public SoundProperty getSound() {
-        return subProperties.getOrCreate(ParticlePropertyRegistry.SOUND_PROPERTY.get(), () -> new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER)));
+        SoundProperty sound = subProperties.get(ParticlePropertyRegistry.SOUND_PROPERTY.get());
+        return sound != null ? sound : new SoundProperty(new ConfiguredSpellSound(SoundRegistry.POINTED_DRIPSTONE_WATER));
     }
 
     @Override

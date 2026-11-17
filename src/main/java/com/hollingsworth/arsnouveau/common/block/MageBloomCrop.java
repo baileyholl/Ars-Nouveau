@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -41,6 +42,6 @@ public class MageBloomCrop extends CropBlock {
     @Override
     public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTootipComponents, TooltipFlag pTooltipFlag) {
         super.appendHoverText(pStack, pContext, pTootipComponents, pTooltipFlag);
-        pTootipComponents.add(Component.translatable("tooltip.magebloom"));
+        pTootipComponents.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.magebloom"), pContext));
     }
 }

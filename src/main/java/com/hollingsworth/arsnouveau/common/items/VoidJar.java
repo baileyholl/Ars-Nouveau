@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.items.data.VoidJarData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -38,6 +40,9 @@ public class VoidJar extends ModItem implements IScribeable {
     }
 
     public static boolean tryVoiding(Player player, ItemStack pickingUp) {
+        if (player instanceof ANFakePlayer) {
+            return false;
+        }
         NonNullList<ItemStack> list = player.inventory.items;
         for (ItemStack jar : list) {
             if (jar.getItem() instanceof VoidJar voidJar) {
@@ -101,6 +106,6 @@ public class VoidJar extends ModItem implements IScribeable {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.VOID_JAR, context, tooltip2::add, flagIn);
+        stack.addToTooltip(DataComponentRegistry.VOID_JAR, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
     }
 }

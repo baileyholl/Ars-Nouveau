@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.DocItemTooltipHandler;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
@@ -17,8 +16,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DocClientUtils {
 
@@ -82,12 +84,16 @@ public class DocClientUtils {
         int radius = 41;
         double xPos = x + nextXAngle(angle, radius);
         double yPos = y + nextYAngle(angle, radius);
+        ItemStack stack = displayedStack(ingredient);
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
         PoseStack ms = graphics.pose();
-        ms.pushPose(); // This translation makes it not stuttery. It does not affect the tooltip as that is drawn separately later.
+        ms.pushPose();
         ms.translate(xPos - (int) xPos, yPos - (int) yPos, 0);
-        ItemStack hovered = DocClientUtils.renderIngredient(graphics, (int) xPos, (int) yPos, mouseX, mouseY, ingredient);
+        drawItemStack(graphics, (int) xPos, (int) yPos, stack);
         ms.popPose();
-        return hovered;
+        return handleHover((int) xPos, (int) yPos, mouseX, mouseY, stack);
     }
 
     public static double nextXAngle(double angle, int radius) {
@@ -102,22 +108,29 @@ public class DocClientUtils {
      * @return returns the hovered stack
      */
     public static ItemStack renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
+        return DocClientUtils.renderItemStack(graphics, x, y, mouseX, mouseY, displayedStack(ingr));
+    }
+
+    private static ItemStack displayedStack(Ingredient ingr) {
         ItemStack[] stacks = ingr.getItems();
-        if (stacks.length > 0) {
-            return DocClientUtils.renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ClientInfo.ticksInGame / 20) % stacks.length]);
-        }
-        return ItemStack.EMPTY;
+        return stacks.length > 0 ? stacks[(ClientInfo.ticksInGame / 20) % stacks.length] : ItemStack.EMPTY;
     }
 
     public static ItemStack renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        Font font = Minecraft.getInstance().font;
+        drawItemStack(graphics, x, y, stack);
+        return handleHover(x, y, mouseX, mouseY, stack);
+    }
+
+    private static void drawItemStack(GuiGraphics graphics, int x, int y, ItemStack stack) {
         graphics.renderItem(stack, x, y);
-        graphics.renderItemDecorations(font, stack, x, y);
+        graphics.renderItemDecorations(Minecraft.getInstance().font, stack, x, y);
+    }
+
+    private static ItemStack handleHover(int x, int y, int mouseX, int mouseY, ItemStack stack) {
         if (GuiUtils.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
-            DocItemTooltipHandler.onTooltip(graphics, stack, mouseX, mouseY);
             return stack;
         }
         return ItemStack.EMPTY;
@@ -158,6 +171,34 @@ public class DocClientUtils {
 
     public static List<NuggetMultilLineLabel> splitToFitFullPage(Component text) {
         return DocClientUtils.splitToFitPageWithOffset(text, ROWS_FOR_NORMAL_PAGE, ROWS_FOR_NORMAL_PAGE);
+    }
+
+    public static List<Component> splitTooltip(Component text, @Nullable Item.TooltipContext context) {
+        if (context == null) {
+            return List.of(text);
+        }
+        var level = context.level();
+        if (level == null || !level.isClientSide) {
+            return List.of(text);
+        }
+        Font font = Minecraft.getInstance().font;
+        if (font.width(text) <= 200) {
+            return List.of(text);
+        }
+        List<FormattedText> lines = font.getSplitter().splitLines(text, 200, Style.EMPTY);
+        if (lines.isEmpty()) {
+            return List.of(text);
+        }
+        List<Component> components = new ArrayList<>();
+        for (FormattedText line : lines) {
+            MutableComponent component = Component.empty().withStyle(text.getStyle());
+            line.visit((style, contents) -> {
+                component.append(Component.literal(contents).withStyle(style));
+                return Optional.empty();
+            }, Style.EMPTY);
+            components.add(component);
+        }
+        return components;
     }
 
     public static List<NuggetMultilLineLabel> splitToFitTitlePage(Component text) {

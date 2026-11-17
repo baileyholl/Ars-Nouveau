@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
@@ -98,7 +99,9 @@ public class EnchantersMirror extends ModItem implements ICasterTool, GeoItem, I
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get())
             getInformation(stack, context, tooltip2, flagIn);
-        new SpellStats.Builder().addDurationModifier(1.0).build().addTooltip(tooltip2);
+        List<Component> statTooltips = new ArrayList<>();
+        new SpellStats.Builder().addDurationModifier(1.0).build().addTooltip(statTooltips);
+        statTooltips.forEach(component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)));
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }
 

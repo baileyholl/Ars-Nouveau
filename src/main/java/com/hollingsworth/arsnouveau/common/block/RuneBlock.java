@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -128,7 +129,7 @@ public class RuneBlock extends TickableModBlock {
                         // If the effect is not a filter, proceed with rune activation
                         if (part instanceof IFilter filter) {
                             // If one or more filters are detected, all must match to let the rune activate
-                            if (!filter.shouldResolveOnEntity(entityIn, worldIn)) {
+                            if (!filter.shouldResolveOnEntity(new EntityHitResult(entityIn), worldIn)) {
                                 return;
                             }
                         } else break;

@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PlanariumTile;
 import com.hollingsworth.arsnouveau.common.entity.BubbleEntity;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.event.BreezeEvent;
+import com.hollingsworth.arsnouveau.common.items.AbjurationEssence;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
@@ -63,6 +64,7 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean immersivePortalsLoaded = false;
+    @Deprecated(forRemoval = true)
     public static boolean patchouliLoaded = false;
 
     public static List<String> postLoadWarnings = new ArrayList<>();
@@ -80,7 +82,6 @@ public class ArsNouveau {
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
-        patchouliLoaded = ModList.get().isLoaded("patchouli");
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
@@ -102,7 +103,7 @@ public class ArsNouveau {
         NeoForge.EVENT_BUS.addListener(BubbleEntity::entityHurt);
         NeoForge.EVENT_BUS.addListener(BubbleEntity::preEntityRemoval);
         NeoForge.EVENT_BUS.addListener(BreezeEvent::onSpellResolve);
-
+        NeoForge.EVENT_BUS.addListener(AbjurationEssence::onScribesTableInteract);
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
             ClientInfo.endClientTick();
         });
@@ -134,6 +135,7 @@ public class ArsNouveau {
         }
 
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
     }
 
@@ -197,6 +199,7 @@ public class ArsNouveau {
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
         EventQueue.getServerInstance().clear();
+        PlanariumTile.dimManager.entries.clear();
     }
 
     public static ResourceLocation prefix(String str) {

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.perk.ITickablePerk;
 import com.hollingsworth.arsnouveau.api.perk.PerkAttributes;
 import com.hollingsworth.arsnouveau.api.perk.PerkInstance;
@@ -38,6 +39,7 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -128,8 +130,10 @@ public class AnimatedMagicArmor extends ArmorItem implements IDyeable, GeoItem {
         super.appendHoverText(stack, world, tooltip, flag);
         var data = stack.get(DataComponentRegistry.ARMOR_PERKS);
         if (data != null) {
-            tooltip.add(Component.translatable("ars_nouveau.tier", data.getTier() + 1).withStyle(ChatFormatting.GOLD));
-            data.appendPerkTooltip(tooltip, stack);
+            tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.tier", data.getTier() + 1).withStyle(ChatFormatting.GOLD), world));
+            List<Component> perkTooltips = new ArrayList<>();
+            data.appendPerkTooltip(perkTooltips, stack);
+            perkTooltips.forEach(component -> tooltip.addAll(DocClientUtils.splitTooltip(component, world)));
         }
     }
 

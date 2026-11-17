@@ -44,7 +44,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
             return;
         }
         timePerforming--;
-        if (BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.5) {
+        if (BlockUtil.distanceFrom(entity.level(), entity.blockPosition(), pos) > 1.5) {
             entity.getNavigation().moveTo(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 1.2);
         } else {
             ServerLevel world = (ServerLevel) entity.level;

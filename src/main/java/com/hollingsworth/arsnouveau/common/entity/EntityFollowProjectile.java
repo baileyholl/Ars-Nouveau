@@ -40,7 +40,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
         this.entityData.set(GREEN, 25);
         this.entityData.set(BLUE, 180);
 
-        double distance = BlockUtil.distanceFrom(BlockPos.containing(from), BlockPos.containing(to));
+        double distance = BlockUtil.distanceFrom(worldIn, BlockPos.containing(from), BlockPos.containing(to));
         setDespawnDistance((int) (distance + 10));
     }
 
@@ -107,7 +107,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
         }
         Vec3 vec3d2 = this.getDeltaMovement();
         BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
-        if (BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)) {
+        if (BlockUtil.distanceFrom(level, this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(level, this.blockPosition(), dest) > this.entityData.get(DESPAWN)) {
             if (level.isClientSide && entityData.get(SPAWN_TOUCH)) {
                 ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED), this.entityData.get(GREEN), this.entityData.get(BLUE)));
             }

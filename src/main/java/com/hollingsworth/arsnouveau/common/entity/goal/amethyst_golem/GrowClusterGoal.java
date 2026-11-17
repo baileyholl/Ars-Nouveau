@@ -32,7 +32,7 @@ public class GrowClusterGoal extends Goal {
         usingTicks--;
         if (pathPos != null) {
             golem.getNavigation().tryMoveToBlockPos(pathPos, 1.3f);
-            if (BlockUtil.distanceFrom(golem.blockPosition(), pathPos) <= 2) {
+            if (BlockUtil.distanceFrom(golem.level(), golem.blockPosition(), pathPos) <= 2) {
                 golem.setImbueing(true);
                 golem.setImbuePos(pathPos);
             }

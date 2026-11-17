@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.CreativeSourceJarTile;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,6 @@ public class CreativeSourceJar extends SourceJar {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", 100));
+        tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.source_jar.fullness", 100), context));
     }
 }

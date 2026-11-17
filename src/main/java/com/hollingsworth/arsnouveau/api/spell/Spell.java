@@ -103,10 +103,7 @@ public class Spell {
     public static Spell fromJson(String jsonString) {
 
         try {
-            System.out.println("About to read full spell from JSON: " + jsonString);
-            Spell spell = CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
-            System.out.println("Full decoded spell: " + spell);
-            return spell;
+            return CODEC.codec().parse(JsonOps.INSTANCE, JsonParser.parseString(jsonString)).getOrThrow();
         } catch (Exception e) {
             System.out.println("Failed to read spell from JSON: " + e.getMessage());
         }

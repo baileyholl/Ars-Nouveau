@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
@@ -58,6 +59,6 @@ public class FamiliarScript extends ModItem {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        tooltip2.add(Component.translatable("ars_nouveau.familiar.script"));
+        tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.familiar.script"), context));
     }
 }

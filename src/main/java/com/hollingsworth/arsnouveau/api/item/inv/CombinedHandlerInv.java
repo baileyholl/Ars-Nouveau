@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.item.inv;
 
+import it.unimi.dsi.fastutil.ints.IntArrays;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
@@ -26,10 +27,16 @@ public class CombinedHandlerInv implements IItemHandler {
         if (slot < 0)
             return -1;
 
-        for (int i = 0; i < baseIndex.length; i++) {
-            if (slot - baseIndex[i] < 0) {
-                return i;
+        if (baseIndex.length <= 8 || slot < baseIndex[8]) {
+            for (int i = 0; i < baseIndex.length; i++) {
+                if (slot - baseIndex[i] < 0) {
+                    return i;
+                }
             }
+        } else {
+            var index = IntArrays.binarySearch(this.baseIndex, slot);
+            index = index < 0 ? -(index + 1) : index + 1;
+            return index;
         }
         return -1;
     }

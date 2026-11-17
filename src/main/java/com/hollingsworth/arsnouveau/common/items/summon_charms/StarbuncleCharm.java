@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
 import com.hollingsworth.arsnouveau.api.item.AbstractSummonCharm;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
@@ -55,7 +56,7 @@ public class StarbuncleCharm extends AbstractSummonCharm implements AliasProvide
         super.appendHoverText(stack, context, tooltip2, flagIn);
         StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
         if (data != null) {
-            data.addToTooltip(context, tooltip2::add, flagIn);
+            data.addToTooltip(context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
         }
     }
 }

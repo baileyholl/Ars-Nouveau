@@ -11,6 +11,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -37,15 +38,16 @@ public class WaveMotion extends ParticleMotion {
         double deltaX = x - prevX;
         double deltaY = y - prevY;
         double deltaZ = z - prevZ;
+        Vector3f up = toEmitterSpace(0, 0, 0, 0, 1, 0);
 
         float randomScale = 0.01f;
         for (int i = 0; i < totalParticles; i++) {
 
             double t = (double) i / Math.max(1, totalParticles - 1);
-            double waveY = Math.sin(age + t) * amplitude;
-            double px = prevX + deltaX * t;
-            double py = prevY + deltaY * t + waveY;
-            double pz = prevZ + deltaZ * t;
+            double wave = Math.sin(age + t) * amplitude;
+            double px = prevX + deltaX * t + up.x * wave;
+            double py = prevY + deltaY * t + up.y * wave;
+            double pz = prevZ + deltaZ * t + up.z * wave;
             level.addParticle(particleOptions, px, py, pz,
                     ParticleUtil.inRange(-randomScale, randomScale),
                     ParticleUtil.inRange(-randomScale, randomScale),
@@ -60,12 +62,12 @@ public class WaveMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE)
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.3f, SpawnType.SPHERE))
                 .maxDensity(200)
                 .minDensity(20)
                 .minRadius(0.1f)
                 .densityStepSize(5)
                 .supportsShapes(false)
-                .supportsRadius(true)));
+                .supportsRadius(true));
     }
 }

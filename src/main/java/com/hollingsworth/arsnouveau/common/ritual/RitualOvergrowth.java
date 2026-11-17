@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -38,6 +39,8 @@ public class RitualOvergrowth extends AbstractRitual {
                 List<AgeableMob> animals = getWorld().getEntitiesOfClass(AgeableMob.class, new AABB(getPos()).inflate(5));
                 boolean didWorkOnce = false;
                 for (AgeableMob a : animals) {
+                    if (a.getType().is(EntityTags.OVERGROWTH_BLACKLIST))
+                        continue;
                     if (a.isBaby()) {
                         a.ageUp(500, true);
                         didWorkOnce = true;

@@ -63,12 +63,12 @@ public class BrazierMotion extends ParticleMotion {
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
-                propertyMap.createIfMissing(new ParticleTypeProperty()),
-                propMap.createIfMissing(new ParticleDensityProperty(100, 0.25, SpawnType.SPHERE)
+                propertyMap.createIfMissing(new ParticleTypeProperty()), // intentional, this is the second particle type for the brazier
+                propMap.createIfMissing(new ParticleDensityProperty(100, 0.25, SpawnType.SPHERE))
                         .supportsShapes(false)
                         .minDensity(1)
                         .maxDensity(200)
-                        .densityStepSize(1)),
+                        .densityStepSize(1),
                 propMap.createIfMissing(new SpeedProperty().yRange(0, 0.05)));
     }
 }

@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.event.ScribesTableInteractEvent;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -23,18 +25,18 @@ public class AbjurationEssence extends AbstractEssence {
         super("abjuration");
     }
 
-
-    @Override
-    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
-        Level level = context.getLevel();
-        if (!level.isClientSide && level.getBlockEntity(context.getClickedPos()) instanceof ScribesTile scribesTile) {
-            if (scribesTile.getStack().has(DataComponentRegistry.PRESTIDIGITATION)) {
-                scribesTile.getStack().remove(DataComponentRegistry.PRESTIDIGITATION.get());
-                scribesTile.setChanged();
-                context.getPlayer().sendSystemMessage(Component.translatable("ars_nouveau.prestidigitation_clear"));
-            }
+    public static void onScribesTableInteract(ScribesTableInteractEvent event) {
+        if (!(event.stack.getItem() instanceof AbjurationEssence))
+            return;
+        ItemStack tableStack = event.tile.getStack();
+        if (!tableStack.has(DataComponentRegistry.PRESTIDIGITATION))
+            return;
+        if (!event.level.isClientSide) {
+            tableStack.remove(DataComponentRegistry.PRESTIDIGITATION.get());
+            event.tile.updateBlock();
+            PortUtil.sendMessage(event.player, Component.translatable("ars_nouveau.prestidigitation.prestidigitation_clear"));
         }
-        return super.useOn(context);
+        event.setCanceled(true);
     }
 
     @Override
@@ -50,6 +52,6 @@ public class AbjurationEssence extends AbstractEssence {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.abjuration_essence.tooltip").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+        tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.abjuration_essence.tooltip").withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), context));
     }
 }

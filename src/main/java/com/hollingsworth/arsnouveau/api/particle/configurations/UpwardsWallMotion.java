@@ -31,7 +31,7 @@ public class UpwardsWallMotion extends ParticleMotion {
     @Override
     public void tick(PropertyParticleOptions particleOptions, Level level, double x, double y, double z, double prevX, double prevY, double prevZ) {
         WallProperty wallProperty = particleOptions.map.getOrDefault(ParticlePropertyRegistry.WALL_PROPERTY.get(), new WallProperty(5, 5, 20, Direction.NORTH));
-        ParticleDensityProperty density = getDensity(particleOptions, 20, 0.0f);
+        ParticleDensityProperty density = getDensity(particleOptions, 20, 0.3f);
         RandomSource rand = level.random;
         int chance = wallProperty.chance;
         int range = wallProperty.range;
@@ -63,11 +63,12 @@ public class UpwardsWallMotion extends ParticleMotion {
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
         return List.of(propMap.createIfMissing(new ParticleTypeProperty()),
-                propMap.createIfMissing(new ParticleDensityProperty()
+                propMap.createIfMissing(new ParticleDensityProperty(20, 0.3, SpawnType.SPHERE))
                         .minDensity(20)
                         .maxDensity(100)
                         .densityStepSize(10)
-                        .supportsShapes(false))
+                        .supportsShapes(false)
+                        .supportsRadius(false)
         );
     }
 }

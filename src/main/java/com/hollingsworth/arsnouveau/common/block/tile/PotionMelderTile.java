@@ -233,7 +233,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
     }
 
     public boolean closeEnough(BlockPos pos1, BlockPos pos2) {
-        return BlockUtil.distanceFrom(Vec3.atCenterOf(pos1), Vec3.atCenterOf(pos2)) <= 3.5;
+        return BlockUtil.distanceFrom(level, Vec3.atCenterOf(pos1), Vec3.atCenterOf(pos2)) <= 3.5;
     }
 
     private <E extends BlockEntity & GeoAnimatable> PlayState idlePredicate(AnimationState<E> event) {

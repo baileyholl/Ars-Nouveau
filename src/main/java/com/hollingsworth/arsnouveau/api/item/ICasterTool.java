@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.api.spell.ItemCasterProvider;
@@ -99,6 +100,6 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
     default void getInformation(ItemStack stack, Item.TooltipContext context, List<Component> tooltip2, TooltipFlag flagIn) {
         AbstractCaster<?> caster = getSpellCaster(stack);
         if (caster == null) return;
-        stack.addToTooltip(caster.getComponentType(), context, tooltip2::add, flagIn);
+        stack.addToTooltip(caster.getComponentType(), context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
     }
 }

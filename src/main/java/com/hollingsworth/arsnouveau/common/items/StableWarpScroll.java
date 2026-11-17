@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.client.jei.AliasProvider;
 import com.hollingsworth.arsnouveau.common.event.timed.BuildPortalEvent;
@@ -81,7 +82,7 @@ public class StableWarpScroll extends ModItem implements AliasProvider {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, tooltip2::add, flagIn);
+        stack.addToTooltip(DataComponentRegistry.WARP_SCROLL, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
     }
 
     @Override

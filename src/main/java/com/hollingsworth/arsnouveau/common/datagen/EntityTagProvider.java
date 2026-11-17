@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -68,6 +70,11 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                 EntityType.SMALL_FIREBALL,
                 EntityType.DRAGON_FIREBALL
         );
+        this.tag(EntityTags.BUBBLE_BLACKLIST).addOptional(ResourceLocation.fromNamespaceAndPath("create", "contraption"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "carriage_contraption"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "stationary_contraption"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "seat"))
+                .addOptional(ResourceLocation.fromNamespaceAndPath("create", "gantry_contraption"));
         this.tag(EntityTags.FAMILIAR).add(ModEntities.ENTITY_FAMILIAR_STARBUNCLE.get(), ModEntities.ENTITY_FAMILIAR_SYLPH.get(),
                 ModEntities.ENTITY_FAMILIAR_WIXIE.get(), ModEntities.ENTITY_FAMILIAR_DRYGMY.get(),
                 ModEntities.ENTITY_FAMILIAR_BOOKWYRM.get(), ModEntities.LILY.get());
@@ -97,5 +104,19 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
 
         this.tag(EntityTags.ANIMAL_SUMMON_BLACKLIST).add(ModEntities.GIFT_STARBY.get());
         this.tag(EntityTags.BURST_WHITELIST).add(ModEntities.BUBBLE.get(), EntityType.ARROW);
+        this.tag(EntityTags.DENY_SPAWN_RITUAL_WHITELIST);
+        this.tag(EntityTags.DENY_SPAWN_RITUAL_BLACKLIST);
+        this.tag(EntityTags.BREED_BLACKLIST);
+        this.tag(EntityTags.OVERGROWTH_BLACKLIST);
+        this.tag(EntityTags.INTERACT_JAR_BLACKLIST);
+        this.tag(EntityTags.ITEM_GRATE_PASSABLE);
+        this.tag(EntityTags.ITEM_GRATE_COLLIDE);
+
+        TagKey<EntityType<?>> RETAIN_IN_SUBLEVEL = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("sable", "retain_in_sub_level"));
+        TagKey<EntityType<?>> DESTROY_LEAVING_PLOT = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("sable", "destroy_when_leaving_plot"));
+        this.tag(RETAIN_IN_SUBLEVEL).add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.GIFT_STARBY.get(), ModEntities.AMETHYST_GOLEM.get());
+        this.tag(DESTROY_LEAVING_PLOT).add(ModEntities.STARBUNCLE_TYPE.get(), ModEntities.GIFT_STARBY.get(), ModEntities.AMETHYST_GOLEM.get());
+        this.tag(EntityTags.UNDERFOOT_BLACKLIST).addOptional(ResourceLocation.parse("create:super_glue"));
+        this.tag(EntityTags.UNDERFOOT_WHITELIST).add(EntityType.ITEM);
     }
 }

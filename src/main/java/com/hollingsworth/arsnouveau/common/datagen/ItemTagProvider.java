@@ -30,6 +30,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
     public static TagKey<Item> BERRY_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "fruits/berry"));
     public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(ArsNouveau.prefix("magic_shards"));
     public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(ArsNouveau.prefix("interact_jar_blacklist"));
+    public static TagKey<Item> JAR_ITEM_CAPTURE_BLACKLIST = ItemTags.create(ArsNouveau.prefix("jar_item_blacklist"));
     public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(ArsNouveau.prefix("ritual_loot_blacklist"));
     public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(ArsNouveau.prefix("ritual_trade_blacklist"));
     public static TagKey<Item> STORAGE_BLOCKS_QUARTZ = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/quartz"));
@@ -236,6 +237,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(Tags.Items.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(Tags.Items.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.asItem());
         this.tag(JAR_ITEM_BLACKLIST);
+        this.tag(JAR_ITEM_CAPTURE_BLACKLIST).addTag(JAR_ITEM_BLACKLIST);
         this.tag(RITUAL_LOOT_BLACKLIST);
         this.tag(RITUAL_TRADE_BLACKLIST);
 

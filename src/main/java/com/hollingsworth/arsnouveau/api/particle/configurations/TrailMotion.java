@@ -70,6 +70,7 @@ public class TrailMotion extends ParticleMotion {
 
     @Override
     public List<BaseProperty<?>> getProperties(PropMap propMap) {
-        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.1f, SpawnType.SPHERE)));
+        return List.of(propMap.createIfMissing(new ParticleTypeProperty()), propMap.createIfMissing(new ParticleDensityProperty(100, 0.1f, SpawnType.SPHERE)),
+                propMap.createIfMissing(new SpeedProperty()));
     }
 }

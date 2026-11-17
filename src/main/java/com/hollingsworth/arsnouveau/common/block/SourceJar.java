@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -9,6 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -55,7 +59,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public @org.jetbrains.annotations.Nullable PushReaction getPistonPushReaction(BlockState state) {
+    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
@@ -117,6 +121,15 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide && player.isCreative() && level.getBlockEntity(pos) instanceof SourceJarTile jarTile) {
+            int source = player.isCrouching() ? -1000 : 1000;
+            jarTile.addSource(source);
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
@@ -133,7 +146,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         int mana = BlockFillContents.get(stack);
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (mana * 100) / 10000));
+        tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.source_jar.fullness", (mana * 100) / 10000), context));
     }
 
     @Override

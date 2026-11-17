@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootEnhancerModifier;
 import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
@@ -66,6 +67,6 @@ public class Present extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         PresentData data = stack.get(DataComponentRegistry.PRESENT);
-        stack.addToTooltip(DataComponentRegistry.PRESENT, context, tooltip2::add, flagIn);
+        stack.addToTooltip(DataComponentRegistry.PRESENT, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
     }
 }

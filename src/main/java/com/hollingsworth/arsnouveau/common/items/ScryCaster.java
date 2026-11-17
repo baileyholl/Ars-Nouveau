@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.client.renderer.item.ScryCasterRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScryerCrystal;
@@ -75,10 +76,10 @@ public class ScryCaster extends ModItem implements ICasterTool, GeoItem {
         var globalPos = data.pos().orElse(null);
 
         if (globalPos == null) {
-            tooltip2.add(Component.translatable("ars_nouveau.scry_caster.no_pos"));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.scry_caster.no_pos"), context));
         } else {
             BlockPos pos = globalPos.pos();
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()), context));
         }
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }

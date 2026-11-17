@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.BuddingConversionRecipe;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
@@ -107,6 +106,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
             this.pathNavigate.getPathingOptions().setEnterDoors(true);
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
             this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler());
+            this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
         }
         return pathNavigate;
     }
@@ -228,6 +228,15 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
     }
 
     @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    protected void pushEntities() {
+    }
+
+    @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (!level.isClientSide) {
@@ -299,7 +308,7 @@ public class AmethystGolem extends PathfinderMob implements GeoEntity, IDispella
                 return PlayState.CONTINUE;
             }
 
-            if (isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+            if (isImbueing()) {
                 controller.setAnimation(RawAnimation.begin().thenPlay("tending_master"));
                 return PlayState.CONTINUE;
             }

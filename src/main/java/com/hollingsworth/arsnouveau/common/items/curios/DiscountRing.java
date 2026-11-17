@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items.curios;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -31,6 +32,6 @@ public abstract class DiscountRing extends AbstractManaCurio implements IManaDis
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("tooltip.discount_item", getManaDiscount(stack)));
+        tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.discount_item", getManaDiscount(stack)), context));
     }
 }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
@@ -11,6 +12,7 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -94,6 +96,14 @@ public class AnnotatedCodex extends ModItem {
                     numUnlocked++;
                 }
             }
+            if (pPlayer instanceof ServerPlayer serverPlayer) {
+                var iMana = CapabilityRegistry.getMana(pPlayer);
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(pPlayer);
+                if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
+                    iMana.setGlyphBonus(cap.getKnownGlyphs().size());
+                    iMana.syncToClient(serverPlayer);
+                }
+            }
             if (numUnlocked > 0) {
                 if (!pPlayer.hasInfiniteMaterials()) {
                     stack.shrink(1);
@@ -111,6 +121,6 @@ public class AnnotatedCodex extends ModItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.CODEX_DATA, context, tooltip2::add, flagIn);
+        stack.addToTooltip(DataComponentRegistry.CODEX_DATA, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
     }
 }

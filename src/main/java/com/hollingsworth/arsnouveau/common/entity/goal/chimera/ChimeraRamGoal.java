@@ -88,7 +88,7 @@ public class ChimeraRamGoal extends Goal {
             attack();
         }
 
-        if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 3f) {
+        if (boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.level(), boss.position, boss.getTarget().position) <= 3f) {
             endRam();
         }
     }

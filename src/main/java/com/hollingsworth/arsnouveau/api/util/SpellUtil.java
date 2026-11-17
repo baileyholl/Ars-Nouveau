@@ -165,21 +165,24 @@ public class SpellUtil {
     }
 
     private static Set<BlockPos> DFSBlockstates(Level world, Collection<BlockPos> start, int maxBlocks, Predicate<BlockState> isMatch) {
-        LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
+        Queue<BlockPos> searchQueue = new ArrayDeque<>(start);
         HashSet<BlockPos> searched = new HashSet<>(start);
         HashSet<BlockPos> found = new HashSet<>();
 
         while (!searchQueue.isEmpty() && found.size() < maxBlocks) {
-            BlockPos current = searchQueue.removeFirst();
+            BlockPos current = searchQueue.remove();
             BlockState state = world.getBlockState(current);
             if (isMatch.test(state)) {
                 found.add(current);
-                BlockPos.betweenClosedStream(current.offset(1, 1, 1), current.offset(-1, -1, -1)).forEach(neighborMutable -> {
-                    if (searched.contains(neighborMutable)) return;
+                for (BlockPos neighborMutable : BlockPos.betweenClosed(current.offset(1, 1, 1), current.offset(-1, -1, -1))) {
+                    if (searched.contains(neighborMutable)) {
+                        continue;
+                    }
+
                     BlockPos neighbor = neighborMutable.immutable();
                     searched.add(neighbor);
                     searchQueue.add(neighbor);
-                });
+                }
             }
         }
         return found;

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.potion.IPotionProvider;
 import com.hollingsworth.arsnouveau.api.registry.PotionProviderRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
@@ -164,7 +165,7 @@ public abstract class PotionFlask extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         MultiPotionContents data = stack.getOrDefault(DataComponentRegistry.MULTI_POTION, new MultiPotionContents(0, PotionContents.EMPTY, 8));
-        tooltip.add(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
-        PotionContents.addPotionTooltip(data.contents().getAllEffects(), tooltip::add, 1.0F, context.tickRate());
+        tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.flask.charges", data.charges()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), context));
+        PotionContents.addPotionTooltip(data.contents().getAllEffects(), component -> tooltip.addAll(DocClientUtils.splitTooltip(component, context)), 1.0F, context.tickRate());
     }
 }

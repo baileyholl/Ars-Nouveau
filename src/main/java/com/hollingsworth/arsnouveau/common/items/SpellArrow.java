@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.spell.*;
@@ -57,11 +58,11 @@ public class SpellArrow extends ArrowItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        pTooltipComponents.add(Component.translatable("ars_nouveau.spell_arrow.desc"));
+        pTooltipComponents.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.spell_arrow.desc"), pContext));
         var spell = new Spell().mutable();
         for (int i = 0; i < numParts; i++) {
             spell.recipe.add(part);
         }
-        pTooltipComponents.add(Component.literal(spell.immutable().getDisplayString()));
+        pTooltipComponents.addAll(DocClientUtils.splitTooltip(Component.literal(spell.immutable().getDisplayString()), pContext));
     }
 }

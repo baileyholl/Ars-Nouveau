@@ -9,7 +9,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -38,7 +37,9 @@ public abstract class AbstractPathJob implements Callable<Path> {
     public static Set<ModNode> lastDebugNodesVisited;
     public static Set<ModNode> lastDebugNodesNotVisited;
     public static Set<ModNode> lastDebugNodesPath;
-    public static final Map<Player, UUID> trackingMap = new HashMap<>();
+
+    // prevents OOM errors if attempting to pathfind over ridiculous distance, i.e. sable
+    private static final int maxCacheRadius = 512;
     /**
      * Start position to path from.
      */
@@ -82,11 +83,6 @@ public abstract class AbstractPathJob implements Callable<Path> {
     private final boolean allowJumpPointSearchTypeWalk;
     private int totalNodesAdded = 0;
     public int totalNodesVisited = 0;
-
-    /**
-     * Are there xz restrictions.
-     */
-    private final boolean xzRestricted;
 
     /**
      * Are xz restrictions hard or soft.
@@ -140,12 +136,11 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @param entity the entity.
      */
     public AbstractPathJob(final Level world, final BlockPos start, final BlockPos end, final int range, final PathResult result, final LivingEntity entity) {
-        final int minX = Math.min(start.getX(), end.getX()) - (range / 2);
-        final int minZ = Math.min(start.getZ(), end.getZ()) - (range / 2);
-        final int maxX = Math.max(start.getX(), end.getX()) + (range / 2);
-        final int maxZ = Math.max(start.getZ(), end.getZ()) + (range / 2);
+        final int minX = Math.max(Math.min(start.getX(), end.getX()) - (range / 2), start.getX() - maxCacheRadius);
+        final int minZ = Math.max(Math.min(start.getZ(), end.getZ()) - (range / 2), start.getZ() - maxCacheRadius);
+        final int maxX = Math.min(Math.max(start.getX(), end.getX()) + (range / 2), start.getX() + maxCacheRadius);
+        final int maxZ = Math.min(Math.max(start.getZ(), end.getZ()) + (range / 2), start.getZ() + maxCacheRadius);
         this.restrictionType = AbstractAdvancedPathNavigate.RestrictionType.NONE;
-        this.xzRestricted = false;
         this.hardXzRestriction = false;
 
         this.world = new ChunkCache(world, new BlockPos(minX, world.getMinBuildHeight(), minZ), new BlockPos(maxX, world.getMaxBuildHeight(), maxZ), range, world.dimensionType());
@@ -225,8 +220,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         this.maxZ = Math.max(startRestriction.getZ(), endRestriction.getZ()) + grow.getZ();
         this.minY = Math.min(startRestriction.getY(), endRestriction.getY()) - grow.getY();
         this.maxY = Math.max(startRestriction.getY(), endRestriction.getY()) + grow.getY();
-
-        this.xzRestricted = true;
+        
         this.hardXzRestriction = hardRestriction;
         this.restrictionType = restrictionType;
         this.world = new ChunkCache(world, new BlockPos(minX, world.getMinBuildHeight(), minZ), new BlockPos(maxX, world.getMaxBuildHeight(), maxZ), range, world.dimensionType());

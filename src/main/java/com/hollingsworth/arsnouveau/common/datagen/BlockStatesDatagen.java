@@ -38,6 +38,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerOnlyState(BlockRegistry.VITALIC_BLOCK.get(), LibBlockNames.VITALIC_SOURCELINK);
         registerOnlyState(BlockRegistry.VOLCANIC_BLOCK.get(), LibBlockNames.VOLCANIC_SOURCELINK);
         registerOnlyState(BlockRegistry.CRAB_HAT.get(), LibBlockNames.CRAB_HAT);
+        horizontalBlock(BlockRegistry.STARBUNCLE_PLUSH.get(), getUncheckedModel(LibBlockNames.STARBUNCLE_PLUSH));
         for (var pot : BlockRegistry.flowerPots.entrySet()) {
             registerOnlyState(pot.getValue(), "pots/" + LibBlockNames.Pot(pot.getKey().get().getPath()));
         }

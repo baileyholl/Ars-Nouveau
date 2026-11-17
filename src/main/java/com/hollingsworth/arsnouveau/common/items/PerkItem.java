@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.perk.IPerk;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.network.chat.Component;
@@ -33,9 +34,9 @@ public class PerkItem extends ModItem {
             return;
 
         if (flagIn.hasShiftDown()) {
-            tooltip2.add(Component.translatable(perk.getDescriptionKey()));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable(perk.getDescriptionKey()), context));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")), context));
         }
     }
 }

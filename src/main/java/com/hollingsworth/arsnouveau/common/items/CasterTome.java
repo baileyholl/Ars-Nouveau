@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.mana.IManaDiscountEquipment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
@@ -67,15 +68,15 @@ public class CasterTome extends ModItem implements ICasterTool, IManaDiscountEqu
             // If the caster is hidden, show the hidden recipe
 
             if (caster.isSpellHidden()) {
-                tooltip2.add(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)));
+                tooltip2.addAll(DocClientUtils.splitTooltip(Component.literal(caster.getHiddenRecipe()).withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "alt")).withColor(ChatFormatting.GOLD)), context));
             } else if (Screen.hasShiftDown() || !Config.GLYPH_TOOLTIPS.get()) {
                 getInformation(stack, context, tooltip2, flagIn);
             }
 
             if (!Screen.hasShiftDown() && !caster.getFlavorText().isEmpty())
-                tooltip2.add(Component.literal(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)));
+                tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.BLUE)), context));
 
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.caster_tome"));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.caster_tome"), context));
 
         }
         super.appendHoverText(stack, context, tooltip2, flagIn);

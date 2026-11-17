@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
 import com.hollingsworth.arsnouveau.api.particle.timelines.PrestidigitationTimeline;
+import com.hollingsworth.arsnouveau.api.spell.ITimelined;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
-public class ParticleTile extends ModdedTile implements ITickable {
+public class ParticleTile extends ModdedTile implements ITickable, ITimelined<PrestidigitationTimeline> {
     protected PrestidigitationTimeline timeline = new PrestidigitationTimeline();
     public ParticleEmitter particleEmitter;
     public boolean isTemporary;
@@ -71,5 +72,10 @@ public class ParticleTile extends ModdedTile implements ITickable {
         this.timeline = timeline;
         this.particleEmitter = new ParticleEmitter(() -> this.getBlockPos().getCenter(), () -> new Vec2(0, 0), timeline.onTickEffect);
         updateBlock();
+    }
+
+    @Override
+    public PrestidigitationTimeline getTimeline() {
+        return timeline;
     }
 }

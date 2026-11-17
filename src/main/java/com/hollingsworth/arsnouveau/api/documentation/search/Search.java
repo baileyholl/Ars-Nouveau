@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -25,6 +26,7 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.util.QueryBuilder;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +37,7 @@ public class Search {
     public static PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer());
     public static List<ConnectedSearch> connectedSearches = new ArrayList<>();
     public static Map<Item, DocEntry> itemToEntryMap = new HashMap<>();
+    public static Analyzer cjkAnalyzer = new CJKAnalyzer();
 
     public static void addConnectedSearch(ConnectedSearch connectedSearch) {
         connectedSearches.add(connectedSearch);
@@ -42,8 +45,7 @@ public class Search {
 
     public static void initSearchIndex() {
         try {
-            Map<String, Analyzer> perFieldAnalyzer = Map.of("title", new EnglishAnalyzer(), "titleGrams", new NGramAnalyzer(2, 3), "tags", new EnglishAnalyzer());
-            analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(), perFieldAnalyzer);
+            analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(), Map.of("title", new EnglishAnalyzer(), "titleGrams", new NGramAnalyzer(2, 3), "tags", new EnglishAnalyzer(), "titleCjk", cjkAnalyzer, "tagsCjk", cjkAnalyzer));
             Files.createDirectories(Path.of(DocDataLoader.DATA_FOLDER));
             try (Directory directory = new MMapDirectory(Path.of(DocDataLoader.DATA_FOLDER + "search_index"))) {
                 IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(analyzer));
@@ -53,8 +55,10 @@ public class Search {
                     document.add(new StoredField("ID", docEntry.id().toString()));
                     document.add(new TextField("title", docEntry.entryTitle().getString(), Field.Store.YES));
                     document.add(new TextField("titleGrams", docEntry.entryTitle().getString(), Field.Store.YES));
+                    document.add(new TextField("titleCjk", docEntry.entryTitle().getString(), Field.Store.NO));
                     for (Component tag : docEntry.searchTags()) {
                         document.add(new TextField("tags", tag.getString(), Field.Store.YES));
+                        document.add(new TextField("tagsCjk", tag.getString(), Field.Store.NO));
                     }
                     writer.addDocument(document);
                     if (!docEntry.renderStack().isEmpty()) {
@@ -68,6 +72,7 @@ public class Search {
                     document.add(new StoredField("connectedIndex", i));
                     document.add(new TextField("title", connectedSearch.title().getString(), Field.Store.YES));
                     document.add(new TextField("titleGrams", connectedSearch.title().getString(), Field.Store.YES));
+                    document.add(new TextField("titleCjk", connectedSearch.title().getString(), Field.Store.NO));
                     if (!connectedSearch.icon().isEmpty()) {
                         itemToEntryMap.put(connectedSearch.icon().getItem(), DocumentationRegistry.getEntry(connectedSearch.entryId()));
                     }
@@ -75,8 +80,12 @@ public class Search {
                 }
                 writer.commit();
                 DirectoryReader reader = DirectoryReader.open(writer);
+                IndexSearcher oldSearcher = searcher;
                 searcher = new IndexSearcher(reader);
                 writer.close();
+                if (oldSearcher != null) {
+                    oldSearcher.getIndexReader().close();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,9 +105,27 @@ public class Search {
             if (nGramQuery == null) {
                 return results;
             }
-            BooleanQuery booleanClauses = new BooleanQuery.Builder().setMinimumNumberShouldMatch(1).add(nGramQuery, BooleanClause.Occur.SHOULD).build();
+            BooleanQuery.Builder booleanClauses = new BooleanQuery.Builder().add(nGramQuery, BooleanClause.Occur.SHOULD);
+            if (query.codePoints().anyMatch(codePoint -> {
+                Character.UnicodeScript script = Character.UnicodeScript.of(codePoint);
+                return script == Character.UnicodeScript.HAN || script == Character.UnicodeScript.HIRAGANA || script == Character.UnicodeScript.KATAKANA || script == Character.UnicodeScript.HANGUL;
+            })) {
+                QueryBuilder queryBuilder = new QueryBuilder(cjkAnalyzer);
+                BooleanQuery.Builder cjkClauses = new BooleanQuery.Builder().setMinimumNumberShouldMatch(1);
+                Query titleQuery = queryBuilder.createPhraseQuery("titleCjk", query);
+                Query tagsQuery = queryBuilder.createPhraseQuery("tagsCjk", query);
+                if (titleQuery != null) {
+                    cjkClauses.add(titleQuery, BooleanClause.Occur.SHOULD);
+                }
+                if (tagsQuery != null) {
+                    cjkClauses.add(tagsQuery, BooleanClause.Occur.SHOULD);
+                }
+                booleanClauses.add(cjkClauses.build(), BooleanClause.Occur.MUST);
+            } else {
+                booleanClauses.setMinimumNumberShouldMatch(1);
+            }
 
-            TopDocs topDocs = searcher.search(booleanClauses, 100);
+            TopDocs topDocs = searcher.search(booleanClauses.build(), 100);
             StoredFields storedFields = searcher.storedFields();
             for (ScoreDoc doc : topDocs.scoreDocs) {
                 if (doc.score < 0.5f)

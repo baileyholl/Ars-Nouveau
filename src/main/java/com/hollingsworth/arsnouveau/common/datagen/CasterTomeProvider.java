@@ -22,7 +22,9 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CasterTomeProvider extends SimpleDataProvider {
 
@@ -36,7 +38,20 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
     @Override
     public void collectJsons(CachedOutput pOutput) {
+        collectTomes(tomes, updatedTomes);
 
+        for (CasterRecipeWrapper g : tomes) {
+            Path path = getRecipePath(output, g.id().getPath());
+            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
+        }
+
+        for (UpdatedRecipeWrapper g : updatedTomes) {
+            Path path = getRecipePath(output, g.id().getPath());
+            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
+        }
+    }
+
+    public static void collectTomes(List<CasterRecipeWrapper> tomes, List<UpdatedRecipeWrapper> updatedTomes) {
         tomes.add(buildTome("glow", "Glow Trap", new Spell()
                         .add(MethodTouch.INSTANCE)
                         .add(EffectRune.INSTANCE)
@@ -210,6 +225,13 @@ public class CasterTomeProvider extends SimpleDataProvider {
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND))
                 , "Fire at a body of water to create a Ice bubble in the depths.", new ParticleColor(0, 0, 255)));
 
+        updatedTomes.add(new UpdatedRecipeWrapper(ArsNouveau.prefix("pandoxyy_tome"),
+                "Pandoxyy's Spin Cycle",
+                "First you're airborne. Then you're dizzy. Then you're somewhere else. By the time you figure out what happened, it's already happening again.",
+                Spell.fromBinaryBase64("H4sIAAAAAAAA/5WTTW+DMAyG/8qUM5qAjbXl2lXaZVrV7rZNKIChkVInIqEUofz3JdCPtaPSxiWR3/i1/SR0RIkacxJ3xiMVZEwCiT8IrVSCot4BreOSt3KTKOAF8UYEUaVMjyoNwzxJ60qNy7cTleT/Vm67VUJTDeN2gIppthtXYZ9tKJZAvjwiaaVZxuGdbYEztJC6i4wej40JXIESfMewXBQFZNoFt0IzgW4nKyFfqRxw69bBvrAZaJlzvTfpUtUxF2wU1HXx4+FkcOzO3f6ugNAkJReNnVjV6fKmZya4qH56zY8Bll9ZZrZBTdHRtweCydQjJYnD0PdIateHmZuVoX5miqYcbHpBuQJjzCX1vL+N1tU4bSPrSXNW2/78+8AfvuBx5gfBUxDaGSRt8DDmevmyWC2IGUd7Gtz0L91dEqwPb//8E4zn9rfrNKRbpy0p5mLftp+174cTdbeWDO/mraVkGWR/BBVG0QAq6jkFU9+YbyvT/qqPAwAA")
+                        .withColor(new ParticleColor(178, 220, 239))
+                        .withSound(new ConfiguredSpellSound(SoundRegistry.PUFFER_FISH_BLOW_UP, 1.0f, 1.2f))));
+
         updatedTomes.add(fromCode("chems", "Chem's Scientific Repulsion Runes", "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.", "H4sIAAAAAAAA/+1ZW2/aMBT+K1OeGUooZZTXrdJeqlXQt2mKTGKCV8e2bAdIUf77jhMgJIRCgF4Y8ILx5fhcvnPxYW4pHjHf6s2ThiWxRwS2er8tJJXLeDTBKOoFNBZjV0j+F3uaUGw1KpYpYQGWlUsKM0U0mVQflBHbQhFFzBu/tvSnYQkkNfEofiIhBhaA93lh/zCSSptJzvpYcToBNu9HIxDETIZcE87MCKQTD0hkatCxUUIFnSS/8JcwR9XyLIZZrMq3Lze7GcV5zu7mDQxP3YDyKQisouHjVpoep1yu0/q+nCB+iaQHDGrENJCEDa3b24YVmO+GNbR6Ttc2ohKmfxCFhhTDaS0jnCRJUeV+ar7Y3LAaAgmJfBIBd3bTsbOP076zHafjtEACgaZsIeTg8ed9/95KqhW7EjtJ8WdMhAcLRObQ3GGU9ckFEOG0lojQQ4wdiSmSvjsimPq1bT5FlJo5iYAPUHPD8saIeThVGotCd0kNTrbshuUTadzKcGbk1eOyQHVA5EsiBCjAnSKdeuPbQOnOyZBk2ymUAFkbUBohqnBJElW2az7YuFBwIId910ikNGc4HYHnTxBAZT+Q2jlKnaZdB5UlPZpdnz6AGC9yCXv+D62+tMJeZnfs9eB0W8fsKxW+FoxeYR+HAjhItlBfRKaye8M9mvgkIBotwXQk1igJxvWxpgTGqVjxA2GD7Idt3CZ+QLP8N4Bg9lLaARPrW44IYGeVBVsFpDmHpz3EfB6eDmgbkNqQhaI4w9kT8Z6vELsAiH3u3HVWNnnT4hdMtG/5m7nxhicwzUN4DV0fPWdl970fPbmBSyyHKMBDyr3nomnfWY+VPOesbRQ/q6YC8DCiiMhDgPpCghcUvClS4UUooDBVgkt86RV2MSnZtUrsgh7NHg8pXaf0mRLmu/CklgF28wBFtDc2r7z2gZW7hooKiiYZuyMUEhqvEbWb31JZdncTipjnEJ/TRgBwE0mvrIishFsh6ZTO2rlJYeR0OxmM2t0tMCob+0xD94cFBYjDMFRuCn9IspceGBy7EBlq5cQNXX5Y0wWHROushSh5/iifWb2vrXbT7tx0uuBgcRpuWt27zo3RjOn1HfMqGZLADSKlPx5C9Xss9TLAStLMwANz8EKr05Pa5JisXChIKzsKqzqtxEn69832LLhc1nimI2nImpllVGm8txorhUt5LPHC5ZDoo2pSxjOq54vOYxNwAVSVZd7O58+h/+CkBy9F+7Xz8unertcGwxk0GI7IsdcgtiszZonCLDJkmm5WH4uIKtDSlz7kFQVceIezmvwDAgwHyp8hAAA="));
 
         tomes.add(buildTome("ivy", "Ivy", new Spell(MethodTouch.INSTANCE)
@@ -303,11 +325,6 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         tomes.add(buildTome("pranks", "Pranks", new Spell(MethodProjectile.INSTANCE, EffectLinger.INSTANCE, EffectLaunch.INSTANCE, AugmentAmplify.INSTANCE, EffectDelay.INSTANCE, AugmentDurationDown.INSTANCE, EffectFirework.INSTANCE, AugmentAmplify.INSTANCE, EffectSummonVex.INSTANCE, EffectWindshear.INSTANCE), "Tome-Fuzzer sending chaotic magic streams into existence. May be hacking the planet."));
 
-        for (CasterRecipeWrapper g : tomes) {
-            Path path = getRecipePath(output, g.id().getPath());
-            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
-        }
-
         updatedTomes.add(fromCode("frantastic", "Simulmantic Storm", "It is unknown whether the original author of this spell survived its first casting, or if she was replaced by one of her simulacra in the ensuing chaos. Don't think too hard about it. ", "H4sIAAAAAAAA/+1X227aQBD9lWqfaWSbQAivaaS+VI1C39rKWq8Hs81erL1AEeLfO2tzD1SJg6VUxS9e7J3LnjMzPiyI1V7lZLhYdogBxksgw++EGpsq7adA/bAQ83KSlkb/Aua4ANI58tp6KbVKc2B6fnSDNhl35zYVXBVgzh1P8GLiFLomPzukpMZxJuAbl4DhEJ3FnkkdBx+OBeXmfjxGkMJPqR3XKqwQufILLWuI3TwAvOdBafS63Eb6WgZLuzYFfAr2MOx6c1o7XGzzPBIAZmkh9AwPa332cNIn00KbXV936wc8P3DJMEFHVQAYNyS9XocU4d4hGRnGgyiclCv3iVuaCUBrZzws8TqOwDrB8J5R60armtwU53bxLJUMhEgzodlTAHGqhZfoP7q6RkS5Y5Ow7i2r6rZaTOEcvsNB9507Q7lown5l2Cr9IDApw1lqcdNTe0WQdKsiiG9vqyroJ8+KYEyFhaoIdt3koCx38xBis0wi9Elz7m1AOEK4MfmZWp1u9PD5/vGenKimg/OGXVo9VuRjTzfhKPPGun+8RZuyA5I7B1UIox1dQ/a74qVD5tU92BShM15AbfwGavcGhVajYHgZuW8euUfe15+1AzpXn1vMrvG4KwydYhmkYw4ifzUFMypEVYlUhXLDkmYTqhguEQblZbr2ZusRknMTNEtILUx5Nzk80bvitBetKK05xfvZJmjyhi7730fnWWnZn35xVF/x9W0Ux/24OU0NxA2oPC21cVSkY0MlYE8Ksatz4lA2G5nTP5HGaigcNtb278JFG7erjf9G/wul6V5EqXOopyw69YY901eydPMtXiv6TqTfvrx9Rwy+pP1b6v/LmG5K02mB+zEZXPVvbrr9QaVz4+hq0O0NutevUbu9tui+aN/WtO/OtyvsUFRW7HDphQxq0/zwUZTc2A8jp43EnFjzxJd/ADOROyaBEwAA"));
 
         updatedTomes.add(fromCode("shoob", "Shoob's Graceful Retreat", "Need a quick getaway? Using Shoob's patented \"Tactical retreat\" technique, you can escape AND do it gracefully! (Shibe Inc is not liable for misuse or failure in the escape)", "H4sIAAAAAAAA/+1WS2/bMAz+Lzobg10s3ZZrF6CXYUWz2zAYsk2nxGRR0CNpEOS/j3LiZknVoE3RAcWiiyVR/Pj4SMkr4SjoRoxX60xYqNGAGP8U0rpSU5iDDOOZWpq70oFqRZYQwL1R5JB0UioJXrTvQteRLhuoaZk8UCnUv9OQnVHYprWOyVDP0WGFCn36ANx70E3psQPxKxNGWo+1gh+8Zmc4X6s9JbIV+rjZKol20rZQ98uOfMwSz4wl802aTdL9MqZ8D0ETo653lr6bqOkGVeBdcIdmh8PlBnC18zNhABblTNGCw3WhunkSsyZF9m+sq2EDmwPImh30UnuG5AMXo1EmZvGbiUqMi895jBS1/4pOVgpY29sAax7pDAwORnktnZ9uq3RXrn29OlJzSMq8lahOSX6v+L9kf7/cG9AuNgFbeJgWec6YssHA/uUfeNmP4uOXvCguiwuOwciF3oY5vbme3E7Ec1glfdvTh3p2Ck1VsM6faRqmo7ciaRoVz5fYqy+xhHzzUByQ6ynUd9G5c3+8g/44+gIl3pae3AN3+z+r90D4QloDTekMWXgz0i8/bTnfkv6I8lYq968534v8GO+7yaMwPXnoyuAiQNpKXwhRpmUXZZyQ+vRWWf8BdCbsTtsLAAA="));
@@ -320,17 +337,32 @@ public class CasterTomeProvider extends SimpleDataProvider {
 
         updatedTomes.add(fromCode("urticantodin", "Urti's Bounce'a Bounce", " Traveling issues? Nonsense, all it takes is one leap and you get there in no time! Why the sticky feeling? Safety precautions, your legs aren't strong enough for the sudden stop with the ground, so we made them bouncy!", "H4sIAAAAAAAA/+1WTY/TMBD9Lz5Hq6RsYemR3UpcEKstnBCKnGSSmnVsyx8NVZX/zthtN02aVgtiQYjmYstjz7x58zL2hhjpREFmmzYiGnKmgMy+EKpNKqRbAXWziq/VMjXASxKNGDhQNWqgteKsXP9WW4Zgcxg1FU5Ty6RIC9mIs46/RkRRbVnO4ROrgTOBOW96BxQVVtZo9AYpHsBIvmKimpcl5NYv1tIH8zOlpfqAHAQK7doT2POVOW0sabugH5U/avZnAVfBHCPYbk63Hjcd5OMIApq04rLBrI3L7k/6zCWX+tDX7X6BFQOXOQK0SAK6xA2T6TQilR8jkpFZchP7VJmwd8zQjAOettpB27Z93gsQhtm1j/A0RReaFswhuvgqibdfcv02TpLXyQQzULQRuyQX9+/nD3PSjhP7lHYbtOtLBIudmjtZj5/tCjyAHHT+t4oONbMWQkW0tHQf7LunKo7IOowecIXx4gHyn1EMp7qC1NTyEV5MNMmbmyCaMGZhPFJNSbmBYQWGJewmRxGVRHdQpIVmylgpIMzShnoW2/ZZgpzEh4q8nvYlePv53UkBHrJ4ToNnEjBLxx9Bp5njHGy6ZEE0K8md7z3xlf/xFLP5Evm7enUCR9DsINMGq8RlX6p/uBmMYt3hGmpXy2/4jzEehFtyynT31/0PffMZHS6nxo62t7OtT1PGzzewXsRaFsBD/0GnTudDRFAru+742rXAE/BD8MvNt5/iZfcyd9/lgfIPPFCkWPiDl7Y24GXscdbdBn6HoP4uJBg7/3WA7Q8eVoVm6gwAAA=="));
 
-        for (UpdatedRecipeWrapper g : updatedTomes) {
-            Path path = getRecipePath(output, g.id().getPath());
-            saveStable(pOutput, CasterTomeData.CODEC.encodeStart(JsonOps.INSTANCE, g.toData()).getOrThrow(), path);
+        updatedTomes.add(fromCode("oaksa", "OAKSA's Open Concept", "The hill has been reassigned as a floor.", "H4sIAAAAAAAA/9VW32/aMBD+Vyo/A7ITQglv1VZp0lS1KnvbpsgJhnp1bMt2OliV/31np9AA6VbWMTG/xPb94O777g4/IqsqOUOTx7qHDCu4ZmjyGVFjM6mqB0aryUKs9F2mjfrGCscFQ70OcV4Z6zollknLHX/otqPq/7jPDaP3nRK2dIYW3blrXtxXGn3tIU2N44Vgn3jJBJcA8uOWfgtekMwF5eZyPocbfyyV40r6HajpK6p3ra1mzHOIVldcTpsDHuAenOmyfV7+2FGAi7ZGvZ3FOurMrXQIbJNGOG/pMlncUelxsFV+A3EyUGV2N9RCCWXart6tL/hsx2OhpHWNS1CIkqSHFvAlox7K0YRArI5L955bmgsf/5wKy2pYINiP7w5wX6L6mYpr7VG1a1i7wz0WsqzkzrGQt1GOrvldrr2jyTgdpH55wwUkE6c7LmahsVbebLMlGIwNnfEKMiHek9X0u3yia3rz4fL2Ep0wySSJA8kEk0ByhIcH0ryO0IsLat30abxt5tzzZi8WLkRlgQlmMm+aAflCoPBLhlklHtgh3picMVNSmTkmmFbGNZ5gWnBxAr1dqhkTof4gtcoUe0CWGipqQ3QTWf2W2hGQsuEFwErN/dHnBBniU58T/RMZFHgQ47AISSOcRuN09NcHx78hnzR/Eb4E8vA9dHpsh+m1lLwNvc/l4tdd2+2xeRgdWk6HQGuVhIBzpcrjwRqPA7DDYYNrNHoR19dWbz9OBml0jkkcirgPBTkYjpI4Gq7reLcTuso4aRcxTrqrtpuYFmwNzVNvepoUq5LD1mYhOyjEY/dPlP62f946pV7DLsF/Tu8eZC/otR7eXkPS0mvgi4/Tiy8VxtG5PbvOBYfkICu5OLvWTPav/Ase3heHPl2bsUTGuK5/AqfbMj95DQAA"));
+    }
+
+    public static Map<String, String> langEntries() {
+        List<CasterRecipeWrapper> tomes = new ArrayList<>();
+        List<UpdatedRecipeWrapper> updatedTomes = new ArrayList<>();
+        collectTomes(tomes, updatedTomes);
+
+        Map<String, String> entries = new LinkedHashMap<>();
+        for (CasterRecipeWrapper g : tomes) {
+            entries.put(CasterTomeData.nameKey(g.id()), g.name());
+            entries.put(CasterTomeData.flavorKey(g.id()), g.flavorText());
         }
+
+        for (UpdatedRecipeWrapper g : updatedTomes) {
+            entries.put(CasterTomeData.nameKey(g.id()), g.name());
+            entries.put(CasterTomeData.flavorKey(g.id()), g.flavorText());
+        }
+        return entries;
     }
 
     protected Path getRecipePath(Path pathIn, String str) {
         return pathIn.resolve("data/ars_nouveau/recipe/tomes/" + str + ".json");
     }
 
-    public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText) {
+    public static CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText) {
         return new CasterRecipeWrapper(ArsNouveau.prefix(id + "_tome"),
                 name,
                 spell.serializeRecipe(),
@@ -339,7 +371,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.color().serialize(), spell.sound());
     }
 
-    public CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
+    public static CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
         return new CasterRecipeWrapper(ArsNouveau.prefix(id + "_tome"),
                 name,
                 spell.serializeRecipe(),
@@ -348,7 +380,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 color.serialize(), spell.sound());
     }
 
-    public UpdatedRecipeWrapper fromCode(String id, String name, String flavorText, String code) {
+    public static UpdatedRecipeWrapper fromCode(String id, String name, String flavorText, String code) {
         Spell spell = Spell.fromBinaryBase64(code);
         return new UpdatedRecipeWrapper(ArsNouveau.prefix(id + "_tome"),
                 name,

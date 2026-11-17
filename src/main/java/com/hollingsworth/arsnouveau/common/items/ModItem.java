@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +49,7 @@ public class ModItem extends Item {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
         if (tooltip != null && !tooltip.isEmpty()) {
-            tooltip2.addAll(tooltip);
+            tooltip.forEach(component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)));
         }
     }
 }
