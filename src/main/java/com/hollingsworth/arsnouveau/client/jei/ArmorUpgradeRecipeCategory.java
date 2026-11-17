@@ -20,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class ArmorUpgradeRecipeCategory extends EnchantingApparatusRecipeCategor
         }
         builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addItemStacks(stacks);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 90, 10).addItemStacks(outputs);
+        point = new Vec2(center.x, center.y - 32);
         for (Ingredient input : inputs) {
             builder.addSlot(RecipeIngredientRole.INPUT, (int) point.x, (int) point.y).addIngredients(input);
             point = rotatePointAbout(point, center, angleBetweenEach);

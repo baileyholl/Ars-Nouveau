@@ -45,7 +45,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        this.reset();
+        this.reset(widgets.getHeight());
         double angleBetweenEach = 360.0 / this.recipe.pedestalItems().size();
 
         MultiProvider provider = multiProvider;
