@@ -209,7 +209,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
         }
 
-        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity, ClipContext.Block.COLLIDER);
+        HitResult hitresult = ProjectileUtil.getHitResult(position(), this, this::canHitEntity, getDeltaMovement(), level(), 1.0F, ClipContext.Block.COLLIDER);
         if (hitresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, hitresult)) {
             if (this.hitTargetOrDeflectSelf(hitresult) != ProjectileDeflection.NONE) return;
         }
@@ -561,7 +561,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
      * Returns true if it's possible to attack this entity with an item.
      */
     public boolean isAttackable() {
-        return false;
+        return this.blockState.getBlock() == Blocks.SLIME_BLOCK;
     }
 
     public void setStartPos(BlockPos pOrigin) {
