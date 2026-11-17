@@ -4,13 +4,11 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
@@ -98,12 +96,6 @@ public class Glyph extends ModItem {
             tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.glyph_disabled"), context));
         } else if (spellPart != null) {
             tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)), context));
-            if (Screen.hasShiftDown() && !spellPart.spellSchools.isEmpty()) {
-                tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.schools"), context));
-                for (SpellSchool s : spellPart.spellSchools) {
-                    tooltip2.addAll(DocClientUtils.splitTooltip(s.getTextComponent(), context));
-                }
-            }
         }
         var player = ArsNouveau.proxy.getPlayer();
         if (player == null)
@@ -125,8 +117,8 @@ public class Glyph extends ModItem {
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        if (!Screen.hasShiftDown() && spellPart != null && !spellPart.spellSchools.isEmpty()) {
-            return Optional.of(new SchoolTooltip(spellPart, true));
+        if (spellPart != null && !spellPart.spellSchools.isEmpty()) {
+            return Optional.of(new SchoolTooltip(spellPart));
         }
         return Optional.empty();
     }

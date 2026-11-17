@@ -805,6 +805,9 @@ public class GuiSpellBook extends SpellSlottedScreen {
 
             if (renderable instanceof GlyphButton widget) {
                 return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
+            } else if (renderable instanceof CraftingButton widget) {
+                AbstractSpellPart part = widget.getAbstractSpellPart();
+                return part == null || part.spellSchools.isEmpty() ? null : new SchoolTooltip(part);
             } else if (renderable instanceof GuiSpellSlot spellSlot) {
                 if (spellSlot.isSelected) {
                     if (spell.isEmpty()) {
