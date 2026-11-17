@@ -561,7 +561,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
      * Returns true if it's possible to attack this entity with an item.
      */
     public boolean isAttackable() {
-        return this.blockState.getBlock() == Blocks.SLIME_BLOCK;
+        return this.blockState.is(Blocks.SLIME_BLOCK);
     }
 
     public void setStartPos(BlockPos pOrigin) {
