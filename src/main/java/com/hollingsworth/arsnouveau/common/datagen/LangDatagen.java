@@ -1341,6 +1341,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.particle_config.helix", "Helix");
         add("ars_nouveau.particle_config.spiral", "Spiral");
         add("ars_nouveau.particle.property.color", "Color");
+        add("ars_nouveau.particle.property.transparency", "Transparency");
         add("ars_nouveau.particle.property.particle_type", "Particle");
         add("ars_nouveau.spell_styles", "Spell Styles");
         add("ars_nouveau.timeline.trail", "Trail");
@@ -1369,6 +1370,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.hue", "Hue");
         add("ars_nouveau.sat", "Saturation");
         add("ars_nouveau.lightness", "Lightness");
+        add("ars_nouveau.transparency","Transparency");
         add("ars_nouveau.particle.end_rod", "End Rod");
         add("ars_nouveau.particle.glow_squid", "Glow Squid");
         add("ars_nouveau.particle.glow_ink", "Glow Ink");

@@ -19,6 +19,8 @@ public class ParticlePropertyRegistry {
     public static final DeferredRegister<IPropertyType<?>> PROP_DF = DeferredRegister.create(PARTICLE_PROPERTY_REGISTRY, ArsNouveau.MODID);
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<ColorProperty>> COLOR_PROPERTY = PROP_DF.register("color", () -> new SimplePropertyType<>(ColorProperty.CODEC, ColorProperty.STREAM_CODEC));
+    public static final DeferredHolder<IPropertyType<?>, IPropertyType<TransparencyProperty>> TRANSPARENCY_PROPERTY = PROP_DF.register("transparency", () -> new SimplePropertyType<>(TransparencyProperty.CODEC, TransparencyProperty.STREAM_CODEC));
+
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<ParticleTypeProperty>> TYPE_PROPERTY = PROP_DF.register("particle_type", () -> new SimplePropertyType<>(ParticleTypeProperty.CODEC, ParticleTypeProperty.STREAM_CODEC));
 
     public static final DeferredHolder<IPropertyType<?>, IPropertyType<ParticleDensityProperty>> DENSITY_PROPERTY = PROP_DF.register("density", () -> new SimplePropertyType<>(ParticleDensityProperty.CODEC, ParticleDensityProperty.STREAM_CODEC));
