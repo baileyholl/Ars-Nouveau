@@ -13,16 +13,21 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.animal.ShoulderRidingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -39,7 +44,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
-public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdorable {
+public class Lily extends ShoulderRidingEntity implements GeoEntity, IDispellable, IAdorable {
+
     // Owner UUID to Lily UUID
     public static BiMap<UUID, UUID> ownerLilyMap = HashBiMap.create();
 
@@ -47,7 +53,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     private static final EntityDataAccessor<Boolean> WAG = SynchedEntityData.defineId(Lily.class, EntityDataSerializers.BOOLEAN);
     public int wagTicks;
 
-    public Lily(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
+    public Lily(EntityType<? extends ShoulderRidingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -68,11 +74,15 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     }
 
     @Override
-    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
         if (this.level.isClientSide) {
             return InteractionResult.CONSUME;
         }
         if (this.isOwnedBy(pPlayer)) {
+            if (pPlayer.isShiftKeyDown() && pPlayer instanceof ServerPlayer sp) {
+                this.setEntityOnShoulder(sp);
+                return InteractionResult.SUCCESS;
+            }
             this.setOrderedToSit(!this.isOrderedToSit());
             this.jumping = false;
             this.navigation.stop();
@@ -100,7 +110,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder pBuilder) {
         super.defineSynchedData(pBuilder);
         pBuilder.define(SIT, false);
         pBuilder.define(WAG, false);
@@ -134,7 +144,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         wagTicks = ticks;
     }
 
-    protected void playStepSound(BlockPos pPos, BlockState pBlock) {
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pBlock) {
         this.playSound(SoundEvents.WOLF_STEP, 0.15F, 1.0F);
     }
 
@@ -150,7 +160,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
         }
     }
 
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
         return SoundEvents.WOLF_HURT;
     }
 
@@ -183,27 +193,28 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
 
     @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel pLevel, @NotNull AgeableMob pOtherParent) {
         return null;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "walk", 1, (event) -> {
+        data.add(new AnimationController<>(this, "walk", 1, (event) -> {
+
             if (event.isMoving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController(this, "idle", 1, (event) -> {
+        data.add(new AnimationController<>(this, "idle", 1, (event) -> {
             if (!event.isMoving() && !this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
         }));
-        data.add(new AnimationController(this, "idle_wag", 1, (event) -> {
+        data.add(new AnimationController<>(this, "idle_wag", 1, (event) -> {
             if (!event.isMoving() && this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("idle_wagging"));
                 return PlayState.CONTINUE;
@@ -211,7 +222,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
             return PlayState.STOP;
         }));
 
-        data.add(new AnimationController(this, "rest", 1, (event) -> {
+        data.add(new AnimationController<>(this, "rest", 1, (event) -> {
             if (!event.isMoving() && this.isOrderedToSit() && !this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("resting"));
                 return PlayState.CONTINUE;
@@ -219,7 +230,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
             return PlayState.STOP;
         }));
 
-        data.add(new AnimationController(this, "rest_wag", 1, (event) -> {
+        data.add(new AnimationController<>(this, "rest_wag", 1, (event) -> {
             if (!event.isMoving() && this.isOrderedToSit() && this.isWagging()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("resting_wagging"));
                 return PlayState.CONTINUE;
@@ -246,7 +257,7 @@ public class Lily extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     }
 
     @Override
-    public void load(CompoundTag pCompound) {
+    public void load(@NotNull CompoundTag pCompound) {
         super.load(pCompound);
         if (!ownerLilyMap.containsKey(this.getOwnerUUID())) {
             Lily.ownerLilyMap.put(this.getOwnerUUID(), this.getUUID());

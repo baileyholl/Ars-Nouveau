@@ -55,24 +55,14 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void applyTickEffects() {
         if (!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null) {
             getOwner().addEffect(new MobEffectInstance(ModPotions.LOOTING_EFFECT, 600, 0, false, false, true));
         }
     }
 
-// TODO: restore looting event
-//    public void onLootingEvent(LootingLevelEvent event) {
-//        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
-//            if (level.random.nextFloat() > 0.4) {
-//                event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
-//            }
-//        }
-//    }
-
     @Override
-    public PlayState walkPredicate(AnimationState event) {
+    public PlayState walkPredicate(AnimationState<? extends FamiliarEntity> event) {
         if (event.isMoving()) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
             return PlayState.CONTINUE;
