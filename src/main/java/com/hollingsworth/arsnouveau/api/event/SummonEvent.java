@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 import javax.annotation.Nullable;
 
@@ -40,6 +41,25 @@ public class SummonEvent extends Event {
             this.source = source;
             this.world = world;
             this.wasExpiration = wasExpiration;
+        }
+    }
+
+    public static class Pre extends Event implements ICancellableEvent {
+        public HitResult rayTraceResult;
+        public Level world;
+        public LivingEntity shooter;
+
+        public SpellContext context;
+        public ISummon summon;
+        public SpellStats stats;
+
+        public Pre(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats stats, SpellContext spellContext, ISummon summon) {
+            this.rayTraceResult = rayTraceResult;
+            this.world = world;
+            this.shooter = shooter;
+            this.stats = stats;
+            this.context = spellContext;
+            this.summon = summon;
         }
     }
 }
