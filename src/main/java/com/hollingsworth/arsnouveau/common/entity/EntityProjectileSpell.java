@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -130,7 +132,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected boolean canRide(Entity vehicle) {
+    protected boolean canRide(@NotNull Entity vehicle) {
         return false;
     }
 
@@ -319,7 +321,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void setRemoved(RemovalReason reason) {
+    public void setRemoved(@NotNull RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK)
             reason = RemovalReason.DISCARDED;
         super.setRemoved(reason);
@@ -336,7 +338,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.SPELL_PROJ.get();
     }
 
@@ -373,7 +375,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         result = transformHitResult(result);
 
         if (result instanceof BlockHitResult blockHitResult && !this.isRemoved() && !hitList.contains(blockHitResult.getBlockPos())
@@ -462,7 +464,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(@NotNull Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
     }
 
@@ -479,7 +481,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         Entity entity = this.level.getEntity(pPacket.getData());
         if (entity != null) {
@@ -506,7 +508,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.spellResolver = null;
         if (tag.contains("pierce")) {
@@ -544,8 +546,14 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         return changed;
     }
 
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        ProjectileTimeline timeline = this.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+        ModelProperty.AnimationConfig animationConfig = modelProperty.selectedResource.animationConfig();
+        if (animationConfig != null)
+            animationConfig.animationRegistrar().accept(controllers, this);
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
