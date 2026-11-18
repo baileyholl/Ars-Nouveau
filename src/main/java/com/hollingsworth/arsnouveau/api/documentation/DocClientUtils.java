@@ -149,7 +149,8 @@ public class DocClientUtils {
         }
     }
 
-    public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
+    // TODO: breaking change rename back to drawParagaph and deprecate void methods
+    public static NuggetMultilLineLabel drawMultiLine(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(x + 1, y, 0);
@@ -157,6 +158,11 @@ public class DocClientUtils {
         int lineHeight = 9;
         label.renderLeftAlignedNoShadow(guiGraphics, 0, 0, lineHeight, 0);
         poseStack.popPose();
+        return label;
+    }
+
+    public static void drawParagraph(Component text, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {
+        drawMultiLine(text, guiGraphics, x, y, width, mouseX, mouseY, partialTick);
     }
 
     public static void drawParagraph(NuggetMultilLineLabel label, GuiGraphics guiGraphics, int x, int y, int width, int mouseX, int mouseY, float partialTick) {

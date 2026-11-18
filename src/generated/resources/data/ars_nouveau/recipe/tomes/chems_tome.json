@@ -244,6 +244,10 @@
           "sound": {}
         },
         "flairEffect": {
+          "motion": {
+            "type": "ars_nouveau:none",
+            "propMap": {}
+          },
           "particleOptions": {
             "type": "ars_nouveau:new_glow",
             "properties": {
@@ -295,6 +299,10 @@
           }
         },
         "onSpawnEffect": {
+          "motion": {
+            "type": "ars_nouveau:none",
+            "propMap": {}
+          },
           "particleOptions": {
             "type": "ars_nouveau:new_glow",
             "properties": {
