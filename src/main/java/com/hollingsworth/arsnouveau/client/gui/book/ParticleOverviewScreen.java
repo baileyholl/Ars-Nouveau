@@ -18,6 +18,7 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.SelectableButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateParticleTimeline;
 import com.hollingsworth.nuggets.client.gui.GuiHelpers;
+import com.hollingsworth.nuggets.client.gui.NuggetMultilLineLabel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -54,6 +55,9 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     boolean allExpanded = false;
     List<PropWidgetList> propLists = new ArrayList<>();
     ParticlePreviewWidget previewWidget;
+    GuiImageButton clearButton;
+    SelectableButton expandButton;
+
 
     public ParticleOverviewScreen(GuiSpellBook previousScreen, int slot, InteractionHand stackHand) {
         super(stackHand);
@@ -64,7 +68,6 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     public List<IParticleTimelineType<?>> findTimelineFromSlot() {
-
         List<IParticleTimelineType<?>> timelines = new ArrayList<>();
         for (AbstractSpellPart spellPart : caster.getSpell(selectedSpellSlot).recipe()) {
             IParticleTimelineType<?> timeline = null;
@@ -78,9 +81,6 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             if (timeline != null && !timelines.contains(timeline)) {
                 timelines.add(timeline);
             }
-        }
-        if (timelines.isEmpty()) {
-            timelines.add(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         }
         return timelines;
     }
@@ -130,7 +130,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             rowOffset = rowOffset + 1;
             layoutLeftPage();
         }).withHoverImage(DocAssets.BUTTON_DOWN_HOVER);
-        addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::reset));
+        clearButton = addRenderableWidget(new ClearButton(bookRight - 129, bookBottom - 13, Component.translatable("ars_nouveau.spell_book_gui.clear"), this::reset));
 
         addRenderableWidget(upButton);
         addRenderableWidget(downButton);
@@ -148,7 +148,7 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
 
         initLeftSideButtons();
 
-        SelectableButton expandButton = new SelectableButton(bookLeft + LEFT_PAGE_OFFSET + 12, bookBottom - 30, DocAssets.EXPAND_ICON, DocAssets.COLLAPSE_ICON, (button) -> {
+        expandButton = new SelectableButton(bookLeft + LEFT_PAGE_OFFSET + 12, bookBottom - 30, DocAssets.EXPAND_ICON, DocAssets.COLLAPSE_ICON, (button) -> {
             allExpanded = !allExpanded;
             if (button instanceof SelectableButton selectableButton) {
                 selectableButton.isSelected = allExpanded;
@@ -287,7 +287,9 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             }
         }
         layoutLeftPage();
+        if (selectedTimeline.isEmpty()) {
 
+        }
     }
 
     public void layoutLeftPage() {
@@ -346,6 +348,9 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     }
 
     private void updatePreviewButton() {
+        expandButton.visible = !selectedTimeline.isEmpty();
+        clearButton.visible = !selectedTimeline.isEmpty();
+        saveButton.visible = !selectedTimeline.isEmpty();
         if (previewButton == null) {
             return;
         }
@@ -370,6 +375,12 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         boolean previewActive = updatePreviewVisibility();
         super.render(graphics, mouseX, mouseY, partialTicks);
+        if (selectedTimeline.isEmpty()) {
+            List<NuggetMultilLineLabel> multiLines = DocClientUtils.splitToFitTitlePage(Component.translatable("ars_nouveau.spell_book_gui.no_timelines"));
+            DocClientUtils.drawParagraph(multiLines.getFirst(), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET + 20, ONE_PAGE_WIDTH - 20, mouseX, mouseY, partialTicks);
+            int yOffset = multiLines.getFirst().getLineCount() * 9 + 22 + bookTop + PAGE_TOP_OFFSET;
+            DocClientUtils.blit(graphics, DocAssets.SPELL_STYLE_TOOLTIP_ICON, bookLeft + LEFT_PAGE_OFFSET + ONE_PAGE_WIDTH / 2 - 5, yOffset);
+        }
         previewWidget.render(graphics, mouseX, mouseY, partialTicks);
         DocClientUtils.drawHeader(Component.translatable("ars_nouveau.spell_styles"), graphics, bookLeft + LEFT_PAGE_OFFSET, bookTop + PAGE_TOP_OFFSET, ONE_PAGE_WIDTH, mouseX, mouseY, partialTicks);
         if (propertyWidgetProvider != null && !previewActive) {

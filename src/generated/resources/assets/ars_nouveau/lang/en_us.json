@@ -1455,6 +1455,7 @@
   "ars_nouveau.spell_book_gui.effect": "Effect",
   "ars_nouveau.spell_book_gui.familiar": "Familiars",
   "ars_nouveau.spell_book_gui.form": "Form",
+  "ars_nouveau.spell_book_gui.no_timelines": "Create a spell in this slot to edit its particles, color, sound, and texture.\nConfigurable glyphs will have a spell styles icon:",
   "ars_nouveau.spell_book_gui.search": "Search",
   "ars_nouveau.spell_book_gui.select": "Select",
   "ars_nouveau.spell_book_gui.spell_name": "Spell Name",
