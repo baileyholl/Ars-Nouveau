@@ -45,20 +45,18 @@ public class SpellUtil {
     }
 
     public static boolean isCorrectHarvestLevel(int strength, BlockState state) {
-        Tier tier = switch (strength) {
-            case 2:
-                yield Tiers.STONE;
-            case 3:
-                yield Tiers.IRON;
-            case 4:
-                yield Tiers.DIAMOND;
-            case 5:
-                yield Tiers.NETHERITE;
-            default:
-                yield Tiers.WOOD;
+        // Zero or negative harvest levels can occur when a caster if afflicted with Mining Fatigue. Breaking blocks
+        // should not be possible in that case to prevent players trivially cheesing Ocean Monuments
+        if (strength <= 0) {
+            return false;
+        }
+        final Tier tier = switch (strength) {
+            case 1 -> Tiers.WOOD;
+            case 2 -> Tiers.STONE;
+            case 3 -> Tiers.IRON;
+            case 4 -> Tiers.DIAMOND;
+            default -> Tiers.NETHERITE;
         };
-        if (strength > 5)
-            tier = Tiers.NETHERITE;
         return !BuiltInRegistries.BLOCK.getOrCreateTag(tier.getIncorrectBlocksForDrops()).contains(state.getBlockHolder());
     }
 
