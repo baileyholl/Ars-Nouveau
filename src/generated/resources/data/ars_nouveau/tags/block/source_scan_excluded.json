@@ -1,0 +1,10 @@
+{
+  "values": [
+    "ars_nouveau:relay",
+    "ars_nouveau:relay_splitter",
+    "ars_nouveau:relay_collector",
+    "ars_nouveau:relay_deposit",
+    "ars_nouveau:relay_warp",
+    "ars_nouveau:imbuement_chamber"
+  ]
+}

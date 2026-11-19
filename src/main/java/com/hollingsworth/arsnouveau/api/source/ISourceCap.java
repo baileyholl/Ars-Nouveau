@@ -39,4 +39,8 @@ public interface ISourceCap {
 
     int extractSource(final int source, boolean simulate);
 
+    default boolean isInfinite() {
+        return false;
+    }
+
 }

@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.particle.timelines.RuneTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
-import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -150,7 +150,7 @@ public class RuneTile extends ModdedTile implements GeoBlockEntity, ITickable, I
             level.destroyBlock(this.worldPosition, false);
         }
         if (!level.isClientSide) {
-            List<ISpecialSourceProvider> provider = SourceUtil.takeSourceMultipleWithParticles(worldPosition, level, 10, spell.getCost());
+            List<SourceAccess> provider = SourceUtil.takeNearbyWithParticles(worldPosition, level, 10, spell.getCost());
             if (provider != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));

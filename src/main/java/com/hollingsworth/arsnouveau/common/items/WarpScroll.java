@@ -51,7 +51,7 @@ public class WarpScroll extends ModItem implements AliasProvider {
                 && data.canTeleportWithDim(entity.getCommandSenderWorld().dimension().location().toString())
                 && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                 && BlockRegistry.PORTAL_BLOCK.get().trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), data, displayName)
-                && SourceUtil.takeSourceMultipleWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
+                && SourceUtil.takeNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null) {
             BlockPos pos = entity.blockPosition();
             ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
             world.sendParticles(ParticleTypes.PORTAL, pos.getX(), pos.getY() + 1.0, pos.getZ(),

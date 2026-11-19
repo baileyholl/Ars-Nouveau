@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
+import com.hollingsworth.arsnouveau.api.source.SourceAccess;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -21,22 +21,23 @@ public class RelayCollectorTile extends RelayTile {
         if (disabled)
             return;
         if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
-            List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
+            List<SourceAccess> takeList = SourceUtil.findProviders(getBlockPos(), level, 5);
 
-            for (ISpecialSourceProvider provider : takeList) {
+            for (SourceAccess access : takeList) {
                 if (this.getSource() >= getMaxSource()) {
                     break;
                 }
-                if (this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()) {
+                if (access.pos().equals(this.getToPos())) {
                     continue;
                 }
-                if (this.getFromPos() != null && level.isLoaded(this.getFromPos()) && level.getBlockEntity(this.getFromPos()) == provider.getSource()) {
+                if (access.pos().equals(this.getFromPos())) {
                     continue;
                 }
 
-                int transferred = transferSource(provider.getSource(), this);
+                int transferred = transferSource(access.cap(), this.getSourceStorage());
                 if (transferred > 0) {
-                    ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
+                    updateBlock();
+                    ParticleUtil.spawnFollowProjectile(level, access.pos(), this.worldPosition, this.getColor());
                 }
             }
 

@@ -84,7 +84,7 @@ public class CapabilityRegistry {
 
         var sourceContainers = List.of(BlockRegistry.SOURCE_JAR_TILE, BlockRegistry.CREATIVE_SOURCE_JAR_TILE,
                 BlockRegistry.AGRONOMIC_SOURCELINK_TILE, BlockRegistry.ALCHEMICAL_TILE, BlockRegistry.VITALIC_TILE, BlockRegistry.MYCELIAL_TILE, BlockRegistry.VOLCANIC_TILE,
-                BlockRegistry.RELAY_COLLECTOR_TILE, BlockRegistry.RELAY_DEPOSIT_TILE, BlockRegistry.RELAY_WARP_TILE, BlockRegistry.ARCANE_RELAY_TILE,
+                BlockRegistry.RELAY_COLLECTOR_TILE, BlockRegistry.RELAY_DEPOSIT_TILE, BlockRegistry.RELAY_WARP_TILE, BlockRegistry.ARCANE_RELAY_TILE, BlockRegistry.RELAY_SPLITTER_TILE,
                 BlockRegistry.IMBUEMENT_TILE);
 
         for (var container : sourceContainers) {
