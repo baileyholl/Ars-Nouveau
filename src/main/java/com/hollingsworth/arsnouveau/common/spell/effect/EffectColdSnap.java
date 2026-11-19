@@ -50,7 +50,9 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         if (!canDamage(livingEntity))
             return;
         this.damage(vec, level, shooter, livingEntity, spellStats, spellContext, resolver, snareSec, damage);
-        spawnIce(shooter, level, BlockPos.containing(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z), spellStats, spellContext, resolver);
+        var pos = new Vec3(vec.x, vec.y + (rayTraceResult.getEntity().onGround() ? 1 : 0), vec.z);
+        var blockPos = BlockPos.containing(pos);
+        spawnIce(shooter, level, blockPos, pos.subtract(blockPos.getBottomCenter()), spellStats, spellContext, resolver);
         if (livingEntity.hasEffect(ModPotions.FREEZING_EFFECT)) {
             livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze() + 3);
         }
@@ -66,6 +68,10 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     public void spawnIce(LivingEntity shooter, Level level, BlockPos targetPos, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        spawnIce(shooter, level, targetPos, Vec3.ZERO, spellStats, spellContext, resolver);
+    }
+
+    public void spawnIce(LivingEntity shooter, Level level, BlockPos targetPos, Vec3 offset, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Vec3 middleVec = new Vec3(0.2, 0.3, 0.2);
         Vec3 cornerScaleVec = new Vec3(0.1, 0.2, 0.1);
         Set<BlockPos> corners = new HashSet<>();
@@ -73,38 +79,43 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
 
         for (int i = 1; i < 2 + spellStats.getAoeMultiplier(); i++) {
             // Middle sides
-            sides.addAll(replaceableBetween(level, targetPos.offset(-i, -i, 0), targetPos.offset(-i, i, 0)));
-            sides.addAll(replaceableBetween(level, targetPos.offset(i, -i, 0), targetPos.offset(i, i, 0)));
-            sides.addAll(replaceableBetween(level, targetPos.offset(0, -i, -i), targetPos.offset(0, i, -i)));
-            sides.addAll(replaceableBetween(level, targetPos.offset(0, -i, i), targetPos.offset(0, i, i)));
+            addReplaceableBetween(sides, level, targetPos.offset(-i, -i, 0), targetPos.offset(-i, i, 0));
+            addReplaceableBetween(sides, level, targetPos.offset(i, -i, 0), targetPos.offset(i, i, 0));
+            addReplaceableBetween(sides, level, targetPos.offset(0, -i, -i), targetPos.offset(0, i, -i));
+            addReplaceableBetween(sides, level, targetPos.offset(0, -i, i), targetPos.offset(0, i, i));
             // corners
-            corners.addAll(replaceableBetween(level, targetPos.offset(-i, -i, -i), targetPos.offset(-i, i, -i)));
-            corners.addAll(replaceableBetween(level, targetPos.offset(i, -i, -i), targetPos.offset(i, i, -i)));
-            corners.addAll(replaceableBetween(level, targetPos.offset(-i, -i, i), targetPos.offset(-i, i, i)));
-            corners.addAll(replaceableBetween(level, targetPos.offset(i, -i, i), targetPos.offset(i, i, i)));
-
+            addReplaceableBetween(corners, level, targetPos.offset(-i, -i, -i), targetPos.offset(-i, i, -i));
+            addReplaceableBetween(corners, level, targetPos.offset(i, -i, -i), targetPos.offset(i, i, -i));
+            addReplaceableBetween(corners, level, targetPos.offset(-i, -i, i), targetPos.offset(-i, i, i));
+            addReplaceableBetween(corners, level, targetPos.offset(i, -i, i), targetPos.offset(i, i, i));
         }
+
         // top and bottom
-        corners.addAll(replaceableBetween(level, targetPos.offset(0, -1, 0), targetPos.offset(0, 1, 0)));
+        addReplaceableBetween(corners, level, targetPos.offset(0, -1, 0), targetPos.offset(0, 1, 0));
 
         for (BlockPos pos : corners) {
             if (!level.getBlockState(pos).canBeReplaced()) {
                 continue;
             }
-            spawnIce(level, pos, targetPos, cornerScaleVec, spellStats, spellContext, resolver, shooter);
+            spawnIce(level, pos, targetPos, offset, cornerScaleVec, spellStats, spellContext, resolver, shooter);
         }
 
         for (BlockPos pos : sides) {
             if (!level.getBlockState(pos).canBeReplaced()) {
                 continue;
             }
-            spawnIce(level, pos, targetPos, middleVec, spellStats, spellContext, resolver, shooter);
+            spawnIce(level, pos, targetPos, offset, middleVec, spellStats, spellContext, resolver, shooter);
         }
     }
 
     public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter) {
+        spawnIce(level, pos, targetPos, Vec3.ZERO, scaleVec, spellStats, context, resolver, shooter);
+    }
+
+    public void spawnIce(Level level, BlockPos pos, BlockPos targetPos, Vec3 offset, Vec3 scaleVec, SpellStats spellStats, SpellContext context, SpellResolver resolver, LivingEntity shooter) {
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        IceShardEntity fallingBlock = new IceShardEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, Blocks.ICE.defaultBlockState(), resolver);
+        var icePos = pos.getBottomCenter().add(offset);
+        IceShardEntity fallingBlock = new IceShardEntity(level, icePos.x, icePos.y, icePos.z, Blocks.ICE.defaultBlockState(), resolver);
         // Send the falling block the opposite direction of the target
         fallingBlock.setDeltaMovement(pos.getX() - targetPos.getX(), pos.getY() - targetPos.getY(), pos.getZ() - targetPos.getZ());
         fallingBlock.setDeltaMovement(fallingBlock.getDeltaMovement().multiply(scaleVec));
@@ -117,15 +128,20 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
         ShapersFocus.tryPropagateEntitySpell(fallingBlock, level, shooter, context, resolver);
     }
 
+    @Deprecated
     public Set<BlockPos> replaceableBetween(Level level, BlockPos pos1, BlockPos pos2) {
         HashSet<BlockPos> set = new HashSet<>();
+        addReplaceableBetween(set, level, pos1, pos2);
+        return set;
+    }
+
+    public void addReplaceableBetween(Set<BlockPos> set, Level level, BlockPos pos1, BlockPos pos2) {
         for (BlockPos pos : BlockPos.betweenClosed(pos1, pos2)) {
             if (!level.getBlockState(pos).canBeReplaced()) {
                 continue;
             }
             set.add(pos.immutable());
         }
-        return set;
     }
 
     public boolean canDamage(LivingEntity livingEntity) {
