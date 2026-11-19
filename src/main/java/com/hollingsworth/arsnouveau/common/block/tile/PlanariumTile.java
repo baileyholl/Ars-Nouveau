@@ -135,7 +135,6 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         updateBlock();
     }
 
-
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.handleUpdateTag(tag, lookupProvider);
@@ -303,7 +302,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         public Map<ResourceKey<Level>, Entry> entries = new ConcurrentHashMap<>();
 
         public static void onBlockBroken(BlockEvent.BreakEvent event) {
-            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.JAR_DIMENSION_TYPE_KEY)) {
                 boolean insideJar = PlanariumChunkGenerator.innerBox.contains(event.getPos().getBottomCenter());
                 if (insideJar) {
                     PlanariumTile.dimManager.markDirty(level.dimension());
@@ -329,7 +328,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         }
 
         public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
-            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.JAR_DIMENSION_TYPE_KEY)) {
                 PlanariumTile.dimManager.markDirty(level.dimension());
             }
         }
@@ -356,7 +355,7 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
         public static Holder<DimensionType> getDimensionTypeHolder(MinecraftServer server) {
             return server.registryAccess() // get dynamic registries
                     .registryOrThrow(Registries.DIMENSION_TYPE)
-                    .getHolderOrThrow(ArsNouveau.DIMENSION_TYPE_KEY);
+                    .getHolderOrThrow(ArsNouveau.JAR_DIMENSION_TYPE_KEY);
         }
 
         public StructureTemplate getTemplate(ResourceKey<Level> key) {

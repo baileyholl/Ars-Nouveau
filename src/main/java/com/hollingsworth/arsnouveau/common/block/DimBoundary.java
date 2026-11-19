@@ -75,7 +75,7 @@ public class DimBoundary extends ModBlock implements IWandable {
         if (storedPos == null
                 || !(level instanceof ServerLevel serverLevel)
                 || !level.dimension().equals(storedPos.dimension())
-                || !WorldUtil.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+                || !WorldUtil.isOfWorldType(level, ArsNouveau.JAR_DIMENSION_TYPE_KEY)) {
             return Result.FAIL;
         }
         JarDimData dimData = JarDimData.from(serverLevel);
