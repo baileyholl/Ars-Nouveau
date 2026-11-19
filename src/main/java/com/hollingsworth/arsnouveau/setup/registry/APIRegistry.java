@@ -140,6 +140,7 @@ public class APIRegistry {
         registerRitual(new RitualScrying());
         registerRitual(new RitualFlight());
         registerRitual(new RitualGravity());
+        registerRitual(new RitualAntimagic());
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualAnimalSummoning());
         registerRitual(new RitualBinding());
