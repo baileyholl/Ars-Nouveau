@@ -4,15 +4,32 @@ import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ANPlayerData implements INBTSerializable<CompoundTag> {
+    public static final StreamCodec<RegistryFriendlyByteBuf, ANPlayerData> STREAM_CODEC = StreamCodec.composite(
+            AbstractSpellPart.STREAM_LIST.map(list -> (Set<AbstractSpellPart>) new HashSet<>(list), s -> s.stream().toList()), d -> d.glyphs,
+            FamiliarData.STREAM_CODEC.apply(ByteBufCodecs.list()).map(list -> (Set<FamiliarData>) new HashSet<>(list), s -> s.stream().toList()), d -> d.familiars,
+            ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), d -> Optional.ofNullable(d.lastSummonedFamiliar),
+            (glyphs, familiars, lastSummonedFamiliar) -> {
+                var instance = new ANPlayerData();
+                instance.glyphs = glyphs;
+                instance.familiars = familiars;
+                instance.lastSummonedFamiliar = lastSummonedFamiliar.orElse(null);
+                return instance;
+            }
+    );
+
     public Set<AbstractSpellPart> glyphs = new HashSet<>();
 
     public Set<FamiliarData> familiars = new HashSet<>();
