@@ -2,6 +2,8 @@
   "values": [
     "minecraft:bamboo",
     "minecraft:sugar_cane",
-    "minecraft:cactus"
+    "minecraft:cactus",
+    "minecraft:kelp",
+    "minecraft:kelp_plant"
   ]
 }
