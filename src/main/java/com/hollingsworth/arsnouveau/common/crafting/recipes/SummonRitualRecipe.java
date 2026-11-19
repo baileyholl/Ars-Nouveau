@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -108,6 +110,13 @@ public class SummonRitualRecipe implements SpecialSingleInputRecipe {
                 ResourceLocation.CODEC.fieldOf("mob").forGetter(WeightedMobType::mob),
                 Codec.INT.fieldOf("weight").forGetter(WeightedMobType::weight)
         ).apply(instance, WeightedMobType::new));
+
+        public static WeightedMobType fromSpawnerData(MobSpawnSettings.SpawnerData data) {
+            return new WeightedMobType(
+                    BuiltInRegistries.ENTITY_TYPE.getKey(data.type),
+                    data.getWeight().asInt()
+            );
+        }
 
         @Override
         public @NotNull Weight getWeight() {
