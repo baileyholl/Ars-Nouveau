@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 204,
     "g": 204,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Weaken it, kill it and take it home.",
@@ -20,9 +20,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 204,
       "g": 204,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Sutokahs LOVE",
