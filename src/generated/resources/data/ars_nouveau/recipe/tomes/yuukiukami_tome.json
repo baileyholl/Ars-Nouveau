@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 105,
     "g": 1,
-    "id": "ars_nouveau:constant",
     "r": 48
   },
   "flavour_text": "One of YuukiUkami’s earliest creations, this spell reflects their desire for precision and mastery. Infused with the arcane finesse of its creator, it draws minerals from the earth at a distance, as if the ores themselves were eager to join the mage’s growing legacy",
@@ -18,9 +18,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 105,
       "g": 1,
-      "id": "ars_nouveau:constant",
       "r": 48
     },
     "name": "Yuuki's Mineral Assimilator",

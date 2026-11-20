@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 255,
     "g": 255,
-    "id": "ars_nouveau:constant",
     "r": 25
   },
   "flavour_text": "Heroes are so straightforward, so easily befuddled...",
@@ -17,9 +17,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 255,
       "g": 255,
-      "id": "ars_nouveau:constant",
       "r": 25
     },
     "name": "KirinDave's Sinister Switch",

@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 203,
     "g": 119,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "The bite from this storm is worse than its bark.",
@@ -27,9 +27,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 203,
       "g": 119,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Aurellia's Bite Storm",

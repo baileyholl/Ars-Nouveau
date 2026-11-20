@@ -2,15 +2,20 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.IParticleColor;
+import com.hollingsworth.arsnouveau.api.particle.IParticleColorType;
 import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,30 +25,53 @@ import java.util.Random;
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
 public class ParticleColor implements IParticleColor, Cloneable {
+    // TODO: breaking change, make this Codec<IParticleColor> when deprecated codecs are removed
+    public static final MapCodec<ParticleColor> CODEC = MapCodec.recursive("ParticleColor", self -> NeoForgeExtraCodecs.withAlternative(
+            ParticleColorRegistry.PARTICLE_COLOR_REGISTRY.byNameCodec().dispatchMap(ParticleColor::getType, IParticleColorType::codec),
+            ParticleColor.OLD_REGISTRY_CODEC));
 
-    public static final MapCodec<ParticleColor> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(ParticleColor::getRegistryName),
-            Codec.INT.fieldOf("r").forGetter(ParticleColor::getRedInt),
-            Codec.INT.fieldOf("g").forGetter(ParticleColor::getGreenInt),
-            Codec.INT.fieldOf("b").forGetter(ParticleColor::getBlueInt)
-    ).apply(instance, ParticleColorRegistry::from));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ParticleColor> STREAM = NeoForgeStreamCodecs.lazy(() -> ByteBufCodecs.registry(ParticleColorRegistry.PARTICLE_COLOR_REGISTRY_KEY).dispatch(ParticleColor::getType, IParticleColorType::streamCodec));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ParticleColor> STREAM = StreamCodec.of(
+    @Deprecated(forRemoval = true)
+    public static final StreamCodec<RegistryFriendlyByteBuf, ParticleColor> OLD_REGISTRY_STREAM = StreamCodec.of(
             (buf, val) -> {
                 buf.writeResourceLocation(val.getRegistryName());
                 buf.writeInt(val.getRedInt());
                 buf.writeInt(val.getGreenInt());
                 buf.writeInt(val.getBlueInt());
             },
+            buf -> ParticleColorRegistry.from(buf.readResourceLocation(), buf.readInt(), buf.readInt(), buf.readInt())
+    );
+
+    @Deprecated(forRemoval = true)
+    public static final MapCodec<ParticleColor> OLD_REGISTRY_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("id").forGetter(ParticleColor::getRegistryName),
+            Codec.INT.fieldOf("r").forGetter(ParticleColor::getRedInt),
+            Codec.INT.fieldOf("g").forGetter(ParticleColor::getGreenInt),
+            Codec.INT.fieldOf("b").forGetter(ParticleColor::getBlueInt)
+    ).apply(instance, ParticleColorRegistry::from));
+
+    public static final MapCodec<ParticleColor> CONSTANT_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.INT.fieldOf("r").forGetter(ParticleColor::getRedInt),
+            Codec.INT.fieldOf("g").forGetter(ParticleColor::getGreenInt),
+            Codec.INT.fieldOf("b").forGetter(ParticleColor::getBlueInt)
+    ).apply(instance, ParticleColor::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ParticleColor> CONSTANT_STREAM = StreamCodec.of(
+            (buf, val) -> {
+                buf.writeInt(val.getRedInt());
+                buf.writeInt(val.getGreenInt());
+                buf.writeInt(val.getBlueInt());
+            },
             buf -> {
-                ResourceLocation id = buf.readResourceLocation();
                 int r = buf.readInt();
                 int g = buf.readInt();
                 int b = buf.readInt();
-                return ParticleColorRegistry.from(id, r, g, b);
+                return new ParticleColor(r, g, b);
             }
     );
 
+    @Deprecated(forRemoval = true)
     public static final ResourceLocation ID = ArsNouveau.prefix("constant");
 
     public static final ParticleColor DEFAULT = new ParticleColor(255, 25, 180);
@@ -147,7 +175,17 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return ID;
     }
 
+    @Override
+    public IParticleColorType<?> getType() {
+        return getClass() == ParticleColor.class ? ParticleColorRegistry.CONSTANT_TYPE.get() : ParticleColorRegistry.LEGACY_TYPE.get();
+    }
+
+    @Deprecated(forRemoval = true)
     public CompoundTag serialize() {
+        IParticleColorType<?> type = getType();
+        if (type != ParticleColorRegistry.CONSTANT_TYPE.get() && type != ParticleColorRegistry.LEGACY_TYPE.get()) {
+            return (CompoundTag) ANCodecs.encode(CODEC.codec(), this);
+        }
         CompoundTag tag = new CompoundTag();
         // Wrap and store as int because we don't want to lose precision
         ParticleColor.IntWrapper wrapper = toWrapper();
@@ -162,6 +200,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
         return "" + this.r + "," + this.g + "," + this.b;
     }
 
+    @Deprecated(forRemoval = true)
     public IntWrapper toWrapper() {
         return new IntWrapper(this);
     }
@@ -214,6 +253,7 @@ public class ParticleColor implements IParticleColor, Cloneable {
         double y = (299 * getRedInt() + 587 * getGreenInt() + 114 * getBlueInt()) / 1000;
         return y >= 128 ? ParticleColor.BLACK : ParticleColor.WHITE;
     }
+
 
     @Deprecated(forRemoval = true)
     public static class IntWrapper implements Cloneable {

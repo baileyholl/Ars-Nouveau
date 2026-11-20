@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 239,
     "g": 220,
-    "id": "ars_nouveau:constant",
     "r": 178
   },
   "flavour_text": "First you're airborne. Then you're dizzy. Then you're somewhere else. By the time you figure out what happened, it's already happening again.",
@@ -28,9 +28,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 239,
       "g": 220,
-      "id": "ars_nouveau:constant",
       "r": 178
     },
     "name": "Pandoxyy's Spin Cycle",
@@ -55,9 +55,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 239,
                       "g": 220,
-                      "id": "ars_nouveau:constant",
                       "r": 178
                     },
                     "tintDisabled": false

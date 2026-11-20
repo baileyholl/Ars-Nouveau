@@ -209,7 +209,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                         .add(AugmentPierce.INSTANCE)
                         .withSound(new ConfiguredSpellSound(SoundRegistry.TEMPESTRY_SPELL_SOUND)),
                 "For those who can't settle with just a tiny hut.",
-                new RainbowParticleColor(255, 255, 255))
+                new RainbowParticleColor())
         );
 
 
