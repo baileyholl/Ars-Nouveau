@@ -7,14 +7,4 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record SimpleParticleColorType<T extends ParticleColor>(MapCodec<T> codec,
                                                                StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) implements IParticleColorType<T> {
-
-    @Override
-    public MapCodec<T> codec() {
-        return codec;
-    }
-
-    @Override
-    public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
-        return streamCodec;
-    }
 }

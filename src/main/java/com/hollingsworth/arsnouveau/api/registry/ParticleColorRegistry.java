@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.api.particle.SimpleParticleColorType;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -27,7 +28,7 @@ public class ParticleColorRegistry {
 
 
     // TODO: to be removed, this is just a fallback for addons that implemented or overrode particle color types before the new system was implemented.
-    public static final DeferredHolder<IParticleColorType<?>, IParticleColorType<ParticleColor>> LEGACY_TYPE = PARTICLE_COLOR.register("legacy", () -> new SimpleParticleColorType<>(ParticleColor.OLD_REGISTRY_CODEC, ParticleColor.STREAM));
+    public static final DeferredHolder<IParticleColorType<?>, IParticleColorType<ParticleColor>> LEGACY_TYPE = PARTICLE_COLOR.register("legacy", () -> new SimpleParticleColorType<>(ParticleColor.OLD_REGISTRY_CODEC, ParticleColor.OLD_REGISTRY_STREAM));
 
     public static final DeferredHolder<IParticleColorType<?>, IParticleColorType<ParticleColor>> CONSTANT_TYPE = PARTICLE_COLOR.register("constant", () -> new SimpleParticleColorType<>(ParticleColor.CONSTANT_CODEC, ParticleColor.CONSTANT_STREAM));
 
@@ -74,7 +75,11 @@ public class ParticleColorRegistry {
         if (compoundTag == null) {
             return new ParticleColor(0, 0, 0);
         }
-        return MAP.getOrDefault(ResourceLocation.tryParse(compoundTag.getString("type")), DEFAULT).create(compoundTag);
+        IParticleProvider provider = MAP.get(ResourceLocation.tryParse(compoundTag.getString("type")));
+        if (provider != null) {
+            return provider.create(compoundTag);
+        }
+        return ANCodecs.decodeOptional(ParticleColor.CODEC.codec(), compoundTag).orElseGet(() -> DEFAULT.create(compoundTag));
     }
 
     @Deprecated(forRemoval = true)
