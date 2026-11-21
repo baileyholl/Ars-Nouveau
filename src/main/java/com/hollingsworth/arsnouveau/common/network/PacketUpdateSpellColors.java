@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCaster;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -29,14 +28,14 @@ public class PacketUpdateSpellColors extends AbstractPacket {
     //Decoder
     public PacketUpdateSpellColors(RegistryFriendlyByteBuf buf) {
         castSlot = buf.readInt();
-        color = ParticleColorRegistry.from(buf.readNbt());
+        color = ParticleColor.STREAM.decode(buf);
         mainHand = buf.readBoolean();
     }
 
     //Encoder
     public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeInt(castSlot);
-        buf.writeNbt(color.serialize());
+        ParticleColor.STREAM.encode(buf, color);
         buf.writeBoolean(mainHand);
     }
 

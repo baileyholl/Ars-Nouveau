@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.particle.IParticleColorType;
 import com.hollingsworth.arsnouveau.api.particle.IParticleProvider;
 import com.hollingsworth.arsnouveau.api.particle.SimpleParticleColorType;
+import com.hollingsworth.arsnouveau.client.particle.GradientParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.arsnouveau.common.util.ANCodecs;
@@ -34,6 +35,8 @@ public class ParticleColorRegistry {
 
     public static final DeferredHolder<IParticleColorType<?>, IParticleColorType<RainbowParticleColor>> RAINBOW_TYPE = PARTICLE_COLOR.register("rainbow", () -> new SimpleParticleColorType<>(RainbowParticleColor.RAINBOW_CODEC, RainbowParticleColor.RAINBOW_STREAM));
 
+    public static final DeferredHolder<IParticleColorType<?>, IParticleColorType<GradientParticleColor>> GRADIENT = PARTICLE_COLOR.register("gradient", () -> new SimpleParticleColorType<>(GradientParticleColor.GRADIENT_CODEC, GradientParticleColor.GRADIENT_STREAM));
+
     @Deprecated(forRemoval = true)
     private static ConcurrentHashMap<ResourceLocation, IParticleProvider> MAP = new ConcurrentHashMap<>();
 
@@ -61,6 +64,17 @@ public class ParticleColorRegistry {
             @Override
             public ParticleColor create(int r, int g, int b) {
                 return new RainbowParticleColor();
+            }
+        });
+        MAP.put(GradientParticleColor.ID, new IParticleProvider() {
+            @Override
+            public ParticleColor create(CompoundTag tag) {
+                return ANCodecs.decode(GradientParticleColor.GRADIENT_CODEC.codec(), tag);
+            }
+
+            @Override
+            public ParticleColor create(int r, int g, int b) {
+                return new GradientParticleColor(new ParticleColor(r, g, b), new ParticleColor(r, g, b), 20);
             }
         });
     }

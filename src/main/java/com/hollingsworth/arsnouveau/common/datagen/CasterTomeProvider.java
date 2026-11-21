@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
 import com.mojang.serialization.JsonOps;
@@ -368,7 +369,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                spell.color().serialize(), spell.sound());
+                (CompoundTag) ANCodecs.encode(ParticleColor.CODEC.codec(), spell.color()), spell.sound());
     }
 
     public static CasterRecipeWrapper buildTome(String id, String name, Spell spell, String flavorText, ParticleColor color) {
@@ -377,7 +378,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                 spell.serializeRecipe(),
                 ItemsRegistry.CASTER_TOME.registryObject.getId(),
                 flavorText,
-                color.serialize(), spell.sound());
+                (CompoundTag) ANCodecs.encode(ParticleColor.CODEC.codec(), color), spell.sound());
     }
 
     public static UpdatedRecipeWrapper fromCode(String id, String name, String flavorText, String code) {
@@ -411,7 +412,7 @@ public class CasterTomeProvider extends SimpleDataProvider {
                                       ResourceLocation tomeType, String flavorText, CompoundTag particleColor,
                                       ConfiguredSpellSound sound) {
         public CasterTomeData toData() {
-            return new CasterTomeData(name, spell, tomeType, flavorText, particleColor, sound);
+            return new CasterTomeData(name, spell, tomeType, flavorText, ANCodecs.decode(ParticleColor.CODEC.codec(), particleColor), sound);
         }
     }
 }

@@ -59,19 +59,12 @@ public class RainbowParticleColor extends ParticleColor {
 
     @Override
     public ParticleColor nextColor(int ticks) {
-        return Color.rainbowColor(ticks).toParticle();
+        return transition(ticks);
     }
 
     @Override
     public ParticleColor transition(int ticks) {
         return RAINBOW_FRAMES[Math.abs((tickOffset + ticks) % RAINBOW_FRAMES.length)];
-    }
-
-    @Override
-    public CompoundTag serialize() {
-        CompoundTag tag = super.serialize();
-        tag.putInt("tickOffset", tickOffset);
-        return tag;
     }
 
     @Override

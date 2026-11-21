@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
 import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
@@ -55,7 +54,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     @Override
     public void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
-        this.color = ParticleColorRegistry.from(compound.getCompound("color"));
+        this.color = ANCodecs.decodeOptional(ParticleColor.CODEC.codec(), compound.getCompound("color")).orElseGet(ParticleColor::defaultParticleColor);
         lit = compound.getBoolean("lit");
         if (compound.contains("timeline")) {
             this.timeline = ANCodecs.decode(LightTimeline.CODEC.codec(), compound.getCompound("timeline"));
@@ -73,7 +72,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
     @Override
     public void saveAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.saveAdditional(compound, pRegistries);
-        compound.put("color", color.serialize());
+        compound.put("color", ANCodecs.encode(ParticleColor.CODEC.codec(), color));
         compound.putBoolean("lit", lit);
         compound.put("timeline", ANCodecs.encode(LightTimeline.CODEC.codec(), timeline));
     }
