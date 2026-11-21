@@ -21,11 +21,21 @@ public record SchoolTooltip(AbstractSpellPart part, boolean glyphItem,
 
     @Deprecated(forRemoval = true)
     public SchoolTooltip(AbstractSpellPart part, boolean glyphItem) {
-        this(part, false, false);
+        this(part, glyphItem, false);
     }
 
     public SchoolTooltip(AbstractSpellPart part) {
         this(part, false, false);
+    }
+
+    @Deprecated(forRemoval = true)
+    public List<SpellSchool> schools() {
+        return part.spellSchools;
+    }
+
+    @Deprecated(forRemoval = true)
+    public String name() {
+        return glyphItem ? Component.translatable("ars_nouveau.glyph_of", part.getLocaleName()).getString() : part.getLocaleName();
     }
 
 
