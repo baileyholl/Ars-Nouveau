@@ -1,10 +1,7 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
-    "b": 0,
-    "g": 0,
-    "id": "ars_nouveau:rainbow",
-    "r": 255
+    "type": "ars_nouveau:rainbow"
   },
   "flavour_text": "For those who can't settle with just a tiny hut.",
   "name": "Alex's Magnificent Mansion",
@@ -29,10 +26,7 @@
   ],
   "spellData": {
     "color": {
-      "b": 0,
-      "g": 0,
-      "id": "ars_nouveau:rainbow",
-      "r": 255
+      "type": "ars_nouveau:rainbow"
     },
     "name": "Alex's Magnificent Mansion",
     "particleTimeline": {},

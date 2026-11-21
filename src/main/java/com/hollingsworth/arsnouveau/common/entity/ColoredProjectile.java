@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -42,7 +42,7 @@ public abstract class ColoredProjectile extends Projectile {
 
     public ParticleColor getColor() {
         if (this.color == null) {
-            this.color = ParticleColorRegistry.from(entityData.get(PARTICLE_TAG));
+            this.color = ANCodecs.decodeOptional(ParticleColor.CODEC.codec(), entityData.get(PARTICLE_TAG)).orElseGet(ParticleColor::defaultParticleColor);
         }
         return this.color;
     }
@@ -61,7 +61,7 @@ public abstract class ColoredProjectile extends Projectile {
         entityData.set(RED, wrapper.r);
         entityData.set(GREEN, wrapper.g);
         entityData.set(BLUE, wrapper.b);
-        entityData.set(PARTICLE_TAG, colors.serialize());
+        entityData.set(PARTICLE_TAG, (CompoundTag) ANCodecs.encode(ParticleColor.CODEC.codec(), colors));
         this.color = colors;
     }
 
@@ -89,7 +89,7 @@ public abstract class ColoredProjectile extends Projectile {
         pBuilder.define(RED, 255);
         pBuilder.define(GREEN, 25);
         pBuilder.define(BLUE, 180);
-        pBuilder.define(PARTICLE_TAG, new ParticleColor(255, 25, 180).serialize());
+        pBuilder.define(PARTICLE_TAG, (CompoundTag) ANCodecs.encode(ParticleColor.CODEC.codec(), new ParticleColor(255, 25, 180)));
     }
 
     @Nullable

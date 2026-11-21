@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 201,
     "g": 145,
-    "id": "ars_nouveau:constant",
     "r": 145
   },
   "flavour_text": "It's covered in dirt and moss..",
@@ -25,9 +25,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 201,
       "g": 145,
-      "id": "ars_nouveau:constant",
       "r": 145
     },
     "name": "Verdant Aura",

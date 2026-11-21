@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.item.inv.IInvProvider;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
@@ -20,6 +19,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.ChatFormatting;
@@ -233,7 +233,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         } else {
             ritual = null;
         }
-        color = ParticleColorRegistry.from(tag.getCompound("color"));
+        color = ANCodecs.decodeOptional(ParticleColor.CODEC.codec(), tag.getCompound("color")).orElseGet(ParticleColor::defaultParticleColor);
         isDecorative = tag.getBoolean("decorative");
         isOff = tag.getBoolean("off");
 
@@ -251,7 +251,7 @@ public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, G
         } else {
             tag.remove("ritualID");
         }
-        tag.put("color", color.serialize());
+        tag.put("color", ANCodecs.encode(ParticleColor.CODEC.codec(), color));
         tag.putBoolean("decorative", isDecorative);
         tag.putBoolean("off", isOff);
         // store the relay position

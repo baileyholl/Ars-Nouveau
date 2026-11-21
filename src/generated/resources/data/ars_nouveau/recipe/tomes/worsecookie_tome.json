@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 1,
     "g": 153,
-    "id": "ars_nouveau:constant",
     "r": 204
   },
   "flavour_text": "Along the shore the cloud waves break, The twin suns sink beneath the lake, The shadows lengthen. In Carcosa",
@@ -23,9 +23,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 1,
       "g": 153,
-      "id": "ars_nouveau:constant",
       "r": 204
     },
     "name": "The Yellow Sun",

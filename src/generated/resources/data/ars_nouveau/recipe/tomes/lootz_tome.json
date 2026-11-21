@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 1,
     "g": 255,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Mobs meet fireworks",
@@ -22,9 +22,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 1,
       "g": 255,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Fireworks and Mobs",
