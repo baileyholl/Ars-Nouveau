@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Safely contain your enemies while they wither away. Some say Kamii is still stuck in a bubble somewhere after miscasting this curse.",
@@ -21,9 +21,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Kamii's Curse",
@@ -46,9 +46,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -83,9 +83,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -108,9 +108,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -136,9 +136,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -160,9 +160,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 204,
                       "g": 193,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": false

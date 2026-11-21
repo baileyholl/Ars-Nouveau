@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": " Traveling issues? Nonsense, all it takes is one leap and you get there in no time! Why the sticky feeling? Safety precautions, your legs aren't strong enough for the sudden stop with the ground, so we made them bouncy!",
@@ -21,9 +21,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "",
@@ -48,9 +48,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -82,9 +82,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -112,9 +112,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -137,9 +137,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -175,9 +175,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -215,9 +215,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 178,
                       "g": 178,
-                      "id": "ars_nouveau:constant",
                       "r": 178
                     },
                     "tintDisabled": false
@@ -249,9 +249,9 @@
         "propMap": {
           "ars_nouveau:color": {
             "particleColor": {
+              "type": "ars_nouveau:constant",
               "b": 180,
               "g": 25,
-              "id": "ars_nouveau:constant",
               "r": 255
             },
             "tintDisabled": true

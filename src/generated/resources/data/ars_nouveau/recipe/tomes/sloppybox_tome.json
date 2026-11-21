@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 1,
     "g": 1,
-    "id": "ars_nouveau:constant",
     "r": 139
   },
   "flavour_text": "Enough heat to melt a mountain or evaporate oceans.",
@@ -20,9 +20,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 1,
       "g": 1,
-      "id": "ars_nouveau:constant",
       "r": 139
     },
     "name": "Arcane Smelt",

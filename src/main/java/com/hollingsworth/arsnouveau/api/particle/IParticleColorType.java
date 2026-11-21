@@ -1,0 +1,14 @@
+package com.hollingsworth.arsnouveau.api.particle;
+
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+
+public interface IParticleColorType<T extends ParticleColor> {
+
+    MapCodec<T> codec();
+
+    StreamCodec<RegistryFriendlyByteBuf, T> streamCodec();
+
+}

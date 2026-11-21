@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 32,
     "g": 114,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "In a flash of magic, the world twists, and what was once here is now there.",
@@ -29,9 +29,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 32,
       "g": 114,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Chosen's Chaotic Shift",

@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "It is unknown whether the original author of this spell survived its first casting, or if she was replaced by one of her simulacra in the ensuing chaos. Don't think too hard about it. ",
@@ -22,9 +22,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Simulmancer's Storm",
@@ -49,9 +49,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -88,9 +88,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -131,9 +131,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -168,9 +168,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 62,
                       "g": 199,
-                      "id": "ars_nouveau:constant",
                       "r": 223
                     },
                     "tintDisabled": false
@@ -193,9 +193,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -232,9 +232,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 62,
                       "g": 199,
-                      "id": "ars_nouveau:constant",
                       "r": 223
                     },
                     "tintDisabled": false
@@ -263,9 +263,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -300,9 +300,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -325,9 +325,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -363,9 +363,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true

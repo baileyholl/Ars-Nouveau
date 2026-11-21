@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.HelixParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -21,7 +19,7 @@ public class PacketANEffect extends AbstractPacket {
     private final double x;
     private final double y;
     private final double z;
-    private final CompoundTag particleNbt;
+    private final ParticleColor color;
 
     private final int[] args;
 
@@ -30,9 +28,7 @@ public class PacketANEffect extends AbstractPacket {
         this.x = x;
         this.y = y;
         this.z = z;
-        //255,25,180
-        ParticleColor defaultColor = new ParticleColor(255, 25, 180);
-        this.particleNbt = defaultColor.serialize();
+        this.color = new ParticleColor(255, 25, 180);
         this.args = args;
     }
 
@@ -41,7 +37,7 @@ public class PacketANEffect extends AbstractPacket {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.particleNbt = color.serialize();
+        this.color = color;
         this.args = args;
     }
 
@@ -59,13 +55,13 @@ public class PacketANEffect extends AbstractPacket {
         double x = buf.readDouble();
         double y = buf.readDouble();
         double z = buf.readDouble();
-        CompoundTag nbt = buf.readNbt();
+        ParticleColor color = ParticleColor.STREAM.decode(buf);
         int[] args = new int[type.argCount];
 
         for (int i = 0; i < args.length; i++) {
             args[i] = buf.readVarInt();
         }
-        return new PacketANEffect(type, x, y, z, ParticleColorRegistry.from(nbt), args);
+        return new PacketANEffect(type, x, y, z, color, args);
     }
 
     @Override
@@ -74,7 +70,7 @@ public class PacketANEffect extends AbstractPacket {
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
-        buf.writeNbt(particleNbt);
+        ParticleColor.STREAM.encode(buf, color);
         for (int i = 0; i < type.argCount; i++) {
             buf.writeVarInt(args[i]);
         }
@@ -88,7 +84,6 @@ public class PacketANEffect extends AbstractPacket {
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
         ClientLevel world = minecraft.level;
-        ParticleColor color = ParticleColorRegistry.from(particleNbt);
         switch (type) {
             case BURST -> {
                 for (int i = 0; i < 10; i++) {

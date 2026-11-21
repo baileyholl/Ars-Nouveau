@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Just make sure your somewhere you want to be greener",
@@ -23,9 +23,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Treeleafs gardeners dream",
@@ -57,9 +57,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 187,
                       "g": 119,
-                      "id": "ars_nouveau:constant",
                       "r": 1
                     },
                     "tintDisabled": false
@@ -97,9 +97,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -127,9 +127,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -152,9 +152,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -190,9 +190,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -230,9 +230,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 187,
                       "g": 119,
-                      "id": "ars_nouveau:constant",
                       "r": 1
                     },
                     "tintDisabled": false

@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 255,
     "g": 1,
-    "id": "ars_nouveau:constant",
     "r": 1
   },
   "flavour_text": "Fire at a body of water to create a Ice bubble in the depths.",
@@ -27,9 +27,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 255,
       "g": 1,
-      "id": "ars_nouveau:constant",
       "r": 1
     },
     "name": "Poseidon's Refuge",

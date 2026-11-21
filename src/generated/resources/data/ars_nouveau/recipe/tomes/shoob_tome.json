@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Need a quick getaway? Using Shoob's patented \"Tactical retreat\" technique, you can escape AND do it gracefully! (Shibe Inc is not liable for misuse or failure in the escape)",
@@ -23,9 +23,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "",
@@ -48,9 +48,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -78,9 +78,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -103,9 +103,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -136,9 +136,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -169,9 +169,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 1,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 67
                     },
                     "tintDisabled": false
@@ -209,9 +209,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true

@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Smothers an area with runes that launch entities upward. Do NOT get covered in the Repulsion Runes.",
@@ -19,9 +19,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Repulsion Runes",
@@ -46,9 +46,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -82,9 +82,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -118,9 +118,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -154,9 +154,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 200,
-                      "id": "ars_nouveau:constant",
                       "r": 91
                     },
                     "tintDisabled": false
@@ -198,9 +198,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 200,
-                      "id": "ars_nouveau:constant",
                       "r": 91
                     },
                     "tintDisabled": false
@@ -229,9 +229,9 @@
         "propMap": {
           "ars_nouveau:color": {
             "particleColor": {
+              "type": "ars_nouveau:constant",
               "b": 180,
               "g": 25,
-              "id": "ars_nouveau:constant",
               "r": 255
             },
             "tintDisabled": true
@@ -256,9 +256,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -286,9 +286,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -311,9 +311,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -344,9 +344,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -377,9 +377,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -413,9 +413,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -467,9 +467,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 200,
-                      "id": "ars_nouveau:constant",
                       "r": 91
                     },
                     "tintDisabled": false
@@ -511,9 +511,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 200,
-                      "id": "ars_nouveau:constant",
                       "r": 91
                     },
                     "tintDisabled": false
@@ -541,9 +541,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 200,
-                      "id": "ars_nouveau:constant",
                       "r": 91
                     },
                     "tintDisabled": false
@@ -570,9 +570,9 @@
                 "subPropMap": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 248,
                       "g": 186,
-                      "id": "ars_nouveau:constant",
                       "r": 63
                     },
                     "tintDisabled": false
@@ -584,9 +584,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -608,9 +608,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 200,
-                      "id": "ars_nouveau:constant",
                       "r": 91
                     },
                     "tintDisabled": false
@@ -633,9 +633,9 @@
         "propMap": {
           "ars_nouveau:color": {
             "particleColor": {
+              "type": "ars_nouveau:constant",
               "b": 255,
               "g": 200,
-              "id": "ars_nouveau:constant",
               "r": 91
             },
             "tintDisabled": false

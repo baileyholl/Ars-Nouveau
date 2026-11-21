@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
@@ -39,11 +39,11 @@ public class ColorPos {
         tag.putDouble("x", pos.x);
         tag.putDouble("y", pos.y);
         tag.putDouble("z", pos.z);
-        tag.put("color", color.serialize());
+        tag.put("color", ANCodecs.encode(ParticleColor.CODEC.codec(), color));
         return tag;
     }
 
     public static ColorPos fromTag(CompoundTag tag) {
-        return new ColorPos(new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")), ParticleColorRegistry.from(tag.getCompound("color")));
+        return new ColorPos(new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")), ANCodecs.decodeOptional(ParticleColor.CODEC.codec(), tag.getCompound("color")).orElseGet(ParticleColor::defaultParticleColor));
     }
 }
