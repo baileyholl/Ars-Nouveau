@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 1,
     "g": 90,
-    "id": "ars_nouveau:constant",
     "r": 225
   },
   "flavour_text": " A utility spell to aid you in your adventures",
@@ -22,9 +22,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 1,
       "g": 90,
-      "id": "ars_nouveau:constant",
       "r": 225
     },
     "name": "You were hurt, but you're fine",

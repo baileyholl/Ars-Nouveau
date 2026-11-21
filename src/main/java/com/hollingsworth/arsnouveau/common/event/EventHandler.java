@@ -367,6 +367,7 @@ public class EventHandler {
         ArcanoResetCommand.register(event.getDispatcher());
         if (!FMLEnvironment.production) {
             ExportDocsCommand.register(event.getDispatcher());
+            DebugLecternCommand.register(event.getDispatcher());
         }
     }
 

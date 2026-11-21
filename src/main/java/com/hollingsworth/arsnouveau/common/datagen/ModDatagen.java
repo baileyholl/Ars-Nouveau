@@ -62,8 +62,6 @@ public class ModDatagen {
 
         event.getGenerator().addProvider(event.includeServer(), new ANCurioProvider(output, fileHelper, provider));
 
-        event.getGenerator().addProvider(event.includeServer(), new PatchouliProvider(event.getGenerator(), provider));
-
         DatapackBuiltinEntriesProvider datapackProvider = new WorldgenProvider(output, provider);
         event.getGenerator().addProvider(event.includeServer(), datapackProvider);
         CompletableFuture<HolderLookup.Provider> lookupProvider = datapackProvider.getRegistryProvider();

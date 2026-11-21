@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
 
     public static List<WeakReference<PlanariumTile>> deferredRenders = new ArrayList<>();
-    public static Map<ResourceKey<Level>, StructureRenderData> structureRenderData = new WeakHashMap<>();
+    public static Map<ResourceKey<Level>, StructureRenderData> structureRenderData = new HashMap<>();
     public static Direction[] DIRECTIONS = Direction.values();
     public static float pad = 0.0025f;
     public static float scale = (1.0f - 2.0f * pad) / (float) 32;
@@ -367,7 +367,7 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         StructureRenderData data = PlanariumRenderer.structureRenderData.get(tile.key);
         //Start drawing the Render and cache it, used for both Building and Copy/Paste
         if (shouldUpdateRender(data, tile)) {
-            clearByteBuffers(data);
+            data.close();
             data = new StructureRenderData(tile.getTemplate(), tile.lastUpdated);
             PlanariumRenderer.structureRenderData.put(tile.key, data);
             generateRender(data, player.level(), renderPos, Minecraft.getInstance().gameRenderer.getMainCamera().getPosition());
@@ -377,21 +377,6 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
 
     public static boolean shouldUpdateRender(StructureRenderData data, PlanariumTile planariumTile) {
         return data.lastUpdatedAt < planariumTile.lastUpdated;
-    }
-
-    public static void clearByteBuffers(StructureRenderData data) {
-        for (Map.Entry<RenderType, ByteBufferBuilder> entry : data.builders.entrySet()) {
-            entry.getValue().clear();
-            entry.getValue().close();
-        }
-        data.bufferBuilders.clear();
-        data.sortStates.clear();
-        for (var mesh : data.meshDatas.values()) {
-            if (mesh != null) {
-                mesh.close();
-            }
-        }
-        data.meshDatas.clear();
     }
 
 
@@ -574,7 +559,7 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         );
     }
 
-    public static class StructureRenderData {
+    public static class StructureRenderData implements AutoCloseable {
         public ArrayList<CulledStatePos> statePosCache;
         public Map<RenderType, MeshData.SortState> sortStates = new HashMap<>();
         public Map<RenderType, MeshData> meshDatas = new HashMap<>();
@@ -603,6 +588,24 @@ public class PlanariumRenderer implements BlockEntityRenderer<PlanariumTile> {
         //Get the buffer from the map, and ensure its building
         public ByteBufferBuilder getByteBuffer(RenderType renderType) {
             return builders.get(renderType);
+        }
+
+        @Override
+        public void close() {
+            for (MeshData mesh : meshDatas.values()) {
+                if (mesh != null) {
+                    mesh.close();
+                }
+            }
+            meshDatas.clear();
+            sortStates.clear();
+            bufferBuilders.clear();
+            for (ByteBufferBuilder builder : builders.values()) {
+                builder.close();
+            }
+            for (VertexBuffer vertexBuffer : vertexBuffers.values()) {
+                vertexBuffer.close();
+            }
         }
     }
 }

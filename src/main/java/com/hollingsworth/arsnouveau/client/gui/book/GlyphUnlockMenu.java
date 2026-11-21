@@ -319,7 +319,7 @@ public class GlyphUnlockMenu extends BaseBook {
         }
 
         for (int i = 0; i < selectedRecipe.value().inputs.size(); i++) {
-            if (i > itemButtons.size())
+            if (i >= itemButtons.size())
                 break;
             itemButtons.get(i).visible = true;
             itemButtons.get(i).ingredient = selectedRecipe.value().inputs.get(i);

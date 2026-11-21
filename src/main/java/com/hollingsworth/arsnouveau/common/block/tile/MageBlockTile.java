@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.util.IWololoable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.util.ANCodecs;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,7 @@ public class MageBlockTile extends ModdedTile implements ITickable, IDispellable
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider pRegistries) {
         super.loadAdditional(compound, pRegistries);
         this.age = compound.getInt("age");
-        this.color = ParticleColorRegistry.from(compound.getCompound("lightColor"));
+        this.color = ANCodecs.decodeOptional(ParticleColor.CODEC.codec(), compound.getCompound("lightColor")).orElseGet(ParticleColor::defaultParticleColor);
         this.isPermanent = compound.getBoolean("permanent");
         this.lengthModifier = compound.getDouble("modifier");
     }
@@ -59,7 +59,7 @@ public class MageBlockTile extends ModdedTile implements ITickable, IDispellable
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(tag, pRegistries);
         tag.put("age", IntTag.valueOf(age));
-        tag.put("lightColor", color.serialize());
+        tag.put("lightColor", ANCodecs.encode(ParticleColor.CODEC.codec(), color));
         tag.putBoolean("permanent", isPermanent);
         tag.putDouble("modifier", lengthModifier);
     }

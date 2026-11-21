@@ -22,9 +22,9 @@ public class FallingParticle extends PropParticle {
     public FallingParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         super(options, level, x, y, z, xSpeed, ySpeed, zSpeed);
         float scale = 0.5f;
-        xd = xd * scale;
-        yd = yd * scale;
-        zd = zd * scale;
+        xd = xSpeed * scale;
+        yd = ySpeed * scale;
+        zd = zSpeed * scale;
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.03F;
         this.lifetime = 20;

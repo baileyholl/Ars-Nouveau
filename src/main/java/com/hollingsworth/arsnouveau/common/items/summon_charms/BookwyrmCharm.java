@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items.summon_charms;
 
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.items.data.PersistentFamiliarData;
@@ -28,7 +29,7 @@ public class BookwyrmCharm extends ModItem {
         Level world = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
         if (world.isClientSide) return InteractionResult.SUCCESS;
-        if (world.getBlockEntity(pos) instanceof StorageLecternTile tile) {
+        if (world.getBlockEntity(pos) instanceof CraftingLecternTile tile) {
             EntityBookwyrm bookwyrm = tile.addBookwyrm();
             if (bookwyrm != null) {
                 bookwyrm.fromCharmData(pContext.getItemInHand().getOrDefault(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, new PersistentFamiliarData()));
@@ -45,7 +46,7 @@ public class BookwyrmCharm extends ModItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, tooltip2::add, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.tooltip.bookwyrm"));
+        stack.addToTooltip(DataComponentRegistry.PERSISTENT_FAMILIAR_DATA, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
+        tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.tooltip.bookwyrm"), context));
     }
 }

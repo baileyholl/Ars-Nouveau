@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -205,18 +206,18 @@ public class DominionWand extends ModItem implements IRadialProvider {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext world, @NotNull List<Component> tooltip, @NotNull TooltipFlag p_77624_4_) {
         DominionWandData data = stack.getOrDefault(DataComponentRegistry.DOMINION_WAND, new DominionWandData());
         if (data.storedEntityId() == DominionWandData.NULL_ENTITY) {
-            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_entity"));
+            tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.dominion_wand.no_entity"), world));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.entity_stored"));
+            tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.dominion_wand.entity_stored"), world));
         }
 
         if (data.storedPos().isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.no_location"));
+            tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.dominion_wand.no_location"), world));
         } else {
-            tooltip.add(Component.translatable("ars_nouveau.dominion_wand.position_stored", getGlobalPosString(data.getValidPos())));
+            tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.dominion_wand.position_stored", getGlobalPosString(data.getValidPos())), world));
         }
 
-        if (data.strict()) tooltip.add(Component.literal("Side-Sensitive"));
+        if (data.strict()) tooltip.addAll(DocClientUtils.splitTooltip(Component.literal("Side-Sensitive"), world));
     }
 
     public static String getPosString(BlockPos pos) {

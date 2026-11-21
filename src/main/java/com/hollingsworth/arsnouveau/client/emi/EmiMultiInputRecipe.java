@@ -24,12 +24,12 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
 
     protected Vec2 point;
     protected Vec2 center;
+    protected int centerOffset = 9;
 
     public EmiMultiInputRecipe(ResourceLocation id, T recipe, MultiProvider multiProvider) {
         this.id = id;
         this.recipe = recipe;
         this.multiProvider = multiProvider;
-        this.reset();
     }
 
     public T getRecipe() {
@@ -41,11 +41,8 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
         return this.id;
     }
 
-    public void reset() {
-        var w = this.getDisplayWidth();
-        var h = this.getDisplayHeight();
-
-        this.center = new Vec2((int) (w * 0.5) - 8, (int) (h * 0.5) - 9);
+    public void reset(int height) {
+        this.center = new Vec2((int) (this.getDisplayWidth() * 0.5) - 8, (int) (height * 0.5) - centerOffset);
         this.point = center.add(new Vec2(0, -32));
     }
 
@@ -64,7 +61,7 @@ public abstract class EmiMultiInputRecipe<T> implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        this.reset();
+        this.reset(widgets.getHeight());
         MultiProvider provider = multiProvider;
         List<Ingredient> inputs = provider.input;
         double angleBetweenEach = 360.0 / inputs.size();

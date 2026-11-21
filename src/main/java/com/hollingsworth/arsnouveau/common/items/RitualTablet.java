@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -46,11 +47,11 @@ public class RitualTablet extends ModItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("tooltip.ars_nouveau.tablet"));
+        tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.tablet"), context));
         if (flagIn.hasShiftDown()) {
-            tooltip2.add(Component.translatable(ritual.getDescriptionKey()));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable(ritual.getDescriptionKey()), context));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")).withStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)), context));
         }
     }
 

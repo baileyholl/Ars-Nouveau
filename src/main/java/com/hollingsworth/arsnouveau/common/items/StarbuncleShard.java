@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -24,12 +25,12 @@ public class StarbuncleShard extends ModItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         StarbuncleCharmData data = stack.get(DataComponentRegistry.STARBUNCLE_DATA);
         if (data != null) {
-            data.getName().ifPresent(tooltip2::add);
+            data.getName().ifPresent(component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)));
             if (data.getAdopter() != null && !data.getAdopter().isEmpty()) {
-                tooltip2.add(Component.translatable("ars_nouveau.adopter", data.getAdopter()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)));
+                tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.adopter", data.getAdopter()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), context));
             }
             if (data.getBio() != null && !data.getBio().isEmpty()) {
-                tooltip2.add(Component.literal(data.getBio()).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)));
+                tooltip2.addAll(DocClientUtils.splitTooltip(Component.literal(data.getBio()).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE)), context));
             }
         } else {
             super.appendHoverText(stack, context, tooltip2, flagIn);

@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.client.gui.SchoolTooltip;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
@@ -94,15 +93,9 @@ public class Glyph extends ModItem {
             return;
 
         if (!Config.isGlyphEnabled(this.spellPart.getRegistryName())) {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_disabled"));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.glyph_disabled"), context));
         } else if (spellPart != null) {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-            if (Screen.hasShiftDown() && !spellPart.spellSchools.isEmpty()) {
-                tooltip2.add(Component.translatable("ars_nouveau.schools"));
-                for (SpellSchool s : spellPart.spellSchools) {
-                    tooltip2.add(s.getTextComponent());
-                }
-            }
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)), context));
         }
         var player = ArsNouveau.proxy.getPlayer();
         if (player == null)
@@ -110,22 +103,22 @@ public class Glyph extends ModItem {
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(player);
         if (playerDataCap != null) {
             if (playerDataCap.knowsGlyph(spellPart) || GlyphRegistry.getDefaultStartingSpells().contains(spellPart)) {
-                tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)));
+                tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.glyph_known").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)), context));
             } else {
-                tooltip2.add(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)));
+                tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.glyph_unknown").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_RED)), context));
             }
         }
         if (flagIn.hasShiftDown()) {
-            tooltip2.add(spellPart.getBookDescLang());
+            tooltip2.addAll(DocClientUtils.splitTooltip(spellPart.getBookDescLang(), context));
         } else {
-            tooltip2.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("tooltip.ars_nouveau.hold_shift", Component.keybind("key.sneak")), context));
         }
     }
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        if (!Screen.hasShiftDown() && spellPart != null && !spellPart.spellSchools.isEmpty()) {
-            return Optional.of(new SchoolTooltip(spellPart, true));
+        if (spellPart != null && !spellPart.spellSchools.isEmpty()) {
+            return Optional.of(new SchoolTooltip(spellPart));
         }
         return Optional.empty();
     }

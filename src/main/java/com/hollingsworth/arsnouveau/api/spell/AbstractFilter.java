@@ -32,7 +32,7 @@ public abstract class AbstractFilter extends AbstractEffect implements IFilter {
 
     @Override
     public Integer getTypeIndex() {
-        return 7;
+        return 15;
     }
 
     @Override

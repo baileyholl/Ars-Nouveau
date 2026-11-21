@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
+import com.hollingsworth.arsnouveau.common.block.tile.CraftingLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.RandomStorageVisitGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.bookwyrm.TransferTask;
@@ -113,7 +113,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         }
 
         if (level.getGameTime() % 20 == 0) {
-            if (!(level.getBlockEntity(lecternPos) instanceof StorageLecternTile)) {
+            if (!(level.getBlockEntity(lecternPos) instanceof CraftingLecternTile)) {
                 if (!level.isClientSide) {
                     this.hurt(level.damageSources().playerAttack(ANFakePlayer.getPlayer((ServerLevel) level)), 99);
                 }
@@ -168,11 +168,11 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new TransferGoal(this));
         this.goalSelector.addGoal(4, new RandomStorageVisitGoal(this, () -> {
-            StorageLecternTile tile = getTile();
+            CraftingLecternTile tile = getTile();
             if (tile == null || playerTooFar) {
                 return null;
             }
-            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(StorageLecternTile.HandlerPos::pos).toList());
+            List<BlockPos> targets = new ArrayList<>(tile.handlerPosList.stream().map(handlerPos -> handlerPos.pos).toList());
             targets.add(tile.getBlockPos());
             return targets.get(level.random.nextInt(targets.size())).above();
         }));
@@ -181,7 +181,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
     public TransferTask getTransferTask() {
-        StorageLecternTile tile = getTile();
+        CraftingLecternTile tile = getTile();
         if (tile != null) {
             return tile.getTransferTask();
         }
@@ -210,7 +210,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     @Override
     public void remove(RemovalReason pReason) {
         super.remove(pReason);
-        StorageLecternTile tile = getTile();
+        CraftingLecternTile tile = getTile();
         if (tile != null) {
             tile.removeBookwyrm(this);
         }
@@ -251,8 +251,8 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
     }
 
 
-    public @Nullable StorageLecternTile getTile() {
-        return lecternPos == null || !(level.getBlockEntity(lecternPos) instanceof StorageLecternTile) ? null : (StorageLecternTile) level.getBlockEntity(lecternPos);
+    public @Nullable CraftingLecternTile getTile() {
+        return lecternPos == null || !(level.getBlockEntity(lecternPos) instanceof CraftingLecternTile) ? null : (CraftingLecternTile) level.getBlockEntity(lecternPos);
     }
 
     @Override

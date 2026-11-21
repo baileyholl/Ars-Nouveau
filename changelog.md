@@ -1,13 +1,13 @@
 # Changelog
 
-Adds a preview button to the spell particles screen for visualizing current selected effects and sounds
+Rainbow particle colors now properly interpolate over time as they did before the spell particle update
 
-Adds Drygmy and Starbuncle painting blocks (Jarva)
+Fixes density sliders losing their correct minimum and maximum values when reopening the styles screen
 
-Improves performance with automated enchanting apparatus (Jarva)
+Fixes bubble, breaking circle, and sculk particles not respecting tint color
 
-Fixes world loading with Biolith
+Fixes prestidigitation on held items and armor spawning particles with correct colors and properties
 
-Fixes bubbles targeting create contraptions
+Prestidigitation now works on any living entity that is holding or wearing a prestidigitated item
 
-Fixes warp portal particles spawning in wrong location (Qther)
+Fixes pantomime not placing blocks with the orientation you are actually facing

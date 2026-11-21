@@ -18,11 +18,7 @@ public class TransientCustomContainer implements CraftingContainer {
     private final AbstractContainerMenu menu;
 
     public TransientCustomContainer(AbstractContainerMenu pMenu, int pWidth, int pHeight) {
-        this(pMenu, pWidth, pHeight, NonNullList.withSize(pWidth * pHeight, ItemStack.EMPTY));
-    }
-
-    public TransientCustomContainer(AbstractContainerMenu pMenu, int pWidth, int pHeight, NonNullList<ItemStack> pItems) {
-        this.items = pItems;
+        this.items = NonNullList.withSize(pWidth * pHeight, ItemStack.EMPTY);
         this.menu = pMenu;
         this.width = pWidth;
         this.height = pHeight;

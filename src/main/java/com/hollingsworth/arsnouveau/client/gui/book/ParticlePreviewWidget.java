@@ -44,15 +44,25 @@ public class ParticlePreviewWidget extends AbstractWidget {
 
     private final Minecraft mc = Minecraft.getInstance();
     private final List<Particle> particles = new ArrayList<>();
+    private final Queue<Particle> particlesToAdd = new ArrayDeque<>();
     private final PreviewCamera camera = new PreviewCamera();
     private ParticlePreviewLevel previewLevel;
     private ParticleTimelinePreview timelinePreview;
     private boolean timelineFinished;
     private int startDelay;
+    private Queue<IParticleTimeline<?>> allTimelines = new ArrayDeque<>();
 
     public ParticlePreviewWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
         this.active = false;
+    }
+
+    public void playAll(List<IParticleTimeline<?>> timelines) {
+        this.allTimelines = new ArrayDeque<>(timelines);
+        if (!allTimelines.isEmpty()) {
+            IParticleTimeline<?> nextTimeline = allTimelines.poll();
+            play(nextTimeline);
+        }
     }
 
     public void play(IParticleTimeline<?> timeline) {
@@ -60,15 +70,26 @@ public class ParticlePreviewWidget extends AbstractWidget {
             return;
         }
         particles.clear();
+        particlesToAdd.clear();
         previewLevel = new ParticlePreviewLevel(mc.level, (options, x, y, z, xSpeed, ySpeed, zSpeed) -> {
             Particle particle = makeParticle(options, x, y, z, xSpeed, ySpeed, zSpeed);
             if (particle != null) {
-                particles.add(particle);
+                particlesToAdd.add(particle);
             }
         });
         camera.moveTo(Vec3.ZERO);
         camera.setAngles(225f, 30f);
         timelinePreview = createPreview(timeline, previewLevel);
+        // This should never happen but guards against misbehaving addons
+        if (timelinePreview == null) {
+            IParticleTimeline<?> nextTimeline = allTimelines.poll();
+            if (nextTimeline != null) {
+                play(nextTimeline);
+            } else {
+                dismiss();
+            }
+            return;
+        }
         timelineFinished = false;
         startDelay = 5;
     }
@@ -84,15 +105,21 @@ public class ParticlePreviewWidget extends AbstractWidget {
         return timeline.getType().createPreview((T) timeline, level).orElse(null);
     }
 
-    public boolean isPlaying() {
-        return timelinePreview != null && (!timelineFinished || !particles.isEmpty());
+    public boolean currentTimelinePlaying() {
+        return timelinePreview != null && (!timelineFinished || !particles.isEmpty() || !particlesToAdd.isEmpty());
+    }
+
+    public boolean isCompletelyFinished() {
+        return startDelay == 0 && !currentTimelinePlaying() && allTimelines.isEmpty();
     }
 
     public void dismiss() {
         particles.clear();
+        particlesToAdd.clear();
         timelinePreview = null;
         timelineFinished = true;
         previewLevel = null;
+        allTimelines.clear();
         startDelay = 0;
     }
 
@@ -104,6 +131,11 @@ public class ParticlePreviewWidget extends AbstractWidget {
         if (timelinePreview != null && !timelineFinished && !timelinePreview.tick(previewLevel)) {
             timelineFinished = true;
         }
+
+        if (timelinePreview != null && timelineFinished && !allTimelines.isEmpty() && !currentTimelinePlaying()) {
+            IParticleTimeline<?> nextTimeline = allTimelines.poll();
+            play(nextTimeline);
+        }
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
             Particle particle = iterator.next();
@@ -112,11 +144,13 @@ public class ParticlePreviewWidget extends AbstractWidget {
                 iterator.remove();
             }
         }
+        particles.addAll(particlesToAdd);
+        particlesToAdd.clear();
     }
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (!isPlaying()) {
+        if (isCompletelyFinished() || timelinePreview == null) {
             return;
         }
 

@@ -46,8 +46,12 @@ public class SpellSlottedScreen extends BaseBook {
     }
 
     public void onBookstackUpdated(ItemStack stack) {
+        AbstractCaster<?> caster = SpellCasterRegistry.from(stack);
+        if (caster == null) {
+            return;
+        }
         this.bookStack = stack;
-        this.caster = SpellCasterRegistry.from(stack);
+        this.caster = caster;
     }
 
     public void initSpellSlots(Consumer<GuiSpellSlot> onSlotChanged) {
@@ -77,7 +81,7 @@ public class SpellSlottedScreen extends BaseBook {
     @Override
     protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
-            if (renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+            if (renderable instanceof AbstractWidget widget && (!widget.visible || !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget))) {
                 continue;
             }
             if (renderable instanceof GuiSpellSlot spellSlot) {

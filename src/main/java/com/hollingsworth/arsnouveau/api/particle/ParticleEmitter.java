@@ -76,14 +76,14 @@ public class ParticleEmitter {
     public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, ParticleMotion particleConfig, ParticleOptions particleOptions) {
         this.position = getPosition;
         this.offset = Vec3.ZERO;
-        this.particleConfig = particleConfig;
+        this.particleConfig = particleConfig.getType().create(particleConfig.propertyMap.copy());
         this.rotation = rot;
         this.rotationOffset = Vec2.ZERO;
-        this.particleOptions = particleOptions instanceof PropertyParticleOptions propertyParticleOptions ? propertyParticleOptions : new PropertyParticleOptions(particleOptions.getType());
+        this.particleOptions = particleOptions instanceof PropertyParticleOptions propertyParticleOptions ? new PropertyParticleOptions(propertyParticleOptions.map.copy()) : new PropertyParticleOptions(particleOptions.getType());
         this.rand1 = Math.random();
         this.rand2 = Math.random();
         this.rand3 = Math.random();
-        particleConfig.init(this);
+        this.particleConfig.init(this);
     }
 
     public ParticleEmitter(Supplier<Vec3> getPosition, Supplier<Vec2> rot, TimelineEntryData entryData) {

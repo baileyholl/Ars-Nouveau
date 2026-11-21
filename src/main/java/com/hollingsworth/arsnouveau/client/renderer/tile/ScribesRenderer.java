@@ -75,7 +75,7 @@ public class ScribesRenderer extends ArsGeoBlockRenderer<ScribesTile> {
         if (state.getValue(ScribesBlock.PART) != ThreePartBlock.HEAD)
             return;
 
-        renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.value().output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), stack, bufferSource, packedLight, packedOverlay, ClientInfo.ticksInGame + partialTick);
+        renderPressedItem(tile, tile.crafting ? tile.craftingTicks < 40 ? tile.recipe.value().output.getItem().getDefaultInstance() : ItemsRegistry.BLANK_GLYPH.get().getDefaultInstance() : tile.getStack(), stack, bufferSource, packedLight, packedOverlay, partialTick);
     }
 
     public void renderPressedItem(ScribesTile tile, ItemStack itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight, int packedOverlay, float partialTicks) {

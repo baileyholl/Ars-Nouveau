@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 1,
     "g": 128,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Leave the riches untouched. Seek only to carve the earth.",
@@ -23,9 +23,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 1,
       "g": 128,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Gobute's Humble Tunnel",

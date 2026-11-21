@@ -14,8 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class MobJarItemRenderer extends GeoItemRenderer<MobJarItem> {
-    private static MobJarTile jarTile;
-
     public MobJarItemRenderer() {
         super(new GenericModel<>("mob_jar"));
     }
@@ -28,7 +26,7 @@ public class MobJarItemRenderer extends GeoItemRenderer<MobJarItem> {
         }
         super.renderByItem(stack, transformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
 
-        jarTile = new MobJarTile(Minecraft.getInstance().player.getOnPos().above(), BlockRegistry.MOB_JAR.defaultBlockState());
+        MobJarTile jarTile = new MobJarTile(Minecraft.getInstance().player.getOnPos().above(), BlockRegistry.MOB_JAR.defaultBlockState());
         Entity entity = MobJarItem.fromItem(stack, Minecraft.getInstance().level);
         if (entity == null)
             return;

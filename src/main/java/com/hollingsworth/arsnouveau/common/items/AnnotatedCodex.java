@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
@@ -120,6 +121,6 @@ public class AnnotatedCodex extends ModItem {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, Item.@NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        stack.addToTooltip(DataComponentRegistry.CODEX_DATA, context, tooltip2::add, flagIn);
+        stack.addToTooltip(DataComponentRegistry.CODEX_DATA, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
     }
 }

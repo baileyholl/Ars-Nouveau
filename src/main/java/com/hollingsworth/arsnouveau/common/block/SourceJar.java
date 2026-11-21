@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -145,7 +146,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
         int mana = BlockFillContents.get(stack);
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (mana * 100) / 10000));
+        tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.source_jar.fullness", (mana * 100) / 10000), context));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.particle;
 
 import com.hollingsworth.arsnouveau.api.nbt.ITagSerializable;
+import com.hollingsworth.arsnouveau.api.registry.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.resources.ResourceLocation;
 
@@ -37,5 +38,12 @@ public interface IParticleColor extends ITagSerializable, Cloneable {
         return (int) (getBlue() * 255.0F);
     }
 
+    @Deprecated(forRemoval = true)
     ResourceLocation getRegistryName();
+
+    default IParticleColorType<?> getType() {
+        return ParticleColorRegistry.LEGACY_TYPE.get();
+    }
+
+
 }

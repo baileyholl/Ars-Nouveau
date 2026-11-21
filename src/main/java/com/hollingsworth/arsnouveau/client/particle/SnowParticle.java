@@ -2,15 +2,14 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.ParticleRenderType;
 
-public class SnowParticle extends TextureSheetParticle {
+public class SnowParticle extends PropParticle {
     private float rotSpeed;
     private final float spinAcceleration;
 
-    protected SnowParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
-        super(level, x, y, z);
-        this.setSprite(spriteSet.get(this.random.nextInt(12), 12));
+    public SnowParticle(PropertyParticleOptions options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        super(options, level, x, y, z);
         this.rotSpeed = (float) Math.toRadians(this.random.nextBoolean() ? -30.0 : 30.0);
         this.spinAcceleration = (float) Math.toRadians(this.random.nextBoolean() ? -5.0 : 5.0);
         this.lifetime = 300;
@@ -23,12 +22,17 @@ public class SnowParticle extends TextureSheetParticle {
         this.gravity = 0.025f;
         this.friction = 0.98f;
         float scalar = 0.03f;
-        this.xd = 0 + ParticleUtil.inRange(-scalar, scalar);
-        this.yd = 0 + ParticleUtil.inRange(-scalar, scalar);
-        this.zd = 0 + ParticleUtil.inRange(-scalar, scalar);
+        this.xd = xSpeed + ParticleUtil.inRange(-scalar, scalar);
+        this.yd = ySpeed + ParticleUtil.inRange(-scalar, scalar);
+        this.zd = zSpeed + ParticleUtil.inRange(-scalar, scalar);
         this.quadSize = 0.06F * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
         this.lifetime = (int) ParticleUtil.inRange(20, 30);
 
+    }
+
+    @Override
+    public boolean tinted() {
+        return true;
     }
 
     @Override
@@ -47,6 +51,7 @@ public class SnowParticle extends TextureSheetParticle {
         }
 
         if (!this.removed) {
+            setColorFromProps();
             this.yd = this.yd - (double) this.gravity * 0.08f;
             this.rotSpeed = this.rotSpeed + this.spinAcceleration / 20.0F;
             this.oRoll = this.roll;
@@ -65,31 +70,6 @@ public class SnowParticle extends TextureSheetParticle {
                 this.alpha -= 0.015F;
                 this.scale(0.95f);
             }
-        }
-    }
-
-    public static class Provider implements ParticleProvider<PropertyParticleOptions> {
-        private final SpriteSet sprite;
-
-        public Provider(SpriteSet pSprites) {
-            this.sprite = pSprites;
-        }
-
-        public Particle createParticle(
-                PropertyParticleOptions pType,
-                ClientLevel pLevel,
-                double pX,
-                double pY,
-                double pZ,
-                double pXSpeed,
-                double pYSpeed,
-                double pZSpeed
-        ) {
-            SnowParticle snowParticle = new SnowParticle(
-                    pLevel, pX, pY, pZ, sprite
-            );
-            snowParticle.pickSprite(this.sprite);
-            return snowParticle;
         }
     }
 }

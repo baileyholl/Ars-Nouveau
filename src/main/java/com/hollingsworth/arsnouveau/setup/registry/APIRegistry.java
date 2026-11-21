@@ -339,6 +339,7 @@ public class APIRegistry {
         OrbitTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
         TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+        BurstTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
 
         List<IParticleMotionType<?>> LIGHT_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.WISP_TYPE.get());
@@ -351,6 +352,7 @@ public class APIRegistry {
 
         List<IParticleMotionType<?>> DELAY_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
         DelayTimeline.TICKING_OPTIONS.addAll(DELAY_OPTIONS);
+        DelayTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), true));
@@ -407,13 +409,13 @@ public class APIRegistry {
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.WARPED_SPORE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.REVERSE_PORTAL.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.WHITE_ASH.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMALL_FLAME.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMALL_FLAME.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SNOWFLAKE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.ELECTRIC_SPARK.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SCRAPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.WAX.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.TRIAL_SPAWNER.get(), true));
-        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.OMINOUS_SPAWNING.get(), true));
+        ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.OMINOUS_SPAWNING.get(), false));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.RAID_OMEN.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BREAKING_CIRCLE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.CLOUD.get(), true));

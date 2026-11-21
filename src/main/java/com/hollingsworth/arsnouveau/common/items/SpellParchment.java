@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
@@ -48,7 +49,7 @@ public class SpellParchment extends ModItem implements ICasterTool {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
-        stack.addToTooltip(DataComponentRegistry.SPELL_CASTER, context, tooltip2::add, flagIn);
+        stack.addToTooltip(DataComponentRegistry.SPELL_CASTER, context, component -> tooltip2.addAll(DocClientUtils.splitTooltip(component, context)), flagIn);
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }
     

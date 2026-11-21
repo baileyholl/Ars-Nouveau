@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public class EmiGlyphRecipe extends EmiMultiInputRecipe<GlyphRecipe> {
     public EmiGlyphRecipe(ResourceLocation id, GlyphRecipe recipe) {
         super(id, recipe, new EmiMultiInputRecipe.MultiProvider(recipe.output, recipe.inputs, null));
+        this.centerOffset = 12;
     }
 
     @Override
@@ -30,6 +31,6 @@ public class EmiGlyphRecipe extends EmiMultiInputRecipe<GlyphRecipe> {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         super.addWidgets(widgets);
-        widgets.addText(Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, 100, 10, false);
+        widgets.addText(Component.translatable("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0, widgets.getHeight() - 10, 10, false);
     }
 }

@@ -67,6 +67,7 @@ public class ArsNouveau {
     public static boolean optifineLoaded = false;
     public static boolean sodiumLoaded = false;
     public static boolean immersivePortalsLoaded = false;
+    @Deprecated(forRemoval = true)
     public static boolean patchouliLoaded = false;
 
     public static List<String> postLoadWarnings = new ArrayList<>();
@@ -84,7 +85,6 @@ public class ArsNouveau {
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");
-        patchouliLoaded = ModList.get().isLoaded("patchouli");
         immersivePortalsLoaded = ModList.get().isLoaded("immersive_portals_core");
         APIRegistry.setup();
         modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.STARTUP_CONFIG);
@@ -138,6 +138,7 @@ public class ArsNouveau {
         }
 
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
         NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onBlockPlaced);
         NeoForge.EVENT_BUS.addListener(ArcanoBossEvents::onBlockBroken);
@@ -205,6 +206,7 @@ public class ArsNouveau {
     public static void onServerStopped(final ServerStoppingEvent event) {
         Pathfinding.shutdown();
         EventQueue.getServerInstance().clear();
+        PlanariumTile.dimManager.entries.clear();
     }
 
     public static ResourceLocation prefix(String str) {

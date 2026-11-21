@@ -26,11 +26,12 @@ import java.util.HashSet;
 public class DimBoundary extends ModBlock implements IWandable {
 
     public DimBoundary() {
-        super(BlockBehaviour.Properties.of().strength(0.2f, 3600000.0F)
+        super(BlockBehaviour.Properties.of()
                 .noLootTable()
                 .sound(SoundType.GLASS)
                 .noOcclusion()
                 .isValidSpawn(Blocks::never)
+                .strength(-1.0F, 3600000.0F)
                 .pushReaction(PushReaction.BLOCK));
     }
 

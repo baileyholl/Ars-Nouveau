@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.common.util.ItemUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
@@ -131,10 +132,10 @@ public class PotionJar extends ModBlock implements SimpleWaterloggedBlock, Entit
         if (!data.equals(PotionContents.EMPTY)) {
             ItemStack potionItem = new ItemStack(Items.POTION);
             potionItem.set(DataComponents.POTION_CONTENTS, data);
-            tooltip.add(Component.translatable(potionItem.getDescriptionId()));
+            tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable(potionItem.getDescriptionId()), pContext));
         }
-        PotionContents.addPotionTooltip(data.getAllEffects(), tooltip::add, 1.0F, 20.0f);
-        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (fill * 100) / 10000));
+        PotionContents.addPotionTooltip(data.getAllEffects(), component -> tooltip.addAll(DocClientUtils.splitTooltip(component, pContext)), 1.0F, 20.0f);
+        tooltip.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.source_jar.fullness", (fill * 100) / 10000), pContext));
     }
 
     @Override

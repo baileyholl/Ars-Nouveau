@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.item.IRadialProvider;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
@@ -34,7 +35,7 @@ public class AlchemistsCrown extends ModItem implements IRadialProvider {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip2, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip2, flagIn);
-        tooltip2.add(Component.translatable("ars_nouveau.tooltip.alchemists_crown", KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()));
+        tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.tooltip.alchemists_crown", KeyMapping.createNameSupplier(ModKeyBindings.HEAD_CURIO_HOTKEY.getName()).get()), context));
     }
 
     @Override

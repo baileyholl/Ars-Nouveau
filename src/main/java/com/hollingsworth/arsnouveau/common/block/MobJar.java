@@ -23,6 +23,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,6 +67,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return VISUAL_SHAPE;
     }
+
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
@@ -130,6 +132,15 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
         });
         tile.updateBlock();
         return ItemInteractionResult.SUCCESS;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof MobJarTile tile) {
+            stack.applyComponents(tile.collectComponents());
+        }
+        return stack;
     }
 
     @Override
@@ -219,6 +230,7 @@ public class MobJar extends TickableModBlock implements EntityBlock, SimpleWater
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return shape;
     }
+
 
     @Nullable
     @Override

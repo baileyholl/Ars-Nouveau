@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.camera.ICameraMountable;
 import com.hollingsworth.arsnouveau.common.items.data.ScryPosData;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -42,9 +43,9 @@ public class ScryerScroll extends ModItem {
         var globalPos = data.pos().orElse(null);
         if (globalPos != null) {
             BlockPos pos = globalPos.pos();
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.scryer_scroll.bound", pos.getX() + ", " + pos.getY() + ", " + pos.getZ()), context));
         } else {
-            tooltip2.add(Component.translatable("ars_nouveau.scryer_scroll.craft"));
+            tooltip2.addAll(DocClientUtils.splitTooltip(Component.translatable("ars_nouveau.scryer_scroll.craft"), context));
         }
         super.appendHoverText(stack, context, tooltip2, flagIn);
     }

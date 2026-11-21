@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.container.AbstractStorageTerminalScreen;
+import com.hollingsworth.arsnouveau.client.container.CraftingTerminalScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -34,7 +34,7 @@ public class ServerToClientStoragePacket extends AbstractPacket {
 
     @Override
     public void onClientReceived(Minecraft minecraft, Player player) {
-        if (minecraft.screen instanceof AbstractStorageTerminalScreen<?> terminalScreen) {
+        if (minecraft.screen instanceof CraftingTerminalScreen terminalScreen) {
             terminalScreen.receiveServerSettings(searchString, tabNames);
         }
     }

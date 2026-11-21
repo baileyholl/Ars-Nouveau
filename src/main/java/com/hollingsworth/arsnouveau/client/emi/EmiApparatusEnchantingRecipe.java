@@ -45,7 +45,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        this.reset();
+        this.reset(widgets.getHeight());
         double angleBetweenEach = 360.0 / this.recipe.pedestalItems().size();
 
         MultiProvider provider = multiProvider;
@@ -113,6 +113,11 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
     protected static List<ItemStack> reactiveEnchantableCache = null;
 
     private List<ItemStack> getEnchantable() {
+        var level = Minecraft.getInstance().level;
+        if (level == null) {
+            return List.of();
+        }
+
         if (this.recipe instanceof ReactiveEnchantmentRecipe || this.recipe.enchantmentKey == EnchantmentRegistry.REACTIVE_ENCHANTMENT) {
             if (reactiveEnchantableCache == null) {
                 ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
@@ -121,6 +126,9 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
                         continue;
                     }
                     var stack = item.getDefaultInstance();
+                    if (!stack.supportsEnchantment(HolderHelper.unwrap(level, EnchantmentRegistry.REACTIVE_ENCHANTMENT))) {
+                        continue;
+                    }
                     this.addName(stack);
                     builder.add(stack);
                 }
@@ -131,8 +139,7 @@ public class EmiApparatusEnchantingRecipe extends EmiEnchantingApparatusRecipe<E
 
         if (enchantableCache == null) {
             ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-            var level = Minecraft.getInstance().level;
-            if (level != null && level.holder(recipe.enchantmentKey).isPresent()) {
+            if (level.holder(recipe.enchantmentKey).isPresent()) {
                 var enchantment = HolderHelper.unwrap(level, recipe.enchantmentKey);
                 for (var item : BuiltInRegistries.ITEM) {
                     var stack = item.getDefaultInstance();

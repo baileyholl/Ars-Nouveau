@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
-import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.debug.EntityDebugger;
@@ -174,7 +173,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animatableManager) {
         animatableManager.add(new AnimationController<>(this, "walkController", 1, (event) -> {
-            if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+            if (event.isMoving()) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
                 return PlayState.CONTINUE;
             }
