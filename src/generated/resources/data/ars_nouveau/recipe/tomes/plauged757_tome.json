@@ -8,12 +8,7 @@
   },
   "flavour_text": "WARNING: ONLY TO BE USED AS A LAST RESORT!!",
   "name": "Self Atomic",
-  "sound": {
-    "sound": {
-      "id": "ars_nouveau:gaia_family"
-    }
-  },
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_self",
     "ars_nouveau:glyph_explosion",
     "ars_nouveau:glyph_amplify",
@@ -25,32 +20,9 @@
     "ars_nouveau:glyph_aoe",
     "ars_nouveau:glyph_aoe"
   ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:constant",
-      "b": 1,
-      "g": 1,
-      "r": 255
-    },
-    "name": "Self Atomic",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_self",
-      "ars_nouveau:glyph_explosion",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe"
-    ],
+  "sound": {
     "sound": {
-      "sound": {
-        "id": "ars_nouveau:gaia_family"
-      }
+      "id": "ars_nouveau:gaia_family"
     }
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  }
 }

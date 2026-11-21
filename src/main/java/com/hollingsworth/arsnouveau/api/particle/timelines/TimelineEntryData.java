@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class TimelineEntryData {
     public static final MapCodec<TimelineEntryData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ParticleMotion.CODEC.lenientOptionalFieldOf("motion").xmap(motion -> motion.orElseGet(NoneMotion::new), Optional::of).forGetter(i -> i.motion),
+            ParticleMotion.CODEC.lenientOptionalFieldOf("motion").xmap(motion -> motion.orElseGet(NoneMotion::new), motion -> motion instanceof NoneMotion ? Optional.empty() : Optional.of(motion)).forGetter(i -> i.motion),
             ParticleTypes.CODEC.fieldOf("particleOptions").forGetter(i -> i.particleOptions)
     ).apply(instance, TimelineEntryData::new));
 

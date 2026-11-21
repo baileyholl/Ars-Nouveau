@@ -8,8 +8,7 @@
   },
   "flavour_text": "Now you never have to be lonely again! You will always have a friend with you! Feel free to change their name to whatever you want! :D",
   "name": "Ivy",
-  "sound": {},
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_touch",
     "ars_nouveau:glyph_animate_block",
     "ars_nouveau:glyph_extend_time",
@@ -20,29 +19,5 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_name"
-  ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:constant",
-      "b": 180,
-      "g": 105,
-      "r": 255
-    },
-    "name": "Ivy",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_touch",
-      "ars_nouveau:glyph_animate_block",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_name"
-    ],
-    "sound": {}
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  ]
 }

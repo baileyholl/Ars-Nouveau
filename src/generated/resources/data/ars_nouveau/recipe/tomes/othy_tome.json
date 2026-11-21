@@ -8,33 +8,12 @@
   },
   "flavour_text": "Swarm your enemies with bladed spirits.",
   "name": "Othy's Misdirection",
-  "sound": {},
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_self",
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_summon_decoy",
     "ars_nouveau:glyph_blink",
     "ars_nouveau:glyph_amplify",
     "ars_nouveau:glyph_amplify"
-  ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:constant",
-      "b": 255,
-      "g": 255,
-      "r": 255
-    },
-    "name": "Othy's Misdirection",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_self",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_summon_decoy",
-      "ars_nouveau:glyph_blink",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_amplify"
-    ],
-    "sound": {}
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  ]
 }

@@ -22,6 +22,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -53,7 +54,7 @@ public abstract class ParticleMotion {
 
     protected static <T extends ParticleMotion> MapCodec<T> buildPropCodec(Function<PropMap, T> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                PropMap.CODEC.fieldOf("propMap").forGetter(s -> s.propertyMap)
+                PropMap.CODEC.optionalFieldOf("propMap").xmap(o -> o.orElseGet(PropMap::new), map -> map.isEmpty() ? Optional.empty() : Optional.of(map)).forGetter(s -> s.propertyMap)
         ).apply(instance, constructor));
     }
 
