@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "The hill has been reassigned as a floor.",
@@ -26,9 +26,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "0AKSA's Obliterating Open-Mine",
@@ -51,9 +51,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 1,
                       "g": 216,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": false
@@ -88,9 +88,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 204,
                       "g": 101,
-                      "id": "ars_nouveau:constant",
                       "r": 153
                     },
                     "tintDisabled": false
@@ -131,9 +131,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 226,
                       "g": 44,
-                      "id": "ars_nouveau:constant",
                       "r": 138
                     },
                     "tintDisabled": false
@@ -168,9 +168,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 229,
-                      "id": "ars_nouveau:constant",
                       "r": 1
                     },
                     "tintDisabled": false
@@ -200,9 +200,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 1,
                       "g": 140,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": false
@@ -237,9 +237,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 1
                     },
                     "tintDisabled": false

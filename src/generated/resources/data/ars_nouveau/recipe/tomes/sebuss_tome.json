@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 180,
     "g": 25,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Even the book is burning hot! You might need to use this spell with caution if you don't want your item to burn!",
@@ -18,9 +18,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 180,
       "g": 25,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Sebuss's Very Hot Smelt",
@@ -45,9 +45,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -69,9 +69,9 @@
         "propMap": {
           "ars_nouveau:color": {
             "particleColor": {
+              "type": "ars_nouveau:constant",
               "b": 127,
               "g": 127,
-              "id": "ars_nouveau:constant",
               "r": 127
             },
             "tintDisabled": false
@@ -88,6 +88,10 @@
           }
         },
         "flairEffect": {
+          "motion": {
+            "type": "ars_nouveau:none",
+            "propMap": {}
+          },
           "particleOptions": {
             "type": "ars_nouveau:new_glow",
             "properties": {
@@ -96,9 +100,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -133,9 +137,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -146,6 +150,10 @@
           }
         },
         "onSpawnEffect": {
+          "motion": {
+            "type": "ars_nouveau:none",
+            "propMap": {}
+          },
           "particleOptions": {
             "type": "ars_nouveau:new_glow",
             "properties": {
@@ -154,9 +162,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 180,
                       "g": 25,
-                      "id": "ars_nouveau:constant",
                       "r": 255
                     },
                     "tintDisabled": true
@@ -186,9 +194,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -210,9 +218,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 255,
                       "g": 255,
-                      "id": "ars_nouveau:constant",
                       "r": 50
                     },
                     "tintDisabled": false
@@ -256,9 +264,9 @@
                 "subProperties": {
                   "ars_nouveau:color": {
                     "particleColor": {
+                      "type": "ars_nouveau:constant",
                       "b": 1,
                       "g": 66,
-                      "id": "ars_nouveau:constant",
                       "r": 132
                     },
                     "tintDisabled": false
@@ -281,9 +289,9 @@
         "propMap": {
           "ars_nouveau:color": {
             "particleColor": {
+              "type": "ars_nouveau:constant",
               "b": 50,
               "g": 50,
-              "id": "ars_nouveau:constant",
               "r": 255
             },
             "tintDisabled": false

@@ -31,6 +31,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -68,7 +69,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.*;
 import java.util.function.Function;
 
-public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider, ICapabilityProvider<CraftingLecternTile, Direction, IItemHandler>, GeoBlockEntity {
+public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITickable, IWandable, ITooltipProvider, ICapabilityProvider<CraftingLecternTile, Direction, IItemHandler>, GeoBlockEntity, Clearable {
     public Map<String, List<HandlerPos>> tabManagerMap = new HashMap<>();
     public Map<String, Map<StoredItemStack, Long>> itemsByTab = new HashMap<>();
     public Map<Item, Long> itemCounts = new HashMap<>();
@@ -685,6 +686,11 @@ public class CraftingLecternTile extends ModdedTile implements MenuProvider, ITi
             return new LecternInvWrapper(this, getConnectedHandlers().toArray(new IItemHandler[0]));
         }
         return chainedHandler;
+    }
+
+    @Override
+    public void clearContent() {
+        craftingMatrices.values().forEach(Clearable::clearContent);
     }
 
     public TransientCustomContainer getCraftingInv(Player player) {

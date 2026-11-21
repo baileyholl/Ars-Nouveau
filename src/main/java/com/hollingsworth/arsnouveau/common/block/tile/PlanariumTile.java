@@ -1,7 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.IResolveListener;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.client.renderer.PlanariumRenderingWorld;
 import com.hollingsworth.arsnouveau.client.renderer.world.CulledStatePos;
 import com.hollingsworth.arsnouveau.common.block.DimBoundary;
@@ -19,7 +24,12 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.nuggets.common.util.BlockPosHelpers;
 import com.hollingsworth.nuggets.common.util.WorldHelpers;
 import net.commoble.infiniverse.internal.DimensionManager;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.SectionPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -42,6 +52,8 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -297,9 +309,20 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
                     PlanariumTile.dimManager.markDirty(level.dimension());
                 }
                 if (event.getState().getBlock() instanceof DimBoundary && !insideJar) {
-                    if (event.getPlayer().canInteractWithBlock(event.getPos(), 4.0f)) {
-                        DimBoundary.playerAttemptedBreak(level, event.getPlayer());
+                    event.setCanceled(true);
+                }
+            }
+        }
+
+        public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+            if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+                boolean insideJar = PlanariumChunkGenerator.innerBox.contains(event.getPos().getBottomCenter());
+                if (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof DimBoundary && !insideJar) {
+                    if (event.getEntity().canInteractWithBlock(event.getPos(), 4.0f)) {
+                        DimBoundary.playerAttemptedBreak(level, event.getEntity());
                     }
+                    event.setUseBlock(TriState.FALSE);
+                    event.setUseItem(TriState.FALSE);
                     event.setCanceled(true);
                 }
             }

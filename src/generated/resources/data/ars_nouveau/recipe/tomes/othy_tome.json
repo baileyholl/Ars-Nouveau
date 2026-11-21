@@ -1,9 +1,9 @@
 {
   "type": "ars_nouveau:caster_tome",
   "color": {
+    "type": "ars_nouveau:constant",
     "b": 255,
     "g": 255,
-    "id": "ars_nouveau:constant",
     "r": 255
   },
   "flavour_text": "Swarm your enemies with bladed spirits.",
@@ -19,9 +19,9 @@
   ],
   "spellData": {
     "color": {
+      "type": "ars_nouveau:constant",
       "b": 255,
       "g": 255,
-      "id": "ars_nouveau:constant",
       "r": 255
     },
     "name": "Othy's Misdirection",

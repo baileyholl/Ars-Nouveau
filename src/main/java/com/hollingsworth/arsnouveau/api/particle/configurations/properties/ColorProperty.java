@@ -156,7 +156,7 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     widgets.add(button);
                 }
                 rainbowButton = new SelectedParticleButton(x + xOffset + (size % numPerRow) * 18, y + 100 + (size / numPerRow) * 18, DocAssets.SPELLSTYLE_RAINBOW, (button) -> {
-                    particleColor = new RainbowParticleColor(particleColor.getRedInt(), particleColor.getGreenInt(), particleColor.getBlueInt());
+                    particleColor = new RainbowParticleColor();
                     displayColor = particleColor;
                     tintDisabled = false;
                     propertyHolder.set(getType(), property);
