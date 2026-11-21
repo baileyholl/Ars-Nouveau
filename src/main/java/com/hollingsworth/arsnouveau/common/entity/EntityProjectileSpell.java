@@ -51,8 +51,6 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -134,7 +132,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected boolean canRide(Entity vehicle) {
+    protected boolean canRide(@NotNull Entity vehicle) {
         return false;
     }
 
@@ -323,7 +321,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void setRemoved(RemovalReason reason) {
+    public void setRemoved(@NotNull RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK)
             reason = RemovalReason.DISCARDED;
         super.setRemoved(reason);
@@ -340,7 +338,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.SPELL_PROJ.get();
     }
 
@@ -377,7 +375,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         result = transformHitResult(result);
 
         if (result instanceof BlockHitResult blockHitResult && !this.isRemoved() && !hitList.contains(blockHitResult.getBlockPos())
@@ -466,7 +464,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(@NotNull Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
     }
 
@@ -483,7 +481,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         Entity entity = this.level.getEntity(pPacket.getData());
         if (entity != null) {
@@ -510,7 +508,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.spellResolver = null;
         if (tag.contains("pierce")) {
@@ -553,8 +551,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         ProjectileTimeline timeline = this.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
-        if (modelProperty.selectedResource.getAnimation() != null)
-            controllers.add(new AnimationController<>(this, "loopController", 20, (event) -> event.setAndContinue(RawAnimation.begin().thenPlay("run"))));
+        ModelProperty.AnimationConfig animationConfig = modelProperty.selectedResource.animationConfig();
+        if (animationConfig != null)
+            animationConfig.animationRegistrar().accept(controllers, this);
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
