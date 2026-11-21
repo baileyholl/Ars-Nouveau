@@ -17,6 +17,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class ApparatusEnchantingRecipeCategory extends EnchantingApparatusRecipe
 
         builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addItemStack(dummy);
 
+        point = new Vec2(center.x, center.y - 32);
         for (Ingredient input : inputs) {
             builder.addSlot(RecipeIngredientRole.INPUT, (int) point.x, (int) point.y)
                     .addIngredients(input);

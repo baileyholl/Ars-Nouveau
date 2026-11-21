@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import net.minecraft.ChatFormatting;
@@ -50,10 +49,6 @@ public class GlyphButton extends ANButton {
         }
         if (Screen.hasShiftDown()) {
             tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", spellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-            tip.add(Component.translatable("ars_nouveau.schools"));
-            for (SpellSchool s : spellPart.spellSchools) {
-                tip.add(s.getTextComponent());
-            }
             tip.add(spellPart.getBookDescLang());
         } else {
             tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));

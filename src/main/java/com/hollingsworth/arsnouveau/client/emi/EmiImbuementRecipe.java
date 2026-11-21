@@ -13,6 +13,7 @@ import java.util.List;
 public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     public EmiImbuementRecipe(ResourceLocation id, ImbuementRecipe recipe) {
         super(id, recipe, new MultiProvider(recipe.output, recipe.pedestalItems, recipe.input));
+        this.centerOffset = getDisplayHeight() == 100 ? 12 : 9;
     }
 
     @Override
@@ -47,6 +48,6 @@ public class EmiImbuementRecipe extends EmiMultiInputRecipe<ImbuementRecipe> {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         super.addWidgets(widgets);
-        widgets.addText(Component.translatable("ars_nouveau.source", recipe.source), 0, this.getDisplayHeight() - 10, 10, false);
+        widgets.addText(Component.translatable("ars_nouveau.source", recipe.source), 0, widgets.getHeight() - 10, 10, false);
     }
 }
