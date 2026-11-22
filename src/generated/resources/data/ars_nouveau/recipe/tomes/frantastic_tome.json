@@ -1,7 +1,7 @@
 {
   "type": "ars_nouveau:caster_tome",
   "flavour_text": "It is unknown whether the original author of this spell survived its first casting, or if she was replaced by one of her simulacra in the ensuing chaos. Don't think too hard about it. ",
-  "name": "Simulmancer's Storm",
+  "name": "Simulmantic Storm",
   "particleTimeline": {
     "ars_nouveau:linger": {
       "type": "ars_nouveau:linger",

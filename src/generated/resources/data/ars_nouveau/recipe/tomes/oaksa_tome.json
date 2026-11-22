@@ -1,7 +1,7 @@
 {
   "type": "ars_nouveau:caster_tome",
   "flavour_text": "The hill has been reassigned as a floor.",
-  "name": "0AKSA's Obliterating Open-Mine",
+  "name": "0AKSA's Open Concept",
   "particleTimeline": {
     "ars_nouveau:projectile": {
       "type": "ars_nouveau:projectile",

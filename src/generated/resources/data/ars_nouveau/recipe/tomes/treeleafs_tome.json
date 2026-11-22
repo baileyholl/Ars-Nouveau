@@ -1,7 +1,7 @@
 {
   "type": "ars_nouveau:caster_tome",
   "flavour_text": "Just make sure your somewhere you want to be greener",
-  "name": "Treeleafs gardeners dream",
+  "name": "Treeleafs Gardener's Dream",
   "particleTimeline": {
     "ars_nouveau:burst": {
       "type": "ars_nouveau:burst",
