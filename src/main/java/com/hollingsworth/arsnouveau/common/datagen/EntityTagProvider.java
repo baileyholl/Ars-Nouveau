@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
@@ -44,6 +45,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.ALAKARKINOS_TYPE.get()
                 );
         this.tag(EntityTags.SPELL_CAN_HIT);
+        this.tag(EntityTypeTags.REDIRECTABLE_PROJECTILE).add(ModEntities.ENCHANTED_FALLING_BLOCK.get(), ModEntities.ENCHANTED_HEAD_BLOCK.get());
         this.tag(EntityTags.HOSTILE_MOBS)
                 .add(ModEntities.WILDEN_HUNTER.get(), ModEntities.WILDEN_GUARDIAN.get(),
                         ModEntities.WILDEN_STALKER.get()

@@ -339,7 +339,6 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.WOODEN_SLABS).add(BlockRegistry.ARCHWOOD_SLABS.get());
         this.tag(BlockTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS.get());
         this.tag(BlockTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR.get());
-
         this.tag(IGNORE_TILE).add(
                 BlockRegistry.INTANGIBLE_AIR.get(),
                 BlockRegistry.MAGE_BLOCK.get(),

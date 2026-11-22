@@ -38,15 +38,26 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.projectile.ProjectileDeflection;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AnvilBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ConcretePowderBlock;
+import net.minecraft.world.level.block.Fallable;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -197,9 +208,10 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
         if (!this.isNoGravity()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
         }
-        EntityHitResult hitEntity = findHitEntity(this.position, this.position.add(this.getDeltaMovement()));
-        if (hitEntity != null) {
-            onHitEntity(hitEntity);
+
+        HitResult hitresult = ProjectileUtil.getHitResult(position(), this, this::canHitEntity, getDeltaMovement(), level(), 1.0F, ClipContext.Block.COLLIDER);
+        if (hitresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, hitresult)) {
+            if (this.hitTargetOrDeflectSelf(hitresult) != ProjectileDeflection.NONE) return;
         }
         this.move(MoverType.SELF, this.getDeltaMovement());
         if (!this.level.isClientSide && !this.isRemoved()) {
@@ -388,6 +400,43 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
     }
 
     public void doPostHurtEffects(LivingEntity livingentity) {
+        if (this.blockState.getBlock() == Blocks.SLIME_BLOCK && this.getDeltaMovement().length() > 0.2) {
+            // bounce the block entity
+            this.setDeltaMovement(this.getDeltaMovement().scale(-0.75));
+        } else if (this.blockState.is(Blocks.MAGMA_BLOCK) || this.blockState.is(BlockTags.FIRE)) {
+            livingentity.setRemainingFireTicks(livingentity.getRemainingFireTicks() + 80);
+        } else if (this.blockState.is(BlockTags.ICE)) {
+            livingentity.setTicksFrozen(livingentity.getTicksFrozen() + 80);
+        }
+    }
+
+    @Override
+    protected void onHitBlock(@NotNull BlockHitResult result) {
+        super.onHitBlock(result);
+        if (this.blockState.getBlock() == Blocks.SLIME_BLOCK && this.getDeltaMovement().length() > 0.3) {
+            bounce(result);
+            this.hasImpulse = true;
+        }
+    }
+
+    public void bounce(BlockHitResult blockHitResult) {
+        Direction direction = blockHitResult.getDirection();
+        float factor = -0.8F;
+        // bounce off the block according to the face hit and reduce momentum
+        switch (direction) {
+            case UP, DOWN -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(vel.x() * 0.85, factor * vel.y(), vel.z() * 0.85);
+            }
+            case EAST, WEST -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(factor * vel.x(), vel.y() * 0.85, vel.z() * 0.85);
+            }
+            case NORTH, SOUTH -> {
+                Vec3 vel = getDeltaMovement();
+                setDeltaMovement(vel.x() * 0.85, vel.y(), factor * vel.z() * 0.85);
+            }
+        }
     }
 
     public void fillCrashReportCategory(@NotNull CrashReportCategory pCategory) {
@@ -512,7 +561,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
      * Returns true if it's possible to attack this entity with an item.
      */
     public boolean isAttackable() {
-        return false;
+        return this.blockState.is(Blocks.SLIME_BLOCK);
     }
 
     public void setStartPos(BlockPos pOrigin) {
