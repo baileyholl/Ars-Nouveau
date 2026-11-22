@@ -124,7 +124,8 @@ public class ArcanoBossModel extends HierarchicalModel<ArcanoBoss> {
         this.animate(entity.swingStaff, ArcanoBossAnimations.swing_staff, ageInTicks);
         this.animate(entity.spinStaff, ArcanoBossAnimations.spin_staff, ageInTicks);
         this.animate(entity.spinStaff2, ArcanoBossAnimations.spin_staff2, ageInTicks);
-
+        this.animate(entity.slamStaff, ArcanoBossAnimations.staff_slam_master, ageInTicks);
+        
 
 //        this.animate(entity.idleAnimationState, RootminAnimations.IDLE, ageInTicks);
 //        this.animate(entity.angryAnimationState, RootminAnimations.ANGRY, ageInTicks);

@@ -29,6 +29,7 @@ public class ParticleMotionRegistry {
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<NoneMotion>> NONE_TYPE = PARTICLE_CONFIG.register("none", () -> new SimpleParticleMotionType<>(NoneMotion.CODEC, NoneMotion.STREAM, NoneMotion::new));
 
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<WaveMotion>> WAVE_TYPE = PARTICLE_CONFIG.register("wave", () -> new SimpleParticleMotionType<>(WaveMotion.CODEC, WaveMotion.STREAM, WaveMotion::new));
+    public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<ShockwaveMotion>> SHOCKWAVE_TYPE = PARTICLE_CONFIG.register("shockwave", () -> new SimpleParticleMotionType<>(ShockwaveMotion.CODEC, ShockwaveMotion.STREAM, ShockwaveMotion::new));
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<ZigZagMotion>> ZIGZAG_TYPE = PARTICLE_CONFIG.register("zigzag", () -> new SimpleParticleMotionType<>(ZigZagMotion.CODEC, ZigZagMotion.STREAM, ZigZagMotion::new));
 
     public static final DeferredHolder<IParticleMotionType<?>, IParticleMotionType<LightBlobMotion>> LIGHT_BLOB = PARTICLE_CONFIG.register("light", () -> new SimpleParticleMotionType<>(LightBlobMotion.CODEC, LightBlobMotion.STREAM, LightBlobMotion::new));

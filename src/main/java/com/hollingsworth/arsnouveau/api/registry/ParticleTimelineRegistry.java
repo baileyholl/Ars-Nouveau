@@ -26,6 +26,8 @@ public class ParticleTimelineRegistry {
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<OrbitTimeline>> ORBIT_TIMELINE = TIMELINE_DF.register("orbit", () -> new SimpleParticleTimelineType<>(EffectOrbit.INSTANCE, OrbitTimeline.CODEC, OrbitTimeline.STREAM_CODEC, OrbitTimeline::new, OrbitTimelinePreview::new));
 
+    public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<EarthshakeTimeline>> EARTHSHAKE_TIMELINE = TIMELINE_DF.register("earthshake", () -> new SimpleParticleTimelineType<>(EffectEarthshake.INSTANCE, EarthshakeTimeline.CODEC, EarthshakeTimeline.STREAM_CODEC, EarthshakeTimeline::new, (timeline, level) -> new EmitterTimelinePreview(timeline.waveEffect, null, level, new Vec3(0, -0.5, 0), 8, 10f, 6, 6)));
+
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<WallTimeline>> WALL_TIMELINE = TIMELINE_DF.register("wall", () -> new SimpleParticleTimelineType<>(EffectWall.INSTANCE, WallTimeline.CODEC, WallTimeline.STREAM_CODEC, WallTimeline::new, WallTimelinePreview::new));
 
     public static final DeferredHolder<IParticleTimelineType<?>, IParticleTimelineType<LingerTimeline>> LINGER_TIMELINE = TIMELINE_DF.register("linger", () -> new SimpleParticleTimelineType<>(EffectLinger.INSTANCE, LingerTimeline.CODEC, LingerTimeline.STREAM_CODEC, LingerTimeline::new, LingerTimelinePreview::new));

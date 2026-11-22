@@ -27,10 +27,14 @@ public class InitArcanoState extends ArcanoState {
             return new ArcanoSetupPhase(arcanoBoss);
         }
         var previousState = arcanoBoss.memoryMap.get(MemoryTypes.LAST_STATE);
-        if (!(previousState instanceof ArcanoBossBasicAttack)) {
-            return new ArcanoBossBasicAttack(arcanoBoss);
-        }
-        return new ConjureTurretsState(arcanoBoss);
+//        if (previousState instanceof ArcanoBossBasicAttack) {
+//            return new ConjureTurretsState(arcanoBoss);
+//        }
+//        if (previousState instanceof ConjureTurretsState) {
+//            return new ArcanoBossGroundAttack(arcanoBoss);
+//        }
+//        return new ArcanoBossBasicAttack(arcanoBoss);
+        return new ArcanoBossGroundAttack(arcanoBoss);
     }
 
     @Override

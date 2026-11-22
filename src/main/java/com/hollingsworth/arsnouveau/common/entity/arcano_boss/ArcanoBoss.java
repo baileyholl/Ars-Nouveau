@@ -56,6 +56,7 @@ public class ArcanoBoss extends Monster {
     public AnimationState swingStaff = new AnimationState();
     public AnimationState spinStaff = new AnimationState();
     public AnimationState spinStaff2 = new AnimationState();
+    public AnimationState slamStaff = new AnimationState();
     public boolean isSetupPhase = false;
     public int setupTicks = 0;
     public int maxSetupTicks = 100;
@@ -225,6 +226,9 @@ public class ArcanoBoss extends Monster {
             } else {
                 this.swingStaff.stop();
             }
+            if (pose == ArcanoBossState.SLAM_STAFF) {
+                this.slamStaff.start(this.tickCount);
+            }
         }
 
         super.onSyncedDataUpdated(key);
@@ -320,7 +324,8 @@ public class ArcanoBoss extends Monster {
         FLIGHT(1),
         SWING(2),
         SPIN_STAFF(3),
-        SPIN_STAFF2(4);
+        SPIN_STAFF2(4),
+        SLAM_STAFF(5);
 
         public static final IntFunction<ArcanoBossState> BY_ID = ByIdMap.continuous(ArcanoBossState::id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
         public static final StreamCodec<ByteBuf, ArcanoBossState> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, ArcanoBossState::id);
