@@ -41,7 +41,7 @@ public class TransparencyProperty extends BaseProperty<TransparencyProperty> {
     }
 
     public TransparencyProperty() {
-        this(225);
+        this(255);
     }
 
     public int getTransparency() {
@@ -87,14 +87,14 @@ public class TransparencyProperty extends BaseProperty<TransparencyProperty> {
                         20,
                         Component.translatable("ars_nouveau.transparency"),
                         Component.literal("%"),
-                        0.0D,
-                        255.0D,
+                        50D,
+                        255D,
                         transparency,
                         1,
                         1,
                         false,
                         value -> {
-                            transparency = (int) (value.floatValue() * 255);
+                            transparency = (int) (50 + value.floatValue() * 205);
                             propertyHolder.set(getType(), property);
                         }
                 );
