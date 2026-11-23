@@ -30,6 +30,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 
 import java.util.List;
 import java.util.Optional;
@@ -127,11 +128,21 @@ public record CasterTomeData(String flavorText, Spell spell,
     }
 
     public static class Serializer implements RecipeSerializer<CasterTomeData> {
-        public static MapCodec<CasterTomeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.STRING.fieldOf("flavour_text").forGetter(CasterTomeData::flavorText),
-                Spell.CODEC.forGetter(CasterTomeData::spell),
-                ResourceLocation.CODEC.fieldOf("type").forGetter(CasterTomeData::tomeType)
-        ).apply(instance, CasterTomeData::new));
+        public static MapCodec<CasterTomeData> CODEC = NeoForgeExtraCodecs.mapWithAlternative(
+                RecordCodecBuilder.mapCodec(instance -> instance.group(
+                        Codec.STRING.fieldOf("flavour_text").forGetter(CasterTomeData::flavorText),
+                        Spell.CODEC.forGetter(CasterTomeData::spell),
+                        ResourceLocation.CODEC.fieldOf("type").forGetter(CasterTomeData::tomeType)
+                ).apply(instance, CasterTomeData::new)),
+                RecordCodecBuilder.mapCodec(instance -> instance.group(
+                        Codec.STRING.fieldOf("name").forGetter(tomeData -> tomeData.spell.name()),
+                        Codec.list(ResourceLocation.CODEC).fieldOf("spell").forGetter(tomeData -> tomeData.spell.serializeRecipe()),
+                        ResourceLocation.CODEC.fieldOf("tome_type").forGetter(CasterTomeData::tomeType),
+                        Codec.STRING.fieldOf("flavour_text").forGetter(CasterTomeData::flavorText),
+                        ParticleColor.CODEC.fieldOf("color").forGetter(tomeData -> tomeData.spell.color()),
+                        ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(tomeData -> tomeData.spell.sound()),
+                        Spell.CODEC.codec().optionalFieldOf("spellData").forGetter(tomeData -> Optional.ofNullable(tomeData.spell))
+                ).apply(instance, CasterTomeData::deserialize)));
 
         public static StreamCodec<RegistryFriendlyByteBuf, CasterTomeData> STREAM = CheatSerializer.create(CODEC);
 
