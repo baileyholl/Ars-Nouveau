@@ -62,7 +62,7 @@ public class EffectLight extends AbstractEffect implements IPotionEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+        BlockPos pos = getIntendedTargetPos(rayTraceResult);
         Player player = getPlayer(shooter, (ServerLevel) world);
         if (!BlockUtil.destroyRespectsClaim(player, world, pos))
             return;

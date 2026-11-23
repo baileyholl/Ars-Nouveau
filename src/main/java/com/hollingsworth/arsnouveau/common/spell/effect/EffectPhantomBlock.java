@@ -41,7 +41,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
-            pos = rayTraceResult.isInside() ? pos : pos.relative((rayTraceResult).getDirection());
+            pos = getIntendedTargetPos(rayTraceResult, pos);
             if (!world.isInWorldBounds(pos))
                 continue;
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))

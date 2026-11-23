@@ -52,8 +52,7 @@ public class EffectRedstone extends AbstractEffect {
                 world.neighborChanged(pos1, world.getBlockState(pos1).getBlock(), pos1);
                 world.updateNeighborsAt(pos1, world.getBlockState(pos1).getBlock());
             } else {
-
-                pos1 = pos1.relative(rayTraceResult.getDirection());
+                pos1 = getIntendedTargetPos(rayTraceResult, pos1);
 
                 if (!world.isInWorldBounds(pos1))
                     return;

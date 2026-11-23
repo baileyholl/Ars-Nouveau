@@ -57,9 +57,9 @@ public class EffectPlaceBlock extends AbstractEffect {
             fakePlayer.lookAt(EntityAnchorArgument.Anchor.EYES, lookLoc);
         }
         for (BlockPos pos1 : posList) {
+            pos1 = getIntendedTargetPos(rayTraceResult, pos1);
             if (!world.isInWorldBounds(pos1))
                 continue;
-            pos1 = rayTraceResult.isInside() ? pos1 : pos1.relative(rayTraceResult.getDirection());
             boolean notReplaceable = !world.getBlockState(pos1).canBeReplaced();
             if (notReplaceable)
                 continue;

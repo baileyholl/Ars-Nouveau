@@ -61,7 +61,7 @@ public class EffectPrestidigitation extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+        BlockPos pos = getIntendedTargetPos(rayTraceResult);
         Player player = getPlayer(shooter, (ServerLevel) world);
         if (world.getBlockState(pos).canBeReplaced()
                 && world.isUnobstructed(BlockRegistry.PARTICLE_BLOCK.get().defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))

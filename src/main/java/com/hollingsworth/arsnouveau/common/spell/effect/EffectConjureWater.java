@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +50,7 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
             applyConfigPotion(livingEntity, ModPotions.SOAKED_EFFECT, spellStats);
         }
         if (spellStats.isSensitive() && !world.dimensionType().ultraWarm()) {
-            placeWater((ServerLevel) world, shooter, spellContext, resolver, entity.blockPosition(), Direction.UP);
+            placeWater(rayTraceResult, (ServerLevel) world, shooter, spellContext, resolver, entity.blockPosition(), Direction.UP);
         }
 
     }
@@ -61,11 +62,11 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
         if (world.dimensionType().ultraWarm())
             return;
         for (BlockPos pos1 : posList) {
-            placeWater((ServerLevel) world, shooter, spellContext, resolver, pos1, rayTraceResult.getDirection());
+            placeWater(rayTraceResult, (ServerLevel) world, shooter, spellContext, resolver, pos1, rayTraceResult.getDirection());
         }
     }
 
-    private void placeWater(ServerLevel world, @NotNull LivingEntity shooter, SpellContext spellContext, SpellResolver resolver, BlockPos pos1, Direction direction) {
+    private void placeWater(HitResult hitResult, ServerLevel world, @NotNull LivingEntity shooter, SpellContext spellContext, SpellResolver resolver, BlockPos pos1, Direction direction) {
         if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, world), world, pos1))
             return;
         if (!world.isInWorldBounds(pos1))
@@ -76,12 +77,18 @@ public class EffectConjureWater extends AbstractEffect implements IPotionEffect 
             ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
                     new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), direction, pos1, false
             ), world, shooter, spellContext, resolver);
-        } else if (world.getBlockState(pos1.relative(direction)).canBeReplaced(Fluids.WATER)) {
-            pos1 = pos1.relative(direction);
-            world.setBlockAndUpdate(pos1, Blocks.WATER.defaultBlockState());
-            ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
-                    new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), direction, pos1, false
-            ), world, shooter, spellContext, resolver);
+        } else {
+            BlockPos previousPos = pos1.immutable();
+            pos1 = hitResult instanceof BlockHitResult blockHitResult ? getIntendedTargetPos(blockHitResult, pos1) : pos1;
+            if (!previousPos.equals(pos1) && (!world.isInWorldBounds(pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, world), world, pos1))) {
+                return;
+            }
+            if (world.getBlockState(pos1).canBeReplaced(Fluids.WATER)) {
+                world.setBlockAndUpdate(pos1, Blocks.WATER.defaultBlockState());
+                ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
+                        new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), direction, pos1, false
+                ), world, shooter, spellContext, resolver);
+            }
         }
     }
 

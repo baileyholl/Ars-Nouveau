@@ -124,6 +124,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
+    public BlockPos getIntendedTargetPos(BlockHitResult hitResult, BlockPos originalPos) {
+        return hitResult.isInside() ? originalPos : originalPos.relative(hitResult.getDirection());
+    }
+
+    public BlockPos getIntendedTargetPos(BlockHitResult hitResult) {
+        return hitResult.isInside() ? hitResult.getBlockPos() : hitResult.getBlockPos().relative(hitResult.getDirection());
+    }
+
     public ModConfigSpec.DoubleValue DAMAGE;
     public ModConfigSpec.DoubleValue AMP_VALUE;
     public ModConfigSpec.IntValue POTION_TIME;
