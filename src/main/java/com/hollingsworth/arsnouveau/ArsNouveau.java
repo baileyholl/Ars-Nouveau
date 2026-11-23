@@ -137,6 +137,7 @@ public class ArsNouveau {
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockBroken);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onBlockPlaced);
+        NeoForge.EVENT_BUS.addListener(PlanariumTile.DimManager::onLevelLoad);
     }
 
     public void setup(final FMLCommonSetupEvent event) {

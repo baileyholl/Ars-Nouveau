@@ -44,6 +44,7 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -55,6 +56,7 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -332,6 +334,35 @@ public class PlanariumTile extends ModdedTile implements ITickable, Nameable {
             if (event.getLevel() instanceof ServerLevel level && WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
                 PlanariumTile.dimManager.markDirty(level.dimension());
             }
+        }
+
+        public static void onLevelLoad(LevelEvent.Load event) {
+            if (!(event.getLevel() instanceof ServerLevel level) || !WorldHelpers.isOfWorldType(level, ArsNouveau.DIMENSION_TYPE_KEY)) {
+                return;
+            }
+
+            var data = JarDimData.from(level);
+            if (data.getVersion() < 1) {
+                var boundary = BlockRegistry.DIM_BOUNDARY.get();
+                var pos = new BlockPos.MutableBlockPos();
+                for (int x = -1; x <= 32; x++) {
+                    for (int z = -1; z <= 32; z++) {
+                        pos.set(x, 32, z);
+                        if (level.getBlockState(pos).is(boundary)) {
+                            pos.setY(33);
+                            if (level.getBlockState(pos).isEmpty()) {
+                                level.setBlock(pos, boundary.defaultBlockState(), Block.UPDATE_NONE);
+                                if (x != -1 && x != 32 && z != -1 && z != 32) {
+                                    pos.setY(32);
+                                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            data.setVersion(JarDimData.LATEST_VERSION);
         }
 
         public Tuple<ServerLevel, Entry> getOrCreateLevel(String dimName, ServerLevel serverLevel, BlockPos ownerPos) {

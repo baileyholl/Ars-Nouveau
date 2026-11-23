@@ -20,9 +20,11 @@ import java.util.UUID;
 
 public class JarDimData extends SavedData {
     public static Codec<Map<UUID, RotPos>> ENTERED_FROM_CODEC = Codec.unboundedMap(UUIDUtil.STRING_CODEC, RotPos.CODEC.codec());
+    public static int LATEST_VERSION = 1;
 
     private Map<UUID, RotPos> enteredFrom = new HashMap<>();
     private BlockPos spawnPos = new BlockPos(7, 2, 7);
+    private int version = LATEST_VERSION;
 
 
     public void setEnteredFrom(UUID uuid, GlobalPos pos, Vec2 rot) {
@@ -43,12 +45,22 @@ public class JarDimData extends SavedData {
         return spawnPos;
     }
 
+    public int getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(int newVersion) {
+        this.version = newVersion;
+        setDirty();
+    }
+
     @Override
     public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
         if (!enteredFrom.isEmpty()) {
             compoundTag.put("enteredFrom", ANCodecs.encode(ENTERED_FROM_CODEC, enteredFrom));
         }
         compoundTag.put("spawnPos", ANCodecs.encode(BlockPos.CODEC, spawnPos));
+        compoundTag.putInt("version", this.version);
         return compoundTag;
     }
 
@@ -59,6 +71,11 @@ public class JarDimData extends SavedData {
         }
         if (compoundTag.contains("spawnPos")) {
             data.spawnPos = ANCodecs.decode(BlockPos.CODEC, compoundTag.get("spawnPos"));
+        }
+        if (compoundTag.contains("version", CompoundTag.TAG_INT)) {
+            data.version = compoundTag.getInt("version");
+        } else {
+            data.version = 0;
         }
         return data;
     }
