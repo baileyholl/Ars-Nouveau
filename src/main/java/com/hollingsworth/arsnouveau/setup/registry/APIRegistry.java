@@ -47,6 +47,7 @@ public class APIRegistry {
         registerSpell(MethodPantomime.INSTANCE);
         registerSpell(EffectBreak.INSTANCE);
         registerSpell(EffectHarm.INSTANCE);
+        registerSpell(EffectEarthshake.INSTANCE);
         registerSpell(EffectIgnite.INSTANCE);
         registerSpell(EffectPhantomBlock.INSTANCE);
         registerSpell(EffectHeal.INSTANCE);
