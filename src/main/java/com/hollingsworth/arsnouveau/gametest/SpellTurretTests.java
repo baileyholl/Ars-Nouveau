@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestSequence;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -201,6 +202,27 @@ public class SpellTurretTests {
             }).thenWaitUntil(() -> {
                 var setup = supp.get();
                 helper.assertBlockState(setup.posInFrontOfTurret, (state) -> state == Blocks.CANDLE.defaultBlockState().setValue(CandleBlock.LIT, true), () -> "Ignite did not light candle block " + setup.spell.toString());
+            });
+        });
+        seq.thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void shootsFirework(GameTestHelper helper) {
+        GameTestSequence seq = helper.startSequence();
+        assertTurretWithAllForms(seq, helper, new Spell(EffectFirework.INSTANCE), (supp, sequence) -> {
+            sequence.thenExecute(() -> {
+                var setup = supp.get();
+                setup.tile.shootSpell();
+            }).thenWaitUntil(() -> {
+                var setup = supp.get();
+                var spell = setup.spell;
+                var fireworks = helper.getEntities(EntityType.FIREWORK_ROCKET);
+                if (spell.getCastMethod() == MethodTouch.INSTANCE) {
+                    helper.assertTrue(!fireworks.isEmpty() && Direction.getNearest(fireworks.getFirst().getDeltaMovement()) == setup.direction, "Firework was not shot in the correct direction " + setup.direction + " " + spell);
+                } else {
+                    helper.assertTrue(!fireworks.isEmpty() && Direction.getNearest(fireworks.getFirst().getDeltaMovement()) == Direction.UP, "Firework was not shot in the correct direction " + setup.direction + " " + spell);
+                }
             });
         });
         seq.thenSucceed();

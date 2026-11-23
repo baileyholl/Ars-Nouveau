@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -74,10 +76,15 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
         FireworkRocketEntity fireworkrocketentity;
         if (context.getCaster().getCasterType() == SpellContext.CasterType.TURRET) {
             BlockPos pos = rayTraceResult.getBlockPos();
-            Direction direction = rayTraceResult.getDirection();
-            if (direction != Direction.UP && direction != Direction.DOWN)
-                direction = rayTraceResult.getDirection().getOpposite();
-            fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true);
+
+            Direction direction;
+            if (context.getSpell().getCastMethod() == MethodTouch.INSTANCE) {
+                direction = context.getCaster().getFacingDirection();
+            } else {
+                direction = Direction.UP;
+            }
+            Vec3 location = rayTraceResult.getLocation();
+            fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, location.x, location.y, location.z, true);
             fireworkrocketentity.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), 0.5F, 1.0F);
         } else {
             BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
