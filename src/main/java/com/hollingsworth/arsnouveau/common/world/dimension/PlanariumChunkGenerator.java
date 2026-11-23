@@ -87,11 +87,11 @@ public class PlanariumChunkGenerator extends ChunkGenerator {
         int worldZ = chunkZ * 16;
 
         int minX = -1;
-        int maxX = 32;
+        int maxX = minX + 33;
         int minY = 0;
-        int maxY = 32;
+        int maxY = minY + 33;
         int minZ = -1;
-        int maxZ = 32;
+        int maxZ = minZ + 33;
 
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
