@@ -15,7 +15,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestSequence;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -222,6 +224,10 @@ public class SpellTurretTests {
                     helper.assertTrue(!fireworks.isEmpty() && Direction.getNearest(fireworks.getFirst().getDeltaMovement()) == setup.direction, "Firework was not shot in the correct direction " + setup.direction + " " + spell);
                 } else {
                     helper.assertTrue(!fireworks.isEmpty() && Direction.getNearest(fireworks.getFirst().getDeltaMovement()) == Direction.UP, "Firework was not shot in the correct direction " + setup.direction + " " + spell);
+                }
+            }).thenExecute(() -> {
+                for (FireworkRocketEntity rocketEntity : helper.getEntities(EntityType.FIREWORK_ROCKET)) {
+                    rocketEntity.remove(Entity.RemovalReason.DISCARDED);
                 }
             });
         });
