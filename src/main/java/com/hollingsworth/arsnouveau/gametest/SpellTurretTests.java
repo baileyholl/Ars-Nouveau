@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.gametest;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
+import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
@@ -256,7 +257,7 @@ public class SpellTurretTests {
                 helper.assertContainerContains(setup.posBehindTurret, Items.WATER_BUCKET);
             });
         });
-        
+
         assertTurretWithAllForms(seq, helper, new Spell(EffectInteract.INSTANCE), (supp, sequence) -> {
             sequence.thenExecute(() -> {
                 var setup = supp.get();
@@ -273,6 +274,22 @@ public class SpellTurretTests {
                 var setup = supp.get();
                 helper.assertBlockState(setup.posInFrontOfTurret, BlockBehaviour.BlockStateBase::isAir, () -> "Interact did not pick up water block " + setup.spell.toString());
                 helper.assertContainerContains(setup.posBehindTurret, Items.WATER_BUCKET);
+            });
+        });
+        seq.thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void placesRune(GameTestHelper helper) {
+        GameTestSequence seq = helper.startSequence();
+        assertTurretWithAllForms(seq, helper, new Spell(EffectRune.INSTANCE), (supp, sequence) -> {
+            sequence.thenExecute(() -> {
+                var setup = supp.get();
+                setup.tile.shootSpell();
+            }).thenWaitUntil(() -> {
+                var setup = supp.get();
+                Direction expectedFacing = setup.spell.getCastMethod() == MethodTouch.INSTANCE ? Direction.UP : setup.direction.getOpposite();
+                helper.assertBlockState(setup.posInFrontOfTurret, (state) -> state.getBlock() == BlockRegistry.RUNE_BLOCK.get() && state.getValue(RuneBlock.FACING) == expectedFacing, () -> "Rune block was not placed facing " + expectedFacing + " " + setup.direction + " " + setup.spell.toString());
             });
         });
         seq.thenSucceed();
