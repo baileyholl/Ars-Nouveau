@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
@@ -277,6 +278,73 @@ public class SpellTurretTests {
             });
         });
         seq.thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void tossesIntoInventory(GameTestHelper helper) {
+        GameTestSequence seq = helper.startSequence();
+        assertTurretWithAllForms(seq, helper, new Spell(EffectToss.INSTANCE), (supp, sequence) -> {
+            sequence.thenExecute(() -> {
+                var setup = supp.get();
+                helper.setBlock(setup.posInFrontOfTurret, Blocks.CHEST);
+                setup.chest.setItem(0, Items.STONE.getDefaultInstance());
+                setup.tile.shootSpell();
+            }).thenWaitUntil(() -> {
+                var setup = supp.get();
+                helper.assertContainerContains(setup.posInFrontOfTurret, Items.STONE);
+                helper.assertContainerEmpty(setup.posBehindTurret);
+            }).thenExecute(() -> {
+                var setup = supp.get();
+                ChestBlockEntity target = helper.getBlockEntity(setup.posInFrontOfTurret);
+                target.clearContent();
+            });
+        });
+        seq.thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void growsPlants(GameTestHelper helper) {
+        helper.setBlock(new BlockPos(0, 3, 0), BlockRegistry.CREATIVE_SOURCE_JAR.defaultBlockState());
+        Spell spell = new Spell(MethodTouch.INSTANCE, EffectGrow.INSTANCE);
+        BlockState turret = BlockRegistry.BASIC_SPELL_TURRET.defaultBlockState().setValue(BasicSpellTurret.FACING, Direction.EAST);
+
+        BlockPos cropPos = new BlockPos(7, 2, 7);
+        helper.setBlock(cropPos.below(), Blocks.FARMLAND);
+        helper.setBlock(cropPos, Blocks.WHEAT);
+        helper.setBlock(cropPos.west(), turret);
+        BasicSpellTurretTile cropTurret = helper.getBlockEntity(cropPos.west());
+        cropTurret.setSpell(spell);
+        cropTurret.shootSpell();
+        helper.assertBlockState(cropPos, (state) -> state.is(Blocks.WHEAT) && state.getValue(BlockStateProperties.AGE_7) > 0, () -> "Wheat was not grown");
+
+        for (int x = 0; x <= 4; x++) {
+            for (int z = 0; z <= 4; z++) {
+                helper.setBlock(new BlockPos(x, 1, z), Blocks.DIRT);
+                helper.setBlock(new BlockPos(x, 2, z), x == 0 || z == 0 || x == 4 || z == 4 ? Blocks.GLASS : Blocks.WATER);
+            }
+        }
+        BlockPos waterPos = new BlockPos(2, 2, 2);
+        helper.setBlock(waterPos.west(), turret.setValue(BlockStateProperties.WATERLOGGED, true));
+        BasicSpellTurretTile waterTurret = helper.getBlockEntity(waterPos.west());
+        waterTurret.setSpell(spell);
+        waterTurret.shootSpell();
+        helper.assertBlockState(waterPos, (state) -> state.is(Blocks.SEAGRASS) || state.is(Blocks.TALL_SEAGRASS), () -> "Seagrass was not grown in the water in front of the turret");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty10")
+    public static void sensitiveProjectileGrowsCrop(GameTestHelper helper) {
+        helper.setBlock(new BlockPos(0, 3, 0), BlockRegistry.CREATIVE_SOURCE_JAR.defaultBlockState());
+        BlockPos cropPos = new BlockPos(7, 2, 7);
+        BlockPos turretPos = cropPos.west(3);
+        int startAge = 3;
+        helper.setBlock(cropPos.below(), Blocks.FARMLAND);
+        helper.setBlock(cropPos, Blocks.WHEAT.defaultBlockState().setValue(BlockStateProperties.AGE_7, startAge));
+        helper.setBlock(turretPos, BlockRegistry.BASIC_SPELL_TURRET.defaultBlockState().setValue(BasicSpellTurret.FACING, Direction.EAST));
+        BasicSpellTurretTile tile = helper.getBlockEntity(turretPos);
+        tile.setSpell(new Spell(MethodProjectile.INSTANCE, AugmentSensitive.INSTANCE, EffectGrow.INSTANCE));
+        tile.shootSpell();
+        helper.succeedWhen(() -> helper.assertBlockState(cropPos, (state) -> state.is(Blocks.WHEAT) && state.getValue(BlockStateProperties.AGE_7) > startAge, () -> "Wheat was not grown by the sensitive projectile"));
     }
 
     @GameTest(template = "empty10")

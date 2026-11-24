@@ -14,6 +14,7 @@ import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,8 +38,9 @@ public class EffectGrow extends AbstractEffect {
                         world.levelEvent(1505, blockpos, 0); //particles
                     }
                 } else {
-                    BlockPos relative = blockpos.relative(rayTraceResult.getDirection());
-                    boolean flag = world.getBlockState(blockpos).isFaceSturdy(world, blockpos, rayTraceResult.getDirection());
+                    boolean targetsWater = rayTraceResult.isInside() && world.getBlockState(blockpos).is(Blocks.WATER);
+                    BlockPos relative = targetsWater ? blockpos : blockpos.relative(rayTraceResult.getDirection());
+                    boolean flag = targetsWater || world.getBlockState(blockpos).isFaceSturdy(world, blockpos, rayTraceResult.getDirection());
                     if (flag && BoneMealItem.growWaterPlant(stack, world, relative, rayTraceResult.getDirection())) {
                         if (!world.isClientSide) {
                             world.levelEvent(1505, relative, 0); //particles
