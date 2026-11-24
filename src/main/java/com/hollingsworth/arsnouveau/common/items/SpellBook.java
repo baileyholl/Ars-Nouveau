@@ -24,7 +24,6 @@ import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -37,7 +36,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -71,12 +69,6 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-//        var caster2 = SpellCasterRegistry.from(stack);
-//        caster2.getSpell().particleTimeline().debugPrintHash(caster2.getSpell(), worldIn);
-//        var timeline = caster2.getSpell().particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
-//        var element = IParticleTimeline.CODEC.encodeStart(JsonOps.INSTANCE, timeline);
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        System.out.println(gson.toJson(element.result().get()));
         if (playerIn instanceof ServerPlayer) {
             if (tier != SpellTier.CREATIVE) {
                 var iMana = CapabilityRegistry.getMana(playerIn);
@@ -107,11 +99,6 @@ public class SpellBook extends ModItem implements GeoItem, ICasterTool, IRadialP
         caster.castOnServer(handIn, Component.translatable("ars_nouveau.invalid_spell"));
 
         return InteractionResultHolder.pass(stack);
-    }
-
-    @Override
-    public boolean doesSneakBypassUse(@NotNull ItemStack stack, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
-        return true;
     }
 
     @Override
