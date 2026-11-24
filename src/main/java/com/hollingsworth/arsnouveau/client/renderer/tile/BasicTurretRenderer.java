@@ -28,8 +28,9 @@ public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTil
             master.get().setRotX(0);
             master.get().setRotY(0);
             if (animatable instanceof RotatingTurretTile tile) {
-                master.get().setRotY((tile.getRotationX() + 90) * Mth.DEG_TO_RAD);
-                master.get().setRotX(tile.getRotationY() * Mth.DEG_TO_RAD);
+                float partialTick = animationState.getPartialTick();
+                master.get().setRotY((Mth.rotLerp(partialTick, tile.prevRotationX, tile.rotationX) + 90) * Mth.DEG_TO_RAD);
+                master.get().setRotX(Mth.lerp(partialTick, tile.prevRotationY, tile.rotationY) * Mth.DEG_TO_RAD);
             }
         }
     };

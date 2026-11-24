@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
-@SuppressWarnings("rawtypes")
 public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTile> {
 
     public RotatingTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
@@ -17,29 +16,12 @@ public class RotatingTurretRenderer extends ArsGeoBlockRenderer<RotatingTurretTi
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, RotatingTurretTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-        super.actuallyRender(poseStack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
-        float rotationX = tile.rotationX;
-        float neededRotationX = tile.clientNeededX;
-        float rotationY = tile.rotationY;
-        float neededRotationY = tile.clientNeededY;
-        float step = (0.1f + partialTick);
-        if (rotationX != neededRotationX) {
-            float diff = neededRotationX - rotationX;
-            if (Math.abs(diff) < step) {
-                tile.setRotationX(neededRotationX);
-            } else {
-                tile.setRotationX(rotationX + diff * step);
-            }
-        }
-        if (rotationY != neededRotationY) {
-            float diff = neededRotationY - rotationY;
-            if (Math.abs(diff) < step) {
-                tile.setRotationY(neededRotationY);
-            } else {
-                tile.setRotationY(rotationY + diff * step);
-            }
-        }
+    public void actuallyRender(PoseStack poseStack, RotatingTurretTile animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
+        model.getBone("spell_turret").ifPresent(bone -> {
+            bone.setRotX(0);
+            bone.setRotY(0);
+        });
     }
 
     //Disable geckolib automatic rotation based on blockstate

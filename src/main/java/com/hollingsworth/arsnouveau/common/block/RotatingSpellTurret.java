@@ -52,21 +52,26 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         // Makes the turret rotate to the right direction right after being placed, otherwise it starts right and rotate to facing west.
         switch (orientation) {
             case DOWN:
-                turretTile.neededRotationY = -90F;
+                turretTile.neededRotationY = -90f;
+                turretTile.rotationY = -90F;
                 break;
             case UP:
-                turretTile.neededRotationY = 90F;
+                turretTile.neededRotationY = 90f;
+                turretTile.rotationY = 90F;
                 break;
             case NORTH:
-                turretTile.neededRotationX = 270F;
+                turretTile.neededRotationX = 270f;
+                turretTile.rotationX = 270F;
                 break;
             case SOUTH:
-                turretTile.neededRotationX = 90F;
+                turretTile.neededRotationX = 90f;
+                turretTile.rotationX = 90F;
                 break;
             case WEST:
                 break;
             case EAST:
-                turretTile.neededRotationX = 180F;
+                turretTile.neededRotationX = 180f;
+                turretTile.rotationX = 180F;
                 break;
         }
     }
