@@ -528,6 +528,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.familiar.unlocked", "Familiar unlocked.");
         add("ars_nouveau.familiar.script", "Used for obtaining familiars. Obtained from the Ritual of Binding.");
         add("ars_nouveau.schools", "Schools: ");
+        add("ars_nouveau.tooltip.can_be_styled", "Can be Styled");
         add("entity.ars_nouveau.familiar_bookwyrm", "Bookwyrm Familiar");
         add("entity.ars_nouveau.familiar_starbuncle", "Starbuncle Familiar");
         add("entity.ars_nouveau.familiar_whirlisprig", "Whirlisprig Familiar");
@@ -1680,6 +1681,7 @@ public class LangDatagen extends LanguageProvider {
         add("painting.ars_nouveau.starbuncle.author", "Gootastic");
         add("painting.ars_nouveau.resting_drygmy.title", "Resting Drygmy");
         add("painting.ars_nouveau.resting_drygmy.author", "Gootastic");
+        add("ars_nouveau.spell_book_gui.no_timelines", "Create a spell in this slot to edit its particles, color, sound, and texture.\nConfigurable glyphs will have a spell styles icon:");
     }
 
     public void addCategory(String key, String value) {

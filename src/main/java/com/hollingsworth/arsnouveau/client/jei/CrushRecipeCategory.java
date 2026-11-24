@@ -47,7 +47,7 @@ public class CrushRecipeCategory implements IRecipeCategory<RecipeHolder<CrushRe
 
     @Override
     public int getHeight() {
-        return 56;
+        return 60;
     }
 
     @Override
@@ -62,9 +62,9 @@ public class CrushRecipeCategory implements IRecipeCategory<RecipeHolder<CrushRe
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);
-            matrixStack.drawString(renderer, Math.round(100 * output.chance() - 0.5f) + "%", 98, 11 + 17 * i, 10, false);
+            matrixStack.drawString(renderer, Math.round(100 * output.chance() - 0.5f) + "%", 98, 9 + 18 * i, 10, false);
             if (output.maxRange() > 1) {
-                matrixStack.drawString(renderer, "1-" + output.maxRange(), 75, 11 + 17 * i, 10, false);
+                matrixStack.drawString(renderer, "1-" + output.maxRange(), 75, 9 + 18 * i, 10, false);
             }
         }
     }
@@ -75,7 +75,7 @@ public class CrushRecipeCategory implements IRecipeCategory<RecipeHolder<CrushRe
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input());
         for (int i = 0; i < recipe.outputs().size(); i++) {
             CrushRecipe.CrushOutput output = recipe.outputs().get(i);
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 5 + 16 * i).addItemStack(output.stack());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 5 + 18 * i).addItemStack(output.stack());
         }
     }
 }
