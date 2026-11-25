@@ -51,6 +51,12 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     public float prevRotationX;
     public float prevRotationY;
 
+    // kept for ars elemental
+    @Deprecated(forRemoval = true)
+    public float clientNeededX;
+    @Deprecated(forRemoval = true)
+    public float clientNeededY;
+
     @Override
     public void tick() {
         super.tick();
@@ -60,6 +66,8 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
         rotationX = Math.abs(diffX) < 0.1f ? neededRotationX : rotationX + diffX * 0.1f;
         float diffY = neededRotationY - rotationY;
         rotationY = Math.abs(diffY) < 0.1f ? neededRotationY : rotationY + diffY * 0.1f;
+        clientNeededX = rotationX;
+        clientNeededY = rotationY;
         if (!level.isClientSide && (rotationX != prevRotationX || rotationY != prevRotationY)) {
             setChanged();
         }
@@ -190,8 +198,8 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        rotationX = prevRotationX = tag.getFloat("rotationX");
-        rotationY = prevRotationY = tag.getFloat("rotationY");
+        rotationX = prevRotationX = clientNeededX = tag.getFloat("rotationX");
+        rotationY = prevRotationY = clientNeededY = tag.getFloat("rotationY");
         neededRotationX = tag.getFloat("neededRotationX");
         neededRotationY = tag.getFloat("neededRotationY");
     }

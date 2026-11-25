@@ -9,11 +9,22 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 
 public class BasicTurretRenderer extends ArsGeoBlockRenderer<BasicSpellTurretTile> {
-    public static GeoModel model = new GenericModel("basic_spell_turret");
+    public static GeoModel model = new GenericModel<>("basic_spell_turret") {
+        @Override
+        public void setCustomAnimations(GeoAnimatable animatable, long instanceId, AnimationState<GeoAnimatable> animationState) {
+            super.setCustomAnimations(animatable, instanceId, animationState);
+            getBone("spell_turret").ifPresent(bone -> {
+                bone.setRotX(0);
+                bone.setRotY(0);
+            });
+        }
+    };
 
     public BasicTurretRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         this(rendererDispatcherIn, model);
