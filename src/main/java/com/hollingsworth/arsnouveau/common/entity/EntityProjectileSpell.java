@@ -80,6 +80,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
 
     public static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<SpellResolver> SPELL_RESOLVER = SynchedEntityData.defineId(EntityProjectileSpell.class, DataSerializers.SPELL_RESOLVER.get());
+    public static final EntityDataAccessor<Integer> PARTICLE_DELAY = SynchedEntityData.defineId(EntityProjectileSpell.class, EntityDataSerializers.INT);
 
 
     @Deprecated
@@ -140,6 +141,9 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         if (age == 0 && castSound != null && !level.isClientSide) {
             castSound.playSound(level, getX(), getY(), getZ());
         }
+        if (this.age >= getParticleDelay()) {
+            playParticles();
+        }
         age++;
 
         if ((!level.isClientSide && this.age > getExpirationTime()) || (!level.isClientSide && resolver() == null)) {
@@ -161,10 +165,6 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         } else {
             tickNextPosition();
         }
-
-        if (level.isClientSide && this.age >= getParticleDelay()) {
-            playParticles();
-        }
     }
 
     public HitResult getHitResult() {
@@ -179,6 +179,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         super.defineSynchedData(pBuilder);
         pBuilder.define(OWNER_ID, -1);
         pBuilder.define(SPELL_RESOLVER, new SpellResolver(new SpellContext(level, new Spell(), null, null)));
+        pBuilder.define(PARTICLE_DELAY, 2);
     }
 
     /**
@@ -244,7 +245,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
 
 
     public int getParticleDelay() {
-        return 2;
+        return entityData.get(PARTICLE_DELAY);
     }
 
     public void buildEmitters() {

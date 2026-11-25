@@ -2,24 +2,19 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
-import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
-import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
-import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
-import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -29,8 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 public class EffectKnockback extends AbstractEffect {
     public static EffectKnockback INSTANCE = new EffectKnockback();
@@ -43,8 +36,15 @@ public class EffectKnockback extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
 
         float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-        knockback(rayTraceResult.getEntity(), spellContext.getCaster(), strength, spellStats.hasBuff(AugmentExtract.INSTANCE));
-        rayTraceResult.getEntity().hurtMarked = true;
+        Entity target = rayTraceResult.getEntity();
+        Vec3 priorMovement = target.getDeltaMovement();
+        knockback(target, spellContext.getCaster(), strength, spellStats.hasBuff(AugmentExtract.INSTANCE));
+        if (target instanceof ServerPlayer player) {
+            player.connection.send(new ClientboundSetEntityMotionPacket(player));
+            player.setDeltaMovement(priorMovement);
+        } else {
+            target.hurtMarked = true;
+        }
 
     }
 
@@ -70,16 +70,8 @@ public class EffectKnockback extends AbstractEffect {
             knockback(target, strength, vec3.x, vec3.z);
             return;
         }
-        float v = 0;
-        if (shooter instanceof TileCaster tc) {
-            BlockEntity tile = tc.getTile();
-            if (tile instanceof RotatingTurretTile rotatingTurretTile) {
-                v = rotatingTurretTile.getRotationY();
-            } else if (tile instanceof BasicSpellTurretTile || tile instanceof RuneTile) {
-                v = tile.getBlockState().getValue(FACING).toYRot();
-            }
-        } else if (shooter instanceof LivingCaster lc) v = lc.livingEntity.yRot;
-        knockback(target, strength, Mth.sin(v * ((float) Math.PI / 180F)), -Mth.cos(v * ((float) Math.PI / 180F)));
+        Vec3 facing = shooter.getFacingVec();
+        knockback(target, strength, -facing.x, -facing.z);
     }
 
     public void knockback(Entity entity, double strength, double xRatio, double zRatio) {

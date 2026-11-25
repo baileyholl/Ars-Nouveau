@@ -13,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,16 +73,8 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
 
     public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context) {
         FireworkRocketEntity fireworkrocketentity;
-        if (context.getCaster().getCasterType() == SpellContext.CasterType.TURRET) {
-            BlockPos pos = rayTraceResult.getBlockPos();
-
-            Vec3 angle;
-            if (context.getSpell().getCastMethod() == MethodTouch.INSTANCE) {
-                angle = context.getCaster().getFacingVec();
-            } else {
-                Direction direction = rayTraceResult.getDirection();
-                angle = new Vec3(direction.getStepX(), direction.getStepY(), direction.getStepZ());
-            }
+        if (context.getCaster().getCasterType() == SpellContext.CasterType.TURRET && context.getSpell().getCastMethod() == MethodTouch.INSTANCE) {
+            Vec3 angle = context.getCaster().getFacingVec();
             Vec3 location = rayTraceResult.getLocation();
             fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, location.x, location.y, location.z, true);
             fireworkrocketentity.shoot(angle.x, angle.y, angle.z, 0.5F, 1.0F);

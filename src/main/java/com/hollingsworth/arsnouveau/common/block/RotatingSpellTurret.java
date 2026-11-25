@@ -36,11 +36,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
     public static Position getDispensePosition(BlockPos coords, RotatingTurretTile tile) {
-        Vec3 direction = tile.getShootAngle().normalize();
-        double d0 = coords.getX() + 0.5 + 0.5D * direction.x();
-        double d1 = coords.getY() + 0.5 + 0.5D * direction.y();
-        double d2 = coords.getZ() + 0.5 + 0.5D * direction.z();
-        return new Vec3(d0, d1, d2);
+        return coords.getCenter().add(tile.getShootAngle().scale(0.575));
     }
 
 
@@ -89,6 +85,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                     EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                     spell.setOwner(fakePlayer);
                     spell.setPos(iposition.x(), iposition.y() - 0.25, iposition.z());
+                    spell.getEntityData().set(EntityProjectileSpell.PARTICLE_DELAY, 0);
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
                     SpellStats stats = resolver.getCastStats();
                     float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
