@@ -77,15 +77,16 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
         if (context.getCaster().getCasterType() == SpellContext.CasterType.TURRET) {
             BlockPos pos = rayTraceResult.getBlockPos();
 
-            Direction direction;
+            Vec3 angle;
             if (context.getSpell().getCastMethod() == MethodTouch.INSTANCE) {
-                direction = context.getCaster().getFacingDirection();
+                angle = context.getCaster().getFacingVec();
             } else {
-                direction = Direction.UP;
+                Direction direction = rayTraceResult.getDirection();
+                angle = new Vec3(direction.getStepX(), direction.getStepY(), direction.getStepZ());
             }
             Vec3 location = rayTraceResult.getLocation();
             fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, location.x, location.y, location.z, true);
-            fireworkrocketentity.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), 0.5F, 1.0F);
+            fireworkrocketentity.shoot(angle.x, angle.y, angle.z, 0.5F, 1.0F);
         } else {
             BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
             fireworkrocketentity = new FireworkRocketEntity(world, shooter,

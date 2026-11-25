@@ -21,10 +21,16 @@ import java.util.function.Predicate;
 public class TileCaster implements IWrappedCaster {
     protected SpellContext.CasterType casterType;
     protected BlockEntity tile;
+    protected Vec3 shootingAngle;
 
     public TileCaster(BlockEntity tile, SpellContext.CasterType casterType) {
         this.tile = tile;
         this.casterType = casterType;
+    }
+
+    public TileCaster(BlockEntity tile, SpellContext.CasterType casterType, Vec3 shootingAngle) {
+        this(tile, casterType);
+        this.shootingAngle = shootingAngle;
     }
 
     @Override
@@ -44,6 +50,11 @@ public class TileCaster implements IWrappedCaster {
     @Override
     public Direction getFacingDirection() {
         return tile.getBlockState().getOptionalValue(BlockStateProperties.FACING).orElse(Direction.NORTH);
+    }
+
+    @Override
+    public Vec3 getFacingVec() {
+        return shootingAngle == null ? IWrappedCaster.super.getFacingVec() : shootingAngle;
     }
 
     @Override

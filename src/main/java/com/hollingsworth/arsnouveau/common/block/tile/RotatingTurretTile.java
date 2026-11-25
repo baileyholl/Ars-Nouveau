@@ -137,7 +137,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
                 ? FakePlayerFactory.get(level, new GameProfile(uuid, ""))
                 : ANFakePlayer.getPlayer(level);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET, getShootAngle())));
         if (resolver.castType != null && RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, level, pos, fakePlayer, iposition, orderedByNearest()[0].getOpposite());
         }
