@@ -12,12 +12,10 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentRandomize;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.setup.registry.DispenserBehaviorRegistry;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -47,14 +45,13 @@ public class EffectPlaceBlock extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         Player fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world, shooter instanceof Player player ? player.getUUID() : null);
+        Direction direction = Direction.SOUTH;
         var sensitiveCount = spellStats.getBuffCount(AugmentSensitive.INSTANCE);
         if (sensitiveCount > 0) {
-            fakePlayer.setPos(spellContext.getUnwrappedCaster().position);
-            var lookLoc = rayTraceResult.getLocation();
+            direction = Direction.getNearest(spellContext.getCaster().getFacingVec());
             if (sensitiveCount > 1) {
-                fakePlayer.setPos(fakePlayer.position.subtract(fakePlayer.position.subtract(lookLoc).scale(2)));
+                direction = direction.getOpposite();
             }
-            fakePlayer.lookAt(EntityAnchorArgument.Anchor.EYES, lookLoc);
         }
         for (BlockPos pos1 : posList) {
             pos1 = getIntendedTargetPos(rayTraceResult, pos1);
@@ -66,7 +63,7 @@ public class EffectPlaceBlock extends AbstractEffect {
             var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer));
             if (event.isCanceled())
                 continue;
-            place(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false), world, shooter, spellStats, spellContext, resolver, fakePlayer);
+            place(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false), world, shooter, spellStats, spellContext, resolver, direction);
         }
     }
 
@@ -76,22 +73,20 @@ public class EffectPlaceBlock extends AbstractEffect {
         onResolveBlock(new BlockHitResult(entity.position, Direction.DOWN, entity.blockPosition().below(), true), world, shooter, spellStats, spellContext, resolver);
     }
 
-    public void place(BlockHitResult resolveResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, Player fakePlayer) {
+    public void place(BlockHitResult resolveResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, Direction direction) {
         InventoryManager manager = spellContext.getCaster().getInvManager();
         ExtractedStack extractItem = spellStats.isRandomized() ? manager.extractRandomItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1) : manager.extractItem(i -> !i.isEmpty() && i.getItem() instanceof BlockItem, 1);
         if (extractItem.isEmpty())
             return;
-        InteractionResult resultType = attemptPlace(world, extractItem.stack, (BlockItem) extractItem.stack.getItem(), resolveResult, fakePlayer);
+        InteractionResult resultType = attemptPlace(world, extractItem.stack, (BlockItem) extractItem.stack.getItem(), resolveResult, direction);
         if (InteractionResult.FAIL != resultType) {
             ShapersFocus.tryPropagateBlockSpell(resolveResult, world, shooter, spellContext, resolver);
         }
         extractItem.returnOrDrop(world, shooter.getOnPos());
     }
 
-    public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer) {
-        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        Direction nearestDirection = fakePlayer.getNearestViewDirection();
-        var context = new DispenserBehaviorRegistry.UnbiasedDirectionalPlaceContext(world, result.getBlockPos(), nearestDirection, stack, nearestDirection);
+    public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Direction direction) {
+        var context = new DispenserBehaviorRegistry.UnbiasedDirectionalPlaceContext(world, result.getBlockPos(), direction, stack, direction);
         return item.place(context);
     }
 

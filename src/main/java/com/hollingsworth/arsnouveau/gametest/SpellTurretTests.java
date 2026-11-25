@@ -72,6 +72,27 @@ public class SpellTurretTests {
     }
 
     @GameTest(template = "empty10")
+    public static void placesBlock(GameTestHelper helper) {
+        GameTestSequence seq = helper.startSequence();
+        for (int i = 0; i <= 2; i++) {
+            int sensitive = i;
+            assertTurretWithAllForms(seq, helper, new Spell(EffectPlaceBlock.INSTANCE).add(AugmentSensitive.INSTANCE, sensitive), (supp, sequence) -> {
+                sequence.thenExecute(() -> {
+                    var setup = supp.get();
+                    setup.chest.setItem(0, Items.PISTON.getDefaultInstance());
+                    setup.tile.shootSpell();
+                }).thenWaitUntil(() -> {
+                    var setup = supp.get();
+                    Direction expected = sensitive == 0 ? Direction.SOUTH : sensitive == 1 ? setup.direction : setup.direction.getOpposite();
+                    helper.assertBlockState(setup.posInFrontOfTurret, (state) -> state.is(Blocks.PISTON) && state.getValue(BlockStateProperties.FACING) == expected.getOpposite(), () -> "Piston was not placed in direction " + expected + " " + setup.direction + " " + setup.spell.toString());
+                    helper.assertContainerEmpty(setup.posBehindTurret);
+                });
+            });
+        }
+        seq.thenSucceed();
+    }
+
+    @GameTest(template = "empty10")
     public static void exchangesBlock(GameTestHelper helper) {
         GameTestSequence seq = helper.startSequence();
         assertTurretWithAllForms(seq, helper, new Spell(EffectExchange.INSTANCE, EffectPickup.INSTANCE), (supp, sequence) -> {
