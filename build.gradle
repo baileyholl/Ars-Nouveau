@@ -45,6 +45,7 @@ neoForge {
             client()
             gameDirectory = project.file('runs/client')
             programArguments.addAll("--width", "1280", "--height", "720")
+            jvmArguments.add(provider { "-javaagent:" + configurations.compileClasspath.find { it.name.startsWith('sponge-mixin') } })
         }
 
         clientAlt {
