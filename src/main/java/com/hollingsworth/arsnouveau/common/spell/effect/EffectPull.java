@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EnchantedFallingBlock;
@@ -8,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,24 +44,23 @@ public class EffectPull extends AbstractEffect {
     public void onResolveBlock(BlockHitResult blockHitResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (spellStats.isSensitive()) return;
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, blockHitResult.getBlockPos(), blockHitResult, spellStats);
+        Vec3 direction = blockHitResult.isInside() && spellContext.getCaster() instanceof TileCaster tileCaster ? tileCaster.getFacingVec().reverse() : Vec3.atLowerCornerOf(blockHitResult.getDirection().getNormal());
         for (BlockPos p : posList) {
             if (!canBlockBeHarvested(spellStats, world, p)) {
                 continue;
             }
             EnchantedFallingBlock fallingBlockEntity = EnchantedFallingBlock.fall(world, p, shooter, spellContext, resolver, spellStats);
             if (fallingBlockEntity != null) {
-                setMotion(fallingBlockEntity, blockHitResult, spellStats);
+                setMotion(fallingBlockEntity, direction, spellStats);
                 ShapersFocus.tryPropagateEntitySpell(fallingBlockEntity, world, shooter, spellContext, resolver);
             }
         }
     }
 
 
-    public void setMotion(Entity entity, BlockHitResult blockHitResult, SpellStats spellStats) {
+    public void setMotion(Entity entity, Vec3 direction, SpellStats spellStats) {
         double scalar = 0.5 + ParticleUtil.inRange(-0.05, 0.05) + spellStats.getAmpMultiplier() * .3;
-        Vec3i directionVec = blockHitResult.getDirection().getNormal();
-        Vec3 deltaVec = new Vec3(directionVec.getX() * scalar, directionVec.getY() * scalar + 0.1, directionVec.getZ() * scalar);
-        entity.setDeltaMovement(deltaVec);
+        entity.setDeltaMovement(direction.x * scalar, direction.y * scalar + 0.1, direction.z * scalar);
     }
 
     @Override

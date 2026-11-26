@@ -13,16 +13,16 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.mixin.BlockItemAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
+import com.hollingsworth.arsnouveau.setup.registry.DispenserBehaviorRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -109,12 +109,15 @@ public class EffectExchange extends AbstractEffect {
 
     public void attemptPlace(ItemStack stack, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, Player fakePlayer, SpellContext spellContext, SpellResolver resolver) {
         BlockItem item = (BlockItem) stack.getItem();
+        Block currentBlock = world.getBlockState(pos1).getBlock();
+        if (item.getBlock() == currentBlock) {
+            return;
+        }
         ItemStack tool = LootUtil.getDefaultFakeTool();
         tool.enchant(HolderHelper.unwrap(world, Enchantments.SILK_TOUCH), 1);
-        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
+        BlockPlaceContext context = new DispenserBehaviorRegistry.UnbiasedDirectionalPlaceContext(world, pos1, Direction.getNearest(spellContext.getCaster().getFacingVec()), stack, result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
-        if (placeState == null || placeState.getBlock() == world.getBlockState(pos1).getBlock()) {
+        if (placeState == null || placeState.getBlock() == currentBlock) {
             return;
         }
         if (!BlockUtil.breakExtraBlock((ServerLevel) world, pos1, tool, shooter.getUUID(), true)) {
