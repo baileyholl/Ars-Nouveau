@@ -41,7 +41,7 @@ public class IceShardEntity extends EnchantedFallingBlock {
             for (LivingEntity living : world.getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(position)).inflate(1.25))) {
                 if (living == shooter || living.isAlliedTo(shooter))
                     continue;
-                living.hurt(DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, shooter == null ? ANFakePlayer.getPlayer(world) : shooter), baseDamage);
+                living.hurt(DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, resolver == null ? null : resolver.spellContext, shooter == null ? ANFakePlayer.getPlayer(world) : shooter), baseDamage);
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * 3, 1));
             }
 

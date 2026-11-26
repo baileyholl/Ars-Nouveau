@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -9,6 +11,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 public class DamageUtil {
@@ -32,6 +35,10 @@ public class DamageUtil {
             return new SpellDamageSource(type, entity);
         else
             return new SpellDamageSource(type);
+    }
+
+    static public DamageSource source(LevelAccessor level, ResourceKey<DamageType> key, @Nullable SpellContext spellContext, @Nullable Entity entity) {
+        return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key), spellContext, entity);
     }
 
 
@@ -60,6 +67,10 @@ public class DamageUtil {
 
         public SpellDamageSource(Holder<DamageType> pType, Vec3 pDamageSourcePosition) {
             this(pType, null, null, pDamageSourcePosition);
+        }
+
+        public SpellDamageSource(Holder<DamageType> pType, @Nullable SpellContext spellContext, @Nullable Entity pEntity) {
+            this(pType, pEntity, pEntity, spellContext != null && spellContext.getCaster() instanceof TileCaster tileCaster && pEntity instanceof FakePlayer ? tileCaster.getPosition() : null);
         }
 
         public SpellDamageSource(Holder<DamageType> pType, @Nullable Entity pEntity) {

@@ -133,7 +133,7 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     public void damage(Vec3 vec, ServerLevel world, LivingEntity shooter, LivingEntity livingEntity, SpellStats stats, SpellContext context, SpellResolver resolver, int snareTime, float damage) {
-        if (attemptDamage(world, shooter, stats, context, resolver, livingEntity, buildDamageSource(world, shooter), damage)) {
+        if (attemptDamage(world, shooter, stats, context, resolver, livingEntity, buildDamageSource(world, shooter, context), damage)) {
             world.sendParticles(ParticleTypes.SPIT, vec.x, vec.y + 0.5, vec.z, 50,
                     ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), 0.3);
 
@@ -142,8 +142,8 @@ public class EffectColdSnap extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter, SpellContext spellContext) {
+        return DamageUtil.source(world, DamageTypesRegistry.COLD_SNAP, spellContext, shooter == null ? ANFakePlayer.getPlayer((ServerLevel) world) : shooter);
     }
 
     @Override

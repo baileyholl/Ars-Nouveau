@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IDamageEffect {
 
@@ -83,6 +84,10 @@ public interface IDamageEffect {
      * @return Player-Based Damage Source, will use Ars FakePlayer if the source is not a Player
      */
     default DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter));
+        return buildDamageSource(world, shooter, null);
+    }
+
+    default DamageSource buildDamageSource(Level world, LivingEntity shooter, @Nullable SpellContext spellContext) {
+        return DamageUtil.source(world, DamageTypesRegistry.GENERIC_SPELL_DAMAGE, spellContext, ANFakePlayer.getOrFakePlayer((ServerLevel) world, shooter));
     }
 }
