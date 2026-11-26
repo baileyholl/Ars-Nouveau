@@ -33,7 +33,8 @@ public class EffectPull extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity target = rayTraceResult.getEntity();
-        Vec3 vec3d = new Vec3(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
+        Vec3 shooterPosition = spellContext.getCaster().getPosition();
+        Vec3 vec3d = new Vec3(shooterPosition.x() - target.getX(), shooterPosition.y() - target.getY(), shooterPosition.z() - target.getZ());
         double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         target.setDeltaMovement(vec3d.normalize().scale(d2));
         target.hurtMarked = true;

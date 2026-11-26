@@ -49,7 +49,7 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        Vec3 origLoc = shooter.position;
+        Vec3 origLoc = spellContext.getCaster().getPosition();
 
         Level shooterLevel = shooter.level;
         if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED) || entity instanceof FakePlayer) {

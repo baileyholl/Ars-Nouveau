@@ -49,7 +49,7 @@ public class TileCaster implements IWrappedCaster {
 
     @Override
     public Direction getFacingDirection() {
-        return tile.getBlockState().getOptionalValue(BlockStateProperties.FACING).orElse(Direction.NORTH);
+        return shootingAngle == null ? tile.getBlockState().getOptionalValue(BlockStateProperties.FACING).orElse(Direction.NORTH) : Direction.getNearest(shootingAngle);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class TileCaster implements IWrappedCaster {
 
     @Override
     public Vec3 getPosition() {
-        return new Vec3(tile.getBlockPos().getX(), tile.getBlockPos().getY(), tile.getBlockPos().getZ());
+        return Vec3.atBottomCenterOf(tile.getBlockPos());
     }
 
     @Override
