@@ -317,10 +317,10 @@ public class ParticleOverviewScreen extends SpellSlottedScreen {
             }
         }
         List<AbstractWidget> slicedWidgets = visibleWidgets.subList(rowOffset, visibleWidgets.size());
-        int LEFT_PAGE_SLICE = 9;
+        int LEFT_PAGE_SLICE = 8;
         for (int i = 0; i < Math.min(slicedWidgets.size(), LEFT_PAGE_SLICE); i++) {
             AbstractWidget widget = slicedWidgets.get(i);
-            widget.y = bookTop + 36 + 13 * i;
+            widget.y = bookTop + 36 + 15 * i;
             widget.active = true;
             widget.visible = true;
         }
