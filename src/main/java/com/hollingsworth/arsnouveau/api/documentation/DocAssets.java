@@ -141,7 +141,7 @@ public class DocAssets {
     public static final BlitInfo STORAGE_SETTINGS_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/storage_tab1.png"), 22, 13);
     public static final BlitInfo STORAGE_TAB = new BlitInfo(ArsNouveau.prefix("textures/gui/storage_tab2.png"), 18, 13);
     public static final BlitInfo STORAGE_TAB_SELECTED = new BlitInfo(ArsNouveau.prefix("textures/gui/storage_tab2_selected.png"), 18, 13);
-
+    public static final BlitInfo SPELL_STYLE_TOOLTIP_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_icon_spellstyle.png"), 14, 10);
 
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height) {

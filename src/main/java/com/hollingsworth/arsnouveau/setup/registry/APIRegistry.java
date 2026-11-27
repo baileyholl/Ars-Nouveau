@@ -339,6 +339,7 @@ public class APIRegistry {
         OrbitTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
         TouchTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
+        BurstTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
 
         List<IParticleMotionType<?>> LIGHT_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.WISP_TYPE.get());
@@ -351,6 +352,7 @@ public class APIRegistry {
 
         List<IParticleMotionType<?>> DELAY_OPTIONS = Arrays.asList(ParticleMotionRegistry.LIGHT_BLOB.get(), ParticleMotionRegistry.BRAZIER_TYPE.get(), ParticleMotionRegistry.UPWARD_FIELD_TYPE.get());
         DelayTimeline.TICKING_OPTIONS.addAll(DELAY_OPTIONS);
+        DelayTimeline.RESOLVING_OPTIONS.addAll(RESOLVE_OPTIONS);
 
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.BUBBLE_CLONE_TYPE.get(), true));
         ParticleTypeProperty.addType(new ParticleTypeProperty.ParticleData(ModParticles.SMOKE_TYPE.get(), true));

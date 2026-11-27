@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
@@ -631,7 +633,6 @@ public class GuiSpellBook extends SpellSlottedScreen {
         if (validationErrors.isEmpty()) {
             Spell spell = getSpell();
             Networking.sendToServer(new PacketUpdateCaster(spell, this.selectedSpellSlot, this.spellNameBox.getValue(), hand == InteractionHand.MAIN_HAND));
-            ParticleOverviewScreen.LAST_SELECTED_PART = null;
         }
     }
 
@@ -800,12 +801,23 @@ public class GuiSpellBook extends SpellSlottedScreen {
     protected TooltipComponent getClientImageTooltip(int mouseX, int mouseY) {
         for (Renderable renderable : renderables) {
 
-            if (renderable instanceof AbstractWidget widget && !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget)) {
+            if (renderable instanceof AbstractWidget widget && (!widget.visible || !GuiUtils.isMouseInRelativeRange(mouseX, mouseY, widget))) {
                 continue;
             }
 
-            if (renderable instanceof GlyphButton widget) {
-                return widget.abstractSpellPart.spellSchools.isEmpty() ? null : new SchoolTooltip(widget.abstractSpellPart);
+            if (renderable instanceof GlyphButton || renderable instanceof CraftingButton) {
+                AbstractSpellPart part = renderable instanceof GlyphButton glyphButton ? glyphButton.abstractSpellPart : ((CraftingButton) renderable).getAbstractSpellPart();
+                if (part == null) {
+                    return null;
+                }
+                boolean hasStyle = false;
+                for (IParticleTimelineType<?> type : ParticleTimelineRegistry.PARTICLE_TIMELINE_REGISTRY) {
+                    if (type.getSpellPart() == part) {
+                        hasStyle = true;
+                        break;
+                    }
+                }
+                return part.spellSchools.isEmpty() && !hasStyle ? null : new SchoolTooltip(part, false, hasStyle);
             } else if (renderable instanceof GuiSpellSlot spellSlot) {
                 if (spellSlot.isSelected) {
                     if (spell.isEmpty()) {

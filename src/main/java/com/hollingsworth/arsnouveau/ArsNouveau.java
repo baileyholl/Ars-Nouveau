@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.items.AbjurationEssence;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.world.Terrablender;
+import com.hollingsworth.arsnouveau.setup.MixinHotSwap;
 import com.hollingsworth.arsnouveau.setup.ModSetup;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.config.ServerConfig;
@@ -79,6 +80,9 @@ public class ArsNouveau {
 
     public ArsNouveau(IEventBus modEventBus, ModContainer modContainer) {
         NeoForge.EVENT_BUS.addListener(ArsNouveau::onServerStopped);
+        if (!FMLEnvironment.production && ModuleLayer.boot().findModule("java.instrument").isPresent()) {
+            MixinHotSwap.register();
+        }
         caelusLoaded = ModList.get().isLoaded("caelus");
         terrablenderLoaded = ModList.get().isLoaded("terrablender");
         sodiumLoaded = ModList.get().isLoaded("rubidium");

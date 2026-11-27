@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.utils.RenderUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -85,10 +84,6 @@ public class CraftingButton extends GuiImageButton {
             }
             if (Screen.hasShiftDown()) {
                 tip.add(Component.translatable("tooltip.ars_nouveau.glyph_level", abstractSpellPart.getConfigTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-                tip.add(Component.translatable("ars_nouveau.schools"));
-                for (SpellSchool s : abstractSpellPart.spellSchools) {
-                    tip.add(s.getTextComponent());
-                }
                 tip.add(abstractSpellPart.getBookDescLang());
             } else {
                 tip.add(Component.translatable("tooltip.ars_nouveau.hold_shift", Minecraft.getInstance().options.keyShift.getKey().getDisplayName()));

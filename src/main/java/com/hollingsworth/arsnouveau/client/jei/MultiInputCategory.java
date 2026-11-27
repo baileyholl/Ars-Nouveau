@@ -32,6 +32,7 @@ public abstract class MultiInputCategory<T extends Recipe<?>> implements IRecipe
         if (provider.optionalCenter != null)
             builder.addSlot(RecipeIngredientRole.INPUT, 48, 45).addIngredients(provider.optionalCenter);
 
+        point = new Vec2(center.x, center.y - 32);
         for (Ingredient input : inputs) {
             builder.addSlot(RecipeIngredientRole.INPUT, (int) point.x, (int) point.y)
                     .addIngredients(input);
