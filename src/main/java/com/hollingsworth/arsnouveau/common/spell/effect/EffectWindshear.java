@@ -44,7 +44,7 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
 
             float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + numBlocks);
 
-            if (attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(world, shooter), damage)) {//converted DamageSource FALL into playerAttack
+            if (attemptDamage(world, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(world, shooter, spellContext), damage)) {//converted DamageSource FALL into playerAttack
                 Vec3 vec = rayTraceResult.getEntity().position;
                 for (int i = 0; i < 10; i++) {
                     ((ServerLevel) world).sendParticles(ParticleTypes.SWEEP_ATTACK, vec.x + ParticleUtil.inRange(-0.2, 0.2), vec.y + 0.5 + ParticleUtil.inRange(-0.2, 0.2), vec.z + ParticleUtil.inRange(-0.2, 0.2), 30,
@@ -55,8 +55,8 @@ public class EffectWindshear extends AbstractEffect implements IDamageEffect {
     }
 
     @Override
-    public DamageSource buildDamageSource(Level world, LivingEntity shooter) {
-        return DamageUtil.source(world, DamageTypesRegistry.WINDSHEAR, shooter);
+    public DamageSource buildDamageSource(Level world, LivingEntity shooter, SpellContext spellContext) {
+        return DamageUtil.source(world, DamageTypesRegistry.WINDSHEAR, spellContext, shooter);
     }
 
     @Override

@@ -33,6 +33,12 @@ public interface IWrappedCaster {
         return Direction.NORTH;
     }
 
+    // Unit vector of the caster's facing direction.
+    default Vec3 getFacingVec() {
+        Direction direction = getFacingDirection();
+        return new Vec3(direction.getStepX(), direction.getStepY(), direction.getStepZ());
+    }
+
     /**
      * Returns the first block entity that matches the predicate.
      */

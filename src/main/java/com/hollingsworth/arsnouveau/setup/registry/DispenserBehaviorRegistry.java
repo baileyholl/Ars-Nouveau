@@ -143,6 +143,11 @@ public class DispenserBehaviorRegistry {
         }
 
         @Override
+        public @NotNull Direction getNearestLookingVerticalDirection() {
+            return this.direction == Direction.UP ? Direction.UP : Direction.DOWN;
+        }
+
+        @Override
         public Direction @NotNull [] getNearestLookingDirections() {
             return switch (this.direction) {
                 default ->

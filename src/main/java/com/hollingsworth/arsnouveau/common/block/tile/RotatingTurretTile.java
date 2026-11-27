@@ -48,65 +48,27 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     public float neededRotationX;
     public float neededRotationY;
 
-    // Step between current and needed rotation on the client each tick, smoothly animate with partials between
+    public float prevRotationX;
+    public float prevRotationY;
+
+    // kept for ars elemental
+    @Deprecated(forRemoval = true)
     public float clientNeededX;
+    @Deprecated(forRemoval = true)
     public float clientNeededY;
 
     @Override
     public void tick() {
         super.tick();
-        // Animated in the renderer
-        if (level.isClientSide) {
-            if (clientNeededX != neededRotationX) {
-                float diff = neededRotationX - clientNeededX;
-                if (Math.abs(diff) < 0.1) {
-                    clientNeededX = neededRotationX;
-                } else {
-                    clientNeededX += diff * 0.1f;
-                }
-            }
-            if (clientNeededY != neededRotationY) {
-                float diff = neededRotationY - clientNeededY;
-                if (Math.abs(diff) < 0.1) {
-                    clientNeededY = neededRotationY;
-                } else {
-                    clientNeededY += diff * 0.1f;
-                }
-            }
-            if (rotationX != clientNeededX) {
-                float diff = clientNeededX - rotationX;
-                if (Math.abs(diff) < 0.1) {
-                    rotationX = clientNeededX;
-                } else {
-                    rotationX += diff * 0.1f;
-                }
-            }
-            if (rotationY != clientNeededY) {
-                float diff = clientNeededY - rotationY;
-                if (Math.abs(diff) < 0.1) {
-                    rotationY = clientNeededY;
-                } else {
-                    rotationY += diff * 0.1f;
-                }
-            }
-            return;
-        }
-        if (rotationX != neededRotationX) {
-            float diff = neededRotationX - rotationX;
-            if (Math.abs(diff) < 0.1) {
-                setRotationX(neededRotationX);
-            } else {
-                setRotationX(rotationX + diff * 0.1f);
-            }
-            setChanged();
-        }
-        if (rotationY != neededRotationY) {
-            float diff = neededRotationY - rotationY;
-            if (Math.abs(diff) < 0.1) {
-                setRotationY(neededRotationY);
-            } else {
-                setRotationY(rotationY + diff * 0.1f);
-            }
+        prevRotationX = rotationX;
+        prevRotationY = rotationY;
+        float diffX = Mth.wrapDegrees(neededRotationX - rotationX);
+        rotationX = Math.abs(diffX) < 0.1f ? neededRotationX : rotationX + diffX * 0.1f;
+        float diffY = neededRotationY - rotationY;
+        rotationY = Math.abs(diffY) < 0.1f ? neededRotationY : rotationY + diffY * 0.1f;
+        clientNeededX = rotationX;
+        clientNeededY = rotationY;
+        if (!level.isClientSide && (rotationX != prevRotationX || rotationY != prevRotationY)) {
             setChanged();
         }
     }
@@ -137,7 +99,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
 
         updateBlock();
         ParticleUtil.beam(blockPos, getBlockPos(), level);
-        PortUtil.sendMessageNoSpam(playerEntity, Component.literal("Turret now aims to " + blockPos.toShortString()));
+        PortUtil.sendMessageNoSpam(playerEntity, Component.translatable("ars_nouveau.rotating_turret_aims", blockPos.toShortString()));
     }
 
     public static double angleBetween(Vec3 a, Vec3 b) {
@@ -183,7 +145,7 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
                 ? FakePlayerFactory.get(level, new GameProfile(uuid, ""))
                 : ANFakePlayer.getPlayer(level);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET)));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(level, spellCaster.getSpell(), fakePlayer, new TileCaster(this, SpellContext.CasterType.TURRET, getShootAngle())));
         if (resolver.castType != null && RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
             RotatingSpellTurret.ROT_TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, level, pos, fakePlayer, iposition, orderedByNearest()[0].getOpposite());
         }
@@ -236,8 +198,8 @@ public class RotatingTurretTile extends BasicSpellTurretTile implements IWandabl
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(tag, pRegistries);
-        rotationX = tag.getFloat("rotationX");
-        rotationY = tag.getFloat("rotationY");
+        rotationX = prevRotationX = clientNeededX = tag.getFloat("rotationX");
+        rotationY = prevRotationY = clientNeededY = tag.getFloat("rotationY");
         neededRotationX = tag.getFloat("neededRotationX");
         neededRotationY = tag.getFloat("neededRotationY");
     }

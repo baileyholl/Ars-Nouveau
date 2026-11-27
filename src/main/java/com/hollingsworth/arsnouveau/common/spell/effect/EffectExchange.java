@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.LivingCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -14,7 +16,9 @@ import com.hollingsworth.arsnouveau.common.mixin.BlockItemAccessor;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.util.HolderHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,6 +38,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +53,7 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
-        Vec3 origLoc = shooter.position;
+        Vec3 origLoc = isNotFakePlayer(shooter) ? shooter.position : spellContext.getCaster().getPosition();
 
         Level shooterLevel = shooter.level;
         if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED) || entity instanceof FakePlayer) {
@@ -111,8 +115,8 @@ public class EffectExchange extends AbstractEffect {
         BlockItem item = (BlockItem) stack.getItem();
         ItemStack tool = LootUtil.getDefaultFakeTool();
         tool.enchant(HolderHelper.unwrap(world, Enchantments.SILK_TOUCH), 1);
-        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
+        Player placer = shooter instanceof Player player ? player : fakePlayer;
+        BlockPlaceContext context = new CasterPlaceContext(world, placer, pos1, spellContext.getCaster(), stack, result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
         if (placeState == null || placeState.getBlock() == world.getBlockState(pos1).getBlock()) {
             return;
@@ -125,7 +129,7 @@ public class EffectExchange extends AbstractEffect {
         item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
 
         ((BlockItemAccessor) item).invokeUpdateBlockStateFromTag(pos1, world, stack, placeState);
-        BlockItem.updateCustomBlockEntityTag(world, shooter instanceof Player player ? player : fakePlayer, pos1, stack);
+        BlockItem.updateCustomBlockEntityTag(world, placer, pos1, stack);
         BlockItemAccessor.invokeUpdateBlockEntityComponents(world, pos1, stack);
         stack.shrink(1);
         ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), result.getDirection(), pos1, false), world, shooter, spellContext, resolver);
@@ -170,5 +174,81 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public Set<SpellSchool> getSchools() {
         return setOf(SpellSchools.MANIPULATION);
+    }
+
+    // IWrappedCaster sensitive version of the vanilla player placement context
+    public static class CasterPlaceContext extends BlockPlaceContext {
+        private final float yRot;
+        private final float xRot;
+
+        public CasterPlaceContext(Level level, Player player, BlockPos pos, IWrappedCaster caster, ItemStack stack, Direction face) {
+            super(level, player, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.atCenterOf(pos).relative(face.getOpposite(), 0.5), face, pos, false));
+            if (caster instanceof LivingCaster living) {
+                yRot = living.livingEntity.getYRot();
+                xRot = living.livingEntity.getXRot();
+            } else {
+                Vec3 facing = caster.getFacingVec();
+                yRot = (float) Math.toDegrees(Math.atan2(-facing.x, facing.z));
+                xRot = (float) Math.toDegrees(Math.asin(Mth.clamp(-facing.y, -1.0, 1.0)));
+            }
+        }
+
+        @Override
+        public @NotNull BlockPos getClickedPos() {
+            return getHitResult().getBlockPos();
+        }
+
+        private Direction[] orderedByNearest() {
+            float sinX = Mth.sin(xRot * (float) (Math.PI / 180.0));
+            float cosX = Mth.cos(xRot * (float) (Math.PI / 180.0));
+            float sinY = Mth.sin(-yRot * (float) (Math.PI / 180.0));
+            float cosY = Mth.cos(-yRot * (float) (Math.PI / 180.0));
+            Direction x = sinY > 0 ? Direction.EAST : Direction.WEST;
+            Direction y = sinX < 0 ? Direction.UP : Direction.DOWN;
+            Direction z = cosY > 0 ? Direction.SOUTH : Direction.NORTH;
+            float ax = Math.abs(sinY);
+            float ay = Math.abs(sinX);
+            float az = Math.abs(cosY);
+            float hx = ax * cosX;
+            float hz = az * cosX;
+            Direction[] order;
+            if (ax > az) {
+                order = ay > hx ? new Direction[]{y, x, z} : hz > ay ? new Direction[]{x, z, y} : new Direction[]{x, y, z};
+            } else {
+                order = ay > hz ? new Direction[]{y, z, x} : hx > ay ? new Direction[]{z, x, y} : new Direction[]{z, y, x};
+            }
+            return new Direction[]{order[0], order[1], order[2], order[2].getOpposite(), order[1].getOpposite(), order[0].getOpposite()};
+        }
+
+        @Override
+        public @NotNull Direction getNearestLookingDirection() {
+            return orderedByNearest()[0];
+        }
+
+        @Override
+        public @NotNull Direction getNearestLookingVerticalDirection() {
+            return xRot < 0 ? Direction.UP : Direction.DOWN;
+        }
+
+        @Override
+        public Direction @NotNull [] getNearestLookingDirections() {
+            List<Direction> directions = new ArrayList<>(List.of(orderedByNearest()));
+            if (!replaceClicked) {
+                Direction clicked = getClickedFace().getOpposite();
+                directions.remove(clicked);
+                directions.addFirst(clicked);
+            }
+            return directions.toArray(Direction[]::new);
+        }
+
+        @Override
+        public @NotNull Direction getHorizontalDirection() {
+            return Direction.fromYRot(yRot);
+        }
+
+        @Override
+        public float getRotation() {
+            return yRot;
+        }
     }
 }

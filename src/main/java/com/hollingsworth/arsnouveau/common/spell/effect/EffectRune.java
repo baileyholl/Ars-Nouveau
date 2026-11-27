@@ -36,8 +36,10 @@ public class EffectRune extends AbstractEffect {
     @Override
     public void onResolve(HitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = BlockPos.containing(rayTraceResult.getLocation());
-        if (rayTraceResult instanceof BlockHitResult blockHit && blockHit.isInside()) {
-            pos = pos.relative(blockHit.getDirection());
+        Direction face = Direction.UP;
+        if (rayTraceResult instanceof BlockHitResult blockHit && !blockHit.isInside()) {
+            face = blockHit.getDirection();
+            pos = blockHit.getBlockPos().relative(face);
         }
         SpellContext newContext = spellContext.makeChildContext();
         spellContext.setCanceled(true);
@@ -46,7 +48,7 @@ public class EffectRune extends AbstractEffect {
                 return;
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
                 return;
-            BlockState placementState = BlockRegistry.RUNE_BLOCK.get().getStateForPlacement(new BlockPlaceContext(getPlayer(shooter, (ServerLevel) world), InteractionHand.MAIN_HAND, ItemStack.EMPTY, rayTraceResult instanceof BlockHitResult blockHit ? blockHit : new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, pos, false)));
+            BlockState placementState = BlockRegistry.RUNE_BLOCK.get().getStateForPlacement(new BlockPlaceContext(getPlayer(shooter, (ServerLevel) world), InteractionHand.MAIN_HAND, ItemStack.EMPTY, new BlockHitResult(rayTraceResult.getLocation(), face, pos, false)));
             if (placementState == null) return;
             world.setBlockAndUpdate(pos, placementState);
             if (world.getBlockEntity(pos) instanceof RuneTile runeTile) {

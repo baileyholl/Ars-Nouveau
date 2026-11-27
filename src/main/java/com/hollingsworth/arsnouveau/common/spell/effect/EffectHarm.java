@@ -35,7 +35,7 @@ public class EffectHarm extends AbstractEffect implements IDamageEffect, IPotion
             if ((spellStats.hasBuff(AugmentExtendTime.INSTANCE) || spellStats.hasBuff(AugmentDurationDown.INSTANCE)) && rayTraceResult.getEntity() instanceof LivingEntity entity) {
                 this.applyConfigPotion(entity, MobEffects.POISON, spellStats);
             } else {
-                attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, getPlayer(shooter, (ServerLevel) level)), (float) damage);
+                attemptDamage(level, shooter, spellStats, spellContext, resolver, rayTraceResult.getEntity(), buildDamageSource(level, getPlayer(shooter, (ServerLevel) level), spellContext), (float) damage);
             }
         }
     }

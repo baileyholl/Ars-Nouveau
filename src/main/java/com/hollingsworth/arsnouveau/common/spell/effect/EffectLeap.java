@@ -45,7 +45,7 @@ public class EffectLeap extends AbstractEffect {
             vector = entity.getLookAngle();
             bonus = Math.max(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         } else {
-            vector = getLookVector(shooter, spellContext);
+            vector = spellContext.getCaster().getFacingVec();
             bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         }
         entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
@@ -53,6 +53,8 @@ public class EffectLeap extends AbstractEffect {
         entity.hurtMarked = true;
     }
 
+
+    @Deprecated(forRemoval = true)
     public static Vec3 getLookVector(@NotNull LivingEntity shooter, SpellContext spellContext) {
         Vec3 vector;
         vector = shooter.getLookAngle();
@@ -76,7 +78,7 @@ public class EffectLeap extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
             if (entity != null) {
-                Vec3 vector = getLookVector(shooter, spellContext);
+                Vec3 vector = spellContext.getCaster().getFacingVec();
                 double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
                 entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
                 entity.hurtMarked = true;

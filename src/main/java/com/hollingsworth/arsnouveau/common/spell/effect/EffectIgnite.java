@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,7 +40,7 @@ public class EffectIgnite extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (spellStats.isSensitive()) {
-            BlockPos target = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+            BlockPos target = getIntendedTargetPos(rayTraceResult);
             if (world.getBlockState(target).canBeReplaced()) {
                 world.setBlock(target, BlockRegistry.MAGIC_FIRE.get().getStateForPlacement(world, target), 3);
             }
@@ -53,15 +52,12 @@ public class EffectIgnite extends AbstractEffect {
             return;
         }
 
-        if (world.getBlockState((rayTraceResult).getBlockPos().above()).canBeReplaced()) {
-            Direction face = (rayTraceResult).getDirection();
-            for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
-                BlockPos blockpos1 = pos.relative(face);
-                if (BaseFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockpos1)) {
-                    BlockState blockstate1 = BaseFireBlock.getState(world, blockpos1);
-                    world.setBlock(blockpos1, blockstate1, 3);
-                    world.updateNeighborsAt(blockpos1, blockstate1.getBlock());
-                }
+        for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
+            BlockPos blockpos1 = getIntendedTargetPos(rayTraceResult, pos);
+            if (BaseFireBlock.canBePlacedAt(world, blockpos1, rayTraceResult.getDirection()) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockpos1)) {
+                BlockState blockstate1 = BaseFireBlock.getState(world, blockpos1);
+                world.setBlock(blockpos1, blockstate1, 3);
+                world.updateNeighborsAt(blockpos1, blockstate1.getBlock());
             }
         }
     }

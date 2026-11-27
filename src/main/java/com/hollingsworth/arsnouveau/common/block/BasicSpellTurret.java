@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.google.common.collect.Maps;
 import com.hollingsworth.arsnouveau.api.registry.SpellCasterRegistry;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
@@ -8,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -42,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
@@ -77,6 +80,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                 EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                 spell.setOwner(fakePlayer);
                 spell.setPos(iposition.x(), iposition.y() - 0.25, iposition.z());
+                spell.getEntityData().set(EntityProjectileSpell.PARTICLE_DELAY, 0);
                 SpellStats stats = resolver.getCastStats();
                 float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
                 if (world.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile) {
@@ -98,8 +102,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);
                 } else {
-                    Vec3 hitVec = new Vec3(touchPos.getX() + facingDir.getStepX() * 0.5, touchPos.getY() + facingDir.getStepY() * 0.5, touchPos.getZ() + facingDir.getStepZ() * 0.5);
-                    resolver.onCastOnBlock(new BlockHitResult(hitVec, facingDir.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), true));
+                    resolver.onCastOnBlock(new BlockHitResult(touchPos.getCenter(), facingDir.getOpposite(), touchPos, true));
                 }
             }
         });
@@ -121,10 +124,7 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
     public static Position getDispensePosition(BlockPos pos, Direction direction) {
-        double d0 = pos.getX() + 0.5 + 0.5D * (double) direction.getStepX();
-        double d1 = pos.getY() + 0.5 + 0.5D * (double) direction.getStepY();
-        double d2 = pos.getZ() + 0.5 + 0.5D * (double) direction.getStepZ();
-        return new Vec3(d0, d1, d2);
+        return pos.getCenter().relative(direction, 0.55);
     }
 
     @Override
@@ -203,11 +203,20 @@ public class BasicSpellTurret extends TickableModBlock implements SimpleWaterlog
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
-        return shape;
+        return this == BlockRegistry.BASIC_SPELL_TURRET.get() ? SHAPES.get(pState.getValue(FACING)) : shape;
     }
 
-    //kept is as simple as possible for compat. with other turrets, needed for waterlogged. Does not keep track of turret direction
+    @Deprecated(forRemoval = true)
+    // kept for ars elemental, correct usage is to now use SHAPES and adjust the dispense position to offset correctly, otherwise projectiles will target the turret.
     static final VoxelShape shape = Block.box(4.6, 4.6, 4.6, 11.6, 11.6, 11.6);
+
+    private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(Map.of(
+            Direction.NORTH, Block.box(4.5, 4.5, 6, 11.5, 11.5, 13),
+            Direction.SOUTH, Block.box(4.5, 4.5, 3, 11.5, 11.5, 10),
+            Direction.WEST, Block.box(6, 4.5, 4.5, 13, 11.5, 11.5),
+            Direction.EAST, Block.box(3, 4.5, 4.5, 10, 11.5, 11.5),
+            Direction.UP, Block.box(4.5, 3, 4.5, 11.5, 10, 11.5),
+            Direction.DOWN, Block.box(4.5, 6, 4.5, 11.5, 13, 11.5)));
 
     @Override
     protected boolean isPathfindable(@NotNull BlockState pState, @NotNull PathComputationType pPathComputationType) {

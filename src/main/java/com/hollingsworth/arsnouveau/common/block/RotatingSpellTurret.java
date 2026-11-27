@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.RotatingTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -16,12 +17,16 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,13 +41,8 @@ public class RotatingSpellTurret extends BasicSpellTurret {
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
     public static Position getDispensePosition(BlockPos coords, RotatingTurretTile tile) {
-        Vec3 direction = tile.getShootAngle().normalize();
-        double d0 = coords.getX() + 0.5 + 0.5D * direction.x();
-        double d1 = coords.getY() + 0.5 + 0.5D * direction.y();
-        double d2 = coords.getZ() + 0.5 + 0.5D * direction.z();
-        return new Vec3(d0, d1, d2);
+        return coords.getCenter().add(tile.getShootAngle().scale(0.575));
     }
-
 
     @Override
     public void setPlacedBy(Level world, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, @NotNull ItemStack stack) {
@@ -52,21 +52,26 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         // Makes the turret rotate to the right direction right after being placed, otherwise it starts right and rotate to facing west.
         switch (orientation) {
             case DOWN:
-                turretTile.neededRotationY = -90F;
+                turretTile.neededRotationY = -90f;
+                turretTile.rotationY = -90F;
                 break;
             case UP:
-                turretTile.neededRotationY = 90F;
+                turretTile.neededRotationY = 90f;
+                turretTile.rotationY = 90F;
                 break;
             case NORTH:
-                turretTile.neededRotationX = 270F;
+                turretTile.neededRotationX = 270f;
+                turretTile.rotationX = 270F;
                 break;
             case SOUTH:
-                turretTile.neededRotationX = 90F;
+                turretTile.neededRotationX = 90f;
+                turretTile.rotationX = 90F;
                 break;
             case WEST:
                 break;
             case EAST:
-                turretTile.neededRotationX = 180F;
+                turretTile.neededRotationX = 180f;
+                turretTile.rotationX = 180F;
                 break;
         }
     }
@@ -76,6 +81,12 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         return new RotatingTurretTile(pos, state);
     }
 
+    @Override
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return context.isHoldingItem(ItemsRegistry.DOMINION_ROD.get()) ? Shapes.block() : super.getShape(state, level, pos, context);
+    }
+
+
     static {
         ROT_TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
             @Override
@@ -84,6 +95,7 @@ public class RotatingSpellTurret extends BasicSpellTurret {
                     EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
                     spell.setOwner(fakePlayer);
                     spell.setPos(iposition.x(), iposition.y() - 0.25, iposition.z());
+                    spell.getEntityData().set(EntityProjectileSpell.PARTICLE_DELAY, 0);
                     Vec3 vec3d = rotatingTurretTile.getShootAngle().normalize();
                     SpellStats stats = resolver.getCastStats();
                     float velocity = Math.max(0.1f, 0.75f + stats.getAccMultiplier() / 2);
@@ -97,13 +109,11 @@ public class RotatingSpellTurret extends BasicSpellTurret {
         ROT_TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
             @Override
             public void onCast(SpellResolver resolver, ServerLevel serverLevel, BlockPos pos, Player fakePlayer, Position dispensePosition, Direction facingDir) {
-                BlockPos touchPos = pos.relative(facingDir);
-
                 if (!(serverLevel.getBlockEntity(pos) instanceof RotatingTurretTile rotatingTurretTile)) {
                     return;
                 }
                 Vec3 aimVec = rotatingTurretTile.getShootAngle().add(rotatingTurretTile.getX() + 0.5, rotatingTurretTile.getY() + 0.5, rotatingTurretTile.getZ() + 0.5);
-                List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(touchPos));
+                List<LivingEntity> entityList = serverLevel.getEntitiesOfClass(LivingEntity.class, new AABB(BlockPos.containing(aimVec)));
                 if (!entityList.isEmpty()) {
                     LivingEntity entity = entityList.get(serverLevel.random.nextInt(entityList.size()));
                     resolver.onCastOnEntity(ItemStack.EMPTY, entity, InteractionHand.MAIN_HAND);

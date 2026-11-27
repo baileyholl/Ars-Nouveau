@@ -57,7 +57,7 @@ public class EffectCut extends AbstractEffect implements IDamageEffect {
             }
         } else {
             float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-            attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter), damage);
+            attemptDamage(world, shooter, spellStats, spellContext, resolver, entity, buildDamageSource(world, shooter, spellContext), damage);
         }
     }
 

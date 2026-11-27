@@ -253,7 +253,7 @@ public class InventoryManager {
         ItemScroll.SortPref highestPref = ItemScroll.SortPref.INVALID;
         FilterableItemHandler highestHandler = null;
         for (FilterableItemHandler wrapper : inventories) {
-            ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
+            ItemScroll.SortPref pref = type == InteractType.EXTRACT ? ItemScroll.SortPref.INVALID : ItemScroll.SortPref.LOW;
             // Get the highest pref item in the handler
             for (int i = 0; i < maxSlotForType(wrapper, type); i++) {
                 // Simulate extract to respect modded inventory filters
@@ -276,7 +276,8 @@ public class InventoryManager {
                 highestPref = pref;
             }
         }
-        return highestHandler;
+        // Fallback to first inv for partial stack predicates
+        return highestHandler == null && !inventories.isEmpty() ? inventories.getFirst() : highestHandler;
     }
 
     private int maxSlotForType(FilterableItemHandler filterableItemHandler, InteractType interactType) {

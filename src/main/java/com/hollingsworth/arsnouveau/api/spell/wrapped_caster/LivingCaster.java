@@ -50,6 +50,11 @@ public class LivingCaster implements IWrappedCaster {
     }
 
     @Override
+    public Vec3 getFacingVec() {
+        return livingEntity.getViewVector(1.0f);
+    }
+
+    @Override
     public Vec3 getPosition() {
         return livingEntity.position();
     }
