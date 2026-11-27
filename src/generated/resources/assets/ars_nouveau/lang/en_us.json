@@ -448,6 +448,7 @@
   "ars_nouveau.augment_icon_tooltip": "Augments: Appear after Forms and Effects and modifies how they behave.",
   "ars_nouveau.augmenting": "Augmenting %s:",
   "ars_nouveau.binding_inventories": "Binding Inventories",
+  "ars_nouveau.book_offset": "Spellbook Y Offset: ",
   "ars_nouveau.bound_script": "Bound Script: %s",
   "ars_nouveau.bow.invalid": "This tool may only accept spells that do not contain a form.",
   "ars_nouveau.brazier_relay.connected": "Brazier connected.",

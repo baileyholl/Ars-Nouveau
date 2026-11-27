@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,8 +35,17 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
         model.getBone("tier3").ifPresent(bone -> bone.setHidden(animatable.tier.value < 3));
         model.getBone("tier1").ifPresent(bone -> bone.setHidden(animatable.tier.value != 1));
         model.getBone("tier2").ifPresent(bone -> bone.setHidden(animatable.tier.value != 2));
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
+        if (renderPerspective == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || renderPerspective == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
+            poseStack.pushPose();
+            poseStack.translate(0, (float) (Config.SPELLBOOK_Y_OFFSET.getAsInt() - 5) / 10, 0);
+            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
+            poseStack.popPose();
+        } else {
+
+            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, packedColor);
+        }
     }
+
 
     @Override
     protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, float partialTick) {

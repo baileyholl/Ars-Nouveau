@@ -1371,7 +1371,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.hue", "Hue");
         add("ars_nouveau.sat", "Saturation");
         add("ars_nouveau.lightness", "Lightness");
-        add("ars_nouveau.transparency","Transparency");
+        add("ars_nouveau.transparency", "Transparency");
         add("ars_nouveau.particle.end_rod", "End Rod");
         add("ars_nouveau.particle.glow_squid", "Glow Squid");
         add("ars_nouveau.particle.glow_ink", "Glow Ink");
@@ -1683,6 +1683,7 @@ public class LangDatagen extends LanguageProvider {
         add("painting.ars_nouveau.resting_drygmy.author", "Gootastic");
         add("ars_nouveau.spell_book_gui.no_timelines", "Create a spell in this slot to edit its particles, color, sound, and texture.\nConfigurable glyphs will have a spell styles icon:");
         add("ars_nouveau.rotating_turret_aims", "Turret now aims at %s");
+        add("ars_nouveau.book_offset", "Spellbook Y Offset: ");
     }
 
     public void addCategory(String key, String value) {
