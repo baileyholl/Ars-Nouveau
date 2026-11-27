@@ -115,7 +115,8 @@ public class EffectExchange extends AbstractEffect {
         BlockItem item = (BlockItem) stack.getItem();
         ItemStack tool = LootUtil.getDefaultFakeTool();
         tool.enchant(HolderHelper.unwrap(world, Enchantments.SILK_TOUCH), 1);
-        BlockPlaceContext context = new CasterPlaceContext(world, pos1, spellContext.getCaster(), stack, result.getDirection());
+        Player placer = shooter instanceof Player player ? player : fakePlayer;
+        BlockPlaceContext context = new CasterPlaceContext(world, placer, pos1, spellContext.getCaster(), stack, result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
         if (placeState == null || placeState.getBlock() == world.getBlockState(pos1).getBlock()) {
             return;
@@ -128,7 +129,7 @@ public class EffectExchange extends AbstractEffect {
         item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
 
         ((BlockItemAccessor) item).invokeUpdateBlockStateFromTag(pos1, world, stack, placeState);
-        BlockItem.updateCustomBlockEntityTag(world, shooter instanceof Player player ? player : fakePlayer, pos1, stack);
+        BlockItem.updateCustomBlockEntityTag(world, placer, pos1, stack);
         BlockItemAccessor.invokeUpdateBlockEntityComponents(world, pos1, stack);
         stack.shrink(1);
         ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), result.getDirection(), pos1, false), world, shooter, spellContext, resolver);
@@ -180,8 +181,8 @@ public class EffectExchange extends AbstractEffect {
         private final float yRot;
         private final float xRot;
 
-        public CasterPlaceContext(Level level, BlockPos pos, IWrappedCaster caster, ItemStack stack, Direction face) {
-            super(level, null, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.atCenterOf(pos).relative(face.getOpposite(), 0.5), face, pos, false));
+        public CasterPlaceContext(Level level, Player player, BlockPos pos, IWrappedCaster caster, ItemStack stack, Direction face) {
+            super(level, player, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.atCenterOf(pos).relative(face.getOpposite(), 0.5), face, pos, false));
             if (caster instanceof LivingCaster living) {
                 yRot = living.livingEntity.getYRot();
                 xRot = living.livingEntity.getXRot();

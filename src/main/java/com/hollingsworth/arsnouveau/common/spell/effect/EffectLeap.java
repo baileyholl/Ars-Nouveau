@@ -78,7 +78,7 @@ public class EffectLeap extends AbstractEffect {
         for (BlockPos pos1 : posList) {
             EnchantedFallingBlock entity = EnchantedFallingBlock.fall(world, pos1, shooter, spellContext, resolver, spellStats);
             if (entity != null) {
-                Vec3 vector = getLookVector(shooter, spellContext);
+                Vec3 vector = spellContext.getCaster().getFacingVec();
                 double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
                 entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
                 entity.hurtMarked = true;

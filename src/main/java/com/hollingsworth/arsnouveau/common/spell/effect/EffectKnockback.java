@@ -41,6 +41,7 @@ public class EffectKnockback extends AbstractEffect {
         knockback(target, spellContext.getCaster(), strength, spellStats.hasBuff(AugmentExtract.INSTANCE));
         if (target instanceof ServerPlayer player) {
             player.connection.send(new ClientboundSetEntityMotionPacket(player));
+            player.hurtMarked = false;
             player.setDeltaMovement(priorMovement);
         } else {
             target.hurtMarked = true;

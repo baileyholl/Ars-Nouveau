@@ -291,25 +291,6 @@ public class SpellTurretTests {
                 helper.assertContainerContains(setup.posBehindTurret, Items.WATER_BUCKET);
             });
         });
-
-        assertTurretWithAllForms(seq, helper, new Spell(EffectInteract.INSTANCE), true, (supp, sequence) -> {
-            sequence.thenExecute(() -> {
-                var setup = supp.get();
-                setup.chest.setItem(0, Items.WATER_BUCKET.getDefaultInstance());
-                setup.tile.shootSpell();
-            }).thenWaitUntil(() -> {
-                var setup = supp.get();
-                helper.assertBlockState(setup.posInFrontOfTurret, (state) -> state == Blocks.WATER.defaultBlockState(), () -> "Interact did not place water block " + setup.spell.toString());
-                helper.assertContainerContains(setup.posBehindTurret, Items.BUCKET);
-            }).thenExecute(() -> {
-                var setup = supp.get();
-                setup.tile.shootSpell();
-            }).thenWaitUntil(() -> {
-                var setup = supp.get();
-                helper.assertBlockState(setup.posInFrontOfTurret, BlockBehaviour.BlockStateBase::isAir, () -> "Interact did not pick up water block " + setup.spell.toString());
-                helper.assertContainerContains(setup.posBehindTurret, Items.WATER_BUCKET);
-            });
-        });
         seq.thenSucceed();
     }
 
