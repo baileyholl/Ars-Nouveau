@@ -16,12 +16,12 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionMelderTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.entity.ScryerCamera;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
 import com.hollingsworth.arsnouveau.common.items.data.PotionJarData;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.CameraUtil;
 import com.hollingsworth.arsnouveau.common.util.PotionUtil;
 import com.hollingsworth.arsnouveau.common.world.dimension.JarDimensionEffects;
 import com.hollingsworth.arsnouveau.setup.registry.*;
@@ -35,7 +35,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -199,12 +198,11 @@ public class ClientHandler {
     public static LayeredDraw.Layer cameraOverlay = (gui, tracker) -> {
         Minecraft mc = Minecraft.getInstance();
         Level level = mc.level;
-        BlockPos pos = mc.cameraEntity.blockPosition();
-        if (!CameraUtil.isPlayerMountedOnCamera(mc.player) || mc.options.hideGui) {
+        if (!(mc.cameraEntity instanceof ScryerCamera camera) || mc.options.hideGui) {
             return;
         }
         if (!mc.options.reducedDebugInfo().get()) {
-            BlockEntity var10 = level.getBlockEntity(pos);
+            BlockEntity var10 = level.getBlockEntity(camera.getMountPos());
             if (var10 instanceof ICameraMountable be) {
                 Font font = Minecraft.getInstance().font;
                 Options settings = Minecraft.getInstance().options;
