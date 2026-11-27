@@ -196,7 +196,7 @@ public class Nook extends TamableAnimal implements GeoEntity, IDispellable, IAdo
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController(this, "walk", 1, (event) -> {
             if (event.isMoving()) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay("run"));
+                event.getController().setAnimation(RawAnimation.begin().thenLoop("run"));
                 return PlayState.CONTINUE;
             }
             return PlayState.STOP;
