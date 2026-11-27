@@ -6,12 +6,13 @@ For more information or to download: https://www.curseforge.com/minecraft/mc-mod
 
 For developing an addon, consult this example addon project! https://github.com/baileyholl/Ars-Nouveau-Example-Addon
 
-License: Textures and models are All Rights Reserved unless otherwise given permission. Addon authors are encouraged to
-reuse Ars Nouveau assets and to reach out in the discord.
+Ars Nouveau and its assets are All Rights Reserved unless otherwise given permission or explicitly stated in the
+relevant files or packages. Addon authors are encouraged to reuse Ars Nouveau assets and to reach out in the discord.
 
-Full mod ports will not be given permission for assets. Ars will be ported to the next major and stable modded version when the time comes, as of today there is no estimate or selected version. This repository is also not accepting or interested in AI-generated ports, pull requests, or explanations in tickets. 
+Ars will be ported to the next major and stable modded version
+when the time comes, as of today there is no estimate or selected version. This repository is also not accepting or
+interested in AI-generated ports, pull requests, or explanations in tickets.
 
-This code of this mod is licensed under LGPL V3.
 Every push to this repository is built and published to the [BlameJared](https://maven.blamejared.com) maven, to use
 these builds in your project, simply add the following code in your build.gradle
 
