@@ -13,6 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.server.level.ServerLevel;
@@ -25,12 +27,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Camera work is taken from SecurityCraft:
  * https://github.com/Geforce132/SecurityCraft/blob/1.18.2/src/main/java/net/geforcemods/securitycraft/entity/camera/SecurityCamera.java
  */
 public class ScryerCamera extends Entity {
+    public static final EntityDataAccessor<Optional<BlockPos>> MOUNT_POS = SynchedEntityData.defineId(ScryerCamera.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public final double cameraSpeed;
     public int screenshotSoundCooldown;
     protected int redstoneCooldown;
@@ -61,6 +65,7 @@ public class ScryerCamera extends Entity {
     public ScryerCamera(Level level, BlockPos pos) {
         this(ModEntities.SCRYER_CAMERA.get(), level);
         if (level.getBlockEntity(pos) instanceof ScryerCrystalTile cam) {
+            this.entityData.set(MOUNT_POS, Optional.of(pos.immutable()));
             double x = pos.getX() + 0.5D;
             double y = pos.getY() + 0.5D;
             double z = pos.getZ() + 0.5D;
@@ -81,7 +86,7 @@ public class ScryerCamera extends Entity {
     }
 
     private void setInitialPitchYaw() {
-        Direction facing = this.level.getBlockState(this.blockPosition()).getValue(ScryerCrystal.FACING);
+        Direction facing = this.level.getBlockState(this.getMountPos()).getValue(ScryerCrystal.FACING);
         if (facing == Direction.NORTH) {
             this.setYRot(180.0F);
         } else if (facing == Direction.WEST) {
@@ -106,7 +111,11 @@ public class ScryerCamera extends Entity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        pBuilder.define(MOUNT_POS, Optional.empty());
+    }
 
+    public BlockPos getMountPos() {
+        return this.entityData.get(MOUNT_POS).orElseGet(this::blockPosition);
     }
 
     public void tick() {
@@ -122,7 +131,7 @@ public class ScryerCamera extends Entity {
             if (this.toggleNightVisionCooldown > 0) {
                 --this.toggleNightVisionCooldown;
             }
-        } else if (this.level.getBlockState(this.blockPosition()).getBlock() != BlockRegistry.SCRYERS_CRYSTAL.get()) {
+        } else if (this.level.getBlockState(this.getMountPos()).getBlock() != BlockRegistry.SCRYERS_CRYSTAL.get()) {
             this.discard();
         }
 
@@ -150,7 +159,7 @@ public class ScryerCamera extends Entity {
     }
 
     public boolean isCameraDown() {
-        BlockEntity var2 = this.level.getBlockEntity(this.blockPosition());
+        BlockEntity var2 = this.level.getBlockEntity(this.getMountPos());
         return var2 instanceof ScryerCrystalTile cam && cam.down;
     }
 
@@ -176,7 +185,7 @@ public class ScryerCamera extends Entity {
     public void discardCamera() {
         if (!this.level.isClientSide) {
 
-            if (level.getBlockEntity(this.blockPosition()) instanceof ICameraMountable camMount) {
+            if (level.getBlockEntity(this.getMountPos()) instanceof ICameraMountable camMount) {
                 camMount.stopViewing();
             }
 

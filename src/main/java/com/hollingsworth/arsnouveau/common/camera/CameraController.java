@@ -123,7 +123,7 @@ public class CameraController {
     }
 
     public static void moveViewHorizontally(ScryerCamera cam, float yRot, float next) {
-        BlockState state = cam.level.getBlockState(cam.blockPosition());
+        BlockState state = cam.level.getBlockState(cam.getMountPos());
 
         if (state.hasProperty(ScryerCrystal.FACING)) {
             float checkNext = next;

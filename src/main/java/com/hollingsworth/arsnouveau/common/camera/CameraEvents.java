@@ -23,7 +23,7 @@ public class CameraEvents {
         ServerPlayer player = (ServerPlayer) event.getEntity();
 
         if (player.getCamera() instanceof ScryerCamera cam) {
-            if (player.level.getBlockEntity(cam.blockPosition()) instanceof ICameraMountable camBe)
+            if (player.level.getBlockEntity(cam.getMountPos()) instanceof ICameraMountable camBe)
                 camBe.stopViewing();
 
             cam.discard();
