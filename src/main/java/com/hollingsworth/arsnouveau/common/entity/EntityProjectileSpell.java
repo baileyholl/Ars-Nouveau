@@ -141,7 +141,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         if (age == 0 && castSound != null && !level.isClientSide) {
             castSound.playSound(level, getX(), getY(), getZ());
         }
-        if (this.age >= getParticleDelay()) {
+        if (this.level.isClientSide && this.age >= getParticleDelay()) {
             playParticles();
         }
         age++;

@@ -85,6 +85,11 @@ public class EffectPlaceBlock extends AbstractEffect {
         extractItem.returnOrDrop(world, shooter.getOnPos());
     }
 
+    @Deprecated(forRemoval = true)
+    public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer) {
+        return attemptPlace(world, stack, item, result, fakePlayer.getNearestViewDirection());
+    }
+
     public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Direction direction) {
         var context = new DispenserBehaviorRegistry.UnbiasedDirectionalPlaceContext(world, result.getBlockPos(), direction, stack, direction);
         return item.place(context);

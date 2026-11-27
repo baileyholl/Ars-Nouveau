@@ -39,11 +39,13 @@ public class EffectLeap extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Entity entity = rayTraceResult.getEntity();
         double bonus;
-        Vec3 vector = spellContext.getCaster().getFacingVec();
+        Vec3 vector;
         if (NERF.get() && entity == shooter && !shooter.onGround()) return;
         if (entity instanceof LivingEntity) {
+            vector = entity.getLookAngle();
             bonus = Math.max(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         } else {
+            vector = spellContext.getCaster().getFacingVec();
             bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         }
         entity.setDeltaMovement(vector.x * bonus, vector.y * bonus, vector.z * bonus);
