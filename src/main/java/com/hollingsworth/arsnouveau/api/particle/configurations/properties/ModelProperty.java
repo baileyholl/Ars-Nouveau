@@ -15,10 +15,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class ModelProperty extends BaseProperty<ModelProperty> {
@@ -35,12 +40,11 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
     public PropMap subPropMap;
 
     public static final Model NONE = new Model(ArsNouveau.prefix("empty"), DocAssets.STYLE_ICON_NONE, false);
-    public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, (spell) -> {
+    public static final Model CUBE_BODY = new Model(ArsNouveau.prefix("cube"), DocAssets.STYLE_ICON_BLOCK, true, false, (spell) -> {
         return ArsNouveau.prefix("textures/particle/" + "projectile_" + (spell.age / 5) % 4 + ".png");
-    });
+    }, null);
 
-    public static final Model SPIKE_BODY = new Model(ArsNouveau.prefix("spike"), DocAssets.STYLE_ICON_SPIKE, true);
-
+    public static final Model SPIKE_BODY = new Model(ArsNouveau.prefix("spike"), DocAssets.STYLE_ICON_SPIKE, true, false, null);
 
     public static final List<Model> resources = new CopyOnWriteArrayList<>();
 
@@ -91,12 +95,11 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
                 for (int i = 0; i < resources.size(); i++) {
                     var resource = resources.get(i);
                     SelectedParticleButton selectedParticleButton = new SelectedParticleButton(x + 6 + 16 * (i % 7), y + 20 + 20 * (i / 7), 14, 14, getImagePath(resource), (b) -> {
-                        var didHaveColor = selectedResource.supportsColor;
+                        var previous = selectedResource;
                         selectedResource = resource;
-                        var nowHasColor = selectedResource.supportsColor;
 
                         propertyHolder.set(getType(), self);
-                        if (didHaveColor != nowHasColor && onDependenciesChanged != null) {
+                        if ((previous.supportsColor != resource.supportsColor || previous.supportsTransparency != resource.supportsTransparency) && onDependenciesChanged != null) {
                             onDependenciesChanged.run();
                         }
                         selectedButton.selected = false;
@@ -141,11 +144,14 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
 
     @Override
     public List<BaseProperty<?>> subProperties() {
+        List<BaseProperty<?>> properties = new ArrayList<>();
         if (selectedResource.supportsColor) {
-            return List.of(subPropMap.createIfMissing(new ColorProperty()));
-        } else {
-            return List.of();
+            properties.add(subPropMap.createIfMissing(new ColorProperty()));
         }
+        if (selectedResource.supportsTransparency) {
+            properties.add(subPropMap.createIfMissing(new TransparencyProperty()));
+        }
+        return properties;
     }
 
     @Override
@@ -166,11 +172,25 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
     }
 
     public record Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor,
-                        Function<EntityProjectileSpell, ResourceLocation> getTexture) {
+                        boolean supportsTransparency,
+                        Function<EntityProjectileSpell, ResourceLocation> getTexture,
+                        AnimationConfig animationConfig) {
+
         public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor) {
-            this(resourceLocation, blitInfo, supportsColor, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"));
+            this(resourceLocation, blitInfo, supportsColor, false, null);
         }
 
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, Function<EntityProjectileSpell, ResourceLocation> getTexture) {
+            this(resourceLocation, blitInfo, supportsColor, false, getTexture, null);
+        }
+
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, AnimationConfig animationConfig) {
+            this(resourceLocation, blitInfo, supportsColor, false, animationConfig);
+        }
+
+        public Model(ResourceLocation resourceLocation, DocAssets.BlitInfo blitInfo, boolean supportsColor, boolean supportsTransparency, AnimationConfig animationConfig) {
+            this(resourceLocation, blitInfo, supportsColor, supportsTransparency, spell -> ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), "textures/entity/" + resourceLocation.getPath() + ".png"), animationConfig);
+        }
 
         @Override
         public boolean equals(Object o) {
@@ -184,4 +204,26 @@ public class ModelProperty extends BaseProperty<ModelProperty> {
             return Objects.hashCode(resourceLocation);
         }
     }
+
+
+    public record AnimationConfig(ResourceLocation resourceLocation,
+                                  BiConsumer<AnimatableManager.ControllerRegistrar, EntityProjectileSpell> animationRegistrar) {
+        //Default loop
+        public AnimationConfig(ResourceLocation resourceLocation) {
+            this(resourceLocation, (controllers, spell) -> controllers.add(new AnimationController<>(spell, "loopController", 0, (event) -> event.setAndContinue(RawAnimation.begin().thenPlay("run")))));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            AnimationConfig config = (AnimationConfig) o;
+            return Objects.equals(resourceLocation, config.resourceLocation);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(resourceLocation);
+        }
+    }
+
 }

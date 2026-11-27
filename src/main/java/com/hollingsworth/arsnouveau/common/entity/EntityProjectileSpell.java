@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.particle.ParticleEmitter;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ModelProperty;
 import com.hollingsworth.arsnouveau.api.particle.timelines.ProjectileTimeline;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.api.registry.ParticleTimelineRegistry;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
@@ -131,7 +133,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected boolean canRide(Entity vehicle) {
+    protected boolean canRide(@NotNull Entity vehicle) {
         return false;
     }
 
@@ -238,8 +240,15 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         double z = this.getZ() + vec3d.z;
         if (!this.isNoGravity()) {
             setDeltaMovement(vec3d.x * 0.96, (vec3d.y > 0 ? vec3d.y * 0.97 : vec3d.y) - 0.03f, vec3d.z * 0.96);
+            faceMovement();
         }
         this.setPos(x, y, z);
+    }
+
+    protected void faceMovement() {
+        Vec3 motion = this.getDeltaMovement();
+        this.yRot = (float) (Mth.atan2(motion.x, motion.z) * (double) (180F / (float) Math.PI));
+        this.xRot = (float) (Mth.atan2(motion.y, motion.horizontalDistance()) * (double) (180F / (float) Math.PI));
     }
 
 
@@ -310,16 +319,14 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
         this.setDeltaMovement(vec3d);
-        float f = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
-        this.yRot = (float) (Mth.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
-        this.xRot = (float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+        faceMovement();
         this.yRotO = this.yRot;
         this.xRotO = this.xRot;
 
     }
 
     @Override
-    public void setRemoved(RemovalReason reason) {
+    public void setRemoved(@NotNull RemovalReason reason) {
         if (reason == RemovalReason.UNLOADED_TO_CHUNK)
             reason = RemovalReason.DISCARDED;
         super.setRemoved(reason);
@@ -336,7 +343,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public EntityType<?> getType() {
+    public @NotNull EntityType<?> getType() {
         return ModEntities.SPELL_PROJ.get();
     }
 
@@ -373,7 +380,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         result = transformHitResult(result);
 
         if (result instanceof BlockHitResult blockHitResult && !this.isRemoved() && !hitList.contains(blockHitResult.getBlockPos())
@@ -462,7 +469,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(@NotNull Entity entity) {
         return super.canHitEntity(entity) || entity.getType().is(EntityTags.SPELL_CAN_HIT);
     }
 
@@ -479,7 +486,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
+    public void recreateFromPacket(@NotNull ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         Entity entity = this.level.getEntity(pPacket.getData());
         if (entity != null) {
@@ -506,7 +513,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.spellResolver = null;
         if (tag.contains("pierce")) {
@@ -544,8 +551,14 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         return changed;
     }
 
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        ProjectileTimeline timeline = this.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
+        ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
+        ModelProperty.AnimationConfig animationConfig = modelProperty.selectedResource.animationConfig();
+        if (animationConfig != null)
+            animationConfig.animationRegistrar().accept(controllers, this);
     }
 
     AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

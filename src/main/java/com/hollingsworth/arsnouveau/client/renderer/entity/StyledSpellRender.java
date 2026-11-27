@@ -13,7 +13,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
@@ -28,7 +30,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
     }
 
     @Override
-    public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(EntityProjectileSpell entity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
         ProjectileTimeline timeline = entity.resolver().spell.particleTimeline().get(ParticleTimelineRegistry.PROJECTILE_TIMELINE.get());
         ModelProperty modelProperty = timeline.trailEffect.motion().propertyMap.get(ParticlePropertyRegistry.MODEL_PROPERTY.get());
         if (modelProperty == null || modelProperty.selectedResource == ModelProperty.NONE) {
@@ -47,7 +49,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 //            poseStack.translate(0, -0.25, 0);
 //            poseStack.scale(0.5f, 0.5f, 0.5f);
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.rotLerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
 //        }
@@ -60,6 +62,12 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
         if (modelProp.selectedResource.supportsColor()) {
             colour = modelProp.subPropMap.getParticleColor().getColor();
         }
+        if (modelProp.selectedResource.supportsTransparency()) {
+            var transparencyProperty = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get());
+            if (transparencyProperty != null) {
+                colour = FastColor.ARGB32.color(transparencyProperty.getTransparency(), colour);
+            }
+        }
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         poseStack.popPose();
@@ -67,6 +75,12 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 
     @Override
     public @Nullable RenderType getRenderType(EntityProjectileSpell animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        if (modelProp.selectedResource.supportsTransparency()) {
+            var alpha = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get());
+            if (alpha != null && alpha.getTransparency() < 255) {
+                return RenderType.entityTranslucentCull(texture);
+            }
+        }
         return RenderType.entityCutout(texture);
     }
 
