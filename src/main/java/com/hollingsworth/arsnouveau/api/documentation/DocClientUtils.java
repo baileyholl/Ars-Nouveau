@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.documentation.entry.DocEntry;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.gui.GuiUtils;
+import com.hollingsworth.arsnouveau.client.gui.NineSlicedImage;
 import com.hollingsworth.arsnouveau.client.gui.documentation.BaseDocScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.IndexScreen;
 import com.hollingsworth.arsnouveau.client.gui.documentation.PageHolderScreen;
@@ -73,6 +74,10 @@ public class DocClientUtils {
 
     public static void blit(GuiGraphics graphics, DocAssets.BlitInfo info, int x, int y) {
         graphics.blit(info.location(), x, y, info.u(), info.v(), info.width(), info.height(), info.width(), info.height());
+    }
+
+    public static void blit(GuiGraphics graphics, NineSlicedImage image, int x, int y, int width, int height) {
+        image.draw(graphics, x, y, width, height);
     }
 
     public static ItemStack renderIngredientAtAngle(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float angle, Ingredient ingredient) {

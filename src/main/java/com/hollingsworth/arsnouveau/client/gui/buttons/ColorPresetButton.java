@@ -12,7 +12,7 @@ public class ColorPresetButton extends SelectedParticleButton {
     public ParticleColor particleColor;
 
     public ColorPresetButton(int x, int y, ParticleColor color, OnPress onPress) {
-        super(x, y, DocAssets.SPELLSTYLE_BUTTON_SELECTED_12, DocAssets.SPELLSTYLE_BUTTON_SELECTED_12, onPress);
+        super(x, y, DocAssets.SPELLSTYLE_BUTTON_12, DocAssets.SPELLSTYLE_BUTTON_SELECTED_12, onPress);
         this.particleColor = color;
     }
 
@@ -28,9 +28,9 @@ public class ColorPresetButton extends SelectedParticleButton {
             graphics.fill(x + 2, y + 3, x + 10, y + 9, color.getRGB());
         }
         if (!selected) {
-            DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_BUTTON_12, x, y);
+            DocClientUtils.blit(graphics, DocAssets.SPELL_STYLE_BUTTON, x, y, 12, 12);
         } else {
-            super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
+            DocClientUtils.blit(graphics, DocAssets.SPELL_STYLE_BUTTON_SELECTED, x, y, 12, 12);
         }
     }
 

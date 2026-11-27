@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.documentation;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.NineSlicedImage;
 import net.minecraft.resources.ResourceLocation;
 
 public class DocAssets {
@@ -113,9 +114,11 @@ public class DocAssets {
     public static final BlitInfo SPELLSTYLE_GRADIENT_PREVIEW = BlitInfo.gui("doc_spellstyle_preview_gradient.png", 56, 16);
     public static final BlitInfo SPELLSTYLE_GRADIENT_MENU = BlitInfo.gui("doc_spellstyle_menu_gradient.png", 64, 51);
     public static final BlitInfo SPELLSTYLE_BUTTON_12 = BlitInfo.gui("doc_spellstyle_button_12x12.png", 12, 12);
+    public static final NineSlicedImage SPELL_STYLE_BUTTON = new NineSlicedImage(DocAssets.SPELLSTYLE_BUTTON_12, 3, 3);
     public static final BlitInfo SPELLSTYLE_BUTTON_12_ADD = BlitInfo.gui("doc_spellstyle_button_12x12_add.png", 12, 12);
     public static final BlitInfo SPELLSTYLE_BUTTON_12_CLEAR = BlitInfo.gui("doc_spellstyle_button_12x12_clear.png", 12, 12);
     public static final BlitInfo SPELLSTYLE_BUTTON_SELECTED_12 = BlitInfo.gui("doc_spellstyle_button_selected_12x12.png", 12, 12);
+    public static final NineSlicedImage SPELL_STYLE_BUTTON_SELECTED = new NineSlicedImage(DocAssets.SPELLSTYLE_BUTTON_SELECTED_12, 3, 3);
     public static final BlitInfo SPELLSTYLE_BUTTON_SELECTED_16 = BlitInfo.gui("doc_spellstyle_button_selected_16x16.png", 16, 16);
     public static final BlitInfo SPELLSTYLE_SLIDER = BlitInfo.gui("doc_spellstyle_slider.png", 5, 9);
     public static final BlitInfo SPELLSTYLE_SLIDER_2 = BlitInfo.gui("doc_spellstyle_slider2.png", 5, 9);

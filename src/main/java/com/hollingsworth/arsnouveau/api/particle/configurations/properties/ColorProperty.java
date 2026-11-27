@@ -5,7 +5,10 @@ import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.*;
+import com.hollingsworth.arsnouveau.client.gui.Color;
+import com.hollingsworth.arsnouveau.client.gui.HSLColor;
+import com.hollingsworth.arsnouveau.client.gui.HueSlider;
+import com.hollingsworth.arsnouveau.client.gui.SatLumSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ColorPresetButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -25,7 +28,6 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class ColorProperty extends BaseProperty<ColorProperty> {
 
@@ -237,10 +239,6 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 saturation.setValue(color.getSaturation());
                 lightness.setValue(color.getLightness());
                 syncingSliders = false;
-            }
-
-            public BookSlider buildSlider(int x, int y, Component prefix, Component suffix, double currentVal, Consumer<Double> onValueChange) {
-                return new BookSlider(x, y, 100, 20, prefix, suffix, 1.0D, 255.0D, currentVal, 1, 1, false, onValueChange);
             }
 
             @Override
