@@ -61,7 +61,8 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 
         if (modelProp.selectedResource.supportsColor()) {
             var color = modelProp.subPropMap.getParticleColor();
-            var alpha = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get()).getTransparency();
+            var transparencyProperty = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get());
+            int alpha = transparencyProperty == null ? 255 : transparencyProperty.getTransparency();
             colour = FastColor.ABGR32.color(alpha, color.getColor());
         }
 
@@ -72,8 +73,8 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
     @Override
     public @Nullable RenderType getRenderType(EntityProjectileSpell animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         if (modelProp.selectedResource.supportsColor()) {
-            var alpha = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get()).getTransparency();
-            if (alpha < 255) {
+            var alpha = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get());
+            if (alpha != null && alpha.getTransparency() < 255) {
                 return RenderType.entityTranslucentCull(texture);
             }
         }
