@@ -108,10 +108,10 @@ public class LangDatagen extends LanguageProvider {
         add("item.ars_nouveau.battlemage_leggings", "Battlemage's Legguards");
         add("item.ars_nouveau.battlemage_boots", "Battlemage's Boots");
         add("item.ars_nouveau.battlemage_hood", "Battlemage's Hood");
-        add("item.ars_nouveau.sorcerer_boots", "Sorceror's Footpads");
-        add("item.ars_nouveau.sorcerer_leggings", "Sorceror's Leggings");
-        add("item.ars_nouveau.sorcerer_robes", "Sorceror's Wrap");
-        add("item.ars_nouveau.sorcerer_hood", "Sorceror's Collar");
+        add("item.ars_nouveau.sorcerer_boots", "Sorcerer's Footpads");
+        add("item.ars_nouveau.sorcerer_leggings", "Sorcerer's Leggings");
+        add("item.ars_nouveau.sorcerer_robes", "Sorcerer's Wrap");
+        add("item.ars_nouveau.sorcerer_hood", "Sorcerer's Collar");
         add("item.ars_nouveau.arcanist_robes", "Arcanist's Robes");
         add("item.ars_nouveau.arcanist_leggings", "Arcanist's Pants");
         add("item.ars_nouveau.arcanist_boots", "Arcanist's Treads");
@@ -484,7 +484,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_set", "Spell set.");
         add("block.ars_nouveau.vitalic_sourcelink", "Vitalic Sourcelink");
         add("block.ars_nouveau.alchemical_sourcelink", "Alchemical Sourcelink");
-        add("ars_nouveau.page1.armor", "Magical robes will increase the wearers mana regen and can be upgraded with special abilities using Threads. The Sorceror's set provides the lowest defence, but provides the most powerful set of slots for Threads. The Arcanist's and Battlemage's sets provide increasingly more defence, but fewer and less powerful Thread Slots. For more information on Threads, see the section on Armor and Perks.");
+        add("ars_nouveau.page1.armor", "Magical robes will increase the wearers mana regen and can be upgraded with special abilities using Threads. The Sorcerer's set provides the lowest defence, but provides the most powerful set of slots for Threads. The Arcanist's and Battlemage's sets provide increasingly more defence, but fewer and less powerful Thread Slots. For more information on Threads, see the section on Armor and Perks.");
         add("ars_nouveau.page.potion_jar", "A jar that stores up to 100 potions. Potion can be removed by using an Empty Bottle, Potion Flask, or Arrows on the jar. Wixies will use these jars during Potion Autocrafting. The jar may be locked by using a Dominion Wand while sneaking. Locked Jars will only receive the potion it is locked to from Wixies. Can be used with a Comparator.");
         add("ars_nouveau.glyph_crafting", "Glyph Crafting");
         add("ars_nouveau.page1.scribes_table", "To craft new glyphs, use a spell book on the table to open the codex. Each glyph requires a set of items and experience points to unlock. Select a glyph by clicking on it in the menu, and hit select. Throw the items onto the table as rendered above, and the table will scribe a new glyph. The table will also pull items from nearby inventories. Using the dominion wand on the table will disable auto-pull.");
@@ -990,7 +990,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.perk.feather.desc", "Reduces the amount of fall damage taken.");
         add("ars_nouveau.perk.weight", "Weight");
         add("ars_nouveau.perk.weight.desc", "Affects how much gravity is applied.");
-        add("ars_nouveau.page.threads", "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerors set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.");
+        add("ars_nouveau.page.threads", "Each type of armor has its own unique set of Thread Slots. Upgrading the armor to a new tier will unlock and add additional slots to the armor. The Sorcerers set provides the least amount of defence while providing the most powerful slots, while the Battlemage's set provides defence but much weaker slots. For recipes on upgrading your armor to the next tier, see the section in the Armor and Perks category.");
         add("ars_nouveau.threads", "Thread Slots");
         add("ars_nouveau.page.applying_perks", "Applying Threads");
         add("ars_nouveau.page1.applying_perks", "Threads may be applied to armor using the Alteration Apparatus. Each piece of armor has a unique set of Thread Slots with their own variety of levels. Some Threads may require a Thread Slot of a minimum level, but many threads simply increase in power based on the slot they are given.");
