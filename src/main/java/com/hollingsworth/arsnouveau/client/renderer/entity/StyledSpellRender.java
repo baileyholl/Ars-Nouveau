@@ -49,7 +49,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 //            poseStack.translate(0, -0.25, 0);
 //            poseStack.scale(0.5f, 0.5f, 0.5f);
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.rotLerp(partialTick, animatable.yRotO, animatable.getYRot()) - 90f));
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
 //        }
@@ -60,10 +60,13 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 
 
         if (modelProp.selectedResource.supportsColor()) {
-            var color = modelProp.subPropMap.getParticleColor();
+            colour = modelProp.subPropMap.getParticleColor().getColor();
+        }
+        if (modelProp.selectedResource.supportsTransparency()) {
             var transparencyProperty = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get());
-            int alpha = transparencyProperty == null ? 255 : transparencyProperty.getTransparency();
-            colour = FastColor.ABGR32.color(alpha, color.getColor());
+            if (transparencyProperty != null) {
+                colour = FastColor.ARGB32.color(transparencyProperty.getTransparency(), colour);
+            }
         }
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
@@ -72,7 +75,7 @@ public class StyledSpellRender extends GeoEntityRenderer<EntityProjectileSpell> 
 
     @Override
     public @Nullable RenderType getRenderType(EntityProjectileSpell animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        if (modelProp.selectedResource.supportsColor()) {
+        if (modelProp.selectedResource.supportsTransparency()) {
             var alpha = modelProp.subPropMap.get(ParticlePropertyRegistry.TRANSPARENCY_PROPERTY.get());
             if (alpha != null && alpha.getTransparency() < 255) {
                 return RenderType.entityTranslucentCull(texture);
