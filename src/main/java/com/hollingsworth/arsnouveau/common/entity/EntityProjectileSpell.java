@@ -240,8 +240,15 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
         double z = this.getZ() + vec3d.z;
         if (!this.isNoGravity()) {
             setDeltaMovement(vec3d.x * 0.96, (vec3d.y > 0 ? vec3d.y * 0.97 : vec3d.y) - 0.03f, vec3d.z * 0.96);
+            faceMovement();
         }
         this.setPos(x, y, z);
+    }
+
+    protected void faceMovement() {
+        Vec3 motion = this.getDeltaMovement();
+        this.yRot = (float) (Mth.atan2(motion.x, motion.z) * (double) (180F / (float) Math.PI));
+        this.xRot = (float) (Mth.atan2(motion.y, motion.horizontalDistance()) * (double) (180F / (float) Math.PI));
     }
 
 
@@ -312,9 +319,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements GeoEntit
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
         this.setDeltaMovement(vec3d);
-        float f = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
-        this.yRot = (float) (Mth.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
-        this.xRot = (float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+        faceMovement();
         this.yRotO = this.yRot;
         this.xRotO = this.xRot;
 

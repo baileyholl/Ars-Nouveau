@@ -3,6 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +18,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class EntityHomingProjectileSpell extends EntityProjectileSpell {
+
+    public static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(EntityHomingProjectileSpell.class, EntityDataSerializers.INT);
 
     public EntityHomingProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world) {
         super(entityType, world);
@@ -41,8 +46,18 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
     }
 
     @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(TARGET_ID, -1);
+    }
+
+    @Override
     public void tickNextPosition() {
         if (!this.isRemoved()) {
+
+            if (level.isClientSide) {
+                target = level.getEntity(entityData.get(TARGET_ID)) instanceof LivingEntity living ? living : null;
+            }
 
             if ((target != null) && (!target.isAlive() || (target.distanceToSqr(this) > 50))) target = null;
 
@@ -58,11 +73,13 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
                             this.getBoundingBox().inflate(4), this::shouldTarget);
                 }
                 //update target or keep going
-                if (entities.isEmpty() && target == null) {
-                    super.tickNextPosition();
-                } else if (!entities.isEmpty()) {
+                if (!entities.isEmpty()) {
                     target = entities.stream().filter(e -> e.distanceToSqr(this) < 75).min(Comparator.comparingDouble(e -> e.distanceToSqr(this))).orElse(target);
                 }
+            }
+
+            if (!level.isClientSide) {
+                entityData.set(TARGET_ID, target == null ? -1 : target.getId());
             }
 
             //keep going if we are in target bounding box until exit
@@ -107,6 +124,7 @@ public class EntityHomingProjectileSpell extends EntityProjectileSpell {
         this.setPos(posX, posY, posZ);
 
         this.setDeltaMovement(motionX, motionY, motionZ);
+        faceMovement();
     }
 
     @Override
