@@ -106,8 +106,19 @@ public class DocAssets {
     public static final BlitInfo STYLE_ICON_SPHERE = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_icon_sphere.png"), 14, 14);
     public static final BlitInfo SPELLSTYLE_SELECTED_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_selected.png"), 16, 16);
     public static final BlitInfo SPELLSTYLE_FRAME = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_button_empty.png"), 14, 14);
-    public static final BlitInfo SPELLSTYLE_COLOR_PREVIEW = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_preview_color.png"), 106, 16);
-    public static final BlitInfo SPELLSTYLE_RAINBOW = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_rainbow.png"), 16, 16);
+    public static final BlitInfo SPELLSTYLE_COLOR_PREVIEW = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_preview_color.png"), 70, 16);
+    public static final BlitInfo SPELLSTYLE_RAINBOW = new BlitInfo(ArsNouveau.prefix("textures/gui/doc_spellstyle_rainbow.png"), 8, 8);
+    public static final BlitInfo SPELLSTYLE_GRADIENT_MODE = BlitInfo.gui("doc_spellstyle_mode_gradient.png", 16, 16);
+    public static final BlitInfo SPELLSTYLE_SOLID_MODE = BlitInfo.gui("doc_spellstyle_mode_solid.png", 16, 16);
+    public static final BlitInfo SPELLSTYLE_GRADIENT_PREVIEW = BlitInfo.gui("doc_spellstyle_preview_gradient.png", 56, 16);
+    public static final BlitInfo SPELLSTYLE_GRADIENT_MENU = BlitInfo.gui("doc_spellstyle_menu_gradient.png", 64, 51);
+    public static final BlitInfo SPELLSTYLE_BUTTON_12 = BlitInfo.gui("doc_spellstyle_button_12x12.png", 12, 12);
+    public static final BlitInfo SPELLSTYLE_BUTTON_12_ADD = BlitInfo.gui("doc_spellstyle_button_12x12_add.png", 12, 12);
+    public static final BlitInfo SPELLSTYLE_BUTTON_12_CLEAR = BlitInfo.gui("doc_spellstyle_button_12x12_clear.png", 12, 12);
+    public static final BlitInfo SPELLSTYLE_BUTTON_SELECTED_12 = BlitInfo.gui("doc_spellstyle_button_selected_12x12.png", 12, 12);
+    public static final BlitInfo SPELLSTYLE_BUTTON_SELECTED_16 = BlitInfo.gui("doc_spellstyle_button_selected_16x16.png", 16, 16);
+    public static final BlitInfo SPELLSTYLE_SLIDER = BlitInfo.gui("doc_spellstyle_slider.png", 5, 9);
+    public static final BlitInfo SPELLSTYLE_SLIDER_2 = BlitInfo.gui("doc_spellstyle_slider2.png", 5, 9);
     public static final BlitInfo SPELLSTYLE_BUTTON_BIG = new BlitInfo(ArsNouveau.prefix("textures/gui/spellstyle_button_big.png"), 16, 16);
     public static final BlitInfo PARTICLES_ICON = new BlitInfo(ArsNouveau.prefix("textures/gui/particles_icon.png"), 14, 14);
     public static final BlitInfo CHAPTER_BUTTON_NO_ITEM = new BlitInfo(ArsNouveau.prefix("textures/gui/documentation/doc_button_chapter_text_only.png"), 118, 14);
@@ -146,6 +157,14 @@ public class DocAssets {
     public record BlitInfo(ResourceLocation location, int u, int v, int width, int height) {
         public BlitInfo(ResourceLocation location, int width, int height) {
             this(location, 0, 0, width, height);
+        }
+
+        public BlitInfo(String path, int width, int height) {
+            this(ArsNouveau.prefix(path), width, height);
+        }
+
+        public static BlitInfo gui(String path, int width, int height) {
+            return new BlitInfo("textures/gui/" + path, width, height);
         }
     }
 }

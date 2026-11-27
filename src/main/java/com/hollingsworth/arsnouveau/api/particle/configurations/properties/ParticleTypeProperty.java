@@ -182,6 +182,7 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
         return Objects.hash(getType(), type, subProperties);
     }
 
+    // TODO: breaking remove useLegacyRGB
     public record ParticleData(ParticleType<? extends PropertyParticleOptions> type, boolean acceptsColor,
                                boolean useLegacyRGB, boolean supportsSound) {
 
@@ -202,7 +203,6 @@ public class ParticleTypeProperty extends BaseProperty<ParticleTypeProperty> {
             PropMap subPropMap = forProp.subProperties;
             if (acceptsColor) {
                 ColorProperty colorProperty = subPropMap.createIfMissing(new ColorProperty(ParticleColor.defaultParticleColor(), true));
-                colorProperty.isLegacyRGB = useLegacyRGB;
                 properties.add(colorProperty);
             }
             if (supportsSound) {

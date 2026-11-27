@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -39,6 +41,13 @@ public class DocDataLoader {
             JsonArray particlesArray = new JsonArray();
             DocPlayerData.favoriteParticles.forEach(e -> particlesArray.add(BuiltInRegistries.PARTICLE_TYPE.getKeyOrNull(e).toString()));
             element.add("particles", particlesArray);
+
+            JsonArray colorsArray = new JsonArray();
+            DocPlayerData.favoriteColors.forEach(e -> {
+                colorsArray.add(ParticleColor.CODEC.codec().encodeStart(JsonOps.INSTANCE, e).getOrThrow());
+            });
+            element.add("colors", colorsArray);
+
             if (!Files.exists(DOC_DATA_PATH)) {
                 Files.createFile(DOC_DATA_PATH);
             }
@@ -52,6 +61,7 @@ public class DocDataLoader {
         List<ResourceLocation> bookmarks = new ArrayList<>();
         List<SpellSound> sounds = new ArrayList<>();
         List<ParticleType<?>> particles = new ArrayList<>();
+        List<ParticleColor> favoriteColors = new ArrayList<>();
         try {
             Files.createDirectories(Path.of(DATA_FOLDER));
             String content = Files.readString(Path.of(DATA_FOLDER + "doc_data.json"), StandardCharsets.UTF_8);
@@ -84,11 +94,21 @@ public class DocDataLoader {
                     }
                 });
             }
+
+            if (element.has("colors")) {
+                element.getAsJsonArray("colors").forEach(e -> {
+                    ParticleColor color = ParticleColor.CODEC.codec().decode(JsonOps.INSTANCE, e).getOrThrow().getFirst();
+                    if (color != null) {
+                        favoriteColors.add(color);
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         DocPlayerData.bookmarks = bookmarks;
         DocPlayerData.favoriteSounds = sounds;
         DocPlayerData.favoriteParticles = particles;
+        DocPlayerData.favoriteColors = favoriteColors;
     }
 }

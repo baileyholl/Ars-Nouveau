@@ -11,11 +11,19 @@ import net.minecraft.resources.ResourceLocation;
 public class SelectedParticleButton extends NuggetImageButton {
 
     public boolean selected;
+    public DocAssets.BlitInfo selectedFrame = DocAssets.SPELLSTYLE_SELECTED_FRAME;
 
     public SelectedParticleButton(int x, int y, DocAssets.BlitInfo blitInfo, Button.OnPress onPress) {
         this(x, y, blitInfo.width(), blitInfo.height(), blitInfo.location(), onPress);
-        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - blitInfo.width()) / 2;
-        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - blitInfo.height()) / 2;
+        xOffset = (selectedFrame.width() - blitInfo.width()) / 2;
+        yOffset = (selectedFrame.height() - blitInfo.height()) / 2;
+    }
+
+    public SelectedParticleButton(int x, int y, DocAssets.BlitInfo blitInfo, DocAssets.BlitInfo selectedFrame, Button.OnPress onPress) {
+        this(x, y, blitInfo.width(), blitInfo.height(), blitInfo.location(), onPress);
+        this.selectedFrame = selectedFrame;
+        xOffset = (selectedFrame.width() - blitInfo.width()) / 2;
+        yOffset = (selectedFrame.height() - blitInfo.height()) / 2;
     }
 
 
@@ -25,26 +33,15 @@ public class SelectedParticleButton extends NuggetImageButton {
 
     public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, OnPress onPress) {
         super(x, y, w, h, image, onPress);
-        xOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.width() - w) / 2;
-        yOffset = (DocAssets.SPELLSTYLE_SELECTED_FRAME.height() - h) / 2;
+        xOffset = (selectedFrame.width() - w) / 2;
+        yOffset = (selectedFrame.height() - h) / 2;
     }
 
-    public SelectedParticleButton(int x, int y, int w, int h, ResourceLocation image, ResourceLocation hoveredImage, OnPress onPress) {
-        super(x, y, w, h, image, hoveredImage, onPress);
-    }
-
-    public SelectedParticleButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, ResourceLocation hoveredImage, OnPress onPress) {
-        super(x, y, u, v, w, h, image_width, image_height, image, hoveredImage, onPress);
-    }
-
-    public SelectedParticleButton(int x, int y, int u, int v, int w, int h, int image_width, int image_height, ResourceLocation image, OnPress onPress) {
-        super(x, y, u, v, w, h, image_width, image_height, image, onPress);
-    }
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (selected) {
-            DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_SELECTED_FRAME, x, y);
+            DocClientUtils.blit(graphics, selectedFrame, x, y);
         }
         super.renderWidget(graphics, pMouseX, pMouseY, pPartialTick);
     }

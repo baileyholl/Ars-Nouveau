@@ -93,6 +93,8 @@ public class ParticleColor implements IParticleColor, Cloneable {
     public static final ParticleColor BROWN = new ParticleColor(125, 42, 42);
 
     public static final ParticleColor BLACK = new ParticleColor(0, 0, 0);
+    // Used to represent 'no tint' in the styles menu.
+    public static final ParticleColor NONE = new ParticleColor(0, 0, 0);
 
     // all 16 colors in rainbow order
     public static final List<ParticleColor> PRESET_COLORS = List.of(
