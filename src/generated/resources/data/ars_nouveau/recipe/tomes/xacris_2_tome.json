@@ -8,8 +8,7 @@
   },
   "flavour_text": "Light up the sky",
   "name": "Xacris's Firework Display",
-  "sound": {},
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_projectile",
     "ars_nouveau:glyph_wall",
     "ars_nouveau:glyph_sensitive",
@@ -20,29 +19,5 @@
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_amplify"
-  ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:constant",
-      "b": 255,
-      "g": 255,
-      "r": 25
-    },
-    "name": "Xacris's Firework Display",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_projectile",
-      "ars_nouveau:glyph_wall",
-      "ars_nouveau:glyph_sensitive",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_firework",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_amplify"
-    ],
-    "sound": {}
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  ]
 }

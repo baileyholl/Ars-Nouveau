@@ -8,8 +8,7 @@
   },
   "flavour_text": "Mobs meet fireworks",
   "name": "Fireworks and Mobs",
-  "sound": {},
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_projectile",
     "ars_nouveau:glyph_harm",
     "ars_nouveau:glyph_amplify",
@@ -19,28 +18,5 @@
     "ars_nouveau:glyph_firework",
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_explosion"
-  ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:constant",
-      "b": 1,
-      "g": 255,
-      "r": 255
-    },
-    "name": "Fireworks and Mobs",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_projectile",
-      "ars_nouveau:glyph_harm",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_launch",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_firework",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_explosion"
-    ],
-    "sound": {}
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  ]
 }

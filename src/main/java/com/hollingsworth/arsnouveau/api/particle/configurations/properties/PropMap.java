@@ -108,6 +108,14 @@ public class PropMap {
         return (T) properties.computeIfAbsent(defaultValue.getType(), k -> defaultValue);
     }
 
+    public int size() {
+        return properties.size();
+    }
+
+    public boolean isEmpty() {
+        return properties.isEmpty();
+    }
+
     public ParticleColor getParticleColor() {
         var prop = this.get(ParticlePropertyRegistry.COLOR_PROPERTY.get());
         return prop != null ? prop.particleColor : ParticleColor.defaultParticleColor();

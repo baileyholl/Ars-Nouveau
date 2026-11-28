@@ -8,31 +8,11 @@
   },
   "flavour_text": "When you want to go deeper but just don't have the torches",
   "name": "Emergency Flair",
-  "sound": {},
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_touch",
     "ars_nouveau:glyph_light",
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time",
     "ars_nouveau:glyph_extend_time"
-  ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:constant",
-      "b": 1,
-      "g": 255,
-      "r": 1
-    },
-    "name": "Emergency Flair",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_touch",
-      "ars_nouveau:glyph_light",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time",
-      "ars_nouveau:glyph_extend_time"
-    ],
-    "sound": {}
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  ]
 }

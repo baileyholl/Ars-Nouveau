@@ -5,12 +5,7 @@
   },
   "flavour_text": "For those who can't settle with just a tiny hut.",
   "name": "Alex's Magnificent Mansion",
-  "sound": {
-    "sound": {
-      "id": "ars_nouveau:tempestry_family"
-    }
-  },
-  "spell": [
+  "recipe": [
     "ars_nouveau:glyph_self",
     "ars_nouveau:glyph_burst",
     "ars_nouveau:glyph_sensitive",
@@ -24,31 +19,9 @@
     "ars_nouveau:glyph_amplify",
     "ars_nouveau:glyph_pierce"
   ],
-  "spellData": {
-    "color": {
-      "type": "ars_nouveau:rainbow"
-    },
-    "name": "Alex's Magnificent Mansion",
-    "particleTimeline": {},
-    "recipe": [
-      "ars_nouveau:glyph_self",
-      "ars_nouveau:glyph_burst",
-      "ars_nouveau:glyph_sensitive",
-      "ars_nouveau:glyph_dampen",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_aoe",
-      "ars_nouveau:glyph_phantom_block",
-      "ars_nouveau:glyph_amplify",
-      "ars_nouveau:glyph_pierce"
-    ],
+  "sound": {
     "sound": {
-      "sound": {
-        "id": "ars_nouveau:tempestry_family"
-      }
+      "id": "ars_nouveau:tempestry_family"
     }
-  },
-  "tome_type": "ars_nouveau:caster_tome"
+  }
 }

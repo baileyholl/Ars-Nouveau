@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.IParticleTimelineType;
 import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineMap;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -26,7 +28,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -34,10 +42,27 @@ public class Spell {
 
     public static final MapCodec<Spell> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(s -> s.name),
-            ParticleColor.CODEC.fieldOf("color").forGetter(s -> s.color),
-            ConfiguredSpellSound.CODEC.fieldOf("sound").forGetter(s -> s.sound),
+            ParticleColor.CODEC.codec().optionalFieldOf("color", ParticleColor.DEFAULT).forGetter(s -> s.color),
+            ConfiguredSpellSound.CODEC.codec().optionalFieldOf("sound", ConfiguredSpellSound.DEFAULT).forGetter(s -> s.sound),
             Codec.list(AbstractSpellPart.CODEC).fieldOf("recipe").forGetter(s -> s.recipe),
-            TimelineMap.CODEC.optionalFieldOf("particleTimeline").forGetter(s -> Optional.ofNullable(s.particleTimeline))
+            TimelineMap.CODEC.optionalFieldOf("particleTimeline").forGetter(s -> {
+                if (s.particleTimeline == null || s.particleTimeline.timelines().isEmpty()) {
+                    return Optional.empty();
+                }
+
+                var copy = new HashMap<IParticleTimelineType<? extends IParticleTimeline<?>>, IParticleTimeline<?>>();
+                for (var entry : s.particleTimeline.timelines().entrySet()) {
+                    var key = entry.getKey();
+                    var value = entry.getValue();
+                    if (!s.recipe.contains(key.getSpellPart())) {
+                        continue;
+                    }
+
+                    copy.put(key, value);
+                }
+
+                return Optional.of(new TimelineMap(copy));
+            })
     ).apply(instance, Spell::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Spell> STREAM = StreamCodec.of(
