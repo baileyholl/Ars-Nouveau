@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.particle.configurations.properties;
 
 import com.hollingsworth.arsnouveau.api.documentation.DocAssets;
 import com.hollingsworth.arsnouveau.api.documentation.DocClientUtils;
+import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.particle.configurations.ParticleConfigWidgetProvider;
 import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
@@ -10,7 +11,10 @@ import com.hollingsworth.arsnouveau.client.gui.HSLColor;
 import com.hollingsworth.arsnouveau.client.gui.HueSlider;
 import com.hollingsworth.arsnouveau.client.gui.SatLumSlider;
 import com.hollingsworth.arsnouveau.client.gui.buttons.ColorPresetButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.FavoritedColorButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.FramedImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SelectedParticleButton;
+import com.hollingsworth.arsnouveau.client.particle.GradientParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.RainbowParticleColor;
 import com.hollingsworth.nuggets.client.gui.NoShadowTextField;
@@ -75,9 +79,13 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
             SatLumSlider lightness;
             SelectedParticleButton rainbowButton;
             SelectedParticleButton noneButton;
+            ColorPresetButton gradient1;
+            ColorPresetButton gradient2;
+            ColorPresetButton gradient3;
             List<SelectedParticleButton> selectableButtons = new ArrayList<>();
             NoShadowTextField textField;
             boolean syncingSliders;
+            boolean gradientMode;
 
             @Override
             public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -103,6 +111,10 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 graphics.fill(xOffset + 2, yOffset + 3, xOffset - 2 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.width(), yOffset - 3 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.height(), color.getRGB());
 
                 graphics.fill(xOffset + 3, yOffset + 2, xOffset - 3 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.width(), yOffset - 2 + DocAssets.SPELLSTYLE_COLOR_PREVIEW.height(), color.getRGB());
+
+                if (gradientMode) {
+                    DocClientUtils.blit(graphics, DocAssets.SPELLSTYLE_GRADIENT_MENU, xOffset, 114);
+                }
 
             }
 
@@ -149,6 +161,22 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                     propertyHolder.set(getType(), property);
                     select(noneButton);
                 });
+
+                for (int i = 0; i < 12; i++) {
+                    ParticleColor color = DocPlayerData.favoriteColors.size() > i ? DocPlayerData.favoriteColors.get(i) : null;
+                    var button = new FavoritedColorButton(xOffset + 69 + (i % 3) * perXOffset, yOffset + (i / 3) * perYOffset, i, color, (b) -> {
+                        if (b instanceof FavoritedColorButton favoritedColorButton) {
+                            if (favoritedColorButton.particleColor != null) {
+                                setSlidersFromColor(favoritedColorButton.particleColor);
+                                applyColor(favoritedColorButton.particleColor);
+                            } else {
+                                DocPlayerData.favoriteColors.set(favoritedColorButton.index, particleColor);
+                                favoritedColorButton.particleColor = particleColor;
+                            }
+                        }
+                    });
+                    widgets.add(button);
+                }
                 rainbowButton.withTooltip(Component.translatable("ars_nouveau.color_rainbow"));
                 noneButton.withTooltip(Component.translatable("ars_nouveau.color_none"));
                 selectableButtons.add(noneButton);
@@ -180,6 +208,16 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                         return false;
                     }
                 });
+
+                widgets.add(new FramedImageButton(x + 80, y + 18, DocAssets.SPELLSTYLE_SOLID_MODE, 16, 16, (b) -> {
+                    gradientMode = false;
+                    updateModeButtons();
+                }).withTooltip(Component.translatable("ars_nouveau.solid_mode")));
+
+                widgets.add(new FramedImageButton(x + 98, y + 18, DocAssets.SPELLSTYLE_GRADIENT_MODE, 16, 16, (b) -> {
+                    gradientMode = true;
+                    updateModeButtons();
+                }).withTooltip(Component.translatable("ars_nouveau.gradient_mode")));
                 widgets.add(rainbowButton);
                 widgets.add(textField);
                 widgets.add(hueSlider);
@@ -187,6 +225,14 @@ public class ColorProperty extends BaseProperty<ColorProperty> {
                 widgets.add(lightness);
                 widgets.add(noneButton);
                 updateSelectedColor();
+                gradientMode = particleColor instanceof GradientParticleColor;
+                updateModeButtons();
+            }
+
+            public void updateModeButtons() {
+                for (var b : selectableButtons) {
+                    b.visible = !gradientMode;
+                }
             }
 
             public void setColorFromSliders() {

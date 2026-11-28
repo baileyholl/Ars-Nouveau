@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.client.documentation;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.hollingsworth.arsnouveau.api.documentation.DocPlayerData;
 import com.hollingsworth.arsnouveau.api.registry.DocumentationRegistry;
 import com.hollingsworth.arsnouveau.api.registry.SpellSoundRegistry;
@@ -44,7 +42,11 @@ public class DocDataLoader {
 
             JsonArray colorsArray = new JsonArray();
             DocPlayerData.favoriteColors.forEach(e -> {
-                colorsArray.add(ParticleColor.CODEC.codec().encodeStart(JsonOps.INSTANCE, e).getOrThrow());
+                if (e == null) {
+                    colorsArray.add(JsonNull.INSTANCE);
+                } else {
+                    colorsArray.add(ParticleColor.CODEC.codec().encodeStart(JsonOps.INSTANCE, e).getOrThrow());
+                }
             });
             element.add("colors", colorsArray);
 
@@ -62,6 +64,9 @@ public class DocDataLoader {
         List<SpellSound> sounds = new ArrayList<>();
         List<ParticleType<?>> particles = new ArrayList<>();
         List<ParticleColor> favoriteColors = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            favoriteColors.add(null);
+        }
         try {
             Files.createDirectories(Path.of(DATA_FOLDER));
             String content = Files.readString(Path.of(DATA_FOLDER + "doc_data.json"), StandardCharsets.UTF_8);
@@ -96,12 +101,18 @@ public class DocDataLoader {
             }
 
             if (element.has("colors")) {
-                element.getAsJsonArray("colors").forEach(e -> {
-                    ParticleColor color = ParticleColor.CODEC.codec().decode(JsonOps.INSTANCE, e).getOrThrow().getFirst();
-                    if (color != null) {
-                        favoriteColors.add(color);
+                int index = 0;
+                for (JsonElement colorElement : element.getAsJsonArray("colors")) {
+                    if (colorElement.isJsonNull()) {
+                        favoriteColors.set(index, null);
+                    } else {
+                        ParticleColor color = ParticleColor.CODEC.codec().decode(JsonOps.INSTANCE, colorElement).getOrThrow().getFirst();
+                        if (color != null) {
+                            favoriteColors.set(index, color);
+                        }
                     }
-                });
+                    index++;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

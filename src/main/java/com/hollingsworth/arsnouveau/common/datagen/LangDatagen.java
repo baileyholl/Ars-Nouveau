@@ -1684,6 +1684,10 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.spell_book_gui.no_timelines", "Create a spell in this slot to edit its particles, color, sound, and texture.\nConfigurable glyphs will have a spell styles icon:");
         add("ars_nouveau.rotating_turret_aims", "Turret now aims at %s");
         add("ars_nouveau.book_offset", "Spellbook Y Offset: ");
+        add("ars_nouveau.click_to_add", "Click to favorite color");
+        add("ars_nouveau.right_click_to_remove", "Right-click to remove");
+        add("ars_nouveau.solid_mode", "Solid Color Mode");
+        add("ars_nouveau.gradient_mode", "Gradient Color Mode");
     }
 
     public void addCategory(String key, String value) {
